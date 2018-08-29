@@ -1,12 +1,12 @@
 import { Formik, FormikProps } from "formik"
 import React from "react"
-import { ClientCommands } from "./network/types"
-import { Button } from "./ui/Button"
-import { Form } from "./ui/Form"
-import { FormField } from "./ui/FormField"
-import { Modal } from "./ui/Modal"
-import { styled } from "./ui/styled"
-import { TextInput } from "./ui/TextInput"
+import { ClientCommands } from "../network/types"
+import { Button } from "../ui/Button"
+import { Form } from "../ui/Form"
+import { FormField } from "../ui/FormField"
+import { Modal } from "../ui/Modal"
+import { styled } from "../ui/styled"
+import { TextInput } from "../ui/TextInput"
 
 const initialValues = {
   account: "",
