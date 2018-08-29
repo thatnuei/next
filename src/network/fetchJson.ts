@@ -52,7 +52,11 @@ export async function fetchJson<T = any>(
   const data = await response.json()
 
   if (!response.ok) {
-    throw new Error(data.error || "Unknown network error")
+    throw new Error("Unknown network error")
+  }
+
+  if (data.error) {
+    throw new Error(data.error)
   }
 
   return data

@@ -95,30 +95,35 @@ export class App extends React.Component<{}, State> {
   }
 
   private handleLoginSubmit = async (values: LoginValues) => {
-    type ApiTicketResponse = {
-      ticket: string
-      characters: string[]
+    try {
+      type ApiTicketResponse = {
+        ticket: string
+        characters: string[]
+      }
+
+      const getTicketEndpoint = "https://www.f-list.net/json/getApiTicket.php"
+
+      const data: ApiTicketResponse = await fetchJson(getTicketEndpoint, {
+        method: "post",
+        body: {
+          ...values,
+          no_friends: true,
+          no_bookmarks: true,
+        },
+      })
+
+      this.setState({
+        account: values.account,
+        ticket: data.ticket,
+        userCharacters: data.characters.sort(),
+        screen: "selectCharacter",
+      })
+
+      localStorage.setItem("account", values.account)
+      localStorage.setItem("ticket", data.ticket)
+    } catch (error) {
+      console.error(error)
+      alert(error.message || String(error)) // TODO: replace with actual error modal
     }
-
-    const getTicketEndpoint = "https://www.f-list.net/json/getApiTicket.php"
-
-    const data: ApiTicketResponse = await fetchJson(getTicketEndpoint, {
-      method: "post",
-      body: {
-        ...values,
-        no_friends: true,
-        no_bookmarks: true,
-      },
-    })
-
-    this.setState({
-      account: values.account,
-      ticket: data.ticket,
-      userCharacters: data.characters.sort(),
-      screen: "selectCharacter",
-    })
-
-    localStorage.setItem("account", values.account)
-    localStorage.setItem("ticket", data.ticket)
   }
 }
