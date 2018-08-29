@@ -63,6 +63,6 @@ export class LoginModal extends React.Component {
 }
 
 const HeaderText = styled.h1`
-  margin: 1rem 0rem;
+  margin: 1rem;
   text-align: center;
 `
