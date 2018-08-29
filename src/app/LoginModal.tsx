@@ -12,11 +12,15 @@ const initialValues = {
   password: "",
 }
 
-type LoginValues = typeof initialValues
+export type LoginValues = typeof initialValues
 
-export class LoginModal extends React.Component {
+type Props = {
+  onSubmit: (values: LoginValues) => void
+}
+
+export class LoginModal extends React.Component<Props> {
   handleSubmit = (values: LoginValues) => {
-    console.log(values)
+    this.props.onSubmit(values)
   }
 
   renderForm = (props: FormikProps<LoginValues>) => {

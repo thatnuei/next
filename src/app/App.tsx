@@ -1,6 +1,6 @@
 import React from "react"
 import { ClientCommands } from "../network/types"
-import { LoginModal } from "./LoginModal"
+import { LoginModal, LoginValues } from "./LoginModal"
 
 export class App extends React.Component {
   socket?: WebSocket
@@ -33,6 +33,23 @@ export class App extends React.Component {
   }
 
   render() {
-    return <LoginModal />
+    return <LoginModal onSubmit={this.handleLoginSubmit} />
+  }
+
+  private handleLoginSubmit = async (values: LoginValues) => {
+    const body = new FormData()
+    body.set("account", values.account)
+    body.set("password", values.password)
+    body.set("no_characters", "true")
+    body.set("no_friends", "true")
+    body.set("no_bookmarks", "true")
+
+    const response = await fetch("https://www.f-list.net/json/getApiTicket.php", {
+      method: "post",
+      body,
+    })
+    const data = await response.json()
+
+    console.log(data)
   }
 }
