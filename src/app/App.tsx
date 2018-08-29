@@ -48,7 +48,22 @@ export class App extends React.Component<{}, State> {
     userCharacters: [],
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.init()
+  }
+
+  render() {
+    switch (this.state.screen) {
+      case "login":
+        return <LoginModal onSubmit={this.handleLoginSubmit} />
+      case "selectCharacter":
+        return <SelectCharacterModal characters={this.state.userCharacters} />
+      case "loading":
+        return <div>loading...</div>
+    }
+  }
+
+  private init = async () => {
     try {
       const account = localStorage.getItem("account")
       const ticket = localStorage.getItem("ticket")
@@ -76,17 +91,6 @@ export class App extends React.Component<{}, State> {
     } catch (error) {
       console.warn(error)
       this.setState({ screen: "login" })
-    }
-  }
-
-  render() {
-    switch (this.state.screen) {
-      case "login":
-        return <LoginModal onSubmit={this.handleLoginSubmit} />
-      case "selectCharacter":
-        return <SelectCharacterModal characters={this.state.userCharacters} />
-      case "loading":
-        return <div>loading...</div>
     }
   }
 
