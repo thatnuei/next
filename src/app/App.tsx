@@ -2,8 +2,16 @@ import React from "react"
 import { fetchJson } from "../network/fetchJson"
 import { ClientCommands } from "../network/types"
 import { LoginModal, LoginValues } from "./LoginModal"
+import { SelectCharacterModal } from "./SelectCharacterModal"
 
-export class App extends React.Component {
+type State = {
+  screen: "login" | "selectCharacter"
+  account: string
+  ticket: string
+  userCharacters: string[]
+}
+
+export class App extends React.Component<{}, State> {
   socket?: WebSocket
 
   sendCommand = <K extends keyof ClientCommands>(cmd: K, params: ClientCommands[K]) => {
@@ -33,21 +41,44 @@ export class App extends React.Component {
     socket.onmessage = () => {}
   }
 
+  state: State = {
+    screen: "login",
+    account: "",
+    ticket: "",
+    userCharacters: [],
+  }
+
   render() {
-    return <LoginModal onSubmit={this.handleLoginSubmit} />
+    switch (this.state.screen) {
+      case "login":
+        return <LoginModal onSubmit={this.handleLoginSubmit} />
+      case "selectCharacter":
+        return <SelectCharacterModal characters={this.state.userCharacters} />
+    }
   }
 
   private handleLoginSubmit = async (values: LoginValues) => {
-    const data = await fetchJson("https://www.f-list.net/json/getApiTicket.php", {
+    type ApiTicketResponse = {
+      ticket: string
+      characters: string[]
+    }
+
+    const getTicketEndpoint = "https://www.f-list.net/json/getApiTicket.php"
+
+    const data: ApiTicketResponse = await fetchJson(getTicketEndpoint, {
       method: "post",
       body: {
         ...values,
-        no_characters: true,
         no_friends: true,
         no_bookmarks: true,
       },
     })
 
-    console.log(data)
+    this.setState({
+      account: values.account,
+      ticket: data.ticket,
+      userCharacters: data.characters.sort(),
+      screen: "selectCharacter",
+    })
   }
 }
