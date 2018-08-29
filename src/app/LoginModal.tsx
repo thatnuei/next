@@ -43,7 +43,9 @@ export class LoginModal extends React.Component {
               onChange={props.handleChange}
             />
           </FormField>
-          <Button type="submit">Submit</Button>
+          <div style={{ textAlign: "center" }}>
+            <Button type="submit">Submit</Button>
+          </div>
         </Form>
       </Modal>
     )
