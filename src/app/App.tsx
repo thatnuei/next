@@ -1,4 +1,5 @@
 import React from "react"
+import { fetchJson } from "../network/fetchJson"
 import { ClientCommands } from "../network/types"
 import { LoginModal, LoginValues } from "./LoginModal"
 
@@ -37,18 +38,15 @@ export class App extends React.Component {
   }
 
   private handleLoginSubmit = async (values: LoginValues) => {
-    const body = new FormData()
-    body.set("account", values.account)
-    body.set("password", values.password)
-    body.set("no_characters", "true")
-    body.set("no_friends", "true")
-    body.set("no_bookmarks", "true")
-
-    const response = await fetch("https://www.f-list.net/json/getApiTicket.php", {
+    const data = await fetchJson("https://www.f-list.net/json/getApiTicket.php", {
       method: "post",
-      body,
+      body: {
+        ...values,
+        no_characters: true,
+        no_friends: true,
+        no_bookmarks: true,
+      },
     })
-    const data = await response.json()
 
     console.log(data)
   }
