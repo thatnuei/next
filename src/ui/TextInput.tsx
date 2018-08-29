@@ -6,12 +6,14 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export class TextInput extends React.Component<Props> {
+  private labelId = String(Math.random())
+
   render() {
     const { labelText, ...props } = this.props
     return (
       <div>
-        <Label>{labelText}</Label>
-        <Input {...props} />
+        <Label htmlFor={this.labelId}>{labelText}</Label>
+        <Input id={this.labelId} {...props} />
       </div>
     )
   }
