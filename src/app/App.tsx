@@ -1,6 +1,6 @@
 import React from "react"
 import { ClientCommands } from "../network/types"
-import { SelectCharacterModal } from "./SelectCharacterModal"
+import { LoginModal } from "./LoginModal"
 
 export class App extends React.Component {
   socket?: WebSocket
@@ -33,7 +33,6 @@ export class App extends React.Component {
   }
 
   render() {
-    return <SelectCharacterModal />
-    // return <LoginModal />
+    return <LoginModal />
   }
 }

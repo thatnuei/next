@@ -22,31 +22,29 @@ export class LoginModal extends React.Component {
   renderForm = (props: FormikProps<LoginValues>) => {
     return (
       <Modal panelWidth="18rem">
-        <HeaderText>next</HeaderText>
-        <Form onSubmit={props.handleSubmit}>
-          <FormField>
-            <TextInput
-              labelText="Username"
-              name="account"
-              placeholder="awesomeuser"
-              value={props.values.account}
-              onChange={props.handleChange}
-            />
-          </FormField>
-          <FormField>
-            <TextInput
-              labelText="Password"
-              name="password"
-              type="password"
-              placeholder="••••••••"
-              value={props.values.password}
-              onChange={props.handleChange}
-            />
-          </FormField>
-          <div style={{ textAlign: "center" }}>
+        <ContentContainer>
+          <HeaderText>next</HeaderText>
+          <Form onSubmit={props.handleSubmit}>
+            <FormField labelText="Username">
+              <TextInput
+                name="account"
+                placeholder="awesomeuser"
+                value={props.values.account}
+                onChange={props.handleChange}
+              />
+            </FormField>
+            <FormField labelText="Password">
+              <TextInput
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                value={props.values.password}
+                onChange={props.handleChange}
+              />
+            </FormField>
             <Button type="submit">Submit</Button>
-          </div>
-        </Form>
+          </Form>
+        </ContentContainer>
       </Modal>
     )
   }
@@ -62,7 +60,11 @@ export class LoginModal extends React.Component {
   }
 }
 
+const ContentContainer = styled.div`
+  padding: 1rem;
+`
+
 const HeaderText = styled.h1`
-  margin: 1rem;
+  margin-bottom: 1rem;
   text-align: center;
 `
