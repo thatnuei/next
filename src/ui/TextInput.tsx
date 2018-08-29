@@ -12,7 +12,7 @@ export class TextInput extends React.Component<Props> {
     const { labelText, ...props } = this.props
     return (
       <div>
-        <Label htmlFor={this.labelId}>{labelText}</Label>
+        {labelText ? <Label htmlFor={this.labelId}>{labelText}</Label> : null}
         <Input id={this.labelId} {...props} />
       </div>
     )
