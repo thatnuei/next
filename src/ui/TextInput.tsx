@@ -32,6 +32,9 @@ const Input = styled.input`
   padding: 0.5rem 0.7rem;
   transition: 0.2s background-color;
 
+  display: block;
+  width: 100%;
+
   :focus {
     background: rgba(0, 0, 0, 0.8);
   }
