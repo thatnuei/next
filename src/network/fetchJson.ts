@@ -38,7 +38,7 @@ interface FetchJsonOptions {
   query?: QueryObject
 }
 
-export async function fetchJson<T = unknown>(
+export async function fetchJson<T = any>(
   endpoint: string,
   options: FetchJsonOptions = {},
 ): Promise<T> {
