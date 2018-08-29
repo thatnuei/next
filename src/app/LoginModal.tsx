@@ -21,14 +21,14 @@ export class LoginModal extends React.Component {
 
   renderForm = (props: FormikProps<LoginValues>) => {
     return (
-      <Modal>
+      <Modal panelWidth="18rem">
         <HeaderText>next</HeaderText>
         <Form onSubmit={props.handleSubmit}>
           <FormField>
             <TextInput
               labelText="Username"
               name="account"
-              placeholder="Username"
+              placeholder="awesomeuser"
               value={props.values.account}
               onChange={props.handleChange}
             />
@@ -38,7 +38,7 @@ export class LoginModal extends React.Component {
               labelText="Password"
               name="password"
               type="password"
-              placeholder="Password"
+              placeholder="••••••••"
               value={props.values.password}
               onChange={props.handleChange}
             />
