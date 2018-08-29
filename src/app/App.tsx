@@ -5,7 +5,7 @@ import { LoginModal, LoginValues } from "./LoginModal"
 import { SelectCharacterModal } from "./SelectCharacterModal"
 
 type State = {
-  screen: "login" | "selectCharacter"
+  screen: "loading" | "login" | "selectCharacter"
   account: string
   ticket: string
   userCharacters: string[]
@@ -42,10 +42,41 @@ export class App extends React.Component<{}, State> {
   }
 
   state: State = {
-    screen: "login",
+    screen: "loading",
     account: "",
     ticket: "",
     userCharacters: [],
+  }
+
+  async componentDidMount() {
+    try {
+      const account = localStorage.getItem("account")
+      const ticket = localStorage.getItem("ticket")
+      if (!account || !ticket) {
+        throw new Error("Account or ticket not found in storage")
+      }
+
+      const characterListEndpoint = "https://www.f-list.net/json/api/character-list.php"
+
+      type CharacterListResponse = {
+        characters: string[]
+      }
+
+      const data: CharacterListResponse = await fetchJson(characterListEndpoint, {
+        method: "post",
+        body: { account, ticket },
+      })
+
+      this.setState({
+        account,
+        ticket,
+        userCharacters: data.characters.sort(),
+        screen: "selectCharacter",
+      })
+    } catch (error) {
+      console.warn(error)
+      this.setState({ screen: "login" })
+    }
   }
 
   render() {
@@ -54,6 +85,8 @@ export class App extends React.Component<{}, State> {
         return <LoginModal onSubmit={this.handleLoginSubmit} />
       case "selectCharacter":
         return <SelectCharacterModal characters={this.state.userCharacters} />
+      case "loading":
+        return <div>loading...</div>
     }
   }
 
@@ -80,5 +113,8 @@ export class App extends React.Component<{}, State> {
       userCharacters: data.characters.sort(),
       screen: "selectCharacter",
     })
+
+    localStorage.setItem("account", values.account)
+    localStorage.setItem("ticket", data.ticket)
   }
 }
