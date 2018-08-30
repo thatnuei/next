@@ -1,11 +1,9 @@
 import { observer } from "mobx-react"
 import React from "react"
-import { fetchCharacters } from "../network/api"
 import { ClientCommands } from "../network/types"
 import { appStore } from "./AppStore"
 import { LoginModal } from "./LoginModal"
 import { SelectCharacterModal } from "./SelectCharacterModal"
-import { loadAuthData } from "./storage"
 
 class SocketState {
   socket?: WebSocket
@@ -40,8 +38,14 @@ class SocketState {
 
 @observer
 export class App extends React.Component {
-  componentDidMount() {
-    this.init()
+  async componentDidMount() {
+    try {
+      await appStore.restoreSession()
+      appStore.setScreen("selectCharacter")
+    } catch (error) {
+      console.warn(error)
+      appStore.setScreen("login")
+    }
   }
 
   render() {
@@ -52,23 +56,6 @@ export class App extends React.Component {
         return <LoginModal />
       case "selectCharacter":
         return <SelectCharacterModal />
-    }
-  }
-
-  private init = async () => {
-    try {
-      const { account, ticket } = loadAuthData()
-      if (!account || !ticket) {
-        throw new Error("Account or ticket not found in storage")
-      }
-
-      const { characters } = await fetchCharacters(account, ticket)
-
-      appStore.setUserData(account, ticket, characters.sort())
-      appStore.setScreen("selectCharacter")
-    } catch (error) {
-      console.warn(error)
-      appStore.setScreen("login")
     }
   }
 }
