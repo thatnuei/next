@@ -16,7 +16,17 @@ const initialValues = {
 export type LoginValues = typeof initialValues
 
 export class LoginModal extends React.Component {
-  handleSubmit = async (values: LoginValues) => {
+  render() {
+    return (
+      <Formik<LoginValues>
+        initialValues={initialValues}
+        render={this.renderForm}
+        onSubmit={this.handleSubmit}
+      />
+    )
+  }
+
+  private handleSubmit = async (values: LoginValues) => {
     try {
       await appStore.submitLogin(values.account, values.password)
       appStore.setScreen("selectCharacter")
@@ -26,7 +36,7 @@ export class LoginModal extends React.Component {
     }
   }
 
-  renderForm = (props: FormikProps<LoginValues>) => {
+  private renderForm = (props: FormikProps<LoginValues>) => {
     return (
       <Modal panelWidth="18rem">
         <ContentContainer>
@@ -53,16 +63,6 @@ export class LoginModal extends React.Component {
           </Form>
         </ContentContainer>
       </Modal>
-    )
-  }
-
-  render() {
-    return (
-      <Formik<LoginValues>
-        initialValues={initialValues}
-        render={this.renderForm}
-        onSubmit={this.handleSubmit}
-      />
     )
   }
 }
