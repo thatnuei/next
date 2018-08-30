@@ -5,6 +5,8 @@
   "dependencies": {
     "fchat": "^1.2.1",
     "formik": "^1.1.1",
+    "mobx": "^5.1.0",
+    "mobx-react": "^5.2.5",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "styled-components": "^3.4.5"
