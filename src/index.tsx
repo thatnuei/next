@@ -4,7 +4,7 @@ import ReactDOM from "react-dom"
 import { App } from "./app/App"
 import { applyGlobalStyles } from "./ui/globalStyles"
 
-configure({ enforceActions: true })
+configure({ enforceActions: "observed" })
 
 applyGlobalStyles()
 ReactDOM.render(<App />, document.querySelector("#root"))
