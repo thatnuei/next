@@ -66,23 +66,19 @@ export class SelectCharacterModal extends React.Component {
           />
         </FormField>
         <FormField>
-          <div style={{ textAlign: "center" }}>
-            <select
-              name="character"
-              value={props.values.character}
-              onChange={(event) => this.handleChange(event, props)}
-            >
-              {sessionStore.characters.map((name) => (
-                <option value={name} key={name}>
-                  {name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            name="character"
+            value={props.values.character}
+            onChange={(event) => this.handleChange(event, props)}
+          >
+            {sessionStore.characters.map((name) => (
+              <option value={name} key={name}>
+                {name}
+              </option>
+            ))}
+          </select>
         </FormField>
-        <div style={{ textAlign: "center" }}>
-          <Button>Enter Chat</Button>
-        </div>
+        <Button type="submit">Enter Chat</Button>
       </Form>
     )
   }
