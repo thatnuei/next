@@ -7,6 +7,7 @@ export type CommandListenerRecord = { [T in keyof ServerCommands]?: Set<CommandL
 export class SocketStore {
   private socket?: WebSocket
   private commandListeners: CommandListenerRecord = {}
+  private disconnectListeners = new Set<() => void>()
 
   connect(account: string, ticket: string, character: string) {
     const socket = (this.socket = new WebSocket(`wss://chat.f-list.net:9799`))
@@ -26,8 +27,8 @@ export class SocketStore {
 
     socket.onclose = () => {
       console.log("socket closed")
-
       this.socket = undefined
+      this.disconnectListeners.forEach((listener) => listener())
     }
 
     socket.onmessage = (message) => {
@@ -64,6 +65,10 @@ export class SocketStore {
     } else {
       this.commandListeners[command] = new Set([listener])
     }
+  }
+
+  addDisconnectListener(listener: () => void) {
+    this.disconnectListeners.add(listener)
   }
 }
 
