@@ -1,6 +1,6 @@
 import { action, observable } from "mobx"
 import React from "react"
-import { fetchJson } from "../network/fetchJson"
+import { fetchCharacters, fetchTicket } from "../network/api"
 import { ClientCommands } from "../network/types"
 import { LoginModal, LoginValues } from "./LoginModal"
 import { SelectCharacterModal } from "./SelectCharacterModal"
@@ -90,16 +90,7 @@ export class App extends React.Component {
         throw new Error("Account or ticket not found in storage")
       }
 
-      const characterListEndpoint = "https://www.f-list.net/json/api/character-list.php"
-
-      type CharacterListResponse = {
-        characters: string[]
-      }
-
-      const data: CharacterListResponse = await fetchJson(characterListEndpoint, {
-        method: "post",
-        body: { account, ticket },
-      })
+      const data = await fetchCharacters(account, ticket)
 
       this.viewState.setUserData(account, ticket, data.characters.sort())
       this.viewState.setScreen("selectCharacter")
@@ -111,21 +102,7 @@ export class App extends React.Component {
 
   private handleLoginSubmit = async (values: LoginValues) => {
     try {
-      type ApiTicketResponse = {
-        ticket: string
-        characters: string[]
-      }
-
-      const getTicketEndpoint = "https://www.f-list.net/json/getApiTicket.php"
-
-      const data: ApiTicketResponse = await fetchJson(getTicketEndpoint, {
-        method: "post",
-        body: {
-          ...values,
-          no_friends: true,
-          no_bookmarks: true,
-        },
-      })
+      const data = await fetchTicket(values.account, values.password)
 
       this.viewState.setUserData(values.account, data.ticket, data.characters.sort())
       this.viewState.setScreen("selectCharacter")
