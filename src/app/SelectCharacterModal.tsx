@@ -3,6 +3,7 @@ import { action, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { getAvatarUrl } from "../network/api"
+import { socketStore } from "../network/SocketStore"
 import { sessionStore } from "../session/SessionStore"
 import { Button } from "../ui/Button"
 import { Form } from "../ui/Form"
@@ -95,7 +96,11 @@ export class SelectCharacterModal extends React.Component {
   }
 
   private handleSubmit = (values: FormValues) => {
-    console.log(values)
+    socketStore.connect(
+      sessionStore.account,
+      sessionStore.ticket,
+      values.character,
+    )
   }
 }
 
