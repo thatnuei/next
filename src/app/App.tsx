@@ -1,38 +1,11 @@
-import { action, observable } from "mobx"
+import { observer } from "mobx-react"
 import React from "react"
-import { fetchCharacters, fetchTicket } from "../network/api"
+import { fetchCharacters } from "../network/api"
 import { ClientCommands } from "../network/types"
-import { LoginModal, LoginValues } from "./LoginModal"
+import { appStore } from "./AppStore"
+import { LoginModal } from "./LoginModal"
 import { SelectCharacterModal } from "./SelectCharacterModal"
-import { loadAuthData, saveAuthData } from "./storage"
-
-type AppScreen = "setup" | "login" | "selectCharacter"
-
-class AppViewState {
-  @observable
-  account = ""
-
-  @observable
-  ticket = ""
-
-  @observable
-  characters: string[] = []
-
-  @observable
-  screen: AppScreen = "setup"
-
-  @action
-  setUserData(account: string, ticket: string, characters: string[]) {
-    this.account = account
-    this.ticket = ticket
-    this.characters = characters
-  }
-
-  @action
-  setScreen(screen: AppScreen) {
-    this.screen = screen
-  }
-}
+import { loadAuthData } from "./storage"
 
 class SocketState {
   socket?: WebSocket
@@ -65,21 +38,20 @@ class SocketState {
   }
 }
 
+@observer
 export class App extends React.Component {
-  viewState = new AppViewState()
-
   componentDidMount() {
     this.init()
   }
 
   render() {
-    switch (this.viewState.screen) {
+    switch (appStore.screen) {
       case "setup":
         return <div>Setting things up...</div>
       case "login":
-        return <LoginModal onSubmit={this.handleLoginSubmit} />
+        return <LoginModal />
       case "selectCharacter":
-        return <SelectCharacterModal characters={this.viewState.characters} />
+        return <SelectCharacterModal />
     }
   }
 
@@ -92,25 +64,11 @@ export class App extends React.Component {
 
       const { characters } = await fetchCharacters(account, ticket)
 
-      this.viewState.setUserData(account, ticket, characters.sort())
-      this.viewState.setScreen("selectCharacter")
+      appStore.setUserData(account, ticket, characters.sort())
+      appStore.setScreen("selectCharacter")
     } catch (error) {
       console.warn(error)
-      this.viewState.setScreen("login")
-    }
-  }
-
-  private handleLoginSubmit = async ({ account, password }: LoginValues) => {
-    try {
-      const { ticket, characters } = await fetchTicket(account, password)
-
-      this.viewState.setUserData(account, ticket, characters.sort())
-      this.viewState.setScreen("selectCharacter")
-
-      saveAuthData(account, ticket)
-    } catch (error) {
-      console.error(error)
-      alert(error.message || String(error)) // TODO: replace with actual error modal
+      appStore.setScreen("login")
     }
   }
 }

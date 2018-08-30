@@ -6,6 +6,7 @@ import { FormField } from "../ui/FormField"
 import { Modal } from "../ui/Modal"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
+import { appStore } from "./AppStore"
 
 const initialValues = {
   account: "",
@@ -14,13 +15,15 @@ const initialValues = {
 
 export type LoginValues = typeof initialValues
 
-type Props = {
-  onSubmit: (values: LoginValues) => void
-}
-
-export class LoginModal extends React.Component<Props> {
-  handleSubmit = (values: LoginValues) => {
-    this.props.onSubmit(values)
+export class LoginModal extends React.Component {
+  handleSubmit = async (values: LoginValues) => {
+    try {
+      await appStore.submitLogin(values.account, values.password)
+      appStore.setScreen("selectCharacter")
+    } catch (error) {
+      console.error(error)
+      alert(error.message || String(error)) // TODO: replace with actual error modal
+    }
   }
 
   renderForm = (props: FormikProps<LoginValues>) => {

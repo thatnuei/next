@@ -4,12 +4,9 @@ import { Form } from "../ui/Form"
 import { FormField } from "../ui/FormField"
 import { Modal } from "../ui/Modal"
 import { styled } from "../ui/styled"
+import { appStore } from "./AppStore"
 
-type Props = {
-  characters: string[]
-}
-
-export class SelectCharacterModal extends React.Component<Props> {
+export class SelectCharacterModal extends React.Component {
   render() {
     return (
       <Modal>
@@ -19,7 +16,7 @@ export class SelectCharacterModal extends React.Component<Props> {
             <FormField>
               <div style={{ textAlign: "center" }}>
                 <select>
-                  {this.props.characters.map((name) => (
+                  {appStore.characters.map((name) => (
                     <option value={name} key={name}>
                       {name}
                     </option>
