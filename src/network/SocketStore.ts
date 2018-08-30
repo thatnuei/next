@@ -1,7 +1,12 @@
-import { ClientCommands } from "./types"
+import { ClientCommands, ServerCommands } from "./types"
+
+export type CommandListener<T extends keyof ServerCommands> = (params: ServerCommands[T]) => void
+
+export type CommandListenerRecord = { [T in keyof ServerCommands]?: Set<CommandListener<any>> }
 
 export class SocketStore {
   private socket?: WebSocket
+  private commandListeners: CommandListenerRecord = {}
 
   connect(account: string, ticket: string, character: string) {
     const socket = (this.socket = new WebSocket(`wss://chat.f-list.net:9799`))
@@ -27,16 +32,21 @@ export class SocketStore {
 
     socket.onmessage = (message) => {
       const data: string = message.data
-      const command = data.slice(0, 3)
+      const type = data.slice(0, 3) as keyof ServerCommands
       const params = data.length > 3 ? JSON.parse(data.slice(4)) : {}
-      console.log(command, params)
+      console.log(type, params)
 
-      if (command === "IDN") {
+      if (type === "IDN") {
         console.log("identified")
       }
 
-      if (command === "PIN") {
+      if (type === "PIN") {
         this.sendCommand("PIN", undefined)
+      }
+
+      const listenerSet = this.commandListeners[type]
+      for (const listener of listenerSet || []) {
+        listener(params)
       }
     }
   }
@@ -44,6 +54,15 @@ export class SocketStore {
   sendCommand<K extends keyof ClientCommands>(cmd: K, params: ClientCommands[K]) {
     if (this.socket) {
       this.socket.send(`${cmd} ${JSON.stringify(params)}`)
+    }
+  }
+
+  addCommandListener<T extends keyof ServerCommands>(command: T, listener: CommandListener<T>) {
+    const listeners = this.commandListeners[command]
+    if (listeners) {
+      listeners.add(listener)
+    } else {
+      this.commandListeners[command] = new Set([listener])
     }
   }
 }
