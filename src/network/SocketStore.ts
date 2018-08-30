@@ -35,19 +35,16 @@ export class SocketStore {
       const data: string = message.data
       const type = data.slice(0, 3) as keyof ServerCommands
       const params = data.length > 3 ? JSON.parse(data.slice(4)) : {}
-      console.log(type, params)
-
-      if (type === "IDN") {
-        console.log("identified")
-      }
 
       if (type === "PIN") {
         this.sendCommand("PIN", undefined)
-      }
-
-      const listenerSet = this.commandListeners[type]
-      for (const listener of listenerSet || []) {
-        listener(params)
+      } else {
+        const listenerSet = this.commandListeners[type]
+        if (listenerSet) {
+          listenerSet.forEach((listener) => listener(params))
+        } else {
+          console.log(type, params)
+        }
       }
     }
   }
