@@ -19,7 +19,7 @@ export class SessionStore {
     this.characters = characters.sort()
   }
 
-  async submitLogin(account: string, password: string) {
+  async getApiTicket(account: string, password: string) {
     const { ticket, characters } = await fetchTicket(account, password)
     this.setUserData(account, ticket, characters)
   }
