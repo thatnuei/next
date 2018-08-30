@@ -4,6 +4,7 @@ import { fetchCharacters, fetchTicket } from "../network/api"
 import { ClientCommands } from "../network/types"
 import { LoginModal, LoginValues } from "./LoginModal"
 import { SelectCharacterModal } from "./SelectCharacterModal"
+import { loadAuthData, saveAuthData } from "./storage"
 
 type AppScreen = "setup" | "login" | "selectCharacter"
 
@@ -84,15 +85,14 @@ export class App extends React.Component {
 
   private init = async () => {
     try {
-      const account = localStorage.getItem("account")
-      const ticket = localStorage.getItem("ticket")
+      const { account, ticket } = loadAuthData()
       if (!account || !ticket) {
         throw new Error("Account or ticket not found in storage")
       }
 
-      const data = await fetchCharacters(account, ticket)
+      const { characters } = await fetchCharacters(account, ticket)
 
-      this.viewState.setUserData(account, ticket, data.characters.sort())
+      this.viewState.setUserData(account, ticket, characters.sort())
       this.viewState.setScreen("selectCharacter")
     } catch (error) {
       console.warn(error)
@@ -100,15 +100,14 @@ export class App extends React.Component {
     }
   }
 
-  private handleLoginSubmit = async (values: LoginValues) => {
+  private handleLoginSubmit = async ({ account, password }: LoginValues) => {
     try {
-      const data = await fetchTicket(values.account, values.password)
+      const { ticket, characters } = await fetchTicket(account, password)
 
-      this.viewState.setUserData(values.account, data.ticket, data.characters.sort())
+      this.viewState.setUserData(account, ticket, characters.sort())
       this.viewState.setScreen("selectCharacter")
 
-      localStorage.setItem("account", values.account)
-      localStorage.setItem("ticket", data.ticket)
+      saveAuthData(account, ticket)
     } catch (error) {
       console.error(error)
       alert(error.message || String(error)) // TODO: replace with actual error modal
