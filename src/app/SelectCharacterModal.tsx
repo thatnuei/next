@@ -4,7 +4,7 @@ import { Form } from "../ui/Form"
 import { FormField } from "../ui/FormField"
 import { Modal } from "../ui/Modal"
 import { styled } from "../ui/styled"
-import { appStore } from "./AppStore"
+import { sessionStore } from "./SessionStore"
 
 export class SelectCharacterModal extends React.Component {
   render() {
@@ -16,7 +16,7 @@ export class SelectCharacterModal extends React.Component {
             <FormField>
               <div style={{ textAlign: "center" }}>
                 <select>
-                  {appStore.characters.map((name) => (
+                  {sessionStore.characters.map((name) => (
                     <option value={name} key={name}>
                       {name}
                     </option>

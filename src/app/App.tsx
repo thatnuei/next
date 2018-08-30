@@ -4,6 +4,7 @@ import { ClientCommands } from "../network/types"
 import { appStore } from "./AppStore"
 import { LoginModal } from "./LoginModal"
 import { SelectCharacterModal } from "./SelectCharacterModal"
+import { sessionStore } from "./SessionStore"
 
 class SocketState {
   socket?: WebSocket
@@ -40,7 +41,7 @@ class SocketState {
 export class App extends React.Component {
   async componentDidMount() {
     try {
-      await appStore.restoreSession()
+      await sessionStore.restoreSession()
       appStore.setScreen("selectCharacter")
     } catch (error) {
       console.warn(error)

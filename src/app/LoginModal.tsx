@@ -7,6 +7,7 @@ import { Modal } from "../ui/Modal"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
 import { appStore } from "./AppStore"
+import { sessionStore } from "./SessionStore"
 
 const initialValues = {
   account: "",
@@ -28,7 +29,7 @@ export class LoginModal extends React.Component {
 
   private handleSubmit = async (values: LoginValues) => {
     try {
-      await appStore.submitLogin(values.account, values.password)
+      await sessionStore.submitLogin(values.account, values.password)
       appStore.setScreen("selectCharacter")
     } catch (error) {
       console.error(error)
