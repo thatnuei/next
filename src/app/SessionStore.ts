@@ -1,6 +1,6 @@
 import { action, observable } from "mobx"
 import { fetchCharacters, fetchTicket } from "../network/api"
-import { loadAuthData } from "./storage"
+import { loadAuthData, saveAuthData } from "./storage"
 
 export class SessionStore {
   @observable
@@ -32,6 +32,10 @@ export class SessionStore {
 
     const { characters } = await fetchCharacters(account, ticket)
     this.setUserData(account, ticket, characters)
+  }
+
+  saveSession() {
+    saveAuthData(this.account, this.ticket)
   }
 }
 

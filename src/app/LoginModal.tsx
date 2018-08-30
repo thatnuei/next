@@ -30,6 +30,7 @@ export class LoginModal extends React.Component {
   private handleSubmit = async (values: LoginValues) => {
     try {
       await sessionStore.submitLogin(values.account, values.password)
+      sessionStore.saveSession()
       appStore.setScreen("selectCharacter")
     } catch (error) {
       console.error(error)
