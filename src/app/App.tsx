@@ -1,5 +1,6 @@
 import { observer } from "mobx-react"
 import React from "react"
+import { Chat } from "../chat/Chat"
 import { sessionStore } from "../session/SessionStore"
 import { appStore } from "./AppStore"
 import { LoginModal } from "./LoginModal"
@@ -25,6 +26,8 @@ export class App extends React.Component {
         return <LoginModal />
       case "selectCharacter":
         return <SelectCharacterModal />
+      case "chat":
+        return <Chat />
     }
   }
 }
