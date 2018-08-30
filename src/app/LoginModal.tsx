@@ -1,5 +1,6 @@
 import { Formik, FormikProps } from "formik"
 import React from "react"
+import { sessionStore } from "../session/SessionStore"
 import { Button } from "../ui/Button"
 import { Form } from "../ui/Form"
 import { FormField } from "../ui/FormField"
@@ -7,7 +8,6 @@ import { Modal } from "../ui/Modal"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
 import { appStore } from "./AppStore"
-import { sessionStore } from "./SessionStore"
 
 const initialValues = {
   account: "",

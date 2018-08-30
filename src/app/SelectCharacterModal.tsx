@@ -1,10 +1,10 @@
 import React from "react"
+import { sessionStore } from "../session/SessionStore"
 import { Button } from "../ui/Button"
 import { Form } from "../ui/Form"
 import { FormField } from "../ui/FormField"
 import { Modal } from "../ui/Modal"
 import { styled } from "../ui/styled"
-import { sessionStore } from "./SessionStore"
 
 export class SelectCharacterModal extends React.Component {
   render() {

@@ -1,10 +1,10 @@
 import { observer } from "mobx-react"
 import React from "react"
 import { ClientCommands } from "../network/types"
+import { sessionStore } from "../session/SessionStore"
 import { appStore } from "./AppStore"
 import { LoginModal } from "./LoginModal"
 import { SelectCharacterModal } from "./SelectCharacterModal"
-import { sessionStore } from "./SessionStore"
 
 class SocketState {
   socket?: WebSocket
