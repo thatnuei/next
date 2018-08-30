@@ -1,17 +1,39 @@
+import { action, observable } from "mobx"
 import React from "react"
 import { fetchJson } from "../network/fetchJson"
 import { ClientCommands } from "../network/types"
 import { LoginModal, LoginValues } from "./LoginModal"
 import { SelectCharacterModal } from "./SelectCharacterModal"
 
-type State = {
-  screen: "loading" | "login" | "selectCharacter"
-  account: string
-  ticket: string
-  userCharacters: string[]
+type AppScreen = "setup" | "login" | "selectCharacter"
+
+class AppViewState {
+  @observable
+  account = ""
+
+  @observable
+  ticket = ""
+
+  @observable
+  characters: string[] = []
+
+  @observable
+  screen: AppScreen = "setup"
+
+  @action
+  setUserData(account: string, ticket: string, characters: string[]) {
+    this.account = account
+    this.ticket = ticket
+    this.characters = characters
+  }
+
+  @action
+  setScreen(screen: AppScreen) {
+    this.screen = screen
+  }
 }
 
-export class App extends React.Component<{}, State> {
+class SocketState {
   socket?: WebSocket
 
   sendCommand = <K extends keyof ClientCommands>(cmd: K, params: ClientCommands[K]) => {
@@ -28,8 +50,8 @@ export class App extends React.Component<{}, State> {
         account,
         ticket,
         character,
-        cname: "string",
-        cversion: "string",
+        cname: "next",
+        cversion: "0.1.0",
         method: "ticket",
       })
     }
@@ -40,26 +62,23 @@ export class App extends React.Component<{}, State> {
 
     socket.onmessage = () => {}
   }
+}
 
-  state: State = {
-    screen: "loading",
-    account: "",
-    ticket: "",
-    userCharacters: [],
-  }
+export class App extends React.Component {
+  viewState = new AppViewState()
 
   componentDidMount() {
     this.init()
   }
 
   render() {
-    switch (this.state.screen) {
+    switch (this.viewState.screen) {
+      case "setup":
+        return <div>Setting things up...</div>
       case "login":
         return <LoginModal onSubmit={this.handleLoginSubmit} />
       case "selectCharacter":
-        return <SelectCharacterModal characters={this.state.userCharacters} />
-      case "loading":
-        return <div>loading...</div>
+        return <SelectCharacterModal characters={this.viewState.characters} />
     }
   }
 
@@ -82,15 +101,11 @@ export class App extends React.Component<{}, State> {
         body: { account, ticket },
       })
 
-      this.setState({
-        account,
-        ticket,
-        userCharacters: data.characters.sort(),
-        screen: "selectCharacter",
-      })
+      this.viewState.setUserData(account, ticket, data.characters.sort())
+      this.viewState.setScreen("selectCharacter")
     } catch (error) {
       console.warn(error)
-      this.setState({ screen: "login" })
+      this.viewState.setScreen("login")
     }
   }
 
@@ -112,12 +127,8 @@ export class App extends React.Component<{}, State> {
         },
       })
 
-      this.setState({
-        account: values.account,
-        ticket: data.ticket,
-        userCharacters: data.characters.sort(),
-        screen: "selectCharacter",
-      })
+      this.viewState.setUserData(values.account, data.ticket, data.characters.sort())
+      this.viewState.setScreen("selectCharacter")
 
       localStorage.setItem("account", values.account)
       localStorage.setItem("ticket", data.ticket)
