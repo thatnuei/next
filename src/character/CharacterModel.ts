@@ -1,10 +1,10 @@
-import * as fchat from "fchat"
+import * as fchat from "fchat";
 
 export class CharacterModel {
   constructor(
-    private name: string,
-    private gender: fchat.Character.Gender,
-    private status: fchat.Character.Status,
-    private statusMessage = "",
+    public name: string,
+    public gender: fchat.Character.Gender,
+    public status: fchat.Character.Status,
+    public statusMessage = "",
   ) {}
 }
