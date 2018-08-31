@@ -96,9 +96,9 @@ export class SelectCharacterModal extends React.Component<Props> {
   }
 
   private handleSubmit = (values: FormValues) => {
-    const { socket, user } = this.props.session
+    const { connection, user } = this.props.session
     const { account, ticket } = user
-    socket.connect(
+    connection.connect(
       account,
       ticket,
       values.character,

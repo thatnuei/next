@@ -1,5 +1,5 @@
 import { action, observable } from "mobx"
-import { CommandListener, SocketConnectionHandler } from "../network/SocketStore"
+import { CommandListener, SocketConnectionHandler } from "../network/SocketConnectionHandler"
 
 export class ChatState {
   @observable
@@ -8,9 +8,9 @@ export class ChatState {
   @observable.shallow
   serverVariables = new Map<string, number | string | ReadonlyArray<string>>()
 
-  constructor(socketStore: SocketConnectionHandler) {
-    socketStore.addCommandListener("IDN", this.handleIdentified)
-    socketStore.addCommandListener("VAR", this.handleServerVariables)
+  constructor(connection: SocketConnectionHandler) {
+    connection.addCommandListener("IDN", this.handleIdentified)
+    connection.addCommandListener("VAR", this.handleServerVariables)
   }
 
   @action

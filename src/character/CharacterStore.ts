@@ -1,12 +1,12 @@
 import { observable } from "mobx"
-import { CommandListener, SocketConnectionHandler } from "../network/SocketStore"
+import { CommandListener, SocketConnectionHandler } from "../network/SocketConnectionHandler"
 import { CharacterModel } from "./CharacterModel"
 
 export class CharacterStore {
   characters = observable.map<string, CharacterModel>()
 
-  constructor(socketStore: SocketConnectionHandler) {
-    socketStore.addCommandListener("LIS", this.handleInitialCharacterData)
+  constructor(connection: SocketConnectionHandler) {
+    connection.addCommandListener("LIS", this.handleInitialCharacterData)
   }
 
   private handleInitialCharacterData: CommandListener<"LIS"> = ({ characters }) => {

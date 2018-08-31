@@ -2,7 +2,7 @@ import { action, observable } from "mobx"
 import { CharacterStore } from "../character/CharacterStore"
 import { ChatState } from "../chat/ChatState"
 import { fetchCharacters, fetchTicket } from "../flist/api"
-import { SocketConnectionHandler } from "../network/SocketStore"
+import { SocketConnectionHandler } from "../network/SocketConnectionHandler"
 import { UserState } from "../user/UserState"
 import { loadAuthData, saveAuthData } from "./storage"
 
@@ -10,19 +10,19 @@ export type SessionScreen = "setup" | "login" | "selectCharacter" | "chat"
 
 export class SessionState {
   user = new UserState()
-  socket = new SocketConnectionHandler()
-  chat = new ChatState(this.socket)
-  characters = new CharacterStore(this.socket)
+  connection = new SocketConnectionHandler()
+  chat = new ChatState(this.connection)
+  characters = new CharacterStore(this.connection)
 
   @observable
   screen: SessionScreen = "setup"
 
   constructor() {
-    this.socket.addCommandListener("IDN", () => {
+    this.connection.addCommandListener("IDN", () => {
       this.setScreen("chat")
     })
 
-    this.socket.addDisconnectListener(() => {
+    this.connection.addDisconnectListener(() => {
       alert("Disconnected from server :(")
       this.setScreen("login")
     })
