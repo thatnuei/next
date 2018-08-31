@@ -1,4 +1,4 @@
-import { fetchJson } from "./fetchJson"
+import { fetchJson } from "../network/fetchJson"
 
 export function fetchTicket(account: string, password: string) {
   const getTicketEndpoint = "https://www.f-list.net/json/getApiTicket.php"
@@ -30,8 +30,4 @@ export function fetchCharacters(account: string, ticket: string) {
     method: "post",
     body: { account, ticket },
   })
-}
-
-export function getAvatarUrl(name: string) {
-  return `https://static.f-list.net/images/avatar/${encodeURI(name.toLowerCase())}.png`
 }
