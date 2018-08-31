@@ -10,7 +10,12 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
     return (
       <>
         <SectionHeader>PMs</SectionHeader>
-        <ChatNavigationTab text="Subaru-chan" avatar="Subaru-chan" />
+        <ChatNavigationTab
+          text="Subaru-chan"
+          avatar="Subaru-chan"
+          onActivate={() => console.log("activate")}
+          onClose={() => console.log("close")}
+        />
         <ChatNavigationTab text="Athena Light" avatar="Athena Light" />
         <ChatNavigationTab text="Akiyama Ai" avatar="Akiyama Ai" />
         <ChatNavigationTab text="Alli Moon" avatar="Alli Moon" />

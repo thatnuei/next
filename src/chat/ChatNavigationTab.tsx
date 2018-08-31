@@ -10,19 +10,21 @@ type ChatNavigationTabProps = {
   active?: boolean
   icon?: string
   avatar?: string
+  onActivate?: () => void
+  onClose?: () => void
 }
 
 export const ChatNavigationTab = (props: ChatNavigationTabProps) => {
   return (
     <Container {...props}>
-      <TitleContainer>
+      <TitleContainer {...props} onClick={() => props.onActivate && props.onActivate()}>
         <IconContainer>
           {props.icon && <Icon path={props.icon} size={1} color={clouds} />}
           {props.avatar && <Avatar name={props.avatar} size={24} />}
         </IconContainer>
         <TextContainer>{props.text}</TextContainer>
       </TitleContainer>
-      <CloseButton>
+      <CloseButton {...props} onClick={() => props.onClose && props.onClose()}>
         <Icon path={mdiClose} size={0.8} color={clouds} />
       </CloseButton>
     </Container>
@@ -33,22 +35,18 @@ const Container = styled.div<ChatNavigationTabProps>`
   display: flex;
   align-items: center;
 
-  ${(props) => (props.active ? activeStyle : inactiveStyle)};
-`
-
-const activeStyle = css`
-  background-color: ${flist4};
+  background-color: ${(props) => (props.active ? flist4 : "transparent")};
 `
 
 const inactiveStyle = css`
   opacity: 0.5;
 
   &:hover {
-    opacity: 0.6;
+    opacity: 0.75;
   }
 `
 
-const TitleContainer = styled.a.attrs({ href: "#" })`
+const TitleContainer = styled.a.attrs({ href: "#" })<ChatNavigationTabProps>`
   flex-grow: 1;
 
   padding: 0.6rem 0.6rem;
@@ -58,6 +56,8 @@ const TitleContainer = styled.a.attrs({ href: "#" })`
 
   white-space: nowrap;
   overflow: hidden;
+
+  ${(props) => (props.active ? "" : inactiveStyle)};
 `
 
 const IconContainer = styled.div`
@@ -76,7 +76,7 @@ const TextContainer = styled.div`
   overflow: hidden;
 `
 
-const CloseButton = styled.a.attrs({ href: "#" })`
+const CloseButton = styled.a.attrs({ href: "#" })<ChatNavigationTabProps>`
   padding: 0.3rem 0.4rem;
   flex-shrink: 0;
 
@@ -85,4 +85,6 @@ const CloseButton = styled.a.attrs({ href: "#" })`
   img {
     display: block;
   }
+
+  ${(props) => (props.active ? "" : inactiveStyle)};
 `
