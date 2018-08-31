@@ -1,9 +1,9 @@
 import { observer } from "mobx-react"
 import React from "react"
+import { LoginModal } from "../app/LoginModal"
+import { SelectCharacterModal } from "../app/SelectCharacterModal"
 import { Chat } from "../chat/Chat"
-import { SessionState } from "../session/SessionState"
-import { LoginModal } from "./LoginModal"
-import { SelectCharacterModal } from "./SelectCharacterModal"
+import { SessionState } from "./SessionState"
 
 type Props = {
   state: SessionState

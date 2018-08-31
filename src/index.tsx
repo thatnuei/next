@@ -1,7 +1,7 @@
 import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
-import { Session } from "./app/Session"
+import { Session } from "./session/Session"
 import { SessionState } from "./session/SessionState"
 import { applyGlobalStyles } from "./ui/globalStyles"
 
