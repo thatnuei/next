@@ -13,6 +13,7 @@ export function applyGlobalStyles() {
       font: 16px Roboto, sans-serif;
       color: ${clouds};
       background-color: ${flist5};
+      word-break: break-word;
     }
 
     h1, h2, h3, h4, h5, h6 {
