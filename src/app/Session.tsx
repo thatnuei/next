@@ -11,28 +11,28 @@ type Props = {
 
 @observer
 export class Session extends React.Component<Props> {
-  get state() {
+  get session() {
     return this.props.state
   }
 
   async componentDidMount() {
     try {
-      await this.state.restoreUserData()
-      this.state.setScreen("selectCharacter")
+      await this.session.restoreUserData()
+      this.session.setScreen("selectCharacter")
     } catch (error) {
       console.warn(error)
-      this.state.setScreen("login")
+      this.session.setScreen("login")
     }
   }
 
   render() {
-    switch (this.state.screen) {
+    switch (this.session.screen) {
       case "setup":
         return <div>Setting things up...</div>
       case "login":
-        return <LoginModal session={this.state} />
+        return <LoginModal session={this.session} />
       case "selectCharacter":
-        return <SelectCharacterModal session={this.state} />
+        return <SelectCharacterModal session={this.session} />
       case "chat":
         return <Chat />
     }
