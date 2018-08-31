@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mdi/js": "^2.6.95",
+    "@mdi/react": "^1.0.0",
     "fchat": "^1.2.1",
     "formik": "^1.1.1",
     "mobx": "^5.1.0",
