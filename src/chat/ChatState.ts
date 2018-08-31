@@ -16,7 +16,6 @@ export class ChatState {
   @action
   handleIdentified: CommandListener<"IDN"> = ({ character }) => {
     this.identity = character
-    console.log(this)
   }
 
   @action
