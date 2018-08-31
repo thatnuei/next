@@ -2,7 +2,7 @@ import { Formik, FormikProps } from "formik"
 import { action, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
-import { getAvatarUrl } from "../flist/helpers"
+import { Avatar } from "../character/Avatar"
 import { SessionState } from "../session/SessionState"
 import { Button } from "../ui/Button"
 import { Form } from "../ui/Form"
@@ -62,12 +62,7 @@ export class SelectCharacterModal extends React.Component<Props> {
     return (
       <Form onSubmit={props.handleSubmit} style={formStyle}>
         <FormField>
-          <img
-            key={props.values.character}
-            src={getAvatarUrl(props.values.character)}
-            width={100}
-            height={100}
-          />
+          <Avatar name={props.values.character} />
         </FormField>
         <FormField>
           <select
