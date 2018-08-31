@@ -34,7 +34,7 @@ export class Session extends React.Component<Props> {
       case "selectCharacter":
         return <SelectCharacterModal session={this.session} />
       case "chat":
-        return <Chat />
+        return <Chat session={this.session} />
     }
   }
 }

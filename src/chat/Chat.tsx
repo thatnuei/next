@@ -1,7 +1,37 @@
+import { observer } from "mobx-react"
 import React from "react"
+import { SessionState } from "../session/SessionState"
+import { flist4 } from "../ui/colors"
+import { styled } from "../ui/styled"
+import { ChatSidebar } from "./ChatSidebar"
 
-export class Chat extends React.Component {
+type Props = {
+  session: SessionState
+}
+
+@observer
+export class Chat extends React.Component<Props> {
   render() {
-    return <div>am chat</div>
+    return (
+      <ViewContainer>
+        <ChatSidebar session={this.props.session} />
+        <Body>body</Body>
+      </ViewContainer>
+    )
   }
 }
+
+const ViewContainer = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  display: flex;
+`
+
+const Body = styled.div`
+  flex-grow: 1;
+  background-color: ${flist4};
+`

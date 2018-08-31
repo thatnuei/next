@@ -20,5 +20,11 @@ export function applyGlobalStyles() {
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 300;
     }
+
+    a {
+      font: inherit;
+      color: inherit;
+      text-decoration: none;
+    }
   `
 }
