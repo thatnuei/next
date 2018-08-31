@@ -1,6 +1,6 @@
 import { action, observable } from "mobx"
 import { CharacterStore } from "../character/CharacterStore"
-import { ChatStore } from "../chat/ChatStore"
+import { ChatState } from "../chat/ChatState"
 import { fetchCharacters, fetchTicket } from "../network/api"
 import { SocketConnectionHandler } from "../network/SocketStore"
 import { UserState } from "../user/UserState"
@@ -11,7 +11,7 @@ export type SessionScreen = "setup" | "login" | "selectCharacter" | "chat"
 export class SessionState {
   user = new UserState()
   socket = new SocketConnectionHandler()
-  chat = new ChatStore(this.socket)
+  chat = new ChatState(this.socket)
   characters = new CharacterStore(this.socket)
 
   @observable

@@ -6,33 +6,33 @@ import { LoginModal } from "./LoginModal"
 import { SelectCharacterModal } from "./SelectCharacterModal"
 
 type Props = {
-  session: SessionState
+  state: SessionState
 }
 
 @observer
-export class App extends React.Component<Props> {
-  get session() {
-    return this.props.session
+export class Session extends React.Component<Props> {
+  get state() {
+    return this.props.state
   }
 
   async componentDidMount() {
     try {
-      await this.session.restoreUserData()
-      this.session.setScreen("selectCharacter")
+      await this.state.restoreUserData()
+      this.state.setScreen("selectCharacter")
     } catch (error) {
       console.warn(error)
-      this.session.setScreen("login")
+      this.state.setScreen("login")
     }
   }
 
   render() {
-    switch (this.session.screen) {
+    switch (this.state.screen) {
       case "setup":
         return <div>Setting things up...</div>
       case "login":
-        return <LoginModal session={this.session} />
+        return <LoginModal session={this.state} />
       case "selectCharacter":
-        return <SelectCharacterModal session={this.session} />
+        return <SelectCharacterModal session={this.state} />
       case "chat":
         return <Chat />
     }

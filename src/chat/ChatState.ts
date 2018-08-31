@@ -1,7 +1,7 @@
 import { action, observable } from "mobx"
 import { CommandListener, SocketConnectionHandler } from "../network/SocketStore"
 
-export class ChatStore {
+export class ChatState {
   @observable
   identity = ""
 
