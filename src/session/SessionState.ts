@@ -1,8 +1,8 @@
 import { action, observable } from "mobx"
 import { CharacterStore } from "../character/CharacterStore"
 import { ChatState } from "../chat/ChatState"
+import { SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
 import { fetchCharacters, fetchTicket } from "../flist/api"
-import { SocketConnectionHandler } from "../network/SocketConnectionHandler"
 import { UserState } from "../user/UserState"
 import { loadAuthData, saveAuthData } from "./storage"
 

@@ -1,5 +1,5 @@
 import { action, observable } from "mobx"
-import { CommandListener, SocketConnectionHandler } from "../network/SocketConnectionHandler"
+import { CommandListener, SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
 
 export class ChatState {
   @observable
