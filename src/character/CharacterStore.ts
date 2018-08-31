@@ -1,11 +1,11 @@
 import { observable } from "mobx"
-import { CommandListener, socketStore } from "../network/SocketStore"
+import { CommandListener, SocketConnectionHandler } from "../network/SocketStore"
 import { CharacterModel } from "./CharacterModel"
 
-class CharacterStore {
+export class CharacterStore {
   characters = observable.map<string, CharacterModel>()
 
-  setupListeners() {
+  constructor(socketStore: SocketConnectionHandler) {
     socketStore.addCommandListener("LIS", this.handleInitialCharacterData)
   }
 
@@ -17,5 +17,3 @@ class CharacterStore {
     this.characters.merge(newCharacters)
   }
 }
-
-export const characterStore = new CharacterStore()

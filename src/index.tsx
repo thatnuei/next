@@ -2,16 +2,12 @@ import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
 import { App } from "./app/App"
-import { appStore } from "./app/AppStore"
-import { characterStore } from "./character/CharacterStore"
-import { chatStore } from "./chat/ChatStore"
+import { SessionState } from "./session/SessionState"
 import { applyGlobalStyles } from "./ui/globalStyles"
 
 configure({ enforceActions: "observed" })
 
-appStore.setupListeners()
-chatStore.setupListeners()
-characterStore.setupListeners()
+const session = new SessionState()
 
 applyGlobalStyles()
-ReactDOM.render(<App />, document.querySelector("#root"))
+ReactDOM.render(<App session={session} />, document.querySelector("#root"))
