@@ -3,6 +3,7 @@ import React from "react"
 import { SessionState } from "../session/SessionState"
 import { flist4 } from "../ui/colors"
 import { styled } from "../ui/styled"
+import { ChatConversationLayout } from "./ChatConversationLayout"
 import { ChatSidebar } from "./ChatSidebar"
 
 type Props = {
@@ -15,7 +16,9 @@ export class Chat extends React.Component<Props> {
     return (
       <ViewContainer>
         <ChatSidebar session={this.props.session} />
-        <Body>body</Body>
+        <ChatConversationContainer>
+          <ChatConversationLayout />
+        </ChatConversationContainer>
       </ViewContainer>
     )
   }
@@ -29,6 +32,10 @@ const ViewContainer = styled.div`
   bottom: 0;
 
   display: flex;
+`
+
+const ChatConversationContainer = styled.div`
+  flex-grow: 1;
 `
 
 const Body = styled.div`
