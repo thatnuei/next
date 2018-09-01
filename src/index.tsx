@@ -6,16 +6,18 @@ import { Session } from "./session/Session"
 import { SessionState } from "./session/SessionState"
 import { applyGlobalStyles } from "./ui/globalStyles"
 
+const AsyncMode = (React as any).unstable_AsyncMode
+
 configure({ enforceActions: "observed" })
 
 const session = new SessionState()
 
 function render() {
   const root = (
-    <>
+    <AsyncMode>
       <Session state={session} />
       <DevTools position={{ left: 50, bottom: 8 }} />
-    </>
+    </AsyncMode>
   )
 
   applyGlobalStyles()
