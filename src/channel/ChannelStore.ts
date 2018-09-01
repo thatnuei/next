@@ -19,6 +19,7 @@ export class ChannelStore {
     connection.addCommandListener("COL", this.handleOpList)
     connection.addCommandListener("MSG", this.handleNormalMessage)
     connection.addCommandListener("LRP", this.handleAdMessage)
+    connection.addCommandListener("FLN", this.handleLogout)
   }
 
   @action
@@ -57,6 +58,13 @@ export class ChannelStore {
 
     if (params.character === this.chatState.identity) {
       this.joinedChannels.delete(params.character)
+    }
+  }
+
+  @action
+  private handleLogout: CommandListener<"FLN"> = (params) => {
+    for (const channel of this.channels.values()) {
+      channel.users.delete(params.character)
     }
   }
 
