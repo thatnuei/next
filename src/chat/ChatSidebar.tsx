@@ -1,6 +1,5 @@
 import React from "react"
 import { CharacterInfo } from "../character/CharacterInfo"
-import { CharacterModel } from "../character/CharacterModel"
 import { SessionState } from "../session/SessionState"
 import { flist4 } from "../ui/colors"
 import { styled } from "../ui/styled"
@@ -13,20 +12,13 @@ type Props = {
 
 export class ChatSidebar extends React.Component<Props> {
   render() {
-    const character = new CharacterModel(
-      this.props.session.chat.identity,
-      "Female",
-      "dnd",
-      "aaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    )
-
     return (
       <Container>
         <ChatActionsContainer>
           <ChatActions />
         </ChatActionsContainer>
         <CharacterInfoContainer>
-          <CharacterInfo character={character} />
+          <CharacterInfo character={this.props.session.identityCharacter} />
         </CharacterInfoContainer>
         <ChatNavigationContainer>
           <ChatNavigation />
