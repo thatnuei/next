@@ -14,11 +14,13 @@ export function applyGlobalStyles() {
       color: ${clouds};
       background-color: ${flist5};
       word-break: break-word;
+      line-height: 1.5;
     }
 
     h1, h2, h3, h4, h5, h6 {
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 300;
+      line-height: 1.2;
     }
 
     a {
