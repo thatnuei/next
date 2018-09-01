@@ -6,7 +6,7 @@ import { Session } from "./session/Session"
 import { SessionState } from "./session/SessionState"
 import { applyGlobalStyles } from "./ui/globalStyles"
 
-const AsyncMode = (React as any).unstable_AsyncMode
+const AsyncMode: React.ComponentType = (React as any).unstable_AsyncMode
 
 configure({ enforceActions: "observed" })
 
