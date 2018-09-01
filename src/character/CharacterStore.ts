@@ -12,6 +12,7 @@ export class CharacterStore {
     connection.addCommandListener("STA", this.handleStatus)
   }
 
+  @action
   getCharacter(name: string) {
     const char = this.characters.get(name) || new CharacterModel(name, "None", "offline")
     this.characters.set(name, char)
