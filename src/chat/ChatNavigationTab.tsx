@@ -17,7 +17,7 @@ type ChatNavigationTabProps = {
 export const ChatNavigationTab = (props: ChatNavigationTabProps) => {
   return (
     <Container {...props}>
-      <TitleContainer {...props} onClick={() => props.onActivate && props.onActivate()}>
+      <TitleContainer {...props} onMouseDown={() => props.onActivate && props.onActivate()}>
         <IconContainer>
           {props.icon && <Icon path={props.icon} size={1} color={clouds} />}
           {props.avatar && <Avatar name={props.avatar} size={24} />}
@@ -25,7 +25,7 @@ export const ChatNavigationTab = (props: ChatNavigationTabProps) => {
         <TextContainer>{props.text}</TextContainer>
       </TitleContainer>
       {props.onClose && (
-        <CloseButton {...props} onClick={() => props.onClose && props.onClose()}>
+        <CloseButton {...props} onMouseDown={() => props.onClose && props.onClose()}>
           <Icon path={mdiClose} size={0.8} color={clouds} />
         </CloseButton>
       )}
