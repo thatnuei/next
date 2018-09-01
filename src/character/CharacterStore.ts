@@ -9,6 +9,12 @@ export class CharacterStore {
     connection.addCommandListener("LIS", this.handleInitialCharacterData)
   }
 
+  getCharacter(name: string) {
+    const char = this.characters.get(name) || new CharacterModel(name, "None", "offline")
+    this.characters.set(name, char)
+    return char
+  }
+
   private handleInitialCharacterData: CommandListener<"LIS"> = ({ characters }) => {
     const newCharacters: Record<string, CharacterModel> = {}
     for (const characterData of characters) {
