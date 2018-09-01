@@ -1,6 +1,8 @@
 import { action, computed, observable } from "mobx"
+import { ChannelStore } from "../channel/ChannelStore"
 import { CharacterStore } from "../character/CharacterStore"
 import { ChatState } from "../chat/ChatState"
+import { ConversationStore } from "../conversation/ConversationStore"
 import { SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
 import { fetchCharacters, fetchTicket } from "../flist/api"
 import { UserState } from "../user/UserState"
@@ -13,6 +15,8 @@ export class SessionState {
   connection = new SocketConnectionHandler()
   chat = new ChatState(this.connection)
   characters = new CharacterStore(this.connection)
+  channels = new ChannelStore(this.connection, this.chat)
+  conversationStore = new ConversationStore(this.channels)
 
   @observable
   screen: SessionScreen = "setup"
@@ -20,6 +24,10 @@ export class SessionState {
   constructor() {
     this.connection.addCommandListener("IDN", () => {
       this.setScreen("chat")
+
+      this.connection.sendCommand("JCH", { channel: "Frontpage" })
+      this.connection.sendCommand("JCH", { channel: "Fantasy" })
+      this.connection.sendCommand("JCH", { channel: "Story Driven LFRP" })
     })
 
     this.connection.addDisconnectListener(() => {
