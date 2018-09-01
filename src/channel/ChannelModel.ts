@@ -16,10 +16,10 @@ export class ChannelModel {
   messages: MessageModel[] = []
 
   @observable
-  users = new Set<string>()
+  users = new Map<string, true>()
 
   @observable
-  ops = new Set<string>()
+  ops = new Map<string, true>()
 
   @observable
   mode: ChannelMode = "both"

@@ -9,7 +9,7 @@ export class ChannelStore {
   channels = new Map<string, ChannelModel>()
 
   @observable
-  joinedChannels = new Set<string>()
+  joinedChannels = new Map<string, true>()
 
   constructor(connection: SocketConnectionHandler, private chatState: ChatState) {
     connection.addCommandListener("JCH", this.handleJoin)
@@ -43,10 +43,10 @@ export class ChannelStore {
   private handleJoin: CommandListener<"JCH"> = (params) => {
     const channel = this.getChannel(params.channel)
     channel.title = params.title
-    channel.users.add(params.character.identity)
+    channel.users.set(params.character.identity, true)
 
     if (params.character.identity === this.chatState.identity) {
-      this.joinedChannels.add(params.character.identity)
+      this.joinedChannels.set(params.character.identity, true)
     }
   }
 
@@ -63,7 +63,8 @@ export class ChannelStore {
   @action
   private handleInitialChannelInfo: CommandListener<"ICH"> = (params) => {
     const channel = this.getChannel(params.channel)
-    channel.users = new Set(params.users.map((user) => user.identity))
+    const namePairs = params.users.map((user): [string, true] => [user.identity, true])
+    channel.users = new Map(namePairs)
     channel.mode = params.mode
   }
 
@@ -76,7 +77,7 @@ export class ChannelStore {
   @action
   private handleOpList: CommandListener<"COL"> = (params) => {
     const channel = this.getChannel(params.channel)
-    channel.ops = new Set(params.oplist)
+    channel.ops = new Map(params.oplist.map((name): [string, true] => [name, true]))
   }
 
   @action
