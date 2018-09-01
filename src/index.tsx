@@ -1,7 +1,7 @@
 import { configure, runInAction } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
-import { Chat } from "./chat/Chat"
+import { Session } from "./session/Session"
 import { SessionState } from "./session/SessionState"
 import { applyGlobalStyles } from "./ui/globalStyles"
 
@@ -14,8 +14,7 @@ runInAction(() => {
 })
 
 function render() {
-  // const root = <Session state={session} />
-  const root = <Chat session={session} />
+  const root = <Session state={session} />
 
   applyGlobalStyles()
   ReactDOM.render(root, document.querySelector("#root"))
