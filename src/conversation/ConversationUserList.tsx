@@ -1,3 +1,4 @@
+import { observer } from "mobx-react"
 import React from "react"
 import { CharacterName } from "../character/CharacterName"
 import { flist4, flist5 } from "../ui/colors"
@@ -7,7 +8,7 @@ type Props = {
   users: string[]
 }
 
-export const ConversationUserList = (props: Props) => {
+export const ConversationUserList = observer((props: Props) => {
   return (
     <Container>
       <UserCount>{props.users.length} Characters</UserCount>
@@ -20,7 +21,7 @@ export const ConversationUserList = (props: Props) => {
       </UserList>
     </Container>
   )
-}
+})
 
 const Container = styled.div`
   display: grid;
