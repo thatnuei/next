@@ -11,15 +11,8 @@ const buildFolder = join(rootFolder, "build")
 const publicFolder = join(rootFolder, "public")
 
 /** @type {import('webpack').RuleSetUse} */
-const tsRule = {
-  loader: "ts-loader",
-  options: {
-    transpileOnly: true,
-    compilerOptions: {
-      skipLibCheck: true,
-      isolatedModules: true,
-    },
-  },
+const babelRule = {
+  loader: "babel-loader",
 }
 
 /** @type {import('webpack').Configuration} */
@@ -32,7 +25,7 @@ const config = {
     publicPath: "/",
   },
   module: {
-    rules: [{ test: /\.tsx?$/, use: tsRule, include: [sourceFolder] }],
+    rules: [{ test: /\.tsx?$/, use: babelRule, include: [sourceFolder] }],
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
