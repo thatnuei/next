@@ -10,11 +10,6 @@ const sourceFolder = join(rootFolder, "src")
 const buildFolder = join(rootFolder, "build")
 const publicFolder = join(rootFolder, "public")
 
-/** @type {import('webpack').RuleSetUse} */
-const babelRule = {
-  loader: "babel-loader",
-}
-
 /** @type {import('webpack').Configuration} */
 const config = {
   context: rootFolder,
@@ -25,7 +20,7 @@ const config = {
     publicPath: "/",
   },
   module: {
-    rules: [{ test: /\.tsx?$/, use: babelRule, include: [sourceFolder] }],
+    rules: [{ test: /\.tsx?$/, use: "babel-loader", include: [sourceFolder] }],
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
