@@ -33,9 +33,7 @@ const config = {
     }),
     new CleanPlugin(buildFolder, { verbose: false }),
     new CopyPlugin([{ from: publicFolder, to: buildFolder }]),
-    new ForkTsCheckerWebpackPlugin({
-      silent: true,
-    }),
+    new ForkTsCheckerWebpackPlugin(),
   ],
   mode: "development",
 }
