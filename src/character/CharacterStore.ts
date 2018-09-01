@@ -14,9 +14,12 @@ export class CharacterStore {
 
   @action
   getCharacter(name: string) {
-    const char = this.characters.get(name) || new CharacterModel(name, "None", "offline")
-    this.characters.set(name, char)
-    return char
+    const char = this.characters.get(name)
+    if (char) return char
+
+    const newChar = new CharacterModel(name, "None", "offline")
+    this.characters.set(name, newChar)
+    return newChar
   }
 
   @action
