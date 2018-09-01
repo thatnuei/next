@@ -42,7 +42,6 @@ const HeaderArea = styled.div`
 const SidebarArea = styled.div`
   background-color: ${flist4};
   grid-row: span 2;
-  overflow-y: auto;
   margin-left: 4px;
 `
 

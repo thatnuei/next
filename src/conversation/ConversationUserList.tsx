@@ -1,27 +1,49 @@
 import { observer } from "mobx-react"
 import React from "react"
+import { AutoSizer, List, ListRowRenderer, Size } from "react-virtualized"
 import { CharacterName } from "../character/CharacterName"
 import { flist4, flist5 } from "../ui/colors"
 import { styled } from "../ui/styled"
 
-type Props = {
+export interface ConversationUserListProps {
   users: string[]
 }
 
-export const ConversationUserList = observer((props: Props) => {
-  return (
-    <Container>
-      <UserCount>{props.users.length} Characters</UserCount>
-      <UserList>
-        {props.users.map((name) => (
-          <UserListItem key={name}>
-            <CharacterName name={name} />
-          </UserListItem>
-        ))}
-      </UserList>
-    </Container>
-  )
-})
+@observer
+export class ConversationUserList extends React.Component<ConversationUserListProps> {
+  render() {
+    return (
+      <Container>
+        <UserCount>{this.props.users.length} Characters</UserCount>
+        <UserList>
+          <AutoSizer>{this.renderList}</AutoSizer>
+        </UserList>
+      </Container>
+    )
+  }
+
+  private renderList = (size: Size) => {
+    return (
+      <List
+        {...size}
+        rowHeight={32}
+        rowCount={this.props.users.length}
+        rowRenderer={this.renderListRow}
+        style={{ transform: "translateY(0)" }}
+        overscanRowCount={50}
+      />
+    )
+  }
+
+  private renderListRow: ListRowRenderer = (row) => {
+    const name = this.props.users[row.index]
+    return (
+      <UserListItem key={name} style={row.style}>
+        {name && <CharacterName name={name} />}
+      </UserListItem>
+    )
+  }
+}
 
 const Container = styled.div`
   display: grid;
@@ -39,12 +61,15 @@ const UserCount = styled.div`
 
 const UserList = styled.div`
   background-color: ${flist5};
-  overflow-y: scroll;
-  transform: translateZ(0);
-  padding-bottom: 0.5rem;
 `
 
 const UserListItem = styled.div`
-  padding: 0.5rem;
-  padding-bottom: 0;
+  display: flex;
+  align-items: center;
+
+  padding-left: 0.4rem;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
