@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { action, observable } from "mobx"
 import { CommandListener, SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
 import { CharacterModel } from "./CharacterModel"
 
@@ -7,6 +7,9 @@ export class CharacterStore {
 
   constructor(connection: SocketConnectionHandler) {
     connection.addCommandListener("LIS", this.handleInitialCharacterData)
+    connection.addCommandListener("NLN", this.handleLogin)
+    connection.addCommandListener("FLN", this.handleLogout)
+    connection.addCommandListener("STA", this.handleStatus)
   }
 
   getCharacter(name: string) {
@@ -15,11 +18,34 @@ export class CharacterStore {
     return char
   }
 
+  @action
   private handleInitialCharacterData: CommandListener<"LIS"> = ({ characters }) => {
-    const newCharacters: Record<string, CharacterModel> = {}
-    for (const characterData of characters) {
-      newCharacters[characterData[0]] = new CharacterModel(...characterData)
+    for (const [name, gender, status, statusMessage] of characters) {
+      const character = this.getCharacter(name)
+      character.gender = gender
+      character.status = status
+      character.statusMessage = statusMessage
     }
-    this.characters.merge(newCharacters)
+  }
+
+  @action
+  private handleLogin: CommandListener<"NLN"> = ({ identity, gender, status }) => {
+    const character = this.getCharacter(identity)
+    character.gender = gender
+    character.status = status
+  }
+
+  @action
+  private handleLogout: CommandListener<"FLN"> = ({ character: name }) => {
+    const character = this.getCharacter(name)
+    character.status = "offline"
+    character.statusMessage = ""
+  }
+
+  @action
+  private handleStatus: CommandListener<"STA"> = ({ character: name, status, statusmsg }) => {
+    const character = this.getCharacter(name)
+    character.status = status
+    character.statusMessage = statusmsg
   }
 }
