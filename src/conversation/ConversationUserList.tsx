@@ -29,8 +29,7 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
         rowHeight={32}
         rowCount={this.props.users.length}
         rowRenderer={this.renderListRow}
-        style={{ transform: "translateY(0)" }}
-        overscanRowCount={50}
+        overscanRowCount={10}
       />
     )
   }
