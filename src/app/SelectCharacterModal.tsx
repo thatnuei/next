@@ -62,7 +62,7 @@ export class SelectCharacterModal extends React.Component<Props> {
     return (
       <Form onSubmit={props.handleSubmit} style={formStyle}>
         <FormField>
-          <Avatar name={props.values.character} />
+          <Avatar key={props.values.character} name={props.values.character} />
         </FormField>
         <FormField>
           <select
