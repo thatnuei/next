@@ -1,3 +1,4 @@
+import { observer } from "mobx-react"
 import React from "react"
 import { styled } from "../ui/styled"
 import { Avatar } from "./Avatar"
@@ -8,7 +9,7 @@ type Props = {
   character: CharacterModel
 }
 
-export const CharacterInfo = (props: Props) => {
+export const CharacterInfo = observer((props: Props) => {
   const { name, gender, status, statusMessage } = props.character
 
   const nameColor = genderColors[gender]
@@ -26,7 +27,7 @@ export const CharacterInfo = (props: Props) => {
       </Status>
     </div>
   )
-}
+})
 
 const Name = styled.h1`
   margin-bottom: 0.5rem;
