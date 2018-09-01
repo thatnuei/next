@@ -15,16 +15,6 @@ export class Session extends React.Component<Props> {
     return this.props.state
   }
 
-  async componentDidMount() {
-    try {
-      await this.session.restoreUserData()
-      this.session.setScreen("selectCharacter")
-    } catch (error) {
-      console.warn(error)
-      this.session.setScreen("login")
-    }
-  }
-
   render() {
     switch (this.session.screen) {
       case "setup":

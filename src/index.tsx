@@ -12,6 +12,16 @@ configure({ enforceActions: "observed" })
 
 const session = new SessionState()
 
+async function initSession() {
+  try {
+    await session.restoreUserData()
+    session.setScreen("selectCharacter")
+  } catch (error) {
+    console.warn(error)
+    session.setScreen("login")
+  }
+}
+
 function render() {
   const root = (
     <>
@@ -24,6 +34,7 @@ function render() {
   ReactDOM.render(root, document.querySelector("#root"))
 }
 
+initSession()
 render()
 
 if (module.hot) {
