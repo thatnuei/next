@@ -10,7 +10,7 @@ import { ConversationUserList } from "./ConversationUserList"
 type Props = {
   headerContent?: React.ReactNode
   messages: MessageModel[]
-  users?: string[]
+  users?: Map<string, true>
 }
 
 export const ConversationLayout = observer((props: Props) => {

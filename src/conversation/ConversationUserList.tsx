@@ -5,15 +5,16 @@ import { flist4, flist5 } from "../ui/colors"
 import { styled } from "../ui/styled"
 
 type Props = {
-  users: string[]
+  users: Map<string, true>
 }
 
 export const ConversationUserList = observer((props: Props) => {
+  const users = [...props.users.keys()]
   return (
     <Container>
-      <UserCount>{props.users.length} Characters</UserCount>
+      <UserCount>{users.length} Characters</UserCount>
       <UserList>
-        {props.users.map((name) => (
+        {users.map((name) => (
           <UserListItem key={name}>
             <CharacterName name={name} />
           </UserListItem>
