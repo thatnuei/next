@@ -1,11 +1,11 @@
 import React from "react"
+import { Chatbox } from "../chat/Chatbox"
 import { Message } from "../message/Message"
 import { flist4 } from "../ui/colors"
 import { styled } from "../ui/styled"
-import { Chatbox } from "./Chatbox"
 import { ConversationUserList } from "./ConversationUserList"
 
-export const ChatConversationLayout = () => {
+export const ConversationLayout = () => {
   return (
     <Container>
       <HeaderArea>

@@ -3,8 +3,8 @@ import React from "react"
 import { SessionState } from "../session/SessionState"
 import { flist4 } from "../ui/colors"
 import { styled } from "../ui/styled"
-import { ChatConversationLayout } from "./ChatConversationLayout"
 import { ChatSidebar } from "./ChatSidebar"
+import { ConversationLayout } from "../conversation/ConversationLayout"
 
 type Props = {
   session: SessionState
@@ -17,7 +17,7 @@ export class Chat extends React.Component<Props> {
       <ViewContainer>
         <ChatSidebar session={this.props.session} />
         <ChatConversationContainer>
-          <ChatConversationLayout />
+          <ConversationLayout />
         </ChatConversationContainer>
       </ViewContainer>
     )
