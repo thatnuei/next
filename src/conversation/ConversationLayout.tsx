@@ -10,15 +10,14 @@ import { ConversationUserList } from "./ConversationUserList"
 type Props = {
   headerContent?: React.ReactNode
   messages: MessageModel[]
+  users?: string[]
 }
 
 export const ConversationLayout = observer((props: Props) => {
   return (
     <Container>
       <HeaderArea>{props.headerContent}</HeaderArea>
-      <SidebarArea>
-        <ConversationUserList />
-      </SidebarArea>
+      <SidebarArea>{props.users && <ConversationUserList users={props.users} />}</SidebarArea>
       <MessagesArea>
         {props.messages.map((model) => (
           <Message key={model.id} model={model} />

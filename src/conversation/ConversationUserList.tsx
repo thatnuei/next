@@ -1,18 +1,19 @@
 import React from "react"
-import { CharacterModel } from "../character/CharacterModel"
 import { CharacterName } from "../character/CharacterName"
 import { flist4, flist5 } from "../ui/colors"
 import { styled } from "../ui/styled"
 
-const testCharacter = new CharacterModel("Subaru-chan", "Female", "looking")
+type Props = {
+  users: string[]
+}
 
-export const ConversationUserList = () => {
+export const ConversationUserList = (props: Props) => {
   return (
     <Container>
-      <UserCount>420 Characters</UserCount>
+      <UserCount>{props.users.length} Characters</UserCount>
       <UserList>
-        {[...Array(100)].map((_, i) => (
-          <CharacterName key={i} name="Iris Winter" />
+        {props.users.map((name) => (
+          <CharacterName key={name} name={name} />
         ))}
       </UserList>
     </Container>
