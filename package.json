@@ -8,9 +8,9 @@
     "stats": "webpack -p --reporter json > ./stats.json"
   },
   "dependencies": {
+    "@babel/runtime": "^7.0.0",
     "@mdi/js": "^2.6.95",
     "@mdi/react": "^1.0.0",
-    "@babel/runtime": "^7.0.0",
     "fchat": "^1.2.1",
     "formik": "^1.1.1",
     "mobx": "^5.1.0",
@@ -40,6 +40,7 @@
     "@types/webpack-env": "^1.13.6",
     "@types/webpack-serve": "^2.0.0",
     "babel-loader": "^8.0.0",
+    "babel-plugin-styled-components": "^1.6.0",
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.2",
     "fork-ts-checker-webpack-plugin": "^0.4.9",

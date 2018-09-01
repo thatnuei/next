@@ -1,6 +1,7 @@
 {
   "presets": [["@babel/env", { "modules": false }], "@babel/typescript", "@babel/react"],
   "plugins": [
+    "styled-components",
     ["@babel/proposal-decorators", { "legacy": true }],
     ["@babel/proposal-class-properties", { "loose": true }],
     "@babel/proposal-object-rest-spread",
