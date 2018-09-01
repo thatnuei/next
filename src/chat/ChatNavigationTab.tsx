@@ -22,7 +22,7 @@ export const ChatNavigationTab = (props: ChatNavigationTabProps) => {
           {props.icon && <Icon path={props.icon} size={1} color={clouds} />}
           {props.avatar && <Avatar name={props.avatar} size={24} />}
         </IconContainer>
-        <TextContainer>{props.text}</TextContainer>
+        <TitleText>{props.text}</TitleText>
       </TitleContainer>
       {props.onClose && (
         <CloseButton {...props} onMouseDown={() => props.onClose && props.onClose()}>
@@ -72,10 +72,14 @@ const IconContainer = styled.div`
   }
 `
 
-const TextContainer = styled.div`
+const TitleText = styled.div`
   text-overflow: ellipsis;
   flex-grow: 1;
   overflow: hidden;
+
+  /* fixes vertial alignment */
+  position: relative;
+  top: 1px;
 `
 
 const CloseButton = styled.a.attrs({ href: "#" })<ChatNavigationTabProps>`
