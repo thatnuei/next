@@ -1,4 +1,4 @@
-import { configure, runInAction } from "mobx"
+import { configure } from "mobx"
 import DevTools from "mobx-react-devtools"
 import React from "react"
 import ReactDOM from "react-dom"
@@ -9,10 +9,6 @@ import { applyGlobalStyles } from "./ui/globalStyles"
 configure({ enforceActions: "observed" })
 
 const session = new SessionState()
-
-runInAction(() => {
-  session.chat.identity = "Isla Strider"
-})
 
 function render() {
   const root = (
