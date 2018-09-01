@@ -1,4 +1,5 @@
-import { clouds, flist5 } from "./colors"
+import { darken } from "polished"
+import { clouds, flist2, flist5 } from "./colors"
 import { injectGlobal } from "./styled"
 
 export function applyGlobalStyles() {
@@ -12,7 +13,7 @@ export function applyGlobalStyles() {
     :root {
       font: 16px Roboto, sans-serif;
       color: ${clouds};
-      background-color: ${flist5};
+      background-color: ${darken(0.03, flist5)};
       word-break: break-word;
       line-height: 1.5;
     }
@@ -27,6 +28,19 @@ export function applyGlobalStyles() {
       font: inherit;
       color: inherit;
       text-decoration: none;
+    }
+
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+
+    ::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
+      background-color: ${darken(0.05, flist5)};
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: ${flist2};
     }
   `
 }

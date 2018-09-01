@@ -2,7 +2,7 @@ import { observer } from "mobx-react"
 import React from "react"
 import { CharacterInfo } from "../character/CharacterInfo"
 import { SessionState } from "../session/SessionState"
-import { flist4 } from "../ui/colors"
+import { flist4, flist5 } from "../ui/colors"
 import { styled } from "../ui/styled"
 import { ChatActions } from "./ChatActions"
 import { ChatNavigation } from "./ChatNavigation"
@@ -54,4 +54,5 @@ const CharacterInfoContainer = styled.div`
 
 const ChatNavigationContainer = styled.div`
   overflow-y: auto;
+  background-color: ${flist5};
 `
