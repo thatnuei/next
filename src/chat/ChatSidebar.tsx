@@ -1,3 +1,4 @@
+import { observer } from "mobx-react"
 import React from "react"
 import { CharacterInfo } from "../character/CharacterInfo"
 import { SessionState } from "../session/SessionState"
@@ -10,6 +11,7 @@ type Props = {
   session: SessionState
 }
 
+@observer
 export class ChatSidebar extends React.Component<Props> {
   render() {
     return (
