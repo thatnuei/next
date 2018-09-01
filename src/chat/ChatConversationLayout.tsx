@@ -1,13 +1,16 @@
 import React from "react"
 import { styled } from "../ui/styled"
+import { Chatbox } from "./Chatbox"
 
 export const ChatConversationLayout = () => {
   return (
     <Container>
       <div>description</div>
-      <div style={{ gridRow: "span 3" }}>users</div>
+      <div style={{ gridRow: "span 2" }}>users</div>
       <div>messages</div>
-      <div>chatbox</div>
+      <div style={{ gridColumn: "span 2" }}>
+        <Chatbox onSubmit={console.log} />
+      </div>
     </Container>
   )
 }
