@@ -1,5 +1,4 @@
 import { configure } from "mobx"
-import DevTools from "mobx-react-devtools"
 import React from "react"
 import ReactDOM from "react-dom"
 import { Session } from "./session/Session"
@@ -27,7 +26,6 @@ function render() {
   const root = (
     <SessionProvider value={session}>
       <Session state={session} />
-      <DevTools position={{ left: 50, bottom: 8 }} />
     </SessionProvider>
   )
 
