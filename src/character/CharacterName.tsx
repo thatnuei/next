@@ -16,8 +16,8 @@ const CharacterNameView = (props: Props) => {
 
   return (
     <Container href={getProfileUrl(name)} target="_blank" rel="noopener noreferrer">
-      <StatusDot style={{ color: statusColor }}>•</StatusDot>
-      <Name style={{ color: genderColor }}>{name}</Name>
+      <StatusDot color={statusColor}>•</StatusDot>
+      <Name color={genderColor}>{name}</Name>
     </Container>
   )
 }
@@ -30,9 +30,12 @@ const StatusDot = styled.span`
   margin-right: 0.2rem;
   font-size: 120%;
   line-height: 0;
+  color: ${(props: { color: string }) => props.color};
 `
 
-const Name = styled.span``
+const Name = styled.span`
+  color: ${(props: { color: string }) => props.color};
+`
 
 export const CharacterName = (props: { name: string }) => (
   <SessionConsumer>
