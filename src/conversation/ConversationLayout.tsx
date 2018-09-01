@@ -69,9 +69,12 @@ const SidebarArea = styled.div`
 `
 
 const MessagesArea = styled.div`
+  background-color: ${flist4};
   overflow-y: auto;
 `
 
 const ChatboxArea = styled.div`
+  background-color: ${flist4};
   grid-column: span 2;
+  padding: 4px;
 `

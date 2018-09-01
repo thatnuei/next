@@ -21,8 +21,8 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
         <ChatNavigationTab text="Alli Moon" avatar="Alli Moon" />
 
         <SectionHeader>Channels</SectionHeader>
-        <ChatNavigationTab text="Fantasy" icon={mdiEarth} />
-        <ChatNavigationTab text="Frontpage" icon={mdiEarth} active />
+        <ChatNavigationTab text="Fantasy" icon={mdiEarth} active />
+        <ChatNavigationTab text="Frontpage" icon={mdiEarth} />
         <ChatNavigationTab text="Development" icon={mdiEarth} />
         <ChatNavigationTab text="Story Driven LFRP" icon={mdiEarth} />
       </>
@@ -32,6 +32,6 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
 
 const SectionHeader = styled.h2`
   font-size: 1.2rem;
-  margin-top: 0.8rem;
+  margin: 0.8rem 0.7rem 0.4rem;
   opacity: 0.5;
 `
