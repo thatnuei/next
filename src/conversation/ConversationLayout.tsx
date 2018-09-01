@@ -1,15 +1,18 @@
+import { observer } from "mobx-react"
 import React from "react"
 import { Chatbox } from "../chat/Chatbox"
 import { Message } from "../message/Message"
-import { flist4 } from "../ui/colors"
+import { MessageModel } from "../message/MessageModel"
+import { flist4, flist5 } from "../ui/colors"
 import { styled } from "../ui/styled"
 import { ConversationUserList } from "./ConversationUserList"
 
 type Props = {
   headerContent?: React.ReactNode
+  messages: MessageModel[]
 }
 
-export const ConversationLayout = (props: Props) => {
+export const ConversationLayout = observer((props: Props) => {
   return (
     <Container>
       <HeaderArea>{props.headerContent}</HeaderArea>
@@ -17,27 +20,16 @@ export const ConversationLayout = (props: Props) => {
         <ConversationUserList />
       </SidebarArea>
       <MessagesArea>
-        <Message type="admin" />
-        <Message />
-        <Message type="ad" />
-        <Message />
-        <Message type="ad" />
-        <Message />
-        <Message type="mention" />
-        <Message />
-        <Message />
-        <Message type="ad" />
-        <Message type="ad" />
-        <Message />
-        <Message />
-        <Message />
+        {props.messages.map((model) => (
+          <Message key={model.id} model={model} />
+        ))}
       </MessagesArea>
       <ChatboxArea>
         <Chatbox onSubmit={console.log} />
       </ChatboxArea>
     </Container>
   )
-}
+})
 
 const Container = styled.div`
   display: grid;
@@ -63,7 +55,7 @@ const SidebarArea = styled.div`
 `
 
 const MessagesArea = styled.div`
-  background-color: ${flist4};
+  background-color: ${flist5};
   overflow-y: auto;
 `
 

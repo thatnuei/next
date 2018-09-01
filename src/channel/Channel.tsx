@@ -9,6 +9,6 @@ export interface ChannelProps {
 export class Channel extends React.Component<ChannelProps> {
   render() {
     const { model } = this.props
-    return <ConversationLayout headerContent={<h1>{model.title}</h1>} />
+    return <ConversationLayout headerContent={<h1>{model.title}</h1>} messages={model.messages} />
   }
 }
