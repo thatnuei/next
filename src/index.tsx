@@ -27,5 +27,5 @@ function render() {
 render()
 
 if (module.hot) {
-  module.hot.accept(["./chat/Chat", "./ui/globalStyles"], render)
+  module.hot.accept(["./session/Session", "./ui/globalStyles"], render)
 }
