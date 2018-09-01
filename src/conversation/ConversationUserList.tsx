@@ -12,7 +12,7 @@ export const ConversationUserList = () => {
       <UserCount>420 Characters</UserCount>
       <UserList>
         {[...Array(100)].map((_, i) => (
-          <CharacterName character={testCharacter} key={i} />
+          <CharacterName key={i} name="Iris Winter" />
         ))}
       </UserList>
     </Container>

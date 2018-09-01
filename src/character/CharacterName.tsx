@@ -1,5 +1,6 @@
 import React from "react"
 import { getProfileUrl } from "../flist/helpers"
+import { SessionConsumer } from "../session/SessionContext"
 import { styled } from "../ui/styled"
 import { CharacterModel } from "./CharacterModel"
 import { genderColors, statusColors } from "./colors"
@@ -8,7 +9,7 @@ type Props = {
   character: CharacterModel
 }
 
-export const CharacterName = (props: Props) => {
+const CharacterNameView = (props: Props) => {
   const { name, gender, status } = props.character
   const genderColor = genderColors[gender]
   const statusColor = statusColors[status]
@@ -32,3 +33,9 @@ const StatusDot = styled.span`
 `
 
 const Name = styled.span``
+
+export const CharacterName = (props: { name: string }) => (
+  <SessionConsumer>
+    {(session) => <CharacterNameView character={session.characters.getCharacter(props.name)} />}
+  </SessionConsumer>
+)
