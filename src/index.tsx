@@ -3,6 +3,7 @@ import DevTools from "mobx-react-devtools"
 import React from "react"
 import ReactDOM from "react-dom"
 import { Session } from "./session/Session"
+import { SessionProvider } from "./session/SessionContext"
 import { SessionState } from "./session/SessionState"
 import { applyGlobalStyles } from "./ui/globalStyles"
 
@@ -24,10 +25,10 @@ async function initSession() {
 
 function render() {
   const root = (
-    <>
+    <SessionProvider value={session}>
       <Session state={session} />
       <DevTools position={{ left: 50, bottom: 8 }} />
-    </>
+    </SessionProvider>
   )
 
   applyGlobalStyles()
