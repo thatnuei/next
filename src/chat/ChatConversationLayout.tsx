@@ -3,6 +3,7 @@ import { Message } from "../message/Message"
 import { flist4 } from "../ui/colors"
 import { styled } from "../ui/styled"
 import { Chatbox } from "./Chatbox"
+import { ConversationUserList } from "./ConversationUserList"
 
 export const ChatConversationLayout = () => {
   return (
@@ -18,7 +19,9 @@ export const ChatConversationLayout = () => {
         feugiat maximus enim. Nam commodo ultrices ligula sit amet hendrerit. Nunc in augue
         faucibus, ultrices augue consequat, congue ex. Ut a fringilla lectus.
       </HeaderArea>
-      <SidebarArea>users</SidebarArea>
+      <SidebarArea>
+        <ConversationUserList />
+      </SidebarArea>
       <MessagesArea>
         <Message type="admin" />
         <Message />
