@@ -1,14 +1,34 @@
-import { mdiEarth } from "@mdi/js"
+import { mdiCodeTags, mdiEarth } from "@mdi/js"
+import { observer } from "mobx-react"
 import React from "react"
+import { SessionState } from "../session/SessionState"
 import { styled } from "../ui/styled"
 import { ChatNavigationTab } from "./ChatNavigationTab"
 
-export interface ChatNavigationProps {}
+export interface ChatNavigationProps {
+  session: SessionState
+}
 
+@observer
 export class ChatNavigation extends React.Component<ChatNavigationProps> {
   render() {
+    const { conversationStore } = this.props.session
+    const { channelConversations } = conversationStore
+
+    const channelTabs = channelConversations.map((convo) => (
+      <ChatNavigationTab
+        key={convo.id}
+        text={convo.model.title}
+        icon={mdiEarth}
+        active={conversationStore.isActive(convo)}
+        onActivate={() => conversationStore.setActiveConversation(convo)}
+      />
+    ))
+
     return (
-      <>
+      <div>
+        <ChatNavigationTab text="Console" icon={mdiCodeTags} />
+
         <SectionHeader>PMs</SectionHeader>
         <ChatNavigationTab
           text="Subaru-chan"
@@ -21,11 +41,8 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
         <ChatNavigationTab text="Alli Moon" avatar="Alli Moon" />
 
         <SectionHeader>Channels</SectionHeader>
-        <ChatNavigationTab text="Fantasy" icon={mdiEarth} active />
-        <ChatNavigationTab text="Frontpage" icon={mdiEarth} />
-        <ChatNavigationTab text="Development" icon={mdiEarth} />
-        <ChatNavigationTab text="Story Driven LFRP" icon={mdiEarth} />
-      </>
+        {channelTabs}
+      </div>
     )
   }
 }

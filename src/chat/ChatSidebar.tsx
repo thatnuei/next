@@ -23,7 +23,7 @@ export class ChatSidebar extends React.Component<Props> {
           <CharacterInfo character={this.props.session.identityCharacter} />
         </CharacterInfoContainer>
         <ChatNavigationContainer>
-          <ChatNavigation />
+          <ChatNavigation session={this.props.session} />
         </ChatNavigationContainer>
       </Container>
     )
