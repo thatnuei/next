@@ -1,13 +1,29 @@
 import React from "react"
 import { styled } from "../ui/styled"
 import { Chatbox } from "./Chatbox"
+import { ChatMessage } from "./ChatMessage"
 
 export const ChatConversationLayout = () => {
   return (
     <Container>
       <div>description</div>
       <div style={{ gridRow: "span 2" }}>users</div>
-      <div>messages</div>
+      <div style={{ overflowY: "auto" }}>
+        <ChatMessage type="admin" />
+        <ChatMessage />
+        <ChatMessage type="ad" />
+        <ChatMessage />
+        <ChatMessage type="ad" />
+        <ChatMessage />
+        <ChatMessage type="mention" />
+        <ChatMessage />
+        <ChatMessage />
+        <ChatMessage type="ad" />
+        <ChatMessage type="ad" />
+        <ChatMessage />
+        <ChatMessage />
+        <ChatMessage />
+      </div>
       <div style={{ gridColumn: "span 2" }}>
         <Chatbox onSubmit={console.log} />
       </div>
