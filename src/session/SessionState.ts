@@ -1,4 +1,4 @@
-import { action, observable } from "mobx"
+import { action, computed, observable } from "mobx"
 import { CharacterStore } from "../character/CharacterStore"
 import { ChatState } from "../chat/ChatState"
 import { SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
@@ -50,5 +50,10 @@ export class SessionState {
 
   saveUserData() {
     saveAuthData(this.user.account, this.user.ticket)
+  }
+
+  @computed
+  get identityCharacter() {
+    return this.characters.getCharacter(this.chat.identity)
   }
 }
