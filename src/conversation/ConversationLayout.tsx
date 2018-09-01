@@ -5,20 +5,14 @@ import { flist4 } from "../ui/colors"
 import { styled } from "../ui/styled"
 import { ConversationUserList } from "./ConversationUserList"
 
-export const ConversationLayout = () => {
+type Props = {
+  headerContent?: React.ReactNode
+}
+
+export const ConversationLayout = (props: Props) => {
   return (
     <Container>
-      <HeaderArea>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae eros in lacus varius
-        semper. Quisque at massa ac risus consectetur semper. Interdum et malesuada fames ac ante
-        ipsum primis in faucibus. Curabitur pretium ligula non ligula sollicitudin, et varius lectus
-        blandit. Vivamus rutrum, turpis a porttitor luctus, metus elit sagittis quam, eleifend
-        fringilla mi tortor vel lacus. Nunc ac feugiat urna. Fusce vel diam mollis, rutrum odio at,
-        aliquam massa. Praesent at purus vel justo malesuada finibus. Nam sit amet sodales magna.
-        Morbi vestibulum pulvinar mauris ac dictum. Curabitur ex est, fringilla sodales nisl at,
-        feugiat maximus enim. Nam commodo ultrices ligula sit amet hendrerit. Nunc in augue
-        faucibus, ultrices augue consequat, congue ex. Ut a fringilla lectus.
-      </HeaderArea>
+      <HeaderArea>{props.headerContent}</HeaderArea>
       <SidebarArea>
         <ConversationUserList />
       </SidebarArea>

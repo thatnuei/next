@@ -1,10 +1,10 @@
 import { observer } from "mobx-react"
 import React from "react"
+import { Conversation } from "../conversation/Conversation"
 import { SessionState } from "../session/SessionState"
 import { flist4 } from "../ui/colors"
 import { styled } from "../ui/styled"
 import { ChatSidebar } from "./ChatSidebar"
-import { ConversationLayout } from "../conversation/ConversationLayout"
 
 type Props = {
   session: SessionState
@@ -13,11 +13,14 @@ type Props = {
 @observer
 export class Chat extends React.Component<Props> {
   render() {
+    const { session } = this.props
+    const { activeConversation } = session.conversationStore
+
     return (
       <ViewContainer>
-        <ChatSidebar session={this.props.session} />
+        <ChatSidebar session={session} />
         <ChatConversationContainer>
-          <ConversationLayout />
+          {activeConversation && <Conversation data={activeConversation} />}
         </ChatConversationContainer>
       </ViewContainer>
     )
