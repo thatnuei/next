@@ -1,4 +1,6 @@
 import React from "react"
+import { CharacterModel } from "../character/CharacterModel"
+import { CharacterName } from "../character/CharacterName"
 import { styled } from "../ui/styled"
 
 const messageTypeHighlights = {
@@ -7,6 +9,8 @@ const messageTypeHighlights = {
   admin: "rgba(231, 76, 60, 0.2)",
   none: "transparent",
 }
+
+const senderCharacter = new CharacterModel("Athena Light", "Female", "online")
 
 type Props = {
   type?: keyof typeof messageTypeHighlights
@@ -17,7 +21,9 @@ export const Message = (props: Props) => {
     <Container>
       <Highlight style={{ backgroundColor: messageTypeHighlights[props.type || "none"] }}>
         <Timestamp>[{new Date().toLocaleTimeString()}]</Timestamp>
-        <Sender>sender</Sender>
+        <Sender>
+          <CharacterName character={senderCharacter} />
+        </Sender>
         <MessageText>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae eros in lacus varius
           semper. Quisque at massa ac risus consectetur semper. Interdum et malesuada fames ac ante
