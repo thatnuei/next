@@ -3,6 +3,7 @@
   "plugins": [
     ["@babel/proposal-decorators", { "legacy": true }],
     ["@babel/proposal-class-properties", { "loose": true }],
-    "@babel/proposal-object-rest-spread"
+    "@babel/proposal-object-rest-spread",
+    "@babel/transform-runtime"
   ]
 }

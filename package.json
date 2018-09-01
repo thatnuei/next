@@ -2,9 +2,14 @@
   "name": "next",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "dev": "webpack-serve",
+    "build": "webpack -p"
+  },
   "dependencies": {
     "@mdi/js": "^2.6.95",
     "@mdi/react": "^1.0.0",
+    "@babel/runtime": "^7.0.0",
     "fchat": "^1.2.1",
     "formik": "^1.1.1",
     "mobx": "^5.1.0",
@@ -15,15 +20,12 @@
     "react-dom": "^16.4.2",
     "styled-components": "^3.4.5"
   },
-  "scripts": {
-    "dev": "webpack-serve",
-    "build": "webpack -p"
-  },
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.0.0",
     "@babel/plugin-proposal-decorators": "^7.0.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.0.0",
