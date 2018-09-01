@@ -42,4 +42,6 @@ const UserList = styled.div`
   grid-row-gap: 0.2rem;
   overflow-y: scroll;
   padding: 0.5rem;
+
+  transform: translateZ(0);
 `
