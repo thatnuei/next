@@ -12,7 +12,7 @@ type Props = {
   type?: keyof typeof messageTypeHighlights
 }
 
-export const ChatMessage = (props: Props) => {
+export const Message = (props: Props) => {
   return (
     <Container>
       <Highlight style={{ backgroundColor: messageTypeHighlights[props.type || "none"] }}>

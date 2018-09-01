@@ -1,7 +1,7 @@
 import React from "react"
+import { Message } from "../message/Message"
 import { styled } from "../ui/styled"
 import { Chatbox } from "./Chatbox"
-import { ChatMessage } from "./ChatMessage"
 
 export const ChatConversationLayout = () => {
   return (
@@ -9,20 +9,20 @@ export const ChatConversationLayout = () => {
       <div>description</div>
       <div style={{ gridRow: "span 2" }}>users</div>
       <div style={{ overflowY: "auto" }}>
-        <ChatMessage type="admin" />
-        <ChatMessage />
-        <ChatMessage type="ad" />
-        <ChatMessage />
-        <ChatMessage type="ad" />
-        <ChatMessage />
-        <ChatMessage type="mention" />
-        <ChatMessage />
-        <ChatMessage />
-        <ChatMessage type="ad" />
-        <ChatMessage type="ad" />
-        <ChatMessage />
-        <ChatMessage />
-        <ChatMessage />
+        <Message type="admin" />
+        <Message />
+        <Message type="ad" />
+        <Message />
+        <Message type="ad" />
+        <Message />
+        <Message type="mention" />
+        <Message />
+        <Message />
+        <Message type="ad" />
+        <Message type="ad" />
+        <Message />
+        <Message />
+        <Message />
       </div>
       <div style={{ gridColumn: "span 2" }}>
         <Chatbox onSubmit={console.log} />
