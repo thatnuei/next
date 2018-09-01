@@ -33,7 +33,7 @@ export const ChatConversationLayout = () => {
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 12rem;
+  grid-template-columns: 1fr auto;
   grid-template-rows: auto 1fr auto;
   grid-gap: 4px;
 
