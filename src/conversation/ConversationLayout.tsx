@@ -1,28 +1,21 @@
 import { observer } from "mobx-react"
 import React from "react"
 import { Chatbox } from "../chat/Chatbox"
-import { Message } from "../message/Message"
-import { MessageModel } from "../message/MessageModel"
 import { flist4, flist5 } from "../ui/colors"
 import { styled } from "../ui/styled"
-import { ConversationUserList } from "./ConversationUserList"
 
 type Props = {
-  headerContent?: React.ReactNode
-  messages: MessageModel[]
-  users?: Map<string, true>
+  header?: React.ReactNode
+  messages?: React.ReactNode
+  users?: React.ReactNode
 }
 
 export const ConversationLayout = observer((props: Props) => {
   return (
     <Container>
-      <HeaderArea>{props.headerContent}</HeaderArea>
-      <SidebarArea>{props.users && <ConversationUserList users={props.users} />}</SidebarArea>
-      <MessagesArea>
-        {props.messages.map((model) => (
-          <Message key={model.id} model={model} />
-        ))}
-      </MessagesArea>
+      <HeaderArea>{props.header}</HeaderArea>
+      <SidebarArea>{props.users}</SidebarArea>
+      <MessagesArea>{props.messages}</MessagesArea>
       <ChatboxArea>
         <Chatbox onSubmit={console.log} />
       </ChatboxArea>

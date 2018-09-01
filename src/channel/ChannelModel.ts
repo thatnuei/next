@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { action, observable } from "mobx"
 import { MessageModel } from "../message/MessageModel"
 
 type ChannelMode = "chat" | "ads" | "both"
@@ -15,8 +15,7 @@ export class ChannelModel {
   @observable
   messages: MessageModel[] = []
 
-  @observable
-  users = new Map<string, true>()
+  users = observable.array<string>()
 
   @observable
   ops = new Map<string, true>()
@@ -26,5 +25,20 @@ export class ChannelModel {
 
   constructor(id: string) {
     this.id = id
+  }
+
+  @action
+  setUsers(users: string[]) {
+    this.users.replace(users)
+  }
+
+  @action
+  addUser(name: string) {
+    this.users.push(name)
+  }
+
+  @action
+  removeUser(name: string) {
+    this.users.remove(name)
   }
 }

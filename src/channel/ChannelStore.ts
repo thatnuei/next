@@ -44,7 +44,7 @@ export class ChannelStore {
   private handleJoin: CommandListener<"JCH"> = (params) => {
     const channel = this.getChannel(params.channel)
     channel.title = params.title
-    channel.users.set(params.character.identity, true)
+    channel.addUser(params.character.identity)
 
     if (params.character.identity === this.chatState.identity) {
       this.joinedChannels.set(params.character.identity, true)
@@ -54,7 +54,7 @@ export class ChannelStore {
   @action
   private handleLeave: CommandListener<"LCH"> = (params) => {
     const channel = this.getChannel(params.channel)
-    channel.users.delete(params.character)
+    channel.removeUser(params.character)
 
     if (params.character === this.chatState.identity) {
       this.joinedChannels.delete(params.character)
@@ -64,15 +64,14 @@ export class ChannelStore {
   @action
   private handleLogout: CommandListener<"FLN"> = (params) => {
     for (const channel of this.channels.values()) {
-      channel.users.delete(params.character)
+      channel.removeUser(params.character)
     }
   }
 
   @action
   private handleInitialChannelInfo: CommandListener<"ICH"> = (params) => {
     const channel = this.getChannel(params.channel)
-    const namePairs = params.users.map((user): [string, true] => [user.identity, true])
-    channel.users = new Map(namePairs)
+    channel.setUsers(params.users.map((user) => user.identity))
     channel.mode = params.mode
   }
 
