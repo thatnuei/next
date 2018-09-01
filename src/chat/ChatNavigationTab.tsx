@@ -24,9 +24,11 @@ export const ChatNavigationTab = (props: ChatNavigationTabProps) => {
         </IconContainer>
         <TextContainer>{props.text}</TextContainer>
       </TitleContainer>
-      <CloseButton {...props} onClick={() => props.onClose && props.onClose()}>
-        <Icon path={mdiClose} size={0.8} color={clouds} />
-      </CloseButton>
+      {props.onClose && (
+        <CloseButton {...props} onClick={() => props.onClose && props.onClose()}>
+          <Icon path={mdiClose} size={0.8} color={clouds} />
+        </CloseButton>
+      )}
     </Container>
   )
 }
