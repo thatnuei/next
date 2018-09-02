@@ -7,7 +7,7 @@ export class PrivateChatStore {
   @observable
   privateChats = new Map<string, PrivateChatModel>()
 
-  openChatPartners = observable.map<string, true>()
+  private openChatPartners = observable.map<string, true>()
 
   constructor(connection: SocketConnectionHandler) {
     connection.addCommandListener("PRI", this.handleMessage)
@@ -27,6 +27,11 @@ export class PrivateChatStore {
   @computed
   get openChats() {
     return [...this.openChatPartners.keys()].map(this.getPrivateChat)
+  }
+
+  @action
+  closeChat(partner: string) {
+    this.openChatPartners.delete(partner)
   }
 
   @action

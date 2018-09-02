@@ -12,7 +12,7 @@ export interface ChatNavigationProps {
 @observer
 export class ChatNavigation extends React.Component<ChatNavigationProps> {
   render() {
-    const { conversationStore } = this.props.session
+    const { conversationStore, channels, privateChatStore } = this.props.session
     const { channelConversations, privateConversations } = conversationStore
 
     const channelTabs = channelConversations.map((convo) => (
@@ -22,6 +22,7 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
         icon={mdiEarth}
         active={conversationStore.isActive(convo)}
         onActivate={() => conversationStore.setActiveConversation(convo)}
+        onClose={() => channels.leaveChannel(convo.model.id)}
       />
     ))
 
@@ -32,6 +33,7 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
         avatar={convo.model.partner}
         active={conversationStore.isActive(convo)}
         onActivate={() => conversationStore.setActiveConversation(convo)}
+        onClose={() => privateChatStore.closeChat(convo.model.partner)}
       />
     ))
 

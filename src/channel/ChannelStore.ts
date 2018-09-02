@@ -8,9 +8,9 @@ export class ChannelStore {
   @observable
   channels = new Map<string, ChannelModel>()
 
-  joinedChannelIds = observable.map<string, true>()
+  private joinedChannelIds = observable.map<string, true>()
 
-  constructor(connection: SocketConnectionHandler, private chatState: ChatState) {
+  constructor(private connection: SocketConnectionHandler, private chatState: ChatState) {
     connection.addCommandListener("JCH", this.handleJoin)
     connection.addCommandListener("LCH", this.handleLeave)
     connection.addCommandListener("ICH", this.handleInitialChannelInfo)
@@ -31,6 +31,11 @@ export class ChannelStore {
   @computed
   get joinedChannels() {
     return [...this.joinedChannelIds.keys()].map(this.getChannel)
+  }
+
+  @action
+  leaveChannel(channel: string) {
+    this.connection.sendCommand("LCH", { channel })
   }
 
   @action
@@ -61,7 +66,7 @@ export class ChannelStore {
     channel.removeUser(params.character)
 
     if (params.character === this.chatState.identity) {
-      this.joinedChannelIds.remove(params.channel)
+      this.joinedChannelIds.delete(params.channel)
     }
   }
 
