@@ -16,7 +16,7 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
       <Container>
         <UserCount>{this.props.users.length} Characters</UserCount>
         <UserList>
-          <AutoSizer>{this.renderList}</AutoSizer>
+          <AutoSizer rowCount={this.props.users.length}>{this.renderList}</AutoSizer>
         </UserList>
       </Container>
     )

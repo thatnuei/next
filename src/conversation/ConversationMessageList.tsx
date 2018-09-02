@@ -24,7 +24,7 @@ export class ConversationMessageList extends React.Component<ConversationMessage
   })
 
   render() {
-    return <AutoSizer>{this.renderList}</AutoSizer>
+    return <AutoSizer rowCount={this.props.messages.length}>{this.renderList}</AutoSizer>
   }
 
   private renderList = (size: Size) => {
