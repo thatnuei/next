@@ -18,6 +18,11 @@ export function applyGlobalStyles() {
       line-height: 1.5;
     }
 
+    :focus {
+      outline: 2px solid hsla(219, 63%, 24%, 0.5);
+      outline-offset: -2px;
+    }
+
     h1, h2, h3, h4, h5, h6 {
       font-family: 'Roboto Condensed', sans-serif;
       font-weight: 300;
