@@ -16,7 +16,7 @@ export class Channel extends React.Component<ChannelProps> {
     return (
       <ConversationLayout
         header={<h1>{model.title}</h1>}
-        messages={<ConversationMessageList messages={model.messages} />}
+        messages={<ConversationMessageList key={model.id} messages={model.messages} />}
         users={<ConversationUserList key={model.id} users={model.users} />}
       />
     )
