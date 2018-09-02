@@ -29,13 +29,13 @@ function render() {
     </SessionProvider>
   )
 
-  applyGlobalStyles()
   ReactDOM.render(root, document.querySelector("#root"))
 }
 
+applyGlobalStyles()
 initSession()
 render()
 
 if (module.hot) {
-  module.hot.accept(["./session/Session", "./ui/globalStyles"], render)
+  module.hot.accept("./session/Session", render)
 }
