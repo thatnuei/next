@@ -16,21 +16,26 @@ const CharacterNameView = (props: Props) => {
 
   return (
     <Container href={getProfileUrl(name)} target="_blank" rel="noopener noreferrer">
-      <StatusDot color={statusColor}>•</StatusDot>
+      <StatusDot color={statusColor} />
       <Name color={genderColor}>{name}</Name>
     </Container>
   )
 }
 
 const Container = styled.a`
-  display: inline-block;
+  display: inline-flex;
+  align-items: baseline;
+  vertical-align: baseline;
 `
 
 const StatusDot = styled.span`
+  width: 6px;
+  height: 6px;
+  background-color: ${(props: { color: string }) => props.color};
+  border-radius: 50%;
+  align-self: center;
+
   margin-right: 0.2rem;
-  font-size: 120%;
-  line-height: 0;
-  color: ${(props: { color: string }) => props.color};
 `
 
 const Name = styled.span`
