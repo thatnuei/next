@@ -18,24 +18,16 @@ export const Message = (props: Props) => {
   const { sender, text, type, localeTimeString } = props.model
 
   return (
-    <Container>
-      <Highlight style={{ backgroundColor: messageTypeHighlights[type] }}>
-        <Timestamp>[{localeTimeString}]</Timestamp>
-        <Sender>{sender ? <CharacterName name={sender} /> : "System"}</Sender>
-        <MessageText>{text}</MessageText>
-      </Highlight>
+    <Container style={{ backgroundColor: messageTypeHighlights[type] }}>
+      <Timestamp>[{localeTimeString}]</Timestamp>
+      <Sender>{sender ? <CharacterName name={sender} /> : "System"}</Sender>
+      <MessageText>{text}</MessageText>
     </Container>
   )
 }
 
 const Container = styled.div`
-  &:nth-child(2n) {
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-`
-
-const Highlight = styled.div`
-  padding: 0.4rem 0.7rem;
+  padding: 0.3rem 0.7rem;
 `
 
 const Sender = styled.span`
