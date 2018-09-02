@@ -1,4 +1,4 @@
-import { action, observable } from "mobx"
+import { action, computed, observable } from "mobx"
 import { CommandListener, SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
 import { MessageModel } from "../message/MessageModel"
 import { PrivateChatModel } from "./PrivateChatModel"
@@ -7,12 +7,14 @@ export class PrivateChatStore {
   @observable
   privateChats = new Map<string, PrivateChatModel>()
 
+  openChatPartners = observable.map<string, true>()
+
   constructor(connection: SocketConnectionHandler) {
     connection.addCommandListener("PRI", this.handleMessage)
     connection.addCommandListener("TPN", this.handleTypingStatus)
   }
 
-  @action
+  @action.bound
   getPrivateChat(partner: string) {
     const privateChat = this.privateChats.get(partner)
     if (privateChat) return privateChat
@@ -20,6 +22,11 @@ export class PrivateChatStore {
     const newPrivateChat = new PrivateChatModel(partner)
     this.privateChats.set(partner, newPrivateChat)
     return newPrivateChat
+  }
+
+  @computed
+  get openChats() {
+    return [...this.openChatPartners.keys()].map(this.getPrivateChat)
   }
 
   @action
@@ -33,6 +40,7 @@ export class PrivateChatStore {
     })
 
     privateChat.messages.push(newMessage)
+    this.openChatPartners.set(params.character, true)
   }
 
   @action

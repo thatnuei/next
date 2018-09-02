@@ -18,28 +18,24 @@ export class ConversationStore {
 
   @computed
   get channelConversations() {
-    return [...this.channelStore.channels.values()]
-      .sort((a, b) => a.title.localeCompare(b.title))
-      .map(
-        (channel): ChannelConversationType => ({
-          type: "channel",
-          id: `channel-${channel.id}`,
-          model: channel,
-        }),
-      )
+    return this.channelStore.joinedChannels.sort((a, b) => a.title.localeCompare(b.title)).map(
+      (channel): ChannelConversationType => ({
+        type: "channel",
+        id: `channel-${channel.id}`,
+        model: channel,
+      }),
+    )
   }
 
   @computed
   get privateConversations() {
-    return [...this.privateChatStore.privateChats.values()]
-      .sort((a, b) => a.partner.localeCompare(b.partner))
-      .map(
-        (chat): PrivateConversationType => ({
-          type: "privateChat",
-          id: `privateChat-${chat.partner}`,
-          model: chat,
-        }),
-      )
+    return this.privateChatStore.openChats.sort((a, b) => a.partner.localeCompare(b.partner)).map(
+      (chat): PrivateConversationType => ({
+        type: "privateChat",
+        id: `privateChat-${chat.partner}`,
+        model: chat,
+      }),
+    )
   }
 
   @action

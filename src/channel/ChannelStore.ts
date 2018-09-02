@@ -1,4 +1,4 @@
-import { action, observable } from "mobx"
+import { action, computed, observable } from "mobx"
 import { ChatState } from "../chat/ChatState"
 import { CommandListener, SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
 import { MessageModel, MessageModelOptions } from "../message/MessageModel"
@@ -8,8 +8,7 @@ export class ChannelStore {
   @observable
   channels = new Map<string, ChannelModel>()
 
-  @observable
-  joinedChannels = new Map<string, true>()
+  joinedChannelIds = observable.map<string, true>()
 
   constructor(connection: SocketConnectionHandler, private chatState: ChatState) {
     connection.addCommandListener("JCH", this.handleJoin)
@@ -22,11 +21,16 @@ export class ChannelStore {
     connection.addCommandListener("FLN", this.handleLogout)
   }
 
-  @action
+  @action.bound
   getChannel(id: string) {
     const channel = this.channels.get(id) || new ChannelModel(id)
     this.channels.set(id, channel)
     return channel
+  }
+
+  @computed
+  get joinedChannels() {
+    return [...this.joinedChannelIds.keys()].map(this.getChannel)
   }
 
   @action
@@ -47,7 +51,7 @@ export class ChannelStore {
     channel.addUser(params.character.identity)
 
     if (params.character.identity === this.chatState.identity) {
-      this.joinedChannels.set(params.character.identity, true)
+      this.joinedChannelIds.set(params.channel, true)
     }
   }
 
@@ -57,7 +61,7 @@ export class ChannelStore {
     channel.removeUser(params.character)
 
     if (params.character === this.chatState.identity) {
-      this.joinedChannels.delete(params.character)
+      this.joinedChannelIds.remove(params.channel)
     }
   }
 
