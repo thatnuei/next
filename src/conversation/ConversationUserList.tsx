@@ -1,6 +1,5 @@
 import { observer } from "mobx-react"
 import React from "react"
-import { AutoSizer, List, ListRowRenderer, Size } from "react-virtualized"
 import { CharacterName } from "../character/CharacterName"
 import { flist4, flist5 } from "../ui/colors"
 import { styled } from "../ui/styled"
@@ -16,30 +15,13 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
       <Container>
         <UserCount>{this.props.users.length} Characters</UserCount>
         <UserList>
-          <AutoSizer rowCount={this.props.users.length}>{this.renderList}</AutoSizer>
+          {this.props.users.map((name) => (
+            <UserListItem key={name}>
+              <CharacterName name={name} />
+            </UserListItem>
+          ))}
         </UserList>
       </Container>
-    )
-  }
-
-  private renderList = (size: Size) => {
-    return (
-      <List
-        {...size}
-        rowHeight={32}
-        rowCount={this.props.users.length}
-        rowRenderer={this.renderListRow}
-        overscanRowCount={10}
-      />
-    )
-  }
-
-  private renderListRow: ListRowRenderer = (row) => {
-    const name = this.props.users[row.index]
-    return (
-      <UserListItem key={name} style={row.style}>
-        {name && <CharacterName name={name} />}
-      </UserListItem>
     )
   }
 }
@@ -60,6 +42,8 @@ const UserCount = styled.div`
 
 const UserList = styled.div`
   background-color: ${flist5};
+
+  overflow-y: auto;
 `
 
 const UserListItem = styled.div`
@@ -71,4 +55,6 @@ const UserListItem = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  height: 30px;
 `
