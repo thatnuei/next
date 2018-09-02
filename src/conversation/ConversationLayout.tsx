@@ -43,12 +43,14 @@ const SidebarArea = styled.div`
   background-color: ${flist4};
   grid-row: span 2;
   margin-left: 4px;
+  will-change: contents;
 `
 
 const MessagesArea = styled.div`
   background-color: ${flist5};
   overflow-y: auto;
   transform: translateZ(0);
+  will-change: contents;
 `
 
 const ChatboxArea = styled.div`
