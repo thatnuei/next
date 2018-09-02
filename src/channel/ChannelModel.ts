@@ -23,6 +23,9 @@ export class ChannelModel {
   @observable
   mode: ChannelMode = "both"
 
+  // IDEA: add a property for the joined state, e.g. "left" | "joining" | "joined" | "leaving"
+  // so we can render loading spinners in the UI and such
+
   constructor(id: string) {
     this.id = id
   }
