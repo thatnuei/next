@@ -10,6 +10,7 @@ import {
 } from "react-virtualized"
 import { Message } from "../message/Message"
 import { MessageModel } from "../message/MessageModel"
+import { StripedRow } from "../ui/StripedRow"
 
 export interface ConversationMessageListProps {
   messages: MessageModel[]
@@ -48,9 +49,9 @@ export class ConversationMessageList extends React.Component<ConversationMessage
         parent={row.parent}
         rowIndex={row.index}
       >
-        <div style={row.style}>
+        <StripedRow style={row.style}>
           <Message key={model.id} model={model} />
-        </div>
+        </StripedRow>
       </CellMeasurer>
     )
   }
