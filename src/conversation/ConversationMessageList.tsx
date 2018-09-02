@@ -4,15 +4,51 @@ import { Message } from "../message/Message"
 import { MessageModel } from "../message/MessageModel"
 import { styled } from "../ui/styled"
 
+function trace<T>(value: T): T {
+  console.log(value)
+  return value
+}
+
 export interface ConversationMessageListProps {
   messages: MessageModel[]
 }
 
 @observer
 export class ConversationMessageList extends React.Component<ConversationMessageListProps> {
+  scroller = React.createRef<HTMLElement>()
+  scrolledToBottomThreshold = 30
+
+  scrollToBottom() {
+    const scroller = this.scroller.current
+    if (scroller) {
+      scroller.scrollTop = scroller.scrollHeight
+    }
+  }
+
+  componentDidMount() {
+    this.scrollToBottom()
+  }
+
+  getSnapshotBeforeUpdate() {
+    const scroller = this.scroller.current
+
+    const isNearBottom =
+      scroller != null &&
+      scroller.scrollTop >=
+        scroller.scrollHeight - scroller.clientHeight - this.scrolledToBottomThreshold
+
+    return { isNearBottom }
+  }
+
+  componentDidUpdate(_: any, __: any, snapshot: { isNearBottom: boolean }) {
+    if (snapshot.isNearBottom) {
+      this.scrollToBottom()
+    }
+  }
+
   render() {
     return (
-      <ScrollContainer>
+      <ScrollContainer innerRef={this.scroller}>
         {this.props.messages.map((message) => (
           <Message key={message.id} model={message} />
         ))}
