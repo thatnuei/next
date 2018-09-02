@@ -19,7 +19,7 @@ export interface ConversationMessageListProps {
 @observer
 export class ConversationMessageList extends React.Component<ConversationMessageListProps> {
   cellMeasurerCache = new CellMeasurerCache({
-    defaultHeight: 100,
+    defaultHeight: 150,
     fixedWidth: true,
   })
 
