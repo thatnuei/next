@@ -35,6 +35,7 @@ export class ConversationMessageList extends React.Component<ConversationMessage
         rowHeight={this.cellMeasurerCache.rowHeight}
         rowCount={this.props.messages.length}
         rowRenderer={this.renderRow}
+        overscanRowCount={10}
       />
     )
   }
