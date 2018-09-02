@@ -36,6 +36,10 @@ const config = {
   ],
   mode: process.env.NODE_ENV === "production" ? "production" : "development",
   devtool: process.env.NODE_ENV === "production" ? "source-map" : "eval-source-map",
+  performance: {
+    maxAssetSize: Infinity,
+    hints: false,
+  },
 }
 
 module.exports = config
