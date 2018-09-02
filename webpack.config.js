@@ -35,7 +35,8 @@ const config = {
     new CopyPlugin([{ from: publicFolder, to: buildFolder }]),
     new ForkTsCheckerWebpackPlugin(),
   ],
-  mode: "development",
+  mode: process.env.NODE_ENV === "production" ? "production" : "development",
+  devtool: process.env.NODE_ENV === "production" ? "source-map" : "eval-source-map",
 }
 
 module.exports = config

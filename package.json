@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "webpack-serve",
-    "build": "webpack -p",
-    "start": "serve build",
-    "stats": "webpack -p --reporter json > ./stats.json"
+    "build": "cross-env NODE_ENV=production webpack",
+    "serve": "serve build",
+    "stats": "cross-env NODE_ENV=production webpack --reporter json > ./stats.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
     "@mdi/js": "^2.6.95",
     "@mdi/react": "^1.0.0",
+    "cross-env": "^5.2.0",
     "fchat": "^1.2.1",
     "formik": "^1.1.1",
     "mobx": "^5.1.0",
