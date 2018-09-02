@@ -45,7 +45,7 @@ export class ConversationStore {
   }
 
   @computed
-  get activeConversation() {
+  get activeConversation(): ConversationType | undefined {
     const index = clamp(this.activeConversationIndex, 0, this.conversations.length - 1)
     return this.conversations[index]
   }
