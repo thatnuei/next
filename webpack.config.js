@@ -26,7 +26,6 @@ const config = {
     extensions: [".ts", ".tsx", ".js"],
     mainFields: ["module", "jsnext:main", "main"],
   },
-  // @ts-ignore
   plugins: [
     new HtmlPlugin({
       template: join(sourceFolder, "index.html"),
