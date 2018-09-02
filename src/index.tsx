@@ -1,8 +1,7 @@
 import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
-import { Session } from "./session/Session"
-import { SessionProvider } from "./session/SessionContext"
+import { App } from "./app/App"
 import { SessionState } from "./session/SessionState"
 import { applyGlobalStyles } from "./ui/globalStyles"
 
@@ -23,13 +22,7 @@ async function initSession() {
 }
 
 function render() {
-  const root = (
-    <SessionProvider value={session}>
-      <Session state={session} />
-    </SessionProvider>
-  )
-
-  ReactDOM.render(root, document.querySelector("#root"))
+  ReactDOM.render(<App session={session} />, document.querySelector("#root"))
 }
 
 applyGlobalStyles()
@@ -37,5 +30,5 @@ initSession()
 render()
 
 if (module.hot) {
-  module.hot.accept("./session/Session", render)
+  module.hot.accept("./app/App", render)
 }
