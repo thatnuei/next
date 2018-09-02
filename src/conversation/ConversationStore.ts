@@ -1,6 +1,7 @@
 import { action, computed, observable } from "mobx"
 import { ChannelModel } from "../channel/ChannelModel"
 import { ChannelStore } from "../channel/ChannelStore"
+import { clamp } from "../helpers/math"
 import { PrivateChatModel } from "../privateChat/PrivateChatModel"
 import { PrivateChatStore } from "../privateChat/PrivateChatStore"
 
@@ -12,7 +13,7 @@ export type ConversationType = ChannelConversationType | PrivateConversationType
 
 export class ConversationStore {
   @observable.ref
-  activeConversation?: ConversationType
+  activeConversationIndex = 0
 
   constructor(private channelStore: ChannelStore, private privateChatStore: PrivateChatStore) {}
 
@@ -38,9 +39,23 @@ export class ConversationStore {
     )
   }
 
+  @computed
+  get conversations(): ConversationType[] {
+    return [...this.channelConversations, ...this.privateConversations]
+  }
+
+  @computed
+  get activeConversation() {
+    const index = clamp(this.activeConversationIndex, 0, this.conversations.length - 1)
+    return this.conversations[index]
+  }
+
   @action
   setActiveConversation(convo: ConversationType) {
-    this.activeConversation = convo
+    const index = this.conversations.indexOf(convo)
+    if (index > -1) {
+      this.activeConversationIndex = index
+    }
   }
 
   isActive(convo: ConversationType) {
