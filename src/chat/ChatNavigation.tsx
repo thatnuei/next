@@ -13,7 +13,7 @@ export interface ChatNavigationProps {
 export class ChatNavigation extends React.Component<ChatNavigationProps> {
   render() {
     const { conversationStore } = this.props.session
-    const { channelConversations } = conversationStore
+    const { channelConversations, privateConversations } = conversationStore
 
     const channelTabs = channelConversations.map((convo) => (
       <ChatNavigationTab
@@ -25,20 +25,22 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
       />
     ))
 
+    const privateChatTabs = privateConversations.map((convo) => (
+      <ChatNavigationTab
+        key={convo.id}
+        text={convo.model.partner}
+        avatar={convo.model.partner}
+        active={conversationStore.isActive(convo)}
+        onActivate={() => conversationStore.setActiveConversation(convo)}
+      />
+    ))
+
     return (
       <div>
         <ChatNavigationTab text="Console" icon={mdiCodeTags} />
 
         <SectionHeader>PMs</SectionHeader>
-        <ChatNavigationTab
-          text="Subaru-chan"
-          avatar="Subaru-chan"
-          onActivate={() => console.log("activate")}
-          onClose={() => console.log("close")}
-        />
-        <ChatNavigationTab text="Athena Light" avatar="Athena Light" />
-        <ChatNavigationTab text="Akiyama Ai" avatar="Akiyama Ai" />
-        <ChatNavigationTab text="Alli Moon" avatar="Alli Moon" />
+        {privateChatTabs}
 
         <SectionHeader>Channels</SectionHeader>
         {channelTabs}

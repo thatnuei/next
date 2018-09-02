@@ -1,5 +1,6 @@
 import React from "react"
 import { Channel } from "../channel/Channel"
+import { PrivateChat } from "../privateChat/PrivateChat"
 import { ConversationType } from "./ConversationStore"
 
 export interface ConversationProps {
@@ -12,6 +13,8 @@ export class Conversation extends React.Component<ConversationProps> {
     switch (data.type) {
       case "channel":
         return <Channel model={data.model} />
+      case "privateChat":
+        return <PrivateChat model={data.model} />
     }
   }
 }

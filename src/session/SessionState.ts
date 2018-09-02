@@ -5,6 +5,7 @@ import { ChatState } from "../chat/ChatState"
 import { ConversationStore } from "../conversation/ConversationStore"
 import { SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
 import { fetchCharacters, fetchTicket } from "../flist/api"
+import { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { UserState } from "../user/UserState"
 import { loadAuthData, saveAuthData } from "./storage"
 
@@ -16,7 +17,8 @@ export class SessionState {
   chat = new ChatState(this.connection)
   characters = new CharacterStore(this.connection)
   channels = new ChannelStore(this.connection, this.chat)
-  conversationStore = new ConversationStore(this.channels)
+  privateChatStore = new PrivateChatStore(this.connection)
+  conversationStore = new ConversationStore(this.channels, this.privateChatStore)
 
   @observable
   screen: SessionScreen = "setup"
