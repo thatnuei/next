@@ -12,12 +12,12 @@ export interface ChannelProps {
 @observer
 export class Channel extends React.Component<ChannelProps> {
   render() {
-    const { model } = this.props
+    const channel = this.props.model
     return (
       <ConversationLayout
-        header={<h1>{model.title}</h1>}
-        messages={<ConversationMessageList key={model.id} messages={model.messages} />}
-        users={<ConversationUserList key={model.id} users={model.users} />}
+        header={<h1>{channel.title}</h1>}
+        messages={<ConversationMessageList key={channel.id} messages={channel.messages} />}
+        users={<ConversationUserList key={channel.id} users={channel.users} />}
       />
     )
   }
