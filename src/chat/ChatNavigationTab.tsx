@@ -1,8 +1,8 @@
 import { mdiClose } from "@mdi/js"
-import { Icon } from "@mdi/react"
 import React from "react"
 import { Avatar } from "../character/Avatar"
-import { clouds, flist4 } from "../ui/colors"
+import { flist4 } from "../ui/colors"
+import { Icon } from "../ui/Icon"
 import { css, styled } from "../ui/styled"
 
 type ChatNavigationTabProps = {
@@ -19,14 +19,14 @@ export const ChatNavigationTab = (props: ChatNavigationTabProps) => {
     <Container {...props}>
       <TitleContainer {...props} onMouseDown={() => props.onActivate && props.onActivate()}>
         <IconContainer>
-          {props.icon && <Icon path={props.icon} size={1} color={clouds} />}
+          {props.icon && <Icon path={props.icon} />}
           {props.avatar && <Avatar name={props.avatar} size={24} />}
         </IconContainer>
         <TitleText>{props.text}</TitleText>
       </TitleContainer>
       {props.onClose && (
         <CloseButton {...props} onMouseDown={() => props.onClose && props.onClose()}>
-          <Icon path={mdiClose} size={0.8} color={clouds} />
+          <Icon path={mdiClose} size={0.8} />
         </CloseButton>
       )}
     </Container>

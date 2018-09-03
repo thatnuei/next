@@ -1,7 +1,6 @@
 import { mdiAccountEdit, mdiForum, mdiLogout, mdiSettings } from "@mdi/js"
-import Icon from "@mdi/react"
 import React from "react"
-import { clouds } from "../ui/colors"
+import { Icon } from "../ui/Icon"
 import { styled } from "../ui/styled"
 
 export class ChatActions extends React.Component {
@@ -32,7 +31,7 @@ const Container = styled.div`
 
 const Action = (props: { title: string; icon: string }) => (
   <ActionAnchor title={props.title}>
-    <Icon path={props.icon} size={1.5} color={clouds} />
+    <Icon path={props.icon} size={1.5} />
   </ActionAnchor>
 )
 
