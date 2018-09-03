@@ -29,6 +29,15 @@ export function applyGlobalStyles() {
       line-height: 1.2;
     }
 
+    button {
+      background: transparent;
+      margin: 0;
+      padding: 0;
+      font: inherit;
+      color: inherit;
+      border: none;
+    }
+
     a {
       font: inherit;
       color: inherit;
