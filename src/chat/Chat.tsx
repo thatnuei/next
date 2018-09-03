@@ -49,7 +49,9 @@ export class Chat extends React.Component<Props> {
     return (
       <ViewContainer>
         <Responsive minWidth={sidebarBreakpoint}>
-          <ChatSidebar session={session} />
+          <div style={{ marginRight: "4px" }}>
+            <ChatSidebar session={session} />
+          </div>
         </Responsive>
 
         <ChatConversationContainer>
