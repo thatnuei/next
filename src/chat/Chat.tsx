@@ -101,8 +101,4 @@ const SidebarToggle = styled.button`
 const SidebarOverlayContainer = styled.div`
   background-color: ${darken(0.05, flist5)};
   height: 100%;
-
-  & > * {
-    height: 100%;
-  }
 `
