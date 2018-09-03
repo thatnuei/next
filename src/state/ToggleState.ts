@@ -4,8 +4,8 @@ export class ToggleState {
   @observable
   enabled: boolean
 
-  constructor(value = false) {
-    this.enabled = value
+  constructor(initialState: boolean) {
+    this.enabled = initialState
   }
 
   @action.bound
