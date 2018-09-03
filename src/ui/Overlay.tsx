@@ -2,11 +2,11 @@ import React from "react"
 import { flist3 } from "./colors"
 import { styled } from "./styled"
 
-export type ModalProps = {
+export type OverlayProps = {
   panelWidth?: number | string
 }
 
-export class Modal extends React.Component<ModalProps> {
+export class Overlay extends React.Component<OverlayProps> {
   render() {
     return (
       <Shade>
@@ -28,7 +28,7 @@ const Shade = styled.div`
   display: flex;
 `
 
-const Panel = styled.div<ModalProps>`
+const Panel = styled.div<OverlayProps>`
   background-color: ${flist3};
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
   width: ${(props) =>

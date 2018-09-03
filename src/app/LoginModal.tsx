@@ -4,7 +4,7 @@ import { SessionState } from "../session/SessionState"
 import { Button } from "../ui/Button"
 import { Form } from "../ui/Form"
 import { FormField } from "../ui/FormField"
-import { Modal } from "../ui/Modal"
+import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
 
@@ -43,7 +43,7 @@ export class LoginModal extends React.Component<Props> {
 
   private renderForm = (props: FormikProps<LoginValues>) => {
     return (
-      <Modal panelWidth="18rem">
+      <Overlay panelWidth="18rem">
         <ContentContainer>
           <HeaderText>next</HeaderText>
           <Form onSubmit={props.handleSubmit}>
@@ -67,7 +67,7 @@ export class LoginModal extends React.Component<Props> {
             <Button type="submit">Submit</Button>
           </Form>
         </ContentContainer>
-      </Modal>
+      </Overlay>
     )
   }
 }

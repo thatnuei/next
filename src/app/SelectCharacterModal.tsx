@@ -7,7 +7,7 @@ import { SessionState } from "../session/SessionState"
 import { Button } from "../ui/Button"
 import { Form } from "../ui/Form"
 import { FormField } from "../ui/FormField"
-import { Modal } from "../ui/Modal"
+import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 
 type FormValues = {
@@ -35,7 +35,7 @@ export class SelectCharacterModal extends React.Component<Props> {
 
   render() {
     return (
-      <Modal>
+      <Overlay>
         <ContentContainer>
           <HeaderText>Select a Character</HeaderText>
           {this.lastCharacter ? (
@@ -48,7 +48,7 @@ export class SelectCharacterModal extends React.Component<Props> {
             />
           ) : null}
         </ContentContainer>
-      </Modal>
+      </Overlay>
     )
   }
 
