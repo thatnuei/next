@@ -2,6 +2,7 @@ import { Formik, FormikProps } from "formik"
 import React from "react"
 import { SessionState } from "../session/SessionState"
 import { Button } from "../ui/Button"
+import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
 import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
@@ -73,6 +74,7 @@ export class LoginModal extends React.Component<Props> {
 }
 
 const ContentContainer = styled.div`
+  background-color: ${flist3};
   width: 18rem;
   max-width: 100%;
   padding: 1rem;

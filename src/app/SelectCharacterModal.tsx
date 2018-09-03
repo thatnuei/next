@@ -5,6 +5,7 @@ import React from "react"
 import { Avatar } from "../character/Avatar"
 import { SessionState } from "../session/SessionState"
 import { Button } from "../ui/Button"
+import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
 import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
@@ -102,6 +103,7 @@ export class SelectCharacterModal extends React.Component<Props> {
 }
 
 const ContentContainer = styled.div`
+  background-color: ${flist3};
   padding: 1rem;
 `
 
