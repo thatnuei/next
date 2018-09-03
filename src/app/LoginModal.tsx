@@ -43,7 +43,7 @@ export class LoginModal extends React.Component<Props> {
 
   private renderForm = (props: FormikProps<LoginValues>) => {
     return (
-      <Overlay panelWidth="18rem">
+      <Overlay>
         <ContentContainer>
           <HeaderText>next</HeaderText>
           <Form onSubmit={props.handleSubmit}>
@@ -73,6 +73,8 @@ export class LoginModal extends React.Component<Props> {
 }
 
 const ContentContainer = styled.div`
+  width: 18rem;
+  max-width: 100%;
   padding: 1rem;
 `
 
