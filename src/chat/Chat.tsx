@@ -1,9 +1,18 @@
+import { mdiMenu } from "@mdi/js"
 import { observer } from "mobx-react"
+import { darken } from "polished"
 import React from "react"
-import { Conversation } from "../conversation/Conversation"
+import Responsive from "react-responsive"
+import { ConversationLayout } from "../conversation/ConversationLayout"
+import { ConversationMessageList } from "../conversation/ConversationMessageList"
+import { ConversationUserList } from "../conversation/ConversationUserList"
 import { SessionState } from "../session/SessionState"
-import { flist4 } from "../ui/colors"
+import { ToggleState } from "../state/ToggleState"
+import { flist5 } from "../ui/colors"
+import { Icon } from "../ui/Icon"
+import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
+import { sidebarBreakpoint } from "./breakpoints"
 import { ChatSidebar } from "./ChatSidebar"
 
 type Props = {
@@ -12,16 +21,48 @@ type Props = {
 
 @observer
 export class Chat extends React.Component<Props> {
+  sidebarDisplay = new ToggleState(true)
+
   render() {
     const { session } = this.props
     const { activeConversation } = session.conversationStore
 
+    const header = (
+      <HeaderContainer>
+        <Responsive maxWidth={sidebarBreakpoint}>
+          <SidebarToggle onClick={this.sidebarDisplay.enable}>
+            <Icon path={mdiMenu} />
+          </SidebarToggle>
+        </Responsive>
+      </HeaderContainer>
+    )
+
+    const messageList = activeConversation && (
+      <ConversationMessageList messages={activeConversation.model.messages} />
+    )
+
+    const userList = activeConversation &&
+      "users" in activeConversation.model && (
+        <ConversationUserList users={activeConversation.model.users} />
+      )
+
     return (
       <ViewContainer>
-        <ChatSidebar session={session} />
+        <Responsive minWidth={sidebarBreakpoint}>
+          <ChatSidebar session={session} />
+        </Responsive>
+
         <ChatConversationContainer>
-          {activeConversation && <Conversation data={activeConversation} />}
+          <ConversationLayout header={header} messages={messageList} users={userList} />
         </ChatConversationContainer>
+
+        {this.sidebarDisplay.enabled && (
+          <Overlay anchor="left" onShadeClick={this.sidebarDisplay.disable}>
+            <SidebarOverlayContainer>
+              <ChatSidebar session={session} />
+            </SidebarOverlayContainer>
+          </Overlay>
+        )}
       </ViewContainer>
     )
   }
@@ -41,7 +82,21 @@ const ChatConversationContainer = styled.div`
   flex-grow: 1;
 `
 
-const Body = styled.div`
-  flex-grow: 1;
-  background-color: ${flist4};
+const HeaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
+`
+
+const SidebarToggle = styled.button`
+  padding: 0.5rem;
+`
+
+const SidebarOverlayContainer = styled.div`
+  background-color: ${darken(0.05, flist5)};
+  height: 100%;
+
+  & > * {
+    height: 100%;
+  }
 `
