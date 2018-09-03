@@ -1,8 +1,8 @@
-import { mdiMenu } from "@mdi/js"
+import { mdiAccountMultiple, mdiMenu } from "@mdi/js"
 import { observer } from "mobx-react"
 import { darken } from "polished"
 import React from "react"
-import Responsive from "react-responsive"
+import MediaQuery from "react-responsive"
 import { ConversationLayout } from "../conversation/ConversationLayout"
 import { ConversationMessageList } from "../conversation/ConversationMessageList"
 import { ConversationUserList } from "../conversation/ConversationUserList"
@@ -12,7 +12,7 @@ import { flist5 } from "../ui/colors"
 import { Icon } from "../ui/Icon"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
-import { sidebarBreakpoint } from "./breakpoints"
+import { sidebarBreakpoint, userListBreakpoint } from "./breakpoints"
 import { ChatSidebar } from "./ChatSidebar"
 
 type Props = {
@@ -22,6 +22,7 @@ type Props = {
 @observer
 export class Chat extends React.Component<Props> {
   sidebarDisplay = new ToggleState(false)
+  userListDisplay = new ToggleState(false)
 
   render() {
     const { session } = this.props
@@ -29,11 +30,17 @@ export class Chat extends React.Component<Props> {
 
     const header = (
       <HeaderContainer>
-        <Responsive maxWidth={sidebarBreakpoint}>
+        <MediaQuery maxWidth={sidebarBreakpoint}>
           <SidebarToggle onClick={this.sidebarDisplay.enable}>
             <Icon path={mdiMenu} />
           </SidebarToggle>
-        </Responsive>
+        </MediaQuery>
+
+        <MediaQuery maxWidth={userListBreakpoint}>
+          <SidebarToggle onClick={this.userListDisplay.enable}>
+            <Icon path={mdiAccountMultiple} />
+          </SidebarToggle>
+        </MediaQuery>
       </HeaderContainer>
     )
 
@@ -41,24 +48,28 @@ export class Chat extends React.Component<Props> {
       <ConversationMessageList messages={activeConversation.model.messages} />
     )
 
-    const userList = activeConversation &&
-      "users" in activeConversation.model && (
-        <ConversationUserList users={activeConversation.model.users} />
-      )
+    const userList = (
+      <MediaQuery minWidth={userListBreakpoint}>
+        {activeConversation &&
+          "users" in activeConversation.model && (
+            <ConversationUserList users={activeConversation.model.users} />
+          )}
+      </MediaQuery>
+    )
 
     return (
       <ViewContainer>
-        <Responsive minWidth={sidebarBreakpoint}>
+        <MediaQuery minWidth={sidebarBreakpoint}>
           <div style={{ marginRight: "4px" }}>
             <ChatSidebar session={session} />
           </div>
-        </Responsive>
+        </MediaQuery>
 
         <ChatConversationContainer>
           <ConversationLayout header={header} messages={messageList} users={userList} />
         </ChatConversationContainer>
 
-        <Responsive maxWidth={sidebarBreakpoint}>
+        <MediaQuery maxWidth={sidebarBreakpoint}>
           <Overlay
             anchor="left"
             visible={this.sidebarDisplay.enabled}
@@ -68,7 +79,20 @@ export class Chat extends React.Component<Props> {
               <ChatSidebar session={session} />
             </SidebarOverlayContainer>
           </Overlay>
-        </Responsive>
+        </MediaQuery>
+
+        <MediaQuery maxWidth={userListBreakpoint}>
+          <Overlay
+            anchor="right"
+            visible={this.userListDisplay.enabled}
+            onShadeClick={this.userListDisplay.disable}
+          >
+            {activeConversation &&
+              "users" in activeConversation.model && (
+                <ConversationUserList users={activeConversation.model.users} />
+              )}
+          </Overlay>
+        </MediaQuery>
       </ViewContainer>
     )
   }
@@ -90,8 +114,9 @@ const ChatConversationContainer = styled.div`
 
 const HeaderContainer = styled.div`
   display: flex;
-  align-items: center;
   height: 2.5rem;
+  align-items: center;
+  justify-content: space-between;
 `
 
 const SidebarToggle = styled.button`
