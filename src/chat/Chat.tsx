@@ -56,13 +56,17 @@ export class Chat extends React.Component<Props> {
           <ConversationLayout header={header} messages={messageList} users={userList} />
         </ChatConversationContainer>
 
-        {this.sidebarDisplay.enabled && (
-          <Overlay anchor="left" onShadeClick={this.sidebarDisplay.disable}>
+        <Responsive maxWidth={sidebarBreakpoint}>
+          <Overlay
+            anchor="left"
+            visible={this.sidebarDisplay.enabled}
+            onShadeClick={this.sidebarDisplay.disable}
+          >
             <SidebarOverlayContainer>
               <ChatSidebar session={session} />
             </SidebarOverlayContainer>
           </Overlay>
-        )}
+        </Responsive>
       </ViewContainer>
     )
   }
