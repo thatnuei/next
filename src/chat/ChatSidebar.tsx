@@ -39,6 +39,8 @@ const Container = styled.div`
   grid-row-gap: 4px;
 
   flex-shrink: 0;
+
+  height: 100%;
 `
 
 const ChatActionsContainer = styled.div`
