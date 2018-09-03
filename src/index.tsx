@@ -31,4 +31,5 @@ render()
 
 if (module.hot) {
   module.hot.accept("./app/App", render)
+  module.hot.accept("./ui/globalStyles", applyGlobalStyles)
 }
