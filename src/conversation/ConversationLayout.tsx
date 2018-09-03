@@ -14,7 +14,7 @@ export const ConversationLayout = observer((props: Props) => {
   return (
     <Container>
       <HeaderArea>{props.header}</HeaderArea>
-      <SidebarArea>{props.users}</SidebarArea>
+      <UserListArea>{props.users}</UserListArea>
       <MessagesArea>{props.messages}</MessagesArea>
       <ChatboxArea>
         <Chatbox onSubmit={console.log} />
@@ -38,18 +38,19 @@ const HeaderArea = styled.div`
   overflow-y: auto;
 `
 
-const SidebarArea = styled.div`
-  background-color: ${flist4};
+const UserListArea = styled.div`
   grid-row: span 2;
-  margin-left: 4px;
-  will-change: contents;
+
+  /* make spacing dependent on the presence of the child element */
+  > :first-child {
+    margin-left: 4px;
+  }
 `
 
 const MessagesArea = styled.div`
   background-color: ${flist5};
   overflow-y: auto;
   transform: translateZ(0);
-  will-change: contents;
 `
 
 const ChatboxArea = styled.div`
