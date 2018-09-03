@@ -21,7 +21,7 @@ type Props = {
 
 @observer
 export class Chat extends React.Component<Props> {
-  sidebarDisplay = new ToggleState(true)
+  sidebarDisplay = new ToggleState(false)
 
   render() {
     const { session } = this.props
