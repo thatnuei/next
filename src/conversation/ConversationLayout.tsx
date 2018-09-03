@@ -36,7 +36,6 @@ const Container = styled.div`
 const HeaderArea = styled.div`
   background-color: ${flist4};
   overflow-y: auto;
-  padding: 0.5rem 0.7rem;
 `
 
 const SidebarArea = styled.div`
