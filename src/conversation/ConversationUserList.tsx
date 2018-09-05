@@ -57,7 +57,7 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
   }
 
   private renderListRow: ListRowRenderer = (row) => {
-    const userName = this.filteredUsers[row.index]
+    const userName: string | undefined = this.filteredUsers[row.index]
     return (
       <UserListItem key={row.key} style={row.style}>
         {userName && <CharacterName name={userName} />}
