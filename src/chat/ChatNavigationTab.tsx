@@ -56,9 +56,6 @@ const TitleContainer = styled.a.attrs({ href: "#" })<ChatNavigationTabProps>`
   display: flex;
   align-items: center;
 
-  white-space: nowrap;
-  overflow: hidden;
-
   ${(props) => (props.active ? "" : inactiveStyle)};
 `
 
@@ -73,10 +70,6 @@ const IconContainer = styled.div`
 `
 
 const TitleText = styled.div`
-  text-overflow: ellipsis;
-  flex-grow: 1;
-  overflow: hidden;
-
   /* fixes vertial alignment */
   position: relative;
   top: 1px;
