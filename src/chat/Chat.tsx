@@ -34,15 +34,15 @@ export class Chat extends React.Component<Props> {
     const header = (
       <HeaderContainer>
         <MediaQuery maxWidth={sidebarBreakpoint}>
-          <SidebarToggle onClick={this.sidebarDisplay.enable}>
+          <IconButton onClick={this.sidebarDisplay.enable}>
             <Icon path={mdiMenu} />
-          </SidebarToggle>
+          </IconButton>
         </MediaQuery>
 
         <MediaQuery maxWidth={userListBreakpoint}>
-          <SidebarToggle onClick={this.userListDisplay.enable}>
+          <IconButton onClick={this.userListDisplay.enable}>
             <Icon path={mdiAccountMultiple} />
-          </SidebarToggle>
+          </IconButton>
         </MediaQuery>
       </HeaderContainer>
     )
@@ -121,7 +121,7 @@ const HeaderContainer = styled.div`
   justify-content: space-between;
 `
 
-const SidebarToggle = styled.button`
+const IconButton = styled.button`
   padding: 0.5rem;
 `
 
