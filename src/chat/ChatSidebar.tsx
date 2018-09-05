@@ -29,7 +29,7 @@ export class ChatSidebar extends React.Component<Props> {
 }
 
 const Container = styled.div`
-  width: 18rem;
+  width: 16rem;
 
   display: grid;
   grid-template-columns: auto 1fr;

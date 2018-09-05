@@ -15,8 +15,8 @@ import { styled } from "../ui/styled"
 import { ChatNavigation } from "./ChatNavigation"
 import { ChatSidebar } from "./ChatSidebar"
 
-const sidebarBreakpoint = 1000
-const userListBreakpoint = 850
+const sidebarBreakpoint = 750
+const userListBreakpoint = 1000
 
 type Props = {
   session: SessionState
@@ -38,6 +38,8 @@ export class Chat extends React.Component<Props> {
             <Icon path={mdiMenu} />
           </IconButton>
         </MediaQuery>
+
+        <div style={{ flexGrow: 1 }} />
 
         <MediaQuery maxWidth={userListBreakpoint}>
           <IconButton onClick={this.userListDisplay.enable}>
@@ -76,25 +78,21 @@ export class Chat extends React.Component<Props> {
           />
         </ChatConversationContainer>
 
-        <MediaQuery maxWidth={sidebarBreakpoint}>
-          <Overlay
-            anchor="left"
-            visible={this.sidebarDisplay.enabled}
-            onShadeClick={this.sidebarDisplay.disable}
-          >
-            <SidebarOverlayContainer>{sidebar}</SidebarOverlayContainer>
-          </Overlay>
-        </MediaQuery>
+        <Overlay
+          anchor="left"
+          visible={this.sidebarDisplay.enabled}
+          onShadeClick={this.sidebarDisplay.disable}
+        >
+          <SidebarOverlayContainer>{sidebar}</SidebarOverlayContainer>
+        </Overlay>
 
-        <MediaQuery maxWidth={userListBreakpoint}>
-          <Overlay
-            anchor="right"
-            visible={this.userListDisplay.enabled}
-            onShadeClick={this.userListDisplay.disable}
-          >
-            {userList}
-          </Overlay>
-        </MediaQuery>
+        <Overlay
+          anchor="right"
+          visible={this.userListDisplay.enabled}
+          onShadeClick={this.userListDisplay.disable}
+        >
+          {userList}
+        </Overlay>
       </ViewContainer>
     )
   }
@@ -118,7 +116,6 @@ const HeaderContainer = styled.div`
   display: flex;
   height: 2.5rem;
   align-items: center;
-  justify-content: space-between;
 `
 
 const IconButton = styled.button`
