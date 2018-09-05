@@ -45,7 +45,7 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
     ))
 
     return (
-      <div>
+      <>
         <ChatNavigationTab text="Console" icon={mdiCodeTags} />
 
         <SectionHeader>PMs</SectionHeader>
@@ -53,7 +53,7 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
 
         <SectionHeader>Channels</SectionHeader>
         {channelTabs}
-      </div>
+      </>
     )
   }
 }
