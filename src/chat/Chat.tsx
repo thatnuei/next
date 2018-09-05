@@ -48,14 +48,10 @@ export class Chat extends React.Component<Props> {
       <ConversationMessageList messages={activeConversation.model.messages} />
     )
 
-    const userList = (
-      <MediaQuery minWidth={userListBreakpoint}>
-        {activeConversation &&
-          "users" in activeConversation.model && (
-            <ConversationUserList users={activeConversation.model.users} />
-          )}
-      </MediaQuery>
-    )
+    const userList = activeConversation &&
+      activeConversation.type === "channel" && (
+        <ConversationUserList users={activeConversation.model.users} />
+      )
 
     return (
       <ViewContainer>
@@ -66,7 +62,11 @@ export class Chat extends React.Component<Props> {
         </MediaQuery>
 
         <ChatConversationContainer>
-          <ConversationLayout header={header} messages={messageList} users={userList} />
+          <ConversationLayout
+            header={header}
+            messageList={messageList}
+            userList={<MediaQuery minWidth={userListBreakpoint}>{userList}</MediaQuery>}
+          />
         </ChatConversationContainer>
 
         <MediaQuery maxWidth={sidebarBreakpoint}>
@@ -87,10 +87,7 @@ export class Chat extends React.Component<Props> {
             visible={this.userListDisplay.enabled}
             onShadeClick={this.userListDisplay.disable}
           >
-            {activeConversation &&
-              "users" in activeConversation.model && (
-                <ConversationUserList users={activeConversation.model.users} />
-              )}
+            {userList}
           </Overlay>
         </MediaQuery>
       </ViewContainer>

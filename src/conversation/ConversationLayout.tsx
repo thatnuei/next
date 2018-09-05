@@ -6,16 +6,16 @@ import { styled } from "../ui/styled"
 
 type Props = {
   header?: React.ReactNode
-  messages?: React.ReactNode
-  users?: React.ReactNode
+  messageList?: React.ReactNode
+  userList?: React.ReactNode
 }
 
 export const ConversationLayout = observer((props: Props) => {
   return (
     <Container>
       <HeaderArea>{props.header}</HeaderArea>
-      <UserListArea>{props.users}</UserListArea>
-      <MessagesArea>{props.messages}</MessagesArea>
+      <UserListArea>{props.userList}</UserListArea>
+      <MessagesArea>{props.messageList}</MessagesArea>
       <ChatboxArea>
         <Chatbox onSubmit={console.log} />
       </ChatboxArea>
