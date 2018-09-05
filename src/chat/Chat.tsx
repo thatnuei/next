@@ -15,6 +15,9 @@ import { styled } from "../ui/styled"
 import { sidebarBreakpoint, userListBreakpoint } from "./breakpoints"
 import { ChatSidebar } from "./ChatSidebar"
 
+const sidebarBreakpoint = 1000
+const userListBreakpoint = 850
+
 type Props = {
   session: SessionState
 }
