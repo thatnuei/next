@@ -12,7 +12,7 @@ import { flist5 } from "../ui/colors"
 import { Icon } from "../ui/Icon"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
-import { sidebarBreakpoint, userListBreakpoint } from "./breakpoints"
+import { ChatNavigation } from "./ChatNavigation"
 import { ChatSidebar } from "./ChatSidebar"
 
 const sidebarBreakpoint = 1000
@@ -56,12 +56,16 @@ export class Chat extends React.Component<Props> {
         <ConversationUserList users={activeConversation.model.users} />
       )
 
+    const navigation = (
+      <ChatNavigation session={session} onTabActivate={this.sidebarDisplay.disable} />
+    )
+
+    const sidebar = <ChatSidebar session={session} navigation={navigation} />
+
     return (
       <ViewContainer>
         <MediaQuery minWidth={sidebarBreakpoint}>
-          <div style={{ marginRight: "4px" }}>
-            <ChatSidebar session={session} />
-          </div>
+          <div style={{ marginRight: "4px" }}>{sidebar}</div>
         </MediaQuery>
 
         <ChatConversationContainer>
@@ -78,9 +82,7 @@ export class Chat extends React.Component<Props> {
             visible={this.sidebarDisplay.enabled}
             onShadeClick={this.sidebarDisplay.disable}
           >
-            <SidebarOverlayContainer>
-              <ChatSidebar session={session} />
-            </SidebarOverlayContainer>
+            <SidebarOverlayContainer>{sidebar}</SidebarOverlayContainer>
           </Overlay>
         </MediaQuery>
 

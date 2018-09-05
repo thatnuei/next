@@ -7,6 +7,7 @@ import { ChatNavigationTab } from "./ChatNavigationTab"
 
 export interface ChatNavigationProps {
   session: SessionState
+  onTabActivate: () => void
 }
 
 @observer
@@ -21,7 +22,10 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
         text={convo.model.title}
         icon={mdiEarth}
         active={conversationStore.isActive(convo)}
-        onActivate={() => conversationStore.setActiveConversation(convo)}
+        onActivate={() => {
+          conversationStore.setActiveConversation(convo)
+          this.props.onTabActivate()
+        }}
         onClose={() => channels.leaveChannel(convo.model.id)}
       />
     ))
@@ -32,7 +36,10 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
         text={convo.model.partner}
         avatar={convo.model.partner}
         active={conversationStore.isActive(convo)}
-        onActivate={() => conversationStore.setActiveConversation(convo)}
+        onActivate={() => {
+          conversationStore.setActiveConversation(convo)
+          this.props.onTabActivate()
+        }}
         onClose={() => privateChatStore.closeChat(convo.model.partner)}
       />
     ))
