@@ -1,7 +1,7 @@
 import { observer } from "mobx-react"
 import React from "react"
-import { ChannelModel } from "../channel/ChannelModel"
 import { css, styled } from "../ui/styled"
+import { ChannelModel } from "./ChannelModel"
 
 export interface ChannelFilterProps {
   channel: ChannelModel

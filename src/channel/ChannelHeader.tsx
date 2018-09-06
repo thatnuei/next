@@ -1,7 +1,7 @@
 import React from "react"
-import { ChannelModel } from "../channel/ChannelModel"
 import { styled } from "../ui/styled"
 import { ChannelFilter } from "./ChannelFilter"
+import { ChannelModel } from "./ChannelModel"
 
 export interface ChannelHeaderProps {
   channel: ChannelModel
