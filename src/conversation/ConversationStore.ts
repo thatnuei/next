@@ -1,15 +1,8 @@
 import { action, computed, observable } from "mobx"
-import { ChannelModel } from "../channel/ChannelModel"
 import { ChannelStore } from "../channel/ChannelStore"
 import { clamp } from "../helpers/math"
-import { PrivateChatModel } from "../privateChat/PrivateChatModel"
 import { PrivateChatStore } from "../privateChat/PrivateChatStore"
-
-export type ChannelConversationType = { type: "channel"; id: string; model: ChannelModel }
-
-export type PrivateConversationType = { type: "privateChat"; id: string; model: PrivateChatModel }
-
-export type ConversationType = ChannelConversationType | PrivateConversationType
+import { ConversationModel } from "./ConversationModel"
 
 export class ConversationStore {
   @observable.ref
@@ -19,47 +12,35 @@ export class ConversationStore {
 
   @computed
   get channelConversations() {
-    return this.channelStore.joinedChannels.sort((a, b) => a.title.localeCompare(b.title)).map(
-      (channel): ChannelConversationType => ({
-        type: "channel",
-        id: `channel-${channel.id}`,
-        model: channel,
-      }),
-    )
+    return this.channelStore.joinedChannels.sort((a, b) => a.title.localeCompare(b.title))
   }
 
   @computed
   get privateConversations() {
-    return this.privateChatStore.openChats.sort((a, b) => a.partner.localeCompare(b.partner)).map(
-      (chat): PrivateConversationType => ({
-        type: "privateChat",
-        id: `privateChat-${chat.partner}`,
-        model: chat,
-      }),
-    )
+    return this.privateChatStore.openChats.sort((a, b) => a.partner.localeCompare(b.partner))
   }
 
   @computed
-  get conversations(): ConversationType[] {
+  get conversations(): ConversationModel[] {
     return [...this.channelConversations, ...this.privateConversations]
   }
 
   @computed
-  get activeConversation(): ConversationType | undefined {
+  get activeConversation(): ConversationModel | undefined {
     const index = clamp(this.activeConversationIndex, 0, this.conversations.length - 1)
     return this.conversations[index]
   }
 
   @action
-  setActiveConversation(convo: ConversationType) {
+  setActiveConversation(convo: ConversationModel) {
     const index = this.conversations.indexOf(convo)
     if (index > -1) {
       this.activeConversationIndex = index
     }
   }
 
-  isActive(convo: ConversationType) {
+  isActive(convo: ConversationModel) {
     const current = this.activeConversation
-    return current && current.id === convo.id
+    return current !== undefined && current.id === convo.id
   }
 }

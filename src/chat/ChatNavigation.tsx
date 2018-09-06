@@ -19,28 +19,28 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
     const channelTabs = channelConversations.map((convo) => (
       <ChatNavigationTab
         key={convo.id}
-        text={convo.model.title}
+        text={convo.title}
         icon={mdiEarth}
         active={conversationStore.isActive(convo)}
         onActivate={() => {
           conversationStore.setActiveConversation(convo)
           this.props.onTabActivate()
         }}
-        onClose={() => channels.leaveChannel(convo.model.id)}
+        onClose={() => channels.leaveChannel(convo.id)}
       />
     ))
 
     const privateChatTabs = privateConversations.map((convo) => (
       <ChatNavigationTab
         key={convo.id}
-        text={convo.model.partner}
-        avatar={convo.model.partner}
+        text={convo.partner}
+        avatar={convo.partner}
         active={conversationStore.isActive(convo)}
         onActivate={() => {
           conversationStore.setActiveConversation(convo)
           this.props.onTabActivate()
         }}
-        onClose={() => privateChatStore.closeChat(convo.model.partner)}
+        onClose={() => privateChatStore.closeChat(convo.partner)}
       />
     ))
 

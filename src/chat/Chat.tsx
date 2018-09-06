@@ -3,6 +3,7 @@ import { observer } from "mobx-react"
 import { darken } from "polished"
 import React from "react"
 import MediaQuery from "react-responsive"
+import { ChannelModel } from "../channel/ChannelModel"
 import { ConversationLayout } from "../conversation/ConversationLayout"
 import { ConversationMessageList } from "../conversation/ConversationMessageList"
 import { ConversationUserList } from "../conversation/ConversationUserList"
@@ -50,12 +51,12 @@ export class Chat extends React.Component<Props> {
     )
 
     const messageList = activeConversation && (
-      <ConversationMessageList messages={activeConversation.model.messages} />
+      <ConversationMessageList messages={activeConversation.messages} />
     )
 
     const userList = activeConversation &&
-      activeConversation.type === "channel" && (
-        <ConversationUserList users={activeConversation.model.users} />
+      activeConversation instanceof ChannelModel && (
+        <ConversationUserList users={activeConversation.users} />
       )
 
     const navigation = (

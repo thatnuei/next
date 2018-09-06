@@ -1,19 +1,20 @@
 import { action, observable } from "mobx"
+import { ConversationModel } from "../conversation/ConversationModel"
 import { MessageModel } from "../message/MessageModel"
 
 type ChannelMode = "chat" | "ads" | "both"
 
-export class ChannelModel {
+export class ChannelModel implements ConversationModel {
   id: string
+
+  @observable
+  messages: MessageModel[] = []
 
   @observable
   title = ""
 
   @observable
   description = ""
-
-  @observable
-  messages: MessageModel[] = []
 
   users = observable.array<string>()
 
