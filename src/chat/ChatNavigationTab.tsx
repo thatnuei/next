@@ -41,10 +41,10 @@ const Container = styled.div<ChatNavigationTabProps>`
 `
 
 const inactiveStyle = css`
-  opacity: 0.5;
+  opacity: 0.3;
 
   &:hover {
-    opacity: 0.75;
+    opacity: 0.5;
   }
 `
 
