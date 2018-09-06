@@ -14,7 +14,7 @@ export class ChannelFilter extends React.Component<ChannelFilterProps> {
 
     if (channel.mode === "both") {
       return (
-        <div>
+        <Container>
           <FilterLink active={channel.filter === "both"} onClick={() => channel.setFilter("both")}>
             Both
           </FilterLink>
@@ -24,16 +24,16 @@ export class ChannelFilter extends React.Component<ChannelFilterProps> {
           <FilterLink active={channel.filter === "ads"} onClick={() => channel.setFilter("ads")}>
             Ads
           </FilterLink>
-        </div>
+        </Container>
       )
     }
 
     return (
-      <Disabled>
+      <Container disabled>
         <FilterLink>Both</FilterLink>
         <FilterLink active={channel.mode === "chat"}>Chat</FilterLink>
         <FilterLink active={channel.mode === "ads"}>Ads</FilterLink>
-      </Disabled>
+      </Container>
     )
   }
 }
@@ -44,6 +44,8 @@ const inactiveStyle = css`
   &:hover {
     opacity: 0.7;
   }
+
+  transition: 0.3s opacity;
 `
 
 const FilterLink = styled.a.attrs({ href: "#" })<{ active?: boolean }>`
@@ -51,7 +53,12 @@ const FilterLink = styled.a.attrs({ href: "#" })<{ active?: boolean }>`
   ${(props) => (props.active ? "" : inactiveStyle)};
 `
 
-const Disabled = styled.div`
+const disabledStyle = css`
   opacity: 0.5;
   pointer-events: none;
+`
+
+const Container = styled.div<{ disabled?: boolean }>`
+  ${(props) => props.disabled && disabledStyle};
+  transition: 0.3s opacity;
 `
