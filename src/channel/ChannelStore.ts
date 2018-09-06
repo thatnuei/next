@@ -41,12 +41,7 @@ export class ChannelStore {
   @action
   private addChannelMessage = (channelId: string, options: MessageModelOptions) => {
     const channel = this.getChannel(channelId)
-    const message = new MessageModel(options)
-    channel.messages.push(message)
-
-    while (channel.messages.length > 400) {
-      channel.messages.shift()
-    }
+    channel.addMessage(new MessageModel(options))
   }
 
   @action

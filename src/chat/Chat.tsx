@@ -4,6 +4,7 @@ import { darken } from "polished"
 import React from "react"
 import MediaQuery from "react-responsive"
 import { ChannelModel } from "../channel/ChannelModel"
+import { ChannelHeader } from "../character/ChannelHeader"
 import { ConversationLayout } from "../conversation/ConversationLayout"
 import { ConversationMessageList } from "../conversation/ConversationMessageList"
 import { ConversationUserList } from "../conversation/ConversationUserList"
@@ -40,7 +41,11 @@ export class Chat extends React.Component<Props> {
           </IconButton>
         </MediaQuery>
 
-        <div style={{ flexGrow: 1 }} />
+        <div style={{ flexGrow: 1 }}>
+          {activeConversation instanceof ChannelModel && (
+            <ChannelHeader channel={activeConversation} />
+          )}
+        </div>
 
         <MediaQuery maxWidth={userListBreakpoint}>
           <IconButton onClick={this.userListDisplay.enable}>
@@ -50,14 +55,18 @@ export class Chat extends React.Component<Props> {
       </HeaderContainer>
     )
 
-    const messageList = activeConversation && (
-      <ConversationMessageList messages={activeConversation.messages} />
-    )
+    const messages =
+      activeConversation instanceof ChannelModel
+        ? activeConversation.filteredMessages
+        : activeConversation
+          ? activeConversation.messages
+          : []
 
-    const userList = activeConversation &&
-      activeConversation instanceof ChannelModel && (
-        <ConversationUserList users={activeConversation.users} />
-      )
+    const messageList = activeConversation && <ConversationMessageList messages={messages} />
+
+    const userList = activeConversation instanceof ChannelModel && (
+      <ConversationUserList users={activeConversation.users} />
+    )
 
     const navigation = (
       <ChatNavigation session={session} onTabActivate={this.sidebarDisplay.disable} />
@@ -115,7 +124,6 @@ const ChatConversationContainer = styled.div`
 
 const HeaderContainer = styled.div`
   display: flex;
-  height: 2.5rem;
   align-items: center;
 `
 
