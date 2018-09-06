@@ -62,23 +62,25 @@ export class Chat extends React.Component<Props> {
   }
 
   private renderConversation(conversation: ConversationModel) {
+    const menuToggle = (
+      <IconButton onClick={this.sidebarDisplay.enable}>
+        <Icon path={mdiMenu} />
+      </IconButton>
+    )
+
+    const userListToggle = (
+      <IconButton onClick={this.userListDisplay.enable}>
+        <Icon path={mdiAccountMultiple} />
+      </IconButton>
+    )
+
     const header = (
       <HeaderContainer>
-        <MediaQuery maxWidth={sidebarBreakpoint}>
-          <IconButton onClick={this.sidebarDisplay.enable}>
-            <Icon path={mdiMenu} />
-          </IconButton>
-        </MediaQuery>
-
+        <MediaQuery maxWidth={sidebarBreakpoint}>{menuToggle}</MediaQuery>
         <div style={{ flexGrow: 1 }}>
           {conversation instanceof ChannelModel && <ChannelHeader channel={conversation} />}
         </div>
-
-        <MediaQuery maxWidth={userListBreakpoint}>
-          <IconButton onClick={this.userListDisplay.enable}>
-            <Icon path={mdiAccountMultiple} />
-          </IconButton>
-        </MediaQuery>
+        <MediaQuery maxWidth={userListBreakpoint}>{userListToggle}</MediaQuery>
       </HeaderContainer>
     )
 
