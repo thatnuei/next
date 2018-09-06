@@ -7,6 +7,7 @@ import { ChannelModel } from "../channel/ChannelModel"
 import { ChannelHeader } from "../character/ChannelHeader"
 import { ConversationLayout } from "../conversation/ConversationLayout"
 import { ConversationMessageList } from "../conversation/ConversationMessageList"
+import { ConversationModel } from "../conversation/ConversationModel"
 import { ConversationUserList } from "../conversation/ConversationUserList"
 import { SessionState } from "../session/SessionState"
 import { ToggleState } from "../state/ToggleState"
@@ -33,41 +34,6 @@ export class Chat extends React.Component<Props> {
     const { session } = this.props
     const { activeConversation } = session.conversationStore
 
-    const header = (
-      <HeaderContainer>
-        <MediaQuery maxWidth={sidebarBreakpoint}>
-          <IconButton onClick={this.sidebarDisplay.enable}>
-            <Icon path={mdiMenu} />
-          </IconButton>
-        </MediaQuery>
-
-        <div style={{ flexGrow: 1 }}>
-          {activeConversation instanceof ChannelModel && (
-            <ChannelHeader channel={activeConversation} />
-          )}
-        </div>
-
-        <MediaQuery maxWidth={userListBreakpoint}>
-          <IconButton onClick={this.userListDisplay.enable}>
-            <Icon path={mdiAccountMultiple} />
-          </IconButton>
-        </MediaQuery>
-      </HeaderContainer>
-    )
-
-    const messages =
-      activeConversation instanceof ChannelModel
-        ? activeConversation.filteredMessages
-        : activeConversation
-          ? activeConversation.messages
-          : []
-
-    const messageList = activeConversation && <ConversationMessageList messages={messages} />
-
-    const userList = activeConversation instanceof ChannelModel && (
-      <ConversationUserList users={activeConversation.users} />
-    )
-
     const navigation = (
       <ChatNavigation session={session} onTabActivate={this.sidebarDisplay.disable} />
     )
@@ -81,11 +47,7 @@ export class Chat extends React.Component<Props> {
         </MediaQuery>
 
         <ChatConversationContainer>
-          <ConversationLayout
-            header={header}
-            messageList={messageList}
-            userList={<MediaQuery minWidth={userListBreakpoint}>{userList}</MediaQuery>}
-          />
+          {activeConversation && this.renderConversation(activeConversation)}
         </ChatConversationContainer>
 
         <Overlay
@@ -95,7 +57,45 @@ export class Chat extends React.Component<Props> {
         >
           <SidebarOverlayContainer>{sidebar}</SidebarOverlayContainer>
         </Overlay>
+      </ViewContainer>
+    )
+  }
 
+  private renderConversation(conversation: ConversationModel) {
+    const header = (
+      <HeaderContainer>
+        <MediaQuery maxWidth={sidebarBreakpoint}>
+          <IconButton onClick={this.sidebarDisplay.enable}>
+            <Icon path={mdiMenu} />
+          </IconButton>
+        </MediaQuery>
+
+        <div style={{ flexGrow: 1 }}>
+          {conversation instanceof ChannelModel && <ChannelHeader channel={conversation} />}
+        </div>
+
+        <MediaQuery maxWidth={userListBreakpoint}>
+          <IconButton onClick={this.userListDisplay.enable}>
+            <Icon path={mdiAccountMultiple} />
+          </IconButton>
+        </MediaQuery>
+      </HeaderContainer>
+    )
+
+    const messages = conversation.displayedMessages || conversation.messages
+    const messageList = <ConversationMessageList messages={messages} />
+
+    const userList = conversation instanceof ChannelModel && (
+      <ConversationUserList users={conversation.users} />
+    )
+
+    return (
+      <>
+        <ConversationLayout
+          header={header}
+          messageList={messageList}
+          userList={<MediaQuery minWidth={userListBreakpoint}>{userList}</MediaQuery>}
+        />
         <Overlay
           anchor="right"
           visible={this.userListDisplay.enabled}
@@ -103,7 +103,7 @@ export class Chat extends React.Component<Props> {
         >
           {userList}
         </Overlay>
-      </ViewContainer>
+      </>
     )
   }
 }
