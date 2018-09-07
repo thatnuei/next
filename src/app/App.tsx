@@ -1,10 +1,10 @@
 import React from "react"
 import { Session } from "../session/Session"
 import { SessionProvider } from "../session/SessionContext"
-import { SessionState } from "../session/SessionState"
+import { SessionStore } from "../session/SessionStore"
 
 export interface AppProps {
-  session: SessionState
+  session: SessionStore
 }
 
 export class App extends React.Component<AppProps> {

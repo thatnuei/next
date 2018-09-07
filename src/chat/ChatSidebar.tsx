@@ -1,13 +1,13 @@
 import { observer } from "mobx-react"
 import React from "react"
 import { CharacterInfo } from "../character/CharacterInfo"
-import { SessionState } from "../session/SessionState"
+import { SessionStore } from "../session/SessionStore"
 import { flist4, flist5 } from "../ui/colors"
 import { styled } from "../ui/styled"
 import { ChatActions } from "./ChatActions"
 
 type Props = {
-  session: SessionState
+  session: SessionStore
   navigation: React.ReactNode
 }
 

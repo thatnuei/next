@@ -2,7 +2,7 @@ import { Observer } from "mobx-react"
 import React from "react"
 import { getProfileUrl } from "../flist/helpers"
 import { SessionConsumer } from "../session/SessionContext"
-import { SessionState } from "../session/SessionState"
+import { SessionStore } from "../session/SessionStore"
 import { styled } from "../ui/styled"
 import { genderColors, statusColors } from "./colors"
 
@@ -19,7 +19,7 @@ export class CharacterName extends React.Component<Props> {
     )
   }
 
-  private renderContent = (session: SessionState) => {
+  private renderContent = (session: SessionStore) => {
     const { name, gender, status } = session.characters.getCharacter(this.props.name)
     const genderColor = genderColors[gender]
     const statusColor = statusColors[status]

@@ -9,7 +9,7 @@ import { ConversationLayout } from "../conversation/ConversationLayout"
 import { ConversationMessageList } from "../conversation/ConversationMessageList"
 import { ConversationModel } from "../conversation/ConversationModel"
 import { ConversationUserList } from "../conversation/ConversationUserList"
-import { SessionState } from "../session/SessionState"
+import { SessionStore } from "../session/SessionStore"
 import { ToggleState } from "../state/ToggleState"
 import { flist5 } from "../ui/colors"
 import { Icon } from "../ui/Icon"
@@ -22,7 +22,7 @@ const sidebarBreakpoint = 750
 const userListBreakpoint = 1000
 
 type Props = {
-  session: SessionState
+  session: SessionStore
 }
 
 @observer

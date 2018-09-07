@@ -3,7 +3,7 @@ import { action, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { Avatar } from "../character/Avatar"
-import { SessionState } from "../session/SessionState"
+import { SessionStore } from "../session/SessionStore"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
@@ -16,7 +16,7 @@ type FormValues = {
 }
 
 type Props = {
-  session: SessionState
+  session: SessionStore
 }
 
 @observer

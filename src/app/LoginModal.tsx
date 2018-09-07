@@ -1,6 +1,6 @@
 import { Formik, FormikProps } from "formik"
 import React from "react"
-import { SessionState } from "../session/SessionState"
+import { SessionStore } from "../session/SessionStore"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
@@ -17,7 +17,7 @@ const initialValues = {
 export type LoginValues = typeof initialValues
 
 type Props = {
-  session: SessionState
+  session: SessionStore
 }
 
 export class LoginModal extends React.Component<Props> {

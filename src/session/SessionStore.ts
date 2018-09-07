@@ -11,7 +11,7 @@ import { loadAuthData, saveAuthData } from "./storage"
 
 export type SessionScreen = "setup" | "login" | "selectCharacter" | "chat"
 
-export class SessionState {
+export class SessionStore {
   user = new UserState()
   connection = new SocketConnectionHandler()
   chat = new ChatState(this.connection)

@@ -2,14 +2,14 @@ import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
 import { App } from "./app/App"
-import { SessionState } from "./session/SessionState"
+import { SessionStore } from "./session/SessionStore"
 import { applyGlobalStyles } from "./ui/globalStyles"
 
 // const AsyncMode: React.ComponentType = (React as any).unstable_AsyncMode
 
 configure({ enforceActions: "observed" })
 
-const session = new SessionState()
+const session = new SessionStore()
 
 async function initSession() {
   try {

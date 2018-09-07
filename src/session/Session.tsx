@@ -3,10 +3,10 @@ import React from "react"
 import { LoginModal } from "../app/LoginModal"
 import { SelectCharacterModal } from "../app/SelectCharacterModal"
 import { Chat } from "../chat/Chat"
-import { SessionState } from "./SessionState"
+import { SessionStore } from "./SessionStore"
 
 type Props = {
-  state: SessionState
+  state: SessionStore
 }
 
 @observer

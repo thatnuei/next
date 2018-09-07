@@ -1,12 +1,12 @@
 import { mdiCodeTags, mdiEarth } from "@mdi/js"
 import { observer } from "mobx-react"
 import React from "react"
-import { SessionState } from "../session/SessionState"
+import { SessionStore } from "../session/SessionStore"
 import { styled } from "../ui/styled"
 import { ChatNavigationTab } from "./ChatNavigationTab"
 
 export interface ChatNavigationProps {
-  session: SessionState
+  session: SessionStore
   onTabActivate: () => void
 }
 
