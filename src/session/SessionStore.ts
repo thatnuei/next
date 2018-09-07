@@ -1,7 +1,7 @@
 import { action, computed, observable } from "mobx"
 import { ChannelStore } from "../channel/ChannelStore"
 import { CharacterStore } from "../character/CharacterStore"
-import { ChatState } from "../chat/ChatState"
+import { ChatStore } from "../chat/ChatStore"
 import { ConversationStore } from "../conversation/ConversationStore"
 import { SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
 import { fetchCharacters, fetchTicket } from "../flist/api"
@@ -14,7 +14,7 @@ export type SessionScreen = "setup" | "login" | "selectCharacter" | "chat"
 export class SessionStore {
   user = new UserStore()
   connection = new SocketConnectionHandler()
-  chat = new ChatState(this.connection)
+  chat = new ChatStore(this.connection)
   characters = new CharacterStore(this.connection)
   channels = new ChannelStore(this.connection, this.chat)
   privateChatStore = new PrivateChatStore(this.connection)

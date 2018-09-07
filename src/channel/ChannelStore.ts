@@ -1,5 +1,5 @@
 import { action, computed, observable } from "mobx"
-import { ChatState } from "../chat/ChatState"
+import { ChatStore } from "../chat/ChatStore"
 import { CommandListener, SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
 import { MessageModel, MessageModelOptions } from "../message/MessageModel"
 import { ChannelModel } from "./ChannelModel"
@@ -10,7 +10,7 @@ export class ChannelStore {
 
   private joinedChannelIds = observable.map<string, true>()
 
-  constructor(private connection: SocketConnectionHandler, private chatState: ChatState) {
+  constructor(private connection: SocketConnectionHandler, private chatStore: ChatStore) {
     connection.addCommandListener("JCH", this.handleJoin)
     connection.addCommandListener("LCH", this.handleLeave)
     connection.addCommandListener("ICH", this.handleInitialChannelInfo)
@@ -50,7 +50,7 @@ export class ChannelStore {
     channel.title = params.title
     channel.addUser(params.character.identity)
 
-    if (params.character.identity === this.chatState.identity) {
+    if (params.character.identity === this.chatStore.identity) {
       this.joinedChannelIds.set(params.channel, true)
     }
   }
@@ -60,7 +60,7 @@ export class ChannelStore {
     const channel = this.getChannel(params.channel)
     channel.removeUser(params.character)
 
-    if (params.character === this.chatState.identity) {
+    if (params.character === this.chatStore.identity) {
       this.joinedChannelIds.delete(params.channel)
     }
   }
