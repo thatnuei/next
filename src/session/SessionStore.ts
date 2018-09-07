@@ -6,13 +6,13 @@ import { ConversationStore } from "../conversation/ConversationStore"
 import { SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
 import { fetchCharacters, fetchTicket } from "../flist/api"
 import { PrivateChatStore } from "../privateChat/PrivateChatStore"
-import { UserState } from "../user/UserState"
+import { UserStore } from "../user/UserStore"
 import { loadAuthData, saveAuthData } from "./storage"
 
 export type SessionScreen = "setup" | "login" | "selectCharacter" | "chat"
 
 export class SessionStore {
-  user = new UserState()
+  user = new UserStore()
   connection = new SocketConnectionHandler()
   chat = new ChatState(this.connection)
   characters = new CharacterStore(this.connection)

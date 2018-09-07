@@ -1,6 +1,6 @@
 import { action, observable } from "mobx"
 
-export class UserState {
+export class UserStore {
   @observable
   account = ""
 
