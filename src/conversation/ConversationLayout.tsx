@@ -24,7 +24,7 @@ export const ConversationLayout = observer((props: Props) => {
     <Container>
       <HeaderArea>
         <ChatSidebarToggle />
-        {props.headerContent}
+        <HeaderContentContainer>{props.headerContent}</HeaderContentContainer>
         <ConversationUsersToggle />
       </HeaderArea>
 
@@ -67,6 +67,10 @@ const HeaderArea = styled.div`
   display: flex;
   background-color: ${flist4};
   overflow-y: auto;
+`
+
+const HeaderContentContainer = styled.div`
+  flex-grow: 1;
 `
 
 const UserListArea = styled.div`
