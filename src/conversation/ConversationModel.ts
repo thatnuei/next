@@ -4,5 +4,5 @@ import { MessageModel } from "../message/MessageModel"
 export interface ConversationModel {
   readonly id: string
   messages: MessageModel[]
-  displayedMessages?: MessageModel[]
+  filteredMessages?: MessageModel[]
 }

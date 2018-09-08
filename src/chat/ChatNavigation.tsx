@@ -6,13 +6,10 @@ import { conversationStore } from "../conversation/ConversationStore"
 import { privateChatStore } from "../privateChat/PrivateChatStore"
 import { styled } from "../ui/styled"
 import { ChatNavigationTab } from "./ChatNavigationTab"
-
-export interface ChatNavigationProps {
-  onTabActivate: () => void
-}
+import { chatViewStore } from "./ChatViewStore"
 
 @observer
-export class ChatNavigation extends React.Component<ChatNavigationProps> {
+export class ChatNavigation extends React.Component {
   render() {
     const { channelConversations, privateConversations } = conversationStore
 
@@ -24,7 +21,7 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
         active={conversationStore.isActive(convo)}
         onActivate={() => {
           conversationStore.setActiveConversation(convo)
-          this.props.onTabActivate()
+          chatViewStore.sidebarDisplay.disable()
         }}
         onClose={() => channelStore.leaveChannel(convo.id)}
       />
@@ -38,7 +35,7 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
         active={conversationStore.isActive(convo)}
         onActivate={() => {
           conversationStore.setActiveConversation(convo)
-          this.props.onTabActivate()
+          chatViewStore.sidebarDisplay.disable()
         }}
         onClose={() => privateChatStore.closeChat(convo.partner)}
       />

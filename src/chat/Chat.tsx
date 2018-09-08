@@ -1,109 +1,56 @@
-import { mdiAccountMultiple, mdiMenu } from "@mdi/js"
 import { observer } from "mobx-react"
 import { darken } from "polished"
 import React from "react"
 import MediaQuery from "react-responsive"
-import { ChannelHeader } from "../channel/ChannelHeader"
+import { ChannelConversation } from "../channel/ChannelConversation"
 import { ChannelModel } from "../channel/ChannelModel"
-import { ConversationLayout } from "../conversation/ConversationLayout"
-import { ConversationMessageList } from "../conversation/ConversationMessageList"
-import { ConversationModel } from "../conversation/ConversationModel"
 import { conversationStore } from "../conversation/ConversationStore"
-import { ConversationUserList } from "../conversation/ConversationUserList"
-import { ToggleState } from "../state/ToggleState"
+import { PrivateChatModel } from "../privateChat/PrivateChatModel"
+import { PrivateConversation } from "../privateChat/PrivateConversation"
 import { flist5 } from "../ui/colors"
-import { Icon } from "../ui/Icon"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
-import { ChatNavigation } from "./ChatNavigation"
+import { chatSidebarBreakpoint } from "./breakpoints"
 import { ChatSidebar } from "./ChatSidebar"
-
-const sidebarBreakpoint = 750
-const userListBreakpoint = 1000
+import { chatViewStore } from "./ChatViewStore"
 
 @observer
 export class Chat extends React.Component {
-  sidebarDisplay = new ToggleState(false)
-  userListDisplay = new ToggleState(false)
-
   render() {
     const { activeConversation } = conversationStore
 
-    const navigation = <ChatNavigation onTabActivate={this.sidebarDisplay.disable} />
-
-    const sidebar = <ChatSidebar navigation={navigation} />
-
     return (
-      <ViewContainer>
-        <MediaQuery minWidth={sidebarBreakpoint}>
-          <div style={{ marginRight: "4px" }}>{sidebar}</div>
+      <Container>
+        <MediaQuery minWidth={chatSidebarBreakpoint}>
+          <div style={{ marginRight: "4px" }}>
+            <ChatSidebar />
+          </div>
         </MediaQuery>
 
-        <ChatConversationContainer>
-          {activeConversation && this.renderConversation(activeConversation)}
-        </ChatConversationContainer>
+        <ConversationContainer>
+          {activeConversation instanceof ChannelModel && (
+            <ChannelConversation channel={activeConversation} />
+          )}
+          {activeConversation instanceof PrivateChatModel && (
+            <PrivateConversation privateChat={activeConversation} />
+          )}
+        </ConversationContainer>
 
         <Overlay
           anchor="left"
-          visible={this.sidebarDisplay.enabled}
-          onShadeClick={this.sidebarDisplay.disable}
+          visible={chatViewStore.sidebarDisplay.enabled}
+          onShadeClick={chatViewStore.sidebarDisplay.disable}
         >
-          <SidebarOverlayContainer>{sidebar}</SidebarOverlayContainer>
+          <SidebarOverlayContainer>
+            <ChatSidebar />
+          </SidebarOverlayContainer>
         </Overlay>
-      </ViewContainer>
-    )
-  }
-
-  private renderConversation(conversation: ConversationModel) {
-    const menuToggle = (
-      <IconButton onClick={this.sidebarDisplay.enable}>
-        <Icon path={mdiMenu} />
-      </IconButton>
-    )
-
-    const userListToggle = (
-      <IconButton onClick={this.userListDisplay.enable}>
-        <Icon path={mdiAccountMultiple} />
-      </IconButton>
-    )
-
-    const header = (
-      <HeaderContainer>
-        <MediaQuery maxWidth={sidebarBreakpoint}>{menuToggle}</MediaQuery>
-        <div style={{ flexGrow: 1 }}>
-          {conversation instanceof ChannelModel && <ChannelHeader channel={conversation} />}
-        </div>
-        <MediaQuery maxWidth={userListBreakpoint}>{userListToggle}</MediaQuery>
-      </HeaderContainer>
-    )
-
-    const messages = conversation.displayedMessages || conversation.messages
-    const messageList = <ConversationMessageList messages={messages} />
-
-    const userList = conversation instanceof ChannelModel && (
-      <ConversationUserList users={conversation.users} />
-    )
-
-    return (
-      <>
-        <ConversationLayout
-          header={header}
-          messageList={messageList}
-          userList={<MediaQuery minWidth={userListBreakpoint}>{userList}</MediaQuery>}
-        />
-        <Overlay
-          anchor="right"
-          visible={this.userListDisplay.enabled}
-          onShadeClick={this.userListDisplay.disable}
-        >
-          {userList}
-        </Overlay>
-      </>
+      </Container>
     )
   }
 }
 
-const ViewContainer = styled.div`
+const Container = styled.div`
   position: absolute;
   left: 0;
   right: 0;
@@ -113,7 +60,7 @@ const ViewContainer = styled.div`
   display: flex;
 `
 
-const ChatConversationContainer = styled.div`
+const ConversationContainer = styled.div`
   flex-grow: 1;
 `
 

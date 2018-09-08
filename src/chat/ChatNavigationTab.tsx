@@ -14,6 +14,7 @@ type ChatNavigationTabProps = {
   onClose?: () => void
 }
 
+// TODO: turn into class w/ methods for handlers
 export const ChatNavigationTab = (props: ChatNavigationTabProps) => {
   return (
     <Container {...props}>

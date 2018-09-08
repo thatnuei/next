@@ -5,13 +5,10 @@ import { sessionStore } from "../session/SessionStore"
 import { flist4, flist5 } from "../ui/colors"
 import { styled } from "../ui/styled"
 import { ChatActions } from "./ChatActions"
-
-type Props = {
-  navigation: React.ReactNode
-}
+import { ChatNavigation } from "./ChatNavigation"
 
 @observer
-export class ChatSidebar extends React.Component<Props> {
+export class ChatSidebar extends React.Component {
   render() {
     return (
       <Container>
@@ -21,7 +18,9 @@ export class ChatSidebar extends React.Component<Props> {
         <CharacterInfoContainer>
           <CharacterInfo character={sessionStore.identityCharacter} />
         </CharacterInfoContainer>
-        <ChatNavigationContainer>{this.props.navigation}</ChatNavigationContainer>
+        <ChatNavigationContainer>
+          <ChatNavigation />
+        </ChatNavigationContainer>
       </Container>
     )
   }

@@ -1,24 +1,54 @@
 import { observer } from "mobx-react"
 import React from "react"
+import MediaQuery from "react-responsive"
 import { Chatbox } from "../chat/Chatbox"
+import { ChatSidebarToggle } from "../chat/ChatSidebarToggle"
+import { chatViewStore } from "../chat/ChatViewStore"
+import { MessageModel } from "../message/MessageModel"
 import { flist4, flist5 } from "../ui/colors"
+import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
+import { userListBreakpoint } from "./breakpoints"
+import { ConversationMessageList } from "./ConversationMessageList"
+import { ConversationUserList } from "./ConversationUserList"
+import { ConversationUsersToggle } from "./ConversationUsersToggle"
 
 type Props = {
-  header?: React.ReactNode
-  messageList?: React.ReactNode
-  userList?: React.ReactNode
+  headerContent?: React.ReactNode
+  messages?: MessageModel[]
+  users?: string[]
 }
 
 export const ConversationLayout = observer((props: Props) => {
   return (
     <Container>
-      <HeaderArea>{props.header}</HeaderArea>
-      <UserListArea>{props.userList}</UserListArea>
-      <MessagesArea>{props.messageList}</MessagesArea>
+      <HeaderArea>
+        <ChatSidebarToggle />
+        {props.headerContent}
+        <ConversationUsersToggle />
+      </HeaderArea>
+
+      <UserListArea>
+        <MediaQuery minWidth={userListBreakpoint}>
+          {props.users && <ConversationUserList users={props.users} />}
+        </MediaQuery>
+      </UserListArea>
+
+      <MessagesArea>
+        {props.messages && <ConversationMessageList messages={props.messages} />}
+      </MessagesArea>
+
       <ChatboxArea>
         <Chatbox onSubmit={console.log} />
       </ChatboxArea>
+
+      <Overlay
+        anchor="right"
+        visible={chatViewStore.userListDisplay.enabled}
+        onShadeClick={chatViewStore.userListDisplay.disable}
+      >
+        {props.users && <ConversationUserList users={props.users} />}
+      </Overlay>
     </Container>
   )
 })
@@ -34,6 +64,7 @@ const Container = styled.div`
 `
 
 const HeaderArea = styled.div`
+  display: flex;
   background-color: ${flist4};
   overflow-y: auto;
 `

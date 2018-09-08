@@ -64,7 +64,7 @@ export class ChannelModel implements ConversationModel {
   }
 
   @computed
-  get displayedMessages() {
+  get filteredMessages() {
     if (this.mode !== "both") return this.messages
     if (this.filter === "ads") return this.messages.filter((message) => message.type === "ad")
     if (this.filter === "chat") return this.messages.filter((message) => message.type === "normal")

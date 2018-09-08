@@ -24,4 +24,5 @@ const HeaderContainer = styled.div`
   padding: 0.5rem 0.7rem;
   display: flex;
   align-items: center;
+  flex-grow: 1;
 `
