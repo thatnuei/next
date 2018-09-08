@@ -1,6 +1,18 @@
-import { styled } from "./styled"
+import { css, styled } from "./styled"
 
-export const Button = styled.button`
+type ButtonProps = {
+  flat?: boolean
+}
+
+const flatStyle = css`
+  background: none;
+
+  :hover {
+    background: none;
+  }
+`
+
+export const Button = styled.button<ButtonProps>`
   font: inherit;
   color: inherit;
   border: none;
@@ -12,4 +24,6 @@ export const Button = styled.button`
   :hover {
     background: rgba(0, 0, 0, 0.8);
   }
+
+  ${(props) => props.flat && flatStyle};
 `
