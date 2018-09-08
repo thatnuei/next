@@ -25,7 +25,7 @@ export const ConversationLayout = observer((props: Props) => {
       <HeaderArea>
         <ChatSidebarToggle />
         <HeaderContentContainer>{props.headerContent}</HeaderContentContainer>
-        <ConversationUsersToggle />
+        {props.users && <ConversationUsersToggle />}
       </HeaderArea>
 
       <UserListArea>
