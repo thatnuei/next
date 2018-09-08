@@ -14,7 +14,7 @@ export class App extends React.Component<AppProps> {
   }
 
   render() {
-    switch (this.session.screen) {
+    switch (this.session.appViewStore.screen) {
       case "setup":
         return <div>Setting things up...</div>
       case "login":

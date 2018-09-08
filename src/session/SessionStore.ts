@@ -1,4 +1,5 @@
-import { action, computed, observable } from "mobx"
+import { computed } from "mobx"
+import { AppViewStore } from "../app/AppViewStore"
 import { ChannelStore } from "../channel/ChannelStore"
 import { CharacterStore } from "../character/CharacterStore"
 import { ChatStore } from "../chat/ChatStore"
@@ -9,9 +10,8 @@ import { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { UserStore } from "../user/UserStore"
 import { loadAuthData, saveAuthData } from "./storage"
 
-export type SessionScreen = "setup" | "login" | "selectCharacter" | "chat"
-
 export class SessionStore {
+  appViewStore = new AppViewStore()
   user = new UserStore()
   connection = new SocketStore()
   chat = new ChatStore(this.connection)
@@ -20,12 +20,9 @@ export class SessionStore {
   privateChatStore = new PrivateChatStore(this.connection)
   conversationStore = new ConversationStore(this.channels, this.privateChatStore)
 
-  @observable
-  screen: SessionScreen = "setup"
-
   constructor() {
     this.connection.addCommandListener("IDN", () => {
-      this.setScreen("chat")
+      this.appViewStore.setScreen("chat")
 
       this.connection.sendCommand("JCH", { channel: "Frontpage" })
       this.connection.sendCommand("JCH", { channel: "Fantasy" })
@@ -34,13 +31,8 @@ export class SessionStore {
 
     this.connection.addDisconnectListener(() => {
       alert("Disconnected from server :(")
-      this.setScreen("login")
+      this.appViewStore.setScreen("login")
     })
-  }
-
-  @action
-  setScreen(screen: SessionScreen) {
-    this.screen = screen
   }
 
   async getApiTicket(account: string, password: string) {
