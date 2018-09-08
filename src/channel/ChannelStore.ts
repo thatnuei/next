@@ -1,7 +1,7 @@
 import { action, computed, observable } from "mobx"
 import { ChatStore } from "../chat/ChatStore"
-import { CommandListener, SocketStore } from "../fchat/SocketStore"
 import { MessageModel, MessageModelOptions } from "../message/MessageModel"
+import { CommandListener, SocketStore } from "../socket/SocketStore"
 import { ChannelModel } from "./ChannelModel"
 
 export class ChannelStore {

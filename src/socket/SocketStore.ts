@@ -1,4 +1,4 @@
-import { ClientCommands, ServerCommands } from "./types"
+import { ClientCommands, ServerCommands } from "../fchat/types"
 
 export type CommandListener<T extends keyof ServerCommands> = (params: ServerCommands[T]) => void
 

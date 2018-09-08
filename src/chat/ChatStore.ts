@@ -1,5 +1,5 @@
 import { action, observable } from "mobx"
-import { CommandListener, SocketStore } from "../fchat/SocketStore"
+import { CommandListener, SocketStore } from "../socket/SocketStore"
 
 export class ChatStore {
   @observable
