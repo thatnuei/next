@@ -62,6 +62,8 @@ const disabledStyle = css`
 `
 
 const Container = styled.div<{ disabled?: boolean }>`
-  ${(props) => props.disabled && disabledStyle};
+  display: flex;
+  flex-wrap: wrap;
   transition: 0.3s opacity;
+  ${(props) => props.disabled && disabledStyle};
 `

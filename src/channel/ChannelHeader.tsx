@@ -12,10 +12,10 @@ export class ChannelHeader extends React.Component<ChannelHeaderProps> {
     const { channel } = this.props
     return (
       <HeaderContainer>
-        <div style={{ flexShrink: 0, marginRight: "1.5rem" }}>
+        <div style={{ marginRight: "1.5rem" }}>
           <h2>{channel.title}</h2>
         </div>
-        <div style={{ flexShrink: 0 }}>
+        <div>
           <ChannelFilter channel={channel} />
         </div>
       </HeaderContainer>
