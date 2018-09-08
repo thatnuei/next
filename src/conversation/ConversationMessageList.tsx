@@ -4,11 +4,6 @@ import { Message } from "../message/Message"
 import { MessageModel } from "../message/MessageModel"
 import { styled } from "../ui/styled"
 
-function trace<T>(value: T): T {
-  console.log(value)
-  return value
-}
-
 export interface ConversationMessageListProps {
   messages: MessageModel[]
 }

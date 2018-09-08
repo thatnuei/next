@@ -1,43 +1,46 @@
-import { computed } from "mobx"
-import { AppViewStore } from "../app/AppViewStore"
-import { ChannelStore } from "../channel/ChannelStore"
-import { CharacterStore } from "../character/CharacterStore"
-import { ChatStore } from "../chat/ChatStore"
-import { ConversationStore } from "../conversation/ConversationStore"
+import { action, computed, observable } from "mobx"
+import { appViewStore } from "../app/AppViewStore"
+import { characterStore } from "../character/CharacterStore"
+import { chatStore } from "../chat/ChatStore"
 import { fetchCharacters, fetchTicket } from "../flist/api"
-import { PrivateChatStore } from "../privateChat/PrivateChatStore"
-import { SocketStore } from "../socket/SocketStore"
-import { UserStore } from "../user/UserStore"
+import { socketStore } from "../socket/SocketStore"
 import { loadAuthData, saveAuthData } from "./storage"
 
 export class SessionStore {
-  appViewStore = new AppViewStore()
-  user = new UserStore()
-  connection = new SocketStore()
-  chat = new ChatStore(this.connection)
-  characters = new CharacterStore(this.connection)
-  channels = new ChannelStore(this.connection, this.chat)
-  privateChatStore = new PrivateChatStore(this.connection)
-  conversationStore = new ConversationStore(this.channels, this.privateChatStore)
+  @observable
+  account = ""
+
+  @observable
+  ticket = ""
+
+  @observable
+  characters: string[] = []
 
   constructor() {
-    this.connection.addCommandListener("IDN", () => {
-      this.appViewStore.setScreen("chat")
+    socketStore.addCommandListener("IDN", () => {
+      appViewStore.setScreen("chat")
 
-      this.connection.sendCommand("JCH", { channel: "Frontpage" })
-      this.connection.sendCommand("JCH", { channel: "Fantasy" })
-      this.connection.sendCommand("JCH", { channel: "Story Driven LFRP" })
+      socketStore.sendCommand("JCH", { channel: "Frontpage" })
+      socketStore.sendCommand("JCH", { channel: "Fantasy" })
+      socketStore.sendCommand("JCH", { channel: "Story Driven LFRP" })
     })
 
-    this.connection.addDisconnectListener(() => {
+    socketStore.addDisconnectListener(() => {
       alert("Disconnected from server :(")
-      this.appViewStore.setScreen("login")
+      appViewStore.setScreen("login")
     })
+  }
+
+  @action
+  setUserData(account: string, ticket: string, characters: string[]) {
+    this.account = account
+    this.ticket = ticket
+    this.characters = characters.sort()
   }
 
   async getApiTicket(account: string, password: string) {
     const { ticket, characters } = await fetchTicket(account, password)
-    this.user.setUserData(account, ticket, characters)
+    this.setUserData(account, ticket, characters)
   }
 
   async restoreUserData() {
@@ -47,15 +50,17 @@ export class SessionStore {
     }
 
     const { characters } = await fetchCharacters(account, ticket)
-    this.user.setUserData(account, ticket, characters)
+    this.setUserData(account, ticket, characters)
   }
 
   saveUserData() {
-    saveAuthData(this.user.account, this.user.ticket)
+    saveAuthData(this.account, this.ticket)
   }
 
   @computed
   get identityCharacter() {
-    return this.characters.getCharacter(this.chat.identity)
+    return characterStore.getCharacter(chatStore.identity)
   }
 }
+
+export const sessionStore = new SessionStore()

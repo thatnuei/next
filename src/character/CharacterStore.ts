@@ -1,15 +1,15 @@
 import { action, observable } from "mobx"
-import { CommandListener, SocketStore } from "../socket/SocketStore"
+import { CommandListener, socketStore } from "../socket/SocketStore"
 import { CharacterModel } from "./CharacterModel"
 
 export class CharacterStore {
   characters = observable.map<string, CharacterModel>()
 
-  constructor(connection: SocketStore) {
-    connection.addCommandListener("LIS", this.handleInitialCharacterData)
-    connection.addCommandListener("NLN", this.handleLogin)
-    connection.addCommandListener("FLN", this.handleLogout)
-    connection.addCommandListener("STA", this.handleStatus)
+  constructor() {
+    socketStore.addCommandListener("LIS", this.handleInitialCharacterData)
+    socketStore.addCommandListener("NLN", this.handleLogin)
+    socketStore.addCommandListener("FLN", this.handleLogout)
+    socketStore.addCommandListener("STA", this.handleStatus)
   }
 
   @action
@@ -53,3 +53,5 @@ export class CharacterStore {
     character.statusMessage = statusmsg
   }
 }
+
+export const characterStore = new CharacterStore()

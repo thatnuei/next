@@ -1,7 +1,7 @@
 import { action, computed, observable } from "mobx"
-import { ChatStore } from "../chat/ChatStore"
+import { chatStore } from "../chat/ChatStore"
 import { MessageModel, MessageModelOptions } from "../message/MessageModel"
-import { CommandListener, SocketStore } from "../socket/SocketStore"
+import { CommandListener, socketStore } from "../socket/SocketStore"
 import { ChannelModel } from "./ChannelModel"
 
 export class ChannelStore {
@@ -10,15 +10,15 @@ export class ChannelStore {
 
   private joinedChannelIds = observable.map<string, true>()
 
-  constructor(private connection: SocketStore, private chatStore: ChatStore) {
-    connection.addCommandListener("JCH", this.handleJoin)
-    connection.addCommandListener("LCH", this.handleLeave)
-    connection.addCommandListener("ICH", this.handleInitialChannelInfo)
-    connection.addCommandListener("CDS", this.handleChannelDescription)
-    connection.addCommandListener("COL", this.handleOpList)
-    connection.addCommandListener("MSG", this.handleNormalMessage)
-    connection.addCommandListener("LRP", this.handleAdMessage)
-    connection.addCommandListener("FLN", this.handleLogout)
+  constructor() {
+    socketStore.addCommandListener("JCH", this.handleJoin)
+    socketStore.addCommandListener("LCH", this.handleLeave)
+    socketStore.addCommandListener("ICH", this.handleInitialChannelInfo)
+    socketStore.addCommandListener("CDS", this.handleChannelDescription)
+    socketStore.addCommandListener("COL", this.handleOpList)
+    socketStore.addCommandListener("MSG", this.handleNormalMessage)
+    socketStore.addCommandListener("LRP", this.handleAdMessage)
+    socketStore.addCommandListener("FLN", this.handleLogout)
   }
 
   @action.bound
@@ -35,7 +35,7 @@ export class ChannelStore {
 
   @action
   leaveChannel(channel: string) {
-    this.connection.sendCommand("LCH", { channel })
+    socketStore.sendCommand("LCH", { channel })
   }
 
   @action
@@ -50,7 +50,7 @@ export class ChannelStore {
     channel.title = params.title
     channel.addUser(params.character.identity)
 
-    if (params.character.identity === this.chatStore.identity) {
+    if (params.character.identity === chatStore.identity) {
       this.joinedChannelIds.set(params.channel, true)
     }
   }
@@ -60,7 +60,7 @@ export class ChannelStore {
     const channel = this.getChannel(params.channel)
     channel.removeUser(params.character)
 
-    if (params.character === this.chatStore.identity) {
+    if (params.character === chatStore.identity) {
       this.joinedChannelIds.delete(params.channel)
     }
   }
@@ -109,3 +109,5 @@ export class ChannelStore {
     })
   }
 }
+
+export const channelStore = new ChannelStore()

@@ -3,7 +3,8 @@ import { action, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { Avatar } from "../character/Avatar"
-import { SessionStore } from "../session/SessionStore"
+import { sessionStore } from "../session/SessionStore"
+import { socketStore } from "../socket/SocketStore"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
@@ -15,19 +16,14 @@ type FormValues = {
   character: string
 }
 
-type Props = {
-  session: SessionStore
-}
-
 @observer
-export class SelectCharacterModal extends React.Component<Props> {
+export class SelectCharacterModal extends React.Component {
   @observable
   lastCharacter?: string
 
   @action
   loadLastCharacter() {
-    this.lastCharacter =
-      localStorage.getItem("lastCharacter") || this.props.session.user.characters[0]
+    this.lastCharacter = localStorage.getItem("lastCharacter") || sessionStore.characters[0]
   }
 
   componentDidMount() {
@@ -71,7 +67,7 @@ export class SelectCharacterModal extends React.Component<Props> {
             value={props.values.character}
             onChange={(event) => this.handleChange(event, props)}
           >
-            {this.props.session.user.characters.map((name) => (
+            {sessionStore.characters.map((name) => (
               <option value={name} key={name}>
                 {name}
               </option>
@@ -92,11 +88,9 @@ export class SelectCharacterModal extends React.Component<Props> {
   }
 
   private handleSubmit = (values: FormValues) => {
-    const { connection, user } = this.props.session
-    const { account, ticket } = user
-    connection.connect(
-      account,
-      ticket,
+    socketStore.connect(
+      sessionStore.account,
+      sessionStore.ticket,
       values.character,
     )
   }

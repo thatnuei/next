@@ -1,6 +1,6 @@
 import { action, computed, observable } from "mobx"
 import { MessageModel } from "../message/MessageModel"
-import { CommandListener, SocketStore } from "../socket/SocketStore"
+import { CommandListener, socketStore } from "../socket/SocketStore"
 import { PrivateChatModel } from "./PrivateChatModel"
 
 export class PrivateChatStore {
@@ -9,9 +9,9 @@ export class PrivateChatStore {
 
   private openChatPartners = observable.map<string, true>()
 
-  constructor(connection: SocketStore) {
-    connection.addCommandListener("PRI", this.handleMessage)
-    connection.addCommandListener("TPN", this.handleTypingStatus)
+  constructor() {
+    socketStore.addCommandListener("PRI", this.handleMessage)
+    socketStore.addCommandListener("TPN", this.handleTypingStatus)
   }
 
   @action.bound
@@ -54,3 +54,5 @@ export class PrivateChatStore {
     privateChat.partnerTypingStatus = params.status
   }
 }
+
+export const privateChatStore = new PrivateChatStore()

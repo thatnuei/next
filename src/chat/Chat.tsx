@@ -8,8 +8,8 @@ import { ChannelModel } from "../channel/ChannelModel"
 import { ConversationLayout } from "../conversation/ConversationLayout"
 import { ConversationMessageList } from "../conversation/ConversationMessageList"
 import { ConversationModel } from "../conversation/ConversationModel"
+import { conversationStore } from "../conversation/ConversationStore"
 import { ConversationUserList } from "../conversation/ConversationUserList"
-import { SessionStore } from "../session/SessionStore"
 import { ToggleState } from "../state/ToggleState"
 import { flist5 } from "../ui/colors"
 import { Icon } from "../ui/Icon"
@@ -21,24 +21,17 @@ import { ChatSidebar } from "./ChatSidebar"
 const sidebarBreakpoint = 750
 const userListBreakpoint = 1000
 
-type Props = {
-  session: SessionStore
-}
-
 @observer
-export class Chat extends React.Component<Props> {
+export class Chat extends React.Component {
   sidebarDisplay = new ToggleState(false)
   userListDisplay = new ToggleState(false)
 
   render() {
-    const { session } = this.props
-    const { activeConversation } = session.conversationStore
+    const { activeConversation } = conversationStore
 
-    const navigation = (
-      <ChatNavigation session={session} onTabActivate={this.sidebarDisplay.disable} />
-    )
+    const navigation = <ChatNavigation onTabActivate={this.sidebarDisplay.disable} />
 
-    const sidebar = <ChatSidebar session={session} navigation={navigation} />
+    const sidebar = <ChatSidebar navigation={navigation} />
 
     return (
       <ViewContainer>

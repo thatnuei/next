@@ -1,26 +1,18 @@
-import { Observer } from "mobx-react"
+import { observer } from "mobx-react"
 import React from "react"
 import { getProfileUrl } from "../flist/helpers"
-import { SessionConsumer } from "../session/SessionContext"
-import { SessionStore } from "../session/SessionStore"
 import { styled } from "../ui/styled"
+import { characterStore } from "./CharacterStore"
 import { genderColors, statusColors } from "./colors"
 
 type Props = {
   name: string
 }
 
+@observer
 export class CharacterName extends React.Component<Props> {
   render() {
-    return (
-      <SessionConsumer>
-        {(session) => <Observer>{() => this.renderContent(session)}</Observer>}
-      </SessionConsumer>
-    )
-  }
-
-  private renderContent = (session: SessionStore) => {
-    const { name, gender, status } = session.characters.getCharacter(this.props.name)
+    const { name, gender, status } = characterStore.getCharacter(this.props.name)
     const genderColor = genderColors[gender]
     const statusColor = statusColors[status]
 

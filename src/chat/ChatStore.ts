@@ -1,5 +1,5 @@
 import { action, observable } from "mobx"
-import { CommandListener, SocketStore } from "../socket/SocketStore"
+import { CommandListener, socketStore } from "../socket/SocketStore"
 
 export class ChatStore {
   @observable
@@ -8,9 +8,9 @@ export class ChatStore {
   @observable.shallow
   serverVariables = new Map<string, number | string | ReadonlyArray<string>>()
 
-  constructor(connection: SocketStore) {
-    connection.addCommandListener("IDN", this.handleIdentified)
-    connection.addCommandListener("VAR", this.handleServerVariables)
+  constructor() {
+    socketStore.addCommandListener("IDN", this.handleIdentified)
+    socketStore.addCommandListener("VAR", this.handleServerVariables)
   }
 
   @action
@@ -23,3 +23,5 @@ export class ChatStore {
     this.serverVariables.set(variable, value)
   }
 }
+
+export const chatStore = new ChatStore()

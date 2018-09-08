@@ -11,3 +11,5 @@ export class AppViewStore {
     this.screen = screen
   }
 }
+
+export const appViewStore = new AppViewStore()

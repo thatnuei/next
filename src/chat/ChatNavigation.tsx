@@ -1,19 +1,19 @@
 import { mdiCodeTags, mdiEarth } from "@mdi/js"
 import { observer } from "mobx-react"
 import React from "react"
-import { SessionStore } from "../session/SessionStore"
+import { channelStore } from "../channel/ChannelStore"
+import { conversationStore } from "../conversation/ConversationStore"
+import { privateChatStore } from "../privateChat/PrivateChatStore"
 import { styled } from "../ui/styled"
 import { ChatNavigationTab } from "./ChatNavigationTab"
 
 export interface ChatNavigationProps {
-  session: SessionStore
   onTabActivate: () => void
 }
 
 @observer
 export class ChatNavigation extends React.Component<ChatNavigationProps> {
   render() {
-    const { conversationStore, channels, privateChatStore } = this.props.session
     const { channelConversations, privateConversations } = conversationStore
 
     const channelTabs = channelConversations.map((convo) => (
@@ -26,7 +26,7 @@ export class ChatNavigation extends React.Component<ChatNavigationProps> {
           conversationStore.setActiveConversation(convo)
           this.props.onTabActivate()
         }}
-        onClose={() => channels.leaveChannel(convo.id)}
+        onClose={() => channelStore.leaveChannel(convo.id)}
       />
     ))
 

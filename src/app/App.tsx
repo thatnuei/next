@@ -1,28 +1,22 @@
+import { observer } from "mobx-react"
 import React from "react"
 import { Chat } from "../chat/Chat"
-import { SessionStore } from "../session/SessionStore"
+import { appViewStore } from "./AppViewStore"
 import { LoginModal } from "./LoginModal"
 import { SelectCharacterModal } from "./SelectCharacterModal"
 
-export interface AppProps {
-  session: SessionStore
-}
-
-export class App extends React.Component<AppProps> {
-  get session() {
-    return this.props.session
-  }
-
+@observer
+export class App extends React.Component {
   render() {
-    switch (this.session.appViewStore.screen) {
+    switch (appViewStore.screen) {
       case "setup":
         return <div>Setting things up...</div>
       case "login":
-        return <LoginModal session={this.session} />
+        return <LoginModal />
       case "selectCharacter":
-        return <SelectCharacterModal session={this.session} />
+        return <SelectCharacterModal />
       case "chat":
-        return <Chat session={this.session} />
+        return <Chat />
     }
   }
 }

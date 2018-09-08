@@ -1,6 +1,6 @@
 import { Formik, FormikProps } from "formik"
 import React from "react"
-import { SessionStore } from "../session/SessionStore"
+import { sessionStore } from "../session/SessionStore"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
@@ -8,6 +8,7 @@ import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
+import { appViewStore } from "./AppViewStore"
 
 const initialValues = {
   account: "",
@@ -16,11 +17,7 @@ const initialValues = {
 
 export type LoginValues = typeof initialValues
 
-type Props = {
-  session: SessionStore
-}
-
-export class LoginModal extends React.Component<Props> {
+export class LoginModal extends React.Component {
   render() {
     return (
       <Formik<LoginValues>
@@ -33,9 +30,9 @@ export class LoginModal extends React.Component<Props> {
 
   private handleSubmit = async (values: LoginValues) => {
     try {
-      await this.props.session.getApiTicket(values.account, values.password)
-      this.props.session.saveUserData()
-      this.props.session.appViewStore.setScreen("selectCharacter")
+      await sessionStore.getApiTicket(values.account, values.password)
+      sessionStore.saveUserData()
+      appViewStore.setScreen("selectCharacter")
     } catch (error) {
       console.error(error)
       alert(error.message || String(error)) // TODO: replace with actual error modal

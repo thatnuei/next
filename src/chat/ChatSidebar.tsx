@@ -1,13 +1,12 @@
 import { observer } from "mobx-react"
 import React from "react"
 import { CharacterInfo } from "../character/CharacterInfo"
-import { SessionStore } from "../session/SessionStore"
+import { sessionStore } from "../session/SessionStore"
 import { flist4, flist5 } from "../ui/colors"
 import { styled } from "../ui/styled"
 import { ChatActions } from "./ChatActions"
 
 type Props = {
-  session: SessionStore
   navigation: React.ReactNode
 }
 
@@ -20,7 +19,7 @@ export class ChatSidebar extends React.Component<Props> {
           <ChatActions />
         </ChatActionsContainer>
         <CharacterInfoContainer>
-          <CharacterInfo character={this.props.session.identityCharacter} />
+          <CharacterInfo character={sessionStore.identityCharacter} />
         </CharacterInfoContainer>
         <ChatNavigationContainer>{this.props.navigation}</ChatNavigationContainer>
       </Container>
