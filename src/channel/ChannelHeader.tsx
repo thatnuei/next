@@ -12,9 +12,12 @@ export class ChannelHeader extends React.Component<ChannelHeaderProps> {
     const { channel } = this.props
     return (
       <HeaderContainer>
-        <h2>{channel.title}</h2>
-        <div style={{ flexGrow: 1 }} />
-        <ChannelFilter channel={channel} />
+        <div style={{ flexShrink: 0, marginRight: "1.5rem" }}>
+          <h2>{channel.title}</h2>
+        </div>
+        <div style={{ flexShrink: 0 }}>
+          <ChannelFilter channel={channel} />
+        </div>
       </HeaderContainer>
     )
   }
@@ -25,4 +28,11 @@ const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   flex-grow: 1;
+  flex-wrap: wrap;
+  justify-items: center;
+  justify-content: space-between;
+`
+
+const ChannelFilterContainer = styled.div`
+  flex-shrink: 0;
 `

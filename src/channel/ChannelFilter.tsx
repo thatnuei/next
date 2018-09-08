@@ -49,7 +49,10 @@ const inactiveStyle = css`
 `
 
 const FilterLink = styled.a.attrs({ href: "#" })<{ active?: boolean }>`
-  padding: 0.3rem 0.7rem;
+  :not(:last-child) {
+    margin-right: 1rem;
+  }
+
   ${(props) => (props.active ? "" : inactiveStyle)};
 `
 
