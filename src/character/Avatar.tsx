@@ -12,5 +12,6 @@ export const Avatar = (props: Props) => (
     alt={`Avatar for ${props.name}`}
     width={props.size || 100}
     height={props.size || 100}
+    style={{ verticalAlign: "top" }}
   />
 )
