@@ -4,7 +4,7 @@ export type CommandListener<T extends keyof ServerCommands> = (params: ServerCom
 
 export type CommandListenerRecord = { [T in keyof ServerCommands]?: Set<CommandListener<any>> }
 
-export class SocketConnectionHandler {
+export class SocketStore {
   private socket?: WebSocket
   private commandListeners: CommandListenerRecord = {}
   private disconnectListeners = new Set<() => void>()

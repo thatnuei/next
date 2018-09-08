@@ -1,6 +1,6 @@
 import { action, computed, observable } from "mobx"
 import { ChatStore } from "../chat/ChatStore"
-import { CommandListener, SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
+import { CommandListener, SocketStore } from "../fchat/SocketStore"
 import { MessageModel, MessageModelOptions } from "../message/MessageModel"
 import { ChannelModel } from "./ChannelModel"
 
@@ -10,7 +10,7 @@ export class ChannelStore {
 
   private joinedChannelIds = observable.map<string, true>()
 
-  constructor(private connection: SocketConnectionHandler, private chatStore: ChatStore) {
+  constructor(private connection: SocketStore, private chatStore: ChatStore) {
     connection.addCommandListener("JCH", this.handleJoin)
     connection.addCommandListener("LCH", this.handleLeave)
     connection.addCommandListener("ICH", this.handleInitialChannelInfo)

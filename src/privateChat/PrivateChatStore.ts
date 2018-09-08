@@ -1,5 +1,5 @@
 import { action, computed, observable } from "mobx"
-import { CommandListener, SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
+import { CommandListener, SocketStore } from "../fchat/SocketStore"
 import { MessageModel } from "../message/MessageModel"
 import { PrivateChatModel } from "./PrivateChatModel"
 
@@ -9,7 +9,7 @@ export class PrivateChatStore {
 
   private openChatPartners = observable.map<string, true>()
 
-  constructor(connection: SocketConnectionHandler) {
+  constructor(connection: SocketStore) {
     connection.addCommandListener("PRI", this.handleMessage)
     connection.addCommandListener("TPN", this.handleTypingStatus)
   }

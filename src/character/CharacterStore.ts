@@ -1,11 +1,11 @@
 import { action, observable } from "mobx"
-import { CommandListener, SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
+import { CommandListener, SocketStore } from "../fchat/SocketStore"
 import { CharacterModel } from "./CharacterModel"
 
 export class CharacterStore {
   characters = observable.map<string, CharacterModel>()
 
-  constructor(connection: SocketConnectionHandler) {
+  constructor(connection: SocketStore) {
     connection.addCommandListener("LIS", this.handleInitialCharacterData)
     connection.addCommandListener("NLN", this.handleLogin)
     connection.addCommandListener("FLN", this.handleLogout)

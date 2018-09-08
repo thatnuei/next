@@ -3,7 +3,7 @@ import { ChannelStore } from "../channel/ChannelStore"
 import { CharacterStore } from "../character/CharacterStore"
 import { ChatStore } from "../chat/ChatStore"
 import { ConversationStore } from "../conversation/ConversationStore"
-import { SocketConnectionHandler } from "../fchat/SocketConnectionHandler"
+import { SocketStore } from "../fchat/SocketStore"
 import { fetchCharacters, fetchTicket } from "../flist/api"
 import { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { UserStore } from "../user/UserStore"
@@ -13,7 +13,7 @@ export type SessionScreen = "setup" | "login" | "selectCharacter" | "chat"
 
 export class SessionStore {
   user = new UserStore()
-  connection = new SocketConnectionHandler()
+  connection = new SocketStore()
   chat = new ChatStore(this.connection)
   characters = new CharacterStore(this.connection)
   channels = new ChannelStore(this.connection, this.chat)
