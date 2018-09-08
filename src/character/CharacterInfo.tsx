@@ -3,7 +3,8 @@ import React from "react"
 import { styled } from "../ui/styled"
 import { Avatar } from "./Avatar"
 import { CharacterModel } from "./CharacterModel"
-import { genderColors, statusColors } from "./colors"
+import { CharacterStatus } from "./CharacterStatus"
+import { genderColors } from "./colors"
 
 type Props = {
   character: CharacterModel
@@ -13,7 +14,6 @@ export const CharacterInfo = observer((props: Props) => {
   const { name, gender, status, statusMessage } = props.character
 
   const nameColor = genderColors[gender]
-  const statusColor = statusColors[status]
 
   return (
     <div>
@@ -22,8 +22,7 @@ export const CharacterInfo = observer((props: Props) => {
         <Avatar name={name} />
       </AvatarContainer>
       <Status>
-        <span style={{ color: statusColor }}>{status}</span>
-        {statusMessage.trim() ? ` - ${statusMessage}` : ""}
+        <CharacterStatus status={status} statusMessage={statusMessage} />
       </Status>
     </div>
   )
