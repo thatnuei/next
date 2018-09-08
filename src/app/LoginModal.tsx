@@ -35,7 +35,7 @@ export class LoginModal extends React.Component<Props> {
     try {
       await this.props.session.getApiTicket(values.account, values.password)
       this.props.session.saveUserData()
-      this.props.session.setScreen("selectCharacter")
+      this.props.session.appViewStore.setScreen("selectCharacter")
     } catch (error) {
       console.error(error)
       alert(error.message || String(error)) // TODO: replace with actual error modal

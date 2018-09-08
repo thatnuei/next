@@ -14,10 +14,10 @@ const session = new SessionStore()
 async function initSession() {
   try {
     await session.restoreUserData()
-    session.setScreen("selectCharacter")
+    session.appViewStore.setScreen("selectCharacter")
   } catch (error) {
     console.warn(error)
-    session.setScreen("login")
+    session.appViewStore.setScreen("login")
   }
 }
 
