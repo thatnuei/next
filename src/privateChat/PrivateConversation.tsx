@@ -20,17 +20,17 @@ export class PrivateConversation extends React.Component<PrivateConversationProp
 
     const headerContent = (
       <HeaderContainer>
-        <div style={{ gridRow: "span 2", margin: "auto", marginRight: "0.5rem" }}>
+        <AvatarContainer>
           <Avatar name={privateChat.partner} size={60} />
-        </div>
-        <div style={{ overflowY: "auto" }}>
-          <h2 style={{ marginBottom: "0.2rem" }}>
+        </AvatarContainer>
+        <InfoContainer>
+          <NameContainer>
             <CharacterName name={privateChat.partner} />
-          </h2>
-          <div style={{ fontSize: "80%", fontStyle: "italic" }}>
+          </NameContainer>
+          <StatusContainer>
             <CharacterStatus status={character.status} statusMessage={character.statusMessage} />
-          </div>
-        </div>
+          </StatusContainer>
+        </InfoContainer>
       </HeaderContainer>
     )
 
@@ -39,8 +39,32 @@ export class PrivateConversation extends React.Component<PrivateConversationProp
 }
 
 const HeaderContainer = styled.div`
-  padding: 0.5rem;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 0.5rem;
+  align-content: start;
+`
 
-  max-height: 6rem;
+const AvatarContainer = styled.div`
+  grid-row: span 2;
+  align-self: center;
+  padding: 0.5rem;
+`
+
+const InfoContainer = styled.div`
+  align-self: center;
+`
+
+const NameContainer = styled.h2`
+  padding-bottom: 0.2rem;
+  padding-top: 0.5rem;
+`
+
+const StatusContainer = styled.div`
+  font-size: 80%;
+  font-style: italic;
+  max-height: 3rem;
+  overflow-y: auto;
+  padding-bottom: 0.5rem;
 `
