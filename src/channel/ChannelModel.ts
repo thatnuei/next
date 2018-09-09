@@ -26,7 +26,7 @@ export class ChannelModel implements ConversationModel {
   mode: ChannelMode = "both"
 
   @observable
-  filter: ChannelMode = "both"
+  filter: ChannelMode = "chat"
 
   // IDEA: add a property for the joined state, e.g. "left" | "joining" | "joined" | "leaving"
   // so we can render loading spinners in the UI and such
