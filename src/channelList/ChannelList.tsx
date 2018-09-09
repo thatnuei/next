@@ -1,22 +1,66 @@
-import { mdiEarth } from "@mdi/js"
+import { mdiEarth, mdiKeyVariant } from "@mdi/js"
+import { action, computed, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { channelStore } from "../channel/ChannelStore"
 import { flist4, flist5 } from "../ui/colors"
 import { Icon } from "../ui/Icon"
 import { css, styled } from "../ui/styled"
-import { channelListStore } from "./ChannelListStore"
+import { ChannelListData, channelListStore } from "./ChannelListStore"
 
 export interface ChannelListProps {}
 
+type ChannelListTabData = {
+  title: string
+  channels: ChannelListData[]
+  icon: string
+}
+
 @observer
 export class ChannelList extends React.Component<ChannelListProps> {
+  @observable
+  tabIndex = 0
+
+  @computed
+  get tabs(): ChannelListTabData[] {
+    return [
+      {
+        title: "Public Channels",
+        channels: channelListStore.publicChannels,
+        icon: mdiEarth,
+      },
+      {
+        title: "Private Channels",
+        channels: channelListStore.privateChannels,
+        icon: mdiKeyVariant,
+      },
+    ]
+  }
+
+  @action
+  setTabIndex(index: number) {
+    this.tabIndex = index
+  }
+
   render() {
+    const currentTab = this.tabs[this.tabIndex]
+
     return (
       <Container>
-        <TabListContainer>tabs</TabListContainer>
+        <TabListContainer>
+          {this.tabs.map((tab, index) => (
+            <Tab
+              key={index}
+              active={this.tabIndex === index}
+              onClick={() => this.setTabIndex(index)}
+            >
+              {tab.title}
+            </Tab>
+          ))}
+        </TabListContainer>
+
         <ChannelListContainer>
-          {channelListStore.publicChannels.map((data) => (
+          {currentTab.channels.map((data) => (
             <ChannelListEntry
               key={data.id}
               active={channelStore.isJoined(data.id)}
@@ -28,6 +72,7 @@ export class ChannelList extends React.Component<ChannelListProps> {
             </ChannelListEntry>
           ))}
         </ChannelListContainer>
+
         <SearchContainer>search</SearchContainer>
       </Container>
     )
@@ -41,6 +86,18 @@ export class ChannelList extends React.Component<ChannelListProps> {
     }
   }
 }
+
+const inactiveStyle = css`
+  opacity: 0.4;
+
+  :hover {
+    opacity: 0.7;
+  }
+`
+
+const activeStyle = css`
+  background-color: ${flist4};
+`
 
 const Container = styled.div`
   background-color: ${flist5};
@@ -58,6 +115,18 @@ const Container = styled.div`
 
 const TabListContainer = styled.div`
   flex-shrink: 0;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+`
+
+const Tab = styled.button<{ active?: boolean }>`
+  flex-grow: 1;
+  padding: 0.6rem;
+  text-align: center;
+
+  ${(props) => (props.active ? activeStyle : inactiveStyle)};
 `
 
 const ChannelListContainer = styled.div`
@@ -79,18 +148,6 @@ const ChannelListEntryUsers = styled.div`
 
 const SearchContainer = styled.div`
   flex-shrink: 0;
-`
-
-const inactiveStyle = css`
-  opacity: 0.4;
-
-  :hover {
-    opacity: 0.7;
-  }
-`
-
-const activeStyle = css`
-  background-color: ${flist4};
 `
 
 const ChannelListEntry = styled.button<{ active?: boolean }>`
