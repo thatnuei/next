@@ -44,6 +44,7 @@ export class ChannelList extends React.Component<ChannelListProps> {
 
   render() {
     const currentTab = this.tabs[this.tabIndex]
+    const channels = [...currentTab.channels].sort((a, b) => a.title.localeCompare(b.title))
 
     return (
       <Container>
@@ -60,14 +61,14 @@ export class ChannelList extends React.Component<ChannelListProps> {
         </TabListContainer>
 
         <ChannelListContainer>
-          {currentTab.channels.map((data) => (
+          {channels.map((data) => (
             <ChannelListEntry
               key={data.id}
               active={channelStore.isJoined(data.id)}
               onClick={() => this.handleEntryClick(data.id)}
             >
               <Icon path={mdiEarth} />
-              <ChannelListEntryTitle>{data.title}</ChannelListEntryTitle>
+              <ChannelListEntryTitle dangerouslySetInnerHTML={{ __html: data.title }} />
               <ChannelListEntryUsers>{data.userCount}</ChannelListEntryUsers>
             </ChannelListEntry>
           ))}
