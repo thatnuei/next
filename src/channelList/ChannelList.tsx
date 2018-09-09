@@ -1,4 +1,4 @@
-import { mdiEarth, mdiKeyVariant } from "@mdi/js"
+import { mdiEarth, mdiKeyVariant, mdiSortAlphabetical, mdiSortNumeric } from "@mdi/js"
 import { action, computed, IReactionDisposer, observable, reaction } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
@@ -12,6 +12,8 @@ import {
 } from "react-virtualized"
 import { channelStore } from "../channel/ChannelStore"
 import { queryify } from "../helpers/string"
+import { CompareFn } from "../helpers/types"
+import { Button } from "../ui/Button"
 import { flist4, flist5 } from "../ui/colors"
 import { Icon } from "../ui/Icon"
 import { css, styled } from "../ui/styled"
@@ -26,6 +28,8 @@ type ChannelListTabData = {
   icon: string
 }
 
+type ChannelListSortMode = "alphabetical" | "userCount"
+
 @observer
 export class ChannelList extends React.Component<ChannelListProps> {
   @observable
@@ -33,6 +37,9 @@ export class ChannelList extends React.Component<ChannelListProps> {
 
   @observable
   private searchText = ""
+
+  @observable
+  private sortMode: ChannelListSortMode = "alphabetical"
 
   private cellMeasurerCache = new CellMeasurerCache({
     defaultHeight: 50,
@@ -62,9 +69,21 @@ export class ChannelList extends React.Component<ChannelListProps> {
     const currentTab = this.tabs[this.tabIndex]
     const searchText = queryify(this.searchText)
 
+    const compareFn: CompareFn<ChannelListData> =
+      this.sortMode === "alphabetical"
+        ? (a, b) => a.title.localeCompare(b.title)
+        : (a, b) => b.userCount - a.userCount
+
     return currentTab.channels
       .filter((channel) => queryify(channel.title).includes(searchText))
-      .sort((a, b) => a.title.localeCompare(b.title))
+      .sort(compareFn)
+  }
+
+  // used for initiating re-renders on the list and auto sizer
+  @computed
+  private get lastChannelId() {
+    const lastItem = this.processedChannels[this.processedChannels.length - 1]
+    return lastItem && lastItem.id
   }
 
   @action
@@ -75,6 +94,15 @@ export class ChannelList extends React.Component<ChannelListProps> {
   @action.bound
   private handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.searchText = event.target.value
+  }
+
+  @action.bound
+  private handleSortModeChange() {
+    if (this.sortMode === "alphabetical") {
+      this.sortMode = "userCount"
+    } else {
+      this.sortMode = "alphabetical"
+    }
   }
 
   private handleEntryClick(id: string) {
@@ -93,6 +121,7 @@ export class ChannelList extends React.Component<ChannelListProps> {
         rowCount={this.processedChannels.length}
         rowRenderer={this.renderChannelRow}
         deferredMeasurementCache={this.cellMeasurerCache}
+        lastId={this.lastChannelId}
       />
     )
   }
@@ -155,7 +184,7 @@ export class ChannelList extends React.Component<ChannelListProps> {
         </TabListContainer>
 
         <ChannelListContainer>
-          <AutoSizer channelCount={this.processedChannels.length}>
+          <AutoSizer channelCount={this.processedChannels.length} lastId={this.lastChannelId}>
             {this.renderChannelList}
           </AutoSizer>
         </ChannelListContainer>
@@ -166,6 +195,9 @@ export class ChannelList extends React.Component<ChannelListProps> {
             onChange={this.handleSearchChange}
             placeholder="Search for channels..."
           />
+          <Button flat onClick={this.handleSortModeChange}>
+            <Icon path={this.sortMode === "alphabetical" ? mdiSortAlphabetical : mdiSortNumeric} />
+          </Button>
         </SearchContainer>
       </Container>
     )
@@ -235,6 +267,8 @@ const SearchContainer = styled.div`
   flex-shrink: 0;
   background-color: ${flist4};
   padding: 4px;
+
+  display: flex;
 `
 
 const ChannelListEntry = styled.button<{ active?: boolean }>`
