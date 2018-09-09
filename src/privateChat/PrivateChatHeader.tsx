@@ -4,23 +4,20 @@ import { Avatar } from "../character/Avatar"
 import { CharacterName } from "../character/CharacterName"
 import { CharacterStatus } from "../character/CharacterStatus"
 import { characterStore } from "../character/CharacterStore"
-import { Chatbox } from "../chat/Chatbox"
-import { ConversationLayout } from "../conversation/ConversationLayout"
 import { styled } from "../ui/styled"
 import { PrivateChatModel } from "./PrivateChatModel"
 
-export interface PrivateConversationProps {
+export interface PrivateChatHeaderProps {
   privateChat: PrivateChatModel
 }
 
 @observer
-export class PrivateConversation extends React.Component<PrivateConversationProps> {
+export class PrivateChatHeader extends React.Component<PrivateChatHeaderProps> {
   render() {
     const { privateChat } = this.props
     const character = characterStore.getCharacter(privateChat.partner)
 
-    // TODO: eventually move this to a separate component
-    const headerContent = (
+    return (
       <HeaderContainer>
         <AvatarContainer>
           <Avatar name={privateChat.partner} size={60} />
@@ -34,14 +31,6 @@ export class PrivateConversation extends React.Component<PrivateConversationProp
           </StatusContainer>
         </InfoContainer>
       </HeaderContainer>
-    )
-
-    return (
-      <ConversationLayout
-        headerContent={headerContent}
-        messages={privateChat.messages}
-        chatbox={<Chatbox onSubmit={console.log} />}
-      />
     )
   }
 }

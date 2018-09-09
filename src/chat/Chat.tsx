@@ -1,38 +1,34 @@
+import { computed } from "mobx"
 import { observer } from "mobx-react"
 import { darken } from "polished"
 import React from "react"
 import MediaQuery from "react-responsive"
-import { ChannelConversation } from "../channel/ChannelConversation"
+import { ChannelHeader } from "../channel/ChannelHeader"
 import { ChannelModel } from "../channel/ChannelModel"
 import { ChannelList } from "../channelList/ChannelList"
 import { ConversationLayout } from "../conversation/ConversationLayout"
 import { conversationStore } from "../conversation/ConversationStore"
+import { PrivateChatHeader } from "../privateChat/PrivateChatHeader"
 import { PrivateChatModel } from "../privateChat/PrivateChatModel"
-import { PrivateConversation } from "../privateChat/PrivateConversation"
 import { flist5 } from "../ui/colors"
 import { Overlay, toggleStateProps } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { chatSidebarBreakpoint } from "./breakpoints"
+import { Chatbox } from "./Chatbox"
 import { ChatSidebar } from "./ChatSidebar"
 import { chatViewStore } from "./ChatViewStore"
 
 @observer
 export class Chat extends React.Component {
-  get conversationElement() {
+  render() {
     const { activeConversation } = conversationStore
 
-    if (activeConversation instanceof ChannelModel) {
-      return <ChannelConversation channel={activeConversation} />
-    }
+    const messages = activeConversation
+      ? activeConversation.displayedMessages || activeConversation.messages
+      : []
 
-    if (activeConversation instanceof PrivateChatModel) {
-      return <PrivateConversation privateChat={activeConversation} />
-    }
+    const users = activeConversation && activeConversation.users
 
-    return <ConversationLayout />
-  }
-
-  render() {
     return (
       <Container>
         <MediaQuery minWidth={chatSidebarBreakpoint}>
@@ -41,7 +37,14 @@ export class Chat extends React.Component {
           </div>
         </MediaQuery>
 
-        <ConversationContainer>{this.conversationElement}</ConversationContainer>
+        <ConversationContainer>
+          <ConversationLayout
+            headerContent={this.headerContent}
+            messages={messages}
+            users={users}
+            chatbox={<Chatbox onSubmit={console.log} />}
+          />
+        </ConversationContainer>
 
         <Overlay anchor="left" {...toggleStateProps(chatViewStore.sidebarDisplay)}>
           <SidebarOverlayContainer>
@@ -54,6 +57,21 @@ export class Chat extends React.Component {
         </Overlay>
       </Container>
     )
+  }
+
+  @computed
+  private get headerContent() {
+    const { activeConversation } = conversationStore
+
+    if (activeConversation instanceof ChannelModel) {
+      return <ChannelHeader channel={activeConversation} />
+    }
+
+    if (activeConversation instanceof PrivateChatModel) {
+      return <PrivateChatHeader privateChat={activeConversation} />
+    }
+
+    return <h2 style={{ padding: "0.5rem 0.7rem" }}>next</h2>
   }
 }
 
