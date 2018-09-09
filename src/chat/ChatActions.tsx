@@ -35,7 +35,7 @@ const Action = (props: { title: string; icon: string }) => (
   </ActionAnchor>
 )
 
-const ActionAnchor = styled.a.attrs({ href: "#" })`
+const ActionAnchor = styled.button`
   opacity: 0.5;
 
   &:hover {
