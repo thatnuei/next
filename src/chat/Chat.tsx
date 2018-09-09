@@ -18,9 +18,21 @@ import { chatViewStore } from "./ChatViewStore"
 
 @observer
 export class Chat extends React.Component {
-  render() {
+  get conversationElement() {
     const { activeConversation } = conversationStore
 
+    if (activeConversation instanceof ChannelModel) {
+      return <ChannelConversation channel={activeConversation} />
+    }
+
+    if (activeConversation instanceof PrivateChatModel) {
+      return <PrivateConversation privateChat={activeConversation} />
+    }
+
+    return <ConversationLayout />
+  }
+
+  render() {
     return (
       <Container>
         <MediaQuery minWidth={chatSidebarBreakpoint}>
@@ -29,15 +41,7 @@ export class Chat extends React.Component {
           </div>
         </MediaQuery>
 
-        <ConversationContainer>
-          {activeConversation instanceof ChannelModel && (
-            <ChannelConversation channel={activeConversation} />
-          )}
-          {activeConversation instanceof PrivateChatModel && (
-            <PrivateConversation privateChat={activeConversation} />
-          )}
-          {!activeConversation && <ConversationLayout />}
-        </ConversationContainer>
+        <ConversationContainer>{this.conversationElement}</ConversationContainer>
 
         <Overlay anchor="left" {...toggleStateProps(chatViewStore.sidebarDisplay)}>
           <SidebarOverlayContainer>
