@@ -6,7 +6,8 @@
     "dev": "webpack-serve",
     "build": "cross-env NODE_ENV=production webpack",
     "serve": "serve build",
-    "stats": "cross-env NODE_ENV=production webpack --reporter json > ./stats.json"
+    "stats": "cross-env NODE_ENV=production webpack --reporter json > ./stats.json",
+    "format": "prettier --write \"src/**/*.@(ts|tsx)\""
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
@@ -51,6 +52,7 @@
     "copy-webpack-plugin": "^4.5.2",
     "fork-ts-checker-webpack-plugin": "^0.4.9",
     "html-webpack-plugin": "^3.2.0",
+    "prettier": "^1.14.2",
     "typescript": "^3.0.3",
     "typescript-styled-plugin": "^0.10.0",
     "webpack": "^4.17.2",
