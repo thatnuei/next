@@ -15,12 +15,14 @@ export class ChatSidebar extends React.Component {
         <ChatActionsContainer>
           <ChatActions />
         </ChatActionsContainer>
-        <CharacterInfoContainer>
-          <CharacterInfo character={sessionStore.identityCharacter} />
-        </CharacterInfoContainer>
-        <ChatNavigationContainer>
-          <ChatNavigation />
-        </ChatNavigationContainer>
+        <div style={{ overflowY: "auto", display: "flex", flexDirection: "column" }}>
+          <CharacterInfoContainer>
+            <CharacterInfo character={sessionStore.identityCharacter} />
+          </CharacterInfoContainer>
+          <ChatNavigationContainer>
+            <ChatNavigation />
+          </ChatNavigationContainer>
+        </div>
       </Container>
     )
   }
@@ -28,14 +30,8 @@ export class ChatSidebar extends React.Component {
 
 const Container = styled.div`
   width: 16rem;
-
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: min-content 1fr;
-  grid-row-gap: 4px;
-
+  display: flex;
   flex-shrink: 0;
-
   height: 100%;
 `
 
@@ -50,6 +46,6 @@ const CharacterInfoContainer = styled.div`
 `
 
 const ChatNavigationContainer = styled.div`
-  overflow-y: auto;
   background-color: ${flist5};
+  flex-grow: 1;
 `
