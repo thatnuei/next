@@ -74,6 +74,7 @@ export class ChannelStore {
   private handleJoin: CommandListener<"JCH"> = (params) => {
     const channel = this.getChannel(params.channel)
     channel.title = params.title
+    channel.type = params.channel === params.title ? "public" : "private"
     channel.addUser(params.character.identity)
 
     if (params.character.identity === chatStore.identity) {

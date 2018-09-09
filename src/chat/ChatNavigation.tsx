@@ -1,4 +1,4 @@
-import { mdiCodeTags, mdiEarth } from "@mdi/js"
+import { mdiCodeTags, mdiCommentOutline, mdiEarth } from "@mdi/js"
 import { observer } from "mobx-react"
 import React from "react"
 import { channelStore } from "../channel/ChannelStore"
@@ -17,7 +17,7 @@ export class ChatNavigation extends React.Component {
       <ChatNavigationTab
         key={convo.id}
         text={convo.title}
-        icon={mdiEarth}
+        icon={convo.type === "public" ? mdiEarth : mdiCommentOutline}
         active={conversationStore.isActive(convo)}
         onActivate={() => {
           conversationStore.setActiveConversation(convo)
@@ -57,6 +57,6 @@ export class ChatNavigation extends React.Component {
 
 const SectionHeader = styled.h2`
   font-size: 1.2rem;
-  margin: 0.8rem 0.7rem 0.4rem;
+  margin: 8px;
   opacity: 0.5;
 `

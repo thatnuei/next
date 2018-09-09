@@ -5,6 +5,8 @@ import { MessageModel } from "../message/MessageModel"
 
 export type ChannelMode = fchat.Channel.Mode
 
+export type ChannelType = "public" | "private"
+
 export class ChannelModel implements ConversationModel {
   id: string
 
@@ -27,6 +29,9 @@ export class ChannelModel implements ConversationModel {
 
   @observable
   filter: ChannelMode = "chat"
+
+  @observable
+  type: ChannelType = "public"
 
   // IDEA: add a property for the joined state, e.g. "left" | "joining" | "joined" | "leaving"
   // so we can render loading spinners in the UI and such
