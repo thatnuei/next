@@ -1,7 +1,15 @@
 import { mdiEarth, mdiKeyVariant } from "@mdi/js"
-import { action, computed, observable } from "mobx"
+import { action, computed, IReactionDisposer, observable, reaction } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
+import {
+  AutoSizer,
+  CellMeasurer,
+  CellMeasurerCache,
+  List,
+  ListRowRenderer,
+  Size,
+} from "react-virtualized"
 import { channelStore } from "../channel/ChannelStore"
 import { queryify } from "../helpers/string"
 import { flist4, flist5 } from "../ui/colors"
@@ -25,6 +33,13 @@ export class ChannelList extends React.Component<ChannelListProps> {
 
   @observable
   private searchText = ""
+
+  private cellMeasurerCache = new CellMeasurerCache({
+    defaultHeight: 50,
+    fixedWidth: true,
+  })
+
+  private disposeChannelListWatcher?: IReactionDisposer
 
   @computed
   private get tabs(): ChannelListTabData[] {
@@ -70,6 +85,60 @@ export class ChannelList extends React.Component<ChannelListProps> {
     }
   }
 
+  private renderChannelList = (size: Size) => {
+    return (
+      <List
+        {...size}
+        rowHeight={this.cellMeasurerCache.rowHeight}
+        rowCount={this.processedChannels.length}
+        rowRenderer={this.renderChannelRow}
+        deferredMeasurementCache={this.cellMeasurerCache}
+      />
+    )
+  }
+
+  private renderChannelRow: ListRowRenderer = (row) => {
+    const channel = this.processedChannels[row.index] as ChannelListData | undefined
+
+    const content = channel && (
+      <ChannelListEntry
+        style={row.style}
+        active={channelStore.isJoined(channel.id)}
+        onClick={() => this.handleEntryClick(channel.id)}
+      >
+        <Icon path={mdiEarth} />
+        <ChannelListEntryTitle dangerouslySetInnerHTML={{ __html: channel.title }} />
+        <ChannelListEntryUsers>{channel.userCount}</ChannelListEntryUsers>
+      </ChannelListEntry>
+    )
+
+    return (
+      <CellMeasurer
+        cache={this.cellMeasurerCache}
+        key={row.key}
+        parent={row.parent}
+        rowIndex={row.index}
+      >
+        {content}
+      </CellMeasurer>
+    )
+  }
+
+  componentDidMount() {
+    this.disposeChannelListWatcher = reaction(
+      () => this.processedChannels,
+      () => {
+        this.cellMeasurerCache.clearAll()
+      },
+    )
+  }
+
+  componentWillUnmount() {
+    if (this.disposeChannelListWatcher) {
+      this.disposeChannelListWatcher()
+    }
+  }
+
   render() {
     return (
       <Container>
@@ -86,17 +155,9 @@ export class ChannelList extends React.Component<ChannelListProps> {
         </TabListContainer>
 
         <ChannelListContainer>
-          {this.processedChannels.map((channel) => (
-            <ChannelListEntry
-              key={channel.id}
-              active={channelStore.isJoined(channel.id)}
-              onClick={() => this.handleEntryClick(channel.id)}
-            >
-              <Icon path={mdiEarth} />
-              <ChannelListEntryTitle dangerouslySetInnerHTML={{ __html: channel.title }} />
-              <ChannelListEntryUsers>{channel.userCount}</ChannelListEntryUsers>
-            </ChannelListEntry>
-          ))}
+          <AutoSizer channelCount={this.processedChannels.length}>
+            {this.renderChannelList}
+          </AutoSizer>
         </ChannelListContainer>
 
         <SearchContainer>
