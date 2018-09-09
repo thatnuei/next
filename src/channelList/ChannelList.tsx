@@ -21,13 +21,13 @@ type ChannelListTabData = {
 @observer
 export class ChannelList extends React.Component<ChannelListProps> {
   @observable
-  tabIndex = 0
+  private tabIndex = 0
 
   @observable
-  searchText = ""
+  private searchText = ""
 
   @computed
-  get tabs(): ChannelListTabData[] {
+  private get tabs(): ChannelListTabData[] {
     return [
       {
         title: "Public Channels",
@@ -42,24 +42,35 @@ export class ChannelList extends React.Component<ChannelListProps> {
     ]
   }
 
+  @computed
+  private get processedChannels() {
+    const currentTab = this.tabs[this.tabIndex]
+    const searchText = queryify(this.searchText)
+
+    return currentTab.channels
+      .filter((channel) => queryify(channel.title).includes(searchText))
+      .sort((a, b) => a.title.localeCompare(b.title))
+  }
+
   @action
-  setTabIndex(index: number) {
+  private setTabIndex(index: number) {
     this.tabIndex = index
   }
 
   @action.bound
-  handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
+  private handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.searchText = event.target.value
   }
 
+  private handleEntryClick(id: string) {
+    if (channelStore.isJoined(id)) {
+      channelStore.leaveChannel(id)
+    } else {
+      channelStore.joinChannel(id)
+    }
+  }
+
   render() {
-    const currentTab = this.tabs[this.tabIndex]
-    const searchText = queryify(this.searchText)
-
-    const channels = currentTab.channels
-      .filter((channel) => queryify(channel.title).includes(searchText))
-      .sort((a, b) => a.title.localeCompare(b.title))
-
     return (
       <Container>
         <TabListContainer>
@@ -75,15 +86,15 @@ export class ChannelList extends React.Component<ChannelListProps> {
         </TabListContainer>
 
         <ChannelListContainer>
-          {channels.map((data) => (
+          {this.processedChannels.map((channel) => (
             <ChannelListEntry
-              key={data.id}
-              active={channelStore.isJoined(data.id)}
-              onClick={() => this.handleEntryClick(data.id)}
+              key={channel.id}
+              active={channelStore.isJoined(channel.id)}
+              onClick={() => this.handleEntryClick(channel.id)}
             >
               <Icon path={mdiEarth} />
-              <ChannelListEntryTitle dangerouslySetInnerHTML={{ __html: data.title }} />
-              <ChannelListEntryUsers>{data.userCount}</ChannelListEntryUsers>
+              <ChannelListEntryTitle dangerouslySetInnerHTML={{ __html: channel.title }} />
+              <ChannelListEntryUsers>{channel.userCount}</ChannelListEntryUsers>
             </ChannelListEntry>
           ))}
         </ChannelListContainer>
@@ -97,14 +108,6 @@ export class ChannelList extends React.Component<ChannelListProps> {
         </SearchContainer>
       </Container>
     )
-  }
-
-  private handleEntryClick(id: string) {
-    if (channelStore.isJoined(id)) {
-      channelStore.leaveChannel(id)
-    } else {
-      channelStore.joinChannel(id)
-    }
   }
 }
 
