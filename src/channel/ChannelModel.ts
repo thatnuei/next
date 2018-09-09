@@ -1,8 +1,9 @@
+import * as fchat from "fchat"
 import { action, computed, observable } from "mobx"
 import { ConversationModel } from "../conversation/ConversationModel"
 import { MessageModel } from "../message/MessageModel"
 
-type ChannelMode = "chat" | "ads" | "both"
+export type ChannelMode = fchat.Channel.Mode
 
 export class ChannelModel implements ConversationModel {
   id: string
