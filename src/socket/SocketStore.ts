@@ -51,7 +51,11 @@ export class SocketStore {
 
   sendCommand<K extends keyof ClientCommands>(cmd: K, params: ClientCommands[K]) {
     if (this.socket) {
-      this.socket.send(`${cmd} ${JSON.stringify(params)}`)
+      if (params) {
+        this.socket.send(`${cmd} ${JSON.stringify(params)}`)
+      } else {
+        this.socket.send(cmd)
+      }
     }
   }
 
