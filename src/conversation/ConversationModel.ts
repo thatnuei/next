@@ -5,5 +5,5 @@ export interface ConversationModel {
   readonly id: string
   users?: string[]
   messages: MessageModel[]
-  filteredMessages?: MessageModel[]
+  displayedMessages?: MessageModel[]
 }
