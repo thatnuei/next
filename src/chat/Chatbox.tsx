@@ -43,7 +43,7 @@ export class Chatbox extends React.Component<ChatboxProps> {
           onInput={this.handleInput}
           style={{ resize: "none", width: "initial", flexGrow: 1, marginRight: "4px" }}
         />
-        <Button style={{ width: "6rem" }} onClick={this.submit}>
+        <Button style={{ width: "6rem", textAlign: "center" }} onClick={this.submit}>
           Send
         </Button>
       </Container>
