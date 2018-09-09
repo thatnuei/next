@@ -33,9 +33,16 @@ export class ChannelStore {
     return [...this.joinedChannelIds.keys()].map(this.getChannel)
   }
 
-  @action
-  leaveChannel(channel: string) {
-    socketStore.sendCommand("LCH", { channel })
+  joinChannel(id: string) {
+    socketStore.sendCommand("JCH", { channel: id })
+  }
+
+  leaveChannel(id: string) {
+    socketStore.sendCommand("LCH", { channel: id })
+  }
+
+  isJoined(id: string) {
+    return this.joinedChannelIds.has(id)
   }
 
   @action
