@@ -21,6 +21,7 @@ export class Icon extends React.Component<Props> {
 }
 
 export const IconContainer = styled.div`
+  line-height: 1;
   svg {
     vertical-align: top;
   }
