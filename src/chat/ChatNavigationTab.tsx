@@ -19,10 +19,18 @@ export class ChatNavigationTab extends React.Component<ChatNavigationTabProps> {
     return (
       <Container {...this.props}>
         <TitleContainer {...this.props} onMouseDown={this.handleActivate}>
-          <IconContainer>
-            {this.props.icon && <Icon path={this.props.icon} />}
-            {this.props.avatar && <Avatar name={this.props.avatar} size={24} />}
-          </IconContainer>
+          {this.props.icon && (
+            <IconContainer>
+              <Icon path={this.props.icon} />
+            </IconContainer>
+          )}
+
+          {this.props.avatar && (
+            <IconContainer>
+              <Avatar name={this.props.avatar} size={24} />
+            </IconContainer>
+          )}
+
           <TitleText>{this.props.text}</TitleText>
         </TitleContainer>
         {this.props.onClose && (
@@ -45,7 +53,7 @@ export class ChatNavigationTab extends React.Component<ChatNavigationTabProps> {
 
 const Container = styled.div<ChatNavigationTabProps>`
   display: flex;
-  align-items: center;
+  align-items: stretch;
 
   background-color: ${(props) => (props.active ? flist4 : "transparent")};
 `
@@ -54,29 +62,23 @@ const inactiveStyle = css`
   opacity: 0.3;
 
   &:hover {
-    opacity: 0.5;
+    opacity: 0.6;
   }
 `
 
 const TitleContainer = styled.a.attrs({ href: "#" })<ChatNavigationTabProps>`
   flex-grow: 1;
 
-  padding: 0.6rem 0.6rem;
-
   display: flex;
   align-items: center;
+
+  padding: 8px;
 
   ${(props) => (props.active ? "" : inactiveStyle)};
 `
 
 const IconContainer = styled.div`
-  padding-right: 0.4rem;
-
-  /* to remove the random spacing on the icon */
-  svg,
-  img {
-    display: block;
-  }
+  margin-right: 8px;
 `
 
 const TitleText = styled.div`
@@ -86,14 +88,12 @@ const TitleText = styled.div`
 `
 
 const CloseButton = styled.a.attrs({ href: "#" })<ChatNavigationTabProps>`
-  padding: 0.3rem 0.4rem;
   flex-shrink: 0;
 
-  /* to remove the random spacing on the icon */
-  svg,
-  img {
-    display: block;
-  }
+  padding: 8px;
 
-  ${(props) => (props.active ? "" : inactiveStyle)};
+  display: flex;
+  align-items: center;
+
+  ${inactiveStyle};
 `
