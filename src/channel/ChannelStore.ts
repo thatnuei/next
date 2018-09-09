@@ -19,6 +19,7 @@ export class ChannelStore {
     socketStore.addCommandListener("MSG", this.handleNormalMessage)
     socketStore.addCommandListener("LRP", this.handleAdMessage)
     socketStore.addCommandListener("FLN", this.handleLogout)
+    socketStore.addCommandListener("IDN", this.restoreJoinedChannels)
   }
 
   @action.bound
@@ -45,6 +46,24 @@ export class ChannelStore {
     return this.joinedChannelIds.has(id)
   }
 
+  private saveJoinedChannels() {
+    const channelIds = [...this.joinedChannelIds.keys()]
+    localStorage.setItem("joinedChannels", JSON.stringify(channelIds))
+  }
+
+  private restoreJoinedChannels = () => {
+    let channelIds: string[] = []
+    try {
+      channelIds = JSON.parse(localStorage.getItem("joinedChannels") || "[]")
+    } catch (error) {
+      console.warn("Error loading channels:", error)
+    }
+
+    for (const id of channelIds) {
+      this.joinChannel(id)
+    }
+  }
+
   @action
   private addChannelMessage = (channelId: string, options: MessageModelOptions) => {
     const channel = this.getChannel(channelId)
@@ -59,6 +78,7 @@ export class ChannelStore {
 
     if (params.character.identity === chatStore.identity) {
       this.joinedChannelIds.set(params.channel, true)
+      this.saveJoinedChannels()
     }
   }
 
@@ -69,6 +89,7 @@ export class ChannelStore {
 
     if (params.character === chatStore.identity) {
       this.joinedChannelIds.delete(params.channel)
+      this.saveJoinedChannels()
     }
   }
 

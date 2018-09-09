@@ -19,10 +19,6 @@ export class SessionStore {
   constructor() {
     socketStore.addCommandListener("IDN", () => {
       appViewStore.setScreen("chat")
-
-      socketStore.sendCommand("JCH", { channel: "Frontpage" })
-      socketStore.sendCommand("JCH", { channel: "Fantasy" })
-      socketStore.sendCommand("JCH", { channel: "Story Driven LFRP" })
     })
 
     socketStore.addDisconnectListener(() => {
