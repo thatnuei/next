@@ -3,9 +3,11 @@ import { action, computed, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { channelStore } from "../channel/ChannelStore"
+import { queryify } from "../helpers/string"
 import { flist4, flist5 } from "../ui/colors"
 import { Icon } from "../ui/Icon"
 import { css, styled } from "../ui/styled"
+import { TextInput } from "../ui/TextInput"
 import { ChannelListData, channelListStore } from "./ChannelListStore"
 
 export interface ChannelListProps {}
@@ -20,6 +22,9 @@ type ChannelListTabData = {
 export class ChannelList extends React.Component<ChannelListProps> {
   @observable
   tabIndex = 0
+
+  @observable
+  searchText = ""
 
   @computed
   get tabs(): ChannelListTabData[] {
@@ -42,9 +47,18 @@ export class ChannelList extends React.Component<ChannelListProps> {
     this.tabIndex = index
   }
 
+  @action.bound
+  handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
+    this.searchText = event.target.value
+  }
+
   render() {
     const currentTab = this.tabs[this.tabIndex]
-    const channels = [...currentTab.channels].sort((a, b) => a.title.localeCompare(b.title))
+    const searchText = queryify(this.searchText)
+
+    const channels = currentTab.channels
+      .filter((channel) => queryify(channel.title).includes(searchText))
+      .sort((a, b) => a.title.localeCompare(b.title))
 
     return (
       <Container>
@@ -74,7 +88,13 @@ export class ChannelList extends React.Component<ChannelListProps> {
           ))}
         </ChannelListContainer>
 
-        <SearchContainer>search</SearchContainer>
+        <SearchContainer>
+          <TextInput
+            value={this.searchText}
+            onChange={this.handleSearchChange}
+            placeholder="Search for channels..."
+          />
+        </SearchContainer>
       </Container>
     )
   }
@@ -149,6 +169,8 @@ const ChannelListEntryUsers = styled.div`
 
 const SearchContainer = styled.div`
   flex-shrink: 0;
+  background-color: ${flist4};
+  padding: 4px;
 `
 
 const ChannelListEntry = styled.button<{ active?: boolean }>`
