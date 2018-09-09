@@ -5,7 +5,7 @@ import { flist4 } from "../ui/colors"
 import { Icon } from "../ui/Icon"
 import { css, styled } from "../ui/styled"
 
-type ChatNavigationTabProps = {
+export interface ChatNavigationTabProps {
   text: string
   active?: boolean
   icon?: string
@@ -14,24 +14,33 @@ type ChatNavigationTabProps = {
   onClose?: () => void
 }
 
-// TODO: turn into class w/ methods for handlers
-export const ChatNavigationTab = (props: ChatNavigationTabProps) => {
-  return (
-    <Container {...props}>
-      <TitleContainer {...props} onMouseDown={() => props.onActivate && props.onActivate()}>
-        <IconContainer>
-          {props.icon && <Icon path={props.icon} />}
-          {props.avatar && <Avatar name={props.avatar} size={24} />}
-        </IconContainer>
-        <TitleText>{props.text}</TitleText>
-      </TitleContainer>
-      {props.onClose && (
-        <CloseButton {...props} onMouseDown={() => props.onClose && props.onClose()}>
-          <Icon path={mdiClose} size={0.8} />
-        </CloseButton>
-      )}
-    </Container>
-  )
+export class ChatNavigationTab extends React.Component<ChatNavigationTabProps> {
+  render() {
+    return (
+      <Container {...this.props}>
+        <TitleContainer {...this.props} onMouseDown={this.handleActivate}>
+          <IconContainer>
+            {this.props.icon && <Icon path={this.props.icon} />}
+            {this.props.avatar && <Avatar name={this.props.avatar} size={24} />}
+          </IconContainer>
+          <TitleText>{this.props.text}</TitleText>
+        </TitleContainer>
+        {this.props.onClose && (
+          <CloseButton {...this.props} onMouseDown={this.handleClose}>
+            <Icon path={mdiClose} size={0.8} />
+          </CloseButton>
+        )}
+      </Container>
+    )
+  }
+
+  private handleActivate = () => {
+    this.props.onActivate && this.props.onActivate()
+  }
+
+  private handleClose = () => {
+    this.props.onClose && this.props.onClose()
+  }
 }
 
 const Container = styled.div<ChatNavigationTabProps>`
