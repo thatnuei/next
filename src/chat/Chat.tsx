@@ -8,7 +8,7 @@ import { conversationStore } from "../conversation/ConversationStore"
 import { PrivateChatModel } from "../privateChat/PrivateChatModel"
 import { PrivateConversation } from "../privateChat/PrivateConversation"
 import { flist5 } from "../ui/colors"
-import { Overlay } from "../ui/Overlay"
+import { Overlay, toggleStateProps } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { chatSidebarBreakpoint } from "./breakpoints"
 import { ChatSidebar } from "./ChatSidebar"
@@ -36,11 +36,7 @@ export class Chat extends React.Component {
           )}
         </ConversationContainer>
 
-        <Overlay
-          anchor="left"
-          visible={chatViewStore.sidebarDisplay.enabled}
-          onShadeClick={chatViewStore.sidebarDisplay.disable}
-        >
+        <Overlay anchor="left" {...toggleStateProps(chatViewStore.sidebarDisplay)}>
           <SidebarOverlayContainer>
             <ChatSidebar />
           </SidebarOverlayContainer>

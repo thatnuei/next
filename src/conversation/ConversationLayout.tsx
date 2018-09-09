@@ -6,7 +6,7 @@ import { ChatSidebarToggle } from "../chat/ChatSidebarToggle"
 import { chatViewStore } from "../chat/ChatViewStore"
 import { MessageModel } from "../message/MessageModel"
 import { flist4, flist5 } from "../ui/colors"
-import { Overlay } from "../ui/Overlay"
+import { Overlay, toggleStateProps } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { userListBreakpoint } from "./breakpoints"
 import { ConversationMessageList } from "./ConversationMessageList"
@@ -42,11 +42,7 @@ export const ConversationLayout = observer((props: Props) => {
         <Chatbox onSubmit={console.log} />
       </ChatboxArea>
 
-      <Overlay
-        anchor="right"
-        visible={chatViewStore.userListDisplay.enabled}
-        onShadeClick={chatViewStore.userListDisplay.disable}
-      >
+      <Overlay anchor="right" {...toggleStateProps(chatViewStore.userListDisplay)}>
         {props.users && <ConversationUserList users={props.users} />}
       </Overlay>
     </Container>

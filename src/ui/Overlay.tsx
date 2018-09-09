@@ -1,4 +1,5 @@
 import React from "react"
+import { ToggleState } from "../state/ToggleState"
 import { css, styled } from "./styled"
 
 export type OverlayAnchor = "center" | "left" | "right"
@@ -88,4 +89,8 @@ const panelAnchorStyles = {
     transition: 0.3s transform;
     transform: translateX(${props.visible ? "0" : "100%"});
   `,
+}
+
+export function toggleStateProps(ts: ToggleState): OverlayProps {
+  return { visible: ts.enabled, onShadeClick: ts.disable }
 }
