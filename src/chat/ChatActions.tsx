@@ -1,14 +1,16 @@
 import { mdiAccountEdit, mdiForum, mdiLogout, mdiSettings } from "@mdi/js"
 import React from "react"
+import { channelListStore } from "../channelList/ChannelListStore"
 import { Icon } from "../ui/Icon"
 import { styled } from "../ui/styled"
+import { chatViewStore } from "./ChatViewStore"
 
 export class ChatActions extends React.Component {
   render() {
     return (
       <Container>
         <section>
-          <Action title="Channels" icon={mdiForum} />
+          <Action title="Channels" icon={mdiForum} onClick={this.handleChannelListAction} />
           <Action title="Update Status" icon={mdiAccountEdit} />
           <Action title="Settings" icon={mdiSettings} />
         </section>
@@ -17,6 +19,11 @@ export class ChatActions extends React.Component {
         </section>
       </Container>
     )
+  }
+
+  private handleChannelListAction = () => {
+    chatViewStore.channelListDisplay.enable()
+    channelListStore.requestChannelList()
   }
 }
 

@@ -4,6 +4,7 @@ import React from "react"
 import MediaQuery from "react-responsive"
 import { ChannelConversation } from "../channel/ChannelConversation"
 import { ChannelModel } from "../channel/ChannelModel"
+import { ChannelList } from "../channelList/ChannelList"
 import { conversationStore } from "../conversation/ConversationStore"
 import { PrivateChatModel } from "../privateChat/PrivateChatModel"
 import { PrivateConversation } from "../privateChat/PrivateConversation"
@@ -40,6 +41,10 @@ export class Chat extends React.Component {
           <SidebarOverlayContainer>
             <ChatSidebar />
           </SidebarOverlayContainer>
+        </Overlay>
+
+        <Overlay {...toggleStateProps(chatViewStore.channelListDisplay)}>
+          <ChannelList />
         </Overlay>
       </Container>
     )
