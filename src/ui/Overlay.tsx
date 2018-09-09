@@ -66,7 +66,6 @@ const panelAnchorStyles = {
     margin: auto;
     max-width: calc(100vw - 2rem);
     max-height: calc(100vh - 2rem);
-    overflow-y: auto;
 
     transition: 0.3s transform;
     transform: translateY(${props.visible ? "0" : "-50px"});
