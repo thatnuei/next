@@ -15,14 +15,14 @@ export class ChannelFilter extends React.Component<ChannelFilterProps> {
     if (channel.mode === "both") {
       return (
         <Container>
-          <FilterLink active={channel.filter === "both"} onClick={() => channel.setFilter("both")}>
-            Both
-          </FilterLink>
           <FilterLink active={channel.filter === "chat"} onClick={() => channel.setFilter("chat")}>
             Chat
           </FilterLink>
           <FilterLink active={channel.filter === "ads"} onClick={() => channel.setFilter("ads")}>
             Ads
+          </FilterLink>
+          <FilterLink active={channel.filter === "both"} onClick={() => channel.setFilter("both")}>
+            Both
           </FilterLink>
         </Container>
       )
@@ -30,9 +30,9 @@ export class ChannelFilter extends React.Component<ChannelFilterProps> {
 
     return (
       <Container disabled>
-        <FilterLink>Both</FilterLink>
         <FilterLink active={channel.mode === "chat"}>Chat</FilterLink>
         <FilterLink active={channel.mode === "ads"}>Ads</FilterLink>
+        <FilterLink>Both</FilterLink>
       </Container>
     )
   }
