@@ -7,10 +7,11 @@ import {
   CellMeasurer,
   CellMeasurerCache,
   List,
-  ListRowRenderer,
+  ListRowProps,
   Size,
 } from "react-virtualized"
 import { channelStore } from "../channel/ChannelStore"
+import { observerCallback } from "../helpers/mobx"
 import { queryify } from "../helpers/string"
 import { CompareFn } from "../helpers/types"
 import { Button } from "../ui/Button"
@@ -113,7 +114,7 @@ export class ChannelList extends React.Component<ChannelListProps> {
     }
   }
 
-  private renderChannelList = (size: Size) => {
+  private renderChannelList = observerCallback((size: Size) => {
     return (
       <List
         {...size}
@@ -121,12 +122,11 @@ export class ChannelList extends React.Component<ChannelListProps> {
         rowCount={this.processedChannels.length}
         rowRenderer={this.renderChannelRow}
         deferredMeasurementCache={this.cellMeasurerCache}
-        lastId={this.lastChannelId}
       />
     )
-  }
+  })
 
-  private renderChannelRow: ListRowRenderer = (row) => {
+  private renderChannelRow = observerCallback((row: ListRowProps) => {
     const channel = this.processedChannels[row.index] as ChannelListData | undefined
 
     const content = channel && (
@@ -151,7 +151,7 @@ export class ChannelList extends React.Component<ChannelListProps> {
         {content}
       </CellMeasurer>
     )
-  }
+  })
 
   componentDidMount() {
     this.disposeChannelListWatcher = reaction(
@@ -184,9 +184,7 @@ export class ChannelList extends React.Component<ChannelListProps> {
         </TabListContainer>
 
         <ChannelListContainer>
-          <AutoSizer channelCount={this.processedChannels.length} lastId={this.lastChannelId}>
-            {this.renderChannelList}
-          </AutoSizer>
+          <AutoSizer>{this.renderChannelList}</AutoSizer>
         </ChannelListContainer>
 
         <SearchContainer>

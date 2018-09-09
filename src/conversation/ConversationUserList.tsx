@@ -3,6 +3,7 @@ import { observer } from "mobx-react"
 import React from "react"
 import { AutoSizer, List, ListRowRenderer, Size } from "react-virtualized"
 import { CharacterName } from "../character/CharacterName"
+import { observerCallback } from "../helpers/mobx"
 import { queryify } from "../helpers/string"
 import { flist4, flist5 } from "../ui/colors"
 import { styled } from "../ui/styled"
@@ -33,7 +34,7 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
       <Container>
         <UserCount>{this.props.users.length} Characters</UserCount>
         <UserList>
-          <AutoSizer userCount={this.filteredUsers.length}>{this.renderList}</AutoSizer>
+          <AutoSizer>{this.renderList}</AutoSizer>
         </UserList>
         <TextInput
           placeholder="Search users..."
@@ -44,7 +45,7 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
     )
   }
 
-  private renderList = (size: Size) => {
+  private renderList = observerCallback((size: Size) => {
     return (
       <List
         {...size}
@@ -53,16 +54,16 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
         rowRenderer={this.renderListRow}
       />
     )
-  }
+  })
 
-  private renderListRow: ListRowRenderer = (row) => {
+  private renderListRow: ListRowRenderer = observerCallback((row) => {
     const userName: string | undefined = this.filteredUsers[row.index]
     return (
       <UserListItem key={row.key} style={row.style}>
         {userName && <CharacterName name={userName} />}
       </UserListItem>
     )
-  }
+  })
 }
 
 const Container = styled.div`
