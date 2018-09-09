@@ -36,6 +36,7 @@ export function applyGlobalStyles() {
       font: inherit;
       color: inherit;
       border: none;
+      text-align: left;
     }
 
     a {
