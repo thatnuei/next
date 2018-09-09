@@ -226,8 +226,6 @@ const Container = styled.div`
   max-width: 100%;
   height: 40rem;
   max-height: calc(100vh - 2rem);
-
-  overflow-y: auto;
 `
 
 const TabListContainer = styled.div`
@@ -248,7 +246,6 @@ const Tab = styled.button<{ active?: boolean }>`
 
 const ChannelListContainer = styled.div`
   flex-grow: 1;
-  overflow-y: auto;
   min-height: 0;
 `
 
