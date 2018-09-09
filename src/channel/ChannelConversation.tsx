@@ -1,5 +1,6 @@
 import { observer } from "mobx-react"
 import React from "react"
+import { Chatbox } from "../chat/Chatbox"
 import { ConversationLayout } from "../conversation/ConversationLayout"
 import { ChannelHeader } from "./ChannelHeader"
 import { ChannelModel } from "./ChannelModel"
@@ -17,6 +18,7 @@ export class ChannelConversation extends React.Component<ChannelConversationProp
         headerContent={<ChannelHeader channel={this.props.channel} />}
         messages={channel.filteredMessages}
         users={channel.users}
+        chatbox={<Chatbox onSubmit={console.log} />}
       />
     )
   }

@@ -1,11 +1,10 @@
 import { observer } from "mobx-react"
 import React from "react"
 import MediaQuery from "react-responsive"
-import { Chatbox } from "../chat/Chatbox"
 import { ChatSidebarToggle } from "../chat/ChatSidebarToggle"
 import { chatViewStore } from "../chat/ChatViewStore"
 import { MessageModel } from "../message/MessageModel"
-import { flist4, flist5 } from "../ui/colors"
+import { flist4 } from "../ui/colors"
 import { Overlay, toggleStateProps } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { userListBreakpoint } from "./breakpoints"
@@ -17,6 +16,7 @@ type Props = {
   headerContent?: React.ReactNode
   messages?: MessageModel[]
   users?: string[]
+  chatbox?: React.ReactNode
 }
 
 export const ConversationLayout = observer((props: Props) => {
@@ -38,9 +38,7 @@ export const ConversationLayout = observer((props: Props) => {
         {props.messages && <ConversationMessageList messages={props.messages} />}
       </MessagesArea>
 
-      <ChatboxArea>
-        <Chatbox onSubmit={console.log} />
-      </ChatboxArea>
+      <ChatboxArea>{props.chatbox}</ChatboxArea>
 
       <Overlay anchor="right" {...toggleStateProps(chatViewStore.userListDisplay)}>
         {props.users && <ConversationUserList users={props.users} />}
@@ -79,7 +77,6 @@ const UserListArea = styled.div`
 `
 
 const MessagesArea = styled.div`
-  background-color: ${flist5};
   overflow-y: auto;
   transform: translateZ(0);
 `

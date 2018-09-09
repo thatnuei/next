@@ -5,6 +5,7 @@ import MediaQuery from "react-responsive"
 import { ChannelConversation } from "../channel/ChannelConversation"
 import { ChannelModel } from "../channel/ChannelModel"
 import { ChannelList } from "../channelList/ChannelList"
+import { ConversationLayout } from "../conversation/ConversationLayout"
 import { conversationStore } from "../conversation/ConversationStore"
 import { PrivateChatModel } from "../privateChat/PrivateChatModel"
 import { PrivateConversation } from "../privateChat/PrivateConversation"
@@ -35,6 +36,7 @@ export class Chat extends React.Component {
           {activeConversation instanceof PrivateChatModel && (
             <PrivateConversation privateChat={activeConversation} />
           )}
+          {!activeConversation && <ConversationLayout />}
         </ConversationContainer>
 
         <Overlay anchor="left" {...toggleStateProps(chatViewStore.sidebarDisplay)}>
