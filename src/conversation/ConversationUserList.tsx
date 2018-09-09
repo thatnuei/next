@@ -3,6 +3,7 @@ import { observer } from "mobx-react"
 import React from "react"
 import { AutoSizer, List, ListRowRenderer, Size } from "react-virtualized"
 import { CharacterName } from "../character/CharacterName"
+import { queryify } from "../helpers/string"
 import { flist4, flist5 } from "../ui/colors"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
@@ -23,8 +24,6 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
 
   @computed
   get filteredUsers() {
-    const queryify = (text: string) => text.toLowerCase().replace(/\s+/g, "")
-
     const searchText = queryify(this.searchText)
     return this.props.users.filter((name) => queryify(name).includes(searchText))
   }
