@@ -29,8 +29,8 @@ const Container = styled.div`
   height: 100%;
 `
 
-const Action = (props: { title: string; icon: string }) => (
-  <ActionAnchor title={props.title}>
+const Action = (props: { title: string; icon: string; onClick?: () => void }) => (
+  <ActionAnchor title={props.title} onClick={() => props.onClick && props.onClick()}>
     <Icon path={props.icon} size={1.5} />
   </ActionAnchor>
 )
