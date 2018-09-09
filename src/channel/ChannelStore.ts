@@ -48,13 +48,13 @@ export class ChannelStore {
 
   private saveJoinedChannels() {
     const channelIds = [...this.joinedChannelIds.keys()]
-    localStorage.setItem("joinedChannels", JSON.stringify(channelIds))
+    localStorage.setItem(`joinedChannels:${chatStore.identity}`, JSON.stringify(channelIds))
   }
 
   private restoreJoinedChannels = () => {
     let channelIds: string[] = []
     try {
-      channelIds = JSON.parse(localStorage.getItem("joinedChannels") || "[]")
+      channelIds = JSON.parse(localStorage.getItem(`joinedChannels:${chatStore.identity}`) || "[]")
     } catch (error) {
       console.warn("Error loading channels:", error)
     }
