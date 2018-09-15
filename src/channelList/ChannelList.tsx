@@ -82,13 +82,6 @@ export class ChannelList extends React.Component<ChannelListProps> {
       .sort(compareFn)
   }
 
-  // used for initiating re-renders on the list and auto sizer
-  @computed
-  private get lastChannelId() {
-    const lastItem = this.processedChannels[this.processedChannels.length - 1]
-    return lastItem && lastItem.id
-  }
-
   @action
   private setTabIndex(index: number) {
     this.tabIndex = index
