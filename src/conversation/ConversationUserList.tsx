@@ -59,7 +59,7 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
   })
 
   private renderListRow: ListRowRenderer = observerCallback((row) => {
-    const userName: string | undefined = this.filteredUsers[row.index]
+    const userName = this.filteredUsers[row.index] as string | undefined
     return (
       <UserListItem key={row.key} style={row.style}>
         {userName && <CharacterName name={userName} />}
