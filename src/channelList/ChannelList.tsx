@@ -121,21 +121,7 @@ export class ChannelList extends React.Component<ChannelListProps> {
     )
   })
 
-  private renderChannelRow = observerCallback((row: ListRowProps) => {
-    const channel = this.processedChannels[row.index] as ChannelListData | undefined
-
-    const content = channel && (
-      <ChannelListEntry
-        style={row.style}
-        active={channelStore.isJoined(channel.id)}
-        onClick={() => this.handleEntryClick(channel.id)}
-      >
-        <Icon path={mdiEarth} />
-        <ChannelListEntryTitle dangerouslySetInnerHTML={{ __html: channel.title }} />
-        <ChannelListEntryUsers>{channel.userCount}</ChannelListEntryUsers>
-      </ChannelListEntry>
-    )
-
+  private renderChannelRow = (row: ListRowProps) => {
     return (
       <CellMeasurer
         cache={this.cellMeasurerCache}
@@ -143,8 +129,25 @@ export class ChannelList extends React.Component<ChannelListProps> {
         parent={row.parent}
         rowIndex={row.index}
       >
-        {content}
+        <div style={row.style}>{this.renderChannelRowContent(row)}</div>
       </CellMeasurer>
+    )
+  }
+
+  private renderChannelRowContent = observerCallback((row: ListRowProps) => {
+    const channel = this.processedChannels[row.index] as ChannelListData | undefined
+
+    return (
+      channel && (
+        <ChannelListEntry
+          active={channelStore.isJoined(channel.id)}
+          onClick={() => this.handleEntryClick(channel.id)}
+        >
+          <Icon path={mdiEarth} />
+          <ChannelListEntryTitle dangerouslySetInnerHTML={{ __html: channel.title }} />
+          <ChannelListEntryUsers>{channel.userCount}</ChannelListEntryUsers>
+        </ChannelListEntry>
+      )
     )
   })
 

@@ -1,7 +1,7 @@
 import { action, computed, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
-import { AutoSizer, List, ListRowRenderer, Size } from "react-virtualized"
+import { AutoSizer, List, ListRowProps, ListRowRenderer, Size } from "react-virtualized"
 import { CharacterName } from "../character/CharacterName"
 import { observerCallback } from "../helpers/mobx"
 import { queryify } from "../helpers/string"
@@ -58,13 +58,17 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
     )
   })
 
-  private renderListRow: ListRowRenderer = observerCallback((row) => {
-    const userName = this.filteredUsers[row.index] as string | undefined
+  private renderListRow: ListRowRenderer = (row) => {
     return (
       <UserListItem key={row.key} style={row.style}>
-        {userName && <CharacterName name={userName} />}
+        {this.renderRowContent(row)}
       </UserListItem>
     )
+  }
+
+  private renderRowContent = observerCallback((row: ListRowProps) => {
+    const userName = this.filteredUsers[row.index] as string | undefined
+    return userName && <CharacterName name={userName} />
   })
 }
 
