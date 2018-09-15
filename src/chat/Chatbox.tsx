@@ -23,7 +23,7 @@ export class Chatbox extends React.Component<ChatboxProps> {
   }
 
   @action.bound
-  handleInput(event: React.FormEvent<HTMLTextAreaElement>) {
+  handleChange(event: React.FormEvent<HTMLTextAreaElement>) {
     this.value = event.currentTarget.value
   }
 
@@ -40,7 +40,7 @@ export class Chatbox extends React.Component<ChatboxProps> {
           rows={3}
           value={this.value}
           onKeyDown={this.handleKeyDown}
-          onInput={this.handleInput}
+          onChange={this.handleChange}
           style={{ resize: "none", width: "initial", flexGrow: 1, marginRight: "4px" }}
         />
         <Button style={{ width: "6rem", textAlign: "center" }} onClick={this.submit}>
