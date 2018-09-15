@@ -1,8 +1,11 @@
 import { observer } from "mobx-react"
+import { darken } from "polished"
 import React from "react"
 import { CharacterInfo } from "../character/CharacterInfo"
+import { NavigationScreen } from "../navigation/NavigationStore"
 import { sessionStore } from "../session/SessionStore"
 import { flist4, flist5 } from "../ui/colors"
+import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { ChatActions } from "./ChatActions"
 import { ChatNavigation } from "./ChatNavigation"
@@ -52,4 +55,22 @@ const CharacterInfoContainer = styled.div`
 const ChatNavigationContainer = styled.div`
   background-color: ${flist5};
   flex-grow: 1;
+`
+
+export const chatSidebarKey = "chatSidebar"
+
+export const chatSidebarOverlay = (): NavigationScreen => ({
+  key: chatSidebarKey,
+  render: ({ close }) => (
+    <Overlay anchor="left" onShadeClick={close}>
+      <SidebarOverlayContainer>
+        <ChatSidebar onTabActivate={close} />
+      </SidebarOverlayContainer>
+    </Overlay>
+  ),
+})
+
+const SidebarOverlayContainer = styled.div`
+  background-color: ${darken(0.05, flist5)};
+  height: 100%;
 `

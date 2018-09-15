@@ -1,8 +1,8 @@
 import { mdiAccountEdit, mdiForum, mdiLogout, mdiSettings } from "@mdi/js"
 import React from "react"
+import { channelListOverlay } from "../channelList/ChannelList"
 import { channelListStore } from "../channelList/ChannelListStore"
 import { navigationStore } from "../navigation/NavigationStore"
-import { channelListOverlay } from "../navigation/screens"
 import { Icon } from "../ui/Icon"
 import { styled } from "../ui/styled"
 

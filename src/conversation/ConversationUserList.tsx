@@ -5,7 +5,9 @@ import { AutoSizer, List, ListRowRenderer, Size } from "react-virtualized"
 import { CharacterName } from "../character/CharacterName"
 import { observerCallback } from "../helpers/mobx"
 import { queryify } from "../helpers/string"
+import { NavigationScreen } from "../navigation/NavigationStore"
 import { flist4, flist5 } from "../ui/colors"
+import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
 
@@ -96,3 +98,12 @@ const UserListItem = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `
+
+export const userListOverlay = (users: string[]): NavigationScreen => ({
+  key: "userList",
+  render: ({ close }) => (
+    <Overlay anchor="right" onShadeClick={close}>
+      {users && <ConversationUserList users={users} />}
+    </Overlay>
+  ),
+})

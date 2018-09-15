@@ -14,9 +14,11 @@ import { channelStore } from "../channel/ChannelStore"
 import { observerCallback } from "../helpers/mobx"
 import { queryify } from "../helpers/string"
 import { CompareFn } from "../helpers/types"
+import { NavigationScreen } from "../navigation/NavigationStore"
 import { Button } from "../ui/Button"
 import { flist4, flist5 } from "../ui/colors"
 import { Icon } from "../ui/Icon"
+import { Overlay } from "../ui/Overlay"
 import { css, styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
 import { ChannelListData, channelListStore } from "./ChannelListStore"
@@ -273,3 +275,12 @@ const ChannelListEntry = styled.button<{ active?: boolean }>`
   padding: 0.4rem 0.5rem;
   ${(props) => (props.active ? activeStyle : inactiveStyle)};
 `
+
+export const channelListOverlay = (): NavigationScreen => ({
+  key: "channelList",
+  render: ({ close }) => (
+    <Overlay onShadeClick={close}>
+      <ChannelList />
+    </Overlay>
+  ),
+})

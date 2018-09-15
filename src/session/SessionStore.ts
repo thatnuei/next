@@ -1,9 +1,9 @@
 import { action, computed, observable } from "mobx"
+import { loginScreen } from "../app/LoginModal"
 import { characterStore } from "../character/CharacterStore"
 import { chatStore } from "../chat/ChatStore"
 import { fetchCharacters, fetchTicket } from "../flist/api"
 import { navigationStore } from "../navigation/NavigationStore"
-import { loginScreen } from "../navigation/screens"
 import { socketStore } from "../socket/SocketStore"
 import { loadAuthData, saveAuthData } from "./storage"
 

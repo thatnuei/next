@@ -3,8 +3,8 @@ import { action, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { Avatar } from "../character/Avatar"
-import { navigationStore } from "../navigation/NavigationStore"
-import { chatScreen } from "../navigation/screens"
+import { chatScreen } from "../chat/Chat"
+import { NavigationScreen, navigationStore } from "../navigation/NavigationStore"
 import { sessionStore } from "../session/SessionStore"
 import { socketStore } from "../socket/SocketStore"
 import { Button } from "../ui/Button"
@@ -109,3 +109,8 @@ const ContentContainer = styled.div`
 const HeaderText = styled.h1`
   margin-bottom: 1rem;
 `
+
+export const selectCharacterScreen = (): NavigationScreen => ({
+  key: "characterSelect",
+  render: () => <SelectCharacterModal />,
+})

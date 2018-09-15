@@ -2,10 +2,10 @@ import { mdiMenu } from "@mdi/js"
 import React from "react"
 import MediaQuery from "react-responsive"
 import { navigationStore } from "../navigation/NavigationStore"
-import { chatSidebarOverlay } from "../navigation/screens"
 import { Button } from "../ui/Button"
 import { Icon } from "../ui/Icon"
 import { chatSidebarBreakpoint } from "./breakpoints"
+import { chatSidebarOverlay } from "./ChatSidebar"
 
 export const ChatSidebarToggle = () => (
   <MediaQuery maxWidth={chatSidebarBreakpoint}>

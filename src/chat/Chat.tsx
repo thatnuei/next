@@ -6,6 +6,7 @@ import { ChannelHeader } from "../channel/ChannelHeader"
 import { ChannelModel } from "../channel/ChannelModel"
 import { ConversationLayout } from "../conversation/ConversationLayout"
 import { conversationStore } from "../conversation/ConversationStore"
+import { NavigationScreen } from "../navigation/NavigationStore"
 import { PrivateChatHeader } from "../privateChat/PrivateChatHeader"
 import { PrivateChatModel } from "../privateChat/PrivateChatModel"
 import { styled } from "../ui/styled"
@@ -73,3 +74,8 @@ const Container = styled.div`
 const ConversationContainer = styled.div`
   flex-grow: 1;
 `
+
+export const chatScreen = (): NavigationScreen => ({
+  key: "chat",
+  render: () => <Chat />,
+})

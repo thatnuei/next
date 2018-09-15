@@ -1,7 +1,6 @@
 import { Formik, FormikProps } from "formik"
 import React from "react"
-import { navigationStore } from "../navigation/NavigationStore"
-import { selectCharacterScreen } from "../navigation/screens"
+import { NavigationScreen, navigationStore } from "../navigation/NavigationStore"
 import { sessionStore } from "../session/SessionStore"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
@@ -10,6 +9,7 @@ import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
+import { selectCharacterScreen } from "./SelectCharacterModal"
 
 const initialValues = {
   account: "",
@@ -83,3 +83,8 @@ const HeaderText = styled.h1`
   margin-bottom: 1rem;
   text-align: center;
 `
+
+export const loginScreen = (): NavigationScreen => ({
+  key: "login",
+  render: () => <LoginModal />,
+})
