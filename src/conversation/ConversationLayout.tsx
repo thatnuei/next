@@ -2,10 +2,8 @@ import { observer } from "mobx-react"
 import React from "react"
 import MediaQuery from "react-responsive"
 import { ChatSidebarToggle } from "../chat/ChatSidebarToggle"
-import { chatViewStore } from "../chat/ChatViewStore"
 import { MessageModel } from "../message/MessageModel"
 import { flist4 } from "../ui/colors"
-import { Overlay, toggleStateProps } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { userListBreakpoint } from "./breakpoints"
 import { ConversationMessageList } from "./ConversationMessageList"
@@ -25,7 +23,7 @@ export const ConversationLayout = observer((props: Props) => {
       <HeaderArea>
         <ChatSidebarToggle />
         <HeaderContentContainer>{props.headerContent}</HeaderContentContainer>
-        {props.users && <ConversationUsersToggle />}
+        {props.users && <ConversationUsersToggle users={props.users} />}
       </HeaderArea>
 
       <UserListArea>
@@ -39,10 +37,6 @@ export const ConversationLayout = observer((props: Props) => {
       </MessagesArea>
 
       <ChatboxArea>{props.chatbox}</ChatboxArea>
-
-      <Overlay anchor="right" {...toggleStateProps(chatViewStore.userListDisplay)}>
-        {props.users && <ConversationUserList users={props.users} />}
-      </Overlay>
     </Container>
   )
 })

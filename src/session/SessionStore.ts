@@ -1,8 +1,9 @@
 import { action, computed, observable } from "mobx"
-import { appViewStore } from "../app/AppViewStore"
 import { characterStore } from "../character/CharacterStore"
 import { chatStore } from "../chat/ChatStore"
 import { fetchCharacters, fetchTicket } from "../flist/api"
+import { navigationStore } from "../navigation/NavigationStore"
+import { loginScreen } from "../navigation/screens"
 import { socketStore } from "../socket/SocketStore"
 import { loadAuthData, saveAuthData } from "./storage"
 
@@ -17,13 +18,9 @@ export class SessionStore {
   characters: string[] = []
 
   constructor() {
-    socketStore.addCommandListener("IDN", () => {
-      appViewStore.setScreen("chat")
-    })
-
     socketStore.addDisconnectListener(() => {
       alert("Disconnected from server :(")
-      appViewStore.setScreen("login")
+      navigationStore.replace(loginScreen())
     })
   }
 

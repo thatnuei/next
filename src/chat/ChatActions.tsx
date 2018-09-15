@@ -1,9 +1,10 @@
 import { mdiAccountEdit, mdiForum, mdiLogout, mdiSettings } from "@mdi/js"
 import React from "react"
 import { channelListStore } from "../channelList/ChannelListStore"
+import { navigationStore } from "../navigation/NavigationStore"
+import { channelListOverlay } from "../navigation/screens"
 import { Icon } from "../ui/Icon"
 import { styled } from "../ui/styled"
-import { chatViewStore } from "./ChatViewStore"
 
 export class ChatActions extends React.Component {
   render() {
@@ -22,7 +23,7 @@ export class ChatActions extends React.Component {
   }
 
   private handleChannelListAction = () => {
-    chatViewStore.channelListDisplay.enable()
+    navigationStore.push(channelListOverlay())
     channelListStore.requestChannelList()
   }
 }

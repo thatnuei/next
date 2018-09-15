@@ -3,6 +3,8 @@ import { action, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { Avatar } from "../character/Avatar"
+import { navigationStore } from "../navigation/NavigationStore"
+import { chatScreen } from "../navigation/screens"
 import { sessionStore } from "../session/SessionStore"
 import { socketStore } from "../socket/SocketStore"
 import { Button } from "../ui/Button"
@@ -92,6 +94,9 @@ export class SelectCharacterModal extends React.Component {
       sessionStore.account,
       sessionStore.ticket,
       values.character,
+      () => {
+        navigationStore.replace(chatScreen())
+      },
     )
   }
 }

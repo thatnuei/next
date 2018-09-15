@@ -9,7 +9,7 @@ export class SocketStore {
   private commandListeners: CommandListenerRecord = {}
   private disconnectListeners = new Set<() => void>()
 
-  connect(account: string, ticket: string, character: string) {
+  connect(account: string, ticket: string, character: string, onSuccess: () => void) {
     const socket = (this.socket = new WebSocket(`wss://chat.f-list.net:9799`))
 
     socket.onopen = () => {
@@ -45,6 +45,10 @@ export class SocketStore {
         } else {
           console.log(type, params)
         }
+      }
+
+      if (type === "IDN") {
+        onSuccess()
       }
     }
   }

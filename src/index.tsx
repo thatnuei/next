@@ -2,7 +2,8 @@ import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
 import { App } from "./app/App"
-import { appViewStore } from "./app/AppViewStore"
+import { navigationStore } from "./navigation/NavigationStore"
+import { loginScreen, selectCharacterScreen } from "./navigation/screens"
 import { sessionStore } from "./session/SessionStore"
 import { applyGlobalStyles } from "./ui/globalStyles"
 
@@ -13,10 +14,10 @@ configure({ enforceActions: "observed" })
 async function initSession() {
   try {
     await sessionStore.restoreUserData()
-    appViewStore.setScreen("selectCharacter")
+    navigationStore.push(selectCharacterScreen())
   } catch (error) {
     console.warn(error)
-    appViewStore.setScreen("login")
+    navigationStore.push(loginScreen())
   }
 }
 

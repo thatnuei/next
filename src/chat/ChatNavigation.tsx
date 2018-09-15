@@ -3,15 +3,20 @@ import { observer } from "mobx-react"
 import React from "react"
 import { channelStore } from "../channel/ChannelStore"
 import { conversationStore } from "../conversation/ConversationStore"
+import { noop } from "../helpers/function"
 import { privateChatStore } from "../privateChat/PrivateChatStore"
 import { styled } from "../ui/styled"
 import { ChatNavigationTab } from "./ChatNavigationTab"
-import { chatViewStore } from "./ChatViewStore"
+
+type Props = {
+  onTabActivate?: () => void
+}
 
 @observer
-export class ChatNavigation extends React.Component {
+export class ChatNavigation extends React.Component<Props> {
   render() {
     const { channelConversations, privateConversations } = conversationStore
+    const { onTabActivate = noop } = this.props
 
     const channelTabs = channelConversations.map((convo) => (
       <ChatNavigationTab
@@ -21,7 +26,7 @@ export class ChatNavigation extends React.Component {
         active={conversationStore.isActive(convo)}
         onActivate={() => {
           conversationStore.setActiveConversation(convo)
-          chatViewStore.sidebarDisplay.disable()
+          onTabActivate()
         }}
         onClose={() => channelStore.leaveChannel(convo.id)}
       />
@@ -35,7 +40,7 @@ export class ChatNavigation extends React.Component {
         active={conversationStore.isActive(convo)}
         onActivate={() => {
           conversationStore.setActiveConversation(convo)
-          chatViewStore.sidebarDisplay.disable()
+          onTabActivate()
         }}
         onClose={() => privateChatStore.closeChat(convo.partner)}
       />

@@ -1,14 +1,15 @@
 import { mdiAccountMultiple } from "@mdi/js"
 import React from "react"
 import MediaQuery from "react-responsive"
-import { chatViewStore } from "../chat/ChatViewStore"
+import { navigationStore } from "../navigation/NavigationStore"
+import { userListOverlay } from "../navigation/screens"
 import { Button } from "../ui/Button"
 import { Icon } from "../ui/Icon"
 import { userListBreakpoint } from "./breakpoints"
 
-export const ConversationUsersToggle = () => (
+export const ConversationUsersToggle = (props: { users: string[] }) => (
   <MediaQuery maxWidth={userListBreakpoint}>
-    <Button flat onClick={chatViewStore.userListDisplay.enable}>
+    <Button flat onClick={() => navigationStore.push(userListOverlay(props.users))}>
       <Icon path={mdiAccountMultiple} />
     </Button>
   </MediaQuery>

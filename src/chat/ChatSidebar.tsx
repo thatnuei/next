@@ -7,8 +7,12 @@ import { styled } from "../ui/styled"
 import { ChatActions } from "./ChatActions"
 import { ChatNavigation } from "./ChatNavigation"
 
+type Props = {
+  onTabActivate?: () => void
+}
+
 @observer
-export class ChatSidebar extends React.Component {
+export class ChatSidebar extends React.Component<Props> {
   render() {
     return (
       <Container>
@@ -20,7 +24,7 @@ export class ChatSidebar extends React.Component {
             <CharacterInfo character={sessionStore.identityCharacter} />
           </CharacterInfoContainer>
           <ChatNavigationContainer>
-            <ChatNavigation />
+            <ChatNavigation onTabActivate={this.props.onTabActivate} />
           </ChatNavigationContainer>
         </div>
       </Container>
