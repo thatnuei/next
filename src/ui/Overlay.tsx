@@ -1,4 +1,4 @@
-import { easeInOut } from "@popmotion/easing"
+import { circOut, easeIn } from "@popmotion/easing"
 import React from "react"
 import posed from "react-pose"
 import { css, styled } from "./styled"
@@ -38,7 +38,7 @@ export class Overlay extends React.Component<OverlayProps> {
 
 const duration = 350
 
-// as unattractive as this is, this give the best static typing
+// as unattractive as this is, this gives the best static typing
 const Shade = posed(styled.div`
   position: fixed;
   left: 0;
@@ -56,7 +56,7 @@ const Shade = posed(styled.div`
   },
   exit: {
     opacity: 0,
-    transition: { duration },
+    transition: { duration, ease: easeIn },
   },
 })
 
@@ -65,11 +65,11 @@ const basePanelStyles = css`
 `
 
 const enterAnimation = {
-  transition: { duration },
+  transition: { duration, ease: circOut },
 }
 
 const exitAnimation = {
-  transition: { duration, ease: easeInOut },
+  transition: { duration, ease: easeIn },
 }
 
 const CenterPanel = posed(styled.div`
