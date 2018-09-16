@@ -1,8 +1,7 @@
 import { action, observable } from "mobx"
-import { loginScreen } from "../app/LoginModal"
 import { RootStore } from "../app/RootStore"
 import { CharacterStatus } from "../character/types"
-import { fetchCharacters, fetchTicket } from "../flist/api"
+import { authenticate, fetchCharacters } from "../flist/api"
 import { loadAuthData, saveAuthData } from "./storage"
 
 export class SessionStore {
@@ -18,7 +17,6 @@ export class SessionStore {
   constructor(private rootStore: RootStore) {
     rootStore.socketStore.addDisconnectListener(() => {
       alert("Disconnected from server :(")
-      rootStore.navigationStore.replace(loginScreen())
     })
   }
 
@@ -30,7 +28,7 @@ export class SessionStore {
   }
 
   async getApiTicket(account: string, password: string) {
-    const { ticket, characters } = await fetchTicket(account, password)
+    const { ticket, characters } = await authenticate(account, password)
     this.setUserData(account, ticket, characters)
   }
 

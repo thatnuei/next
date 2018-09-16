@@ -1,6 +1,5 @@
 import { Formik, FormikProps } from "formik"
 import React from "react"
-import { NavigationScreen } from "../navigation/NavigationStore"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
@@ -8,8 +7,6 @@ import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
-import { rootStore } from "./RootStore"
-import { selectCharacterScreen } from "./SelectCharacterModal"
 
 const initialValues = {
   account: "",
@@ -18,7 +15,11 @@ const initialValues = {
 
 export type LoginValues = typeof initialValues
 
-export class LoginModal extends React.Component {
+export type LoginScreenProps = {
+  onSubmit: (values: LoginValues) => void
+}
+
+export class LoginScreen extends React.Component<LoginScreenProps> {
   render() {
     return (
       <Formik<LoginValues>
@@ -27,18 +28,6 @@ export class LoginModal extends React.Component {
         onSubmit={this.handleSubmit}
       />
     )
-  }
-
-  private handleSubmit = async (values: LoginValues) => {
-    try {
-      await rootStore.sessionStore.getApiTicket(values.account, values.password)
-      rootStore.sessionStore.saveUserData()
-      rootStore.navigationStore.pop()
-      rootStore.navigationStore.push(selectCharacterScreen())
-    } catch (error) {
-      console.error(error)
-      alert(error.message || String(error)) // TODO: replace with actual error modal
-    }
   }
 
   private renderForm = (props: FormikProps<LoginValues>) => {
@@ -70,6 +59,10 @@ export class LoginModal extends React.Component {
       </Overlay>
     )
   }
+
+  private handleSubmit = async (values: LoginValues) => {
+    this.props.onSubmit(values)
+  }
 }
 
 const ContentContainer = styled.div`
@@ -83,8 +76,3 @@ const HeaderText = styled.h1`
   margin-bottom: 1rem;
   text-align: center;
 `
-
-export const loginScreen = (): NavigationScreen => ({
-  key: "login",
-  render: () => <LoginModal />,
-})

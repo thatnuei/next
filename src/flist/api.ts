@@ -1,6 +1,6 @@
 import { fetchJson } from "../network/fetchJson"
 
-export function fetchTicket(account: string, password: string) {
+export function authenticate(account: string, password: string) {
   const getTicketEndpoint = "https://www.f-list.net/json/getApiTicket.php"
 
   type ApiTicketResponse = {
