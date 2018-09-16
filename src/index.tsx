@@ -3,18 +3,12 @@ import React from "react"
 import ReactDOM from "react-dom"
 import { App } from "./app/App"
 import { AppStore } from "./app/AppStore"
-import { StoreProvider } from "./app/StoreContext"
 import { applyGlobalStyles } from "./ui/globalStyles"
 
 // const AsyncMode: React.ComponentType = (React as any).unstable_AsyncMode
 
-function render(appStore: AppStore) {
-  ReactDOM.render(
-    <StoreProvider value={appStore}>
-      <App />
-    </StoreProvider>,
-    document.querySelector("#root"),
-  )
+function render() {
+  ReactDOM.render(<App />, document.querySelector("#root"))
 }
 
 function main() {
@@ -24,10 +18,10 @@ function main() {
   appStore.init()
 
   applyGlobalStyles()
-  render(appStore)
+  render()
 
   if (module.hot) {
-    module.hot.accept("./app/App", () => render(appStore))
+    module.hot.accept("./app/App", () => render())
   }
 }
 

@@ -1,14 +1,10 @@
-import { computed } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import MediaQuery from "react-responsive"
-import { AppStore } from "../app/AppStore"
-import { StoreConsumer } from "../app/StoreContext"
+import { appStore } from "../app/AppStore"
 import { ChannelHeader } from "../channel/ChannelHeader"
 import { ChannelModel } from "../channel/ChannelModel"
 import { ConversationLayout } from "../conversation/ConversationLayout"
-import { ConversationModel } from "../conversation/ConversationModel"
-import { observerCallback } from "../helpers/mobx"
 import { NavigationScreen } from "../navigation/NavigationStore"
 import { NavigationView } from "../navigation/NavigationView"
 import { PrivateChatHeader } from "../privateChat/PrivateChatHeader"
@@ -30,7 +26,12 @@ export class Chat extends React.Component {
         </MediaQuery>
 
         <ConversationContainer>
-          <StoreConsumer>{this.renderConversation}</StoreConsumer>
+          <ConversationLayout
+            headerContent={this.renderHeaderContent()}
+            messages={appStore.conversationStore.currentMessages || []}
+            users={appStore.conversationStore.currentUsers}
+            chatbox={<Chatbox onSubmit={console.log} />}
+          />
         </ConversationContainer>
 
         <NavigationView />
@@ -38,17 +39,9 @@ export class Chat extends React.Component {
     )
   }
 
-  private renderConversation = observerCallback(({ conversationStore }: AppStore) => (
-    <ConversationLayout
-      headerContent={this.renderHeaderContent(conversationStore.activeConversation)}
-      messages={conversationStore.currentMessages || []}
-      users={conversationStore.currentUsers}
-      chatbox={<Chatbox onSubmit={console.log} />}
-    />
-  ))
+  private renderHeaderContent() {
+    const conversation = appStore.conversationStore.activeConversation
 
-  @computed
-  private renderHeaderContent(conversation?: ConversationModel) {
     if (conversation instanceof ChannelModel) {
       return <ChannelHeader channel={conversation} />
     }
