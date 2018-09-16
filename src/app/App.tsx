@@ -15,18 +15,21 @@ export class App extends React.Component<Props> {
   }
 
   private renderScreen() {
-    switch (this.props.store.screen) {
+    const { store } = this.props
+    switch (store.screen) {
       case "setup":
         return "Setting things up..."
 
       case "login":
-        return <LoginScreen onSubmit={this.props.store.handleLoginSubmit} />
+        return <LoginScreen onSubmit={store.handleLoginSubmit} />
 
       case "characterSelect":
         return (
           <CharacterSelectScreen
-            characters={this.props.store.characters}
-            onSubmit={this.props.store.handleCharacterSubmit}
+            characters={store.characters}
+            selectedCharacter={store.identity}
+            onSelectedCharacterChange={store.setIdentity}
+            onSubmit={store.handleCharacterSubmit}
           />
         )
 

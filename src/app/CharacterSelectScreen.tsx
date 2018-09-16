@@ -1,5 +1,4 @@
 import { bind } from "decko"
-import { Formik, FormikProps } from "formik"
 import { observer } from "mobx-react"
 import React from "react"
 import { Avatar } from "../character/Avatar"
@@ -10,38 +9,22 @@ import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 
-type FormValues = {
-  character: string
-}
-
 type CharacterSelectScreenProps = {
+  selectedCharacter: string
   characters: string[]
-  onSubmit: (character: string) => void
+  onSelectedCharacterChange: (character: string) => void
+  onSubmit: () => void
 }
 
 @observer
 export class CharacterSelectScreen extends React.Component<CharacterSelectScreenProps> {
-  private initialValues = {
-    character: this.props.characters[0],
-  }
-
   render() {
-    return (
-      <Overlay>
-        <ContentContainer>
-          <HeaderText>Select a Character</HeaderText>
-          <Formik<FormValues>
-            initialValues={this.initialValues}
-            render={this.renderForm}
-            onSubmit={this.handleSubmit}
-          />
-        </ContentContainer>
-      </Overlay>
-    )
-  }
+    const { characters, selectedCharacter, onSelectedCharacterChange } = this.props
 
-  @bind
-  private renderForm(props: FormikProps<FormValues>) {
+    const onCharacterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+      onSelectedCharacterChange(event.target.value)
+    }
+
     const formStyle: React.CSSProperties = {
       display: "flex",
       flexDirection: "column",
@@ -49,27 +32,33 @@ export class CharacterSelectScreen extends React.Component<CharacterSelectScreen
     }
 
     return (
-      <Form onSubmit={props.handleSubmit} style={formStyle}>
-        <FormField>
-          <Avatar key={props.values.character} name={props.values.character} />
-        </FormField>
-        <FormField>
-          <select name="character" value={props.values.character} onChange={props.handleChange}>
-            {this.props.characters.map((name) => (
-              <option value={name} key={name}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </FormField>
-        <Button type="submit">Enter Chat</Button>
-      </Form>
+      <Overlay>
+        <ContentContainer>
+          <HeaderText>Select a Character</HeaderText>
+          <Form onSubmit={this.handleSubmit} style={formStyle}>
+            <FormField>
+              <Avatar key={selectedCharacter} name={selectedCharacter} />
+            </FormField>
+            <FormField>
+              <select name="character" value={selectedCharacter} onChange={onCharacterChange}>
+                {characters.map((name) => (
+                  <option value={name} key={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+            <Button type="submit">Enter Chat</Button>
+          </Form>
+        </ContentContainer>
+      </Overlay>
     )
   }
 
   @bind
-  private handleSubmit(values: FormValues) {
-    this.props.onSubmit(values.character)
+  private handleSubmit(event: React.FormEvent) {
+    event.preventDefault()
+    this.props.onSubmit()
   }
 }
 

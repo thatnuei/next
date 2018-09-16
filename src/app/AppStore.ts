@@ -28,6 +28,7 @@ export class AppStore {
     try {
       this.restoreAuthData()
       await this.fetchCharacters()
+      this.restoreIdentity()
       this.setScreen("characterSelect")
     } catch (error) {
       console.warn("non-fatal:", error)
@@ -41,6 +42,7 @@ export class AppStore {
       const { ticket, characters } = await authenticate(account, password)
       this.setAuthData(account, ticket)
       this.setCharacters(characters)
+      this.restoreIdentity()
       this.setScreen("characterSelect")
       this.saveAuthData()
     } catch (error) {
@@ -49,8 +51,7 @@ export class AppStore {
   }
 
   @bind
-  handleCharacterSubmit(character: string) {
-    this.setIdentity(character)
+  handleCharacterSubmit() {
     this.connectToChat()
   }
 
@@ -120,8 +121,9 @@ export class AppStore {
   }
 
   @action
-  private setIdentity(identity: string) {
+  setIdentity(identity: string) {
     this.identity = identity
+    this.saveIdentity()
   }
 
   private async fetchCharacters() {
@@ -138,5 +140,13 @@ export class AppStore {
   private saveAuthData() {
     localStorage.setItem("account", this.account)
     localStorage.setItem("ticket", this.ticket)
+  }
+
+  private restoreIdentity() {
+    this.identity = localStorage.getItem("lastCharacter") || this.characters[0]
+  }
+
+  private saveIdentity() {
+    localStorage.setItem("lastCharacter", this.identity)
   }
 }
