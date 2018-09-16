@@ -4,7 +4,7 @@ import { authenticate, fetchCharacters } from "../flist/api"
 import { assertDefined } from "../helpers/assertDefined"
 import { LoginValues } from "./LoginScreen"
 
-type AppScreen = "setup" | "login" | "characterSelect" | "chat"
+type AppScreen = "setup" | "login" | "characterSelect" | "connecting" | "chat"
 
 export class AppStore {
   @observable
@@ -57,6 +57,8 @@ export class AppStore {
 
   @bind
   private connectToChat() {
+    this.setScreen("connecting")
+
     const socket = (this.socket = new WebSocket(`wss://chat.f-list.net:9799`))
 
     socket.onopen = () => {

@@ -33,6 +33,9 @@ export class App extends React.Component<Props> {
           />
         )
 
+      case "connecting":
+        return "Connecting..."
+
       case "chat":
         return "chat"
     }
