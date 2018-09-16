@@ -19,6 +19,10 @@ function main() {
 
   applyGlobalStyles()
   render(appStore)
+
+  if (module.hot) {
+    module.hot.accept("./app/App", () => render(appStore))
+  }
 }
 
 main()
