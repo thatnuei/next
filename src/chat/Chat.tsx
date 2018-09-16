@@ -2,11 +2,15 @@ import { computed } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import MediaQuery from "react-responsive"
-import { rootStore } from "../app/RootStore"
+import { AppStore } from "../app/AppStore"
+import { StoreConsumer } from "../app/StoreContext"
 import { ChannelHeader } from "../channel/ChannelHeader"
 import { ChannelModel } from "../channel/ChannelModel"
 import { ConversationLayout } from "../conversation/ConversationLayout"
+import { ConversationModel } from "../conversation/ConversationModel"
+import { observerCallback } from "../helpers/mobx"
 import { NavigationScreen } from "../navigation/NavigationStore"
+import { NavigationView } from "../navigation/NavigationView"
 import { PrivateChatHeader } from "../privateChat/PrivateChatHeader"
 import { PrivateChatModel } from "../privateChat/PrivateChatModel"
 import { styled } from "../ui/styled"
@@ -17,14 +21,6 @@ import { ChatSidebar } from "./ChatSidebar"
 @observer
 export class Chat extends React.Component {
   render() {
-    const { activeConversation } = rootStore.conversationStore
-
-    const messages = activeConversation
-      ? activeConversation.displayedMessages || activeConversation.messages
-      : []
-
-    const users = activeConversation && activeConversation.users
-
     return (
       <Container>
         <MediaQuery minWidth={chatSidebarBreakpoint}>
@@ -34,27 +30,31 @@ export class Chat extends React.Component {
         </MediaQuery>
 
         <ConversationContainer>
-          <ConversationLayout
-            headerContent={this.headerContent}
-            messages={messages}
-            users={users}
-            chatbox={<Chatbox onSubmit={console.log} />}
-          />
+          <StoreConsumer>{this.renderConversation}</StoreConsumer>
         </ConversationContainer>
+
+        <NavigationView />
       </Container>
     )
   }
 
-  @computed
-  private get headerContent() {
-    const { activeConversation } = rootStore.conversationStore
+  private renderConversation = observerCallback(({ conversationStore }: AppStore) => (
+    <ConversationLayout
+      headerContent={this.renderHeaderContent(conversationStore.activeConversation)}
+      messages={conversationStore.currentMessages || []}
+      users={conversationStore.currentUsers}
+      chatbox={<Chatbox onSubmit={console.log} />}
+    />
+  ))
 
-    if (activeConversation instanceof ChannelModel) {
-      return <ChannelHeader channel={activeConversation} />
+  @computed
+  private renderHeaderContent(conversation?: ConversationModel) {
+    if (conversation instanceof ChannelModel) {
+      return <ChannelHeader channel={conversation} />
     }
 
-    if (activeConversation instanceof PrivateChatModel) {
-      return <PrivateChatHeader privateChat={activeConversation} />
+    if (conversation instanceof PrivateChatModel) {
+      return <PrivateChatHeader privateChat={conversation} />
     }
 
     return <h2 style={{ padding: "0.5rem 0.7rem" }}>next</h2>

@@ -10,7 +10,7 @@ import {
   ListRowProps,
   Size,
 } from "react-virtualized"
-import { rootStore } from "../app/RootStore"
+import { appStore } from "../app/AppStore"
 import { observerCallback } from "../helpers/mobx"
 import { queryify } from "../helpers/string"
 import { CompareFn } from "../helpers/types"
@@ -56,12 +56,12 @@ export class ChannelList extends React.Component<ChannelListProps> {
     return [
       {
         title: "Public Channels",
-        channels: rootStore.channelListStore.publicChannels,
+        channels: appStore.channelListStore.publicChannels,
         icon: mdiEarth,
       },
       {
         title: "Private Channels",
-        channels: rootStore.channelListStore.privateChannels,
+        channels: appStore.channelListStore.privateChannels,
         icon: mdiKeyVariant,
       },
     ]
@@ -102,10 +102,10 @@ export class ChannelList extends React.Component<ChannelListProps> {
   }
 
   private handleEntryClick(id: string) {
-    if (rootStore.channelStore.isJoined(id)) {
-      rootStore.channelStore.leaveChannel(id)
+    if (appStore.channelStore.isJoined(id)) {
+      appStore.channelStore.leaveChannel(id)
     } else {
-      rootStore.channelStore.joinChannel(id)
+      appStore.channelStore.joinChannel(id)
     }
   }
 
@@ -140,7 +140,7 @@ export class ChannelList extends React.Component<ChannelListProps> {
     return (
       channel && (
         <ChannelListEntry
-          active={rootStore.channelStore.isJoined(channel.id)}
+          active={appStore.channelStore.isJoined(channel.id)}
           onClick={() => this.handleEntryClick(channel.id)}
         >
           <Icon path={mdiEarth} />

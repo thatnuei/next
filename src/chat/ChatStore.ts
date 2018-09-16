@@ -1,31 +1,17 @@
-import { action, computed, observable } from "mobx"
-import { RootStore, rootStore } from "../app/RootStore"
-import { CommandListener } from "../socket/SocketStore"
+import { action, observable } from "mobx"
+import { SocketEventBus } from "../app/AppStore"
+import { ServerCommands } from "../fchat/types"
 
 export class ChatStore {
   @observable
-  identity = ""
-
-  @observable.shallow
   serverVariables = new Map<string, number | string | ReadonlyArray<string>>()
 
-  constructor(rootStore: RootStore) {
-    rootStore.socketStore.addCommandListener("IDN", this.handleIdentified)
-    rootStore.socketStore.addCommandListener("VAR", this.handleServerVariables)
+  constructor(socketEvents: SocketEventBus) {
+    socketEvents.listen("VAR", this.handleServerVariables)
   }
 
-  @action
-  handleIdentified: CommandListener<"IDN"> = ({ character }) => {
-    this.identity = character
-  }
-
-  @action
-  handleServerVariables: CommandListener<"VAR"> = ({ variable, value }) => {
+  @action.bound
+  handleServerVariables({ variable, value }: ServerCommands["VAR"]) {
     this.serverVariables.set(variable, value)
-  }
-
-  @computed
-  get identityCharacter() {
-    return rootStore.characterStore.getCharacter(this.identity)
   }
 }

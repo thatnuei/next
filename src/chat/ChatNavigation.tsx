@@ -1,7 +1,7 @@
 import { mdiCodeTags, mdiCommentOutline, mdiEarth } from "@mdi/js"
 import { observer } from "mobx-react"
 import React from "react"
-import { rootStore } from "../app/RootStore"
+import { appStore } from "../app/AppStore"
 import { noop } from "../helpers/function"
 import { styled } from "../ui/styled"
 import { ChatNavigationTab } from "./ChatNavigationTab"
@@ -13,7 +13,7 @@ type Props = {
 @observer
 export class ChatNavigation extends React.Component<Props> {
   render() {
-    const { channelConversations, privateConversations } = rootStore.conversationStore
+    const { channelConversations, privateConversations } = appStore.conversationStore
     const { onTabActivate = noop } = this.props
 
     const channelTabs = channelConversations.map((convo) => (
@@ -21,12 +21,12 @@ export class ChatNavigation extends React.Component<Props> {
         key={convo.id}
         text={convo.title}
         icon={convo.type === "public" ? mdiEarth : mdiCommentOutline}
-        active={rootStore.conversationStore.isActive(convo)}
+        active={appStore.conversationStore.isActive(convo)}
         onActivate={() => {
-          rootStore.conversationStore.setActiveConversation(convo)
+          appStore.conversationStore.setActiveConversation(convo)
           onTabActivate()
         }}
-        onClose={() => rootStore.channelStore.leaveChannel(convo.id)}
+        onClose={() => appStore.channelStore.leaveChannel(convo.id)}
       />
     ))
 
@@ -35,12 +35,12 @@ export class ChatNavigation extends React.Component<Props> {
         key={convo.id}
         text={convo.partner}
         avatar={convo.partner}
-        active={rootStore.conversationStore.isActive(convo)}
+        active={appStore.conversationStore.isActive(convo)}
         onActivate={() => {
-          rootStore.conversationStore.setActiveConversation(convo)
+          appStore.conversationStore.setActiveConversation(convo)
           onTabActivate()
         }}
-        onClose={() => rootStore.privateChatStore.closeChat(convo.partner)}
+        onClose={() => appStore.privateChatStore.closeChat(convo.partner)}
       />
     ))
 

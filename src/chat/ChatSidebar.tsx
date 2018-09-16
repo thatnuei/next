@@ -1,7 +1,7 @@
 import { observer } from "mobx-react"
 import { darken } from "polished"
 import React from "react"
-import { rootStore } from "../app/RootStore"
+import { appStore } from "../app/AppStore"
 import { CharacterInfo } from "../character/CharacterInfo"
 import { NavigationScreen } from "../navigation/NavigationStore"
 import { flist4, flist5 } from "../ui/colors"
@@ -24,7 +24,7 @@ export class ChatSidebar extends React.Component<Props> {
         </ChatActionsContainer>
         <div style={{ overflowY: "auto", display: "flex", flexDirection: "column" }}>
           <CharacterInfoContainer>
-            <CharacterInfo character={rootStore.chatStore.identityCharacter} />
+            <CharacterInfo character={appStore.identityCharacter} />
           </CharacterInfoContainer>
           <ChatNavigationContainer>
             <ChatNavigation onTabActivate={this.props.onTabActivate} />

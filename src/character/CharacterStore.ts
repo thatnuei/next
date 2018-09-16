@@ -1,16 +1,16 @@
 import { action, observable } from "mobx"
-import { RootStore } from "../app/RootStore"
+import { AppStore } from "../app/AppStore"
 import { CommandListener } from "../socket/SocketStore"
 import { CharacterModel } from "./CharacterModel"
 
 export class CharacterStore {
   characters = observable.map<string, CharacterModel>()
 
-  constructor(rootStore: RootStore) {
-    rootStore.socketStore.addCommandListener("LIS", this.handleInitialCharacterData)
-    rootStore.socketStore.addCommandListener("NLN", this.handleLogin)
-    rootStore.socketStore.addCommandListener("FLN", this.handleLogout)
-    rootStore.socketStore.addCommandListener("STA", this.handleStatus)
+  constructor(appStore: AppStore) {
+    appStore.socketEvents.listen("LIS", this.handleInitialCharacterData)
+    appStore.socketEvents.listen("NLN", this.handleLogin)
+    appStore.socketEvents.listen("FLN", this.handleLogout)
+    appStore.socketEvents.listen("STA", this.handleStatus)
   }
 
   @action

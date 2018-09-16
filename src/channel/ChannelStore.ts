@@ -1,7 +1,7 @@
 import { action, computed, observable } from "mobx"
-import { RootStore } from "../app/RootStore"
+import { AppStore } from "../app/AppStore"
+import { ServerCommands } from "../fchat/types"
 import { MessageModel, MessageModelOptions } from "../message/MessageModel"
-import { CommandListener } from "../socket/SocketStore"
 import { ChannelModel } from "./ChannelModel"
 
 export class ChannelStore {
@@ -10,17 +10,16 @@ export class ChannelStore {
 
   private joinedChannelIds = observable.map<string, true>()
 
-  constructor(private rootStore: RootStore) {
-    const { socketStore } = rootStore
-    socketStore.addCommandListener("JCH", this.handleJoin)
-    socketStore.addCommandListener("LCH", this.handleLeave)
-    socketStore.addCommandListener("ICH", this.handleInitialChannelInfo)
-    socketStore.addCommandListener("CDS", this.handleChannelDescription)
-    socketStore.addCommandListener("COL", this.handleOpList)
-    socketStore.addCommandListener("MSG", this.handleNormalMessage)
-    socketStore.addCommandListener("LRP", this.handleAdMessage)
-    socketStore.addCommandListener("FLN", this.handleLogout)
-    socketStore.addCommandListener("IDN", this.restoreJoinedChannels)
+  constructor(private appStore: AppStore) {
+    appStore.socketEvents.listen("JCH", this.handleJoin)
+    appStore.socketEvents.listen("LCH", this.handleLeave)
+    appStore.socketEvents.listen("ICH", this.handleInitialChannelInfo)
+    appStore.socketEvents.listen("CDS", this.handleChannelDescription)
+    appStore.socketEvents.listen("COL", this.handleOpList)
+    appStore.socketEvents.listen("MSG", this.handleNormalMessage)
+    appStore.socketEvents.listen("LRP", this.handleAdMessage)
+    appStore.socketEvents.listen("FLN", this.handleLogout)
+    appStore.socketEvents.listen("IDN", this.restoreJoinedChannels)
   }
 
   @action.bound
@@ -36,11 +35,11 @@ export class ChannelStore {
   }
 
   joinChannel(id: string) {
-    this.rootStore.socketStore.sendCommand("JCH", { channel: id })
+    this.appStore.sendCommand("JCH", { channel: id })
   }
 
   leaveChannel(id: string) {
-    this.rootStore.socketStore.sendCommand("LCH", { channel: id })
+    this.appStore.sendCommand("LCH", { channel: id })
   }
 
   isJoined(id: string) {
@@ -48,7 +47,7 @@ export class ChannelStore {
   }
 
   private get storedChannelsKey() {
-    return `joinedChannels:${this.rootStore.chatStore.identity}`
+    return `joinedChannels:${this.appStore.identity}`
   }
 
   private saveJoinedChannels() {
@@ -76,58 +75,58 @@ export class ChannelStore {
     channel.addMessage(new MessageModel(options))
   }
 
-  @action
-  private handleJoin: CommandListener<"JCH"> = (params) => {
+  @action.bound
+  private handleJoin(params: ServerCommands["JCH"]) {
     const channel = this.getChannel(params.channel)
     channel.title = params.title
     channel.type = params.channel === params.title ? "public" : "private"
     channel.addUser(params.character.identity)
 
-    if (params.character.identity === this.rootStore.chatStore.identity) {
+    if (params.character.identity === this.appStore.identity) {
       this.joinedChannelIds.set(params.channel, true)
       this.saveJoinedChannels()
     }
   }
 
-  @action
-  private handleLeave: CommandListener<"LCH"> = (params) => {
+  @action.bound
+  private handleLeave(params: ServerCommands["LCH"]) {
     const channel = this.getChannel(params.channel)
     channel.removeUser(params.character)
 
-    if (params.character === this.rootStore.chatStore.identity) {
+    if (params.character === this.appStore.identity) {
       this.joinedChannelIds.delete(params.channel)
       this.saveJoinedChannels()
     }
   }
 
-  @action
-  private handleLogout: CommandListener<"FLN"> = (params) => {
+  @action.bound
+  private handleLogout(params: ServerCommands["FLN"]) {
     for (const channel of this.channels.values()) {
       channel.removeUser(params.character)
     }
   }
 
-  @action
-  private handleInitialChannelInfo: CommandListener<"ICH"> = (params) => {
+  @action.bound
+  private handleInitialChannelInfo(params: ServerCommands["ICH"]) {
     const channel = this.getChannel(params.channel)
     channel.setUsers(params.users.map((user) => user.identity))
     channel.mode = params.mode
   }
 
-  @action
-  private handleChannelDescription: CommandListener<"CDS"> = (params) => {
+  @action.bound
+  private handleChannelDescription(params: ServerCommands["CDS"]) {
     const channel = this.getChannel(params.channel)
     channel.description = params.description
   }
 
-  @action
-  private handleOpList: CommandListener<"COL"> = (params) => {
+  @action.bound
+  private handleOpList(params: ServerCommands["COL"]) {
     const channel = this.getChannel(params.channel)
     channel.ops = new Map(params.oplist.map((name): [string, true] => [name, true]))
   }
 
-  @action
-  private handleNormalMessage: CommandListener<"MSG"> = (params) => {
+  @action.bound
+  private handleNormalMessage(params: ServerCommands["MSG"]) {
     this.addChannelMessage(params.channel, {
       sender: params.character,
       text: params.message,
@@ -135,8 +134,8 @@ export class ChannelStore {
     })
   }
 
-  @action
-  private handleAdMessage: CommandListener<"LRP"> = (params) => {
+  @action.bound
+  private handleAdMessage(params: ServerCommands["LRP"]) {
     this.addChannelMessage(params.channel, {
       sender: params.character,
       text: params.message,

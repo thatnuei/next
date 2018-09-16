@@ -1,35 +1,32 @@
+import { bind } from "decko"
 import { observer } from "mobx-react"
 import React from "react"
-import { AppStore } from "./AppStore"
+import { appStore } from "./AppStore"
 import { CharacterSelectScreen } from "./CharacterSelectScreen"
 import { LoginScreen } from "./LoginScreen"
 
-type Props = {
-  store: AppStore
-}
-
 @observer
-export class App extends React.Component<Props> {
+export class App extends React.Component {
   render() {
     return this.renderScreen()
   }
 
+  @bind
   private renderScreen() {
-    const { store } = this.props
-    switch (store.screen) {
+    switch (appStore.screen) {
       case "setup":
         return "Setting things up..."
 
       case "login":
-        return <LoginScreen onSubmit={store.handleLoginSubmit} />
+        return <LoginScreen onSubmit={appStore.handleLoginSubmit} />
 
       case "characterSelect":
         return (
           <CharacterSelectScreen
-            characters={store.characters}
-            selectedCharacter={store.identity}
-            onSelectedCharacterChange={store.setIdentity}
-            onSubmit={store.handleCharacterSubmit}
+            characters={appStore.characters}
+            selectedCharacter={appStore.identity}
+            onSelectedCharacterChange={appStore.setIdentity}
+            onSubmit={appStore.handleCharacterSubmit}
           />
         )
 

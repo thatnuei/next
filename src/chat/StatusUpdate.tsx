@@ -1,7 +1,7 @@
 import { action, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
-import { rootStore } from "../app/RootStore"
+import { appStore } from "../app/AppStore"
 import { CharacterStatus } from "../character/types"
 import { NavigationScreen } from "../navigation/NavigationStore"
 import { Button } from "../ui/Button"
@@ -19,10 +19,10 @@ type Props = {
 @observer
 export class UpdateStatusForm extends React.Component<Props> {
   @observable
-  private status: CharacterStatus = rootStore.chatStore.identityCharacter.status
+  private status: CharacterStatus = appStore.identityCharacter.status
 
   @observable
-  private statusMessage = rootStore.chatStore.identityCharacter.statusMessage
+  private statusMessage = appStore.identityCharacter.statusMessage
 
   render() {
     return (
@@ -60,7 +60,7 @@ export class UpdateStatusForm extends React.Component<Props> {
   @action.bound
   private handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    rootStore.sessionStore.updateStatus(this.status, this.statusMessage)
+    appStore.updateStatus(this.status, this.statusMessage)
     this.props.onSubmit()
   }
 }

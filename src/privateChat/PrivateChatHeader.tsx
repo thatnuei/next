@@ -1,6 +1,6 @@
 import { observer } from "mobx-react"
 import React from "react"
-import { rootStore } from "../app/RootStore"
+import { appStore } from "../app/AppStore"
 import { Avatar } from "../character/Avatar"
 import { CharacterName } from "../character/CharacterName"
 import { CharacterStatus } from "../character/CharacterStatus"
@@ -15,7 +15,7 @@ export interface PrivateChatHeaderProps {
 export class PrivateChatHeader extends React.Component<PrivateChatHeaderProps> {
   render() {
     const { privateChat } = this.props
-    const character = rootStore.characterStore.getCharacter(privateChat.partner)
+    const character = appStore.characterStore.getCharacter(privateChat.partner)
 
     return (
       <HeaderContainer>

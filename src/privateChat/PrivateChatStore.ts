@@ -1,5 +1,5 @@
 import { action, computed, observable } from "mobx"
-import { RootStore } from "../app/RootStore"
+import { AppStore } from "../app/AppStore"
 import { MessageModel } from "../message/MessageModel"
 import { CommandListener } from "../socket/SocketStore"
 import { PrivateChatModel } from "./PrivateChatModel"
@@ -10,9 +10,9 @@ export class PrivateChatStore {
 
   private openChatPartners = observable.map<string, true>()
 
-  constructor(rootStore: RootStore) {
-    rootStore.socketStore.addCommandListener("PRI", this.handleMessage)
-    rootStore.socketStore.addCommandListener("TPN", this.handleTypingStatus)
+  constructor(appStore: AppStore) {
+    appStore.socketEvents.listen("PRI", this.handleMessage)
+    appStore.socketEvents.listen("TPN", this.handleTypingStatus)
   }
 
   @action.bound

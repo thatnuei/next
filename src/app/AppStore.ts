@@ -1,11 +1,22 @@
 import { bind } from "decko"
-import { action, observable } from "mobx"
-import { ClientCommands } from "../fchat/types"
+import { action, computed, observable } from "mobx"
+import { ChannelStore } from "../channel/ChannelStore"
+import { ChannelListStore } from "../channelList/ChannelListStore"
+import { CharacterStore } from "../character/CharacterStore"
+import { CharacterStatus } from "../character/types"
+import { ChatStore } from "../chat/ChatStore"
+import { ConversationStore } from "../conversation/ConversationStore"
+import { ClientCommands, ServerCommands } from "../fchat/types"
 import { authenticate, fetchCharacters } from "../flist/api"
 import { assertDefined } from "../helpers/assertDefined"
+import { NavigationStore } from "../navigation/NavigationStore"
+import { PrivateChatStore } from "../privateChat/PrivateChatStore"
+import { EventBus } from "../state/EventBus"
 import { LoginValues } from "./LoginScreen"
 
 type AppScreen = "setup" | "login" | "characterSelect" | "connecting" | "chat"
+
+export type SocketEventBus = EventBus<ServerCommands>
 
 export class AppStore {
   @observable
@@ -24,6 +35,15 @@ export class AppStore {
   identity = ""
 
   socket?: WebSocket
+  socketEvents: SocketEventBus = new EventBus()
+
+  chatStore = new ChatStore(this.socketEvents)
+  channelStore = new ChannelStore(this)
+  channelListStore = new ChannelListStore(this)
+  characterStore = new CharacterStore(this)
+  privateChatStore = new PrivateChatStore(this)
+  conversationStore = new ConversationStore(this)
+  navigationStore = new NavigationStore()
 
   async init() {
     try {
@@ -74,7 +94,7 @@ export class AppStore {
     }
 
     socket.onmessage = ({ data }: { data: string }) => {
-      const command = data.slice(0, 3)
+      const command = data.slice(0, 3) as keyof ServerCommands
       const params = data.length > 3 ? JSON.parse(data.slice(4)) : {}
 
       if (command === "PIN") {
@@ -87,7 +107,7 @@ export class AppStore {
         return
       }
 
-      console.log(command, params) // TODO: send command to stores
+      this.socketEvents.send(command, params)
     }
 
     socket.onclose = () => {
@@ -97,7 +117,7 @@ export class AppStore {
     }
   }
 
-  private sendCommand<K extends keyof ClientCommands>(command: K, params: ClientCommands[K]) {
+  sendCommand<K extends keyof ClientCommands>(command: K, params: ClientCommands[K]) {
     if (this.socket) {
       if (params) {
         this.socket.send(`${command} ${JSON.stringify(params)}`)
@@ -152,4 +172,15 @@ export class AppStore {
   private saveIdentity() {
     localStorage.setItem("lastCharacter", this.identity)
   }
+
+  @computed
+  get identityCharacter() {
+    return this.characterStore.getCharacter(this.identity)
+  }
+
+  updateStatus(status: CharacterStatus, statusmsg: string) {
+    this.sendCommand("STA", { status, statusmsg })
+  }
 }
+
+export const appStore = new AppStore()

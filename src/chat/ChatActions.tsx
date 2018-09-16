@@ -1,6 +1,6 @@
 import { mdiAccountEdit, mdiForum, mdiLogout, mdiSettings } from "@mdi/js"
 import React from "react"
-import { rootStore } from "../app/RootStore"
+import { appStore } from "../app/AppStore"
 import { channelListOverlay } from "../channelList/ChannelList"
 import { Icon } from "../ui/Icon"
 import { styled } from "../ui/styled"
@@ -23,12 +23,12 @@ export class ChatActions extends React.Component {
   }
 
   private handleChannelListAction = () => {
-    rootStore.navigationStore.push(channelListOverlay())
-    rootStore.channelListStore.requestChannelList()
+    appStore.navigationStore.push(channelListOverlay())
+    appStore.channelListStore.requestChannelList()
   }
 
   private handleStatusAction = () => {
-    rootStore.navigationStore.push(updateStatusOverlay())
+    appStore.navigationStore.push(updateStatusOverlay())
   }
 }
 

@@ -1,5 +1,5 @@
 import { action, observable } from "mobx"
-import { RootStore } from "../app/RootStore"
+import { AppStore } from "../app/AppStore"
 import { CommandListener } from "../socket/SocketStore"
 
 export type ChannelListData = {
@@ -15,14 +15,14 @@ export class ChannelListStore {
   @observable
   privateChannels: ChannelListData[] = []
 
-  constructor(private rootStore: RootStore) {
-    rootStore.socketStore.addCommandListener("CHA", this.handlePublicChannels)
-    rootStore.socketStore.addCommandListener("ORS", this.handlePrivateChannels)
+  constructor(private appStore: AppStore) {
+    appStore.socketEvents.listen("CHA", this.handlePublicChannels)
+    appStore.socketEvents.listen("ORS", this.handlePrivateChannels)
   }
 
   requestChannelList() {
-    this.rootStore.socketStore.sendCommand("CHA", undefined)
-    this.rootStore.socketStore.sendCommand("ORS", undefined)
+    this.appStore.sendCommand("CHA", undefined)
+    this.appStore.sendCommand("ORS", undefined)
   }
 
   @action
