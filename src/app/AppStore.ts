@@ -1,5 +1,6 @@
 import { bind } from "decko"
 import { action, observable } from "mobx"
+import { ClientCommands } from "../fchat/types"
 import { authenticate, fetchCharacters } from "../flist/api"
 import { assertDefined } from "../helpers/assertDefined"
 import { LoginValues } from "./LoginScreen"
@@ -77,7 +78,7 @@ export class AppStore {
       const params = data.length > 3 ? JSON.parse(data.slice(4)) : {}
 
       if (command === "PIN") {
-        this.sendCommand("PIN")
+        this.sendCommand("PIN", undefined)
         return
       }
 
@@ -96,7 +97,7 @@ export class AppStore {
     }
   }
 
-  private sendCommand(command: string, params?: object) {
+  private sendCommand<K extends keyof ClientCommands>(command: K, params: ClientCommands[K]) {
     if (this.socket) {
       if (params) {
         this.socket.send(`${command} ${JSON.stringify(params)}`)
