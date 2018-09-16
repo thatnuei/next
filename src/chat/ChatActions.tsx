@@ -5,6 +5,7 @@ import { channelListStore } from "../channelList/ChannelListStore"
 import { navigationStore } from "../navigation/NavigationStore"
 import { Icon } from "../ui/Icon"
 import { styled } from "../ui/styled"
+import { updateStatusOverlay } from "./StatusUpdate"
 
 export class ChatActions extends React.Component {
   render() {
@@ -12,7 +13,7 @@ export class ChatActions extends React.Component {
       <Container>
         <section>
           <Action title="Channels" icon={mdiForum} onClick={this.handleChannelListAction} />
-          <Action title="Update Status" icon={mdiAccountEdit} />
+          <Action title="Update Status" icon={mdiAccountEdit} onClick={this.handleStatusAction} />
           <Action title="Settings" icon={mdiSettings} />
         </section>
         <section>
@@ -25,6 +26,10 @@ export class ChatActions extends React.Component {
   private handleChannelListAction = () => {
     navigationStore.push(channelListOverlay())
     channelListStore.requestChannelList()
+  }
+
+  private handleStatusAction = () => {
+    navigationStore.push(updateStatusOverlay())
   }
 }
 
