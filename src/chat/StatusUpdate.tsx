@@ -11,6 +11,7 @@ import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { TextArea } from "../ui/TextArea"
+import { chatStore } from "./ChatStore"
 
 type Props = {
   onSubmit: () => void
@@ -19,10 +20,10 @@ type Props = {
 @observer
 export class UpdateStatusForm extends React.Component<Props> {
   @observable
-  private status: CharacterStatus = sessionStore.identityCharacter.status
+  private status: CharacterStatus = chatStore.identityCharacter.status
 
   @observable
-  private statusMessage = sessionStore.identityCharacter.statusMessage
+  private statusMessage = chatStore.identityCharacter.statusMessage
 
   render() {
     return (

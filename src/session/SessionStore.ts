@@ -1,8 +1,6 @@
-import { action, computed, observable } from "mobx"
+import { action, observable } from "mobx"
 import { loginScreen } from "../app/LoginModal"
-import { characterStore } from "../character/CharacterStore"
 import { CharacterStatus } from "../character/types"
-import { chatStore } from "../chat/ChatStore"
 import { fetchCharacters, fetchTicket } from "../flist/api"
 import { navigationStore } from "../navigation/NavigationStore"
 import { socketStore } from "../socket/SocketStore"
@@ -49,11 +47,6 @@ export class SessionStore {
 
   saveUserData() {
     saveAuthData(this.account, this.ticket)
-  }
-
-  @computed
-  get identityCharacter() {
-    return characterStore.getCharacter(chatStore.identity)
   }
 
   updateStatus(status: CharacterStatus, statusmsg: string) {

@@ -1,4 +1,5 @@
-import { action, observable } from "mobx"
+import { action, computed, observable } from "mobx"
+import { characterStore } from "../character/CharacterStore"
 import { CommandListener, socketStore } from "../socket/SocketStore"
 
 export class ChatStore {
@@ -21,6 +22,11 @@ export class ChatStore {
   @action
   handleServerVariables: CommandListener<"VAR"> = ({ variable, value }) => {
     this.serverVariables.set(variable, value)
+  }
+
+  @computed
+  get identityCharacter() {
+    return characterStore.getCharacter(this.identity)
   }
 }
 
