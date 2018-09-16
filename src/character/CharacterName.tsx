@@ -1,8 +1,8 @@
 import { observer } from "mobx-react"
 import React from "react"
+import { rootStore } from "../app/RootStore"
 import { getProfileUrl } from "../flist/helpers"
 import { styled } from "../ui/styled"
-import { characterStore } from "./CharacterStore"
 import { genderColors, statusColors } from "./colors"
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 @observer
 export class CharacterName extends React.Component<Props> {
   render() {
-    const { name, gender, status } = characterStore.getCharacter(this.props.name)
+    const { name, gender, status } = rootStore.characterStore.getCharacter(this.props.name)
     const genderColor = genderColors[gender]
     const statusColor = statusColors[status]
 

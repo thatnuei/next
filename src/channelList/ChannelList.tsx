@@ -10,7 +10,7 @@ import {
   ListRowProps,
   Size,
 } from "react-virtualized"
-import { channelStore } from "../channel/ChannelStore"
+import { rootStore } from "../app/RootStore"
 import { observerCallback } from "../helpers/mobx"
 import { queryify } from "../helpers/string"
 import { CompareFn } from "../helpers/types"
@@ -21,7 +21,7 @@ import { Icon } from "../ui/Icon"
 import { Overlay } from "../ui/Overlay"
 import { css, styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
-import { ChannelListData, channelListStore } from "./ChannelListStore"
+import { ChannelListData } from "./ChannelListStore"
 
 export interface ChannelListProps {}
 
@@ -56,12 +56,12 @@ export class ChannelList extends React.Component<ChannelListProps> {
     return [
       {
         title: "Public Channels",
-        channels: channelListStore.publicChannels,
+        channels: rootStore.channelListStore.publicChannels,
         icon: mdiEarth,
       },
       {
         title: "Private Channels",
-        channels: channelListStore.privateChannels,
+        channels: rootStore.channelListStore.privateChannels,
         icon: mdiKeyVariant,
       },
     ]
@@ -102,10 +102,10 @@ export class ChannelList extends React.Component<ChannelListProps> {
   }
 
   private handleEntryClick(id: string) {
-    if (channelStore.isJoined(id)) {
-      channelStore.leaveChannel(id)
+    if (rootStore.channelStore.isJoined(id)) {
+      rootStore.channelStore.leaveChannel(id)
     } else {
-      channelStore.joinChannel(id)
+      rootStore.channelStore.joinChannel(id)
     }
   }
 
@@ -140,7 +140,7 @@ export class ChannelList extends React.Component<ChannelListProps> {
     return (
       channel && (
         <ChannelListEntry
-          active={channelStore.isJoined(channel.id)}
+          active={rootStore.channelStore.isJoined(channel.id)}
           onClick={() => this.handleEntryClick(channel.id)}
         >
           <Icon path={mdiEarth} />

@@ -1,10 +1,8 @@
 import { mdiCodeTags, mdiCommentOutline, mdiEarth } from "@mdi/js"
 import { observer } from "mobx-react"
 import React from "react"
-import { channelStore } from "../channel/ChannelStore"
-import { conversationStore } from "../conversation/ConversationStore"
+import { rootStore } from "../app/RootStore"
 import { noop } from "../helpers/function"
-import { privateChatStore } from "../privateChat/PrivateChatStore"
 import { styled } from "../ui/styled"
 import { ChatNavigationTab } from "./ChatNavigationTab"
 
@@ -15,7 +13,7 @@ type Props = {
 @observer
 export class ChatNavigation extends React.Component<Props> {
   render() {
-    const { channelConversations, privateConversations } = conversationStore
+    const { channelConversations, privateConversations } = rootStore.conversationStore
     const { onTabActivate = noop } = this.props
 
     const channelTabs = channelConversations.map((convo) => (
@@ -23,12 +21,12 @@ export class ChatNavigation extends React.Component<Props> {
         key={convo.id}
         text={convo.title}
         icon={convo.type === "public" ? mdiEarth : mdiCommentOutline}
-        active={conversationStore.isActive(convo)}
+        active={rootStore.conversationStore.isActive(convo)}
         onActivate={() => {
-          conversationStore.setActiveConversation(convo)
+          rootStore.conversationStore.setActiveConversation(convo)
           onTabActivate()
         }}
-        onClose={() => channelStore.leaveChannel(convo.id)}
+        onClose={() => rootStore.channelStore.leaveChannel(convo.id)}
       />
     ))
 
@@ -37,12 +35,12 @@ export class ChatNavigation extends React.Component<Props> {
         key={convo.id}
         text={convo.partner}
         avatar={convo.partner}
-        active={conversationStore.isActive(convo)}
+        active={rootStore.conversationStore.isActive(convo)}
         onActivate={() => {
-          conversationStore.setActiveConversation(convo)
+          rootStore.conversationStore.setActiveConversation(convo)
           onTabActivate()
         }}
-        onClose={() => privateChatStore.closeChat(convo.partner)}
+        onClose={() => rootStore.privateChatStore.closeChat(convo.partner)}
       />
     ))
 

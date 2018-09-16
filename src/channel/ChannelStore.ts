@@ -1,7 +1,7 @@
 import { action, computed, observable } from "mobx"
-import { chatStore } from "../chat/ChatStore"
+import { RootStore } from "../app/RootStore"
 import { MessageModel, MessageModelOptions } from "../message/MessageModel"
-import { CommandListener, socketStore } from "../socket/SocketStore"
+import { CommandListener } from "../socket/SocketStore"
 import { ChannelModel } from "./ChannelModel"
 
 export class ChannelStore {
@@ -10,7 +10,8 @@ export class ChannelStore {
 
   private joinedChannelIds = observable.map<string, true>()
 
-  constructor() {
+  constructor(private rootStore: RootStore) {
+    const { socketStore } = rootStore
     socketStore.addCommandListener("JCH", this.handleJoin)
     socketStore.addCommandListener("LCH", this.handleLeave)
     socketStore.addCommandListener("ICH", this.handleInitialChannelInfo)
@@ -35,26 +36,31 @@ export class ChannelStore {
   }
 
   joinChannel(id: string) {
-    socketStore.sendCommand("JCH", { channel: id })
+    this.rootStore.socketStore.sendCommand("JCH", { channel: id })
   }
 
   leaveChannel(id: string) {
-    socketStore.sendCommand("LCH", { channel: id })
+    this.rootStore.socketStore.sendCommand("LCH", { channel: id })
   }
 
   isJoined(id: string) {
     return this.joinedChannelIds.has(id)
   }
 
+  private get storedChannelsKey() {
+    return `joinedChannels:${this.rootStore.chatStore.identity}`
+  }
+
   private saveJoinedChannels() {
     const channelIds = [...this.joinedChannelIds.keys()]
-    localStorage.setItem(`joinedChannels:${chatStore.identity}`, JSON.stringify(channelIds))
+    localStorage.setItem(this.storedChannelsKey, JSON.stringify(channelIds))
   }
 
   private restoreJoinedChannels = () => {
     let channelIds: string[] = []
     try {
-      channelIds = JSON.parse(localStorage.getItem(`joinedChannels:${chatStore.identity}`) || "[]")
+      const storedChannels = localStorage.getItem(this.storedChannelsKey)
+      channelIds = JSON.parse(storedChannels || "[]")
     } catch (error) {
       console.warn("Error loading channels:", error)
     }
@@ -77,7 +83,7 @@ export class ChannelStore {
     channel.type = params.channel === params.title ? "public" : "private"
     channel.addUser(params.character.identity)
 
-    if (params.character.identity === chatStore.identity) {
+    if (params.character.identity === this.rootStore.chatStore.identity) {
       this.joinedChannelIds.set(params.channel, true)
       this.saveJoinedChannels()
     }
@@ -88,7 +94,7 @@ export class ChannelStore {
     const channel = this.getChannel(params.channel)
     channel.removeUser(params.character)
 
-    if (params.character === chatStore.identity) {
+    if (params.character === this.rootStore.chatStore.identity) {
       this.joinedChannelIds.delete(params.channel)
       this.saveJoinedChannels()
     }
@@ -138,5 +144,3 @@ export class ChannelStore {
     })
   }
 }
-
-export const channelStore = new ChannelStore()

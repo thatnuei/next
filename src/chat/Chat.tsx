@@ -2,10 +2,10 @@ import { computed } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import MediaQuery from "react-responsive"
+import { rootStore } from "../app/RootStore"
 import { ChannelHeader } from "../channel/ChannelHeader"
 import { ChannelModel } from "../channel/ChannelModel"
 import { ConversationLayout } from "../conversation/ConversationLayout"
-import { conversationStore } from "../conversation/ConversationStore"
 import { NavigationScreen } from "../navigation/NavigationStore"
 import { PrivateChatHeader } from "../privateChat/PrivateChatHeader"
 import { PrivateChatModel } from "../privateChat/PrivateChatModel"
@@ -17,7 +17,7 @@ import { ChatSidebar } from "./ChatSidebar"
 @observer
 export class Chat extends React.Component {
   render() {
-    const { activeConversation } = conversationStore
+    const { activeConversation } = rootStore.conversationStore
 
     const messages = activeConversation
       ? activeConversation.displayedMessages || activeConversation.messages
@@ -47,7 +47,7 @@ export class Chat extends React.Component {
 
   @computed
   private get headerContent() {
-    const { activeConversation } = conversationStore
+    const { activeConversation } = rootStore.conversationStore
 
     if (activeConversation instanceof ChannelModel) {
       return <ChannelHeader channel={activeConversation} />

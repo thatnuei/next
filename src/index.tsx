@@ -3,9 +3,8 @@ import React from "react"
 import ReactDOM from "react-dom"
 import { App } from "./app/App"
 import { loginScreen } from "./app/LoginModal"
+import { rootStore } from "./app/RootStore"
 import { selectCharacterScreen } from "./app/SelectCharacterModal"
-import { navigationStore } from "./navigation/NavigationStore"
-import { sessionStore } from "./session/SessionStore"
 import { applyGlobalStyles } from "./ui/globalStyles"
 
 // const AsyncMode: React.ComponentType = (React as any).unstable_AsyncMode
@@ -14,11 +13,11 @@ configure({ enforceActions: "observed" })
 
 async function initSession() {
   try {
-    await sessionStore.restoreUserData()
-    navigationStore.push(selectCharacterScreen())
+    await rootStore.sessionStore.restoreUserData()
+    rootStore.navigationStore.push(selectCharacterScreen())
   } catch (error) {
     console.warn(error)
-    navigationStore.push(loginScreen())
+    rootStore.navigationStore.push(loginScreen())
   }
 }
 

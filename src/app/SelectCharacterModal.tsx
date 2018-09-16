@@ -4,15 +4,14 @@ import { observer } from "mobx-react"
 import React from "react"
 import { Avatar } from "../character/Avatar"
 import { chatScreen } from "../chat/Chat"
-import { NavigationScreen, navigationStore } from "../navigation/NavigationStore"
-import { sessionStore } from "../session/SessionStore"
-import { socketStore } from "../socket/SocketStore"
+import { NavigationScreen } from "../navigation/NavigationStore"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
 import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
+import { rootStore } from "./RootStore"
 
 type FormValues = {
   character: string
@@ -25,7 +24,8 @@ export class SelectCharacterModal extends React.Component {
 
   @action
   loadLastCharacter() {
-    this.lastCharacter = localStorage.getItem("lastCharacter") || sessionStore.characters[0]
+    this.lastCharacter =
+      localStorage.getItem("lastCharacter") || rootStore.sessionStore.characters[0]
   }
 
   componentDidMount() {
@@ -69,7 +69,7 @@ export class SelectCharacterModal extends React.Component {
             value={props.values.character}
             onChange={(event) => this.handleChange(event, props)}
           >
-            {sessionStore.characters.map((name) => (
+            {rootStore.sessionStore.characters.map((name) => (
               <option value={name} key={name}>
                 {name}
               </option>
@@ -90,12 +90,12 @@ export class SelectCharacterModal extends React.Component {
   }
 
   private handleSubmit = (values: FormValues) => {
-    socketStore.connect(
-      sessionStore.account,
-      sessionStore.ticket,
+    rootStore.socketStore.connect(
+      rootStore.sessionStore.account,
+      rootStore.sessionStore.ticket,
       values.character,
       () => {
-        navigationStore.replace(chatScreen())
+        rootStore.navigationStore.replace(chatScreen())
       },
     )
   }

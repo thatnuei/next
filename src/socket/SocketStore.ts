@@ -76,5 +76,3 @@ export class SocketStore {
     this.disconnectListeners.add(listener)
   }
 }
-
-export const socketStore = new SocketStore()

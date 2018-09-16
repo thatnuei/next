@@ -1,23 +1,24 @@
 import { action, computed, observable } from "mobx"
-import { channelStore } from "../channel/ChannelStore"
+import { RootStore } from "../app/RootStore"
 import { clamp } from "../helpers/math"
-import { privateChatStore } from "../privateChat/PrivateChatStore"
 import { ConversationModel } from "./ConversationModel"
 
 export class ConversationStore {
   @observable.ref
   activeConversationIndex = 0
 
-  constructor() {}
+  constructor(private rootStore: RootStore) {}
 
   @computed
   get channelConversations() {
-    return channelStore.joinedChannels.sort((a, b) => a.title.localeCompare(b.title))
+    return this.rootStore.channelStore.joinedChannels.sort((a, b) => a.title.localeCompare(b.title))
   }
 
   @computed
   get privateConversations() {
-    return privateChatStore.openChats.sort((a, b) => a.partner.localeCompare(b.partner))
+    return this.rootStore.privateChatStore.openChats.sort((a, b) =>
+      a.partner.localeCompare(b.partner),
+    )
   }
 
   @computed
@@ -44,5 +45,3 @@ export class ConversationStore {
     return current !== undefined && current.id === convo.id
   }
 }
-
-export const conversationStore = new ConversationStore()

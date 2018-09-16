@@ -1,7 +1,6 @@
 import { Formik, FormikProps } from "formik"
 import React from "react"
-import { NavigationScreen, navigationStore } from "../navigation/NavigationStore"
-import { sessionStore } from "../session/SessionStore"
+import { NavigationScreen } from "../navigation/NavigationStore"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
@@ -9,6 +8,7 @@ import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
+import { rootStore } from "./RootStore"
 import { selectCharacterScreen } from "./SelectCharacterModal"
 
 const initialValues = {
@@ -31,10 +31,10 @@ export class LoginModal extends React.Component {
 
   private handleSubmit = async (values: LoginValues) => {
     try {
-      await sessionStore.getApiTicket(values.account, values.password)
-      sessionStore.saveUserData()
-      navigationStore.pop()
-      navigationStore.push(selectCharacterScreen())
+      await rootStore.sessionStore.getApiTicket(values.account, values.password)
+      rootStore.sessionStore.saveUserData()
+      rootStore.navigationStore.pop()
+      rootStore.navigationStore.push(selectCharacterScreen())
     } catch (error) {
       console.error(error)
       alert(error.message || String(error)) // TODO: replace with actual error modal

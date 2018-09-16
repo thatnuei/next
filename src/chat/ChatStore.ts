@@ -1,6 +1,6 @@
 import { action, computed, observable } from "mobx"
-import { characterStore } from "../character/CharacterStore"
-import { CommandListener, socketStore } from "../socket/SocketStore"
+import { RootStore, rootStore } from "../app/RootStore"
+import { CommandListener } from "../socket/SocketStore"
 
 export class ChatStore {
   @observable
@@ -9,9 +9,9 @@ export class ChatStore {
   @observable.shallow
   serverVariables = new Map<string, number | string | ReadonlyArray<string>>()
 
-  constructor() {
-    socketStore.addCommandListener("IDN", this.handleIdentified)
-    socketStore.addCommandListener("VAR", this.handleServerVariables)
+  constructor(rootStore: RootStore) {
+    rootStore.socketStore.addCommandListener("IDN", this.handleIdentified)
+    rootStore.socketStore.addCommandListener("VAR", this.handleServerVariables)
   }
 
   @action
@@ -26,8 +26,6 @@ export class ChatStore {
 
   @computed
   get identityCharacter() {
-    return characterStore.getCharacter(this.identity)
+    return rootStore.characterStore.getCharacter(this.identity)
   }
 }
-
-export const chatStore = new ChatStore()

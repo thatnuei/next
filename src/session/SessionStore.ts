@@ -1,9 +1,8 @@
 import { action, observable } from "mobx"
 import { loginScreen } from "../app/LoginModal"
+import { RootStore } from "../app/RootStore"
 import { CharacterStatus } from "../character/types"
 import { fetchCharacters, fetchTicket } from "../flist/api"
-import { navigationStore } from "../navigation/NavigationStore"
-import { socketStore } from "../socket/SocketStore"
 import { loadAuthData, saveAuthData } from "./storage"
 
 export class SessionStore {
@@ -16,10 +15,10 @@ export class SessionStore {
   @observable
   characters: string[] = []
 
-  constructor() {
-    socketStore.addDisconnectListener(() => {
+  constructor(private rootStore: RootStore) {
+    rootStore.socketStore.addDisconnectListener(() => {
       alert("Disconnected from server :(")
-      navigationStore.replace(loginScreen())
+      rootStore.navigationStore.replace(loginScreen())
     })
   }
 
@@ -50,8 +49,6 @@ export class SessionStore {
   }
 
   updateStatus(status: CharacterStatus, statusmsg: string) {
-    socketStore.sendCommand("STA", { status, statusmsg })
+    this.rootStore.socketStore.sendCommand("STA", { status, statusmsg })
   }
 }
-
-export const sessionStore = new SessionStore()

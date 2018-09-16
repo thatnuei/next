@@ -9,7 +9,7 @@ export type NavigationScreenProps = {
   close(): void
 }
 
-class NavigationStore {
+export class NavigationStore {
   @observable
   screens: NavigationScreen[] = []
 
@@ -34,5 +34,3 @@ class NavigationStore {
     this.screens = this.screens.filter((screen) => screen.key !== key)
   }
 }
-
-export const navigationStore = new NavigationStore()
