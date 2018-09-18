@@ -1,6 +1,7 @@
 import { bind } from "decko"
 import { observer } from "mobx-react"
 import React from "react"
+import { Chat } from "../chat/Chat"
 import { appStore } from "./AppStore"
 import { CharacterSelectScreen } from "./CharacterSelectScreen"
 import { LoginScreen } from "./LoginScreen"
@@ -34,7 +35,7 @@ export class App extends React.Component {
         return "Connecting..."
 
       case "chat":
-        return "chat"
+        return <Chat />
     }
   }
 }
