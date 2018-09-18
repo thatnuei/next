@@ -104,7 +104,6 @@ export class AppStore {
 
       if (command === "IDN") {
         this.setScreen("chat")
-        return
       }
 
       this.socketEvents.send(command, params)
