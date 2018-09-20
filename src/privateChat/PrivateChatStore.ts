@@ -4,7 +4,6 @@ import { MessageModel } from "../message/MessageModel"
 import { CommandListener } from "../socket/SocketStore"
 import { PrivateChatModel } from "./PrivateChatModel"
 
-// TODO: save private chats
 export class PrivateChatStore {
   @observable
   privateChats = new Map<string, PrivateChatModel>()
@@ -12,6 +11,7 @@ export class PrivateChatStore {
   private openChatPartners = observable.map<string, true>()
 
   constructor(private appStore: AppStore) {
+    appStore.socketEvents.listen("IDN", this.restoreChats)
     appStore.socketEvents.listen("PRI", this.handleMessage)
     appStore.socketEvents.listen("TPN", this.handleTypingStatus)
   }
@@ -34,6 +34,7 @@ export class PrivateChatStore {
   @action
   closeChat(partner: string) {
     this.openChatPartners.delete(partner)
+    this.saveChats()
   }
 
   sendMessage(recipientName: string, message: string) {
@@ -48,6 +49,29 @@ export class PrivateChatStore {
     this.getPrivateChat(recipientName).messages.push(newMessage)
   }
 
+  private get storageKey() {
+    return `privateChats:${this.appStore.identity}`
+  }
+
+  private saveChats() {
+    const partners = [...this.openChatPartners.keys()]
+    localStorage.setItem(this.storageKey, JSON.stringify(partners))
+  }
+
+  @action.bound
+  private restoreChats() {
+    let partners: string[] = []
+    try {
+      partners = JSON.parse(localStorage.getItem(this.storageKey) || "[]")
+    } catch (error) {
+      console.warn("Couldn't load private chats from storage:", error)
+    }
+
+    for (const name of partners) {
+      this.openChatPartners.set(name, true)
+    }
+  }
+
   @action
   private handleMessage: CommandListener<"PRI"> = (params) => {
     const privateChat = this.getPrivateChat(params.character)
@@ -60,6 +84,7 @@ export class PrivateChatStore {
 
     privateChat.messages.push(newMessage)
     this.openChatPartners.set(params.character, true)
+    this.saveChats()
   }
 
   @action
