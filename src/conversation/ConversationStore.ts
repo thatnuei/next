@@ -4,6 +4,7 @@ import { clamp } from "../helpers/math"
 import { ConversationModel } from "./ConversationModel"
 
 export class ConversationStore {
+  // TODO: use id-based selection instead of index-based
   @observable.ref
   activeConversationIndex = 0
 
@@ -43,15 +44,5 @@ export class ConversationStore {
   isActive(convo: ConversationModel) {
     const current = this.activeConversation
     return current !== undefined && current.id === convo.id
-  }
-
-  @computed
-  get currentMessages() {
-    return this.activeConversation && this.activeConversation.messages
-  }
-
-  @computed
-  get currentUsers() {
-    return this.activeConversation && this.activeConversation.users
   }
 }
