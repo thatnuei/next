@@ -37,22 +37,30 @@ export class Chat extends React.Component {
     const conversation = appStore.conversationStore.activeConversation
 
     if (conversation instanceof ChannelModel) {
+      const handleChatboxSubmit = (message: string) => {
+        appStore.channelStore.sendMessage(conversation.id, message)
+      }
+
       return (
         <ConversationLayout
           headerContent={<ChannelHeader channel={conversation} />}
           messages={conversation.messages}
           users={<ChannelUserList users={conversation.users} ops={conversation.ops} />}
-          chatbox={<Chatbox onSubmit={console.log} />}
+          chatbox={<Chatbox onSubmit={handleChatboxSubmit} />}
         />
       )
     }
 
     if (conversation instanceof PrivateChatModel) {
+      const handleChatboxSubmit = (message: string) => {
+        appStore.privateChatStore.sendMessage(conversation.partner, message)
+      }
+
       return (
         <ConversationLayout
           headerContent={<PrivateChatHeader privateChat={conversation} />}
           messages={conversation.messages}
-          chatbox={<Chatbox onSubmit={console.log} />}
+          chatbox={<Chatbox onSubmit={handleChatboxSubmit} />}
         />
       )
     }

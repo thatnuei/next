@@ -46,6 +46,16 @@ export class ChannelStore {
     return this.joinedChannelIds.has(id)
   }
 
+  sendMessage(id: string, message: string) {
+    this.appStore.sendCommand("MSG", { channel: id, message })
+
+    this.addChannelMessage(id, {
+      sender: this.appStore.identity,
+      text: message,
+      type: "normal",
+    })
+  }
+
   private get storedChannelsKey() {
     return `joinedChannels:${this.appStore.identity}`
   }

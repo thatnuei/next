@@ -4,13 +4,14 @@ import { MessageModel } from "../message/MessageModel"
 import { CommandListener } from "../socket/SocketStore"
 import { PrivateChatModel } from "./PrivateChatModel"
 
+// TODO: save private chats
 export class PrivateChatStore {
   @observable
   privateChats = new Map<string, PrivateChatModel>()
 
   private openChatPartners = observable.map<string, true>()
 
-  constructor(appStore: AppStore) {
+  constructor(private appStore: AppStore) {
     appStore.socketEvents.listen("PRI", this.handleMessage)
     appStore.socketEvents.listen("TPN", this.handleTypingStatus)
   }
@@ -33,6 +34,18 @@ export class PrivateChatStore {
   @action
   closeChat(partner: string) {
     this.openChatPartners.delete(partner)
+  }
+
+  sendMessage(recipientName: string, message: string) {
+    this.appStore.sendCommand("PRI", { recipient: recipientName, message })
+
+    const newMessage = new MessageModel({
+      sender: this.appStore.identity,
+      text: message,
+      type: "normal",
+    })
+
+    this.getPrivateChat(recipientName).messages.push(newMessage)
   }
 
   @action
