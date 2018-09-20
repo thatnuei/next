@@ -1,5 +1,11 @@
+import { mdiAccountMultiple } from "@mdi/js"
 import React from "react"
-import { ConversationUsersToggle } from "../conversation/ConversationUsersToggle"
+import MediaQuery from "react-responsive"
+import { appStore } from "../app/AppStore"
+import { userListBreakpoint } from "../conversation/breakpoints"
+import { userListOverlay } from "../conversation/ConversationUserList"
+import { Button } from "../ui/Button"
+import { Icon } from "../ui/Icon"
 import { styled } from "../ui/styled"
 import { ChannelFilter } from "./ChannelFilter"
 import { ChannelModel } from "./ChannelModel"
@@ -27,9 +33,19 @@ export class ChannelHeader extends React.Component<ChannelHeaderProps> {
           </div>
           <ChannelFilter channel={channel} />
         </div>
-        <ConversationUsersToggle users={channel.users} ops={channel.ops} />
+
+        <MediaQuery maxWidth={userListBreakpoint}>
+          <Button flat onClick={this.showUserListOverlay}>
+            <Icon path={mdiAccountMultiple} />
+          </Button>
+        </MediaQuery>
       </HeaderContainer>
     )
+  }
+
+  private showUserListOverlay = () => {
+    const { users, ops } = this.props.channel
+    appStore.navigationStore.push(userListOverlay(users, ops))
   }
 }
 
