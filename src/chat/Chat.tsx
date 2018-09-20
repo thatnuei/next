@@ -5,6 +5,7 @@ import { appStore } from "../app/AppStore"
 import { ChannelHeader } from "../channel/ChannelHeader"
 import { ChannelModel } from "../channel/ChannelModel"
 import { ConversationLayout } from "../conversation/ConversationLayout"
+import { ConversationUserList } from "../conversation/ConversationUserList"
 import { NavigationScreen } from "../navigation/NavigationStore"
 import { NavigationView } from "../navigation/NavigationView"
 import { PrivateChatHeader } from "../privateChat/PrivateChatHeader"
@@ -25,32 +26,38 @@ export class Chat extends React.Component {
           </div>
         </MediaQuery>
 
-        <ConversationContainer>
-          <ConversationLayout
-            headerContent={this.renderHeaderContent()}
-            messages={appStore.conversationStore.currentMessages || []}
-            users={appStore.conversationStore.currentUsers}
-            chatbox={<Chatbox onSubmit={console.log} />}
-          />
-        </ConversationContainer>
+        <ConversationContainer>{this.renderConversation()}</ConversationContainer>
 
         <NavigationView />
       </Container>
     )
   }
 
-  private renderHeaderContent() {
+  private renderConversation() {
     const conversation = appStore.conversationStore.activeConversation
 
     if (conversation instanceof ChannelModel) {
-      return <ChannelHeader channel={conversation} />
+      return (
+        <ConversationLayout
+          headerContent={<ChannelHeader channel={conversation} />}
+          messages={conversation.messages}
+          users={<ConversationUserList users={conversation.users} ops={conversation.ops} />}
+          chatbox={<Chatbox onSubmit={console.log} />}
+        />
+      )
     }
 
     if (conversation instanceof PrivateChatModel) {
-      return <PrivateChatHeader privateChat={conversation} />
+      return (
+        <ConversationLayout
+          headerContent={<PrivateChatHeader privateChat={conversation} />}
+          messages={conversation.messages}
+          chatbox={<Chatbox onSubmit={console.log} />}
+        />
+      )
     }
 
-    return <h2 style={{ padding: "0.5rem 0.7rem" }}>next</h2>
+    return <ConversationLayout headerContent={<h2 style={{ padding: "0.5rem 0.7rem" }}>next</h2>} />
   }
 }
 

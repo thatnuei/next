@@ -7,13 +7,11 @@ import { flist4 } from "../ui/colors"
 import { styled } from "../ui/styled"
 import { userListBreakpoint } from "./breakpoints"
 import { ConversationMessageList } from "./ConversationMessageList"
-import { ConversationUserList } from "./ConversationUserList"
-import { ConversationUsersToggle } from "./ConversationUsersToggle"
 
 type Props = {
   headerContent?: React.ReactNode
   messages?: MessageModel[]
-  users?: string[]
+  users?: JSX.Element
   chatbox?: React.ReactNode
 }
 
@@ -23,13 +21,10 @@ export const ConversationLayout = observer((props: Props) => {
       <HeaderArea>
         <ChatSidebarToggle />
         <HeaderContentContainer>{props.headerContent}</HeaderContentContainer>
-        {props.users && <ConversationUsersToggle users={props.users} />}
       </HeaderArea>
 
       <UserListArea>
-        <MediaQuery minWidth={userListBreakpoint}>
-          {props.users && <ConversationUserList users={props.users} />}
-        </MediaQuery>
+        <MediaQuery minWidth={userListBreakpoint}>{props.users}</MediaQuery>
       </UserListArea>
 
       <MessagesArea>
