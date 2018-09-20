@@ -1,11 +1,11 @@
 import { observer } from "mobx-react"
 import React from "react"
 import MediaQuery from "react-responsive"
+import { userListBreakpoint } from "../channel/breakpoints"
 import { ChatSidebarToggle } from "../chat/ChatSidebarToggle"
 import { MessageModel } from "../message/MessageModel"
 import { flist4 } from "../ui/colors"
 import { styled } from "../ui/styled"
-import { userListBreakpoint } from "./breakpoints"
 import { ConversationMessageList } from "./ConversationMessageList"
 
 type Props = {

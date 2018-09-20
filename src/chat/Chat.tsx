@@ -4,8 +4,8 @@ import MediaQuery from "react-responsive"
 import { appStore } from "../app/AppStore"
 import { ChannelHeader } from "../channel/ChannelHeader"
 import { ChannelModel } from "../channel/ChannelModel"
+import { ChannelUserList } from "../channel/ChannelUserList"
 import { ConversationLayout } from "../conversation/ConversationLayout"
-import { ConversationUserList } from "../conversation/ConversationUserList"
 import { NavigationScreen } from "../navigation/NavigationStore"
 import { NavigationView } from "../navigation/NavigationView"
 import { PrivateChatHeader } from "../privateChat/PrivateChatHeader"
@@ -41,7 +41,7 @@ export class Chat extends React.Component {
         <ConversationLayout
           headerContent={<ChannelHeader channel={conversation} />}
           messages={conversation.messages}
-          users={<ConversationUserList users={conversation.users} ops={conversation.ops} />}
+          users={<ChannelUserList users={conversation.users} ops={conversation.ops} />}
           chatbox={<Chatbox onSubmit={console.log} />}
         />
       )

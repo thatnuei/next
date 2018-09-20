@@ -13,14 +13,13 @@ import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
 
-export interface ConversationUserListProps {
+export interface ChannelUserListProps {
   users: string[]
   ops: Map<string, true>
 }
 
-// TODO: rename this to "ChannelUsers", move to Channel module
 @observer
-export class ConversationUserList extends React.Component<ConversationUserListProps> {
+export class ChannelUserList extends React.Component<ChannelUserListProps> {
   @observable
   searchText = ""
 
@@ -37,9 +36,7 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
     const getCharacter = (name: string) => appStore.characterStore.getCharacter(name)
 
     const isAdmin = (name: string) => (appStore.chatStore.admins.has(name) ? 0 : 1)
-
     const isChannelOp = (name: string) => (this.props.ops.has(name) ? 0 : 1)
-
     const isLooking = (name: string) => (getCharacter(name).status === "looking" ? 0 : 1)
 
     return sort(filteredUsers, isAdmin, isChannelOp, isLooking, (name) => name)
@@ -117,11 +114,14 @@ const UserListItem = styled.div`
   text-overflow: ellipsis;
 `
 
-export const userListOverlay = (users: string[], ops: Map<string, true>): NavigationScreen => ({
+export const channelUserListOverlay = (
+  users: string[],
+  ops: Map<string, true>,
+): NavigationScreen => ({
   key: "userList",
   render: ({ close }) => (
     <Overlay anchor="right" onShadeClick={close}>
-      {users && <ConversationUserList users={users} ops={ops} />}
+      {users && <ChannelUserList users={users} ops={ops} />}
     </Overlay>
   ),
 })

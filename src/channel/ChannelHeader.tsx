@@ -2,13 +2,13 @@ import { mdiAccountMultiple } from "@mdi/js"
 import React from "react"
 import MediaQuery from "react-responsive"
 import { appStore } from "../app/AppStore"
-import { userListBreakpoint } from "../conversation/breakpoints"
-import { userListOverlay } from "../conversation/ConversationUserList"
 import { Button } from "../ui/Button"
 import { Icon } from "../ui/Icon"
 import { styled } from "../ui/styled"
+import { userListBreakpoint } from "./breakpoints"
 import { ChannelFilter } from "./ChannelFilter"
 import { ChannelModel } from "./ChannelModel"
+import { channelUserListOverlay } from "./ChannelUserList"
 
 export interface ChannelHeaderProps {
   channel: ChannelModel
@@ -45,7 +45,7 @@ export class ChannelHeader extends React.Component<ChannelHeaderProps> {
 
   private showUserListOverlay = () => {
     const { users, ops } = this.props.channel
-    appStore.navigationStore.push(userListOverlay(users, ops))
+    appStore.navigationStore.push(channelUserListOverlay(users, ops))
   }
 }
 
