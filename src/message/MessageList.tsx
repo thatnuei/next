@@ -1,24 +1,17 @@
 import { observer } from "mobx-react"
 import React from "react"
-import { Message } from "../message/Message"
-import { MessageModel } from "../message/MessageModel"
 import { styled } from "../ui/styled"
+import { Message } from "./Message"
+import { MessageModel } from "./MessageModel"
 
-export interface ConversationMessageListProps {
+export interface MessageListProps {
   messages: MessageModel[]
 }
 
 @observer
-export class ConversationMessageList extends React.Component<ConversationMessageListProps> {
-  scroller = React.createRef<HTMLElement>()
-  scrolledToBottomThreshold = 30
-
-  scrollToBottom() {
-    const scroller = this.scroller.current
-    if (scroller) {
-      scroller.scrollTop = scroller.scrollHeight
-    }
-  }
+export class MessageList extends React.Component<MessageListProps> {
+  private scroller = React.createRef<HTMLElement>()
+  private scrolledToBottomThreshold = 30
 
   componentDidMount() {
     this.scrollToBottom()
@@ -49,6 +42,13 @@ export class ConversationMessageList extends React.Component<ConversationMessage
         ))}
       </ScrollContainer>
     )
+  }
+
+  private scrollToBottom() {
+    const scroller = this.scroller.current
+    if (scroller) {
+      scroller.scrollTop = scroller.scrollHeight
+    }
   }
 }
 

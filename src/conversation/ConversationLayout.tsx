@@ -3,10 +3,10 @@ import React from "react"
 import MediaQuery from "react-responsive"
 import { userListBreakpoint } from "../channel/breakpoints"
 import { ChatSidebarToggle } from "../chat/ChatSidebarToggle"
+import { MessageList } from "../message/MessageList"
 import { MessageModel } from "../message/MessageModel"
 import { flist4 } from "../ui/colors"
 import { styled } from "../ui/styled"
-import { ConversationMessageList } from "./ConversationMessageList"
 
 type Props = {
   headerContent?: React.ReactNode
@@ -27,9 +27,7 @@ export const ConversationLayout = observer((props: Props) => {
         <MediaQuery minWidth={userListBreakpoint}>{props.users}</MediaQuery>
       </UserListArea>
 
-      <MessagesArea>
-        {props.messages && <ConversationMessageList messages={props.messages} />}
-      </MessagesArea>
+      <MessagesArea>{props.messages && <MessageList messages={props.messages} />}</MessagesArea>
 
       <ChatboxArea>{props.chatbox}</ChatboxArea>
     </Container>
