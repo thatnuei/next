@@ -35,11 +35,12 @@ export class ChannelUserList extends React.Component<ChannelUserListProps> {
 
     const getCharacter = (name: string) => appStore.characterStore.getCharacter(name)
 
-    const isAdmin = (name: string) => (appStore.chatStore.admins.has(name) ? 0 : 1)
-    const isChannelOp = (name: string) => (this.props.ops.has(name) ? 0 : 1)
-    const isLooking = (name: string) => (getCharacter(name).status === "looking" ? 0 : 1)
+    const adminsFirst = (name: string) => (appStore.chatStore.admins.has(name) ? 0 : 1)
+    const channelOpsFirst = (name: string) => (this.props.ops.has(name) ? 0 : 1)
+    const lookingFirst = (name: string) => (getCharacter(name).status === "looking" ? 0 : 1)
+    const byName = (name: string) => name.toLocaleLowerCase()
 
-    return sort(filteredUsers, isAdmin, isChannelOp, isLooking, (name) => name.toLocaleLowerCase())
+    return sort(filteredUsers, adminsFirst, channelOpsFirst, lookingFirst, byName)
   }
 
   render() {
