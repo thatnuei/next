@@ -2,8 +2,10 @@ import { action, computed, observable } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { AutoSizer, List, ListRowProps, ListRowRenderer, Size } from "react-virtualized"
+import { appStore } from "../app/AppStore"
 import { CharacterName } from "../character/CharacterName"
 import { observerCallback } from "../helpers/mobx"
+import { sort } from "../helpers/sort"
 import { queryify } from "../helpers/string"
 import { NavigationScreen } from "../navigation/NavigationStore"
 import { flist4, flist5 } from "../ui/colors"
@@ -13,8 +15,10 @@ import { TextInput } from "../ui/TextInput"
 
 export interface ConversationUserListProps {
   users: string[]
+  ops: Map<string, true>
 }
 
+// TODO: rename this to "ChannelUsers", move to Channel module
 @observer
 export class ConversationUserList extends React.Component<ConversationUserListProps> {
   @observable
@@ -26,9 +30,19 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
   }
 
   @computed
-  get filteredUsers() {
+  get processedUsers() {
     const searchText = queryify(this.searchText)
-    return this.props.users.filter((name) => queryify(name).includes(searchText))
+    const filteredUsers = this.props.users.filter((name) => queryify(name).includes(searchText))
+
+    const getCharacter = (name: string) => appStore.characterStore.getCharacter(name)
+
+    const isAdmin = (name: string) => (appStore.chatStore.admins.has(name) ? 0 : 1)
+
+    const isChannelOp = (name: string) => (this.props.ops.has(name) ? 0 : 1)
+
+    const isLooking = (name: string) => (getCharacter(name).status === "looking" ? 0 : 1)
+
+    return sort(filteredUsers, isAdmin, isChannelOp, isLooking, (name) => name)
   }
 
   render() {
@@ -51,7 +65,7 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
     return (
       <List
         {...size}
-        rowCount={this.filteredUsers.length}
+        rowCount={this.processedUsers.length}
         rowHeight={30}
         rowRenderer={this.renderListRow}
       />
@@ -67,7 +81,7 @@ export class ConversationUserList extends React.Component<ConversationUserListPr
   }
 
   private renderRowContent = observerCallback((row: ListRowProps) => {
-    const userName = this.filteredUsers[row.index] as string | undefined
+    const userName = this.processedUsers[row.index] as string | undefined
     return userName && <CharacterName name={userName} />
   })
 }
@@ -103,11 +117,11 @@ const UserListItem = styled.div`
   text-overflow: ellipsis;
 `
 
-export const userListOverlay = (users: string[]): NavigationScreen => ({
+export const userListOverlay = (users: string[], ops: Map<string, true>): NavigationScreen => ({
   key: "userList",
   render: ({ close }) => (
     <Overlay anchor="right" onShadeClick={close}>
-      {users && <ConversationUserList users={users} />}
+      {users && <ConversationUserList users={users} ops={ops} />}
     </Overlay>
   ),
 })
