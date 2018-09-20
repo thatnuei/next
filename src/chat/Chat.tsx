@@ -44,7 +44,7 @@ export class Chat extends React.Component {
       return (
         <ConversationLayout
           headerContent={<ChannelHeader channel={conversation} />}
-          messages={conversation.messages}
+          messages={conversation.displayedMessages}
           users={<ChannelUserList users={conversation.users} ops={conversation.ops} />}
           chatbox={<Chatbox onSubmit={handleChatboxSubmit} />}
         />
