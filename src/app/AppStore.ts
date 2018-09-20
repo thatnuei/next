@@ -107,6 +107,8 @@ export class AppStore {
       }
 
       this.socketEvents.send(command, params)
+
+      console.log(command, params)
     }
 
     socket.onclose = () => {
