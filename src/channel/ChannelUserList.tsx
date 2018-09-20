@@ -39,7 +39,7 @@ export class ChannelUserList extends React.Component<ChannelUserListProps> {
     const isChannelOp = (name: string) => (this.props.ops.has(name) ? 0 : 1)
     const isLooking = (name: string) => (getCharacter(name).status === "looking" ? 0 : 1)
 
-    return sort(filteredUsers, isAdmin, isChannelOp, isLooking, (name) => name)
+    return sort(filteredUsers, isAdmin, isChannelOp, isLooking, (name) => name.toLocaleLowerCase())
   }
 
   render() {
