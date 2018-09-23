@@ -1,7 +1,10 @@
 import { bind } from "decko"
+import { action, observable, runInAction } from "mobx"
 import { observer } from "mobx-react"
 import React from "react"
 import { Avatar } from "../character/Avatar"
+import { StoredValue } from "../helpers/StoredValue"
+import { appStore } from "../store"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
@@ -9,21 +12,24 @@ import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 
-type CharacterSelectScreenProps = {
-  selectedCharacter: string
-  characters: string[]
-  onSelectedCharacterChange: (character: string) => void
-  onSubmit: () => void
-}
+const storedLastCharacter = new StoredValue<string>("lastCharacter")
 
 @observer
-export class CharacterSelectScreen extends React.Component<CharacterSelectScreenProps> {
-  render() {
-    const { characters, selectedCharacter, onSelectedCharacterChange } = this.props
+export class CharacterSelectScreen extends React.Component {
+  @observable
+  private selectedCharacter = ""
 
-    const onCharacterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      onSelectedCharacterChange(event.target.value)
-    }
+  async componentDidMount() {
+    const { characters } = appStore.userStore
+    const lastCharacter = (await storedLastCharacter.load()) || characters[0] || ""
+    runInAction("setCharacter", () => {
+      this.selectedCharacter = lastCharacter
+    })
+  }
+
+  render() {
+    const { characters } = appStore.userStore
+    const { selectedCharacter, handleChange } = this
 
     const formStyle: React.CSSProperties = {
       display: "flex",
@@ -40,7 +46,7 @@ export class CharacterSelectScreen extends React.Component<CharacterSelectScreen
               <Avatar key={selectedCharacter} name={selectedCharacter} />
             </FormField>
             <FormField>
-              <select name="character" value={selectedCharacter} onChange={onCharacterChange}>
+              <select name="character" value={selectedCharacter} onChange={handleChange}>
                 {characters.map((name) => (
                   <option value={name} key={name}>
                     {name}
@@ -55,10 +61,23 @@ export class CharacterSelectScreen extends React.Component<CharacterSelectScreen
     )
   }
 
+  @action.bound
+  private handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
+    this.selectedCharacter = event.target.value
+    storedLastCharacter.save(event.target.value)
+  }
+
   @bind
   private handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    this.props.onSubmit()
+
+    const { credentials } = appStore.userStore
+    if (!credentials) {
+      appStore.appRouterStore.setRoute("login")
+      return
+    }
+
+    appStore.connectToChat(credentials.account, credentials.ticket, this.selectedCharacter)
   }
 }
 

@@ -7,32 +7,22 @@ import { CharacterStatus } from "../character/types"
 import { ChatStore } from "../chat/ChatStore"
 import { ConversationStore } from "../conversation/ConversationStore"
 import { ClientCommands, ServerCommands } from "../fchat/types"
-import { authenticate, fetchCharacters } from "../flist/api"
-import { assertDefined } from "../helpers/assertDefined"
 import { NavigationStore } from "../navigation/NavigationStore"
 import { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { EventBus } from "../state/EventBus"
+import { UserStore } from "../user/UserStore"
 import { AppRouterStore } from "./AppRouterStore"
-import { LoginValues } from "./LoginScreen"
 
 export type SocketEventBus = EventBus<ServerCommands>
 
 export class AppStore {
-  @observable
-  account = ""
-
-  @observable
-  ticket = ""
-
-  @observable
-  characters: string[] = []
-
   @observable
   identity = ""
 
   socket?: WebSocket
   socketEvents: SocketEventBus = new EventBus()
 
+  userStore = new UserStore()
   appRouterStore = new AppRouterStore()
   chatStore = new ChatStore(this.socketEvents)
   channelStore = new ChannelStore(this)
@@ -44,9 +34,7 @@ export class AppStore {
 
   async init() {
     try {
-      this.restoreAuthData()
-      await this.fetchCharacters()
-      this.restoreIdentity()
+      await this.userStore.loadCharacters()
       this.appRouterStore.setRoute("characterSelect")
     } catch (error) {
       console.warn("non-fatal:", error)
@@ -55,34 +43,16 @@ export class AppStore {
   }
 
   @bind
-  async handleLoginSubmit({ account, password }: LoginValues) {
-    try {
-      const { ticket, characters } = await authenticate(account, password)
-      this.setAuthData(account, ticket)
-      this.setCharacters(characters)
-      this.restoreIdentity()
-      this.appRouterStore.setRoute("characterSelect")
-      this.saveAuthData()
-    } catch (error) {
-      alert(error)
-    }
-  }
-
-  @bind
-  handleCharacterSubmit() {
-    this.connectToChat()
-  }
-
-  @bind
-  private connectToChat() {
+  connectToChat(account: string, ticket: string, identity: string) {
+    this.setIdentity(identity)
     this.appRouterStore.setRoute("connecting")
 
     const socket = (this.socket = new WebSocket(`wss://chat.f-list.net:9799`))
 
     socket.onopen = () => {
       this.sendCommand("IDN", {
-        account: this.account,
-        ticket: this.ticket,
+        account,
+        ticket,
         character: this.identity,
         cname: "next",
         cversion: "0.1.0",
@@ -125,45 +95,9 @@ export class AppStore {
     }
   }
 
-  @action
-  private setAuthData(account: string, ticket: string) {
-    this.account = account
-    this.ticket = ticket
-  }
-
-  @action
-  private setCharacters(characters: string[]) {
-    this.characters = characters
-  }
-
   @action.bound
   setIdentity(identity: string) {
     this.identity = identity
-    this.saveIdentity()
-  }
-
-  private async fetchCharacters() {
-    const { characters } = await fetchCharacters(this.account, this.ticket)
-    this.setCharacters(characters)
-  }
-
-  @action
-  private restoreAuthData() {
-    this.account = assertDefined(localStorage.getItem("account"), "Account not found")
-    this.ticket = assertDefined(localStorage.getItem("ticket"), "Ticket not found")
-  }
-
-  private saveAuthData() {
-    localStorage.setItem("account", this.account)
-    localStorage.setItem("ticket", this.ticket)
-  }
-
-  private restoreIdentity() {
-    this.identity = localStorage.getItem("lastCharacter") || this.characters[0]
-  }
-
-  private saveIdentity() {
-    localStorage.setItem("lastCharacter", this.identity)
   }
 
   @computed

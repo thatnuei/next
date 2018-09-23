@@ -19,17 +19,10 @@ export class App extends React.Component {
         return "Setting things up..."
 
       case "login":
-        return <LoginScreen onSubmit={appStore.handleLoginSubmit} />
+        return <LoginScreen />
 
       case "characterSelect":
-        return (
-          <CharacterSelectScreen
-            characters={appStore.characters}
-            selectedCharacter={appStore.identity}
-            onSelectedCharacterChange={appStore.setIdentity}
-            onSubmit={appStore.handleCharacterSubmit}
-          />
-        )
+        return <CharacterSelectScreen />
 
       case "connecting":
         return "Connecting..."
