@@ -71,8 +71,4 @@ export class SocketStore {
       this.commandListeners[command] = new Set([listener])
     }
   }
-
-  addDisconnectListener(listener: () => void) {
-    this.disconnectListeners.add(listener)
-  }
 }
