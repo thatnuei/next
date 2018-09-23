@@ -12,16 +12,12 @@ import { assertDefined } from "../helpers/assertDefined"
 import { NavigationStore } from "../navigation/NavigationStore"
 import { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { EventBus } from "../state/EventBus"
+import { AppRouterStore } from "./AppRouterStore"
 import { LoginValues } from "./LoginScreen"
-
-type AppScreen = "setup" | "login" | "characterSelect" | "connecting" | "chat"
 
 export type SocketEventBus = EventBus<ServerCommands>
 
 export class AppStore {
-  @observable
-  screen: AppScreen = "setup"
-
   @observable
   account = ""
 
@@ -37,6 +33,7 @@ export class AppStore {
   socket?: WebSocket
   socketEvents: SocketEventBus = new EventBus()
 
+  appRouterStore = new AppRouterStore()
   chatStore = new ChatStore(this.socketEvents)
   channelStore = new ChannelStore(this)
   channelListStore = new ChannelListStore(this)
@@ -50,10 +47,10 @@ export class AppStore {
       this.restoreAuthData()
       await this.fetchCharacters()
       this.restoreIdentity()
-      this.setScreen("characterSelect")
+      this.appRouterStore.setRoute("characterSelect")
     } catch (error) {
       console.warn("non-fatal:", error)
-      this.setScreen("login")
+      this.appRouterStore.setRoute("login")
     }
   }
 
@@ -64,7 +61,7 @@ export class AppStore {
       this.setAuthData(account, ticket)
       this.setCharacters(characters)
       this.restoreIdentity()
-      this.setScreen("characterSelect")
+      this.appRouterStore.setRoute("characterSelect")
       this.saveAuthData()
     } catch (error) {
       alert(error)
@@ -78,7 +75,7 @@ export class AppStore {
 
   @bind
   private connectToChat() {
-    this.setScreen("connecting")
+    this.appRouterStore.setRoute("connecting")
 
     const socket = (this.socket = new WebSocket(`wss://chat.f-list.net:9799`))
 
@@ -103,7 +100,7 @@ export class AppStore {
       }
 
       if (command === "IDN") {
-        this.setScreen("chat")
+        this.appRouterStore.setRoute("chat")
       }
 
       this.socketEvents.send(command, params)
@@ -132,11 +129,6 @@ export class AppStore {
   private setAuthData(account: string, ticket: string) {
     this.account = account
     this.ticket = ticket
-  }
-
-  @action
-  private setScreen(screen: AppScreen) {
-    this.screen = screen
   }
 
   @action

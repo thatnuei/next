@@ -14,7 +14,7 @@ export class App extends React.Component {
 
   @bind
   private renderScreen() {
-    switch (appStore.screen) {
+    switch (appStore.appRouterStore.route) {
       case "setup":
         return "Setting things up..."
 
