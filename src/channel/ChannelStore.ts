@@ -35,11 +35,11 @@ export class ChannelStore {
   }
 
   joinChannel(id: string) {
-    this.root.sendCommand("JCH", { channel: id })
+    this.root.socketStore.sendCommand("JCH", { channel: id })
   }
 
   leaveChannel(id: string) {
-    this.root.sendCommand("LCH", { channel: id })
+    this.root.socketStore.sendCommand("LCH", { channel: id })
   }
 
   isJoined(id: string) {
@@ -47,7 +47,7 @@ export class ChannelStore {
   }
 
   sendMessage(id: string, message: string) {
-    this.root.sendCommand("MSG", { channel: id, message })
+    this.root.socketStore.sendCommand("MSG", { channel: id, message })
 
     this.addChannelMessage(id, {
       sender: this.root.chatStore.identity,

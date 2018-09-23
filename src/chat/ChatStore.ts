@@ -29,7 +29,7 @@ export class ChatStore {
   }
 
   updateStatus(status: CharacterStatus, statusmsg: string) {
-    this.root.sendCommand("STA", { status, statusmsg })
+    this.root.socketStore.sendCommand("STA", { status, statusmsg })
   }
 
   @action.bound

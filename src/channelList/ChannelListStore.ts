@@ -21,8 +21,8 @@ export class ChannelListStore {
   }
 
   requestChannelList() {
-    this.appStore.sendCommand("CHA", undefined)
-    this.appStore.sendCommand("ORS", undefined)
+    this.appStore.socketStore.sendCommand("CHA", undefined)
+    this.appStore.socketStore.sendCommand("ORS", undefined)
   }
 
   @action

@@ -77,7 +77,11 @@ export class CharacterSelectScreen extends React.Component {
       return
     }
 
-    appStore.connectToChat(credentials.account, credentials.ticket, this.selectedCharacter)
+    appStore.socketStore.connectToChat(
+      credentials.account,
+      credentials.ticket,
+      this.selectedCharacter,
+    )
   }
 }
 

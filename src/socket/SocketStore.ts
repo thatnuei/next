@@ -1,3 +1,4 @@
+import { AppStore } from "../app/AppStore"
 import { ClientCommands, ServerCommands } from "../fchat/types"
 
 export type CommandListener<T extends keyof ServerCommands> = (params: ServerCommands[T]) => void
@@ -5,16 +6,17 @@ export type CommandListener<T extends keyof ServerCommands> = (params: ServerCom
 export type CommandListenerRecord = { [T in keyof ServerCommands]?: Set<CommandListener<any>> }
 
 export class SocketStore {
-  private socket?: WebSocket
-  private commandListeners: CommandListenerRecord = {}
-  private disconnectListeners = new Set<() => void>()
+  socket?: WebSocket
 
-  connect(account: string, ticket: string, character: string, onSuccess: () => void) {
+  constructor(private root: AppStore) {}
+
+  connectToChat(account: string, ticket: string, character: string) {
+    this.root.chatStore.setIdentity(character)
+    this.root.appRouterStore.setRoute("connecting")
+
     const socket = (this.socket = new WebSocket(`wss://chat.f-list.net:9799`))
 
     socket.onopen = () => {
-      console.log("socket open")
-
       this.sendCommand("IDN", {
         account,
         ticket,
@@ -25,50 +27,38 @@ export class SocketStore {
       })
     }
 
-    socket.onclose = () => {
-      console.log("socket closed")
-      this.socket = undefined
-      this.disconnectListeners.forEach((listener) => listener())
-    }
-
-    socket.onmessage = (message) => {
-      const data: string = message.data
-      const type = data.slice(0, 3) as keyof ServerCommands
+    socket.onmessage = ({ data }: { data: string }) => {
+      const command = data.slice(0, 3) as keyof ServerCommands
       const params = data.length > 3 ? JSON.parse(data.slice(4)) : {}
 
-      if (type === "PIN") {
+      if (command === "PIN") {
         this.sendCommand("PIN", undefined)
-      } else {
-        const listenerSet = this.commandListeners[type]
-        if (listenerSet) {
-          listenerSet.forEach((listener) => listener(params))
-        } else {
-          console.log(type, params)
-        }
+        return
       }
 
-      if (type === "IDN") {
-        onSuccess()
+      if (command === "IDN") {
+        this.root.appRouterStore.setRoute("chat")
       }
+
+      this.root.socketEvents.send(command, params)
+
+      console.log(command, params)
+    }
+
+    socket.onclose = () => {
+      alert("Chat connection lost :(")
+      this.root.init()
+      // TODO: reconnect?
     }
   }
 
-  sendCommand<K extends keyof ClientCommands>(cmd: K, params: ClientCommands[K]) {
+  sendCommand<K extends keyof ClientCommands>(command: K, params: ClientCommands[K]) {
     if (this.socket) {
       if (params) {
-        this.socket.send(`${cmd} ${JSON.stringify(params)}`)
+        this.socket.send(`${command} ${JSON.stringify(params)}`)
       } else {
-        this.socket.send(cmd)
+        this.socket.send(command)
       }
-    }
-  }
-
-  addCommandListener<T extends keyof ServerCommands>(command: T, listener: CommandListener<T>) {
-    const listeners = this.commandListeners[command]
-    if (listeners) {
-      listeners.add(listener)
-    } else {
-      this.commandListeners[command] = new Set([listener])
     }
   }
 }

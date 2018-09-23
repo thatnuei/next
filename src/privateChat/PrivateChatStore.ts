@@ -38,7 +38,7 @@ export class PrivateChatStore {
   }
 
   sendMessage(recipientName: string, message: string) {
-    this.root.sendCommand("PRI", { recipient: recipientName, message })
+    this.root.socketStore.sendCommand("PRI", { recipient: recipientName, message })
 
     const newMessage = new MessageModel({
       sender: this.root.chatStore.identity,
