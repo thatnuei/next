@@ -13,44 +13,33 @@ export class CharacterStore {
     appStore.socketEvents.listen("STA", this.handleStatus)
   }
 
-  @action
   getCharacter(name: string) {
-    const char = this.characters.get(name)
-    if (char) return char
-
-    const newChar = new CharacterModel(name, "None", "offline")
-    this.characters.set(name, newChar)
-    return newChar
+    return this.characters.get(name) || new CharacterModel(name, "None", "offline")
   }
 
   @action
   private handleInitialCharacterData: CommandListener<"LIS"> = ({ characters }) => {
+    const map: Record<string, CharacterModel> = {}
     for (const [name, gender, status, statusMessage] of characters) {
-      const character = this.getCharacter(name)
-      character.gender = gender
-      character.status = status
-      character.statusMessage = statusMessage
+      map[name] = new CharacterModel(name, gender, status, statusMessage)
     }
+    this.characters.merge(map)
   }
 
   @action
-  private handleLogin: CommandListener<"NLN"> = ({ identity, gender, status }) => {
-    const character = this.getCharacter(identity)
-    character.gender = gender
-    character.status = status
+  private handleLogin: CommandListener<"NLN"> = ({ identity, gender }) => {
+    this.characters.set(identity, new CharacterModel(identity, gender, "online"))
   }
 
   @action
-  private handleLogout: CommandListener<"FLN"> = ({ character: name }) => {
-    const character = this.getCharacter(name)
-    character.status = "offline"
-    character.statusMessage = ""
+  private handleLogout: CommandListener<"FLN"> = ({ character: character }) => {
+    const { gender } = this.getCharacter(character)
+    this.characters.set(character, new CharacterModel(character, gender, "offline"))
   }
 
   @action
-  private handleStatus: CommandListener<"STA"> = ({ character: name, status, statusmsg }) => {
-    const character = this.getCharacter(name)
-    character.status = status
-    character.statusMessage = statusmsg
+  private handleStatus: CommandListener<"STA"> = ({ character, status, statusmsg }) => {
+    const { gender } = this.getCharacter(character)
+    this.characters.set(character, new CharacterModel(character, gender, status, statusmsg))
   }
 }
