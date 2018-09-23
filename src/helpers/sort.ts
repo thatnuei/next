@@ -1,1 +1,2 @@
-export { sortBy as sort } from "lodash"
+import sort from "lodash/sortBy"
+export { sort }
