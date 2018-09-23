@@ -1,17 +1,30 @@
-import { action, observable } from "mobx"
-import { SocketEventBus } from "../app/AppStore"
+import { action, computed, observable } from "mobx"
+import { AppStore, SocketEventBus } from "../app/AppStore"
 import { ServerCommands } from "../fchat/types"
 
 export class ChatStore {
+  @observable
+  identity = ""
+
   @observable
   serverVariables = new Map<string, number | string | ReadonlyArray<string>>()
 
   @observable
   admins = new Map<string, true>()
 
-  constructor(socketEvents: SocketEventBus) {
+  constructor(private root: AppStore, socketEvents: SocketEventBus) {
     socketEvents.listen("VAR", this.handleServerVariables)
     socketEvents.listen("ADL", this.handleAdminList)
+  }
+
+  @action.bound
+  setIdentity(identity: string) {
+    this.identity = identity
+  }
+
+  @computed
+  get identityCharacter() {
+    return this.root.characterStore.getCharacter(this.identity)
   }
 
   @action.bound

@@ -19,10 +19,10 @@ type Props = {
 @observer
 export class UpdateStatusForm extends React.Component<Props> {
   @observable
-  private status: CharacterStatus = appStore.identityCharacter.status
+  private status: CharacterStatus = appStore.chatStore.identityCharacter.status
 
   @observable
-  private statusMessage = appStore.identityCharacter.statusMessage
+  private statusMessage = appStore.chatStore.identityCharacter.statusMessage
 
   render() {
     return (

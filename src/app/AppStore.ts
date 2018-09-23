@@ -1,5 +1,4 @@
 import { bind } from "decko"
-import { action, computed, observable } from "mobx"
 import { ChannelStore } from "../channel/ChannelStore"
 import { ChannelListStore } from "../channelList/ChannelListStore"
 import { CharacterStore } from "../character/CharacterStore"
@@ -16,15 +15,12 @@ import { AppRouterStore } from "./AppRouterStore"
 export type SocketEventBus = EventBus<ServerCommands>
 
 export class AppStore {
-  @observable
-  identity = ""
-
   socket?: WebSocket
   socketEvents: SocketEventBus = new EventBus()
 
   userStore = new UserStore()
   appRouterStore = new AppRouterStore()
-  chatStore = new ChatStore(this.socketEvents)
+  chatStore = new ChatStore(this, this.socketEvents)
   channelStore = new ChannelStore(this)
   channelListStore = new ChannelListStore(this)
   characterStore = new CharacterStore(this)
@@ -43,8 +39,8 @@ export class AppStore {
   }
 
   @bind
-  connectToChat(account: string, ticket: string, identity: string) {
-    this.setIdentity(identity)
+  connectToChat(account: string, ticket: string, character: string) {
+    this.chatStore.setIdentity(character)
     this.appRouterStore.setRoute("connecting")
 
     const socket = (this.socket = new WebSocket(`wss://chat.f-list.net:9799`))
@@ -53,7 +49,7 @@ export class AppStore {
       this.sendCommand("IDN", {
         account,
         ticket,
-        character: this.identity,
+        character,
         cname: "next",
         cversion: "0.1.0",
         method: "ticket",
@@ -93,16 +89,6 @@ export class AppStore {
         this.socket.send(command)
       }
     }
-  }
-
-  @action.bound
-  setIdentity(identity: string) {
-    this.identity = identity
-  }
-
-  @computed
-  get identityCharacter() {
-    return this.characterStore.getCharacter(this.identity)
   }
 
   updateStatus(status: CharacterStatus, statusmsg: string) {

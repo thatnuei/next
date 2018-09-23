@@ -10,10 +10,10 @@ export class PrivateChatStore {
 
   private openChatPartners = observable.map<string, true>()
 
-  constructor(private appStore: AppStore) {
-    appStore.socketEvents.listen("IDN", this.restoreChats)
-    appStore.socketEvents.listen("PRI", this.handleMessage)
-    appStore.socketEvents.listen("TPN", this.handleTypingStatus)
+  constructor(private root: AppStore) {
+    root.socketEvents.listen("IDN", this.restoreChats)
+    root.socketEvents.listen("PRI", this.handleMessage)
+    root.socketEvents.listen("TPN", this.handleTypingStatus)
   }
 
   @action.bound
@@ -38,10 +38,10 @@ export class PrivateChatStore {
   }
 
   sendMessage(recipientName: string, message: string) {
-    this.appStore.sendCommand("PRI", { recipient: recipientName, message })
+    this.root.sendCommand("PRI", { recipient: recipientName, message })
 
     const newMessage = new MessageModel({
-      sender: this.appStore.identity,
+      sender: this.root.chatStore.identity,
       text: message,
       type: "normal",
     })
@@ -50,7 +50,7 @@ export class PrivateChatStore {
   }
 
   private get storageKey() {
-    return `privateChats:${this.appStore.identity}`
+    return `privateChats:${this.root.chatStore.identity}`
   }
 
   private saveChats() {

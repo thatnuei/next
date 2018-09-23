@@ -10,16 +10,16 @@ export class ChannelStore {
 
   private joinedChannelIds = observable.map<string, true>()
 
-  constructor(private appStore: AppStore) {
-    appStore.socketEvents.listen("JCH", this.handleJoin)
-    appStore.socketEvents.listen("LCH", this.handleLeave)
-    appStore.socketEvents.listen("ICH", this.handleInitialChannelInfo)
-    appStore.socketEvents.listen("CDS", this.handleChannelDescription)
-    appStore.socketEvents.listen("COL", this.handleOpList)
-    appStore.socketEvents.listen("MSG", this.handleNormalMessage)
-    appStore.socketEvents.listen("LRP", this.handleAdMessage)
-    appStore.socketEvents.listen("FLN", this.handleLogout)
-    appStore.socketEvents.listen("IDN", this.restoreJoinedChannels)
+  constructor(private root: AppStore) {
+    root.socketEvents.listen("JCH", this.handleJoin)
+    root.socketEvents.listen("LCH", this.handleLeave)
+    root.socketEvents.listen("ICH", this.handleInitialChannelInfo)
+    root.socketEvents.listen("CDS", this.handleChannelDescription)
+    root.socketEvents.listen("COL", this.handleOpList)
+    root.socketEvents.listen("MSG", this.handleNormalMessage)
+    root.socketEvents.listen("LRP", this.handleAdMessage)
+    root.socketEvents.listen("FLN", this.handleLogout)
+    root.socketEvents.listen("IDN", this.restoreJoinedChannels)
   }
 
   @action.bound
@@ -35,11 +35,11 @@ export class ChannelStore {
   }
 
   joinChannel(id: string) {
-    this.appStore.sendCommand("JCH", { channel: id })
+    this.root.sendCommand("JCH", { channel: id })
   }
 
   leaveChannel(id: string) {
-    this.appStore.sendCommand("LCH", { channel: id })
+    this.root.sendCommand("LCH", { channel: id })
   }
 
   isJoined(id: string) {
@@ -47,17 +47,17 @@ export class ChannelStore {
   }
 
   sendMessage(id: string, message: string) {
-    this.appStore.sendCommand("MSG", { channel: id, message })
+    this.root.sendCommand("MSG", { channel: id, message })
 
     this.addChannelMessage(id, {
-      sender: this.appStore.identity,
+      sender: this.root.chatStore.identity,
       text: message,
       type: "normal",
     })
   }
 
   private get storedChannelsKey() {
-    return `joinedChannels:${this.appStore.identity}`
+    return `joinedChannels:${this.root.chatStore.identity}`
   }
 
   private saveJoinedChannels() {
@@ -92,7 +92,7 @@ export class ChannelStore {
     channel.type = params.channel === params.title ? "public" : "private"
     channel.addUser(params.character.identity)
 
-    if (params.character.identity === this.appStore.identity) {
+    if (params.character.identity === this.root.chatStore.identity) {
       this.joinedChannelIds.set(params.channel, true)
       this.saveJoinedChannels()
     }
@@ -103,7 +103,7 @@ export class ChannelStore {
     const channel = this.getChannel(params.channel)
     channel.removeUser(params.character)
 
-    if (params.character === this.appStore.identity) {
+    if (params.character === this.root.chatStore.identity) {
       this.joinedChannelIds.delete(params.channel)
       this.saveJoinedChannels()
     }

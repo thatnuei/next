@@ -24,7 +24,7 @@ export class ChatSidebar extends React.Component<Props> {
         </ChatActionsContainer>
         <div style={{ overflowY: "auto", display: "flex", flexDirection: "column" }}>
           <CharacterInfoContainer>
-            <CharacterInfo character={appStore.identityCharacter} />
+            <CharacterInfo character={appStore.chatStore.identityCharacter} />
           </CharacterInfoContainer>
           <ChatNavigationContainer>
             <ChatNavigation onTabActivate={this.props.onTabActivate} />
