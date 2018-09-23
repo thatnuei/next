@@ -60,7 +60,7 @@ export class UpdateStatusForm extends React.Component<Props> {
   @action.bound
   private handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    appStore.updateStatus(this.status, this.statusMessage)
+    appStore.chatStore.updateStatus(this.status, this.statusMessage)
     this.props.onSubmit()
   }
 }

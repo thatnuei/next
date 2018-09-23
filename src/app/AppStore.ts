@@ -2,7 +2,6 @@ import { bind } from "decko"
 import { ChannelStore } from "../channel/ChannelStore"
 import { ChannelListStore } from "../channelList/ChannelListStore"
 import { CharacterStore } from "../character/CharacterStore"
-import { CharacterStatus } from "../character/types"
 import { ChatStore } from "../chat/ChatStore"
 import { ConversationStore } from "../conversation/ConversationStore"
 import { ClientCommands, ServerCommands } from "../fchat/types"
@@ -89,9 +88,5 @@ export class AppStore {
         this.socket.send(command)
       }
     }
-  }
-
-  updateStatus(status: CharacterStatus, statusmsg: string) {
-    this.sendCommand("STA", { status, statusmsg })
   }
 }

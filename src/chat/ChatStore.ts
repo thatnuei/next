@@ -1,5 +1,6 @@
 import { action, computed, observable } from "mobx"
 import { AppStore, SocketEventBus } from "../app/AppStore"
+import { CharacterStatus } from "../character/types"
 import { ServerCommands } from "../fchat/types"
 
 export class ChatStore {
@@ -25,6 +26,10 @@ export class ChatStore {
   @computed
   get identityCharacter() {
     return this.root.characterStore.getCharacter(this.identity)
+  }
+
+  updateStatus(status: CharacterStatus, statusmsg: string) {
+    this.root.sendCommand("STA", { status, statusmsg })
   }
 
   @action.bound
