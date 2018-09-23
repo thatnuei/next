@@ -1,7 +1,7 @@
 import { mdiAccountMultiple } from "@mdi/js"
 import React from "react"
 import MediaQuery from "react-responsive"
-import { appStore } from "../app/AppStore"
+import { appStore } from "../store"
 import { Button } from "../ui/Button"
 import { Icon } from "../ui/Icon"
 import { styled } from "../ui/styled"

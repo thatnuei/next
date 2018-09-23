@@ -1,7 +1,7 @@
 import { observer } from "mobx-react"
 import React from "react"
 import posed, { PoseGroup } from "react-pose"
-import { appStore } from "../app/AppStore"
+import { appStore } from "../store"
 import { NavigationScreen } from "./NavigationStore"
 
 const RouteContainer = posed.div()

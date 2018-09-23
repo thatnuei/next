@@ -2,7 +2,7 @@ import { bind } from "decko"
 import { observer } from "mobx-react"
 import React from "react"
 import { Chat } from "../chat/Chat"
-import { appStore } from "./AppStore"
+import { appStore } from "../store"
 import { CharacterSelectScreen } from "./CharacterSelectScreen"
 import { LoginScreen } from "./LoginScreen"
 

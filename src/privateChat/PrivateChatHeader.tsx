@@ -1,9 +1,9 @@
 import { observer } from "mobx-react"
 import React from "react"
-import { appStore } from "../app/AppStore"
 import { Avatar } from "../character/Avatar"
 import { CharacterName } from "../character/CharacterName"
 import { CharacterStatus } from "../character/CharacterStatus"
+import { appStore } from "../store"
 import { styled } from "../ui/styled"
 import { PrivateChatModel } from "./PrivateChatModel"
 

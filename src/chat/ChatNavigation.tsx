@@ -1,8 +1,8 @@
 import { mdiCodeTags, mdiCommentOutline, mdiEarth } from "@mdi/js"
 import { observer } from "mobx-react"
 import React from "react"
-import { appStore } from "../app/AppStore"
 import { noop } from "../helpers/function"
+import { appStore } from "../store"
 import { styled } from "../ui/styled"
 import { ChatNavigationTab } from "./ChatNavigationTab"
 

@@ -10,11 +10,11 @@ import {
   ListRowProps,
   Size,
 } from "react-virtualized"
-import { appStore } from "../app/AppStore"
 import { observerCallback } from "../helpers/mobx"
 import { queryify } from "../helpers/string"
 import { CompareFn } from "../helpers/types"
 import { NavigationScreen } from "../navigation/NavigationStore"
+import { appStore } from "../store"
 import { Button } from "../ui/Button"
 import { flist4, flist5 } from "../ui/colors"
 import { Icon } from "../ui/Icon"

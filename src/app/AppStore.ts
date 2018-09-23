@@ -144,7 +144,7 @@ export class AppStore {
     this.characters = characters
   }
 
-  @action
+  @action.bound
   setIdentity(identity: string) {
     this.identity = identity
     this.saveIdentity()
@@ -183,5 +183,3 @@ export class AppStore {
     this.sendCommand("STA", { status, statusmsg })
   }
 }
-
-export const appStore = new AppStore()

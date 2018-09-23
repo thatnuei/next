@@ -1,7 +1,7 @@
 import { observer } from "mobx-react"
 import React from "react"
-import { appStore } from "../app/AppStore"
 import { getProfileUrl } from "../flist/helpers"
+import { appStore } from "../store"
 import { styled } from "../ui/styled"
 import { genderColors, statusColors } from "./colors"
 
