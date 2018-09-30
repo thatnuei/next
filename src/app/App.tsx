@@ -1,34 +1,70 @@
-import { bind } from "decko"
-import { observer } from "mobx-react"
 import React from "react"
-import { Chat } from "../chat/Chat"
-import { appStore } from "../store"
+import { authenticate } from "../flist/api"
 import { CharacterSelectScreen } from "./CharacterSelectScreen"
-import { LoginScreen } from "./LoginScreen"
+import { LoginScreen, LoginValues } from "./LoginScreen"
 
-@observer
-export class App extends React.Component {
-  render() {
-    return this.renderScreen()
+type AppScreen = "setup" | "login" | "characterSelect" | "chat"
+
+type AuthCredentials = { account: string; ticket: string }
+
+type AppState = {
+  screen: AppScreen
+  credentials?: AuthCredentials
+  characters: string[]
+  identity?: string
+}
+
+export class App extends React.Component<{}, AppState> {
+  state: AppState = {
+    screen: "setup",
+    characters: [],
   }
 
-  @bind
-  private renderScreen() {
-    switch (appStore.appRouterStore.route) {
+  private handleLoginSubmit = async ({ account, password }: LoginValues) => {
+    try {
+      const { ticket, characters } = await authenticate(account, password)
+
+      this.setState({
+        credentials: { account, ticket },
+        characters: characters.sort(),
+        screen: "characterSelect",
+      })
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  private handleCharacterSubmit = (identity: string) => {
+    this.setState({
+      identity,
+      screen: "chat",
+    })
+  }
+
+  componentDidMount() {
+    this.setState({ screen: "login" })
+  }
+
+  render() {
+    switch (this.state.screen) {
       case "setup":
         return "Setting things up..."
 
       case "login":
-        return <LoginScreen />
+        return <LoginScreen onSubmit={this.handleLoginSubmit} />
 
       case "characterSelect":
-        return <CharacterSelectScreen />
-
-      case "connecting":
-        return "Connecting..."
+        return (
+          <CharacterSelectScreen
+            characters={this.state.characters}
+            onSubmit={this.handleCharacterSubmit}
+          />
+        )
 
       case "chat":
-        return <Chat />
+        return "todo: chat"
     }
+
+    return "screen not found"
   }
 }

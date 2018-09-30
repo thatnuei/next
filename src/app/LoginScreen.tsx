@@ -1,6 +1,5 @@
 import { Formik, FormikProps } from "formik"
 import React from "react"
-import { appStore } from "../store"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
@@ -16,7 +15,11 @@ const initialValues = {
 
 export type LoginValues = typeof initialValues
 
-export class LoginScreen extends React.Component {
+type Props = {
+  onSubmit: (values: LoginValues) => void
+}
+
+export class LoginScreen extends React.Component<Props> {
   render() {
     return (
       <Formik<LoginValues>
@@ -57,9 +60,8 @@ export class LoginScreen extends React.Component {
     )
   }
 
-  private handleSubmit = async ({ account, password }: LoginValues) => {
-    await appStore.userStore.authenticate(account, password)
-    appStore.appRouterStore.setRoute("characterSelect")
+  private handleSubmit = async (values: LoginValues) => {
+    this.props.onSubmit(values)
   }
 }
 
