@@ -60,6 +60,8 @@ export class App extends React.Component<{}, AppState> {
   }
 
   private async init() {
+    this.setState({ screen: "setup" })
+
     try {
       const credentials = await storedCredentials.load()
       if (!credentials) {
@@ -80,6 +82,11 @@ export class App extends React.Component<{}, AppState> {
       console.warn("[non-fatal]", error)
       this.setState({ screen: "login" })
     }
+  }
+
+  private handleDisconnect = () => {
+    alert("Disconnected from server :(")
+    this.init()
   }
 
   componentDidMount() {
@@ -104,8 +111,12 @@ export class App extends React.Component<{}, AppState> {
           />
         )
 
-      case "chat":
-        return <Chat />
+      case "chat": {
+        const { credentials, identity } = this.state
+        if (credentials && identity) {
+          return <Chat {...credentials} character={identity} onDisconnect={this.handleDisconnect} />
+        }
+      }
     }
 
     return "screen not found"
