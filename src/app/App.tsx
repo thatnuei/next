@@ -1,5 +1,6 @@
 import React from "react"
-import { authenticate } from "../flist/api"
+import { authenticate, fetchCharacters } from "../flist/api"
+import { StoredValue } from "../helpers/StoredValue"
 import { CharacterSelectScreen } from "./CharacterSelectScreen"
 import { LoginScreen, LoginValues } from "./LoginScreen"
 
@@ -13,6 +14,8 @@ type AppState = {
   characters: string[]
   identity?: string
 }
+
+const storedCredentials = new StoredValue<AuthCredentials>("credentials")
 
 export class App extends React.Component<{}, AppState> {
   state: AppState = {
@@ -29,6 +32,8 @@ export class App extends React.Component<{}, AppState> {
         characters: characters.sort(),
         screen: "characterSelect",
       })
+
+      storedCredentials.save({ account, ticket })
     } catch (error) {
       alert(error)
     }
@@ -41,8 +46,28 @@ export class App extends React.Component<{}, AppState> {
     })
   }
 
+  private async init() {
+    try {
+      const credentials = await storedCredentials.load()
+      if (!credentials) {
+        throw new Error("Credentials not found in storage")
+      }
+
+      const { characters } = await fetchCharacters(credentials.account, credentials.ticket)
+
+      this.setState({
+        credentials,
+        characters: characters.sort(),
+        screen: "characterSelect",
+      })
+    } catch (error) {
+      console.warn("[non-fatal]", error)
+      this.setState({ screen: "login" })
+    }
+  }
+
   componentDidMount() {
-    this.setState({ screen: "login" })
+    this.init()
   }
 
   render() {
