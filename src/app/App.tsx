@@ -1,4 +1,5 @@
 import React from "react"
+import { Chat } from "../chat/Chat"
 import { authenticate, fetchCharacters } from "../flist/api"
 import { StoredValue } from "../helpers/StoredValue"
 import { CharacterSelectScreen } from "./CharacterSelectScreen"
@@ -104,7 +105,7 @@ export class App extends React.Component<{}, AppState> {
         )
 
       case "chat":
-        return "todo: chat"
+        return <Chat />
     }
 
     return "screen not found"
