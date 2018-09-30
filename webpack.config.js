@@ -40,6 +40,7 @@ const config = {
     maxAssetSize: Infinity,
     hints: false,
   },
+  // @ts-ignore
   devServer: {
     stats: "errors-only",
   },
