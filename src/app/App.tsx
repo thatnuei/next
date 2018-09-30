@@ -23,13 +23,19 @@ export class App extends React.Component<{}, AppState> {
     characters: [],
   }
 
+  private getStoredIdentity(account: string) {
+    return new StoredValue<string>(`${account}:identity`)
+  }
+
   private handleLoginSubmit = async ({ account, password }: LoginValues) => {
     try {
       const { ticket, characters } = await authenticate(account, password)
+      const identity = await this.getStoredIdentity(account).load()
 
       this.setState({
         credentials: { account, ticket },
         characters: characters.sort(),
+        identity,
         screen: "characterSelect",
       })
 
@@ -39,11 +45,17 @@ export class App extends React.Component<{}, AppState> {
     }
   }
 
-  private handleCharacterSubmit = (identity: string) => {
-    this.setState({
-      identity,
-      screen: "chat",
-    })
+  private setIdentity = (identity: string) => {
+    this.setState({ identity })
+
+    const { credentials } = this.state
+    if (!credentials) return
+
+    this.getStoredIdentity(credentials.account).save(identity)
+  }
+
+  private showChat = () => {
+    this.setState({ screen: "chat" })
   }
 
   private async init() {
@@ -53,11 +65,14 @@ export class App extends React.Component<{}, AppState> {
         throw new Error("Credentials not found in storage")
       }
 
-      const { characters } = await fetchCharacters(credentials.account, credentials.ticket)
+      const { account, ticket } = credentials
+      const { characters } = await fetchCharacters(account, ticket)
+      const identity = await this.getStoredIdentity(account).load()
 
       this.setState({
         credentials,
         characters: characters.sort(),
+        identity,
         screen: "characterSelect",
       })
     } catch (error) {
@@ -82,7 +97,9 @@ export class App extends React.Component<{}, AppState> {
         return (
           <CharacterSelectScreen
             characters={this.state.characters}
-            onSubmit={this.handleCharacterSubmit}
+            selected={this.state.identity || this.state.characters[0]}
+            onChange={this.setIdentity}
+            onSubmit={this.showChat}
           />
         )
 

@@ -9,18 +9,12 @@ import { styled } from "../ui/styled"
 
 type Props = {
   characters: string[]
-  onSubmit: (character: string) => void
-}
-
-type State = {
   selected: string
+  onChange: (selected: string) => void
+  onSubmit: () => void
 }
 
-export class CharacterSelectScreen extends React.Component<Props, State> {
-  state: State = {
-    selected: this.props.characters[0] || "",
-  }
-
+export class CharacterSelectScreen extends React.Component<Props> {
   render() {
     const formStyle: React.CSSProperties = {
       display: "flex",
@@ -28,7 +22,7 @@ export class CharacterSelectScreen extends React.Component<Props, State> {
       alignItems: "center",
     }
 
-    const { selected } = this.state
+    const { characters, selected } = this.props
 
     return (
       <Overlay>
@@ -40,7 +34,7 @@ export class CharacterSelectScreen extends React.Component<Props, State> {
             </FormField>
             <FormField>
               <select name="character" value={selected} onChange={this.handleChange}>
-                {this.props.characters.map((name) => (
+                {characters.map((name) => (
                   <option value={name} key={name}>
                     {name}
                   </option>
@@ -55,14 +49,12 @@ export class CharacterSelectScreen extends React.Component<Props, State> {
   }
 
   private handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({
-      selected: event.target.value,
-    })
+    this.props.onChange(event.target.value)
   }
 
   private handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
-    this.props.onSubmit(this.state.selected)
+    this.props.onSubmit()
   }
 }
 
