@@ -40,6 +40,14 @@ const config = {
     maxAssetSize: Infinity,
     hints: false,
   },
+  devServer: {
+    stats: "errors-only",
+  },
+  stats: {
+    modules: false,
+    entrypoints: false,
+    children: false,
+  },
 }
 
 module.exports = config
