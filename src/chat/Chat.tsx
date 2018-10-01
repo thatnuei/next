@@ -1,3 +1,5 @@
+import { action, observable } from "mobx"
+import { observer } from "mobx-react"
 import React from "react"
 import { CharacterGender, CharacterStatus } from "../character/types"
 import { chatServerUrl } from "../fchat/constants"
@@ -18,19 +20,14 @@ type CharacterData = {
   statusMessage: string
 }
 
-type ChatState = {
-  characters: { [name: string]: CharacterData | undefined }
-  lastCommand?: keyof ServerCommands
-}
-
 type OptionalArg<T> = T extends undefined ? [] : [T]
 
 type ServerCommand = Values<{ [K in keyof ServerCommands]: { type: K; params: ServerCommands[K] } }>
 
-export class Chat extends React.Component<ChatProps, ChatState> {
-  state: ChatState = {
-    characters: {},
-  }
+@observer
+export class Chat extends React.Component<ChatProps> {
+  @observable.shallow
+  private characters = new Map<string, CharacterData>()
 
   private socket?: WebSocket
 
@@ -74,10 +71,7 @@ export class Chat extends React.Component<ChatProps, ChatState> {
         return
       }
 
-      this.setState(this.handleCommand(command))
-      this.setState({ lastCommand: command.type })
-
-      console.log(type, params)
+      this.handleCommand(command)
     }
 
     socket.onclose = () => {
@@ -85,26 +79,20 @@ export class Chat extends React.Component<ChatProps, ChatState> {
     }
   }
 
-  private handleCommand = (command: ServerCommand) => (state: ChatState) => {
+  @action
+  private handleCommand = (command: ServerCommand) => {
     switch (command.type) {
       case "LIS": {
-        const newCharacters: ChatState["characters"] = {}
         for (const [name, gender, status, statusMessage] of command.params.characters) {
-          newCharacters[name] = { name, gender, status, statusMessage }
+          this.characters.set(name, { name, gender, status, statusMessage })
         }
-        return { characters: { ...state.characters, ...newCharacters } }
+        break
       }
     }
-
-    return state
   }
 
   componentDidMount() {
     this.openConnection()
-  }
-
-  shouldComponentUpdate(_: any, nextState: ChatState) {
-    return nextState.lastCommand !== "LIS"
   }
 
   componentWillUnmount() {
@@ -115,7 +103,9 @@ export class Chat extends React.Component<ChatProps, ChatState> {
   }
 
   render() {
-    console.log("render")
-    return <div>am chat</div>
+    console.log(this.characters)
+    const characters = [...this.characters.values()]
+    const char = characters[characters.length - 1] as CharacterData | undefined
+    return <div>last character: {char ? char.name : "unknown"}</div>
   }
 }
