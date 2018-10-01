@@ -1,7 +1,8 @@
 import { observer } from "mobx-react"
 import React from "react"
+import { CharacterModel } from "../character/CharacterModel"
 import { SocketHandler } from "../socket/SocketHandler"
-import { CharacterData, ChatViewModel } from "./ChatViewModel"
+import { ChatViewModel } from "./ChatViewModel"
 
 export type ChatProps = {
   account: string
@@ -33,7 +34,7 @@ export class Chat extends React.Component<ChatProps> {
 
   render() {
     const characters = [...this.viewModel.characters.values()]
-    const char = characters[characters.length - 1] as CharacterData | undefined
+    const char = characters[characters.length - 1] as CharacterModel | undefined
     return <div>last character: {char ? char.name : "unknown"}</div>
   }
 }

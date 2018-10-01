@@ -1,10 +1,10 @@
 import { action, observable } from "mobx"
-import { CharacterGender, CharacterStatus } from "../character/types"
+import { CharacterModel } from "../character/CharacterModel"
 import { ServerCommand } from "../socket/SocketHandler"
 
 export class ChatViewModel {
   @observable.shallow
-  characters = new Map<string, CharacterData>()
+  characters = new Map<string, CharacterModel>()
 
   @observable.shallow
   friends = new Map<string, true>()
@@ -15,10 +15,8 @@ export class ChatViewModel {
   @observable.shallow
   admins = new Map<string, true>()
 
-  getCharacter(name: string): CharacterData {
-    return (
-      this.characters.get(name) || { name, gender: "None", status: "offline", statusMessage: "" }
-    )
+  getCharacter(name: string): CharacterModel {
+    return this.characters.get(name) || new CharacterModel(name, "None", "offline")
   }
 
   @action
@@ -44,37 +42,38 @@ export class ChatViewModel {
       }
 
       case "FRL": {
-        for (const name of command.params.characters) {
-          this.friends.set(name, true)
+        for (const identity of command.params.characters) {
+          this.friends.set(identity, true)
         }
         break
       }
 
       case "IGN": {
         const { params } = command
-
         if (params.action === "init" || params.action === "list") {
-          for (const name of params.characters) {
-            this.ignored.set(name, true)
+          for (const identity of params.characters) {
+            this.ignored.set(identity, true)
           }
-        } else if (params.action === "add") {
+        }
+        if (params.action === "add") {
           this.ignored.set(params.character, true)
-        } else if (params.action === "delete") {
+        }
+        if (params.action === "delete") {
           this.ignored.delete(params.character)
         }
         break
       }
 
       case "ADL": {
-        for (const name of command.params.ops) {
-          this.admins.set(name, true)
+        for (const identity of command.params.ops) {
+          this.admins.set(identity, true)
         }
         break
       }
 
       case "LIS": {
-        for (const [name, gender, status, statusMessage] of command.params.characters) {
-          this.characters.set(name, { name, gender, status, statusMessage })
+        for (const info of command.params.characters) {
+          this.characters.set(info[0], new CharacterModel(...info))
         }
         break
       }
@@ -97,9 +96,9 @@ export class ChatViewModel {
       }
 
       case "STA": {
-        const { character: name, status, statusmsg } = command.params
-        const { gender = "None" }: Partial<CharacterData> = this.characters.get(name) || {}
-        this.characters.set(name, { name, gender, status, statusMessage: statusmsg })
+        const { character: identity, status, statusmsg } = command.params
+        const { gender } = this.getCharacter(identity)
+        this.characters.set(identity, new CharacterModel(identity, gender, status, statusmsg))
         break
       }
 
@@ -108,11 +107,4 @@ export class ChatViewModel {
       }
     }
   }
-}
-
-export type CharacterData = {
-  name: string
-  gender: CharacterGender
-  status: CharacterStatus
-  statusMessage: string
 }
