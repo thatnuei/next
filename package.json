@@ -7,7 +7,10 @@
     "build": "cross-env NODE_ENV=production webpack",
     "serve": "serve build",
     "stats": "cross-env NODE_ENV=production webpack --reporter json > ./stats.json",
-    "format": "prettier --write \"src/**/*.@(ts|tsx)\""
+    "format": "prettier --write \"src/**/*.@(ts|tsx)\"",
+    "lint": "tslint -p .",
+    "lint-ci": "tslint -p . --config tslint.ci.json",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",
