@@ -42,6 +42,7 @@ export class SocketStore {
 
       this.root.socketEvents.send(command, params)
 
+      // tslint:disable-next-line:no-console
       console.log(command, params)
     }
 
