@@ -1,5 +1,7 @@
 import { action, observable } from "mobx"
+import { ChannelModel } from "../channel/ChannelModel"
 import { CharacterModel } from "../character/CharacterModel"
+import { PrivateChatModel } from "../privateChat/PrivateChatModel"
 import { ServerCommand } from "../socket/SocketHandler"
 
 export class ChatViewModel {
@@ -14,6 +16,15 @@ export class ChatViewModel {
 
   @observable.shallow
   admins = new Map<string, true>()
+
+  @observable.shallow
+  channels = new Map<string, ChannelModel>()
+
+  @observable.shallow
+  joinedChannels = new Map<string, true>()
+
+  @observable.shallow
+  privateChats = new Map<string, PrivateChatModel>()
 
   getCharacter(name: string): CharacterModel {
     return this.characters.get(name) || new CharacterModel(name, "None", "offline")
