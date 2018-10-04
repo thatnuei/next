@@ -9,7 +9,6 @@ import { LoginScreen } from "./LoginScreen"
 @observer
 export class App extends React.Component {
   render() {
-    a
     return this.renderScreen()
   }
 
