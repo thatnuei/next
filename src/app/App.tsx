@@ -1,5 +1,5 @@
 import { bind } from "decko"
-import { observer } from "mobx-react"
+import { observer } from "mobx-react-lol"
 import React from "react"
 import { Chat } from "../chat/Chat"
 import { appStore } from "../store"
