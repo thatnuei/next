@@ -1,6 +1,6 @@
 import { fetchJson } from "../network/fetchJson"
 
-export function authenticate(account: string, password: string) {
+export async function authenticate(account: string, password: string) {
   const getTicketEndpoint = "https://www.f-list.net/json/getApiTicket.php"
 
   type ApiTicketResponse = {
@@ -8,7 +8,7 @@ export function authenticate(account: string, password: string) {
     characters: string[]
   }
 
-  return fetchJson<ApiTicketResponse>(getTicketEndpoint, {
+  const res = await fetchJson<ApiTicketResponse>(getTicketEndpoint, {
     method: "post",
     body: {
       account,
@@ -17,6 +17,8 @@ export function authenticate(account: string, password: string) {
       no_bookmarks: true,
     },
   })
+
+  return { ...res, characters: res.characters.sort() }
 }
 
 export async function fetchCharacters(account: string, ticket: string) {
