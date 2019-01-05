@@ -7,12 +7,10 @@ import GlobalStyle from "./ui/GlobalStyle"
 
 function render() {
   ReactDOM.render(
-    <>
-      <SessionContainer.Provider>
-        <App />
-      </SessionContainer.Provider>
+    <SessionContainer.Provider>
+      <App />
       <GlobalStyle />
-    </>,
+    </SessionContainer.Provider>,
     document.querySelector("#root"),
   )
 }
