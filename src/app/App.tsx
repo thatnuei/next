@@ -17,10 +17,11 @@ function App() {
     setReady(true)
   }
 
-  if (!ready) {
-    return <p>Setting things up...</p>
-  }
+  return ready ? <AppRoutes /> : <p>Setting things up...</p>
+}
+export default App
 
+function AppRoutes() {
   return (
     <Router>
       <LoginScreen default path="login" />
@@ -28,4 +29,3 @@ function App() {
     </Router>
   )
 }
-export default App
