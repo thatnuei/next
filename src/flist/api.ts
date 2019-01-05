@@ -19,15 +19,17 @@ export function authenticate(account: string, password: string) {
   })
 }
 
-export function fetchCharacters(account: string, ticket: string) {
+export async function fetchCharacters(account: string, ticket: string) {
   const characterListEndpoint = "https://www.f-list.net/json/api/character-list.php"
 
   type CharacterListResponse = {
     characters: string[]
   }
 
-  return fetchJson<CharacterListResponse>(characterListEndpoint, {
+  const res = await fetchJson<CharacterListResponse>(characterListEndpoint, {
     method: "post",
     body: { account, ticket },
   })
+
+  return { ...res, characters: res.characters.sort() }
 }
