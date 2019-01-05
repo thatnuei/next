@@ -1,4 +1,4 @@
-import { Router } from "@reach/router"
+import { Redirect, Router } from "@reach/router"
 import React, { useContext, useEffect, useState } from "react"
 import SessionContainer from "../session/SessionContainer"
 import CharacterSelectRoute from "./CharacterSelectRoute"
@@ -9,23 +9,30 @@ function App() {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    restoreSession()
+    init()
   }, [])
 
-  async function restoreSession() {
-    await session.restore()
+  async function init() {
+    try {
+      await session.restore()
+    } catch (error) {
+      console.warn("Session restore error:", error)
+    }
+
     setReady(true)
   }
 
-  return ready ? <AppRoutes /> : <p>Setting things up...</p>
-}
-export default App
+  if (!ready) {
+    return <p>Setting things up...</p>
+  }
 
-function AppRoutes() {
   return (
     <Router>
-      <LoginRoute default path="login" />
+      <LoginRoute path="login" />
       <CharacterSelectRoute path="character-select" />
+      <Redirect from="/" to={session.isAuthenticated ? "character-select" : "login"} />
     </Router>
   )
 }
+
+export default App

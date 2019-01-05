@@ -20,6 +20,7 @@ function useSessionState() {
       const { characters } = await fetchCharacters(session.account, session.ticket)
       setSessionData({ ...session, characters })
     }
+    return session
   }
 
   useEffect(
@@ -33,6 +34,7 @@ function useSessionState() {
     data: sessionData,
     setData: setSessionData,
     restore,
+    isAuthenticated: sessionData !== undefined,
   }
 }
 
