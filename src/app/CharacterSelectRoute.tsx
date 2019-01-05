@@ -9,12 +9,13 @@ import { Form } from "../ui/Form"
 import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
+import routePaths from "./routePaths"
 
-type Props = RouteComponentProps & {}
+type Props = RouteComponentProps
 
 function CharacterSelectRoute(props: Props) {
   const session = useContext(SessionContainer.Context)
-  return session.data ? <View {...session.data} /> : <Redirect to="login" />
+  return session.data ? <View {...session.data} /> : <Redirect to={routePaths.login} />
 }
 export default CharacterSelectRoute
 

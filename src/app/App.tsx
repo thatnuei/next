@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react"
 import SessionContainer from "../session/SessionContainer"
 import CharacterSelectRoute from "./CharacterSelectRoute"
 import LoginRoute from "./LoginRoute"
+import routePaths from "./routePaths"
 
 function App() {
   const session = useContext(SessionContainer.Context)
@@ -28,9 +29,12 @@ function App() {
 
   return (
     <Router>
-      <LoginRoute path="login" />
-      <CharacterSelectRoute path="character-select" />
-      <Redirect from="/" to={session.isAuthenticated ? "character-select" : "login"} />
+      <LoginRoute path={routePaths.login} />
+      <CharacterSelectRoute path={routePaths.characterSelect} />
+      <Redirect
+        from="/"
+        to={session.isAuthenticated ? routePaths.characterSelect : routePaths.login}
+      />
     </Router>
   )
 }

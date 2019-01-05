@@ -10,13 +10,14 @@ import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
+import routePaths from "./routePaths"
 
 const initialValues = {
   account: "",
   password: "",
 }
 
-export type LoginValues = typeof initialValues
+type LoginValues = typeof initialValues
 
 type Props = RouteComponentProps
 
@@ -56,7 +57,7 @@ function LoginRoute(props: Props) {
   async function handleSubmit({ account, password }: LoginValues) {
     const { ticket, characters } = await authenticate(account, password)
     session.setData({ account, ticket, characters })
-    navigate("character-select")
+    navigate(routePaths.characterSelect)
   }
 
   return (
