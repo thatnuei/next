@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Chat } from "../chat/Chat"
 import { authenticate, fetchCharacters } from "../flist/api"
 import { StoredValue } from "../helpers/StoredValue"
@@ -9,36 +9,31 @@ type AppScreen = "setup" | "login" | "characterSelect" | "chat"
 
 type AuthCredentials = { account: string; ticket: string }
 
-type AppState = {
-  screen: AppScreen
-  credentials?: AuthCredentials
-  characters: string[]
-  identity?: string
-}
-
 const storedCredentials = new StoredValue<AuthCredentials>("credentials")
 
-export class App extends React.Component<{}, AppState> {
-  state: AppState = {
-    screen: "setup",
-    characters: [],
+function App() {
+  const [screen, setScreen] = useState<AppScreen>("setup")
+  const [characters, setCharacters] = useState<string[]>([])
+  const [credentials, setCredentials] = useState<AuthCredentials>()
+  const [identity, setIdentity] = useState<string>()
+
+  function handleAuthSuccess(creds: AuthCredentials, characters: string[], newIdentity?: string) {
+    setCredentials(creds)
+    setCharacters(characters.sort())
+    setIdentity(newIdentity)
+    setScreen("characterSelect")
   }
 
-  private getStoredIdentity(account: string) {
+  function getStoredIdentity(account: string) {
     return new StoredValue<string>(`${account}:identity`)
   }
 
-  private handleLoginSubmit = async ({ account, password }: LoginValues) => {
+  async function handleLoginSubmit({ account, password }: LoginValues) {
     try {
       const { ticket, characters } = await authenticate(account, password)
-      const identity = await this.getStoredIdentity(account).load()
+      const storedIdentity = await getStoredIdentity(account).load()
 
-      this.setState({
-        credentials: { account, ticket },
-        characters: characters.sort(),
-        identity,
-        screen: "characterSelect",
-      })
+      handleAuthSuccess({ account, ticket }, characters, storedIdentity)
 
       storedCredentials.save({ account, ticket })
     } catch (error) {
@@ -46,21 +41,18 @@ export class App extends React.Component<{}, AppState> {
     }
   }
 
-  private setIdentity = (identity: string) => {
-    this.setState({ identity })
-
-    const { credentials } = this.state
+  async function handleCharacterSelected(identity: string) {
+    setIdentity(identity)
     if (!credentials) return
-
-    this.getStoredIdentity(credentials.account).save(identity)
+    getStoredIdentity(credentials.account).save(identity)
   }
 
-  private showChat = () => {
-    this.setState({ screen: "chat" })
+  async function showChat() {
+    setScreen("chat")
   }
 
-  private async init() {
-    this.setState({ screen: "setup" })
+  async function init() {
+    setScreen("setup")
 
     try {
       const credentials = await storedCredentials.load()
@@ -70,55 +62,48 @@ export class App extends React.Component<{}, AppState> {
 
       const { account, ticket } = credentials
       const { characters } = await fetchCharacters(account, ticket)
-      const identity = await this.getStoredIdentity(account).load()
+      const storedIdentity = await getStoredIdentity(account).load()
 
-      this.setState({
-        credentials,
-        characters: characters.sort(),
-        identity,
-        screen: "characterSelect",
-      })
+      handleAuthSuccess({ account, ticket }, characters, storedIdentity)
     } catch (error) {
       console.warn("[non-fatal]", error)
-      this.setState({ screen: "login" })
+      setScreen("login")
     }
   }
 
-  private handleDisconnect = () => {
+  function handleDisconnect() {
     alert("Disconnected from server :(")
-    this.init()
+    init()
   }
 
-  componentDidMount() {
-    this.init()
-  }
+  useEffect(() => {
+    init()
+  }, [])
 
-  render() {
-    switch (this.state.screen) {
-      case "setup":
-        return "Setting things up..."
+  switch (screen) {
+    case "setup":
+      return <>Setting things up...</>
 
-      case "login":
-        return <LoginScreen onSubmit={this.handleLoginSubmit} />
+    case "login":
+      return <LoginScreen onSubmit={handleLoginSubmit} />
 
-      case "characterSelect":
-        return (
-          <CharacterSelectScreen
-            characters={this.state.characters}
-            selected={this.state.identity || this.state.characters[0]}
-            onChange={this.setIdentity}
-            onSubmit={this.showChat}
-          />
-        )
+    case "characterSelect":
+      return (
+        <CharacterSelectScreen
+          characters={characters}
+          selected={identity || characters[0]}
+          onChange={handleCharacterSelected}
+          onSubmit={showChat}
+        />
+      )
 
-      case "chat": {
-        const { credentials, identity } = this.state
-        if (credentials && identity) {
-          return <Chat {...credentials} character={identity} onDisconnect={this.handleDisconnect} />
-        }
+    case "chat": {
+      if (credentials && identity) {
+        return <Chat {...credentials} character={identity} onDisconnect={handleDisconnect} />
       }
     }
-
-    return "screen not found"
   }
+
+  return <>screen not found</>
 }
+export default App
