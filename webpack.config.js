@@ -5,19 +5,19 @@ const HtmlPlugin = require("html-webpack-plugin")
 const CleanPlugin = require("clean-webpack-plugin")
 const CopyPlugin = require("copy-webpack-plugin")
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin")
+const merge = require("webpack-merge")
 
 const rootFolder = __dirname
 const sourceFolder = join(rootFolder, "src")
 const buildFolder = join(rootFolder, "build")
 const publicFolder = join(rootFolder, "public")
 
-/** @type {import('webpack').Configuration} */
-const config = {
+/** @type {webpack.Configuration} */
+const baseConfig = {
   context: rootFolder,
   entry: join(sourceFolder, "index"),
   output: {
     path: buildFolder,
-    filename: "[name].[contenthash].js",
     publicPath: "/",
   },
   module: {
@@ -34,13 +34,32 @@ const config = {
     new CleanPlugin(buildFolder, { verbose: false }),
     new CopyPlugin([{ from: publicFolder, to: buildFolder }]),
     new ForkTsCheckerWebpackPlugin(),
-    new webpack.HashedModuleIdsPlugin(),
   ],
-  mode: process.env.NODE_ENV === "production" ? "production" : "development",
-  devtool: process.env.NODE_ENV === "production" ? "source-map" : "eval-source-map",
+  devServer: {
+    stats: "errors-only",
+  },
+  stats: {
+    modules: false,
+    entrypoints: false,
+    children: false,
+  },
+}
+
+/** @type {webpack.Configuration} */
+const devConfig = {
+  mode: "development",
+  devtool: "eval-source-map",
   performance: {
     maxAssetSize: Infinity,
-    hints: false,
+  },
+}
+
+/** @type {webpack.Configuration} */
+const prodConfig = {
+  mode: "production",
+  devtool: "source-map",
+  output: {
+    filename: "[name].[contenthash].js",
   },
   optimization: {
     runtimeChunk: "single",
@@ -54,14 +73,10 @@ const config = {
       },
     },
   },
-  devServer: {
-    stats: "errors-only",
-  },
-  stats: {
-    modules: false,
-    entrypoints: false,
-    children: false,
-  },
+  plugins: [new webpack.HashedModuleIdsPlugin()],
 }
 
-module.exports = config
+module.exports =
+  process.env.NODE_ENV === "production"
+    ? merge(baseConfig, prodConfig)
+    : merge(baseConfig, devConfig)
