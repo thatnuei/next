@@ -1,4 +1,5 @@
 // @ts-check
+const webpack = require("webpack")
 const { join } = require("path")
 const HtmlPlugin = require("html-webpack-plugin")
 const CleanPlugin = require("clean-webpack-plugin")
@@ -16,7 +17,7 @@ const config = {
   entry: join(sourceFolder, "index"),
   output: {
     path: buildFolder,
-    filename: "[name].[hash].js",
+    filename: "[name].[contenthash].js",
     publicPath: "/",
   },
   module: {
@@ -33,6 +34,7 @@ const config = {
     new CleanPlugin(buildFolder, { verbose: false }),
     new CopyPlugin([{ from: publicFolder, to: buildFolder }]),
     new ForkTsCheckerWebpackPlugin(),
+    new webpack.HashedModuleIdsPlugin(),
   ],
   mode: process.env.NODE_ENV === "production" ? "production" : "development",
   devtool: process.env.NODE_ENV === "production" ? "source-map" : "eval-source-map",
@@ -40,7 +42,18 @@ const config = {
     maxAssetSize: Infinity,
     hints: false,
   },
-  // @ts-ignore
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
+  },
   devServer: {
     stats: "errors-only",
   },
