@@ -13,7 +13,6 @@ const sessionKey = "session"
 
 function useSessionState() {
   const [sessionData, setSessionData] = useState<SessionData>()
-  const [identity, setIdentity] = useState<string>()
 
   async function restore() {
     const session = await get<SessionData | undefined>(sessionKey)
@@ -32,8 +31,6 @@ function useSessionState() {
 
   return {
     data: sessionData,
-    identity,
-    setIdentity,
     setData: setSessionData,
     restore,
   }
