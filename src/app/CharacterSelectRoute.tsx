@@ -12,11 +12,11 @@ import { styled } from "../ui/styled"
 
 type Props = RouteComponentProps & {}
 
-function CharacterSelectScreen(props: Props) {
+function CharacterSelectRoute(props: Props) {
   const session = useContext(SessionContainer.Context)
   return session.data ? <View {...session.data} /> : <Redirect to="login" />
 }
-export default CharacterSelectScreen
+export default CharacterSelectRoute
 
 function View({ account, characters }: { account: string; characters: string[] }) {
   const [identity, setIdentity] = usePersistedState<string>(

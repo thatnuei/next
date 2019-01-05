@@ -20,7 +20,7 @@ export type LoginValues = typeof initialValues
 
 type Props = RouteComponentProps
 
-function LoginScreen(props: Props) {
+function LoginRoute(props: Props) {
   const session = useContext(SessionContainer.Context)
 
   function renderForm(formikProps: FormikProps<LoginValues>) {
@@ -67,7 +67,7 @@ function LoginScreen(props: Props) {
     />
   )
 }
-export default LoginScreen
+export default LoginRoute
 
 const ContentContainer = styled.div`
   background-color: ${flist3};

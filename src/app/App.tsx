@@ -1,8 +1,8 @@
 import { Router } from "@reach/router"
 import React, { useContext, useEffect, useState } from "react"
 import SessionContainer from "../session/SessionContainer"
-import CharacterSelectScreen from "./CharacterSelectScreen"
-import LoginScreen from "./LoginScreen"
+import CharacterSelectRoute from "./CharacterSelectRoute"
+import LoginRoute from "./LoginRoute"
 
 function App() {
   const session = useContext(SessionContainer.Context)
@@ -24,8 +24,8 @@ export default App
 function AppRoutes() {
   return (
     <Router>
-      <LoginScreen default path="login" />
-      <CharacterSelectScreen path="character-select" />
+      <LoginRoute default path="login" />
+      <CharacterSelectRoute path="character-select" />
     </Router>
   )
 }
