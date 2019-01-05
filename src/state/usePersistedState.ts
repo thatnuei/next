@@ -1,20 +1,27 @@
 import * as idb from "idb-keyval"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { tuple } from "../helpers/tuple"
 
 function usePersistedState<T>(key: string, defaultValue: T) {
+  const ready = useRef(false)
   const [value, setValue] = useState(defaultValue)
 
+  async function loadValue() {
+    try {
+      const keys = await idb.keys()
+      const value = keys.includes(key) ? await idb.get<T>(key) : defaultValue
+      setValue(value)
+    } catch {}
+    ready.current = true
+  }
+
   useEffect(() => {
-    idb
-      .keys()
-      .then((keys) => (keys.includes(key) ? idb.get<T>(key) : defaultValue))
-      .then(setValue)
+    loadValue()
   }, [])
 
   useEffect(
     () => {
-      idb.set(key, value)
+      if (ready.current) idb.set(key, value)
     },
     [value],
   )
