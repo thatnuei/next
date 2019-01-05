@@ -2,15 +2,20 @@ import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
 import { App } from "./app/App"
-import { applyGlobalStyles } from "./ui/globalStyles"
+import GlobalStyle from "./ui/GlobalStyle"
 
 function render() {
-  ReactDOM.render(<App />, document.querySelector("#root"))
+  ReactDOM.render(
+    <>
+      <App />
+      <GlobalStyle />
+    </>,
+    document.querySelector("#root"),
+  )
 }
 
 function main() {
   configure({ enforceActions: "observed" })
-  applyGlobalStyles()
   render()
 
   if (module.hot) {

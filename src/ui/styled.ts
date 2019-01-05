@@ -1,1 +1,1 @@
-export { css, default as styled, injectGlobal } from "styled-components"
+export { css, default as styled } from "styled-components"

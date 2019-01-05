@@ -10,7 +10,7 @@ export interface MessageListProps {
 
 @observer
 export class MessageList extends React.Component<MessageListProps> {
-  private scroller = React.createRef<HTMLElement>()
+  private scroller = React.createRef<HTMLDivElement>()
   private scrolledToBottomThreshold = 30
 
   componentDidMount() {
@@ -36,7 +36,7 @@ export class MessageList extends React.Component<MessageListProps> {
 
   render() {
     return (
-      <ScrollContainer innerRef={this.scroller}>
+      <ScrollContainer ref={this.scroller}>
         {this.props.messages.map((message) => (
           <Message key={message.id} model={message} />
         ))}
