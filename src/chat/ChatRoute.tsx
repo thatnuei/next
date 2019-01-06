@@ -92,8 +92,7 @@ function ChatRoute(props: ChatRouteProps) {
     return <Redirect to={routePaths.login} />
   }
 
-  const { account, ticket } = props.sessionData
-  return <ChatView account={account} ticket={ticket} identity={identity} />
+  return <ChatView {...props.sessionData} identity={identity} />
 }
 export default ChatRoute
 
