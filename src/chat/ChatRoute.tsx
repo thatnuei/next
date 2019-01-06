@@ -1,4 +1,4 @@
-import { navigate, RouteComponentProps } from "@reach/router"
+import { navigate, Redirect, RouteComponentProps } from "@reach/router"
 import React, { useContext, useEffect } from "react"
 import { useImmer } from "use-immer"
 import routePaths from "../app/routePaths"
@@ -20,24 +20,10 @@ function sendCommand<K extends keyof ClientCommands>(
   }
 }
 
-function ChatRoute(props: RouteComponentProps) {
-  const session = useContext(SessionContainer.Context)
-
+function useChatState(account: string, ticket: string, identity: string) {
   const [characters, updateCharacters] = useImmer<Dictionary<CharacterModel>>({})
 
   useEffect(() => {
-    if (!session.data) {
-      navigate(routePaths.login)
-      return
-    }
-
-    const { account, ticket } = session.data
-    const identity = props.location && (props.location.state.identity as string)
-    if (!identity) {
-      navigate(routePaths.characterSelect)
-      return
-    }
-
     const socket = new WebSocket(`wss://chat.f-list.net:9799`)
 
     socket.onopen = () => {
@@ -92,6 +78,23 @@ function ChatRoute(props: RouteComponentProps) {
     }
   }, [])
 
-  return <p>{Object.keys(characters).length}</p>
+  return { characters }
+}
+
+function ChatRoute(props: RouteComponentProps) {
+  const session = useContext(SessionContainer.Context)
+  const identity = props.location && props.location.state.identity
+
+  if (!session.data || typeof identity !== "string") {
+    return <Redirect to={routePaths.login} />
+  }
+
+  const { account, ticket } = session.data
+  return <ChatView account={account} ticket={ticket} identity={identity} />
 }
 export default ChatRoute
+
+function ChatView(props: { account: string; ticket: string; identity: string }) {
+  const chatState = useChatState(props.account, props.ticket, props.identity)
+  return <p>Characters: {Object.values(chatState.characters).length}</p>
+}
