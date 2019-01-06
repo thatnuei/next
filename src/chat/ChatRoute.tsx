@@ -1,11 +1,11 @@
 import { navigate, RouteComponentProps } from "@reach/router"
-import { fromPairs } from "lodash"
 import React, { useContext, useEffect, useState } from "react"
+import { useImmer } from "use-immer"
 import routePaths from "../app/routePaths"
 import { CharacterModel } from "../character/CharacterModel"
 import { ClientCommands } from "../fchat/types"
 import { tuple } from "../helpers/tuple"
-import { OptionalArg } from "../helpers/types"
+import { Dictionary, OptionalArg } from "../helpers/types"
 import SessionContainer, { SessionData } from "../session/SessionContainer"
 import { ServerCommand } from "../socket/SocketHandler"
 
@@ -29,8 +29,7 @@ function useDictionary<V>(initialValues: Record<string, V> = {}) {
 function ChatRoute(props: RouteComponentProps) {
   const session = useContext(SessionContainer.Context)
 
-  const [characterCount, setCharacterCount] = useState(0)
-  const [characters, setCharacters] = useState<Record<string, CharacterModel | undefined>>({})
+  const [characters, updateCharacters] = useImmer<Dictionary<CharacterModel>>({})
 
   useEffect(() => {
     if (!session.data) {
@@ -83,14 +82,11 @@ function ChatRoute(props: RouteComponentProps) {
       }
 
       if (command.type === "LIS") {
-        const characterPairs = command.params.characters.map(([name, ...args]) =>
-          tuple(name, new CharacterModel(name, ...args)),
-        )
-
-        setCharacters((prev) => ({
-          ...prev,
-          ...fromPairs(characterPairs),
-        }))
+        updateCharacters((draft) => {
+          for (const args of command.params.characters) {
+            draft[args[0]] = new CharacterModel(...args)
+          }
+        })
       }
     }
 
