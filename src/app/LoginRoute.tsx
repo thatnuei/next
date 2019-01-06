@@ -1,8 +1,8 @@
 import { navigate, RouteComponentProps } from "@reach/router"
-import { Formik, FormikProps } from "formik"
 import React, { useContext } from "react"
 import { authenticate } from "../flist/api"
 import SessionContainer from "../session/SessionContainer"
+import useInput from "../state/useInput"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
@@ -12,60 +12,35 @@ import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
 import routePaths from "./routePaths"
 
-const initialValues = {
-  account: "",
-  password: "",
-}
-
-type LoginValues = typeof initialValues
-
 type Props = RouteComponentProps
 
 function LoginRoute(props: Props) {
   const session = useContext(SessionContainer.Context)
+  const account = useInput()
+  const password = useInput()
 
-  function renderForm(formikProps: FormikProps<LoginValues>) {
-    return (
-      <Overlay>
-        <ContentContainer>
-          <HeaderText>next</HeaderText>
-          <Form onSubmit={formikProps.handleSubmit}>
-            <FormField labelText="Username">
-              <TextInput
-                name="account"
-                placeholder="awesomeuser"
-                value={formikProps.values.account}
-                onChange={formikProps.handleChange}
-              />
-            </FormField>
-            <FormField labelText="Password">
-              <TextInput
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                value={formikProps.values.password}
-                onChange={formikProps.handleChange}
-              />
-            </FormField>
-            <Button type="submit">Submit</Button>
-          </Form>
-        </ContentContainer>
-      </Overlay>
-    )
-  }
-
-  async function handleSubmit({ account, password }: LoginValues) {
-    const { ticket, characters } = await authenticate(account, password)
-    session.setData({ account, ticket, characters })
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault()
+    const { ticket, characters } = await authenticate(account.value, password.value)
+    session.setData({ account: account.value, ticket, characters })
     navigate(routePaths.characterSelect)
   }
 
   return (
-    <Formik<LoginValues>
-      initialValues={initialValues}
-      render={renderForm}
-      onSubmit={handleSubmit}
-    />
+    <Overlay>
+      <ContentContainer>
+        <HeaderText>next</HeaderText>
+        <Form onSubmit={handleSubmit}>
+          <FormField labelText="Username">
+            <TextInput placeholder="awesomeuser" {...account.bind} />
+          </FormField>
+          <FormField labelText="Password">
+            <TextInput type="password" placeholder="••••••••" {...password.bind} />
+          </FormField>
+          <Button type="submit">Submit</Button>
+        </Form>
+      </ContentContainer>
+    </Overlay>
   )
 }
 export default LoginRoute
