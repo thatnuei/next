@@ -1,12 +1,11 @@
 import { navigate, RouteComponentProps } from "@reach/router"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect } from "react"
 import { useImmer } from "use-immer"
 import routePaths from "../app/routePaths"
 import { CharacterModel } from "../character/CharacterModel"
 import { ClientCommands } from "../fchat/types"
-import { tuple } from "../helpers/tuple"
 import { Dictionary, OptionalArg } from "../helpers/types"
-import SessionContainer, { SessionData } from "../session/SessionContainer"
+import SessionContainer from "../session/SessionContainer"
 import { ServerCommand } from "../socket/SocketHandler"
 
 function sendCommand<K extends keyof ClientCommands>(
@@ -19,11 +18,6 @@ function sendCommand<K extends keyof ClientCommands>(
   } else {
     socket.send(command)
   }
-}
-
-function useDictionary<V>(initialValues: Record<string, V> = {}) {
-  const [values, setValues] = useState<Record<string, V>>()
-  return tuple(values, {})
 }
 
 function ChatRoute(props: RouteComponentProps) {
@@ -101,5 +95,3 @@ function ChatRoute(props: RouteComponentProps) {
   return <p>{Object.keys(characters).length}</p>
 }
 export default ChatRoute
-
-function View(props: { sessionData: SessionData }) {}
