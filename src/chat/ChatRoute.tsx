@@ -73,8 +73,12 @@ function ChatRoute(props: RouteComponentProps) {
         sendCommand(socket, "PIN")
       }
 
+      if (command.type === "HLO") {
+        console.info(command.params.message)
+      }
+
       if (command.type === "CON") {
-        setCharacterCount(command.params.count)
+        console.info(`There are ${command.params.count} characters in chat`)
       }
 
       if (command.type === "LIS") {
