@@ -1,4 +1,3 @@
-import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
 import App from "./app/App"
@@ -16,7 +15,6 @@ function render() {
 }
 
 function main() {
-  configure({ enforceActions: "observed" })
   render()
 
   if (module.hot) {
