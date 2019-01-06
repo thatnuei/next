@@ -60,6 +60,7 @@ function ChatRoute(props: RouteComponentProps) {
 
     socket.onclose = () => {
       console.log("socket closed")
+      navigate(routePaths.login)
     }
 
     socket.onmessage = ({ data }) => {
