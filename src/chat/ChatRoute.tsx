@@ -1,7 +1,10 @@
 import { navigate, RouteComponentProps } from "@reach/router"
-import React, { useContext, useEffect } from "react"
+import { fromPairs } from "lodash"
+import React, { useContext, useEffect, useState } from "react"
 import routePaths from "../app/routePaths"
+import { CharacterModel } from "../character/CharacterModel"
 import { ClientCommands } from "../fchat/types"
+import { tuple } from "../helpers/tuple"
 import { OptionalArg } from "../helpers/types"
 import SessionContainer, { SessionData } from "../session/SessionContainer"
 import { ServerCommand } from "../socket/SocketHandler"
@@ -18,8 +21,16 @@ function sendCommand<K extends keyof ClientCommands>(
   }
 }
 
+function useDictionary<V>(initialValues: Record<string, V> = {}) {
+  const [values, setValues] = useState<Record<string, V>>()
+  return tuple(values, {})
+}
+
 function ChatRoute(props: RouteComponentProps) {
   const session = useContext(SessionContainer.Context)
+
+  const [characterCount, setCharacterCount] = useState(0)
+  const [characters, setCharacters] = useState<Record<string, CharacterModel | undefined>>({})
 
   useEffect(() => {
     if (!session.data) {
@@ -58,16 +69,30 @@ function ChatRoute(props: RouteComponentProps) {
 
       console.log(command)
 
-      if (type === "PIN") {
+      if (command.type === "PIN") {
         sendCommand(socket, "PIN")
-        return
+      }
+
+      if (command.type === "CON") {
+        setCharacterCount(command.params.count)
+      }
+
+      if (command.type === "LIS") {
+        const characterPairs = command.params.characters.map(([name, ...args]) =>
+          tuple(name, new CharacterModel(name, ...args)),
+        )
+
+        setCharacters((prev) => ({
+          ...prev,
+          ...fromPairs(characterPairs),
+        }))
       }
     }
 
     return () => socket.close()
   }, [])
 
-  return <p>{props.location && props.location.state.character}</p>
+  return <p>{Object.keys(characters).length}</p>
 }
 export default ChatRoute
 
