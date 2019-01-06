@@ -1,5 +1,6 @@
 import { Redirect, Router } from "@reach/router"
 import React, { useContext, useEffect, useState } from "react"
+import ChatRoute from "../chat/ChatRoute"
 import SessionContainer from "../session/SessionContainer"
 import CharacterSelectRoute from "./CharacterSelectRoute"
 import LoginRoute from "./LoginRoute"
@@ -31,6 +32,7 @@ function App() {
     <Router>
       <LoginRoute path={routePaths.login} />
       <CharacterSelectRoute path={routePaths.characterSelect} />
+      <ChatRoute path={routePaths.chat} />
       <Redirect
         from="/"
         to={session.isAuthenticated ? routePaths.characterSelect : routePaths.login}

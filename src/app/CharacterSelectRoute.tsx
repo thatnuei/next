@@ -1,4 +1,4 @@
-import { Redirect, RouteComponentProps } from "@reach/router"
+import { navigate, Redirect, RouteComponentProps } from "@reach/router"
 import React, { useContext } from "react"
 import { Avatar } from "../character/Avatar"
 import SessionContainer from "../session/SessionContainer"
@@ -31,7 +31,7 @@ function View({ account, characters }: { account: string; characters: string[] }
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    // go to chat
+    navigate(routePaths.chat, { state: { identity } })
   }
 
   return (
