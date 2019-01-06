@@ -93,7 +93,12 @@ function ChatRoute(props: RouteComponentProps) {
       }
     }
 
-    return () => socket.close()
+    return () => {
+      socket.onopen = null
+      socket.onclose = null
+      socket.onmessage = null
+      socket.close()
+    }
   }, [])
 
   return <p>{Object.keys(characters).length}</p>
