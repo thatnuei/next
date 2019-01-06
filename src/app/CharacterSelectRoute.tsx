@@ -1,7 +1,7 @@
-import { navigate, Redirect, RouteComponentProps } from "@reach/router"
-import React, { useContext } from "react"
+import { navigate } from "@reach/router"
+import React from "react"
 import { Avatar } from "../character/Avatar"
-import SessionContainer from "../session/SessionContainer"
+import { SessionData } from "../session/SessionContainer"
 import usePersistedState from "../state/usePersistedState"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
@@ -11,15 +11,13 @@ import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import routePaths from "./routePaths"
 
-type Props = RouteComponentProps
+type Props = {
+  sessionData: SessionData
+}
 
 function CharacterSelectRoute(props: Props) {
-  const session = useContext(SessionContainer.Context)
-  return session.data ? <View {...session.data} /> : <Redirect to={routePaths.login} />
-}
-export default CharacterSelectRoute
+  const { account, characters } = props.sessionData
 
-function View({ account, characters }: { account: string; characters: string[] }) {
   const [identity, setIdentity] = usePersistedState<string>(
     `${account}:identity`,
     characters[0] || "",
@@ -57,6 +55,7 @@ function View({ account, characters }: { account: string; characters: string[] }
     </Overlay>
   )
 }
+export default CharacterSelectRoute
 
 const formStyle: React.CSSProperties = {
   display: "flex",

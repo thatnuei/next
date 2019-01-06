@@ -1,7 +1,7 @@
-import { Redirect, Router } from "@reach/router"
+import { Redirect, RouteComponentProps, Router } from "@reach/router"
 import React, { useContext, useEffect, useState } from "react"
 import ChatRoute from "../chat/ChatRoute"
-import SessionContainer from "../session/SessionContainer"
+import SessionContainer, { SessionData } from "../session/SessionContainer"
 import CharacterSelectRoute from "./CharacterSelectRoute"
 import LoginRoute from "./LoginRoute"
 import routePaths from "./routePaths"
@@ -31,8 +31,8 @@ function App() {
   return (
     <Router>
       <LoginRoute path={routePaths.login} />
-      <CharacterSelectRoute path={routePaths.characterSelect} />
-      <ChatRoute path={routePaths.chat} />
+      <AuthRoute path={routePaths.characterSelect} component={CharacterSelectRoute} />
+      <AuthRoute path={routePaths.chat} component={ChatRoute} />
       <Redirect
         from="/"
         to={session.isAuthenticated ? routePaths.characterSelect : routePaths.login}
@@ -42,3 +42,17 @@ function App() {
 }
 
 export default App
+
+type AuthRouteProps = RouteComponentProps & {
+  component: React.ComponentType<{ sessionData: SessionData } & RouteComponentProps>
+}
+
+function AuthRoute(props: AuthRouteProps) {
+  const session = useContext(SessionContainer.Context)
+  if (!session.data) {
+    return <Redirect to={routePaths.login} />
+  }
+
+  const { component: Component, ...componentProps } = props
+  return <Component {...componentProps} sessionData={session.data} />
+}
