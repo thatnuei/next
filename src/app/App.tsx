@@ -33,10 +33,7 @@ function App() {
       <LoginRoute path={routePaths.login} />
       <CharacterSelectRoute path={routePaths.characterSelect} />
       <ChatRoute path={routePaths.chat} />
-      <Redirect
-        from="/"
-        to={appState.isAuthenticated ? routePaths.characterSelect : routePaths.login}
-      />
+      <Redirect from="/" to={appState.user ? routePaths.characterSelect : routePaths.login} />
     </Router>
   )
 }

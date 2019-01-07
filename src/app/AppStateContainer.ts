@@ -130,7 +130,6 @@ function useAppState() {
 
   return {
     user: userData,
-    isAuthenticated: userData !== undefined,
     identity,
     setIdentity,
     restoreSession,
