@@ -37,14 +37,15 @@ function useAppState() {
 
   async function restoreSession() {
     const creds = await idb.get<UserData | undefined>(userDataKey)
-    if (!creds) return
+    if (creds) {
+      const { account, ticket } = creds
+      const { characters } = await api.fetchCharacters(account, ticket)
+      const loadedIdentity = await idb.get<string | undefined>(identityKey(account))
 
-    const { account, ticket } = creds
-    const { characters } = await api.fetchCharacters(account, ticket)
-    const loadedIdentity = await idb.get<string | undefined>(identityKey(account))
+      setUserData({ account, ticket, characters })
+      setIdentity(loadedIdentity || characters[0])
+    }
 
-    setUserData({ account, ticket, characters })
-    setIdentity(loadedIdentity || characters[0])
     setSessionLoaded(true)
   }
 
