@@ -1,12 +1,13 @@
 import { mdiAccountMultiple, mdiMenu } from "@mdi/js"
 import { RouteComponentProps } from "@reach/router"
-import React, { useState } from "react"
+import React from "react"
 import { Button } from "../ui/Button"
 import { primaryColor } from "../ui/colors"
 import { flexGrow, fullHeight } from "../ui/helpers"
 import { Icon } from "../ui/Icon"
 import SideOverlay from "../ui/SideOverlay"
 import { css } from "../ui/styled"
+import useOverlayState from "../ui/useOverlayState"
 
 type ChatRouteProps = RouteComponentProps
 
@@ -18,12 +19,12 @@ function ChatRoute(props: ChatRouteProps) {
   //   return disconnect
   // }, [])
 
-  const [sidebarVisible, setSidebarVisible] = useState(false)
+  const sidebar = useOverlayState()
 
   return (
     <main css={fullHeight}>
       <header css={headerStyle}>
-        <Button flat onClick={() => setSidebarVisible(true)}>
+        <Button flat onClick={sidebar.open}>
           <Icon path={mdiMenu} />
         </Button>
 
@@ -34,7 +35,7 @@ function ChatRoute(props: ChatRouteProps) {
         </Button>
       </header>
 
-      <SideOverlay visible={sidebarVisible} onClick={() => setSidebarVisible(false)}>
+      <SideOverlay {...sidebar.bind}>
         <div>sidebar content eventually</div>
       </SideOverlay>
     </main>
