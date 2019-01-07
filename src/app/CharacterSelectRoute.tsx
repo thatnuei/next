@@ -1,5 +1,5 @@
 import { navigate, Redirect, RouteComponentProps } from "@reach/router"
-import React, { useContext } from "react"
+import React, { useContext, useEffect } from "react"
 import { Avatar } from "../character/Avatar"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
@@ -13,7 +13,11 @@ import routePaths from "./routePaths"
 type Props = RouteComponentProps
 
 function CharacterSelectRoute(props: Props) {
-  const { identity, setIdentity, user } = useContext(AppStateContainer.Context)
+  const { user, identity, setIdentity, restoreIdentity } = useContext(AppStateContainer.Context)
+
+  useEffect(() => {
+    restoreIdentity()
+  }, [])
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     setIdentity(event.target.value)

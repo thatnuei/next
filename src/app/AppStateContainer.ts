@@ -35,15 +35,21 @@ function useAppState() {
     [userData, identity],
   )
 
+  async function restoreIdentity() {
+    if (!userData) return
+
+    const { account, characters } = userData
+    const loadedIdentity = await idb.get<string | undefined>(identityKey(account))
+
+    setIdentity(loadedIdentity || characters[0])
+  }
+
   async function restoreSession() {
     const creds = await idb.get<UserData | undefined>(userDataKey)
     if (creds) {
       const { account, ticket } = creds
       const { characters } = await api.fetchCharacters(account, ticket)
-      const loadedIdentity = await idb.get<string | undefined>(identityKey(account))
-
       setUserData({ account, ticket, characters })
-      setIdentity(loadedIdentity || characters[0])
     }
 
     setSessionLoaded(true)
@@ -52,9 +58,6 @@ function useAppState() {
   async function submitLogin(account: string, password: string) {
     const { ticket, characters } = await api.authenticate(account, password)
     setUserData({ account, ticket, characters })
-
-    const loadedIdentity = await idb.get<string | undefined>(identityKey(account))
-    setIdentity(loadedIdentity || characters[0])
   }
 
   function sendCommand<K extends keyof ClientCommands>(
@@ -70,6 +73,11 @@ function useAppState() {
   }
 
   function connectToChat() {
+    if (!identity) {
+      navigate(routePaths.characterSelect)
+      return
+    }
+
     if (!userData) {
       navigate(routePaths.login)
       return
@@ -134,6 +142,7 @@ function useAppState() {
     identity,
     setIdentity,
     restoreSession,
+    restoreIdentity,
     submitLogin,
     connectToChat,
   }
