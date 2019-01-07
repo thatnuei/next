@@ -1,11 +1,11 @@
-import { navigate, Redirect, RouteComponentProps } from "@reach/router"
+import { navigate, RouteComponentProps } from "@reach/router"
 import React, { useEffect } from "react"
 import { useImmer } from "use-immer"
+import { useAppStateContext } from "../app/AppStateContainer"
 import routePaths from "../app/routePaths"
 import { CharacterModel } from "../character/CharacterModel"
 import { ClientCommands } from "../fchat/types"
 import { Dictionary, OptionalArg } from "../helpers/types"
-import { SessionData } from "../session/SessionContainer"
 import { ServerCommand } from "../socket/SocketHandler"
 
 function sendCommand<K extends keyof ClientCommands>(
@@ -81,28 +81,16 @@ function useChatState(account: string, ticket: string, identity: string) {
   return { characters }
 }
 
-type ChatRouteProps = RouteComponentProps & {
-  sessionData: SessionData
-}
+type ChatRouteProps = RouteComponentProps
 
 function ChatRoute(props: ChatRouteProps) {
-  const identity = props.location && props.location.state.identity
+  const appState = useAppStateContext()
 
-  if (typeof identity !== "string") {
-    return <Redirect to={routePaths.login} />
-  }
+  useEffect(() => {
+    const disconnect = appState.connectToChat()
+    return disconnect
+  }, [])
 
-  return <ChatView {...props.sessionData} identity={identity} />
+  return <p>chat</p>
 }
 export default ChatRoute
-
-type ChatViewProps = {
-  account: string
-  ticket: string
-  identity: string
-}
-
-function ChatView(props: ChatViewProps) {
-  const chatState = useChatState(props.account, props.ticket, props.identity)
-  return <p>Characters: {Object.values(chatState.characters).length}</p>
-}

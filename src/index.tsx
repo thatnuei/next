@@ -1,15 +1,15 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import App from "./app/App"
-import SessionContainer from "./session/SessionContainer"
+import AppStateContainer from "./app/AppStateContainer"
 import GlobalStyle from "./ui/GlobalStyle"
 
 function render() {
   ReactDOM.render(
-    <SessionContainer.Provider>
+    <AppStateContainer.Provider>
       <App />
       <GlobalStyle />
-    </SessionContainer.Provider>,
+    </AppStateContainer.Provider>,
     document.querySelector("#root"),
   )
 }

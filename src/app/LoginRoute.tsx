@@ -1,7 +1,5 @@
 import { navigate, RouteComponentProps } from "@reach/router"
 import React, { useContext } from "react"
-import { authenticate } from "../flist/api"
-import SessionContainer from "../session/SessionContainer"
 import useInput from "../state/useInput"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
@@ -10,20 +8,25 @@ import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
+import AppStateContainer from "./AppStateContainer"
 import routePaths from "./routePaths"
 
 type Props = RouteComponentProps
 
 function LoginRoute(props: Props) {
-  const session = useContext(SessionContainer.Context)
+  const appState = useContext(AppStateContainer.Context)
   const account = useInput()
   const password = useInput()
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    const { ticket, characters } = await authenticate(account.value, password.value)
-    session.setData({ account: account.value, ticket, characters })
-    navigate(routePaths.characterSelect)
+
+    try {
+      await appState.submitLogin(account.value, password.value)
+      navigate(routePaths.characterSelect)
+    } catch (error) {
+      alert(error)
+    }
   }
 
   return (

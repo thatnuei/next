@@ -1,27 +1,19 @@
-import { navigate } from "@reach/router"
-import React from "react"
+import { navigate, Redirect, RouteComponentProps } from "@reach/router"
+import React, { useContext } from "react"
 import { Avatar } from "../character/Avatar"
-import { SessionData } from "../session/SessionContainer"
-import usePersistedState from "../state/usePersistedState"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"
 import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
+import AppStateContainer from "./AppStateContainer"
 import routePaths from "./routePaths"
 
-type Props = {
-  sessionData: SessionData
-}
+type Props = RouteComponentProps
 
 function CharacterSelectRoute(props: Props) {
-  const { account, characters } = props.sessionData
-
-  const [identity, setIdentity] = usePersistedState<string>(
-    `${account}:identity`,
-    characters[0] || "",
-  )
+  const { identity, setIdentity, user } = useContext(AppStateContainer.Context)
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     setIdentity(event.target.value)
@@ -29,8 +21,11 @@ function CharacterSelectRoute(props: Props) {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    navigate(routePaths.chat, { state: { identity } })
+    if (!identity) setIdentity(identity)
+    navigate(routePaths.chat)
   }
+
+  if (!user) return <Redirect to={routePaths.login} />
 
   return (
     <Overlay>
@@ -42,7 +37,7 @@ function CharacterSelectRoute(props: Props) {
           </FormField>
           <FormField>
             <select name="character" value={identity} onChange={handleChange}>
-              {characters.map((name) => (
+              {user.characters.map((name) => (
                 <option value={name} key={name}>
                   {name}
                 </option>
