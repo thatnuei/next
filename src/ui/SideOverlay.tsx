@@ -10,8 +10,9 @@ type SidebarOverlayProps = {
 }
 
 export default function SideOverlay(props: SidebarOverlayProps) {
+  const { onClick = noop } = props
   return (
-    <div onClick={() => (props.onClick || noop)()} css={shadeStyle(props)}>
+    <div onClick={() => onClick()} css={shadeStyle(props)}>
       <div css={panelStyle(props)}>{props.children}</div>
     </div>
   )
