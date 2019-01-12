@@ -66,7 +66,7 @@ const inactiveStyle = css`
   }
 `
 
-const TitleContainer = styled.a.attrs({ href: "#" })<ChatNavigationTabProps>`
+const TitleContainer = styled.a<ChatNavigationTabProps>`
   flex-grow: 1;
 
   display: flex;
@@ -87,7 +87,7 @@ const TitleText = styled.div`
   top: 1px;
 `
 
-const CloseButton = styled.a.attrs({ href: "#" })<ChatNavigationTabProps>`
+const CloseButton = styled.a<ChatNavigationTabProps>`
   flex-shrink: 0;
 
   padding: 8px;
