@@ -1,6 +1,6 @@
 import * as fchat from "fchat"
 
-export default class CharacterModel {
+export class CharacterModel {
   constructor(
     public readonly name: string,
     public readonly gender: fchat.Character.Gender,

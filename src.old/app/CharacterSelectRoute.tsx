@@ -1,6 +1,6 @@
 import { navigate, Redirect, RouteComponentProps } from "@reach/router"
 import React, { useContext, useEffect } from "react"
-import Avatar from "../character/Avatar"
+import { Avatar } from "../character/Avatar"
 import { Button } from "../ui/Button"
 import { flist3 } from "../ui/colors"
 import { Form } from "../ui/Form"

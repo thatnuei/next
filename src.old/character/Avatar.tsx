@@ -6,7 +6,7 @@ type Props = {
   size?: number
 }
 
-const Avatar = (props: Props) => (
+export const Avatar = (props: Props) => (
   <img
     src={getAvatarUrl(props.name)}
     alt={`Avatar for ${props.name}`}
@@ -15,4 +15,3 @@ const Avatar = (props: Props) => (
     style={{ verticalAlign: "top" }}
   />
 )
-export default Avatar

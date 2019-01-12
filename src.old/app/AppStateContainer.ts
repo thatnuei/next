@@ -3,11 +3,11 @@ import createContainer from "constate"
 import * as idb from "idb-keyval"
 import { useContext, useEffect, useState } from "react"
 import { useImmer } from "use-immer"
-import CharacterModel from "../character/CharacterModel"
-import { chatServerUrl } from "../fchat/constants"
-import { ClientCommands, ServerCommand } from "../fchat/types"
+import { CharacterModel } from "../character/CharacterModel"
+import { ClientCommands } from "../fchat/types"
 import * as api from "../flist/api"
 import { Dictionary, OptionalArg } from "../helpers/types"
+import { ServerCommand } from "../socket/SocketHandler"
 import routePaths from "./routePaths"
 
 type UserData = {
@@ -83,7 +83,7 @@ function useAppState() {
       return
     }
 
-    const socket = new WebSocket(chatServerUrl)
+    const socket = new WebSocket(`wss://chat.f-list.net:9799`)
 
     socket.onopen = () => {
       sendCommand(socket, "IDN", {
