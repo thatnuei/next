@@ -23,7 +23,6 @@ function ChatRoute(props: ChatRouteProps) {
   const sidebar = useOverlayState(true)
 
   if (!identity) return <Redirect to={routePaths.characterSelect} />
-  if (!user) return <Redirect to={routePaths.login} />
 
   return (
     <main css={fullHeight}>
