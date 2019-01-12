@@ -8,11 +8,10 @@ import ModalBody from "../ui/ModalBody"
 import ModalOverlay from "../ui/ModalOverlay"
 import ModalTitle from "../ui/ModalTitle"
 import AppStore from "./AppStore"
+import { identityStorageKey } from "./constants"
 import routePaths from "./routePaths"
 
 type Props = RouteComponentProps
-
-const identityKey = (account: string) => `identity:${account}`
 
 function CharacterSelectRoute(props: Props) {
   const { user } = useContext(AppStore.Context)
@@ -39,11 +38,11 @@ function CharacterSelectRoute(props: Props) {
       if (!user || !characters) return
 
       if (!identity) {
-        const loadedIdentity = window.sessionStorage.getItem(identityKey(user.account))
+        const loadedIdentity = window.sessionStorage.getItem(identityStorageKey(user.account))
         setIdentity(loadedIdentity || characters[0])
       }
 
-      window.sessionStorage.setItem(identityKey(user.account), identity || characters[0])
+      window.sessionStorage.setItem(identityStorageKey(user.account), identity || characters[0])
     },
     [identity, characters],
   )

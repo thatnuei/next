@@ -1,6 +1,7 @@
 import { Redirect, RouteComponentProps } from "@reach/router"
 import React, { useContext, useEffect } from "react"
 import AppStore from "../app/AppStore"
+import { identityStorageKey } from "../app/constants"
 import routePaths from "../app/routePaths"
 import Button from "../ui/Button"
 import { appColor } from "../ui/colors"
@@ -12,15 +13,13 @@ import useOverlayState from "../ui/useOverlayState"
 
 type ChatRouteProps = RouteComponentProps
 
-const identityKey = (account: string) => `identity:${account}`
-
 function ChatRoute(props: ChatRouteProps) {
   const { user, connectToChat } = useContext(AppStore.Context)
 
   useEffect(() => {
     if (!user) return
 
-    const identity = window.sessionStorage.getItem(identityKey(user.account))
+    const identity = window.sessionStorage.getItem(identityStorageKey(user.account))
     if (!identity) return
 
     return connectToChat(user.account, user.ticket, identity)
