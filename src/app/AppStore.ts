@@ -1,7 +1,7 @@
 import { navigate } from "@reach/router"
 import createContainer from "constate"
 import * as idb from "idb-keyval"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useImmer } from "use-immer"
 import CharacterModel from "../character/CharacterModel"
 import { Dictionary, OptionalArg } from "../common/types"
@@ -150,7 +150,3 @@ function useAppState() {
 
 const AppStore = createContainer(useAppState)
 export default AppStore
-
-export function useAppStateContext() {
-  return useContext(AppStore.Context)
-}
