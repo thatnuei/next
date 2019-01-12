@@ -1,6 +1,6 @@
-import { css } from "@emotion/core"
 import { darken } from "polished"
 import { clouds, flist2, flist5 } from "./colors"
+import { css } from "./styled"
 
 export default css`
   * {
