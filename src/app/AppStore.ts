@@ -72,24 +72,14 @@ function useAppState() {
     }
   }
 
-  function connectToChat() {
-    if (!identity) {
-      navigate(routePaths.characterSelect)
-      return
-    }
-
-    if (!userData) {
-      navigate(routePaths.login)
-      return
-    }
-
+  function connectToChat(account: string, ticket: string, character: string) {
     const socket = new WebSocket(chatServerUrl)
 
     socket.onopen = () => {
       sendCommand(socket, "IDN", {
-        account: userData.account,
-        ticket: userData.ticket,
-        character: identity,
+        account,
+        ticket,
+        character,
         cname: "next",
         cversion: "0.1.0",
         method: "ticket",
@@ -107,6 +97,13 @@ function useAppState() {
       const command: ServerCommand = { type, params }
 
       console.log(command)
+
+      if (command.type === "IDN") {
+        sendCommand(socket, "JCH", { channel: "Frontpage" })
+        sendCommand(socket, "JCH", { channel: "Fantasy" })
+        sendCommand(socket, "JCH", { channel: "Story Driven LFRP" })
+        sendCommand(socket, "JCH", { channel: "Development" })
+      }
 
       if (command.type === "PIN") {
         sendCommand(socket, "PIN")

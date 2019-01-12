@@ -1,5 +1,7 @@
-import { RouteComponentProps } from "@reach/router"
-import React from "react"
+import { Redirect, RouteComponentProps } from "@reach/router"
+import React, { useContext, useEffect } from "react"
+import AppStore from "../app/AppStore"
+import routePaths from "../app/routePaths"
 import Button from "../ui/Button"
 import { appColor } from "../ui/colors"
 import { flexGrow, fullHeight } from "../ui/helpers"
@@ -11,14 +13,17 @@ import useOverlayState from "../ui/useOverlayState"
 type ChatRouteProps = RouteComponentProps
 
 function ChatRoute(props: ChatRouteProps) {
-  // const appState = useAppStateContext()
+  const { identity, user, connectToChat } = useContext(AppStore.Context)
 
-  // useEffect(() => {
-  //   const disconnect = appState.connectToChat()
-  //   return disconnect
-  // }, [])
+  useEffect(() => {
+    if (!identity || !user) return
+    return connectToChat(user.account, user.ticket, identity)
+  }, [])
 
-  const sidebar = useOverlayState()
+  const sidebar = useOverlayState(true)
+
+  if (!identity) return <Redirect to={routePaths.characterSelect} />
+  if (!user) return <Redirect to={routePaths.login} />
 
   return (
     <main css={fullHeight}>
