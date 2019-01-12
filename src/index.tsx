@@ -1,14 +1,15 @@
+import { Global } from "@emotion/core"
 import React from "react"
 import ReactDOM from "react-dom"
 import App from "./app/App"
 import AppStateContainer from "./app/AppStateContainer"
-import GlobalStyle from "./ui/GlobalStyle"
+import globalStyle from "./ui/globalStyle"
 
 function render() {
   ReactDOM.render(
     <AppStateContainer.Provider>
       <App />
-      <GlobalStyle />
+      <Global styles={globalStyle} />
     </AppStateContainer.Provider>,
     document.querySelector("#root"),
   )
