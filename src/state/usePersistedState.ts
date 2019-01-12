@@ -1,6 +1,6 @@
 import * as idb from "idb-keyval"
 import { useEffect, useRef, useState } from "react"
-import tuple from "../helpers/tuple"
+import tuple from "../common/tuple"
 
 function usePersistedState<T>(key: string, defaultValue: T) {
   const ready = useRef(false)

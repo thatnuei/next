@@ -4,10 +4,10 @@ import * as idb from "idb-keyval"
 import { useContext, useEffect, useState } from "react"
 import { useImmer } from "use-immer"
 import CharacterModel from "../character/CharacterModel"
+import { Dictionary, OptionalArg } from "../common/types"
 import { chatServerUrl } from "../fchat/constants"
 import { ClientCommands, ServerCommand } from "../fchat/types"
 import * as api from "../flist/api"
-import { Dictionary, OptionalArg } from "../helpers/types"
 import routePaths from "./routePaths"
 
 type UserData = {
