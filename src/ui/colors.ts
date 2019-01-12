@@ -1,16 +1,13 @@
+import { shade } from "polished"
+
 // http://flatuicolors.com/
 export const clouds = "rgb(236, 240, 241)"
 export const cloudsDark = "rgb(189, 195, 199)"
 
-const flist = "hsl(210, 60%, 18%)"
+const flist = "hsl(210, 60%, 20%)"
 
-export const primaryColor = flist
+export const appColor = flist
+export const appBackgroundColor = shade(0.5, appColor)
 export const textColor = clouds
 
-// TODO: replace all of these with the better-named colors above
-export const flist0 = "hsl(210, 60%, 28%)"
-export const flist1 = "hsl(210, 60%, 25%)"
-export const flist2 = "hsl(210, 60%, 22%)"
-export const flist3 = "hsl(210, 60%, 18%)"
-export const flist4 = "hsl(210, 60%, 14%)"
-export const flist5 = "hsl(210, 60%, 10%)"
+export const semiBlack = (opacity = 0.5) => `rgba(0, 0, 0, ${opacity})`

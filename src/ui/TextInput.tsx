@@ -1,6 +1,6 @@
 import { styled } from "./styled"
 
-export const TextInput = styled.input`
+const TextInput = styled.input`
   font: inherit;
   color: inherit;
   border: none;
@@ -10,8 +10,10 @@ export const TextInput = styled.input`
 
   display: block;
   width: 100%;
+  max-width: 250px;
 
   :focus {
     background: rgba(0, 0, 0, 0.8);
   }
 `
+export default TextInput

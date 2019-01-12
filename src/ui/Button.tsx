@@ -1,21 +1,17 @@
-import { css, styled } from "./styled"
+import React from "react"
+import { css } from "./styled"
 
-type ButtonProps = {
+type ButtonProps = React.ComponentProps<"button"> & {
   flat?: boolean
 }
 
-const flatStyle = css`
-  background: none;
-  opacity: 0.5;
+const Button = (props: ButtonProps) => {
+  return <button type="button" css={[buttonStyle, props.flat && flatStyle]} {...props} />
+}
 
-  :hover,
-  :focus {
-    background: none;
-    opacity: 1;
-  }
-`
+export default Button
 
-export const Button = styled.button<ButtonProps>`
+const buttonStyle = css`
   font: inherit;
   color: inherit;
   border: none;
@@ -29,6 +25,15 @@ export const Button = styled.button<ButtonProps>`
   :focus {
     background: rgba(0, 0, 0, 0.8);
   }
+`
 
-  ${(props) => props.flat && flatStyle};
+const flatStyle = css`
+  background: none;
+  opacity: 0.5;
+
+  :hover,
+  :focus {
+    background: none;
+    opacity: 1;
+  }
 `

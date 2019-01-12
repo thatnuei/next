@@ -1,5 +1,5 @@
-import { darken } from "polished"
-import { clouds, flist2, flist5 } from "./colors"
+import { lighten, shade } from "polished"
+import { appBackgroundColor, appColor, textColor } from "./colors"
 import { css } from "./styled"
 
 export default css`
@@ -11,8 +11,8 @@ export default css`
 
   :root {
     font: 16px Roboto, sans-serif;
-    color: ${clouds};
-    background-color: ${darken(0.03, flist5)};
+    color: ${textColor};
+    background-color: ${appBackgroundColor};
     word-break: break-word;
     line-height: 1.5;
   }
@@ -56,10 +56,10 @@ export default css`
 
   ::-webkit-scrollbar-track,
   ::-webkit-scrollbar-corner {
-    background-color: ${darken(0.05, flist5)};
+    background-color: ${shade(0.5, appBackgroundColor)};
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: ${flist2};
+    background-color: ${lighten(0.2, appColor)};
   }
 `

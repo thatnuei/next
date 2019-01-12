@@ -1,28 +1,28 @@
 import React from "react"
-import { styled } from "./styled"
+import { css } from "./styled"
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
   labelText?: string
   htmlFor?: string
 }
 
-export class FormField extends React.Component<Props> {
+export default class FormField extends React.Component<Props> {
   render() {
     const { labelText, htmlFor, children, ...props } = this.props
     return (
-      <Container {...props}>
-        {labelText ? <Label htmlFor={htmlFor}>{labelText}</Label> : null}
+      <div css={{ marginBottom: "1rem" }} {...props}>
+        {labelText ? (
+          <label css={labelStyle} htmlFor={htmlFor}>
+            {labelText}
+          </label>
+        ) : null}
         {children}
-      </Container>
+      </div>
     )
   }
 }
 
-const Container = styled.div`
-  margin-bottom: 1rem;
-`
-
-const Label = styled.label`
+const labelStyle = css`
   display: block;
   margin-bottom: 0.25rem;
 `

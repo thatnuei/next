@@ -1,12 +1,11 @@
 import { navigate, Redirect, RouteComponentProps } from "@reach/router"
 import React, { useContext, useEffect } from "react"
 import Avatar from "../character/Avatar"
-import { Button } from "../ui/Button"
-import { flist3 } from "../ui/colors"
-import { Form } from "../ui/Form"
-import { FormField } from "../ui/FormField"
-import { Overlay } from "../ui/Overlay"
-import { styled } from "../ui/styled"
+import Button from "../ui/Button"
+import FormField from "../ui/FormField"
+import ModalBody from "../ui/ModalBody"
+import ModalOverlay from "../ui/ModalOverlay"
+import ModalTitle from "../ui/ModalTitle"
 import AppStore from "./AppStore"
 import routePaths from "./routePaths"
 
@@ -32,10 +31,10 @@ function CharacterSelectRoute(props: Props) {
   if (!user) return <Redirect to={routePaths.login} />
 
   return (
-    <Overlay>
-      <ContentContainer>
-        <HeaderText>Select a Character</HeaderText>
-        <Form onSubmit={handleSubmit} style={formStyle}>
+    <ModalOverlay>
+      <ModalTitle>Select a Character</ModalTitle>
+      <ModalBody>
+        <form onSubmit={handleSubmit} style={formStyle}>
           <FormField>
             <Avatar key={identity} name={identity} />
           </FormField>
@@ -49,9 +48,9 @@ function CharacterSelectRoute(props: Props) {
             </select>
           </FormField>
           <Button type="submit">Enter Chat</Button>
-        </Form>
-      </ContentContainer>
-    </Overlay>
+        </form>
+      </ModalBody>
+    </ModalOverlay>
   )
 }
 export default CharacterSelectRoute
@@ -61,12 +60,3 @@ const formStyle: React.CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
 }
-
-const ContentContainer = styled.div`
-  background-color: ${flist3};
-  padding: 1rem;
-`
-
-const HeaderText = styled.h1`
-  margin-bottom: 1rem;
-`

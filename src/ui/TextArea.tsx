@@ -1,6 +1,6 @@
 import { styled } from "./styled"
 
-export const TextArea = styled.textarea`
+export default styled.textarea`
   font: inherit;
   color: inherit;
   border: none;

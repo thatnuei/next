@@ -1,8 +1,39 @@
-import { circOut, easeIn } from "@popmotion/easing"
 import React from "react"
-import posed from "react-pose"
-import { css, styled } from "./styled"
+import { appColor, semiBlack } from "./colors"
+import { fullscreen } from "./helpers"
+import { css } from "./styled"
 
+type ModalOverlayProps = {
+  children: React.ReactNode
+}
+
+const ModalOverlay = ({ children }: ModalOverlayProps) => {
+  return (
+    <div css={shade}>
+      <div css={panelContainer}>{children}</div>
+    </div>
+  )
+}
+
+export default ModalOverlay
+
+const shade = css`
+  ${fullscreen}
+  background-color: ${semiBlack(0.5)};
+  display: flex;
+  flex-flow: column;
+  padding: 4rem 0;
+  overflow-y: auto;
+`
+
+const panelContainer = css`
+  margin: auto;
+  background-color: ${appColor};
+  width: 100%;
+  max-width: max-content;
+`
+
+/* 
 export type OverlayAnchor = "center" | "left" | "right"
 
 export type OverlayProps = {
@@ -121,3 +152,4 @@ const RightPanel = posed(styled.div`
     translateX: "100%",
   },
 })
+ */

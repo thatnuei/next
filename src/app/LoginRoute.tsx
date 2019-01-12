@@ -1,13 +1,12 @@
 import { navigate, RouteComponentProps } from "@reach/router"
 import React, { useContext } from "react"
 import useInput from "../state/useInput"
-import { Button } from "../ui/Button"
-import { flist3 } from "../ui/colors"
-import { Form } from "../ui/Form"
-import { FormField } from "../ui/FormField"
-import { Overlay } from "../ui/Overlay"
-import { styled } from "../ui/styled"
-import { TextInput } from "../ui/TextInput"
+import Button from "../ui/Button"
+import FormField from "../ui/FormField"
+import ModalBody from "../ui/ModalBody"
+import ModalOverlay from "../ui/ModalOverlay"
+import ModalTitle from "../ui/ModalTitle"
+import TextInput from "../ui/TextInput"
 import AppStore from "./AppStore"
 import routePaths from "./routePaths"
 
@@ -30,10 +29,10 @@ function LoginRoute(props: Props) {
   }
 
   return (
-    <Overlay>
-      <ContentContainer>
-        <HeaderText>next</HeaderText>
-        <Form onSubmit={handleSubmit}>
+    <ModalOverlay>
+      <ModalTitle>next</ModalTitle>
+      <ModalBody css={{ width: "100%" }}>
+        <form onSubmit={handleSubmit}>
           <FormField labelText="Username">
             <TextInput placeholder="awesomeuser" {...account.bind} />
           </FormField>
@@ -41,21 +40,9 @@ function LoginRoute(props: Props) {
             <TextInput type="password" placeholder="••••••••" {...password.bind} />
           </FormField>
           <Button type="submit">Submit</Button>
-        </Form>
-      </ContentContainer>
-    </Overlay>
+        </form>
+      </ModalBody>
+    </ModalOverlay>
   )
 }
 export default LoginRoute
-
-const ContentContainer = styled.div`
-  background-color: ${flist3};
-  width: 18rem;
-  max-width: 100%;
-  padding: 1rem;
-`
-
-const HeaderText = styled.h1`
-  margin-bottom: 1rem;
-  text-align: center;
-`
