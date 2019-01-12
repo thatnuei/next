@@ -1,4 +1,5 @@
 import React from "react"
+import { appColor } from "./colors"
 import { fullscreen } from "./helpers"
 import { css, styled } from "./styled"
 
@@ -42,6 +43,7 @@ const Panel = styled.div<{ anchor: "left" | "right"; visible?: boolean }>`
   top: 0;
   bottom: 0;
   width: max-content;
+  background-color: ${appColor};
   transition: 0.3s;
   ${(props) => props.anchor}: 0;
 
