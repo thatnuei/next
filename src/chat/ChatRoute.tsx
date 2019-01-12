@@ -12,17 +12,23 @@ import useOverlayState from "../ui/useOverlayState"
 
 type ChatRouteProps = RouteComponentProps
 
+const identityKey = (account: string) => `identity:${account}`
+
 function ChatRoute(props: ChatRouteProps) {
-  const { identity, user, connectToChat } = useContext(AppStore.Context)
+  const { user, connectToChat } = useContext(AppStore.Context)
 
   useEffect(() => {
-    if (!identity || !user) return
+    if (!user) return
+
+    const identity = window.sessionStorage.getItem(identityKey(user.account))
+    if (!identity) return
+
     return connectToChat(user.account, user.ticket, identity)
   }, [])
 
   const sidebar = useOverlayState(true)
 
-  if (!identity) return <Redirect to={routePaths.characterSelect} />
+  if (!user) return <Redirect to={routePaths.login} />
 
   return (
     <main css={fullHeight}>

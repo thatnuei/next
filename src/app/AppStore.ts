@@ -13,15 +13,12 @@ import routePaths from "./routePaths"
 type UserData = {
   account: string
   ticket: string
-  characters: string[]
 }
 
 const userDataKey = "user"
-const identityKey = (account: string) => `${account}:identity`
 
 function useAppState() {
   const [userData, setUserData] = useState<UserData>()
-  const [identity, setIdentity] = useState("")
   const [isSessionLoaded, setSessionLoaded] = useState(false)
   const [characters, updateCharacters] = useImmer<Dictionary<CharacterModel>>({})
 
@@ -29,27 +26,16 @@ function useAppState() {
     () => {
       if (!isSessionLoaded || !userData) return
       idb.set(userDataKey, userData)
-      idb.set(identityKey(userData.account), identity)
     },
-    [userData, identity],
+    [userData],
   )
-
-  async function restoreIdentity() {
-    if (!userData) return
-
-    const { account, characters } = userData
-    const loadedIdentity = await idb.get<string | undefined>(identityKey(account))
-
-    setIdentity(loadedIdentity || characters[0])
-  }
 
   async function restoreSession() {
     try {
       const creds = await idb.get<UserData | undefined>(userDataKey)
       if (creds) {
         const { account, ticket } = creds
-        const { characters } = await api.fetchCharacters(account, ticket)
-        setUserData({ account, ticket, characters })
+        setUserData({ account, ticket })
       }
     } catch (error) {
       throw error
@@ -59,8 +45,8 @@ function useAppState() {
   }
 
   async function submitLogin(account: string, password: string) {
-    const { ticket, characters } = await api.authenticate(account, password)
-    setUserData({ account, ticket, characters })
+    const { ticket } = await api.authenticate(account, password)
+    setUserData({ account, ticket })
   }
 
   function sendCommand<K extends keyof ClientCommands>(
@@ -140,10 +126,7 @@ function useAppState() {
   return {
     isSessionLoaded,
     user: userData,
-    identity,
-    setIdentity,
     restoreSession,
-    restoreIdentity,
     submitLogin,
     connectToChat,
   }

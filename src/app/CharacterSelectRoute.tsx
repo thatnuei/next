@@ -1,6 +1,7 @@
 import { navigate, Redirect, RouteComponentProps } from "@reach/router"
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Avatar from "../character/Avatar"
+import { fetchCharacters } from "../flist/api"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
 import ModalBody from "../ui/ModalBody"
@@ -11,12 +12,41 @@ import routePaths from "./routePaths"
 
 type Props = RouteComponentProps
 
+const identityKey = (account: string) => `identity:${account}`
+
 function CharacterSelectRoute(props: Props) {
-  const { user, identity, setIdentity, restoreIdentity } = useContext(AppStore.Context)
+  const { user } = useContext(AppStore.Context)
+  const [identity, setIdentity] = useState<string>()
+  const [characters, setCharacters] = useState<string[]>()
 
   useEffect(() => {
-    restoreIdentity()
+    if (!user) return
+
+    const loadCharacters = async () => {
+      try {
+        const { characters } = await fetchCharacters(user.account, user.ticket)
+        setCharacters(characters)
+      } catch (error) {
+        console.warn("Error fetching characters:", error)
+        navigate(routePaths.login)
+      }
+    }
+    loadCharacters()
   }, [])
+
+  useEffect(
+    () => {
+      if (!user || !characters) return
+
+      if (!identity) {
+        const loadedIdentity = window.sessionStorage.getItem(identityKey(user.account))
+        setIdentity(loadedIdentity || characters[0])
+      }
+
+      window.sessionStorage.setItem(identityKey(user.account), identity || characters[0])
+    },
+    [identity, characters],
+  )
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     setIdentity(event.target.value)
@@ -24,32 +54,36 @@ function CharacterSelectRoute(props: Props) {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    if (!identity) setIdentity(identity)
     navigate(routePaths.chat)
   }
 
   if (!user) return <Redirect to={routePaths.login} />
 
+  const content =
+    identity && characters ? (
+      <form onSubmit={handleSubmit} style={formStyle}>
+        <FormField>
+          <Avatar key={identity} name={identity} />
+        </FormField>
+        <FormField>
+          <select name="character" value={identity} onChange={handleChange}>
+            {characters.map((name) => (
+              <option value={name} key={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </FormField>
+        <Button type="submit">Enter Chat</Button>
+      </form>
+    ) : (
+      <p css={{ textAlign: "center" }}>Loading characters...</p>
+    )
+
   return (
     <ModalOverlay>
       <ModalTitle>Select a Character</ModalTitle>
-      <ModalBody>
-        <form onSubmit={handleSubmit} style={formStyle}>
-          <FormField>
-            <Avatar key={identity} name={identity} />
-          </FormField>
-          <FormField>
-            <select name="character" value={identity} onChange={handleChange}>
-              {user.characters.map((name) => (
-                <option value={name} key={name}>
-                  {name}
-                </option>
-              ))}
-            </select>
-          </FormField>
-          <Button type="submit">Enter Chat</Button>
-        </form>
-      </ModalBody>
+      <ModalBody>{content}</ModalBody>
     </ModalOverlay>
   )
 }
