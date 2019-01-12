@@ -1,7 +1,7 @@
 import { useState } from "react"
 
-export default function useOverlayState() {
-  const [visible, setVisible] = useState(false)
+export default function useOverlayState(initiallyVisible = false) {
+  const [visible, setVisible] = useState(initiallyVisible)
 
   return {
     visible,
