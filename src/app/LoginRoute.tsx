@@ -8,13 +8,13 @@ import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
 import { TextInput } from "../ui/TextInput"
-import AppStateContainer from "./AppStateContainer"
+import AppStore from "./AppStore"
 import routePaths from "./routePaths"
 
 type Props = RouteComponentProps
 
 function LoginRoute(props: Props) {
-  const appState = useContext(AppStateContainer.Context)
+  const appState = useContext(AppStore.Context)
   const account = useInput()
   const password = useInput()
 

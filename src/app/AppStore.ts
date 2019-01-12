@@ -148,9 +148,9 @@ function useAppState() {
   }
 }
 
-const AppStateContainer = createContainer(useAppState)
-export default AppStateContainer
+const AppStore = createContainer(useAppState)
+export default AppStore
 
 export function useAppStateContext() {
-  return useContext(AppStateContainer.Context)
+  return useContext(AppStore.Context)
 }

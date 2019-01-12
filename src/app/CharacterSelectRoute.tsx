@@ -7,13 +7,13 @@ import { Form } from "../ui/Form"
 import { FormField } from "../ui/FormField"
 import { Overlay } from "../ui/Overlay"
 import { styled } from "../ui/styled"
-import AppStateContainer from "./AppStateContainer"
+import AppStore from "./AppStore"
 import routePaths from "./routePaths"
 
 type Props = RouteComponentProps
 
 function CharacterSelectRoute(props: Props) {
-  const { user, identity, setIdentity, restoreIdentity } = useContext(AppStateContainer.Context)
+  const { user, identity, setIdentity, restoreIdentity } = useContext(AppStore.Context)
 
   useEffect(() => {
     restoreIdentity()
