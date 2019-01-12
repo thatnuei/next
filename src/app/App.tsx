@@ -1,5 +1,5 @@
 import { Redirect, Router } from "@reach/router"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect } from "react"
 import ChatRoute from "../chat/ChatRoute"
 import AppStore from "./AppStore"
 import CharacterSelectRoute from "./CharacterSelectRoute"
@@ -7,8 +7,7 @@ import LoginRoute from "./LoginRoute"
 import routePaths from "./routePaths"
 
 function App() {
-  const appState = useContext(AppStore.Context)
-  const [ready, setReady] = useState(false)
+  const { restoreSession, isSessionLoaded, user } = useContext(AppStore.Context)
 
   useEffect(() => {
     init()
@@ -16,15 +15,13 @@ function App() {
 
   async function init() {
     try {
-      await appState.restoreSession()
+      await restoreSession()
     } catch (error) {
       console.warn("Session restore error:", error)
     }
-
-    setReady(true)
   }
 
-  if (!ready) {
+  if (!isSessionLoaded) {
     return <p>Setting things up...</p>
   }
 
@@ -33,7 +30,7 @@ function App() {
       <LoginRoute path={routePaths.login} />
       <CharacterSelectRoute path={routePaths.characterSelect} />
       <ChatRoute path={routePaths.chat} />
-      <Redirect from="/" to={appState.user ? routePaths.characterSelect : routePaths.login} />
+      <Redirect from="/" to={user ? routePaths.characterSelect : routePaths.login} />
     </Router>
   )
 }

@@ -22,13 +22,12 @@ const identityKey = (account: string) => `${account}:identity`
 function useAppState() {
   const [userData, setUserData] = useState<UserData>()
   const [identity, setIdentity] = useState("")
-  const [sessionLoaded, setSessionLoaded] = useState(false)
+  const [isSessionLoaded, setSessionLoaded] = useState(false)
   const [characters, updateCharacters] = useImmer<Dictionary<CharacterModel>>({})
 
   useEffect(
     () => {
-      if (!sessionLoaded) return
-      if (!userData) return
+      if (!isSessionLoaded || !userData) return
       idb.set(userDataKey, userData)
       idb.set(identityKey(userData.account), identity)
     },
@@ -45,14 +44,18 @@ function useAppState() {
   }
 
   async function restoreSession() {
-    const creds = await idb.get<UserData | undefined>(userDataKey)
-    if (creds) {
-      const { account, ticket } = creds
-      const { characters } = await api.fetchCharacters(account, ticket)
-      setUserData({ account, ticket, characters })
+    try {
+      const creds = await idb.get<UserData | undefined>(userDataKey)
+      if (creds) {
+        const { account, ticket } = creds
+        const { characters } = await api.fetchCharacters(account, ticket)
+        setUserData({ account, ticket, characters })
+      }
+    } catch (error) {
+      throw error
+    } finally {
+      setSessionLoaded(true)
     }
-
-    setSessionLoaded(true)
   }
 
   async function submitLogin(account: string, password: string) {
@@ -135,6 +138,7 @@ function useAppState() {
   }
 
   return {
+    isSessionLoaded,
     user: userData,
     identity,
     setIdentity,
