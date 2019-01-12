@@ -1,6 +1,6 @@
 import React from "react"
 import { fullscreen } from "./helpers"
-import { css } from "./styled"
+import { css, styled } from "./styled"
 
 type SidebarOverlayProps = {
   visible?: boolean
@@ -12,45 +12,41 @@ type SidebarOverlayProps = {
 export default function SideOverlay(props: SidebarOverlayProps) {
   const { onClick = noop } = props
   return (
-    <div onClick={() => onClick()} css={shadeStyle(props)}>
-      <div css={panelStyle(props)}>{props.children}</div>
-    </div>
+    <Shade visible={props.visible} onClick={() => onClick()}>
+      <Panel anchor={props.anchor || "left"} visible={props.visible}>
+        {props.children}
+      </Panel>
+    </Shade>
   )
 }
 
-const shadeStyle = (props: SidebarOverlayProps) => css`
+const Shade = styled.div<{ visible?: boolean }>`
   ${fullscreen}
 
   background-color: rgba(0, 0, 0, 0.5);
   transition: 0.3s;
 
-  ${props.visible
-    ? css`
-        opacity: 1;
-        visibility: visible;
-      `
-    : css`
-        opacity: 0;
-        visibility: hidden;
-      `}
+  opacity: 0;
+  visibility: hidden;
+
+  ${(props) => props.visible && shadeVisibleStyle}
 `
 
-const panelStyle = ({ anchor = "left", ...props }: SidebarOverlayProps) => css`
+const shadeVisibleStyle = css`
+  opacity: 1;
+  visibility: visible;
+`
+
+const Panel = styled.div<{ anchor: "left" | "right"; visible?: boolean }>`
   position: absolute;
   top: 0;
   bottom: 0;
   width: max-content;
   transition: 0.3s;
+  ${(props) => props.anchor}: 0;
 
-  ${anchor}: 0;
-
-  ${props.visible
-    ? css`
-        transform: translateX(0);
-      `
-    : css`
-        transform: translateX(${anchor === "left" ? "-100%" : "100%"});
-      `}
+  transform: translateX(${(props) => (props.anchor === "left" ? "-100%" : "100%")});
+  ${(props) => props.visible && `transform: translateX(0);`}
 `
 
 const noop = () => {}
