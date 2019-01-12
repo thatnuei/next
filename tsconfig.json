@@ -63,5 +63,6 @@
         "tags": ["styled", "css", "injectGlobal"]
       }
     ]
-  }
+  },
+  "include": ["src"]
 }

@@ -48,7 +48,7 @@ const inactiveStyle = css`
   transition: 0.3s opacity;
 `
 
-const FilterLink = styled.a.attrs({ href: "#" })<{ active?: boolean }>`
+const FilterLink = styled.a<{ active?: boolean }>`
   :not(:last-child) {
     margin-right: 1rem;
   }

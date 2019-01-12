@@ -1,22 +1,23 @@
 // @ts-check
+const webpack = require("webpack")
 const { join } = require("path")
 const HtmlPlugin = require("html-webpack-plugin")
 const CleanPlugin = require("clean-webpack-plugin")
 const CopyPlugin = require("copy-webpack-plugin")
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin")
+const merge = require("webpack-merge")
 
 const rootFolder = __dirname
 const sourceFolder = join(rootFolder, "src")
 const buildFolder = join(rootFolder, "build")
 const publicFolder = join(rootFolder, "public")
 
-/** @type {import('webpack').Configuration} */
-const config = {
+/** @type {webpack.Configuration} */
+const baseConfig = {
   context: rootFolder,
   entry: join(sourceFolder, "index"),
   output: {
     path: buildFolder,
-    filename: "[name].[hash].js",
     publicPath: "/",
   },
   module: {
@@ -34,15 +35,9 @@ const config = {
     new CopyPlugin([{ from: publicFolder, to: buildFolder }]),
     new ForkTsCheckerWebpackPlugin(),
   ],
-  mode: process.env.NODE_ENV === "production" ? "production" : "development",
-  devtool: process.env.NODE_ENV === "production" ? "source-map" : "eval-source-map",
-  performance: {
-    maxAssetSize: Infinity,
-    hints: false,
-  },
-  // @ts-ignore
   devServer: {
     stats: "errors-only",
+    historyApiFallback: true,
   },
   stats: {
     modules: false,
@@ -51,4 +46,38 @@ const config = {
   },
 }
 
-module.exports = config
+/** @type {webpack.Configuration} */
+const devConfig = {
+  mode: "development",
+  devtool: "eval-source-map",
+  performance: {
+    maxAssetSize: Infinity,
+  },
+}
+
+/** @type {webpack.Configuration} */
+const prodConfig = {
+  mode: "production",
+  devtool: "source-map",
+  output: {
+    filename: "[name].[contenthash].js",
+  },
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
+  },
+  plugins: [new webpack.HashedModuleIdsPlugin()],
+}
+
+module.exports =
+  process.env.NODE_ENV === "production"
+    ? merge(baseConfig, prodConfig)
+    : merge(baseConfig, devConfig)
