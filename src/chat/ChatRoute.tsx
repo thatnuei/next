@@ -6,7 +6,7 @@ import routePaths from "../app/routePaths"
 import ChannelHeader from "../channel/ChannelHeader"
 import Button from "../ui/Button"
 import { appColor } from "../ui/colors"
-import { fullHeight } from "../ui/helpers"
+import { fullscreen } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import SideOverlay from "../ui/SideOverlay"
 import { css } from "../ui/styled"
@@ -32,24 +32,47 @@ function ChatRoute(props: ChatRouteProps) {
   if (!user) return <Redirect to={routePaths.login} />
 
   return (
-    <main css={fullHeight}>
-      <header css={headerStyle}>
-        <Button flat onClick={sidebar.open}>
-          <Icon icon="menu" />
-        </Button>
+    <>
+      <div css={[fullscreen, { display: "flex", flexFlow: "column" }]}>
+        <header css={headerStyle}>
+          <Button flat onClick={sidebar.open}>
+            <Icon icon="menu" />
+          </Button>
 
-        <Router primary={false} css={{ display: "contents" }}>
-          <ChannelHeader path={routePaths.channel(":id")} />
+          <Router primary={false} css={{ display: "contents" }}>
+            <ChannelHeader path={routePaths.channel(":id")} />
+          </Router>
+        </header>
+
+        <Router>
+          <ChannelRoute path={routePaths.channel(":id")} />
         </Router>
-      </header>
+      </div>
 
       <SideOverlay {...sidebar.bind}>
         <ChatSidebarContent />
       </SideOverlay>
-    </main>
+    </>
   )
 }
 export default ChatRoute
+
+function ChannelRoute(props: RouteComponentProps<{ id: string }>) {
+  const { channelStore } = useContext(AppStore.Context)
+  const channel = channelStore.getChannel(props.id || "")
+
+  return (
+    <>
+      <ul>
+        {channel.messages.map((message, i) => (
+          <li key={i}>
+            {message.sender}: {message.message}
+          </li>
+        ))}
+      </ul>
+    </>
+  )
+}
 
 const headerStyle = css`
   display: flex;
