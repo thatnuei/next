@@ -1,7 +1,6 @@
 import { Redirect, RouteComponentProps, Router } from "@reach/router"
 import React, { useContext, useEffect } from "react"
 import AppStore from "../app/AppStore"
-import { identityStorageKey } from "../app/constants"
 import routePaths from "../app/routePaths"
 import ChannelHeader from "../channel/ChannelHeader"
 import ChannelRoute from "../channel/ChannelRoute"
@@ -17,14 +16,10 @@ import ChatSidebarContent from "./ChatSidebarContent"
 type ChatRouteProps = RouteComponentProps
 
 function ChatRoute(props: ChatRouteProps) {
-  const { user, connectToChat } = useContext(AppStore.Context)
+  const { user, identity, connectToChat } = useContext(AppStore.Context)
 
   useEffect(() => {
-    if (!user) return
-
-    const identity = window.sessionStorage.getItem(identityStorageKey(user.account))
-    if (!identity) return
-
+    if (!user || !identity) return
     return connectToChat(user.account, user.ticket, identity)
   }, [])
 

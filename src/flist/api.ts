@@ -5,6 +5,7 @@ export async function authenticate(account: string, password: string) {
 
   type ApiTicketResponse = {
     ticket: string
+    characters: string[]
   }
 
   const res = await fetchJson<ApiTicketResponse>(getTicketEndpoint, {
@@ -18,7 +19,7 @@ export async function authenticate(account: string, password: string) {
     },
   })
 
-  return res
+  return { ...res, characters: res.characters.sort() }
 }
 
 export async function fetchCharacters(account: string, ticket: string) {

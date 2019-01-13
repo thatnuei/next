@@ -9,7 +9,6 @@ import { chatServerUrl } from "../fchat/constants"
 import createCommandHandler from "../fchat/createCommandHandler"
 import { ClientCommandMap, ServerCommand } from "../fchat/types"
 import * as api from "../flist/api"
-import { identityStorageKey } from "./constants"
 import routePaths from "./routePaths"
 
 type UserData = {
@@ -18,31 +17,44 @@ type UserData = {
 }
 
 const userDataKey = "user"
+const identityKey = (account: string) => `identity:${account}`
 
 function useAppState() {
   const [userData, setUserData] = useState<UserData>()
+  const [userCharacters, setUserCharacters] = useState<string[]>()
+  const [identity, setIdentity] = useState<string>()
   const [isSessionLoaded, setSessionLoaded] = useState(false)
   const characterStore = useCharacterStore()
 
-  const channelStore = useChannelStore(
-    // extremely temporary
-    (userData && window.sessionStorage.getItem(identityStorageKey(userData.account))) || undefined,
-  )
+  const channelStore = useChannelStore(identity)
 
   useEffect(
     () => {
       if (!isSessionLoaded || !userData) return
+
       idb.set(userDataKey, userData)
+
+      if (!identity) return
+      window.sessionStorage.setItem(identityKey(userData.account), identity)
     },
-    [userData],
+    [userData, identity],
   )
+
+  function handleSessionData(account: string, ticket: string, characters: string[]) {
+    const newIdentity = window.sessionStorage.getItem(identityKey(account))
+
+    setUserData({ account, ticket })
+    setUserCharacters(characters)
+    setIdentity(newIdentity || characters[0])
+  }
 
   async function restoreSession() {
     try {
       const creds = await idb.get<UserData | undefined>(userDataKey)
       if (creds) {
         const { account, ticket } = creds
-        setUserData({ account, ticket })
+        const { characters } = await api.fetchCharacters(account, ticket)
+        handleSessionData(account, ticket, characters)
       }
     } catch (error) {
       throw error
@@ -52,8 +64,8 @@ function useAppState() {
   }
 
   async function submitLogin(account: string, password: string) {
-    const { ticket } = await api.authenticate(account, password)
-    setUserData({ account, ticket })
+    const { ticket, characters } = await api.authenticate(account, password)
+    handleSessionData(account, ticket, characters)
   }
 
   function sendCommand<K extends keyof ClientCommandMap>(
@@ -131,6 +143,9 @@ function useAppState() {
   return {
     isSessionLoaded,
     user: userData,
+    userCharacters,
+    identity,
+    setIdentity,
     restoreSession,
     submitLogin,
     connectToChat,
