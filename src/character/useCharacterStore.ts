@@ -15,7 +15,7 @@ export default function useCharacterStore() {
     update: (char: Mutable<CharacterModel>) => CharacterModel | void,
   ) {
     updateCharacters((characters) => {
-      const char = getCharacter(name)
+      const char = characters[name] || new CharacterModel(name, "None", "offline")
       characters[name] = update(char) || char
     })
   }

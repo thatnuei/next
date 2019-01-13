@@ -4,27 +4,29 @@ import { Dictionary, Mutable } from "../common/types"
 import createCommandHandler from "../fchat/createCommandHandler"
 import { Channel } from "./types"
 
+function createChannel(id: string): Channel {
+  return {
+    id,
+    name: id,
+    description: "",
+    messages: [],
+    mode: "both",
+    ops: {},
+    users: {},
+  }
+}
+
 export default function useChannelStore(identity?: string) {
   const [channels, updateChannels] = useImmer<Dictionary<Channel>>({})
   const [joinedChannels, updateJoinedChannels] = useImmer<Dictionary<true>>({})
 
   function getChannel(id: string) {
-    return (
-      channels[id] || {
-        id,
-        name: id,
-        description: "",
-        messages: [],
-        mode: "both",
-        ops: {},
-        users: {},
-      }
-    )
+    return channels[id] || createChannel(id)
   }
 
   function updateChannel(id: string, update: (channel: Mutable<Channel>) => Channel | void) {
     updateChannels((channels) => {
-      const channel = getChannel(id)
+      const channel = channels[id] || createChannel(id)
       channels[id] = update(channel) || channel
     })
   }
