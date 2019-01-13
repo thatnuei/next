@@ -1,4 +1,4 @@
-import { Redirect, RouteComponentProps } from "@reach/router"
+import { Link, Redirect, RouteComponentProps } from "@reach/router"
 import React, { useContext, useEffect } from "react"
 import AppStore from "../app/AppStore"
 import { identityStorageKey } from "../app/constants"
@@ -14,7 +14,8 @@ import useOverlayState from "../ui/useOverlayState"
 type ChatRouteProps = RouteComponentProps
 
 function ChatRoute(props: ChatRouteProps) {
-  const { user, connectToChat } = useContext(AppStore.Context)
+  const { user, connectToChat, channelStore } = useContext(AppStore.Context)
+  const { joinedChannels } = channelStore
 
   useEffect(() => {
     if (!user) return
@@ -44,7 +45,11 @@ function ChatRoute(props: ChatRouteProps) {
       </header>
 
       <SideOverlay {...sidebar.bind}>
-        <div>sidebar content eventually</div>
+        {Object.keys(joinedChannels).map((id) => (
+          <div key={id}>
+            <Link to={`/chat/channel/${id}`}>{id}</Link>
+          </div>
+        ))}
       </SideOverlay>
     </main>
   )

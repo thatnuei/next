@@ -4,8 +4,9 @@ import { Dictionary, Mutable } from "../common/types"
 import createCommandHandler from "../fchat/createCommandHandler"
 import { Channel } from "./types"
 
-export default function useChannelStore() {
+export default function useChannelStore(identity?: string) {
   const [channels, updateChannels] = useImmer<Dictionary<Channel>>({})
+  const [joinedChannels, updateJoinedChannels] = useImmer<Dictionary<true>>({})
 
   function getChannel(id: string) {
     return (
@@ -55,12 +56,24 @@ export default function useChannelStore() {
         channel.name = title
         channel.users[character.identity] = true
       })
+
+      if (character.identity === identity) {
+        updateJoinedChannels((draft) => {
+          draft[id] = true
+        })
+      }
     },
 
     LCH({ channel: id, character }) {
       updateChannel(id, (channel) => {
         delete channel.users[character]
       })
+
+      if (character === identity) {
+        updateJoinedChannels((draft) => {
+          delete draft[id]
+        })
+      }
     },
 
     FLN({ character }) {
@@ -84,5 +97,5 @@ export default function useChannelStore() {
     },
   })
 
-  return { channels, updateChannels, getChannel, handleCommand }
+  return { channels, updateChannels, getChannel, joinedChannels, handleCommand }
 }

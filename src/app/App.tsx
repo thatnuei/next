@@ -29,7 +29,7 @@ function App() {
     <Router>
       <LoginRoute path={routePaths.login} />
       <CharacterSelectRoute path={routePaths.characterSelect} />
-      <ChatRoute path={routePaths.chat} />
+      <ChatRoute path="/chat/*" />
       <Redirect from="/" to={user ? routePaths.characterSelect : routePaths.login} />
     </Router>
   )

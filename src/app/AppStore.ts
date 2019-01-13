@@ -9,6 +9,7 @@ import { chatServerUrl } from "../fchat/constants"
 import createCommandHandler from "../fchat/createCommandHandler"
 import { ClientCommandMap, ServerCommand } from "../fchat/types"
 import * as api from "../flist/api"
+import { identityStorageKey } from "./constants"
 import routePaths from "./routePaths"
 
 type UserData = {
@@ -22,7 +23,11 @@ function useAppState() {
   const [userData, setUserData] = useState<UserData>()
   const [isSessionLoaded, setSessionLoaded] = useState(false)
   const characterStore = useCharacterStore()
-  const channelStore = useChannelStore()
+
+  const channelStore = useChannelStore(
+    // extremely temporary
+    (userData && window.sessionStorage.getItem(identityStorageKey(userData.account))) || undefined,
+  )
 
   useEffect(
     () => {
@@ -129,6 +134,8 @@ function useAppState() {
     restoreSession,
     submitLogin,
     connectToChat,
+    characterStore,
+    channelStore,
   }
 }
 
