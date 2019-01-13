@@ -1,4 +1,4 @@
-import { Link, Redirect, RouteComponentProps } from "@reach/router"
+import { Link, Redirect, RouteComponentProps, Router } from "@reach/router"
 import React, { useContext, useEffect } from "react"
 import AppStore from "../app/AppStore"
 import { identityStorageKey } from "../app/constants"
@@ -37,24 +37,41 @@ function ChatRoute(props: ChatRouteProps) {
           <Icon icon="menu" />
         </Button>
 
-        <h2 css={flexGrow}>Frontpage</h2>
-
-        <Button flat>
-          <Icon icon="users" />
-        </Button>
+        <Router primary={false} css={{ display: "contents" }}>
+          <ChannelHeader path="/channel/:id" />
+        </Router>
       </header>
 
       <SideOverlay {...sidebar.bind}>
-        {Object.keys(joinedChannels).map((id) => (
-          <div key={id}>
-            <Link to={`/chat/channel/${id}`}>{id}</Link>
-          </div>
-        ))}
+        <ul>
+          {Object.keys(joinedChannels).map((id) => (
+            <li key={id}>
+              <Link to={`channel/${id}`}>{id}</Link>
+            </li>
+          ))}
+        </ul>
       </SideOverlay>
     </main>
   )
 }
 export default ChatRoute
+
+function ChannelHeader(props: RouteComponentProps<{ id: string }>) {
+  const { channelStore } = useContext(AppStore.Context)
+  const { getChannel } = channelStore
+
+  if (!props.id) return null
+
+  const channel = getChannel(props.id)
+  return (
+    <>
+      <h2 css={flexGrow}>{channel.name}</h2>
+      <Button flat>
+        <Icon icon="users" />
+      </Button>
+    </>
+  )
+}
 
 const headerStyle = css`
   display: flex;
