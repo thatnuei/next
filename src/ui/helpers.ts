@@ -12,6 +12,16 @@ export const fullHeight = css`
   height: 100%;
 `
 
+export const flexRow = css`
+  display: flex;
+`
+
+export const flexColumn = css`
+  display: flex;
+  flex-flow: column;
+`
+
 export const flexGrow = css`
   flex: 1;
+  min-height: 0;
 `
