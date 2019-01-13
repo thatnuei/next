@@ -115,5 +115,5 @@ const headerStyle = css`
   display: flex;
   align-items: center;
   background-color: ${appColor};
-  height: 50px;
+  min-height: 50px;
 `
