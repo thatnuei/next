@@ -10,7 +10,6 @@ const TextInput = styled.input`
 
   display: block;
   width: 100%;
-  max-width: 250px;
 
   :focus {
     background: rgba(0, 0, 0, 0.8);
