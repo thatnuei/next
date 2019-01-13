@@ -1,16 +1,16 @@
 import { Redirect, RouteComponentProps, Router } from "@reach/router"
-import React, { useContext, useEffect, useRef } from "react"
+import React, { useContext, useEffect } from "react"
 import AppStore from "../app/AppStore"
 import { identityStorageKey } from "../app/constants"
 import routePaths from "../app/routePaths"
 import ChannelHeader from "../channel/ChannelHeader"
+import ChannelRoute from "../channel/ChannelRoute"
 import Button from "../ui/Button"
 import { appColor } from "../ui/colors"
-import { fillArea, flexColumn, flexGrow, fullscreen, scrollVertical } from "../ui/helpers"
+import { flexColumn, flexGrow, fullscreen } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import SideOverlay from "../ui/SideOverlay"
 import { css } from "../ui/styled"
-import TextArea from "../ui/TextArea"
 import useOverlayState from "../ui/useOverlayState"
 import ChatSidebarContent from "./ChatSidebarContent"
 
@@ -59,57 +59,6 @@ function ChatRoute(props: ChatRouteProps) {
   )
 }
 export default ChatRoute
-
-function useBottomScroll<E extends HTMLElement>(value: unknown) {
-  const elementRef = useRef<E>(null)
-  const element = elementRef.current
-
-  const scrolledToBottom =
-    element != null && element.scrollTop >= element.scrollHeight - element.clientHeight - 100
-
-  useEffect(
-    () => {
-      if (!element) return
-      if (scrolledToBottom) {
-        element.scrollTop = element.scrollHeight
-      }
-    },
-    [value],
-  )
-
-  return elementRef
-}
-
-function ChannelRoute(props: RouteComponentProps<{ id: string }>) {
-  const { channelStore } = useContext(AppStore.Context)
-  const channel = channelStore.getChannel(props.id || "")
-
-  const bottomScrollRef = useBottomScroll<HTMLUListElement>(channel.messages)
-
-  return (
-    <section css={[fillArea, flexColumn]}>
-      <ul css={[flexGrow, scrollVertical]} ref={bottomScrollRef}>
-        {channel.messages.map((message, i) => (
-          <li key={i}>
-            {message.sender}: {message.message}
-          </li>
-        ))}
-      </ul>
-      <form css={inputContainerStyle} onSubmit={(event) => event.preventDefault()}>
-        <TextArea />
-        <Button>Send</Button>
-      </form>
-    </section>
-  )
-}
-
-const inputContainerStyle = css`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-gap: 0.5rem;
-  padding: 0.5rem;
-  background-color: ${appColor};
-`
 
 const headerStyle = css`
   display: flex;
