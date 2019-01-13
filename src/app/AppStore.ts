@@ -20,27 +20,68 @@ const userDataKey = "user"
 function useCharacterStore() {
   const [characters, updateCharacters] = useImmer<Dictionary<CharacterModel>>({})
 
+  function getCharacter(name: string) {
+    return characters[name] || new CharacterModel(name, "None", "offline")
+  }
+
   function updateCharacter(
     name: string,
     update: (char: Mutable<CharacterModel>) => CharacterModel | void,
   ) {
     updateCharacters((characters) => {
-      const char = characters[name] || new CharacterModel(name, "None", "offline")
+      const char = getCharacter(name)
       characters[name] = update(char) || char
     })
   }
 
-  function getCharacter(name: string) {
-    return characters[name] || new CharacterModel(name, "None", "offline")
+  function handleSocketCommand(cmd: ServerCommand) {
+    switch (cmd.type) {
+      case "LIS": {
+        updateCharacters((draft) => {
+          for (const args of cmd.params.characters) {
+            draft[args[0]] = new CharacterModel(...args)
+          }
+        })
+        return true
+      }
+
+      case "NLN": {
+        const { gender, identity } = cmd.params
+        updateCharacter(identity, (char) => {
+          char.gender = gender
+          char.status = "online"
+        })
+        return true
+      }
+
+      case "FLN": {
+        const { character: identity } = cmd.params
+        updateCharacter(identity, (char) => {
+          char.status = "offline"
+          char.statusMessage = ""
+        })
+        return true
+      }
+
+      case "STA": {
+        const { character: identity, status, statusmsg } = cmd.params
+        updateCharacter(identity, (char) => {
+          char.status = status
+          char.statusMessage = statusmsg
+        })
+        return true
+      }
+    }
+    return false
   }
 
-  return { characters, updateCharacters, updateCharacter, getCharacter }
+  return { characters, updateCharacters, updateCharacter, getCharacter, handleSocketCommand }
 }
 
 function useAppState() {
   const [userData, setUserData] = useState<UserData>()
   const [isSessionLoaded, setSessionLoaded] = useState(false)
-  const { updateCharacter, updateCharacters } = useCharacterStore()
+  const characterStore = useCharacterStore()
 
   useEffect(
     () => {
@@ -105,6 +146,8 @@ function useAppState() {
       const params = data.length > 3 ? JSON.parse(data.slice(4)) : {}
       const command: ServerCommand = { type, params }
 
+      if (characterStore.handleSocketCommand(command)) return
+
       switch (command.type) {
         case "IDN": {
           sendCommand(socket, "JCH", { channel: "Frontpage" })
@@ -126,42 +169,6 @@ function useAppState() {
 
         case "CON": {
           console.info(`There are ${command.params.count} characters in chat`)
-          break
-        }
-
-        case "LIS": {
-          updateCharacters((draft) => {
-            for (const args of command.params.characters) {
-              draft[args[0]] = new CharacterModel(...args)
-            }
-          })
-          break
-        }
-
-        case "NLN": {
-          const { gender, identity } = command.params
-          updateCharacter(identity, (char) => {
-            char.gender = gender
-            char.status = "online"
-          })
-          break
-        }
-
-        case "FLN": {
-          const { character: identity } = command.params
-          updateCharacter(identity, (char) => {
-            char.status = "offline"
-            char.statusMessage = ""
-          })
-          break
-        }
-
-        case "STA": {
-          const { character: identity, status, statusmsg } = command.params
-          updateCharacter(identity, (char) => {
-            char.status = status
-            char.statusMessage = statusmsg
-          })
           break
         }
 
