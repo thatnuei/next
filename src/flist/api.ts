@@ -15,7 +15,6 @@ export async function authenticate(account: string, password: string) {
       password,
       no_friends: true,
       no_bookmarks: true,
-      no_characters: true,
     },
   })
 
