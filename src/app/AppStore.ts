@@ -1,14 +1,14 @@
-import { navigate } from "@reach/router";
-import createContainer from "constate";
-import * as idb from "idb-keyval";
-import { useEffect, useState } from "react";
-import useCharacterStore from "../character/useCharacterStore";
-import { OptionalArg } from "../common/types";
-import { chatServerUrl } from "../fchat/constants";
-import createCommandHandler from "../fchat/createCommandHandler";
-import { ClientCommandMap, ServerCommand } from "../fchat/types";
-import * as api from "../flist/api";
-import routePaths from "./routePaths";
+import { navigate } from "@reach/router"
+import createContainer from "constate"
+import * as idb from "idb-keyval"
+import { useEffect, useState } from "react"
+import useCharacterStore from "../character/useCharacterStore"
+import { OptionalArg } from "../common/types"
+import { chatServerUrl } from "../fchat/constants"
+import createCommandHandler from "../fchat/createCommandHandler"
+import { ClientCommandMap, ServerCommand } from "../fchat/types"
+import * as api from "../flist/api"
+import routePaths from "./routePaths"
 
 type UserData = {
   account: string
@@ -108,6 +108,7 @@ function useAppState() {
 
       if (handleCommand(command)) return
       if (characterStore.handleCommand(command)) return
+
       console.log("unhandled command", command)
     }
 
