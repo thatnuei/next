@@ -17,10 +17,30 @@ type UserData = {
 
 const userDataKey = "user"
 
+function useCharacterStore() {
+  const [characters, updateCharacters] = useImmer<Dictionary<CharacterModel>>({})
+
+  function updateCharacter(
+    name: string,
+    update: (char: Mutable<CharacterModel>) => CharacterModel | void,
+  ) {
+    updateCharacters((characters) => {
+      const char = characters[name] || new CharacterModel(name, "None", "offline")
+      characters[name] = update(char) || char
+    })
+  }
+
+  function getCharacter(name: string) {
+    return characters[name] || new CharacterModel(name, "None", "offline")
+  }
+
+  return { characters, updateCharacters, updateCharacter, getCharacter }
+}
+
 function useAppState() {
   const [userData, setUserData] = useState<UserData>()
   const [isSessionLoaded, setSessionLoaded] = useState(false)
-  const [characters, updateCharacters] = useImmer<Dictionary<CharacterModel>>({})
+  const { updateCharacter, updateCharacters } = useCharacterStore()
 
   useEffect(
     () => {
@@ -59,16 +79,6 @@ function useAppState() {
     } else {
       socket.send(command)
     }
-  }
-
-  function updateCharacter(
-    name: string,
-    update: (char: Mutable<CharacterModel>) => CharacterModel | void,
-  ) {
-    updateCharacters((characters) => {
-      const char = characters[name] || new CharacterModel(name, "None", "offline")
-      characters[name] = update(char) || char
-    })
   }
 
   function connectToChat(account: string, ticket: string, character: string) {
