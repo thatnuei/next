@@ -6,7 +6,7 @@ import ChannelHeader from "../channel/ChannelHeader"
 import ChannelRoute from "../channel/ChannelRoute"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
-import { appColor } from "../ui/colors"
+import { themeColor } from "../ui/colors"
 import { flexColumn, flexGrow, fullscreen } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import SideOverlay from "../ui/SideOverlay"
@@ -59,6 +59,6 @@ export default ChatRoute
 const headerStyle = css`
   display: flex;
   align-items: center;
-  background-color: ${appColor};
+  background-color: ${themeColor};
   min-height: 50px;
 `

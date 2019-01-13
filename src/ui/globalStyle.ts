@@ -1,5 +1,5 @@
 import { lighten, shade } from "polished"
-import { appBackgroundColor, appColor, textColor } from "./colors"
+import { textColor, themeBackgroundColor, themeColor } from "./colors"
 import { css } from "./styled"
 
 export default css`
@@ -12,7 +12,7 @@ export default css`
   :root {
     font: 16px Roboto, sans-serif;
     color: ${textColor};
-    background-color: ${appBackgroundColor};
+    background-color: ${themeBackgroundColor};
     word-break: break-word;
     line-height: 1.5;
   }
@@ -56,10 +56,10 @@ export default css`
 
   ::-webkit-scrollbar-track,
   ::-webkit-scrollbar-corner {
-    background-color: ${shade(0.5, appBackgroundColor)};
+    background-color: ${shade(0.5, themeBackgroundColor)};
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: ${lighten(0.2, appColor)};
+    background-color: ${lighten(0.2, themeColor)};
   }
 `

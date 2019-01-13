@@ -3,7 +3,7 @@ import React, { useContext } from "react"
 import AppStore from "../app/AppStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
-import { appColor } from "../ui/colors"
+import { themeColor } from "../ui/colors"
 import { fillArea, flexColumn, flexGrow, scrollVertical } from "../ui/helpers"
 import { css } from "../ui/styled"
 import TextArea from "../ui/TextArea"
@@ -39,5 +39,5 @@ const inputContainerStyle = css`
   grid-template-columns: 1fr auto;
   grid-gap: 0.5rem;
   padding: 0.5rem;
-  background-color: ${appColor};
+  background-color: ${themeColor};
 `

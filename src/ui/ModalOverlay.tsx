@@ -1,5 +1,5 @@
 import React from "react"
-import { appColor, semiBlack } from "./colors"
+import { semiBlack, themeColor } from "./colors"
 import { fullscreen } from "./helpers"
 import { css } from "./styled"
 
@@ -28,7 +28,7 @@ const shade = css`
 
 const panelContainer = css`
   margin: auto;
-  background-color: ${appColor};
+  background-color: ${themeColor};
   width: 100%;
   max-width: max-content;
 `
