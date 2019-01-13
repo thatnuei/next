@@ -6,7 +6,7 @@ import routePaths from "../app/routePaths"
 import ChannelHeader from "../channel/ChannelHeader"
 import Button from "../ui/Button"
 import { appColor } from "../ui/colors"
-import { flexColumn, flexGrow, fullscreen } from "../ui/helpers"
+import { fillArea, flexColumn, flexGrow, fullscreen, scrollVertical } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import SideOverlay from "../ui/SideOverlay"
 import { css } from "../ui/styled"
@@ -109,16 +109,6 @@ const inputContainerStyle = css`
   grid-gap: 0.5rem;
   padding: 0.5rem;
   background-color: ${appColor};
-`
-
-const fillArea = css`
-  width: 100%;
-  height: 100%;
-`
-
-const scrollVertical = css`
-  overflow-y: auto;
-  transform: translateZ(0);
 `
 
 const headerStyle = css`

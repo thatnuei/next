@@ -25,3 +25,13 @@ export const flexGrow = css`
   flex: 1;
   min-height: 0;
 `
+
+export const fillArea = css`
+  width: 100%;
+  height: 100%;
+`
+
+export const scrollVertical = css`
+  overflow-y: auto;
+  transform: translateZ(0);
+`
