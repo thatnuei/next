@@ -1,14 +1,14 @@
-import { navigate } from "@reach/router"
-import createContainer from "constate"
-import * as idb from "idb-keyval"
-import { useEffect, useState } from "react"
-import { useImmer } from "use-immer"
-import CharacterModel from "../character/CharacterModel"
-import { Dictionary, Mutable, OptionalArg } from "../common/types"
-import { chatServerUrl } from "../fchat/constants"
-import { ClientCommands, ServerCommand } from "../fchat/types"
-import * as api from "../flist/api"
-import routePaths from "./routePaths"
+import { navigate } from "@reach/router";
+import createContainer from "constate";
+import * as idb from "idb-keyval";
+import { useEffect, useState } from "react";
+import useCharacterStore from "../character/useCharacterStore";
+import { OptionalArg } from "../common/types";
+import { chatServerUrl } from "../fchat/constants";
+import createCommandHandler from "../fchat/createCommandHandler";
+import { ClientCommandMap, ServerCommand } from "../fchat/types";
+import * as api from "../flist/api";
+import routePaths from "./routePaths";
 
 type UserData = {
   account: string
@@ -16,67 +16,6 @@ type UserData = {
 }
 
 const userDataKey = "user"
-
-function useCharacterStore() {
-  const [characters, updateCharacters] = useImmer<Dictionary<CharacterModel>>({})
-
-  function getCharacter(name: string) {
-    return characters[name] || new CharacterModel(name, "None", "offline")
-  }
-
-  function updateCharacter(
-    name: string,
-    update: (char: Mutable<CharacterModel>) => CharacterModel | void,
-  ) {
-    updateCharacters((characters) => {
-      const char = getCharacter(name)
-      characters[name] = update(char) || char
-    })
-  }
-
-  function handleSocketCommand(cmd: ServerCommand) {
-    switch (cmd.type) {
-      case "LIS": {
-        updateCharacters((draft) => {
-          for (const args of cmd.params.characters) {
-            draft[args[0]] = new CharacterModel(...args)
-          }
-        })
-        return true
-      }
-
-      case "NLN": {
-        const { gender, identity } = cmd.params
-        updateCharacter(identity, (char) => {
-          char.gender = gender
-          char.status = "online"
-        })
-        return true
-      }
-
-      case "FLN": {
-        const { character: identity } = cmd.params
-        updateCharacter(identity, (char) => {
-          char.status = "offline"
-          char.statusMessage = ""
-        })
-        return true
-      }
-
-      case "STA": {
-        const { character: identity, status, statusmsg } = cmd.params
-        updateCharacter(identity, (char) => {
-          char.status = status
-          char.statusMessage = statusmsg
-        })
-        return true
-      }
-    }
-    return false
-  }
-
-  return { characters, updateCharacters, updateCharacter, getCharacter, handleSocketCommand }
-}
 
 function useAppState() {
   const [userData, setUserData] = useState<UserData>()
@@ -110,10 +49,10 @@ function useAppState() {
     setUserData({ account, ticket })
   }
 
-  function sendCommand<K extends keyof ClientCommands>(
+  function sendCommand<K extends keyof ClientCommandMap>(
     socket: WebSocket,
     command: K,
-    ...params: OptionalArg<ClientCommands[K]>
+    ...params: OptionalArg<ClientCommandMap[K]>
   ) {
     if (params[0]) {
       socket.send(`${command} ${JSON.stringify(params[0])}`)
@@ -124,6 +63,27 @@ function useAppState() {
 
   function connectToChat(account: string, ticket: string, character: string) {
     const socket = new WebSocket(chatServerUrl)
+
+    const handleCommand = createCommandHandler({
+      IDN() {
+        sendCommand(socket, "JCH", { channel: "Frontpage" })
+        sendCommand(socket, "JCH", { channel: "Fantasy" })
+        sendCommand(socket, "JCH", { channel: "Story Driven LFRP" })
+        sendCommand(socket, "JCH", { channel: "Development" })
+      },
+
+      PIN() {
+        sendCommand(socket, "PIN")
+      },
+
+      HLO({ message }) {
+        console.info(message)
+      },
+
+      CON({ count }) {
+        console.info(`There are ${count} characters in chat`)
+      },
+    })
 
     socket.onopen = () => {
       sendCommand(socket, "IDN", {
@@ -146,35 +106,9 @@ function useAppState() {
       const params = data.length > 3 ? JSON.parse(data.slice(4)) : {}
       const command: ServerCommand = { type, params }
 
-      if (characterStore.handleSocketCommand(command)) return
-
-      switch (command.type) {
-        case "IDN": {
-          sendCommand(socket, "JCH", { channel: "Frontpage" })
-          sendCommand(socket, "JCH", { channel: "Fantasy" })
-          sendCommand(socket, "JCH", { channel: "Story Driven LFRP" })
-          sendCommand(socket, "JCH", { channel: "Development" })
-          break
-        }
-
-        case "PIN": {
-          sendCommand(socket, "PIN")
-          break
-        }
-
-        case "HLO": {
-          console.info(command.params.message)
-          break
-        }
-
-        case "CON": {
-          console.info(`There are ${command.params.count} characters in chat`)
-          break
-        }
-
-        default:
-          console.log(command)
-      }
+      if (handleCommand(command)) return
+      if (characterStore.handleCommand(command)) return
+      console.log("unhandled command", command)
     }
 
     return () => {
