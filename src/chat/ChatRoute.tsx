@@ -4,6 +4,7 @@ import AppStore from "../app/AppStore"
 import routePaths from "../app/routePaths"
 import ChannelHeader from "../channel/ChannelHeader"
 import ChannelRoute from "../channel/ChannelRoute"
+import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import { appColor } from "../ui/colors"
 import { flexColumn, flexGrow, fullscreen } from "../ui/helpers"
@@ -28,7 +29,7 @@ function ChatRoute(props: ChatRouteProps) {
   if (!user) return <Redirect to={routePaths.login} />
 
   return (
-    <>
+    <AppDocumentTitle title={identity}>
       <div css={[fullscreen, flexColumn]}>
         <header css={headerStyle}>
           <Button flat onClick={sidebar.open}>
@@ -50,7 +51,7 @@ function ChatRoute(props: ChatRouteProps) {
       <SideOverlay {...sidebar.bind}>
         <ChatSidebarContent />
       </SideOverlay>
-    </>
+    </AppDocumentTitle>
   )
 }
 export default ChatRoute

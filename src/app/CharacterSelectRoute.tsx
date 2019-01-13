@@ -1,6 +1,7 @@
 import { navigate, Redirect, RouteComponentProps } from "@reach/router"
 import React, { useContext } from "react"
 import Avatar from "../character/Avatar"
+import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
 import ModalBody from "../ui/ModalBody"
@@ -26,26 +27,28 @@ function CharacterSelectRoute(props: Props) {
   if (!characters || !identity) return <Redirect to={routePaths.login} />
 
   return (
-    <ModalOverlay>
-      <ModalTitle>Select a Character</ModalTitle>
-      <ModalBody>
-        <form onSubmit={handleSubmit} style={formStyle}>
-          <FormField>
-            <Avatar key={identity} name={identity} />
-          </FormField>
-          <FormField>
-            <select name="character" value={identity} onChange={handleChange}>
-              {characters.map((name) => (
-                <option value={name} key={name}>
-                  {name}
-                </option>
-              ))}
-            </select>
-          </FormField>
-          <Button type="submit">Enter Chat</Button>
-        </form>
-      </ModalBody>
-    </ModalOverlay>
+    <AppDocumentTitle title="Select Character">
+      <ModalOverlay>
+        <ModalTitle>Select a Character</ModalTitle>
+        <ModalBody>
+          <form onSubmit={handleSubmit} style={formStyle}>
+            <FormField>
+              <Avatar key={identity} name={identity} />
+            </FormField>
+            <FormField>
+              <select name="character" value={identity} onChange={handleChange}>
+                {characters.map((name) => (
+                  <option value={name} key={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+            <Button type="submit">Enter Chat</Button>
+          </form>
+        </ModalBody>
+      </ModalOverlay>
+    </AppDocumentTitle>
   )
 }
 export default CharacterSelectRoute

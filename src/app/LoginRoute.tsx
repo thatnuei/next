@@ -1,6 +1,7 @@
 import { navigate, RouteComponentProps } from "@reach/router"
 import React, { useContext } from "react"
 import useInput from "../state/useInput"
+import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
 import ModalBody from "../ui/ModalBody"
@@ -29,20 +30,22 @@ function LoginRoute(props: Props) {
   }
 
   return (
-    <ModalOverlay>
-      <ModalTitle>next</ModalTitle>
-      <ModalBody css={{ width: "100%" }}>
-        <form onSubmit={handleSubmit}>
-          <FormField labelText="Username">
-            <TextInput placeholder="awesomeuser" {...account.bind} />
-          </FormField>
-          <FormField labelText="Password">
-            <TextInput type="password" placeholder="••••••••" {...password.bind} />
-          </FormField>
-          <Button type="submit">Submit</Button>
-        </form>
-      </ModalBody>
-    </ModalOverlay>
+    <AppDocumentTitle title="Login">
+      <ModalOverlay>
+        <ModalTitle>next</ModalTitle>
+        <ModalBody css={{ width: "100%" }}>
+          <form onSubmit={handleSubmit}>
+            <FormField labelText="Username">
+              <TextInput placeholder="awesomeuser" {...account.bind} />
+            </FormField>
+            <FormField labelText="Password">
+              <TextInput type="password" placeholder="••••••••" {...password.bind} />
+            </FormField>
+            <Button type="submit">Submit</Button>
+          </form>
+        </ModalBody>
+      </ModalOverlay>
+    </AppDocumentTitle>
   )
 }
 export default LoginRoute
