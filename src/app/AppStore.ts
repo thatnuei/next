@@ -2,6 +2,7 @@ import { navigate } from "@reach/router"
 import createContainer from "constate"
 import * as idb from "idb-keyval"
 import { useEffect, useState } from "react"
+import useChannelStore from "../channel/useChannelStore"
 import useCharacterStore from "../character/useCharacterStore"
 import { OptionalArg } from "../common/types"
 import { chatServerUrl } from "../fchat/constants"
@@ -21,6 +22,7 @@ function useAppState() {
   const [userData, setUserData] = useState<UserData>()
   const [isSessionLoaded, setSessionLoaded] = useState(false)
   const characterStore = useCharacterStore()
+  const channelStore = useChannelStore()
 
   useEffect(
     () => {
@@ -108,6 +110,7 @@ function useAppState() {
 
       if (handleCommand(command)) return
       if (characterStore.handleCommand(command)) return
+      if (channelStore.handleCommand(command)) return
 
       console.log("unhandled command", command)
     }
