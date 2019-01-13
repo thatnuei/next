@@ -1,21 +1,22 @@
-import { Link, Redirect, RouteComponentProps, Router } from "@reach/router"
+import { Redirect, RouteComponentProps, Router } from "@reach/router"
 import React, { useContext, useEffect } from "react"
 import AppStore from "../app/AppStore"
 import { identityStorageKey } from "../app/constants"
 import routePaths from "../app/routePaths"
+import ChannelHeader from "../channel/ChannelHeader"
 import Button from "../ui/Button"
 import { appColor } from "../ui/colors"
-import { flexGrow, fullHeight } from "../ui/helpers"
+import { fullHeight } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import SideOverlay from "../ui/SideOverlay"
 import { css } from "../ui/styled"
 import useOverlayState from "../ui/useOverlayState"
+import ChatSidebarContent from "./ChatSidebarContent"
 
 type ChatRouteProps = RouteComponentProps
 
 function ChatRoute(props: ChatRouteProps) {
-  const { user, connectToChat, channelStore } = useContext(AppStore.Context)
-  const { joinedChannels } = channelStore
+  const { user, connectToChat } = useContext(AppStore.Context)
 
   useEffect(() => {
     if (!user) return
@@ -38,40 +39,17 @@ function ChatRoute(props: ChatRouteProps) {
         </Button>
 
         <Router primary={false} css={{ display: "contents" }}>
-          <ChannelHeader path="/channel/:id" />
+          <ChannelHeader path={routePaths.channel(":id")} />
         </Router>
       </header>
 
       <SideOverlay {...sidebar.bind}>
-        <ul>
-          {Object.keys(joinedChannels).map((id) => (
-            <li key={id}>
-              <Link to={`channel/${id}`}>{id}</Link>
-            </li>
-          ))}
-        </ul>
+        <ChatSidebarContent />
       </SideOverlay>
     </main>
   )
 }
 export default ChatRoute
-
-function ChannelHeader(props: RouteComponentProps<{ id: string }>) {
-  const { channelStore } = useContext(AppStore.Context)
-  const { getChannel } = channelStore
-
-  if (!props.id) return null
-
-  const channel = getChannel(props.id)
-  return (
-    <>
-      <h2 css={flexGrow}>{channel.name}</h2>
-      <Button flat>
-        <Icon icon="users" />
-      </Button>
-    </>
-  )
-}
 
 const headerStyle = css`
   display: flex;
