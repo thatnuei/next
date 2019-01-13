@@ -4,7 +4,7 @@ import * as idb from "idb-keyval"
 import { useEffect, useState } from "react"
 import { useImmer } from "use-immer"
 import CharacterModel from "../character/CharacterModel"
-import { Dictionary, OptionalArg } from "../common/types"
+import { Dictionary, Mutable, OptionalArg } from "../common/types"
 import { chatServerUrl } from "../fchat/constants"
 import { ClientCommands, ServerCommand } from "../fchat/types"
 import * as api from "../flist/api"
@@ -61,6 +61,16 @@ function useAppState() {
     }
   }
 
+  function updateCharacter(
+    name: string,
+    update: (char: Mutable<CharacterModel>) => CharacterModel | void,
+  ) {
+    updateCharacters((characters) => {
+      const char = characters[name] || new CharacterModel(name, "None", "offline")
+      characters[name] = update(char) || char
+    })
+  }
+
   function connectToChat(account: string, ticket: string, character: string) {
     const socket = new WebSocket(chatServerUrl)
 
@@ -85,33 +95,68 @@ function useAppState() {
       const params = data.length > 3 ? JSON.parse(data.slice(4)) : {}
       const command: ServerCommand = { type, params }
 
-      console.log(command)
+      switch (command.type) {
+        case "IDN": {
+          sendCommand(socket, "JCH", { channel: "Frontpage" })
+          sendCommand(socket, "JCH", { channel: "Fantasy" })
+          sendCommand(socket, "JCH", { channel: "Story Driven LFRP" })
+          sendCommand(socket, "JCH", { channel: "Development" })
+          break
+        }
 
-      if (command.type === "IDN") {
-        sendCommand(socket, "JCH", { channel: "Frontpage" })
-        sendCommand(socket, "JCH", { channel: "Fantasy" })
-        sendCommand(socket, "JCH", { channel: "Story Driven LFRP" })
-        sendCommand(socket, "JCH", { channel: "Development" })
-      }
+        case "PIN": {
+          sendCommand(socket, "PIN")
+          break
+        }
 
-      if (command.type === "PIN") {
-        sendCommand(socket, "PIN")
-      }
+        case "HLO": {
+          console.info(command.params.message)
+          break
+        }
 
-      if (command.type === "HLO") {
-        console.info(command.params.message)
-      }
+        case "CON": {
+          console.info(`There are ${command.params.count} characters in chat`)
+          break
+        }
 
-      if (command.type === "CON") {
-        console.info(`There are ${command.params.count} characters in chat`)
-      }
+        case "LIS": {
+          updateCharacters((draft) => {
+            for (const args of command.params.characters) {
+              draft[args[0]] = new CharacterModel(...args)
+            }
+          })
+          break
+        }
 
-      if (command.type === "LIS") {
-        updateCharacters((draft) => {
-          for (const args of command.params.characters) {
-            draft[args[0]] = new CharacterModel(...args)
-          }
-        })
+        case "NLN": {
+          const { gender, identity } = command.params
+          updateCharacter(identity, (char) => {
+            char.gender = gender
+            char.status = "online"
+          })
+          break
+        }
+
+        case "FLN": {
+          const { character: identity } = command.params
+          updateCharacter(identity, (char) => {
+            char.status = "offline"
+            char.statusMessage = ""
+          })
+          break
+        }
+
+        case "STA": {
+          const { character: identity, status, statusmsg } = command.params
+          updateCharacter(identity, (char) => {
+            char.status = status
+            char.statusMessage = statusmsg
+          })
+          break
+        }
+
+        default:
+          console.log(command)
       }
     }
 
