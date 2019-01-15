@@ -49,6 +49,11 @@ export default css`
     text-decoration: none;
   }
 
+  ul,
+  li {
+    list-style: none;
+  }
+
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
