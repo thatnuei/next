@@ -1,21 +1,27 @@
 import { useImmer } from "use-immer"
 import { Dictionary, Mutable } from "../common/types"
 import createCommandHandler from "../fchat/createCommandHandler"
-import CharacterModel from "./CharacterModel"
+import { Character, CharacterStatus, Gender } from "./types"
+
+function createCharacter(
+  name: string,
+  gender: Gender = "None",
+  status: CharacterStatus = "offline",
+  statusMessage = "",
+): Character {
+  return { name, gender, status, statusMessage }
+}
 
 export default function useCharacterStore() {
-  const [characters, updateCharacters] = useImmer<Dictionary<CharacterModel>>({})
+  const [characters, updateCharacters] = useImmer<Dictionary<Character>>({})
 
   function getCharacter(name: string) {
-    return characters[name] || new CharacterModel(name, "None", "offline")
+    return characters[name] || createCharacter(name, "None", "offline")
   }
 
-  function updateCharacter(
-    name: string,
-    update: (char: Mutable<CharacterModel>) => CharacterModel | void,
-  ) {
+  function updateCharacter(name: string, update: (char: Mutable<Character>) => Character | void) {
     updateCharacters((characters) => {
-      const char = characters[name] || new CharacterModel(name, "None", "offline")
+      const char = characters[name] || createCharacter(name, "None", "offline")
       characters[name] = update(char) || char
     })
   }
@@ -24,7 +30,7 @@ export default function useCharacterStore() {
     LIS({ characters }) {
       updateCharacters((draft) => {
         for (const args of characters) {
-          draft[args[0]] = new CharacterModel(...args)
+          draft[args[0]] = createCharacter(...args)
         }
       })
     },
