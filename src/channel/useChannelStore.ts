@@ -88,13 +88,23 @@ export default function useChannelStore(identity?: string) {
 
     MSG({ channel: id, character, message }) {
       updateChannel(id, (channel) => {
-        channel.messages.push({ sender: character, message, type: "chat", time: Date.now() })
+        channel.messages.push({
+          sender: character,
+          text: message,
+          type: "chat",
+          time: Date.now(),
+        })
       })
     },
 
     LRP({ channel: id, character, message }) {
       updateChannel(id, (channel) => {
-        channel.messages.push({ sender: character, message, type: "lfrp", time: Date.now() })
+        channel.messages.push({
+          sender: character,
+          text: message,
+          type: "lfrp",
+          time: Date.now(),
+        })
       })
     },
   })

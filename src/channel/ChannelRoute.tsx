@@ -28,7 +28,7 @@ export default function ChannelRoute(props: RouteComponentProps<{ id: string }>)
             return (
               <li key={i}>
                 {senderCharacter && <CharacterName {...senderCharacter} />}
-                {message.message}
+                {message.text}
               </li>
             )
           })}
