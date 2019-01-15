@@ -1,7 +1,7 @@
 import { RouteComponentProps } from "@reach/router"
 import React, { useContext } from "react"
 import AppStore from "../app/AppStore"
-import CharacterName from "../character/CharacterName"
+import MessageRow from "../message/MessageRow"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import { themeColor } from "../ui/colors"
@@ -11,7 +11,7 @@ import TextArea from "../ui/TextArea"
 import useBottomScroll from "../ui/useBottomScroll"
 
 export default function ChannelRoute(props: RouteComponentProps<{ id: string }>) {
-  const { channelStore, characterStore, identity } = useContext(AppStore.Context)
+  const { channelStore, identity } = useContext(AppStore.Context)
   const channel = channelStore.getChannel(props.id || "")
 
   const bottomScrollRef = useBottomScroll<HTMLUListElement>(channel.messages)
@@ -19,20 +19,11 @@ export default function ChannelRoute(props: RouteComponentProps<{ id: string }>)
   return (
     <AppDocumentTitle title={`${identity} - ${channel.name}`}>
       <section css={[fillArea, flexColumn]}>
-        <ul css={[flexGrow, scrollVertical]} ref={bottomScrollRef}>
-          {channel.messages.map((message, i) => {
-            const senderCharacter = message.sender
-              ? characterStore.getCharacter(message.sender || "")
-              : undefined
-
-            return (
-              <li key={i}>
-                {senderCharacter && <CharacterName {...senderCharacter} />}
-                {message.text}
-              </li>
-            )
-          })}
-        </ul>
+        <section css={[flexGrow, scrollVertical]} ref={bottomScrollRef}>
+          {channel.messages.map((message, i) => (
+            <MessageRow key={i} {...message} />
+          ))}
+        </section>
         <form css={inputContainerStyle} onSubmit={(event) => event.preventDefault()}>
           <TextArea />
           <Button>Send</Button>
