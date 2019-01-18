@@ -6,13 +6,15 @@ import routePaths from "../app/routePaths"
 const ChatSidebarContent = () => {
   const { channelStore } = useContext(AppStore.Context)
   return (
-    <ul>
-      {Object.keys(channelStore.joinedChannels).map((id) => (
-        <li key={id}>
-          <Link to={routePaths.channel(id)}>{id}</Link>
-        </li>
-      ))}
-    </ul>
+    <nav>
+      <ul>
+        {Object.keys(channelStore.joinedChannels).map((id) => (
+          <li key={id}>
+            <Link to={routePaths.channel(id)}>{id}</Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
   )
 }
 export default ChatSidebarContent
