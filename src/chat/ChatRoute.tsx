@@ -1,5 +1,5 @@
-import { Redirect, RouteComponentProps, Router } from "@reach/router"
 import React, { useContext, useEffect } from "react"
+import { Redirect, Route, Switch } from "react-router-dom"
 import AppStore from "../app/AppStore"
 import routePaths from "../app/routePaths"
 import ChannelHeader from "../channel/ChannelHeader"
@@ -14,9 +14,7 @@ import { css } from "../ui/styled"
 import useOverlayState from "../ui/useOverlayState"
 import ChatSidebarContent from "./ChatSidebarContent"
 
-type ChatRouteProps = RouteComponentProps
-
-function ChatRoute(props: ChatRouteProps) {
+function ChatRoute() {
   const { user, identity, connectToChat } = useContext(AppStore.Context)
 
   useEffect(() => {
@@ -36,15 +34,21 @@ function ChatRoute(props: ChatRouteProps) {
             <Icon icon="menu" />
           </Button>
 
-          <Router primary={false} css={{ display: "contents" }}>
-            <ChannelHeader path={routePaths.channel(":id")} />
-          </Router>
+          <Switch>
+            <Route
+              path={routePaths.channel(":id")}
+              render={({ match }) => <ChannelHeader id={match.params.id} />}
+            />
+          </Switch>
         </header>
 
         <main css={flexGrow}>
-          <Router css={{ display: "contents" }}>
-            <ChannelRoute path={routePaths.channel(":id")} />
-          </Router>
+          <Switch>
+            <Route
+              path={routePaths.channel(":id")}
+              render={({ match }) => <ChannelRoute id={match.params.id} />}
+            />
+          </Switch>
         </main>
       </div>
 

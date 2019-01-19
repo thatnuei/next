@@ -1,13 +1,19 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import { BrowserRouter } from "react-router-dom"
 import AppStore from "./app/AppStore"
+import { RouterProvider } from "./app/routerContext"
 import Root from "./Root"
 
 function renderApp() {
   ReactDOM.render(
-    <AppStore.Provider>
-      <Root />
-    </AppStore.Provider>,
+    <BrowserRouter>
+      <RouterProvider>
+        <AppStore.Provider>
+          <Root />
+        </AppStore.Provider>
+      </RouterProvider>
+    </BrowserRouter>,
     document.querySelector("#root"),
   )
 }

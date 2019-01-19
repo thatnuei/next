@@ -1,7 +1,6 @@
-import { Redirect, Router } from "@reach/router"
 import React, { useContext, useEffect } from "react"
+import { Redirect, Route, Switch } from "react-router"
 import ChatRoute from "../chat/ChatRoute"
-import { fullHeight } from "../ui/helpers"
 import AppStore from "./AppStore"
 import CharacterSelectRoute from "./CharacterSelectRoute"
 import LoginRoute from "./LoginRoute"
@@ -27,12 +26,12 @@ function App() {
   }
 
   return (
-    <Router css={fullHeight}>
-      <LoginRoute path={routePaths.login} />
-      <CharacterSelectRoute path={routePaths.characterSelect} />
-      <ChatRoute path="/chat/*" />
+    <Switch>
+      <Route path={routePaths.login} component={LoginRoute} />
+      <Route path={routePaths.characterSelect} component={CharacterSelectRoute} />
+      <Route path={routePaths.chat} component={ChatRoute} />
       <Redirect from="/" to={user ? routePaths.characterSelect : routePaths.login} />
-    </Router>
+    </Switch>
   )
 }
 

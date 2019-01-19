@@ -1,4 +1,3 @@
-import { navigate } from "@reach/router"
 import createContainer from "constate"
 import * as idb from "idb-keyval"
 import { useEffect, useState } from "react"
@@ -10,6 +9,7 @@ import createCommandHandler from "../fchat/createCommandHandler"
 import { ClientCommandMap, ServerCommand } from "../fchat/types"
 import * as api from "../flist/api"
 import routePaths from "./routePaths"
+import { useRouter } from "./routerContext"
 
 type UserData = {
   account: string
@@ -25,8 +25,8 @@ function useAppState() {
   const [identity, setIdentity] = useState<string>()
   const [isSessionLoaded, setSessionLoaded] = useState(false)
   const characterStore = useCharacterStore()
-
   const channelStore = useChannelStore(identity)
+  const { history } = useRouter()
 
   useEffect(
     () => {
@@ -117,7 +117,7 @@ function useAppState() {
 
     socket.onclose = () => {
       console.log("socket closed")
-      navigate(routePaths.login)
+      history.push(routePaths.login)
     }
 
     socket.onmessage = ({ data }) => {

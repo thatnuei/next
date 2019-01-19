@@ -1,5 +1,5 @@
-import { navigate, Redirect, RouteComponentProps } from "@reach/router"
 import React, { useContext } from "react"
+import { Redirect } from "react-router-dom"
 import Avatar from "../character/Avatar"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
@@ -9,11 +9,11 @@ import ModalOverlay from "../ui/ModalOverlay"
 import ModalTitle from "../ui/ModalTitle"
 import AppStore from "./AppStore"
 import routePaths from "./routePaths"
+import { useRouter } from "./routerContext"
 
-type Props = RouteComponentProps
-
-function CharacterSelectRoute(props: Props) {
+function CharacterSelectRoute() {
   const { userCharacters: characters, identity, setIdentity } = useContext(AppStore.Context)
+  const { history } = useRouter()
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     setIdentity(event.target.value)
@@ -21,7 +21,7 @@ function CharacterSelectRoute(props: Props) {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    navigate(routePaths.chat)
+    history.push(routePaths.chat)
   }
 
   if (!characters || !identity) return <Redirect to={routePaths.login} />

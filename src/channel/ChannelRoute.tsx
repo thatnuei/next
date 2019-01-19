@@ -1,4 +1,3 @@
-import { RouteComponentProps } from "@reach/router"
 import React, { useContext } from "react"
 import AppStore from "../app/AppStore"
 import MessageRow from "../message/MessageRow"
@@ -10,7 +9,7 @@ import { css } from "../ui/styled"
 import TextArea from "../ui/TextArea"
 import useBottomScroll from "../ui/useBottomScroll"
 
-export default function ChannelRoute(props: RouteComponentProps<{ id: string }>) {
+export default function ChannelRoute(props: { id: string }) {
   const { channelStore, identity } = useContext(AppStore.Context)
   const channel = channelStore.getChannel(props.id || "")
 

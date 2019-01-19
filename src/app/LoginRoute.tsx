@@ -1,4 +1,3 @@
-import { navigate, RouteComponentProps } from "@reach/router"
 import React, { useContext } from "react"
 import useInput from "../state/useInput"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
@@ -10,20 +9,20 @@ import ModalTitle from "../ui/ModalTitle"
 import TextInput from "../ui/TextInput"
 import AppStore from "./AppStore"
 import routePaths from "./routePaths"
+import { useRouter } from "./routerContext"
 
-type Props = RouteComponentProps
-
-function LoginRoute(props: Props) {
+function LoginRoute() {
   const appState = useContext(AppStore.Context)
   const account = useInput()
   const password = useInput()
+  const { history } = useRouter()
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
 
     try {
       await appState.submitLogin(account.value, password.value)
-      navigate(routePaths.characterSelect)
+      history.push(routePaths.characterSelect)
     } catch (error) {
       alert(error)
     }

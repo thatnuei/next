@@ -1,4 +1,3 @@
-import { RouteComponentProps } from "@reach/router"
 import React, { useContext } from "react"
 import AppStore from "../app/AppStore"
 import Button from "../ui/Button"
@@ -6,7 +5,7 @@ import { flexGrow } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { css } from "../ui/styled"
 
-export default function ChannelHeader(props: RouteComponentProps<{ id: string }>) {
+export default function ChannelHeader(props: { id: string }) {
   const { channelStore } = useContext(AppStore.Context)
   const channel = channelStore.getChannel(props.id || "")
 
