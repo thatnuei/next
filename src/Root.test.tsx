@@ -10,10 +10,11 @@ const Root = () => (
     </nav>
 
     <main>
-      <Switch default={<Redirect to="/" />}>
+      <Switch default={<p>not found</p>}>
         <Route path="/hi" children={<p>hi</p>} />
         <Route path="/message/:message" children={<Hello />} />
-        <Route exact path="/" children={<p>am index</p>} />
+        <Redirect from="/redirect-test" to="/" />
+        <Route path="/" children={<p>am index</p>} />
       </Switch>
     </main>
   </Router>
