@@ -12,24 +12,37 @@ type RouterContextType = {
 
 const RouterContext = React.createContext<RouterContextType>()
 
+const defaultParam = () => ""
+
 export const Router: React.FC = ({ children }) => {
   const [history] = useState(() => createBrowserHistory())
   const [location, setLocation] = useState(history.location)
 
-  useEffect(() => history.listen(setLocation))
+  useEffect(() => {
+    setLocation(history.location)
+  }, [])
 
-  const param = () => ""
+  useEffect(() => {
+    return history.listen(setLocation)
+  })
 
   return (
-    <RouterContext.Provider value={{ history, location, param }}>{children}</RouterContext.Provider>
+    <RouterContext.Provider value={{ history, location, param: defaultParam }}>
+      {children}
+    </RouterContext.Provider>
   )
 }
 
-export const Route: React.FC<{ path: string }> = ({ path, children }) => {
+type RouteProps = {
+  path: string
+  exact?: boolean
+  children?: React.ReactNode
+}
+
+export const Route = ({ path, exact = false, children }: RouteProps) => {
   const { history, location } = useRouter()
 
-  const regexp = pathToRegexp(path, { end: false })
-
+  const regexp = pathToRegexp(path, { end: exact })
   const match = location.pathname.match(regexp)
   if (!match) return null
 
@@ -44,7 +57,9 @@ export const Route: React.FC<{ path: string }> = ({ path, children }) => {
   )
 }
 
-type LinkProps = React.ComponentPropsWithoutRef<"a"> & { to: string }
+type LinkProps = React.ComponentPropsWithoutRef<"a"> & {
+  to: string
+}
 
 export const Link = ({ to, children, href: _, onClick, ...props }: LinkProps) => {
   const { history } = useRouter()
@@ -69,10 +84,12 @@ export const Switch = ({ children }: { children: React.ReactElement<any>[] }) =>
   const { location } = useRouter()
 
   const matchingRoute = children.find((element) => {
-    const { path } = element.props
-    if (typeof path !== "string") return false
+    if (element.type === Redirect && !element.props.from) return true
 
-    const regexp = pathToRegexp(path, { end: false })
+    const { path, from, exact = false } = element.props
+    if (typeof path !== "string" && typeof from !== "string") return false
+
+    const regexp = pathToRegexp(path || from, { end: exact })
     const match = location.pathname.match(regexp)
     if (!match) return false
 
@@ -80,6 +97,29 @@ export const Switch = ({ children }: { children: React.ReactElement<any>[] }) =>
   })
 
   return matchingRoute || null
+}
+
+export const Redirect = ({ from, to }: { from?: string; to: string }) => {
+  const { history, location } = useRouter()
+
+  let matches: boolean
+
+  if (!from) {
+    matches = true
+  } else {
+    const regexp = pathToRegexp(from, { end: false })
+    const match = location.pathname.match(regexp)
+    matches = match != null
+  }
+
+  useEffect(
+    () => {
+      if (matches) history.push(to)
+    },
+    [matches],
+  )
+
+  return null
 }
 
 export function useRouter() {
