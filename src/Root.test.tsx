@@ -16,6 +16,9 @@ const Root = () => (
         <Redirect from="/redirect-test" to="/" />
         <Route path="/" children={<p>am index</p>} />
       </Switch>
+      <Route path="/message">
+        <p>arbitrarily appears on /message</p>
+      </Route>
     </main>
   </Router>
 )
