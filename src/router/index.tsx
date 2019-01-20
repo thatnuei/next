@@ -82,14 +82,16 @@ export const Link = ({ to, children, href: _, onClick, ...props }: LinkProps) =>
 }
 
 type SwitchProps = {
-  children: React.ReactElement<any>[]
+  children: React.ReactNode
   default?: React.ReactNode
 }
 
 export const Switch = ({ children, default: defaultElement }: SwitchProps) => {
   const { location } = useRouter()
 
-  const matchingRoute = children.find((element) => {
+  const matchingRoute = React.Children.toArray(children).find((element) => {
+    if (!React.isValidElement<any>(element)) return false
+
     const { path, from, partial = false } = element.props
     if (typeof path !== "string" && typeof from !== "string") return false
 
@@ -100,7 +102,9 @@ export const Switch = ({ children, default: defaultElement }: SwitchProps) => {
     return true
   })
 
-  return matchingRoute || (defaultElement && <>{defaultElement}</>) || null
+  if (matchingRoute) return <>{matchingRoute}</>
+  if (defaultElement) return <>{defaultElement}</>
+  return null
 }
 
 export const Redirect = ({ from, to }: { from?: string; to: string }) => {
