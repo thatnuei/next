@@ -1,7 +1,6 @@
 import React, { useContext } from "react"
 import AppStore from "../app/AppStore"
 import MessageRow from "../message/MessageRow"
-import { useRouter } from "../router"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import { themeColor } from "../ui/colors"
@@ -10,10 +9,9 @@ import { css } from "../ui/styled"
 import TextArea from "../ui/TextArea"
 import useBottomScroll from "../ui/useBottomScroll"
 
-export default function ChannelRoute() {
+export default function ChannelRoute(props: { id: string }) {
   const { channelStore, identity } = useContext(AppStore.Context)
-  const { param } = useRouter()
-  const channel = channelStore.getChannel(param("id"))
+  const channel = channelStore.getChannel(props.id)
 
   const bottomScrollRef = useBottomScroll<HTMLUListElement>(channel.messages)
 

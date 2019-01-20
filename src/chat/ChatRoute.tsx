@@ -35,13 +35,19 @@ function ChatRoute() {
           </Button>
 
           <Switch>
-            <Route path={routePaths.channel(":id")} children={<ChannelHeader />} />
+            <Route
+              path={routePaths.channel(":id")}
+              render={(param) => <ChannelHeader id={param("id")} />}
+            />
           </Switch>
         </header>
 
         <main css={flexGrow}>
           <Switch>
-            <Route path={routePaths.channel(":id")} children={<ChannelRoute />} />
+            <Route
+              path={routePaths.channel(":id")}
+              render={(param) => <ChannelRoute id={param("id")} />}
+            />
           </Switch>
         </main>
       </div>

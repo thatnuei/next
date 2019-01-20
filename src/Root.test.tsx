@@ -1,5 +1,5 @@
 import React from "react"
-import { Link, Redirect, Route, Router, Switch, useRouter } from "./router"
+import { Link, Redirect, Route, Router, Switch } from "./router"
 
 const Root = () => (
   <Router>
@@ -12,7 +12,10 @@ const Root = () => (
     <main>
       <Switch default={<p>not found</p>}>
         <Route path="/hi" children={<p>hi</p>} />
-        <Route path="/message/:message" children={<Message />} />
+        <Route
+          path="/message/:message"
+          render={(param) => <Message message={param("message")} />}
+        />
         <Redirect from="/redirect-test" to="/" />
         <Route path="/" children={<p>am index</p>} />
       </Switch>
@@ -25,9 +28,8 @@ const Root = () => (
   </Router>
 )
 
-const Message = () => {
-  const { param } = useRouter()
-  return <p>the message is "{param("message")}"</p>
+const Message = (props: { message: string }) => {
+  return <p>the message is "{props.message}"</p>
 }
 
 export default Root

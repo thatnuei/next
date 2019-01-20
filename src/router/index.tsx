@@ -6,12 +6,9 @@ import tuple from "../common/tuple"
 type RouterContextType = {
   history: History
   location: Location
-  param: (name: string) => string
 }
 
 const RouterContext = React.createContext<RouterContextType>()
-
-const defaultParam = () => ""
 
 export const Router: React.FC<{ history?: History }> = (props) => {
   const history = useState(() => props.history || createBrowserHistory())[0]
@@ -26,19 +23,20 @@ export const Router: React.FC<{ history?: History }> = (props) => {
   })
 
   return (
-    <RouterContext.Provider value={{ history, location, param: defaultParam }}>
-      {props.children}
-    </RouterContext.Provider>
+    <RouterContext.Provider value={{ history, location }}>{props.children}</RouterContext.Provider>
   )
 }
+
+type ParamFn = (paramName: string) => string
 
 type RouteProps = {
   path: string
   partial?: boolean
+  render?: (param: ParamFn) => React.ReactNode
   children?: React.ReactNode
 }
 
-export const Route = ({ path, partial = false, children }: RouteProps) => {
+export const Route = ({ path, partial = false, children, render }: RouteProps) => {
   const { history, location } = useRouter()
 
   const keys: pathToRegexp.Key[] = []
@@ -51,11 +49,13 @@ export const Route = ({ path, partial = false, children }: RouteProps) => {
     : undefined
 
   const paramsMap = new Map(paramPairs)
-  const param = (name: string) => paramsMap.get(name) || ""
+  const param: ParamFn = (name) => paramsMap.get(name) || ""
 
-  return (
-    <RouterContext.Provider value={{ history, location, param }}>{children}</RouterContext.Provider>
-  )
+  const context = { history, location }
+
+  const elements = render ? render(param) : children
+
+  return <RouterContext.Provider value={context}>{elements}</RouterContext.Provider>
 }
 
 type LinkProps = React.ComponentPropsWithoutRef<"a"> & {
