@@ -43,6 +43,7 @@ const baseConfig = {
     modules: false,
     entrypoints: false,
     children: false,
+    excludeAssets: (assetName) => /\.map$/.test(assetName),
   },
 }
 
