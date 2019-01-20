@@ -1,6 +1,6 @@
 import { createLocation, History, Location } from "history"
 import createBrowserHistory from "history/createBrowserHistory"
-import pathToRegexp from "path-to-regexp"
+import pathToRegexp, { PathRegExp } from "path-to-regexp"
 import React, { useContext, useEffect, useState } from "react"
 import tuple from "../common/tuple"
 
@@ -34,7 +34,7 @@ export const Router: React.FC = ({ children }) => {
 }
 
 type RouteProps = {
-  path: string
+  path?: string
   exact?: boolean
   children?: React.ReactNode
 }
@@ -42,14 +42,23 @@ type RouteProps = {
 export const Route = ({ path, exact = false, children }: RouteProps) => {
   const { history, location } = useRouter()
 
-  const regexp = pathToRegexp(path, { end: exact })
-  const match = location.pathname.match(regexp)
+  let _match: RegExpMatchArray | null
+  let regexp: PathRegExp | undefined
+  if (!path) {
+    _match = [location.pathname]
+  } else {
+    regexp = pathToRegexp(path, { end: exact })
+    _match = location.pathname.match(regexp)
+  }
+
+  const match = _match
   if (!match) return null
 
-  const paramsMap = new Map(
-    regexp.keys.map((key, index) => tuple(String(key.name), match[index + 1])),
-  )
+  const paramPairs = regexp
+    ? regexp.keys.map((key, index) => tuple(String(key.name), match[index + 1]))
+    : undefined
 
+  const paramsMap = new Map(paramPairs)
   const param = (name: string) => paramsMap.get(name) || ""
 
   return (
@@ -85,6 +94,7 @@ export const Switch = ({ children }: { children: React.ReactElement<any>[] }) =>
 
   const matchingRoute = children.find((element) => {
     if (element.type === Redirect && !element.props.from) return true
+    if (element.type === Route && !element.props.path) return true
 
     const { path, from, exact = false } = element.props
     if (typeof path !== "string" && typeof from !== "string") return false
