@@ -16,8 +16,10 @@ const Root = () => (
         <Redirect from="/redirect-test" to="/" />
         <Route path="/" children={<p>am index</p>} />
       </Switch>
+
       <Route partial path="/message">
         <p>arbitrarily appears on /message</p>
+        <p>yay</p>
       </Route>
     </main>
   </Router>
