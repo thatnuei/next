@@ -1,6 +1,6 @@
 import { createLocation, History, Location } from "history"
 import createBrowserHistory from "history/createBrowserHistory"
-import pathToRegexp, { PathRegExp } from "path-to-regexp"
+import pathToRegexp from "path-to-regexp"
 import React, { useContext, useEffect, useState } from "react"
 import tuple from "../common/tuple"
 
@@ -34,7 +34,7 @@ export const Router: React.FC = ({ children }) => {
 }
 
 type RouteProps = {
-  path?: string
+  path: string
   exact?: boolean
   children?: React.ReactNode
 }
@@ -42,16 +42,8 @@ type RouteProps = {
 export const Route = ({ path, exact = false, children }: RouteProps) => {
   const { history, location } = useRouter()
 
-  let _match: RegExpMatchArray | null
-  let regexp: PathRegExp | undefined
-  if (!path) {
-    _match = [location.pathname]
-  } else {
-    regexp = pathToRegexp(path, { end: exact })
-    _match = location.pathname.match(regexp)
-  }
-
-  const match = _match
+  const regexp = pathToRegexp(path, { end: exact })
+  const match = location.pathname.match(regexp)
   if (!match) return null
 
   const paramPairs = regexp
@@ -89,13 +81,15 @@ export const Link = ({ to, children, href: _, onClick, ...props }: LinkProps) =>
   )
 }
 
-export const Switch = ({ children }: { children: React.ReactElement<any>[] }) => {
+type SwitchProps = {
+  children: React.ReactElement<any>[]
+  default?: React.ReactNode
+}
+
+export const Switch = ({ children, default: defaultElement }: SwitchProps) => {
   const { location } = useRouter()
 
   const matchingRoute = children.find((element) => {
-    if (element.type === Redirect && !element.props.from) return true
-    if (element.type === Route && !element.props.path) return true
-
     const { path, from, exact = false } = element.props
     if (typeof path !== "string" && typeof from !== "string") return false
 
@@ -106,7 +100,7 @@ export const Switch = ({ children }: { children: React.ReactElement<any>[] }) =>
     return true
   })
 
-  return matchingRoute || null
+  return matchingRoute || (defaultElement && <>{defaultElement}</>) || null
 }
 
 export const Redirect = ({ from, to }: { from?: string; to: string }) => {
