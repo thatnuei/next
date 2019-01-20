@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from "react"
-import { Redirect, Route, Switch } from "react-router-dom"
 import AppStore from "../app/AppStore"
 import routePaths from "../app/routePaths"
 import ChannelHeader from "../channel/ChannelHeader"
 import ChannelRoute from "../channel/ChannelRoute"
+import { Redirect, Route, Switch } from "../router"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import { themeColor } from "../ui/colors"
@@ -35,19 +35,13 @@ function ChatRoute() {
           </Button>
 
           <Switch>
-            <Route
-              path={routePaths.channel(":id")}
-              render={({ match }) => <ChannelHeader id={match.params.id} />}
-            />
+            <Route path={routePaths.channel(":id")} children={<ChannelHeader />} />
           </Switch>
         </header>
 
         <main css={flexGrow}>
           <Switch>
-            <Route
-              path={routePaths.channel(":id")}
-              render={({ match }) => <ChannelRoute id={match.params.id} />}
-            />
+            <Route path={routePaths.channel(":id")} children={<ChannelRoute />} />
           </Switch>
         </main>
       </div>

@@ -1,13 +1,15 @@
 import React, { useContext } from "react"
 import AppStore from "../app/AppStore"
+import { useRouter } from "../router"
 import Button from "../ui/Button"
 import { flexGrow } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { css } from "../ui/styled"
 
-export default function ChannelHeader(props: { id: string }) {
+export default function ChannelHeader() {
   const { channelStore } = useContext(AppStore.Context)
-  const channel = channelStore.getChannel(props.id || "")
+  const { param } = useRouter()
+  const channel = channelStore.getChannel(param("id"))
 
   return (
     <>

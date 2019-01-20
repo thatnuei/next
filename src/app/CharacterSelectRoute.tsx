@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
-import { Redirect } from "react-router-dom"
 import Avatar from "../character/Avatar"
+import { Redirect, useRouter } from "../router"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
@@ -9,7 +9,6 @@ import ModalOverlay from "../ui/ModalOverlay"
 import ModalTitle from "../ui/ModalTitle"
 import AppStore from "./AppStore"
 import routePaths from "./routePaths"
-import { useRouter } from "./routerContext"
 
 function CharacterSelectRoute() {
   const { userCharacters: characters, identity, setIdentity } = useContext(AppStore.Context)

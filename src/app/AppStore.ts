@@ -8,8 +8,8 @@ import { chatServerUrl } from "../fchat/constants"
 import createCommandHandler from "../fchat/createCommandHandler"
 import { ClientCommandMap, ServerCommand } from "../fchat/types"
 import * as api from "../flist/api"
+import { useRouter } from "../router"
 import routePaths from "./routePaths"
-import { useRouter } from "./routerContext"
 
 type UserData = {
   account: string

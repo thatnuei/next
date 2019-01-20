@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
-import { Link } from "react-router-dom"
 import AppStore from "../app/AppStore"
 import routePaths from "../app/routePaths"
+import { Link } from "../router"
 
 const ChatSidebarContent = () => {
   const { channelStore } = useContext(AppStore.Context)

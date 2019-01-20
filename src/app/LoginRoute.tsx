@@ -1,4 +1,5 @@
 import React, { useContext } from "react"
+import { useRouter } from "../router"
 import useInput from "../state/useInput"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
@@ -9,7 +10,6 @@ import ModalTitle from "../ui/ModalTitle"
 import TextInput from "../ui/TextInput"
 import AppStore from "./AppStore"
 import routePaths from "./routePaths"
-import { useRouter } from "./routerContext"
 
 function LoginRoute() {
   const appState = useContext(AppStore.Context)
