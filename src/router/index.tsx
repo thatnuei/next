@@ -1,5 +1,4 @@
-import { createLocation, History, Location } from "history"
-import createBrowserHistory from "history/createBrowserHistory"
+import { createBrowserHistory, createLocation, History, Location } from "history"
 import pathToRegexp from "path-to-regexp"
 import React, { useContext, useEffect, useState } from "react"
 import tuple from "../common/tuple"
@@ -42,12 +41,13 @@ type RouteProps = {
 export const Route = ({ path, partial = false, children }: RouteProps) => {
   const { history, location } = useRouter()
 
-  const regexp = pathToRegexp(path, { end: !partial })
+  const keys: pathToRegexp.Key[] = []
+  const regexp = pathToRegexp(path, keys, { end: !partial })
   const match = location.pathname.match(regexp)
   if (!match) return null
 
   const paramPairs = regexp
-    ? regexp.keys.map((key, index) => tuple(String(key.name), match[index + 1]))
+    ? keys.map((key, index) => tuple(String(key.name), match[index + 1]))
     : undefined
 
   const paramsMap = new Map(paramPairs)
@@ -95,7 +95,7 @@ export const Switch = ({ children, default: defaultElement }: SwitchProps) => {
     const { path, from, partial = false } = element.props
     if (typeof path !== "string" && typeof from !== "string") return false
 
-    const regexp = pathToRegexp(path || from, { end: !partial })
+    const regexp = pathToRegexp(path || from, undefined, { end: !partial })
     const match = location.pathname.match(regexp)
     if (!match) return false
 
@@ -115,7 +115,7 @@ export const Redirect = ({ from, to }: { from?: string; to: string }) => {
   if (!from) {
     matches = true
   } else {
-    const regexp = pathToRegexp(from, { end: false })
+    const regexp = pathToRegexp(from, undefined, { end: false })
     const match = location.pathname.match(regexp)
     matches = match != null
   }
