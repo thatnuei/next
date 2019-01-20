@@ -65,6 +65,23 @@ export const Link = ({ to, children, href: _, onClick, ...props }: LinkProps) =>
   )
 }
 
+export const Switch = ({ children }: { children: React.ReactElement<any>[] }) => {
+  const { location } = useRouter()
+
+  const matchingRoute = children.find((element) => {
+    const { path } = element.props
+    if (typeof path !== "string") return false
+
+    const regexp = pathToRegexp(path, { end: false })
+    const match = location.pathname.match(regexp)
+    if (!match) return false
+
+    return true
+  })
+
+  return matchingRoute || null
+}
+
 export function useRouter() {
   const router = useContext(RouterContext)
   if (!router) throw new Error("Router context not found")

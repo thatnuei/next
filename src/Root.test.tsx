@@ -1,34 +1,19 @@
 import React from "react"
-import { Link, Route, Router, useRouter } from "./router"
+import { Link, Route, Router, Switch, useRouter } from "./router"
 
 const Root = () => (
   <Router>
     <nav>
-      <ul>
-        <li>
-          <Link to="/">home</Link>
-        </li>
-        <li>
-          <Link to="/hi">hi</Link>
-        </li>
-        <li>
-          <Link to="/the-message">the message</Link>
-        </li>
-      </ul>
+      <Link to="/">home</Link> | <Link to="/hi">hi</Link> |{" "}
+      <Link to="/the-message">the message</Link>
     </nav>
 
     <main>
-      <Route path="/">
-        <p>am index</p>
-      </Route>
-
-      <Route path="/hi">
-        <p>hi</p>
-      </Route>
-
-      <Route path="/:message">
-        <Hello />
-      </Route>
+      <Switch>
+        <Route path="/hi" children={<p>hi</p>} />
+        <Route path="/:message" children={<Hello />} />
+        <Route path="/" children={<p>am index</p>} />
+      </Switch>
     </main>
   </Router>
 )
