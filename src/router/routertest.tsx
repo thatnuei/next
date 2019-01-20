@@ -1,5 +1,5 @@
 import React from "react"
-import { Link, Redirect, Route, Router, Switch } from "./router"
+import { Link, Redirect, Route, Router, Switch } from "."
 
 const Root = () => (
   <Router>
