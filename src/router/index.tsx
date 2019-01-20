@@ -14,8 +14,8 @@ const RouterContext = React.createContext<RouterContextType>()
 
 const defaultParam = () => ""
 
-export const Router: React.FC = ({ children }) => {
-  const history = useState(() => createBrowserHistory())[0]
+export const Router: React.FC<{ history?: History }> = (props) => {
+  const history = useState(() => props.history || createBrowserHistory())[0]
   const [location, setLocation] = useState(history.location)
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export const Router: React.FC = ({ children }) => {
 
   return (
     <RouterContext.Provider value={{ history, location, param: defaultParam }}>
-      {children}
+      {props.children}
     </RouterContext.Provider>
   )
 }
