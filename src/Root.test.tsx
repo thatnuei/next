@@ -5,16 +5,16 @@ const Root = () => (
   <Router>
     <nav>
       <Link to="/">home</Link> | <Link to="/hi">hi</Link> |{" "}
-      <Link to="/message/the-message">the message</Link> |{" "}
+      <Link to="/message/awesome">the message</Link> |{" "}
       <Link to="/redirect-test">redirect test</Link> | <Link to="/404">not found test</Link>
     </nav>
 
     <main>
       <Switch default={<p>not found</p>}>
         <Route path="/hi" children={<p>hi</p>} />
-        <Route path="/message/:message" children={<Hello />} />
+        <Route path="/message/:message" children={<Message />} />
         <Redirect from="/redirect-test" to="/" />
-        <Route exact path="/" children={<p>am index</p>} />
+        <Route path="/" children={<p>am index</p>} />
       </Switch>
       <Route path="/message">
         <p>arbitrarily appears on /message</p>
@@ -23,9 +23,9 @@ const Root = () => (
   </Router>
 )
 
-const Hello = () => {
+const Message = () => {
   const { param } = useRouter()
-  return <p>message is {param("message")}</p>
+  return <p>the message is "{param("message")}"</p>
 }
 
 export default Root

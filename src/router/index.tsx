@@ -35,14 +35,14 @@ export const Router: React.FC = ({ children }) => {
 
 type RouteProps = {
   path: string
-  exact?: boolean
+  partial?: boolean
   children?: React.ReactNode
 }
 
-export const Route = ({ path, exact = false, children }: RouteProps) => {
+export const Route = ({ path, partial = false, children }: RouteProps) => {
   const { history, location } = useRouter()
 
-  const regexp = pathToRegexp(path, { end: exact })
+  const regexp = pathToRegexp(path, { end: !partial })
   const match = location.pathname.match(regexp)
   if (!match) return null
 
@@ -90,10 +90,10 @@ export const Switch = ({ children, default: defaultElement }: SwitchProps) => {
   const { location } = useRouter()
 
   const matchingRoute = children.find((element) => {
-    const { path, from, exact = false } = element.props
+    const { path, from, partial = false } = element.props
     if (typeof path !== "string" && typeof from !== "string") return false
 
-    const regexp = pathToRegexp(path || from, { end: exact })
+    const regexp = pathToRegexp(path || from, { end: !partial })
     const match = location.pathname.match(regexp)
     if (!match) return false
 
