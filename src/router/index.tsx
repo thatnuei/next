@@ -107,7 +107,13 @@ export const Switch = ({ children, default: defaultElement }: SwitchProps) => {
   return null
 }
 
-export const Redirect = ({ from, to }: { from?: string; to: string }) => {
+type RedirectProps = {
+  from?: string
+  partial?: boolean
+  to: string
+}
+
+export const Redirect = ({ from, partial = false, to }: RedirectProps) => {
   const { history, location } = useRouter()
 
   let matches: boolean
@@ -115,7 +121,7 @@ export const Redirect = ({ from, to }: { from?: string; to: string }) => {
   if (!from) {
     matches = true
   } else {
-    const regexp = pathToRegexp(from, undefined, { end: false })
+    const regexp = pathToRegexp(from, undefined, { end: !partial })
     const match = location.pathname.match(regexp)
     matches = match != null
   }
