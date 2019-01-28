@@ -14,15 +14,23 @@ import { Channel } from "./types"
 type Props = {
   channel: Channel
   identity: string
-  characters: CharacterStore
+  characterStore: CharacterStore
 }
 
-export default function ChannelRoute({ channel, identity, characters }: Props) {
+export default function ChannelRoute({
+  channel,
+  identity,
+  characterStore,
+}: Props) {
   const bottomScrollRef = useBottomScroll<HTMLUListElement>(channel.messages)
 
   const renderMessage = (message: Message, i: number) => {
     const { sender: senderName, text, type } = message
-    const sender = senderName ? characters.getCharacter(senderName) : undefined
+
+    const sender = senderName
+      ? characterStore.characters.get(senderName)
+      : undefined
+
     return <MessageRow key={i} {...{ sender, text, type }} />
   }
 

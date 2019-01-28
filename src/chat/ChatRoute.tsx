@@ -36,7 +36,9 @@ function ChatRoute(props: Props) {
             <Route
               path={routePaths.channel(":id")}
               render={(param) => (
-                <ChannelHeader channel={channelStore.getChannel(param("id"))} />
+                <ChannelHeader
+                  channel={channelStore.channels.get(param("id"))}
+                />
               )}
             />
           </Switch>
@@ -48,9 +50,9 @@ function ChatRoute(props: Props) {
               path={routePaths.channel(":id")}
               render={(param) => (
                 <ChannelRoute
-                  channel={channelStore.getChannel(param("id"))}
+                  channel={channelStore.channels.get(param("id"))}
                   identity={props.identity}
-                  characters={characterStore}
+                  characterStore={characterStore}
                 />
               )}
             />

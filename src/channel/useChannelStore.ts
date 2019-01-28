@@ -1,31 +1,18 @@
 import { useImmer } from "use-immer"
 import exists from "../common/exists"
-import { Dictionary, Mutable } from "../common/types"
+import { Dictionary } from "../common/types"
 import createCommandHandler from "../fchat/createCommandHandler"
 import { Message, MessageType } from "../message/types"
+import useFactoryMap from "../state/useFactoryMap"
 import { Channel } from "./types"
 
 export default function useChannelStore(identity?: string) {
-  const [channels, updateChannels] = useImmer<Dictionary<Channel>>({})
+  const channels = useFactoryMap(createChannel)
   const [joinedChannels, updateJoinedChannels] = useImmer<Dictionary<true>>({})
-
-  function getChannel(id: string) {
-    return channels[id] || createChannel(id)
-  }
-
-  function updateChannel(
-    id: string,
-    update: (channel: Mutable<Channel>) => Channel | void,
-  ) {
-    updateChannels((channels) => {
-      const channel = channels[id] || createChannel(id)
-      channels[id] = update(channel) || channel
-    })
-  }
 
   const handleCommand = createCommandHandler({
     ICH({ channel: id, mode, users }) {
-      updateChannel(id, (channel) => {
+      channels.update(id, (channel) => {
         channel.mode = mode
         channel.users = {}
         for (const { identity } of users) channel.users[identity] = true
@@ -33,20 +20,20 @@ export default function useChannelStore(identity?: string) {
     },
 
     CDS({ channel: id, description }) {
-      updateChannel(id, (channel) => {
+      channels.update(id, (channel) => {
         channel.description = description
       })
     },
 
     COL({ channel: id, oplist }) {
-      updateChannel(id, (channel) => {
+      channels.update(id, (channel) => {
         channel.ops = {}
         for (const name of oplist) channel.ops[name] = true
       })
     },
 
     JCH({ channel: id, character, title }) {
-      updateChannel(id, (channel) => {
+      channels.update(id, (channel) => {
         channel.name = title
         channel.users[character.identity] = true
       })
@@ -59,7 +46,7 @@ export default function useChannelStore(identity?: string) {
     },
 
     LCH({ channel: id, character }) {
-      updateChannel(id, (channel) => {
+      channels.update(id, (channel) => {
         delete channel.users[character]
       })
 
@@ -71,7 +58,7 @@ export default function useChannelStore(identity?: string) {
     },
 
     FLN({ character }) {
-      updateChannels((channels) => {
+      channels.updateAll((channels) => {
         for (const ch of Object.values(channels).filter(exists)) {
           delete ch.users[character]
         }
@@ -79,19 +66,19 @@ export default function useChannelStore(identity?: string) {
     },
 
     MSG({ channel: id, character, message }) {
-      updateChannel(id, (channel) => {
+      channels.update(id, (channel) => {
         channel.messages.push(createMessage(character, message, "chat"))
       })
     },
 
     LRP({ channel: id, character, message }) {
-      updateChannel(id, (channel) => {
+      channels.update(id, (channel) => {
         channel.messages.push(createMessage(character, message, "lfrp"))
       })
     },
   })
 
-  return { channels, updateChannels, getChannel, joinedChannels, handleCommand }
+  return { channels, joinedChannels, handleCommand }
 }
 
 function createChannel(id: string): Channel {

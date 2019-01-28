@@ -1,6 +1,5 @@
-import { useImmer } from "use-immer"
-import { Dictionary, Mutable } from "../common/types"
 import createCommandHandler from "../fchat/createCommandHandler"
+import useFactoryMap from "../state/useFactoryMap"
 import { Character, CharacterStatus, Gender } from "./types"
 
 function createCharacter(
@@ -13,60 +12,40 @@ function createCharacter(
 }
 
 export default function useCharacterStore() {
-  const [characters, updateCharacters] = useImmer<Dictionary<Character>>({})
-
-  function getCharacter(name: string) {
-    return characters[name] || createCharacter(name, "None", "offline")
-  }
-
-  function updateCharacter(
-    name: string,
-    update: (char: Mutable<Character>) => Character | void,
-  ) {
-    updateCharacters((characters) => {
-      const char = characters[name] || createCharacter(name, "None", "offline")
-      characters[name] = update(char) || char
-    })
-  }
+  const characters = useFactoryMap(createCharacter)
 
   const handleCommand = createCommandHandler({
-    LIS({ characters }) {
-      updateCharacters((draft) => {
-        for (const args of characters) {
+    LIS({ characters: characterInfoTuples }) {
+      characters.updateAll((draft) => {
+        for (const args of characterInfoTuples) {
           draft[args[0]] = createCharacter(...args)
         }
       })
     },
 
     NLN({ gender, identity }) {
-      updateCharacter(identity, (char) => {
+      characters.update(identity, (char) => {
         char.gender = gender
         char.status = "online"
       })
     },
 
     FLN({ character: identity }) {
-      updateCharacter(identity, (char) => {
+      characters.update(identity, (char) => {
         char.status = "offline"
         char.statusMessage = ""
       })
     },
 
     STA({ character: identity, status, statusmsg }) {
-      updateCharacter(identity, (char) => {
+      characters.update(identity, (char) => {
         char.status = status
         char.statusMessage = statusmsg
       })
     },
   })
 
-  return {
-    characters,
-    updateCharacters,
-    updateCharacter,
-    getCharacter,
-    handleCommand,
-  }
+  return { characters, handleCommand }
 }
 
 export type CharacterStore = ReturnType<typeof useCharacterStore>
