@@ -1,14 +1,16 @@
-import React, { useContext } from "react"
-import AppStore from "../app/AppStore"
+import React from "react"
 import routePaths from "../app/routePaths"
 import { Link } from "../router"
 
-const ChatSidebarContent = () => {
-  const { channelStore } = useContext(AppStore.Context)
+type Props = {
+  joinedChannelIds: string[]
+}
+
+const ChatSidebarContent = (props: Props) => {
   return (
     <nav>
       <ul>
-        {Object.keys(channelStore.joinedChannels).map((id) => (
+        {props.joinedChannelIds.map((id) => (
           <li key={id}>
             <Link to={routePaths.channel(id)}>{id}</Link>
           </li>

@@ -1,5 +1,4 @@
-import React, { useContext } from "react"
-import { useRouter } from "../router"
+import React from "react"
 import useInput from "../state/useInput"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
@@ -8,24 +7,18 @@ import ModalBody from "../ui/ModalBody"
 import ModalOverlay from "../ui/ModalOverlay"
 import ModalTitle from "../ui/ModalTitle"
 import TextInput from "../ui/TextInput"
-import AppStore from "./AppStore"
-import routePaths from "./routePaths"
 
-function LoginRoute() {
-  const appState = useContext(AppStore.Context)
+type LoginRouteProps = {
+  onLoginSubmit: (account: string, password: string) => void
+}
+
+function LoginRoute(props: LoginRouteProps) {
   const account = useInput()
   const password = useInput()
-  const { history } = useRouter()
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-
-    try {
-      await appState.submitLogin(account.value, password.value)
-      history.push(routePaths.characterSelect)
-    } catch (error) {
-      alert(error)
-    }
+    props.onLoginSubmit(account.value, password.value)
   }
 
   return (

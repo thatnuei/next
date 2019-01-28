@@ -1,15 +1,12 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import AppStore from "./app/AppStore"
 import Root from "./Root"
 import { Router } from "./router"
 
 function renderApp() {
   ReactDOM.render(
     <Router>
-      <AppStore.Provider>
-        <Root />
-      </AppStore.Provider>
+      <Root />
     </Router>,
     document.querySelector("#root"),
   )

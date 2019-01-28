@@ -1,13 +1,13 @@
 import { Interpolation } from "@emotion/core"
-import React, { useContext } from "react"
-import AppStore from "../app/AppStore"
+import React from "react"
 import CharacterName from "../character/CharacterName"
+import { Character } from "../character/types"
 import { semiBlack } from "../ui/colors"
 import { css } from "../ui/styled"
 import { MessageType } from "./types"
 
 type MessageRowProps = {
-  sender?: string
+  sender?: Character
   text: string
   type: MessageType
 }
@@ -15,16 +15,12 @@ type MessageRowProps = {
 const actionRegex = /^\s*\/me\s*/
 
 const MessageRow = ({ sender, text, type }: MessageRowProps) => {
-  const { characterStore } = useContext(AppStore.Context)
-
-  const senderCharacter = sender ? characterStore.getCharacter(sender || "") : undefined
-
   const isAction = actionRegex.test(text)
   const parsedText = text.replace(actionRegex, "")
 
   return (
     <div css={[containerStyle, highlightStyles[type], isAction && actionStyle]}>
-      <span css={senderStyle}>{senderCharacter && <CharacterName {...senderCharacter} />}</span>
+      <span css={senderStyle}>{sender && <CharacterName {...sender} />}</span>
       {parsedText}
     </div>
   )

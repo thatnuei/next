@@ -1,29 +1,28 @@
-import React, { useContext } from "react"
+import React from "react"
 import Avatar from "../character/Avatar"
-import { Redirect, useRouter } from "../router"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
 import ModalBody from "../ui/ModalBody"
 import ModalOverlay from "../ui/ModalOverlay"
 import ModalTitle from "../ui/ModalTitle"
-import AppStore from "./AppStore"
-import routePaths from "./routePaths"
 
-function CharacterSelectRoute() {
-  const { userCharacters: characters, identity, setIdentity } = useContext(AppStore.Context)
-  const { history } = useRouter()
+type Props = {
+  characters: string[]
+  identity: string
+  onIdentityChange: (identity: string) => void
+  onSubmit: () => void
+}
 
+function CharacterSelectRoute(props: Props) {
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    setIdentity(event.target.value)
+    props.onIdentityChange(event.target.value)
   }
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    history.push(routePaths.chat)
+    props.onSubmit()
   }
-
-  if (!characters || !identity) return <Redirect to={routePaths.login} />
 
   return (
     <AppDocumentTitle title="Select Character">
@@ -32,11 +31,11 @@ function CharacterSelectRoute() {
         <ModalBody>
           <form onSubmit={handleSubmit} style={formStyle}>
             <FormField>
-              <Avatar key={identity} name={identity} />
+              <Avatar key={props.identity} name={props.identity} />
             </FormField>
             <FormField>
-              <select name="character" value={identity} onChange={handleChange}>
-                {characters.map((name) => (
+              <select name="character" value={props.identity} onChange={handleChange}>
+                {props.characters.map((name) => (
                   <option value={name} key={name}>
                     {name}
                   </option>

@@ -1,14 +1,11 @@
-import React, { useContext } from "react"
-import AppStore from "../app/AppStore"
+import React from "react"
 import Button from "../ui/Button"
 import { flexGrow } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { css } from "../ui/styled"
+import { Channel } from "./types"
 
-export default function ChannelHeader(props: { id: string }) {
-  const { channelStore } = useContext(AppStore.Context)
-  const channel = channelStore.getChannel(props.id)
-
+export default function ChannelHeader({ channel }: { channel: Channel }) {
   return (
     <>
       <h2 css={[flexGrow, channelNameStyle]}>{channel.name}</h2>

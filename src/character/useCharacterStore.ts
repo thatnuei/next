@@ -59,3 +59,5 @@ export default function useCharacterStore() {
 
   return { characters, updateCharacters, updateCharacter, getCharacter, handleCommand }
 }
+
+export type CharacterStore = ReturnType<typeof useCharacterStore>
