@@ -1,10 +1,8 @@
-interface QueryObject {
-  [param: string]: string | boolean | number | void | null
+type QueryObject = {
+  [param in string]: string | boolean | number | void | null
 }
 
-interface BodyObject {
-  [field: string]: string | boolean | number | void | null
-}
+type BodyObject = { [field in string]: string | boolean | number | void | null }
 
 /**
  * Generates a query string from an object. The types of values are mapped as such:
