@@ -45,15 +45,6 @@ function App() {
     setIdentity(newIdentity || characters[0])
   }
 
-  async function handleLoginSubmit(account: string, password: string) {
-    const { ticket, characters } = await api.authenticate(account, password)
-    updateSessionData(account, ticket, characters)
-  }
-
-  function handleIdentitySubmit() {
-    history.push(routePaths.chat)
-  }
-
   async function restoreSession() {
     try {
       const creds = await idb.get<UserData | undefined>(userDataKey)
@@ -67,6 +58,20 @@ function App() {
     }
 
     setSessionLoaded(true)
+  }
+
+  async function handleLoginSubmit(account: string, password: string) {
+    try {
+      const { ticket, characters } = await api.authenticate(account, password)
+      updateSessionData(account, ticket, characters)
+      history.push(routePaths.characterSelect)
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  function handleIdentitySubmit() {
+    history.push(routePaths.chat)
   }
 
   function renderChat() {
