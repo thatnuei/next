@@ -24,14 +24,14 @@ export default function ChannelRoute({
 }: Props) {
   const bottomScrollRef = useBottomScroll<HTMLUListElement>(channel.messages)
 
-  const renderMessage = (message: Message, i: number) => {
+  const renderMessage = (message: Message) => {
     const { sender: senderName, text, type } = message
 
     const sender = senderName
       ? characterStore.characters.get(senderName)
       : undefined
 
-    return <MessageRow key={i} {...{ sender, text, type }} />
+    return <MessageRow key={message.id} {...{ sender, text, type }} />
   }
 
   return (
