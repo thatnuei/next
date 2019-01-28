@@ -965,6 +965,23 @@
   resolved "https://registry.npmjs.org/@types/http-assert/-/http-assert-1.4.0.tgz#41d173466e396e99a14d75f7160cc997f2f9ed8b"
   integrity sha512-TZDqvFW4nQwL9DVSNJIJu4lPLttKgzRF58COa7Vs42Ki/MrhIqUbeIw0MWn4kGLiZLXB7oCBibm7nkSjPkzfKQ==
 
+"@types/http-proxy-middleware@*":
+  version "0.19.2"
+  resolved "https://registry.npmjs.org/@types/http-proxy-middleware/-/http-proxy-middleware-0.19.2.tgz#1c44b96487cb2f333102b762c56a8f02241e85bd"
+  integrity sha512-aXcAs2VEaiHwlFlEqMJ+sNSFCO+wuWXcvdBk5Un7f0tUv1eTIIAmkd4S5D/Yi5JI0xofPpm9h3017TngbrLh7A==
+  dependencies:
+    "@types/connect" "*"
+    "@types/http-proxy" "*"
+    "@types/node" "*"
+
+"@types/http-proxy@*":
+  version "1.16.2"
+  resolved "https://registry.npmjs.org/@types/http-proxy/-/http-proxy-1.16.2.tgz#16cb373b52fff2aa2f389d23d940ed4a642349e5"
+  integrity sha512-GgqePmC3rlsn1nv+kx5OviPuUBU2omhnlXOaJSXFgOdsTcScNFap+OaCb2ip9Bm4m5L8EOehgT5d9M4uNB90zg==
+  dependencies:
+    "@types/events" "*"
+    "@types/node" "*"
+
 "@types/invariant@^2.2.29":
   version "2.2.29"
   resolved "https://registry.npmjs.org/@types/invariant/-/invariant-2.2.29.tgz#aa845204cd0a289f65d47e0de63a6a815e30cc66"
@@ -1096,6 +1113,16 @@
     "@types/connect" "*"
     "@types/loglevel" "*"
     "@types/memory-fs" "*"
+    "@types/webpack" "*"
+
+"@types/webpack-dev-server@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.npmjs.org/@types/webpack-dev-server/-/webpack-dev-server-3.1.1.tgz#12ae26194b3e1b8a317559592659921f282583c2"
+  integrity sha512-TnEQPT+OZjWV2kRyNs0RPMDQmBCiLrr/ZhKSgFNF6aM4O/moUAfo2Yu3MIMUjoi3aE/02RH1iVR+Y6mWmXOlVA==
+  dependencies:
+    "@types/express" "*"
+    "@types/http-proxy-middleware" "*"
+    "@types/serve-static" "*"
     "@types/webpack" "*"
 
 "@types/webpack-env@^1.13.6":
