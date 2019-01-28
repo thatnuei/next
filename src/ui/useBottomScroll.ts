@@ -5,14 +5,13 @@ export default function useBottomScroll<E extends HTMLElement>(value: unknown) {
   const element = elementRef.current
 
   const scrolledToBottom =
-    element != null && element.scrollTop >= element.scrollHeight - element.clientHeight - 100
+    element != null &&
+    element.scrollTop >= element.scrollHeight - element.clientHeight - 100
 
   useEffect(
     () => {
-      if (!element) return
-      if (scrolledToBottom) {
-        element.scrollTop = element.scrollHeight
-      }
+      if (!element || !scrolledToBottom) return
+      element.scrollTop = element.scrollHeight
     },
     [value],
   )

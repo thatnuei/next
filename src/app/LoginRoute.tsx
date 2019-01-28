@@ -31,7 +31,11 @@ function LoginRoute(props: LoginRouteProps) {
               <TextInput placeholder="awesomeuser" {...account.bind} />
             </FormField>
             <FormField labelText="Password">
-              <TextInput type="password" placeholder="••••••••" {...password.bind} />
+              <TextInput
+                type="password"
+                placeholder="••••••••"
+                {...password.bind}
+              />
             </FormField>
             <Button type="submit">Submit</Button>
           </form>

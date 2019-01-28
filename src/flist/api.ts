@@ -22,7 +22,8 @@ export async function authenticate(account: string, password: string) {
 }
 
 export async function fetchCharacters(account: string, ticket: string) {
-  const characterListEndpoint = "https://www.f-list.net/json/api/character-list.php"
+  const characterListEndpoint =
+    "https://www.f-list.net/json/api/character-list.php"
 
   type CharacterListResponse = {
     characters: string[]

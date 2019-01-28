@@ -12,8 +12,12 @@ type CharacterNameProps = {
 const CharacterName = (props: CharacterNameProps) => {
   return (
     <a href="#" css={containerStyle}>
-      <span css={[statusDotStyle, { backgroundColor: statusColors[props.status] }]} />
-      <span css={[nameStyle, { color: genderColors[props.gender] }]}>{props.name}</span>
+      <span
+        css={[statusDotStyle, { backgroundColor: statusColors[props.status] }]}
+      />
+      <span css={[nameStyle, { color: genderColors[props.gender] }]}>
+        {props.name}
+      </span>
     </a>
   )
 }

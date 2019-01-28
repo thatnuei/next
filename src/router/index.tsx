@@ -1,4 +1,9 @@
-import { createBrowserHistory, createLocation, History, Location } from "history"
+import {
+  createBrowserHistory,
+  createLocation,
+  History,
+  Location,
+} from "history"
 import pathToRegexp from "path-to-regexp"
 import React, { useContext, useEffect, useState } from "react"
 import tuple from "../common/tuple"
@@ -23,7 +28,9 @@ export const Router: React.FC<{ history?: History }> = (props) => {
   })
 
   return (
-    <RouterContext.Provider value={{ history, location }}>{props.children}</RouterContext.Provider>
+    <RouterContext.Provider value={{ history, location }}>
+      {props.children}
+    </RouterContext.Provider>
   )
 }
 
@@ -36,7 +43,12 @@ type RouteProps = {
   children?: React.ReactNode
 }
 
-export const Route = ({ path, partial = false, children, render }: RouteProps) => {
+export const Route = ({
+  path,
+  partial = false,
+  children,
+  render,
+}: RouteProps) => {
   const { history, location } = useRouter()
 
   const keys: pathToRegexp.Key[] = []
@@ -55,14 +67,22 @@ export const Route = ({ path, partial = false, children, render }: RouteProps) =
 
   const elements = render ? render(param) : children
 
-  return <RouterContext.Provider value={context}>{elements}</RouterContext.Provider>
+  return (
+    <RouterContext.Provider value={context}>{elements}</RouterContext.Provider>
+  )
 }
 
 type LinkProps = React.ComponentPropsWithoutRef<"a"> & {
   to: string
 }
 
-export const Link = ({ to, children, href: _, onClick, ...props }: LinkProps) => {
+export const Link = ({
+  to,
+  children,
+  href: _,
+  onClick,
+  ...props
+}: LinkProps) => {
   const { history } = useRouter()
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {

@@ -6,7 +6,8 @@ const Root = () => (
     <nav>
       <Link to="/">home</Link> | <Link to="/hi">hi</Link> |{" "}
       <Link to="/message/awesome">the message</Link> |{" "}
-      <Link to="/redirect-test">redirect test</Link> | <Link to="/404">not found test</Link>
+      <Link to="/redirect-test">redirect test</Link> |{" "}
+      <Link to="/404">not found test</Link>
     </nav>
 
     <main>

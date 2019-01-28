@@ -6,7 +6,9 @@ type ButtonProps = React.ComponentProps<"button"> & {
 }
 
 const Button = ({ flat, ...props }: ButtonProps) => {
-  return <button type="button" css={[buttonStyle, flat && flatStyle]} {...props} />
+  return (
+    <button type="button" css={[buttonStyle, flat && flatStyle]} {...props} />
+  )
 }
 
 export default Button

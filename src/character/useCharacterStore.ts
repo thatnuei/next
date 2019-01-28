@@ -19,7 +19,10 @@ export default function useCharacterStore() {
     return characters[name] || createCharacter(name, "None", "offline")
   }
 
-  function updateCharacter(name: string, update: (char: Mutable<Character>) => Character | void) {
+  function updateCharacter(
+    name: string,
+    update: (char: Mutable<Character>) => Character | void,
+  ) {
     updateCharacters((characters) => {
       const char = characters[name] || createCharacter(name, "None", "offline")
       characters[name] = update(char) || char
@@ -57,7 +60,13 @@ export default function useCharacterStore() {
     },
   })
 
-  return { characters, updateCharacters, updateCharacter, getCharacter, handleCommand }
+  return {
+    characters,
+    updateCharacters,
+    updateCharacter,
+    getCharacter,
+    handleCommand,
+  }
 }
 
 export type CharacterStore = ReturnType<typeof useCharacterStore>

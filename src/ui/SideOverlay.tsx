@@ -47,7 +47,9 @@ const Panel = styled.div<{ anchor: "left" | "right"; visible?: boolean }>`
   transition: 0.3s;
   ${(props) => props.anchor}: 0;
 
-  transform: translateX(${(props) => (props.anchor === "left" ? "-100%" : "100%")});
+  transform: translateX(
+    ${(props) => (props.anchor === "left" ? "-100%" : "100%")}
+  );
   ${(props) => props.visible && `transform: translateX(0);`}
 `
 

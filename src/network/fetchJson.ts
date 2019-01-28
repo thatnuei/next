@@ -48,7 +48,10 @@ export async function fetchJson<T = any>(
 
   const formData = body && createFormData(body)
 
-  const response = await fetch(`${endpoint}${queryString}`, { method, body: formData })
+  const response = await fetch(`${endpoint}${queryString}`, {
+    method,
+    body: formData,
+  })
   const data = await response.json()
 
   if (!response.ok) {

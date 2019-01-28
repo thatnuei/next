@@ -103,7 +103,9 @@ function ChatRoute(props: Props) {
           <Switch>
             <Route
               path={routePaths.channel(":id")}
-              render={(param) => <ChannelHeader channel={channelStore.getChannel(param("id"))} />}
+              render={(param) => (
+                <ChannelHeader channel={channelStore.getChannel(param("id"))} />
+              )}
             />
           </Switch>
         </header>
@@ -125,7 +127,9 @@ function ChatRoute(props: Props) {
       </div>
 
       <SideOverlay {...sidebar.bind}>
-        <ChatSidebarContent joinedChannelIds={Object.keys(channelStore.joinedChannels)} />
+        <ChatSidebarContent
+          joinedChannelIds={Object.keys(channelStore.joinedChannels)}
+        />
       </SideOverlay>
     </AppDocumentTitle>
   )

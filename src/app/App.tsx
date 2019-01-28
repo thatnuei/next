@@ -37,7 +37,11 @@ function App() {
     [userData, identity],
   )
 
-  function updateSessionData(account: string, ticket: string, characters: string[]) {
+  function updateSessionData(
+    account: string,
+    ticket: string,
+    characters: string[],
+  ) {
     const newIdentity = window.sessionStorage.getItem(identityKey(account))
 
     setUserData({ account, ticket })
@@ -101,7 +105,10 @@ function App() {
 
       <Route partial path={routePaths.chat} render={renderChat} />
 
-      <Redirect from="/" to={userData ? routePaths.characterSelect : routePaths.login} />
+      <Redirect
+        from="/"
+        to={userData ? routePaths.characterSelect : routePaths.login}
+      />
     </Switch>
   )
 }

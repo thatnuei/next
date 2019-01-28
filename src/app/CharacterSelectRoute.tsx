@@ -34,7 +34,11 @@ function CharacterSelectRoute(props: Props) {
               <Avatar key={props.identity} name={props.identity} />
             </FormField>
             <FormField>
-              <select name="character" value={props.identity} onChange={handleChange}>
+              <select
+                name="character"
+                value={props.identity}
+                onChange={handleChange}
+              >
                 {props.characters.map((name) => (
                   <option value={name} key={name}>
                     {name}

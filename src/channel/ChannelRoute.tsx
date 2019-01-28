@@ -32,7 +32,10 @@ export default function ChannelRoute({ channel, identity, characters }: Props) {
         <section css={[flexGrow, scrollVertical]} ref={bottomScrollRef}>
           {channel.messages.map(renderMessage)}
         </section>
-        <form css={inputContainerStyle} onSubmit={(event) => event.preventDefault()}>
+        <form
+          css={inputContainerStyle}
+          onSubmit={(event) => event.preventDefault()}
+        >
           <TextArea />
           <Button>Send</Button>
         </form>

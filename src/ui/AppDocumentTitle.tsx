@@ -3,7 +3,14 @@ import DocumentTitle from "react-document-title"
 
 const suffix = "next"
 
-const AppDocumentTitle: React.FC<{ title?: string }> = ({ title = "", children }) => (
-  <DocumentTitle title={title ? `${title} - ${suffix}` : suffix}>{children}</DocumentTitle>
+type Props = {
+  title?: string
+  children?: React.ReactNode
+}
+
+const AppDocumentTitle = ({ title = "", children }: Props) => (
+  <DocumentTitle title={title ? `${title} - ${suffix}` : suffix}>
+    {children}
+  </DocumentTitle>
 )
 export default AppDocumentTitle

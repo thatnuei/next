@@ -24,7 +24,10 @@ export default function useChannelStore(identity?: string) {
     return channels[id] || createChannel(id)
   }
 
-  function updateChannel(id: string, update: (channel: Mutable<Channel>) => Channel | void) {
+  function updateChannel(
+    id: string,
+    update: (channel: Mutable<Channel>) => Channel | void,
+  ) {
     updateChannels((channels) => {
       const channel = channels[id] || createChannel(id)
       channels[id] = update(channel) || channel
