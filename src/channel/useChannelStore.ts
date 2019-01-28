@@ -2,19 +2,8 @@ import { useImmer } from "use-immer"
 import exists from "../common/exists"
 import { Dictionary, Mutable } from "../common/types"
 import createCommandHandler from "../fchat/createCommandHandler"
+import { Message, MessageType } from "../message/types"
 import { Channel } from "./types"
-
-function createChannel(id: string): Channel {
-  return {
-    id,
-    name: id,
-    description: "",
-    messages: [],
-    mode: "both",
-    ops: {},
-    users: {},
-  }
-}
 
 export default function useChannelStore(identity?: string) {
   const [channels, updateChannels] = useImmer<Dictionary<Channel>>({})
@@ -91,26 +80,42 @@ export default function useChannelStore(identity?: string) {
 
     MSG({ channel: id, character, message }) {
       updateChannel(id, (channel) => {
-        channel.messages.push({
-          sender: character,
-          text: message,
-          type: "chat",
-          time: Date.now(),
-        })
+        channel.messages.push(createMessage(character, message, "chat"))
       })
     },
 
     LRP({ channel: id, character, message }) {
       updateChannel(id, (channel) => {
-        channel.messages.push({
-          sender: character,
-          text: message,
-          type: "lfrp",
-          time: Date.now(),
-        })
+        channel.messages.push(createMessage(character, message, "lfrp"))
       })
     },
   })
 
   return { channels, updateChannels, getChannel, joinedChannels, handleCommand }
+}
+
+function createChannel(id: string): Channel {
+  return {
+    id,
+    name: id,
+    description: "",
+    messages: [],
+    mode: "both",
+    ops: {},
+    users: {},
+  }
+}
+
+function createMessage(
+  sender: string,
+  text: string,
+  type: MessageType,
+): Message {
+  return {
+    id: String(Math.random()),
+    time: Date.now(),
+    sender,
+    text,
+    type,
+  }
 }
