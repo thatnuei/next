@@ -61,7 +61,7 @@ const prodConfig = {
   mode: "production",
   devtool: "source-map",
   output: {
-    filename: "[name].[contenthash].js",
+    filename: "js/[name].[contenthash].js",
   },
   optimization: {
     runtimeChunk: "single",
