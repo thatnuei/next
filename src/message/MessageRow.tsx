@@ -26,7 +26,13 @@ const MessageRow = ({ sender, text, type }: MessageRowProps) => {
   )
 }
 
-export default MessageRow
+export default React.memo(
+  MessageRow,
+  (prev, next) =>
+    prev.sender != null &&
+    next.sender != null &&
+    prev.sender.status === next.sender.status,
+)
 
 const highlightStyles: { [K in MessageType]?: Interpolation } = {
   lfrp: { backgroundColor: "rgba(39, 174, 96, 0.2)" },
