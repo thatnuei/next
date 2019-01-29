@@ -10,16 +10,18 @@ type MessageRowProps = {
   sender?: Character
   text: string
   type: MessageType
+  time: number
 }
 
 const actionRegex = /^\s*\/me\s*/
 
-const MessageRow = ({ sender, text, type }: MessageRowProps) => {
+const MessageRow = ({ sender, text, type, time }: MessageRowProps) => {
   const isAction = actionRegex.test(text)
   const parsedText = text.replace(actionRegex, "")
 
   return (
     <div css={[containerStyle, highlightStyles[type], isAction && actionStyle]}>
+      <span css={dateStyle}>{new Date(time).toLocaleTimeString()}</span>
       <span css={senderStyle}>
         {sender ? <CharacterName {...sender} /> : "System"}
       </span>
@@ -48,5 +50,13 @@ const senderStyle = css`
 `
 
 const actionStyle = css`
+  font-style: italic;
+`
+
+const dateStyle = css`
+  float: right;
+  margin-left: 1rem;
+  opacity: 0.75;
+  font-size: 80%;
   font-style: italic;
 `
