@@ -30,10 +30,7 @@ const MessageRow = ({ sender, text, type }: MessageRowProps) => {
 
 export default React.memo(
   MessageRow,
-  (prev, next) =>
-    prev.sender != null &&
-    next.sender != null &&
-    prev.sender.status === next.sender.status,
+  (prev, next) => prev.sender === next.sender,
 )
 
 const highlightStyles: { [K in MessageType]?: Interpolation } = {
