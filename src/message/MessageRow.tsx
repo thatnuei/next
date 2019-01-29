@@ -20,7 +20,9 @@ const MessageRow = ({ sender, text, type }: MessageRowProps) => {
 
   return (
     <div css={[containerStyle, highlightStyles[type], isAction && actionStyle]}>
-      <span css={senderStyle}>{sender && <CharacterName {...sender} />}</span>
+      <span css={senderStyle}>
+        {sender ? <CharacterName {...sender} /> : "System"}
+      </span>
       {parsedText}
     </div>
   )
