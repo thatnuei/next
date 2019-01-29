@@ -22,7 +22,10 @@ const CharacterName = (props: CharacterNameProps) => {
   )
 }
 
-export default CharacterName
+export default React.memo(
+  CharacterName,
+  (prev, next) => prev.gender === next.gender && prev.status === next.status,
+)
 
 const containerStyle = css`
   display: inline-flex;
