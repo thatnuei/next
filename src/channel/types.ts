@@ -9,6 +9,7 @@ export type Channel = {
   name: string
   description: string
   mode: ChannelMode
+  selectedMode: ChannelMode
   users: Dictionary<true>
   ops: Dictionary<true>
   messages: Message[]
