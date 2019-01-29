@@ -94,14 +94,14 @@ function createChannel(id: string): Channel {
 }
 
 function createMessage(
-  sender: string,
+  senderName: string,
   text: string,
   type: MessageType,
 ): Message {
   return {
     id: String(Math.random()),
     time: Date.now(),
-    sender,
+    senderName,
     text,
     type,
   }

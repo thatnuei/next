@@ -6,6 +6,7 @@ import { OptionalArg } from "../common/types"
 import { chatServerUrl } from "../fchat/constants"
 import createCommandHandler from "../fchat/createCommandHandler"
 import { ClientCommandMap, ServerCommand } from "../fchat/types"
+import { Message, MessageWithSender } from "../message/types"
 import { useRouter } from "../router"
 
 type UserCredentials = {
@@ -18,6 +19,17 @@ function useChatState(user: UserCredentials) {
   const { history } = useRouter()
   const characterStore = useCharacterStore()
   const channelStore = useChannelStore(user.identity)
+
+  function getChannelMessages(channelId: string): MessageWithSender[] {
+    const resolveMessage = (message: Message) => ({
+      ...message,
+      sender: message.senderName
+        ? characterStore.characters.get(message.senderName)
+        : undefined,
+    })
+
+    return channelStore.channels.get(channelId).messages.map(resolveMessage)
+  }
 
   useEffect(() => {
     const socket = new WebSocket(chatServerUrl)
@@ -76,7 +88,7 @@ function useChatState(user: UserCredentials) {
     }
   }, [])
 
-  return { channelStore, characterStore }
+  return { channelStore, characterStore, getChannelMessages }
 }
 export default useChatState
 

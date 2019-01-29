@@ -21,7 +21,7 @@ type Props = {
 }
 
 function ChatRoute(props: Props) {
-  const { channelStore, characterStore } = useChatState(props)
+  const { channelStore, getChannelMessages } = useChatState(props)
   const sidebar = useOverlayState()
 
   return (
@@ -52,7 +52,7 @@ function ChatRoute(props: Props) {
                 <ChannelRoute
                   channel={channelStore.channels.get(param("id"))}
                   identity={props.identity}
-                  characterStore={characterStore}
+                  messages={getChannelMessages(param("id"))}
                 />
               )}
             />

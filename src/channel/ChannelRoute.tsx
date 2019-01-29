@@ -1,7 +1,6 @@
 import React from "react"
-import { CharacterStore } from "../character/useCharacterStore"
 import MessageRow from "../message/MessageRow"
-import { Message } from "../message/types"
+import { MessageWithSender } from "../message/types"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import { themeColor } from "../ui/colors"
@@ -14,31 +13,21 @@ import { Channel } from "./types"
 type Props = {
   channel: Channel
   identity: string
-  characterStore: CharacterStore
+  messages: MessageWithSender[]
 }
 
-export default function ChannelRoute({
-  channel,
-  identity,
-  characterStore,
-}: Props) {
+export default function ChannelRoute({ channel, identity, messages }: Props) {
   const bottomScrollRef = useBottomScroll<HTMLUListElement>(channel.messages)
 
-  const renderMessage = (message: Message) => {
-    const { sender: senderName, text, type } = message
-
-    const sender = senderName
-      ? characterStore.characters.get(senderName)
-      : undefined
-
-    return <MessageRow key={message.id} {...{ sender, text, type }} />
-  }
+  const renderMessage = (message: MessageWithSender) => (
+    <MessageRow key={message.id} {...message} />
+  )
 
   return (
     <AppDocumentTitle title={`${identity} - ${channel.name}`}>
       <section css={[fillArea, flexColumn]}>
         <section css={[flexGrow, scrollVertical]} ref={bottomScrollRef}>
-          {channel.messages.map(renderMessage)}
+          {messages.map(renderMessage)}
         </section>
         <form
           css={inputContainerStyle}
