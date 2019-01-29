@@ -14,11 +14,36 @@ export default function ChannelHeader({ channel }: Props) {
     <>
       <div css={nameAndFilterStyle}>
         <h2 css={channelNameStyle}>{channel.name}</h2>
-        <FilterGroup disabled>
-          <FilterButton>Both</FilterButton>
-          <FilterButton active>Chat</FilterButton>
-          <FilterButton>Ads</FilterButton>
-        </FilterGroup>
+
+        {channel.mode === "chat" && (
+          <FilterGroup disabled>
+            <FilterButton>Both</FilterButton>
+            <FilterButton active>Chat</FilterButton>
+            <FilterButton>Ads</FilterButton>
+          </FilterGroup>
+        )}
+
+        {channel.mode === "ads" && (
+          <FilterGroup disabled>
+            <FilterButton>Both</FilterButton>
+            <FilterButton>Chat</FilterButton>
+            <FilterButton active>Ads</FilterButton>
+          </FilterGroup>
+        )}
+
+        {channel.mode === "both" && (
+          <FilterGroup>
+            <FilterButton active={channel.selectedMode === "both"}>
+              Both
+            </FilterButton>
+            <FilterButton active={channel.selectedMode === "chat"}>
+              Chat
+            </FilterButton>
+            <FilterButton active={channel.selectedMode === "ads"}>
+              Ads
+            </FilterButton>
+          </FilterGroup>
+        )}
       </div>
       <Button flat>
         <Icon icon="users" />
