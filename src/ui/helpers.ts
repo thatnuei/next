@@ -26,6 +26,10 @@ export const flexGrow = css`
   min-height: 0;
 `
 
+export const flexWrap = css`
+  flex-wrap: wrap;
+`
+
 export const fillArea = css`
   width: 100%;
   height: 100%;
