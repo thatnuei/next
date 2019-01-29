@@ -21,14 +21,17 @@ function useChatState(user: UserCredentials) {
   const channelStore = useChannelStore(user.identity)
 
   function getChannelMessages(channelId: string): MessageWithSender[] {
-    const resolveMessage = (message: Message) => ({
-      ...message,
-      sender: message.senderName
-        ? characterStore.characters.get(message.senderName)
-        : undefined,
-    })
+    return channelStore.channels
+      .get(channelId)
+      .messages.map(resolveMessageSender)
+  }
 
-    return channelStore.channels.get(channelId).messages.map(resolveMessage)
+  function resolveMessageSender(message: Message): MessageWithSender {
+    const sender = message.senderName
+      ? characterStore.characters.get(message.senderName)
+      : undefined
+
+    return message.senderName ? { ...message, sender: sender } : message
   }
 
   useEffect(() => {
