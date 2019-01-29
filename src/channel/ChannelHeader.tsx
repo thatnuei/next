@@ -11,6 +11,16 @@ type Props = {
 }
 
 export default function ChannelHeader({ channel, onModeSelected }: Props) {
+  function renderFilterButton(mode: ChannelMode, text: string) {
+    const active = channel.selectedMode === mode
+    const handleClick = () => onModeSelected(channel.id, mode)
+    return (
+      <FilterButton active={active} onClick={handleClick}>
+        {text}
+      </FilterButton>
+    )
+  }
+
   return (
     <>
       <div css={nameAndFilterStyle}>
@@ -34,27 +44,13 @@ export default function ChannelHeader({ channel, onModeSelected }: Props) {
 
         {channel.mode === "both" && (
           <FilterGroup>
-            <FilterButton
-              active={channel.selectedMode === "both"}
-              onClick={() => onModeSelected(channel.id, "both")}
-            >
-              Both
-            </FilterButton>
-            <FilterButton
-              active={channel.selectedMode === "chat"}
-              onClick={() => onModeSelected(channel.id, "chat")}
-            >
-              Chat
-            </FilterButton>
-            <FilterButton
-              active={channel.selectedMode === "ads"}
-              onClick={() => onModeSelected(channel.id, "ads")}
-            >
-              Ads
-            </FilterButton>
+            {renderFilterButton("both", "Both")}
+            {renderFilterButton("chat", "Chat")}
+            {renderFilterButton("ads", "Ads")}
           </FilterGroup>
         )}
       </div>
+
       <Button flat>
         <Icon icon="users" />
       </Button>
