@@ -2,7 +2,7 @@ import React from "react"
 import Button from "../ui/Button"
 import { flexGrow, flexRow, flexWrap } from "../ui/helpers"
 import Icon from "../ui/Icon"
-import { css, styled } from "../ui/styled"
+import { css } from "../ui/styled"
 import { Channel } from "./types"
 
 type Props = {
@@ -14,11 +14,11 @@ export default function ChannelHeader({ channel }: Props) {
     <>
       <div css={nameAndFilterStyle}>
         <h2 css={channelNameStyle}>{channel.name}</h2>
-        <div css={filterGroupStyle}>
-          <FilterButton flat>Both</FilterButton>
-          <FilterButton flat>Chat</FilterButton>
-          <FilterButton flat>Ads</FilterButton>
-        </div>
+        <FilterGroup disabled>
+          <FilterButton>Both</FilterButton>
+          <FilterButton active>Chat</FilterButton>
+          <FilterButton>Ads</FilterButton>
+        </FilterGroup>
       </div>
       <Button flat>
         <Icon icon="users" />
@@ -41,11 +41,36 @@ const channelNameStyle = css`
   margin-right: 0.5rem;
 `
 
-const filterGroupStyle = css`
-  padding: 0.1rem 0;
-  margin: -0.5rem;
-`
+const FilterGroup = (props: {
+  children: React.ReactNode
+  disabled?: boolean
+}) => (
+  <div
+    css={css`
+      padding: 0.1rem 0;
+      margin: -0.5rem;
+      ${props.disabled &&
+        css`
+          opacity: 0.75;
+          pointer-events: none;
+        `}
+    `}
+  >
+    {props.children}
+  </div>
+)
 
-const FilterButton = styled(Button)`
-  padding: 0.5rem;
-`
+const FilterButton = (props: {
+  children: React.ReactNode
+  active?: boolean
+}) => (
+  <Button
+    flat
+    css={css`
+      padding: 0.5rem;
+      opacity: ${props.active ? 1 : 0.5};
+    `}
+  >
+    {props.children}
+  </Button>
+)
