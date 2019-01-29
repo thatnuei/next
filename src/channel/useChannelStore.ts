@@ -4,11 +4,17 @@ import { Dictionary } from "../common/types"
 import createCommandHandler from "../fchat/createCommandHandler"
 import { Message, MessageType } from "../message/types"
 import useFactoryMap from "../state/useFactoryMap"
-import { Channel } from "./types"
+import { Channel, ChannelMode } from "./types"
 
 export default function useChannelStore(identity?: string) {
   const channels = useFactoryMap(createChannel)
   const [joinedChannels, updateJoinedChannels] = useImmer<Dictionary<true>>({})
+
+  function setSelectedMode(channelId: string, mode: ChannelMode) {
+    channels.update(channelId, (channel) => {
+      channel.selectedMode = mode
+    })
+  }
 
   const handleCommand = createCommandHandler({
     ICH({ channel: id, mode, users }) {
@@ -78,7 +84,7 @@ export default function useChannelStore(identity?: string) {
     },
   })
 
-  return { channels, joinedChannels, handleCommand }
+  return { channels, joinedChannels, handleCommand, setSelectedMode }
 }
 
 function createChannel(id: string): Channel {

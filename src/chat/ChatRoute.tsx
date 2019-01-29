@@ -38,6 +38,7 @@ function ChatRoute(props: Props) {
               render={(param) => (
                 <ChannelHeader
                   channel={channelStore.channels.get(param("id"))}
+                  onModeSelected={channelStore.setSelectedMode}
                 />
               )}
             />

@@ -3,13 +3,14 @@ import Button from "../ui/Button"
 import { flexGrow, flexRow, flexWrap } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { css } from "../ui/styled"
-import { Channel } from "./types"
+import { Channel, ChannelMode } from "./types"
 
 type Props = {
   channel: Channel
+  onModeSelected: (channelId: string, mode: ChannelMode) => void
 }
 
-export default function ChannelHeader({ channel }: Props) {
+export default function ChannelHeader({ channel, onModeSelected }: Props) {
   return (
     <>
       <div css={nameAndFilterStyle}>
@@ -33,13 +34,22 @@ export default function ChannelHeader({ channel }: Props) {
 
         {channel.mode === "both" && (
           <FilterGroup>
-            <FilterButton active={channel.selectedMode === "both"}>
+            <FilterButton
+              active={channel.selectedMode === "both"}
+              onClick={() => onModeSelected(channel.id, "both")}
+            >
               Both
             </FilterButton>
-            <FilterButton active={channel.selectedMode === "chat"}>
+            <FilterButton
+              active={channel.selectedMode === "chat"}
+              onClick={() => onModeSelected(channel.id, "chat")}
+            >
               Chat
             </FilterButton>
-            <FilterButton active={channel.selectedMode === "ads"}>
+            <FilterButton
+              active={channel.selectedMode === "ads"}
+              onClick={() => onModeSelected(channel.id, "ads")}
+            >
               Ads
             </FilterButton>
           </FilterGroup>
@@ -88,6 +98,7 @@ const FilterGroup = (props: {
 const FilterButton = (props: {
   children: React.ReactNode
   active?: boolean
+  onClick?: () => void
 }) => (
   <Button
     flat
@@ -95,6 +106,7 @@ const FilterButton = (props: {
       padding: 0.5rem;
       opacity: ${props.active ? 1 : 0.5};
     `}
+    onClick={props.onClick}
   >
     {props.children}
   </Button>
