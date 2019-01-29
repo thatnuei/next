@@ -19,16 +19,18 @@ type Props = {
 export default function ChannelRoute({ channel, identity, messages }: Props) {
   const bottomScrollRef = useBottomScroll<HTMLUListElement>(channel.messages)
 
-  const filteredMessages = useMemo(
-    () =>
-      messages.filter((message) => {
-        // admin and system messages should always be visible
-        if (channel.selectedMode === "ads") return message.type !== "chat"
-        if (channel.selectedMode === "chat") return message.type !== "lfrp"
-        return true
-      }),
-    [channel.messages, channel.selectedMode],
-  )
+  const filteredMessages = useMemo(() => {
+    if (channel.mode !== "both") {
+      return messages
+    }
+
+    return messages.filter((message) => {
+      // admin and system messages should always be visible
+      if (channel.selectedMode === "ads") return message.type !== "chat"
+      if (channel.selectedMode === "chat") return message.type !== "lfrp"
+      return true
+    })
+  }, [channel.messages, channel.selectedMode])
 
   const renderMessage = (message: MessageWithSender) => (
     <MessageRow key={message.id} {...message} />
