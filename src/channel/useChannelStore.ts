@@ -19,7 +19,8 @@ export default function useChannelStore(identity?: string) {
   const handleCommand = createCommandHandler({
     ICH({ channel: id, mode, users }) {
       channels.update(id, (channel) => {
-        channel.mode = channel.selectedMode = mode
+        channel.mode = mode
+        channel.selectedMode = "chat"
         channel.users = {}
         for (const { identity } of users) channel.users[identity] = true
       })
