@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useMemo } from "react"
 import MessageRow from "../message/MessageRow"
 import { MessageWithSender } from "../message/types"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
@@ -19,6 +19,17 @@ type Props = {
 export default function ChannelRoute({ channel, identity, messages }: Props) {
   const bottomScrollRef = useBottomScroll<HTMLUListElement>(channel.messages)
 
+  const filteredMessages = useMemo(
+    () =>
+      messages.filter((message) => {
+        // admin and system messages should always be visible
+        if (channel.selectedMode === "ads") return message.type !== "chat"
+        if (channel.selectedMode === "chat") return message.type !== "lfrp"
+        return true
+      }),
+    [channel.messages, channel.selectedMode],
+  )
+
   const renderMessage = (message: MessageWithSender) => (
     <MessageRow key={message.id} {...message} />
   )
@@ -27,7 +38,7 @@ export default function ChannelRoute({ channel, identity, messages }: Props) {
     <AppDocumentTitle title={`${identity} - ${channel.name}`}>
       <section css={[fillArea, flexColumn]}>
         <section css={[flexGrow, scrollVertical]} ref={bottomScrollRef}>
-          {messages.map(renderMessage)}
+          {filteredMessages.map(renderMessage)}
         </section>
         <form
           css={inputContainerStyle}
