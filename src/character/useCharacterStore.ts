@@ -3,7 +3,7 @@ import FactoryMap from "../state/FactoryMap"
 import useInstanceValue from "../state/useInstanceValue"
 import { Character, CharacterStatus, Gender } from "./types"
 
-function createCharacter(
+export function createCharacter(
   name: string,
   gender: Gender = "None",
   status: CharacterStatus = "offline",
