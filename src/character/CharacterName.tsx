@@ -14,8 +14,12 @@ const CharacterName = (props: CharacterNameProps) => {
     <a href="#" css={containerStyle}>
       <span
         css={[statusDotStyle, { backgroundColor: statusColors[props.status] }]}
+        title={`Status: ${props.status}`}
       />
-      <span css={[nameStyle, { color: genderColors[props.gender] }]}>
+      <span
+        title={`${props.name} - ${props.gender}`}
+        css={[nameStyle, { color: genderColors[props.gender] }]}
+      >
         {props.name}
       </span>
     </a>
