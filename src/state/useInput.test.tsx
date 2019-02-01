@@ -22,5 +22,4 @@ test("useInput", () => {
   fireEvent.change(getByValue("hi"), { target: { value: "awesome" } })
 
   expect(input.value).toBe("awesome")
-  expect(queryByValue("awesome")).not.toBeNull()
 })
