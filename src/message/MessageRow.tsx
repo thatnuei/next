@@ -1,13 +1,14 @@
 import { Interpolation } from "@emotion/core"
-import React from "react"
+import { observer } from "mobx-react-lite"
+import React, { useContext } from "react"
 import CharacterName from "../character/CharacterName"
-import { Character } from "../character/types"
+import ChatStore from "../chat/ChatStore"
 import { semiBlack } from "../ui/colors"
 import { css } from "../ui/styled"
 import { MessageType } from "./types"
 
 type MessageRowProps = {
-  sender?: Character
+  senderName?: string
   text: string
   type: MessageType
   time: number
@@ -15,7 +16,13 @@ type MessageRowProps = {
 
 const actionRegex = /^\s*\/me\s*/
 
-const MessageRow = ({ sender, text, type, time }: MessageRowProps) => {
+const MessageRow = ({ senderName, text, type, time }: MessageRowProps) => {
+  const { characterStore } = useContext(ChatStore.Context)
+
+  const sender = senderName
+    ? characterStore.characters.get(senderName)
+    : undefined
+
   const isAction = actionRegex.test(text)
   const parsedText = text.replace(actionRegex, "")
 
@@ -30,10 +37,7 @@ const MessageRow = ({ sender, text, type, time }: MessageRowProps) => {
   )
 }
 
-export default React.memo(
-  MessageRow,
-  (prev, next) => prev.sender === next.sender,
-)
+export default observer(MessageRow)
 
 const highlightStyles: { [K in MessageType]?: Interpolation } = {
   lfrp: { backgroundColor: "rgba(39, 174, 96, 0.2)" },

@@ -1,6 +1,8 @@
-import React, { useMemo } from "react"
+import { observer } from "mobx-react-lite"
+import React, { useContext } from "react"
+import ChatStore from "../chat/ChatStore"
 import MessageRow from "../message/MessageRow"
-import { MessageWithSender } from "../message/types"
+import { Message } from "../message/types"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import { themeColor } from "../ui/colors"
@@ -11,28 +13,31 @@ import useBottomScroll from "../ui/useBottomScroll"
 import { Channel } from "./types"
 
 type Props = {
-  channel: Channel
-  identity: string
-  messages: MessageWithSender[]
+  channelId: string
 }
 
-export default function ChannelRoute({ channel, identity, messages }: Props) {
+function getFilteredMessages(channel: Channel) {
+  if (channel.mode !== "both") {
+    return channel.messages
+  }
+
+  return channel.messages.filter((msg) => {
+    // admin and system messages should always be visible
+    if (channel.selectedMode === "ads") return msg.type !== "chat"
+    if (channel.selectedMode === "chat") return msg.type !== "lfrp"
+    return true
+  })
+}
+
+function ChannelRoute({ channelId }: Props) {
+  const { channelStore, identity } = useContext(ChatStore.Context)
+  const channel = channelStore.channels.get(channelId)
+
   const bottomScrollRef = useBottomScroll<HTMLUListElement>(channel.messages)
 
-  const filteredMessages = useMemo(() => {
-    if (channel.mode !== "both") {
-      return messages
-    }
+  const filteredMessages = getFilteredMessages(channel)
 
-    return messages.filter((message) => {
-      // admin and system messages should always be visible
-      if (channel.selectedMode === "ads") return message.type !== "chat"
-      if (channel.selectedMode === "chat") return message.type !== "lfrp"
-      return true
-    })
-  }, [channel.messages, channel.selectedMode])
-
-  const renderMessage = (message: MessageWithSender) => (
+  const renderMessage = (message: Message) => (
     <MessageRow key={message.id} {...message} />
   )
 
@@ -53,6 +58,7 @@ export default function ChannelRoute({ channel, identity, messages }: Props) {
     </AppDocumentTitle>
   )
 }
+export default observer(ChannelRoute)
 
 const inputContainerStyle = css`
   display: grid;

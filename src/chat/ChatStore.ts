@@ -1,3 +1,4 @@
+import createContainer from "constate"
 import { useEffect } from "react"
 import routePaths from "../app/routePaths"
 import useChannelStore from "../channel/useChannelStore"
@@ -6,7 +7,6 @@ import { OptionalArg } from "../common/types"
 import { chatServerUrl } from "../fchat/constants"
 import createCommandHandler from "../fchat/createCommandHandler"
 import { ClientCommandMap, ServerCommand } from "../fchat/types"
-import { Message, MessageWithSender } from "../message/types"
 import { useRouter } from "../router"
 
 type UserCredentials = {
@@ -19,20 +19,6 @@ function useChatState(user: UserCredentials) {
   const { history } = useRouter()
   const characterStore = useCharacterStore()
   const channelStore = useChannelStore(user.identity)
-
-  function getChannelMessages(channelId: string): MessageWithSender[] {
-    return channelStore.channels
-      .get(channelId)
-      .messages.map(resolveMessageSender)
-  }
-
-  function resolveMessageSender(message: Message): MessageWithSender {
-    const sender = message.senderName
-      ? characterStore.characters.get(message.senderName)
-      : undefined
-
-    return message.senderName ? { ...message, sender: sender } : message
-  }
 
   useEffect(() => {
     const socket = new WebSocket(chatServerUrl)
@@ -91,9 +77,12 @@ function useChatState(user: UserCredentials) {
     }
   }, [])
 
-  return { channelStore, characterStore, getChannelMessages }
+  return { channelStore, characterStore, identity: user.identity }
 }
-export default useChatState
+
+const ChatStore = createContainer(useChatState)
+
+export default ChatStore
 
 function sendCommand<K extends keyof ClientCommandMap>(
   socket: WebSocket,

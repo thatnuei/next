@@ -1,14 +1,16 @@
-import { useImmer } from "use-immer"
 import exists from "../common/exists"
-import { Dictionary } from "../common/types"
 import createCommandHandler from "../fchat/createCommandHandler"
 import { Message, MessageType } from "../message/types"
-import useFactoryMap from "../state/useFactoryMap"
+import FactoryMap from "../state/FactoryMap"
+import useInstanceValue from "../state/useInstanceValue"
 import { Channel, ChannelMode } from "./types"
 
-export default function useChannelStore(identity?: string) {
-  const channels = useFactoryMap(createChannel)
-  const [joinedChannels, updateJoinedChannels] = useImmer<Dictionary<true>>({})
+export default function useChannelStore(identity: string) {
+  const channels = useInstanceValue(() => new FactoryMap(createChannel))
+
+  function getJoinedChannels() {
+    return channels.values.filter((ch) => ch.users[identity])
+  }
 
   function setSelectedMode(channelId: string, mode: ChannelMode) {
     channels.update(channelId, (channel) => {
@@ -44,32 +46,18 @@ export default function useChannelStore(identity?: string) {
         channel.name = title
         channel.users[character.identity] = true
       })
-
-      if (character.identity === identity) {
-        updateJoinedChannels((draft) => {
-          draft[id] = true
-        })
-      }
     },
 
     LCH({ channel: id, character }) {
       channels.update(id, (channel) => {
         delete channel.users[character]
       })
-
-      if (character === identity) {
-        updateJoinedChannels((draft) => {
-          delete draft[id]
-        })
-      }
     },
 
     FLN({ character }) {
-      channels.updateAll((channels) => {
-        for (const ch of Object.values(channels).filter(exists)) {
-          delete ch.users[character]
-        }
-      })
+      for (const ch of channels.values.filter(exists)) {
+        delete ch.users[character]
+      }
     },
 
     MSG({ channel: id, character, message }) {
@@ -85,7 +73,7 @@ export default function useChannelStore(identity?: string) {
     },
   })
 
-  return { channels, joinedChannels, handleCommand, setSelectedMode }
+  return { channels, getJoinedChannels, handleCommand, setSelectedMode }
 }
 
 function createChannel(id: string): Channel {

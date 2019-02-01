@@ -1,5 +1,6 @@
 import createCommandHandler from "../fchat/createCommandHandler"
-import useFactoryMap from "../state/useFactoryMap"
+import FactoryMap from "../state/FactoryMap"
+import useInstanceValue from "../state/useInstanceValue"
 import { Character, CharacterStatus, Gender } from "./types"
 
 function createCharacter(
@@ -12,15 +13,13 @@ function createCharacter(
 }
 
 export default function useCharacterStore() {
-  const characters = useFactoryMap(createCharacter)
+  const characters = useInstanceValue(() => new FactoryMap(createCharacter))
 
   const handleCommand = createCommandHandler({
     LIS({ characters: characterInfoTuples }) {
-      characters.updateAll((draft) => {
-        for (const args of characterInfoTuples) {
-          draft[args[0]] = createCharacter(...args)
-        }
-      })
+      for (const [name, ...args] of characterInfoTuples) {
+        characters.set(name, createCharacter(name, ...args))
+      }
     },
 
     NLN({ gender, identity }) {

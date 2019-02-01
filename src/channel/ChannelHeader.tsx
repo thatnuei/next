@@ -1,19 +1,23 @@
-import React from "react"
+import { observer } from "mobx-react-lite"
+import React, { useContext } from "react"
+import ChatStore from "../chat/ChatStore"
 import Button from "../ui/Button"
 import { flexGrow, flexRow, flexWrap } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { css } from "../ui/styled"
-import { Channel, ChannelMode } from "./types"
+import { ChannelMode } from "./types"
 
 type Props = {
-  channel: Channel
-  onModeSelected: (channelId: string, mode: ChannelMode) => void
+  channelId: string
 }
 
-export default function ChannelHeader({ channel, onModeSelected }: Props) {
+function ChannelHeader({ channelId }: Props) {
+  const { channelStore } = useContext(ChatStore.Context)
+  const channel = channelStore.channels.get(channelId)
+
   function renderFilterButton(mode: ChannelMode, text: string) {
     const active = channel.selectedMode === mode
-    const handleClick = () => onModeSelected(channel.id, mode)
+    const handleClick = () => channelStore.setSelectedMode(channelId, mode)
     return (
       <FilterButton active={active} onClick={handleClick}>
         {text}
@@ -57,6 +61,7 @@ export default function ChannelHeader({ channel, onModeSelected }: Props) {
     </>
   )
 }
+export default observer(ChannelHeader)
 
 const nameAndFilterStyle = css`
   ${flexGrow};

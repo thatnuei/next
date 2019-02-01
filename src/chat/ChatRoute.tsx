@@ -12,7 +12,6 @@ import SideOverlay from "../ui/SideOverlay"
 import { css } from "../ui/styled"
 import useOverlayState from "../ui/useOverlayState"
 import ChatSidebarContent from "./ChatSidebarContent"
-import useChatState from "./useChatState"
 
 type Props = {
   account: string
@@ -21,7 +20,6 @@ type Props = {
 }
 
 function ChatRoute(props: Props) {
-  const { channelStore, getChannelMessages } = useChatState(props)
   const sidebar = useOverlayState()
 
   return (
@@ -35,12 +33,7 @@ function ChatRoute(props: Props) {
           <Switch>
             <Route
               path={routePaths.channel(":id")}
-              render={(param) => (
-                <ChannelHeader
-                  channel={channelStore.channels.get(param("id"))}
-                  onModeSelected={channelStore.setSelectedMode}
-                />
-              )}
+              render={(param) => <ChannelHeader channelId={param("id")} />}
             />
           </Switch>
         </header>
@@ -49,22 +42,14 @@ function ChatRoute(props: Props) {
           <Switch>
             <Route
               path={routePaths.channel(":id")}
-              render={(param) => (
-                <ChannelRoute
-                  channel={channelStore.channels.get(param("id"))}
-                  identity={props.identity}
-                  messages={getChannelMessages(param("id"))}
-                />
-              )}
+              render={(param) => <ChannelRoute channelId={param("id")} />}
             />
           </Switch>
         </main>
       </div>
 
       <SideOverlay {...sidebar.bind}>
-        <ChatSidebarContent
-          joinedChannelIds={Object.keys(channelStore.joinedChannels)}
-        />
+        <ChatSidebarContent />
       </SideOverlay>
     </AppDocumentTitle>
   )

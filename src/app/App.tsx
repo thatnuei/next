@@ -1,6 +1,7 @@
 import * as idb from "idb-keyval"
 import React, { useEffect, useState } from "react"
 import ChatRoute from "../chat/ChatRoute"
+import ChatStore from "../chat/ChatStore"
 import * as api from "../flist/api"
 import { Redirect, Route, Switch, useRouter } from "../router"
 import CharacterSelectRoute from "./CharacterSelectRoute"
@@ -26,16 +27,13 @@ function App() {
     restoreSession()
   }, [])
 
-  useEffect(
-    () => {
-      if (!isSessionLoaded || !userData) return
-      idb.set(userDataKey, userData)
+  useEffect(() => {
+    if (!isSessionLoaded || !userData) return
+    idb.set(userDataKey, userData)
 
-      if (!identity) return
-      window.sessionStorage.setItem(identityKey(userData.account), identity)
-    },
-    [userData, identity],
-  )
+    if (!identity) return
+    window.sessionStorage.setItem(identityKey(userData.account), identity)
+  }, [userData, identity])
 
   function updateSessionData(
     account: string,
@@ -81,7 +79,11 @@ function App() {
   function renderChat() {
     if (!userData) return <Redirect to={routePaths.login} />
     if (!identity) return <Redirect to={routePaths.characterSelect} />
-    return <ChatRoute {...userData} identity={identity} />
+    return (
+      <ChatStore.Provider {...userData} identity={identity}>
+        <ChatRoute {...userData} identity={identity} />
+      </ChatStore.Provider>
+    )
   }
 
   if (!isSessionLoaded) {
