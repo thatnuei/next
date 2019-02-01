@@ -1,7 +1,7 @@
 import { action, computed, observable } from "mobx"
 
 export default class FactoryMap<T> {
-  @observable
+  @observable.shallow
   private items = new Map<string, T>()
 
   constructor(private createItem: (id: string) => T) {}
