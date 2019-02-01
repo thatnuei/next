@@ -1,6 +1,6 @@
 import { action, computed, observable } from "mobx"
 
-export default class FactoryMap<T> {
+export default class FactoryMap<T extends object> {
   @observable.shallow
   private items = new Map<string, T>()
 
