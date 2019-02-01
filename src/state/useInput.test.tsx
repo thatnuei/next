@@ -1,6 +1,5 @@
 import React from "react"
 import { fireEvent, render } from "react-testing-library"
-import "react-testing-library/cleanup-after-each"
 import useInput from "./useInput"
 
 test("useInput", () => {
