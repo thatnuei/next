@@ -1,34 +1,46 @@
-import { Draft } from "immer"
-import { useImmer } from "use-immer"
-import { Dictionary, Mutable } from "../common/types"
+import { useMemo, useState } from "react"
+import exists from "../common/exists"
+import { Dictionary } from "../common/types"
 
-function useFactoryMap<T>(factory: (id: string) => T) {
-  const [items, updateAll] = useImmer<Dictionary<T>>({})
+export type FactoryMapState<T> = {
+  items: Dictionary<T>
+  get: (id: string) => T
+  set: (id: string, newItem: T) => void
+  merge: (newItems: Record<string, T>) => void
+  update: (id: string, update: (item: T) => T) => void
+  keys: string[]
+  values: T[]
+}
+
+function useFactoryMap<T>(factory: (id: string) => T): FactoryMapState<T> {
+  const [items, setItems] = useState<Dictionary<T>>({})
 
   function get(id: string) {
     const item = items[id]
     if (item) return item
 
     const newItem = factory(id)
-    updateAll((items) => {
-      items[id] = newItem as Draft<T>
-    })
+    setItems({ ...items, [id]: newItem })
     return newItem
   }
 
   function set(id: string, newItem: T) {
-    updateAll((items) => {
-      items[id] = newItem as Draft<T>
-    })
+    setItems({ ...items, [id]: newItem })
   }
 
-  function update(id: string, updater: (channel: Mutable<T>) => T | void) {
-    updateAll((items) => {
-      const item = items[id] || factory(id)
-      items[id] = (updater(item as T) || item) as Draft<T>
-    })
+  function merge(newItems: Record<string, T>) {
+    setItems({ ...items, ...newItems })
   }
 
-  return { items, get, set, update, updateAll }
+  function update(id: string, update: (item: T) => T) {
+    const item = get(id)
+    setItems({ ...items, [id]: update(item) })
+  }
+
+  const keys = useMemo(() => Object.keys(items), [items])
+
+  const values = useMemo(() => Object.values(items).filter(exists), [items])
+
+  return { items, get, set, merge, update, keys, values }
 }
 export default useFactoryMap
