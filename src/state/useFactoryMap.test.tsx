@@ -53,6 +53,17 @@ test("update - return new item", () => {
   expect(map.get("world")).toEqual({ greeting: "hello moon" })
 })
 
+test(`update - "mutate" item`, () => {
+  let map!: FactoryMapState<User>
+  testHook(() => (map = useFactoryMap(createUser)))
+
+  map.update("world", (user) => {
+    user.greeting = "hello moon"
+  })
+
+  expect(map.get("world")).toEqual({ greeting: "hello moon" })
+})
+
 test("values", () => {
   let map!: FactoryMapState<User>
   testHook(() => (map = useFactoryMap(createUser)))

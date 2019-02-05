@@ -1,3 +1,4 @@
+import produce from "immer"
 import { useMemo, useState } from "react"
 import exists from "../common/exists"
 import { Dictionary } from "../common/types"
@@ -7,7 +8,7 @@ export type FactoryMapState<T> = {
   get: (id: string) => T
   set: (id: string, newItem: T) => void
   merge: (newItems: Record<string, T>) => void
-  update: (id: string, update: (item: T) => T) => void
+  update: (id: string, update: (item: T) => T | void) => void
   keys: string[]
   values: T[]
 }
@@ -32,9 +33,9 @@ function useFactoryMap<T>(factory: (id: string) => T): FactoryMapState<T> {
     setItems({ ...items, ...newItems })
   }
 
-  function update(id: string, update: (item: T) => T) {
+  function update(id: string, update: (item: T) => T | void) {
     const item = get(id)
-    setItems({ ...items, [id]: update(item) })
+    setItems({ ...items, [id]: produce(item, update) as T })
   }
 
   const keys = useMemo(() => Object.keys(items), [items])
