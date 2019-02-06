@@ -226,18 +226,16 @@ class SocketStore {
 }
 
 class CharacterModel {
-  name: string
   @observable gender: Gender
   @observable status: CharacterStatus
   @observable statusMessage: string
 
   constructor(
-    name: string,
+    public readonly name: string,
     gender: Gender = "None",
     status: CharacterStatus = "offline",
     statusMessage = "",
   ) {
-    this.name = name
     this.gender = gender
     this.status = status
     this.statusMessage = statusMessage
