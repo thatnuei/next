@@ -65,3 +65,14 @@ test("keys", () => {
   map.get("b")
   expect(map.keys).toEqual(["a", "b"])
 })
+
+test("entries", () => {
+  const map = new FactoryMap(createGreeting)
+  map.get("a")
+  map.get("b")
+
+  expect(map.entries).toEqual([
+    ["a", { greeting: "hello a" }],
+    ["b", { greeting: "hello b" }],
+  ])
+})

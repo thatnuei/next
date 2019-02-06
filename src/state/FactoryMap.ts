@@ -42,4 +42,9 @@ export default class FactoryMap<T extends object> {
   get keys() {
     return [...this.items.keys()]
   }
+
+  @computed
+  get entries() {
+    return [...this.items.entries()]
+  }
 }
