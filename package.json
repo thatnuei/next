@@ -31,7 +31,8 @@
     "react-document-title": "https://github.com/serprex/react-document-title.git#8a5277204ee8d2427457275379e8c6248a7a45df",
     "react-dom": "16.8.0-alpha.1",
     "react-testing-library": "^5.4.4",
-    "use-immer": "^0.1.0"
+    "use-immer": "^0.1.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -53,6 +54,7 @@
     "@types/react": "^16.7.21",
     "@types/react-document-title": "2.0.3",
     "@types/react-dom": "^16.0.11",
+    "@types/uuid": "^3.4.4",
     "@types/webpack": "^4.4.24",
     "@types/webpack-dev-server": "^3.1.1",
     "@types/webpack-env": "^1.13.6",
