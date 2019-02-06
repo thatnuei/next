@@ -23,32 +23,37 @@ class RootStore {
 const credentialsKey = "credentials"
 
 class CharacterCollection {
-  @observable.shallow names = new Set<string>()
+  @observable.shallow private nameSet = new Set<string>()
 
   constructor(private characterStore: CharacterStore) {}
 
   @action
   set(names: Iterable<string>) {
-    this.names = new Set(names)
+    this.nameSet = new Set(names)
   }
 
   @action
   add(name: string) {
-    this.names.add(name)
+    this.nameSet.add(name)
   }
 
   @action
   remove(name: string) {
-    this.names.delete(name)
+    this.nameSet.delete(name)
   }
 
   has(name: string) {
-    return this.names.has(name)
+    return this.nameSet.has(name)
+  }
+
+  @computed
+  get names() {
+    return [...this.nameSet]
   }
 
   @computed
   get characters() {
-    return [...this.names].map((name) =>
+    return [...this.nameSet].map((name) =>
       this.characterStore.characters.get(name),
     )
   }
