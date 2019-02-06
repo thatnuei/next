@@ -6,7 +6,8 @@ import useCharacterStore from "../character/useCharacterStore"
 import { OptionalArg } from "../common/types"
 import { chatServerUrl } from "../fchat/constants"
 import createCommandHandler from "../fchat/createCommandHandler"
-import { ClientCommandMap, ServerCommand } from "../fchat/types"
+import { parseCommand } from "../fchat/helpers"
+import { ClientCommandMap } from "../fchat/types"
 import { useRouter } from "../router"
 
 type UserCredentials = {
@@ -58,9 +59,7 @@ function useChatState(user: UserCredentials) {
     }
 
     socket.onmessage = ({ data }) => {
-      const type = data.slice(0, 3)
-      const params = data.length > 3 ? JSON.parse(data.slice(4)) : {}
-      const command: ServerCommand = { type, params }
+      const command = parseCommand(data)
 
       if (handleCommand(command)) return
       if (characterStore.handleCommand(command)) return
