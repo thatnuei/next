@@ -1,3 +1,4 @@
+import React, { useContext } from "react"
 import ViewStore from "./app/ViewStore"
 import ChannelStore from "./channel/ChannelStore"
 import CharacterStore from "./character/CharacterStore"
@@ -12,4 +13,12 @@ export default class RootStore {
   characterStore = new CharacterStore()
   channelStore = new ChannelStore(this)
   chatStore = new ChatStore(this)
+}
+
+export const RootStoreContext = React.createContext<RootStore>()
+
+export function useRootStore() {
+  const store = useContext(RootStoreContext)
+  if (store == null) throw new Error("Root store provider not found")
+  return store
 }

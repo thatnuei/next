@@ -10,7 +10,7 @@ export default class SocketStore {
 
   constructor(private root: RootStore) {}
 
-  connectToChat() {
+  connectToChat(onConnect: () => void, onDisconnect: () => void) {
     const { account, ticket } = this.root.userStore
     const { identity } = this.root.chatStore
 
@@ -27,10 +27,15 @@ export default class SocketStore {
       })
     }
 
-    socket.onclose = () => {}
+    socket.onclose = () => {
+      onDisconnect()
+    }
 
     socket.onmessage = ({ data }) => {
       const command = parseCommand(data)
+
+      if (command.type === "IDN") onConnect()
+
       this.handleSocketCommand(command)
       this.root.characterStore.handleSocketCommand(command)
       this.root.channelStore.handleSocketCommand(command)

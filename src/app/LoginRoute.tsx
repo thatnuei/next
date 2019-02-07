@@ -1,4 +1,6 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
+import { useRootStore } from "../RootStore"
 import useInput from "../state/useInput"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
@@ -8,17 +10,20 @@ import ModalOverlay from "../ui/ModalOverlay"
 import ModalTitle from "../ui/ModalTitle"
 import TextInput from "../ui/TextInput"
 
-type LoginRouteProps = {
-  onLoginSubmit: (account: string, password: string) => void
-}
-
-function LoginRoute(props: LoginRouteProps) {
+function LoginRoute() {
+  const { userStore, viewStore } = useRootStore()
   const account = useInput()
   const password = useInput()
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    props.onLoginSubmit(account.value, password.value)
+
+    try {
+      await userStore.submitLogin(account.value, password.value)
+      viewStore.showCharacterSelect()
+    } catch (error) {
+      alert(error)
+    }
   }
 
   return (
@@ -44,4 +49,4 @@ function LoginRoute(props: LoginRouteProps) {
     </AppDocumentTitle>
   )
 }
-export default LoginRoute
+export default observer(LoginRoute)
