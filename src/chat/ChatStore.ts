@@ -1,96 +1,18 @@
-import createContainer from "constate"
-import { useEffect } from "react"
-import routePaths from "../app/routePaths"
-import useChannelStore from "../channel/useChannelStore"
-import useCharacterStore from "../character/useCharacterStore"
-import { OptionalArg } from "../common/types"
-import { chatServerUrl } from "../fchat/constants"
-import createCommandHandler from "../fchat/createCommandHandler"
-import { parseCommand } from "../fchat/helpers"
-import { ClientCommandMap } from "../fchat/types"
-import { useRouter } from "../router"
+import { action, observable } from "mobx"
+import CharacterCollection from "../character/CharacterCollection"
+import RootStore from "../RootStore"
 
-type UserCredentials = {
-  account: string
-  ticket: string
-  identity: string
-}
+export default class ChatStore {
+  @observable identity = ""
 
-function useChatState(user: UserCredentials) {
-  const { history } = useRouter()
-  const characterStore = useCharacterStore()
-  const channelStore = useChannelStore(user.identity)
+  friends = new CharacterCollection(this.root.characterStore)
+  ignoreds = new CharacterCollection(this.root.characterStore)
+  admins = new CharacterCollection(this.root.characterStore)
 
-  useEffect(() => {
-    const socket = new WebSocket(chatServerUrl)
+  constructor(private root: RootStore) {}
 
-    const handleCommand = createCommandHandler({
-      IDN() {
-        sendCommand(socket, "JCH", { channel: "Frontpage" })
-        sendCommand(socket, "JCH", { channel: "Fantasy" })
-        sendCommand(socket, "JCH", { channel: "Story Driven LFRP" })
-        sendCommand(socket, "JCH", { channel: "Development" })
-      },
-      PIN() {
-        sendCommand(socket, "PIN")
-      },
-      HLO({ message }) {
-        console.info(message)
-      },
-      CON({ count }) {
-        console.info(`There are ${count} characters in chat`)
-      },
-    })
-
-    socket.onopen = () => {
-      sendCommand(socket, "IDN", {
-        account: user.account,
-        ticket: user.ticket,
-        character: user.identity,
-        cname: "next",
-        cversion: "0.1.0",
-        method: "ticket",
-      })
-    }
-
-    socket.onclose = () => {
-      console.log("socket closed")
-      history.push(routePaths.login)
-    }
-
-    socket.onmessage = ({ data }) => {
-      const command = parseCommand(data)
-
-      if (handleCommand(command)) return
-      if (characterStore.handleCommand(command)) return
-      if (channelStore.handleCommand(command)) return
-
-      console.log("unhandled command", command)
-    }
-
-    return () => {
-      socket.onopen = null
-      socket.onclose = null
-      socket.onmessage = null
-      socket.close()
-    }
-  }, [])
-
-  return { channelStore, characterStore, identity: user.identity }
-}
-
-const ChatStore = createContainer(useChatState)
-
-export default ChatStore
-
-function sendCommand<K extends keyof ClientCommandMap>(
-  socket: WebSocket,
-  command: K,
-  ...params: OptionalArg<ClientCommandMap[K]>
-) {
-  if (params[0]) {
-    socket.send(`${command} ${JSON.stringify(params[0])}`)
-  } else {
-    socket.send(command)
+  @action
+  setIdentity(identity: string) {
+    this.identity = identity
   }
 }

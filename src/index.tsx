@@ -2,15 +2,9 @@ import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
 import Root from "./Root"
-import { Router } from "./router"
 
 function renderApp() {
-  ReactDOM.render(
-    <Router>
-      <Root />
-    </Router>,
-    document.querySelector("#root"),
-  )
+  ReactDOM.render(<Root />, document.querySelector("#root"))
 }
 
 function main() {
