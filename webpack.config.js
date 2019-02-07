@@ -26,6 +26,7 @@ const baseConfig = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
     mainFields: ["module", "jsnext:main", "main"],
+    symlinks: false,
   },
   plugins: [
     new HtmlPlugin({
@@ -45,6 +46,18 @@ const baseConfig = {
     children: false,
     excludeAssets: (assetName) => /\.map$/.test(assetName),
   },
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
+  },
 }
 
 /** @type {webpack.Configuration} */
@@ -62,18 +75,6 @@ const prodConfig = {
   devtool: "source-map",
   output: {
     filename: "js/[name].[contenthash].js",
-  },
-  optimization: {
-    runtimeChunk: "single",
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: "vendors",
-          chunks: "all",
-        },
-      },
-    },
   },
   plugins: [new webpack.HashedModuleIdsPlugin()],
 }
