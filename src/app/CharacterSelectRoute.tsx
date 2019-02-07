@@ -19,12 +19,14 @@ function CharacterSelectRoute() {
   const { identity } = chatStore
 
   useEffect(() => {
-    idb
-      .get<string>(lastCharacterKey(userStore.account))
-      .then((storedIdentity) => {
-        chatStore.setIdentity(storedIdentity || characters[0])
-      })
+    restoreIdentity()
   }, [])
+
+  async function restoreIdentity() {
+    const key = lastCharacterKey(userStore.account)
+    const storedIdentity = await idb.get<string>(key)
+    chatStore.setIdentity(storedIdentity || characters[0])
+  }
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const newIdentity = event.target.value
