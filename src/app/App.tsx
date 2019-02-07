@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRootStore } from "../RootStore"
-import CharacterSelectRoute from "./CharacterSelectRoute"
-import LoginRoute from "./LoginRoute"
+import CharacterSelectScreen from "./CharacterSelectScreen"
+import LoginScreen from "./LoginScreen"
 
 function App() {
   const { viewStore } = useRootStore()
@@ -12,10 +12,10 @@ function App() {
       return <p>Setting things up...</p>
 
     case "login":
-      return <LoginRoute />
+      return <LoginScreen />
 
     case "characterSelect":
-      return <CharacterSelectRoute />
+      return <CharacterSelectScreen />
 
     default:
       return <div>chat eventually</div>

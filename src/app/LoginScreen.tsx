@@ -10,7 +10,7 @@ import ModalOverlay from "../ui/ModalOverlay"
 import ModalTitle from "../ui/ModalTitle"
 import TextInput from "../ui/TextInput"
 
-function LoginRoute() {
+function LoginScreen() {
   const { userStore, viewStore } = useRootStore()
   const account = useInput()
   const password = useInput()
@@ -49,4 +49,4 @@ function LoginRoute() {
     </AppDocumentTitle>
   )
 }
-export default observer(LoginRoute)
+export default observer(LoginScreen)

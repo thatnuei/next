@@ -12,7 +12,7 @@ import ModalTitle from "../ui/ModalTitle"
 
 const lastCharacterKey = (account: string) => `${account}:lastCharacter`
 
-function CharacterSelectRoute() {
+function CharacterSelectScreen() {
   const { userStore, viewStore, chatStore, socketStore } = useRootStore()
 
   const { characters } = userStore
@@ -67,7 +67,7 @@ function CharacterSelectRoute() {
     </AppDocumentTitle>
   )
 }
-export default observer(CharacterSelectRoute)
+export default observer(CharacterSelectScreen)
 
 const formStyle: React.CSSProperties = {
   display: "flex",
