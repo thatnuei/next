@@ -13,6 +13,16 @@ export default class RootStore {
   characterStore = new CharacterStore()
   channelStore = new ChannelStore(this)
   chatStore = new ChatStore(this)
+
+  async init() {
+    try {
+      await this.userStore.restoreUserData()
+      this.viewStore.showCharacterSelect()
+    } catch (error) {
+      console.warn("(non-fatal) user data restore error:", error)
+      this.viewStore.showLogin()
+    }
+  }
 }
 
 export const RootStoreContext = React.createContext<RootStore>()

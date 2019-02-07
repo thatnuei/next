@@ -17,9 +17,7 @@ function renderApp() {
 
 function main() {
   configure({ enforceActions: "observed" })
-
-  store.userStore.restoreUserData()
-
+  store.init()
   renderApp()
 
   if (process.env.NODE_ENV !== "production") {
