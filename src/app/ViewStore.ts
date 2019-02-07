@@ -2,6 +2,7 @@ import { action, computed, observable } from "mobx"
 import RootStore from "../RootStore"
 
 type Screen =
+  | "setup"
   | "login"
   | "characterSelect"
   | "console"
@@ -9,11 +10,16 @@ type Screen =
   | "privateChat"
 
 export default class ViewStore {
-  @observable screen: Screen = "login"
+  @observable screen: Screen = "setup"
   @observable currentChannelId = ""
   @observable currentPrivateChatName = ""
 
   constructor(private root: RootStore) {}
+
+  @action
+  showSetup() {
+    this.screen = "setup"
+  }
 
   @action
   showLogin() {

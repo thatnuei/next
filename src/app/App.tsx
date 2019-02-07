@@ -8,6 +8,9 @@ function App() {
   const { viewStore } = useRootStore()
 
   switch (viewStore.screen) {
+    case "setup":
+      return <p>Setting things up...</p>
+
     case "login":
       return <LoginRoute />
 
