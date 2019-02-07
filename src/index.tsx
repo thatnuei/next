@@ -38,9 +38,3 @@ function main() {
 }
 
 main()
-
-declare global {
-  interface Window {
-    store?: RootStore
-  }
-}
