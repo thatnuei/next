@@ -23,6 +23,10 @@ export default class RootStore {
       this.viewStore.showLogin()
     }
   }
+
+  cleanup() {
+    this.socketStore.disconnectFromChat()
+  }
 }
 
 export const RootStoreContext = React.createContext<RootStore>()

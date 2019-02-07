@@ -4,9 +4,7 @@ import ReactDOM from "react-dom"
 import Root from "./Root"
 import RootStore, { RootStoreContext } from "./RootStore"
 
-const store = new RootStore()
-
-function renderApp() {
+function renderApp(store: RootStore) {
   ReactDOM.render(
     <RootStoreContext.Provider value={store}>
       <Root />
@@ -15,14 +13,24 @@ function renderApp() {
   )
 }
 
+let store!: RootStore
+
+function initStoreAndRender() {
+  if (store) store.cleanup()
+
+  store = new RootStore()
+  store.init()
+  renderApp(store)
+}
+
 function main() {
   configure({ enforceActions: "observed" })
-  store.init()
-  renderApp()
+  initStoreAndRender()
 
   if (process.env.NODE_ENV !== "production") {
     if (module.hot) {
-      module.hot.accept("./Root", renderApp)
+      module.hot.accept("./Root", () => renderApp(store))
+      module.hot.accept("./RootStore", initStoreAndRender)
     }
 
     window.store = store

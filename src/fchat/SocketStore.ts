@@ -42,6 +42,16 @@ export default class SocketStore {
     }
   }
 
+  disconnectFromChat() {
+    const { socket } = this
+    if (socket == null) return
+
+    socket.onopen = null
+    socket.onclose = null
+    socket.onmessage = null
+    socket.close()
+  }
+
   sendSocketCommand<K extends keyof ClientCommandMap>(
     cmd: K,
     params: ClientCommandMap[K],
