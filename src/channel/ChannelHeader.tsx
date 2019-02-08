@@ -1,23 +1,20 @@
 import { observer } from "mobx-react-lite"
-import React, { useContext } from "react"
-import ChatStore from "../chat/ChatStore"
+import React from "react"
 import Button from "../ui/Button"
 import { flexGrow, flexRow, flexWrap } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { css } from "../ui/styled"
+import ChannelModel from "./ChannelModel"
 import { ChannelMode } from "./types"
 
 type Props = {
-  channelId: string
+  channel: ChannelModel
 }
 
-function ChannelHeader({ channelId }: Props) {
-  const { channelStore } = useContext(ChatStore.Context)
-  const channel = channelStore.channels.get(channelId)
-
+function ChannelHeader({ channel }: Props) {
   function renderFilterButton(mode: ChannelMode, text: string) {
     const active = channel.selectedMode === mode
-    const handleClick = () => channelStore.setSelectedMode(channelId, mode)
+    const handleClick = () => channel.setSelectedMode(mode)
     return (
       <FilterButton active={active} onClick={handleClick}>
         {text}

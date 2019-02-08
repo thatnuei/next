@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite"
-import React, { useContext } from "react"
-import ChatStore from "../chat/ChatStore"
+import React from "react"
 import MessageRow from "../message/MessageRow"
 import { Message } from "../message/types"
+import { useRootStore } from "../RootStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import { themeColor } from "../ui/colors"
@@ -10,42 +10,26 @@ import { fillArea, flexColumn, flexGrow, scrollVertical } from "../ui/helpers"
 import { css } from "../ui/styled"
 import TextArea from "../ui/TextArea"
 import useBottomScroll from "../ui/useBottomScroll"
-import { Channel } from "./types"
+import ChannelModel from "./ChannelModel"
 
 type Props = {
-  channelId: string
+  channel: ChannelModel
 }
 
-function getFilteredMessages(channel: Channel) {
-  if (channel.mode !== "both") {
-    return channel.messages
-  }
-
-  return channel.messages.filter((msg) => {
-    // admin and system messages should always be visible
-    if (channel.selectedMode === "ads") return msg.type !== "chat"
-    if (channel.selectedMode === "chat") return msg.type !== "lfrp"
-    return true
-  })
-}
-
-function ChannelRoute({ channelId }: Props) {
-  const { channelStore, identity } = useContext(ChatStore.Context)
-  const channel = channelStore.channels.get(channelId)
+function ChannelRoute({ channel }: Props) {
+  const { chatStore } = useRootStore()
 
   const bottomScrollRef = useBottomScroll<HTMLUListElement>(channel.messages)
-
-  const filteredMessages = getFilteredMessages(channel)
 
   const renderMessage = (message: Message) => (
     <MessageRow key={message.id} {...message} />
   )
 
   return (
-    <AppDocumentTitle title={`${identity} - ${channel.name}`}>
+    <AppDocumentTitle title={`${chatStore.identity} - ${channel.name}`}>
       <section css={[fillArea, flexColumn]}>
         <section css={[flexGrow, scrollVertical]} ref={bottomScrollRef}>
-          {filteredMessages.map(renderMessage)}
+          {channel.filteredMessages.map(renderMessage)}
         </section>
         <form
           css={inputContainerStyle}

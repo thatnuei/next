@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
+import ChatScreen from "../chat/ChatScreen"
 import { useRootStore } from "../RootStore"
 import CharacterSelectScreen from "./CharacterSelectScreen"
 import LoginScreen from "./LoginScreen"
@@ -18,7 +19,7 @@ function App() {
       return <CharacterSelectScreen />
 
     default:
-      return <div>chat eventually</div>
+      return <ChatScreen />
   }
 }
 
