@@ -1,5 +1,6 @@
+import { observe } from "mobx"
 import { observer } from "mobx-react-lite"
-import React, { useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import MessageRow from "../message/MessageRow"
 import { useRootStore } from "../RootStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
@@ -8,7 +9,6 @@ import { themeColor } from "../ui/colors"
 import { fillArea, flexColumn, flexGrow, scrollVertical } from "../ui/helpers"
 import { css } from "../ui/styled"
 import TextArea from "../ui/TextArea"
-import useBottomScroll from "../ui/useBottomScroll"
 import ChannelModel from "./ChannelModel"
 
 type Props = {
@@ -20,7 +20,7 @@ function ChannelRoute({ channel }: Props) {
 
   const messageListRef = useRef<HTMLElement>(null)
 
-  useBottomScroll(messageListRef, channel.lastMessage)
+  useBottomScroll(messageListRef, channel.messages)
 
   return (
     <AppDocumentTitle title={`${chatStore.identity} - ${channel.name}`}>
@@ -50,3 +50,28 @@ const inputContainerStyle = css`
   padding: 0.5rem;
   background-color: ${themeColor};
 `
+
+function useBottomScroll(
+  elementRef: React.RefObject<HTMLElement>,
+  value: unknown,
+) {
+  useEffect(() => {
+    const element = elementRef.current
+    if (element) element.scrollTop = element.scrollHeight
+
+    return observe(value as Object, () => {
+      const element = elementRef.current
+      if (!element) return
+
+      const wasBottomScrolled =
+        element != null &&
+        element.scrollTop >= element.scrollHeight - element.clientHeight - 100
+
+      requestAnimationFrame(() => {
+        if (wasBottomScrolled) {
+          element.scrollTop = element.scrollHeight
+        }
+      })
+    })
+  })
+}
