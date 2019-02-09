@@ -1,4 +1,4 @@
-import { useObserver } from "mobx-react-lite"
+import { observer, useObserver } from "mobx-react-lite"
 import React from "react"
 import ChannelRoomView from "../channel/ChannelRoomView"
 import { useRootStore } from "../RootStore"
@@ -16,7 +16,7 @@ function ChatScreen() {
     </AppDocumentTitle>
   )
 }
-export default ChatScreen
+export default observer(ChatScreen)
 
 function ChatRoomView() {
   const { viewStore } = useRootStore()
