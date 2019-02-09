@@ -18,19 +18,21 @@ describe("ChannelHeader", () => {
   })
 
   it("shows filters", () => {
-    const { channel, queryByText } = setup()
-    expect(queryByText(/both/i)).not.toBeNull()
-    expect(queryByText(/chat/i)).not.toBeNull()
-    expect(queryByText(/ads/i)).not.toBeNull()
-
-    act(() => {
-      channel.setMode("chat")
-    })
-
+    const { queryByText } = setup()
     expect(queryByText(/both/i)).not.toBeNull()
     expect(queryByText(/chat/i)).not.toBeNull()
     expect(queryByText(/ads/i)).not.toBeNull()
   })
 
-  it("shows which filter is active", () => {})
+  it("disables filters if channel only has one mode", () => {
+    const { channel, queryByText } = setup()
+
+    act(() => {
+      channel.setMode("chat")
+    })
+
+    expect(queryByText(/both/i)).toBeDisabled()
+    expect(queryByText(/chat/i)).toBeDisabled()
+    expect(queryByText(/ads/i)).toBeDisabled()
+  })
 })

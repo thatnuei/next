@@ -13,13 +13,13 @@ type Props = {
 
 function ChannelHeader({ channel }: Props) {
   function renderFilterButton(mode: ChannelMode, text: string) {
-    const checked = channel.selectedMode === mode
-    const handleChange = () => channel.setSelectedMode(mode)
+    const active = channel.selectedMode === mode
+    const handleClick = () => channel.setSelectedMode(mode)
 
     return (
-      <FilterInput checked={checked} onChange={handleChange}>
+      <FilterButton active={active} onClick={handleClick}>
         {text}
-      </FilterInput>
+      </FilterButton>
     )
   }
 
@@ -30,21 +30,21 @@ function ChannelHeader({ channel }: Props) {
 
         {channel.mode === "chat" && (
           <FilterGroup>
-            <FilterInput disabled>Both</FilterInput>
-            <FilterInput disabled checked>
+            <FilterButton disabled>Both</FilterButton>
+            <FilterButton disabled active>
               Chat
-            </FilterInput>
-            <FilterInput disabled>Ads</FilterInput>
+            </FilterButton>
+            <FilterButton disabled>Ads</FilterButton>
           </FilterGroup>
         )}
 
         {channel.mode === "ads" && (
           <FilterGroup>
-            <FilterInput disabled>Both</FilterInput>
-            <FilterInput disabled>Chat</FilterInput>
-            <FilterInput disabled checked>
+            <FilterButton disabled>Both</FilterButton>
+            <FilterButton disabled>Chat</FilterButton>
+            <FilterButton disabled active>
               Ads
-            </FilterInput>
+            </FilterButton>
           </FilterGroup>
         )}
 
@@ -92,41 +92,36 @@ const FilterGroup = (props: { children: React.ReactNode }) => (
   </div>
 )
 
-const FilterInput = ({
-  children,
+const FilterButton = ({
+  active,
   ...props
-}: React.ComponentPropsWithoutRef<"input">) => (
-  <label
+}: React.ComponentPropsWithoutRef<typeof Button> & { active?: boolean }) => (
+  <Button
+    flat
     css={css`
-      display: block;
       padding: 0.5rem;
+      ${getActiveStyle({ active, ...props })}
     `}
-  >
-    <input
-      type="radio"
-      name="channel-filter"
-      readOnly={props.disabled}
-      css={css`
-        opacity: 0;
-        position: absolute;
-
-        :disabled + span {
-          opacity: ${props.checked ? 0.6 : 0.3};
-          pointer-events: none;
-        }
-
-        :focus + span {
-          opacity: 1;
-        }
-      `}
-      {...props}
-    />{" "}
-    <span
-      css={css`
-        opacity: ${props.checked ? 0.8 : 0.5};
-      `}
-    >
-      {children}
-    </span>
-  </label>
+    {...props}
+  />
 )
+
+const getActiveStyle = ({ active = false, disabled = false }) => {
+  if (disabled) {
+    return css`
+      opacity: ${active ? 0.6 : 0.3};
+      pointer-events: none;
+    `
+  }
+
+  return active
+    ? css`
+        opacity: 1;
+      `
+    : css`
+        opacity: 0.5;
+        :hover {
+          opacity: 0.75;
+        }
+      `
+}
