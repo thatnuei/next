@@ -1,20 +1,20 @@
 import { observe } from "mobx"
 import React, { useEffect, useRef } from "react"
 import { flexGrow, scrollVertical } from "../ui/helpers"
+import MessageListItem from "./MessageListItem"
 import MessageModel from "./MessageModel"
-import MessageRow from "./MessageRow"
 
 export default function MessageList(props: { messages: MessageModel[] }) {
-  const messageListRef = useRef<HTMLElement>(null)
+  const messageListRef = useRef<HTMLUListElement>(null)
 
   useBottomScroll(messageListRef, props.messages)
 
   return (
-    <section css={[flexGrow, scrollVertical]} ref={messageListRef}>
+    <ul css={[flexGrow, scrollVertical]} ref={messageListRef}>
       {props.messages.slice(-300).map((message) => (
-        <MessageRow key={message.id} {...message} />
+        <MessageListItem key={message.id} {...message} />
       ))}
-    </section>
+    </ul>
   )
 }
 

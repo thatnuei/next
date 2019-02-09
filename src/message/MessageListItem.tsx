@@ -7,7 +7,7 @@ import { semiBlack } from "../ui/colors"
 import { css } from "../ui/styled"
 import { MessageType } from "./types"
 
-type MessageRowProps = {
+type Props = {
   senderName?: string
   text: string
   type: MessageType
@@ -16,7 +16,7 @@ type MessageRowProps = {
 
 const actionRegex = /^\s*\/me\s*/
 
-const MessageRow = ({ senderName, text, type, time }: MessageRowProps) => {
+const MessageListItem = ({ senderName, text, type, time }: Props) => {
   const { characterStore } = useRootStore()
 
   const sender = senderName
@@ -27,17 +27,17 @@ const MessageRow = ({ senderName, text, type, time }: MessageRowProps) => {
   const parsedText = text.replace(actionRegex, "")
 
   return (
-    <div css={[containerStyle, highlightStyles[type], isAction && actionStyle]}>
+    <li css={[containerStyle, highlightStyles[type], isAction && actionStyle]}>
       <span css={dateStyle}>{new Date(time).toLocaleTimeString()}</span>
       <span css={senderStyle}>
         {sender ? <CharacterName {...sender} /> : "System"}
       </span>
       {parsedText}
-    </div>
+    </li>
   )
 }
 
-export default observer(MessageRow)
+export default observer(MessageListItem)
 
 const highlightStyles: { [K in MessageType]?: Interpolation } = {
   lfrp: { backgroundColor: "rgba(39, 174, 96, 0.2)" },
