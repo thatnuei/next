@@ -26,7 +26,7 @@ function ChannelRoute({ channel }: Props) {
     <AppDocumentTitle title={`${chatStore.identity} - ${channel.name}`}>
       <section css={[fillArea, flexColumn]}>
         <section css={[flexGrow, scrollVertical]} ref={messageListRef}>
-          {channel.filteredMessages.map((message) => (
+          {channel.filteredMessages.slice(-300).map((message) => (
             <MessageRow key={message.id} {...message} />
           ))}
         </section>
