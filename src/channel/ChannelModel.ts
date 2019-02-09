@@ -42,9 +42,7 @@ export default class ChannelModel {
 
   @computed
   get filteredMessages() {
-    if (this.mode !== "both") {
-      return this.messages
-    }
+    if (this.mode !== "both") return this.messages
 
     return this.messages.filter((msg) => {
       // admin and system messages should always be visible
