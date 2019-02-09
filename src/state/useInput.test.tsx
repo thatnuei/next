@@ -1,5 +1,5 @@
 import React from "react"
-import { fireEvent, render } from "react-testing-library"
+import { act, fireEvent, render } from "react-testing-library"
 import useInput from "./useInput"
 
 test("useInput", () => {
@@ -14,11 +14,15 @@ test("useInput", () => {
 
   expect(queryByValue("")).not.toBeNull()
 
-  input.setValue("hi")
+  act(() => {
+    input.setValue("hi")
+  })
 
   expect(queryByValue("hi")).not.toBeNull()
 
-  fireEvent.change(getByValue("hi"), { target: { value: "awesome" } })
+  act(() => {
+    fireEvent.change(getByValue("hi"), { target: { value: "awesome" } })
+  })
 
   expect(input.value).toBe("awesome")
 })
