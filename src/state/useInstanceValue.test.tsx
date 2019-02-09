@@ -1,24 +1,19 @@
-import React, { useState } from "react"
+import React from "react"
 import { render } from "react-testing-library"
 import useInstanceValue from "./useInstanceValue"
 
 test("keeps the same reference between renders", () => {
   let value!: { a: number }
-  let rerender!: () => void
 
   const Test = () => {
     value = useInstanceValue(() => ({ a: 123 }))
-
-    const [, setBool] = useState(false)
-    rerender = () => setBool((v) => !v)
-
     return null
   }
 
-  render(<Test />)
+  const { rerender } = render(<Test />)
   expect(value.a).toBe(123)
 
   let prev = value
-  rerender()
+  rerender(<Test />)
   expect(value).toBe(prev)
 })
