@@ -3,16 +3,13 @@ import React from "react"
 import ChannelRoomView from "../channel/ChannelRoomView"
 import { useRootStore } from "../RootStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
-import { flexColumn, fullscreen } from "../ui/helpers"
 
 function ChatScreen() {
   const { chatStore } = useRootStore()
 
   return (
     <AppDocumentTitle title={chatStore.identity}>
-      <div css={[fullscreen, flexColumn]}>
-        <ChatRoomView />
-      </div>
+      <ChatRoomView />
     </AppDocumentTitle>
   )
 }

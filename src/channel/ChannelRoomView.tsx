@@ -1,13 +1,13 @@
 import { observe } from "mobx"
 import { observer } from "mobx-react-lite"
-import React, { useEffect, useRef } from "react"
+import React, { useEffect } from "react"
 import ChatSidebarContent from "../chat/ChatSidebarContent"
-import MessageRow from "../message/MessageRow"
+import MessageList from "../message/MessageList"
 import { useRootStore } from "../RootStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import { themeColor } from "../ui/colors"
-import { fillArea, flexColumn, flexGrow, scrollVertical } from "../ui/helpers"
+import { fillArea, flexColumn, flexGrow, fullscreen } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import SideOverlay from "../ui/SideOverlay"
 import { css } from "../ui/styled"
@@ -25,35 +25,29 @@ function ChannelRoomView({ channel }: Props) {
 
   const sidebar = useOverlayState()
 
-  const messageListRef = useRef<HTMLElement>(null)
-
-  useBottomScroll(messageListRef, channel.messages)
-
   return (
     <AppDocumentTitle title={`${chatStore.identity} - ${channel.name}`}>
-      <header css={headerStyle}>
-        <Button flat onClick={sidebar.open}>
-          <Icon icon="menu" />
-        </Button>
-        <ChannelHeader channel={channel} />
-      </header>
+      <div css={[fullscreen, flexColumn]}>
+        <header css={headerStyle}>
+          <Button flat onClick={sidebar.open}>
+            <Icon icon="menu" />
+          </Button>
+          <ChannelHeader channel={channel} />
+        </header>
 
-      <main css={flexGrow}>
-        <section css={[fillArea, flexColumn]}>
-          <section css={[flexGrow, scrollVertical]} ref={messageListRef}>
-            {channel.filteredMessages.slice(-300).map((message) => (
-              <MessageRow key={message.id} {...message} />
-            ))}
+        <main css={flexGrow}>
+          <section css={[fillArea, flexColumn]}>
+            <MessageList messages={channel.filteredMessages} />
+            <form
+              css={inputContainerStyle}
+              onSubmit={(event) => event.preventDefault()}
+            >
+              <TextArea />
+              <Button>Send</Button>
+            </form>
           </section>
-          <form
-            css={inputContainerStyle}
-            onSubmit={(event) => event.preventDefault()}
-          >
-            <TextArea />
-            <Button>Send</Button>
-          </form>
-        </section>
-      </main>
+        </main>
+      </div>
 
       <SideOverlay {...sidebar.bind}>
         <ChatSidebarContent />
@@ -78,7 +72,7 @@ const headerStyle = css`
   min-height: 50px;
 `
 
-function useBottomScroll(
+export function useBottomScroll(
   elementRef: React.RefObject<HTMLElement>,
   value: unknown,
 ) {
