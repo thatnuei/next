@@ -1,31 +1,19 @@
-import { observer } from "mobx-react-lite"
-import React, { useContext } from "react"
-import routePaths from "../app/routePaths"
-import { Channel } from "../channel/types"
-import { Link } from "../router"
-import ChatStore from "./ChatStore"
+import React from "react"
+import { useRootStore } from "../RootStore"
 
-type Props = {
-  joinedChannels: Channel[]
-}
+const ChatSidebarContent = () => {
+  const { channelStore, viewStore } = useRootStore()
 
-export const ChatSidebarContent = ({ joinedChannels }: Props) => {
   return (
     <nav>
       <ul>
-        {joinedChannels.map(({ id, name }) => (
+        {channelStore.joinedChannels.map(({ id, name }) => (
           <li key={id}>
-            <Link to={routePaths.channel(id)}>{name}</Link>
+            <button onClick={() => viewStore.showChannel(id)}>{name}</button>
           </li>
         ))}
       </ul>
     </nav>
   )
 }
-
-export default observer(() => {
-  const { channelStore } = useContext(ChatStore.Context)
-  return (
-    <ChatSidebarContent joinedChannels={channelStore.getJoinedChannels()} />
-  )
-})
+export default ChatSidebarContent

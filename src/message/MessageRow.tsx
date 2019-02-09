@@ -1,8 +1,8 @@
 import { Interpolation } from "@emotion/core"
 import { observer } from "mobx-react-lite"
-import React, { useContext } from "react"
+import React from "react"
 import CharacterName from "../character/CharacterName"
-import ChatStore from "../chat/ChatStore"
+import { useRootStore } from "../RootStore"
 import { semiBlack } from "../ui/colors"
 import { css } from "../ui/styled"
 import { MessageType } from "./types"
@@ -17,7 +17,7 @@ type MessageRowProps = {
 const actionRegex = /^\s*\/me\s*/
 
 const MessageRow = ({ senderName, text, type, time }: MessageRowProps) => {
-  const { characterStore } = useContext(ChatStore.Context)
+  const { characterStore } = useRootStore()
 
   const sender = senderName
     ? characterStore.characters.get(senderName)
