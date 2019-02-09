@@ -13,12 +13,13 @@ type Props = {
 
 function ChannelHeader({ channel }: Props) {
   function renderFilterButton(mode: ChannelMode, text: string) {
-    const active = channel.selectedMode === mode
-    const handleClick = () => channel.setSelectedMode(mode)
+    const checked = channel.selectedMode === mode
+    const handleChange = () => channel.setSelectedMode(mode)
+
     return (
-      <FilterButton active={active} onClick={handleClick}>
+      <FilterInput checked={checked} onChange={handleChange}>
         {text}
-      </FilterButton>
+      </FilterInput>
     )
   }
 
@@ -28,18 +29,22 @@ function ChannelHeader({ channel }: Props) {
         <h2 css={channelNameStyle}>{channel.name}</h2>
 
         {channel.mode === "chat" && (
-          <FilterGroup disabled>
-            <FilterButton>Both</FilterButton>
-            <FilterButton active>Chat</FilterButton>
-            <FilterButton>Ads</FilterButton>
+          <FilterGroup>
+            <FilterInput disabled>Both</FilterInput>
+            <FilterInput disabled checked>
+              Chat
+            </FilterInput>
+            <FilterInput disabled>Ads</FilterInput>
           </FilterGroup>
         )}
 
         {channel.mode === "ads" && (
-          <FilterGroup disabled>
-            <FilterButton>Both</FilterButton>
-            <FilterButton>Chat</FilterButton>
-            <FilterButton active>Ads</FilterButton>
+          <FilterGroup>
+            <FilterInput disabled>Both</FilterInput>
+            <FilterInput disabled>Chat</FilterInput>
+            <FilterInput disabled checked>
+              Ads
+            </FilterInput>
           </FilterGroup>
         )}
 
@@ -74,38 +79,54 @@ const channelNameStyle = css`
   margin-right: 0.5rem;
 `
 
-const FilterGroup = (props: {
-  children: React.ReactNode
-  disabled?: boolean
-}) => (
+const FilterGroup = (props: { children: React.ReactNode }) => (
   <div
     css={css`
+      display: flex;
+      flex-direction: row;
       padding: 0.1rem 0;
       margin: -0.5rem;
-      ${props.disabled &&
-        css`
-          opacity: 0.75;
-          pointer-events: none;
-        `}
     `}
   >
     {props.children}
   </div>
 )
 
-const FilterButton = (props: {
-  children: React.ReactNode
-  active?: boolean
-  onClick?: () => void
-}) => (
-  <Button
-    flat
+const FilterInput = ({
+  children,
+  ...props
+}: React.ComponentPropsWithoutRef<"input">) => (
+  <label
     css={css`
+      display: block;
       padding: 0.5rem;
-      opacity: ${props.active ? 1 : 0.5};
     `}
-    onClick={props.onClick}
   >
-    {props.children}
-  </Button>
+    <input
+      type="radio"
+      name="channel-filter"
+      readOnly={props.disabled}
+      css={css`
+        opacity: 0;
+        position: absolute;
+
+        :disabled + span {
+          opacity: ${props.checked ? 0.6 : 0.3};
+          pointer-events: none;
+        }
+
+        :focus + span {
+          opacity: 1;
+        }
+      `}
+      {...props}
+    />{" "}
+    <span
+      css={css`
+        opacity: ${props.checked ? 0.8 : 0.5};
+      `}
+    >
+      {children}
+    </span>
+  </label>
 )
