@@ -53,4 +53,9 @@ export default class ChannelModel {
       return true
     })
   }
+
+  @computed
+  get lastMessage(): MessageModel | undefined {
+    return this.messages[this.messages.length - 1]
+  }
 }

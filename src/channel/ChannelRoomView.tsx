@@ -20,8 +20,7 @@ function ChannelRoute({ channel }: Props) {
 
   const messageListRef = useRef<HTMLElement>(null)
 
-  const lastMessage = channel.messages[channel.messages.length - 1]
-  useBottomScroll(messageListRef, lastMessage && lastMessage.id)
+  useBottomScroll(messageListRef, channel.lastMessage)
 
   return (
     <AppDocumentTitle title={`${chatStore.identity} - ${channel.name}`}>
