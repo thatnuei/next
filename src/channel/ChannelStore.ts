@@ -1,5 +1,5 @@
 import { action, computed, observable } from "mobx"
-import createCommandHandler from "../fchat/createCommandHandler"
+import { createCommandHandler } from "../fchat/helpers"
 import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
 import FactoryMap from "../state/FactoryMap"

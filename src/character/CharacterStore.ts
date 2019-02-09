@@ -1,5 +1,5 @@
 import { action } from "mobx"
-import createCommandHandler from "../fchat/createCommandHandler"
+import { createCommandHandler } from "../fchat/helpers"
 import FactoryMap from "../state/FactoryMap"
 import CharacterModel from "./CharacterModel"
 

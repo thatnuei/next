@@ -1,8 +1,7 @@
 import { action } from "mobx"
 import RootStore from "../RootStore"
 import { chatServerUrl } from "./constants"
-import createCommandHandler from "./createCommandHandler"
-import { parseCommand } from "./helpers"
+import { createCommandHandler, parseCommand } from "./helpers"
 import { ClientCommandMap } from "./types"
 
 export default class SocketStore {
