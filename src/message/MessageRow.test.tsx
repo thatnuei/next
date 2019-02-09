@@ -1,29 +1,19 @@
 import React from "react"
 import { render } from "react-testing-library"
-import { createCharacter } from "../character/useCharacterStore"
-import ChatStore from "../chat/ChatStore"
-import FactoryMap from "../state/FactoryMap"
+import RootStore, { RootStoreContext } from "../RootStore"
+import MessageModel from "./MessageModel"
 import MessageRow from "./MessageRow"
-import { Message } from "./types"
 
 describe("MessageRow", () => {
-  const message: Message = {
-    id: "fsdfdsfsafdaf",
-    text: "hello",
-    type: "chat",
-    time: 1548991576255,
-    senderName: "Testificate",
-  }
+  const store = new RootStore()
 
-  const chatStoreMock = {
-    characterStore: { characters: new FactoryMap(createCharacter) },
-  }
+  const message = new MessageModel("Testificate", "hi there", "chat")
 
-  const setup = (extra: Partial<Message> = {}) =>
+  const setup = (extra: Partial<MessageModel> = {}) =>
     render(
-      <ChatStore.Context.Provider value={chatStoreMock as any}>
+      <RootStoreContext.Provider value={store}>
         <MessageRow {...message} {...extra} />
-      </ChatStore.Context.Provider>,
+      </RootStoreContext.Provider>,
     )
 
   it("shows the sender name", () => {
