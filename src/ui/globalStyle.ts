@@ -54,6 +54,11 @@ export default css`
     list-style: none;
   }
 
+  img,
+  svg {
+    vertical-align: top;
+  }
+
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
