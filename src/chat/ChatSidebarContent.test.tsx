@@ -1,30 +1,47 @@
-import { createMemoryHistory } from "history"
 import React from "react"
-import { fireEvent, render } from "react-testing-library"
-import routePaths from "../app/routePaths"
-import { Router } from "../router"
-import { ChatSidebarContent } from "./ChatSidebarContent"
+import { render } from "react-testing-library"
+import { ServerCommand } from "../fchat/types"
+import RootStore, { RootStoreContext } from "../RootStore"
+import ChatSidebarContent from "./ChatSidebarContent"
+
+const createJoinedChannelCommand = (
+  identity: string,
+  id: string,
+  name = id,
+): ServerCommand => ({
+  type: "JCH",
+  params: {
+    channel: id,
+    character: { identity },
+    title: name,
+  },
+})
 
 describe("ChatSidebarContent", () => {
-  const mockChannels = [
-    { id: "Frontpage", name: "Frontpage" },
-    { id: "Fantasy", name: "Fantasy" },
-    { id: "fdsafdsafasdf", name: "Some Private Channel" },
-  ]
+  const store = new RootStore()
+  const identity = "nobody"
 
-  it("renders channel links which, when clicked, lead to the url for that channel", () => {
-    const history = createMemoryHistory()
+  store.chatStore.identity = identity
 
-    const { getByText } = render(
-      <Router history={history}>
-        <ChatSidebarContent joinedChannels={mockChannels as any} />
-      </Router>,
+  store.channelStore.handleSocketCommand(
+    createJoinedChannelCommand(identity, "Frontpage"),
+  )
+  store.channelStore.handleSocketCommand(
+    createJoinedChannelCommand(identity, "Fantasy"),
+  )
+  store.channelStore.handleSocketCommand(
+    createJoinedChannelCommand(identity, "dsfjkladfjkl", "random channel"),
+  )
+
+  it("renders channel buttons", () => {
+    const { queryByText } = render(
+      <RootStoreContext.Provider value={store}>
+        <ChatSidebarContent />
+      </RootStoreContext.Provider>,
     )
 
-    for (const channel of mockChannels) {
-      const link = getByText(channel.name)
-      fireEvent.click(link)
-      expect(history.location.pathname).toBe(routePaths.channel(channel.id))
+    for (const channel of store.channelStore.channels.values) {
+      expect(queryByText(channel.name)).not.toBeNull()
     }
   })
 })
