@@ -1,6 +1,5 @@
-import { observe } from "mobx"
 import { observer } from "mobx-react-lite"
-import React, { useEffect } from "react"
+import React from "react"
 import ChatSidebarContent from "../chat/ChatSidebarContent"
 import MessageList from "../message/MessageList"
 import { useRootStore } from "../RootStore"
@@ -71,28 +70,3 @@ const headerStyle = css`
   background-color: ${themeColor};
   min-height: 50px;
 `
-
-export function useBottomScroll(
-  elementRef: React.RefObject<HTMLElement>,
-  value: unknown,
-) {
-  useEffect(() => {
-    const element = elementRef.current
-    if (element) element.scrollTop = element.scrollHeight
-
-    return observe(value as Object, () => {
-      const element = elementRef.current
-      if (!element) return
-
-      const wasBottomScrolled =
-        element != null &&
-        element.scrollTop >= element.scrollHeight - element.clientHeight - 100
-
-      requestAnimationFrame(() => {
-        if (wasBottomScrolled) {
-          element.scrollTop = element.scrollHeight
-        }
-      })
-    })
-  })
-}

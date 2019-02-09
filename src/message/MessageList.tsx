@@ -1,5 +1,5 @@
-import React, { useRef } from "react"
-import { useBottomScroll } from "../channel/ChannelRoomView"
+import { observe } from "mobx"
+import React, { useEffect, useRef } from "react"
 import { flexGrow, scrollVertical } from "../ui/helpers"
 import MessageModel from "./MessageModel"
 import MessageRow from "./MessageRow"
@@ -16,4 +16,29 @@ export default function MessageList(props: { messages: MessageModel[] }) {
       ))}
     </section>
   )
+}
+
+function useBottomScroll(
+  elementRef: React.RefObject<HTMLElement>,
+  value: unknown,
+) {
+  useEffect(() => {
+    const element = elementRef.current
+    if (element) element.scrollTop = element.scrollHeight
+
+    return observe(value as Object, () => {
+      const element = elementRef.current
+      if (!element) return
+
+      const wasBottomScrolled =
+        element != null &&
+        element.scrollTop >= element.scrollHeight - element.clientHeight - 100
+
+      requestAnimationFrame(() => {
+        if (wasBottomScrolled) {
+          element.scrollTop = element.scrollHeight
+        }
+      })
+    })
+  })
 }
