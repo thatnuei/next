@@ -1,20 +1,23 @@
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 
-export default function useBottomScroll<E extends HTMLElement>(value: unknown) {
-  const elementRef = useRef<E>(null)
+export default function useBottomScroll<E extends HTMLElement>(
+  elementRef: React.RefObject<E>,
+  value: unknown,
+) {
   const element = elementRef.current
-
-  const scrolledToBottom =
+  const wasBottomScrolled =
     element != null &&
     element.scrollTop >= element.scrollHeight - element.clientHeight - 100
 
-  useEffect(
-    () => {
-      if (!element || !scrolledToBottom) return
-      element.scrollTop = element.scrollHeight
-    },
-    [value],
-  )
+  const scrollToBottom = () => {
+    const element = elementRef.current
+    if (!element) return
+    element.scrollTop = element.scrollHeight
+  }
 
-  return elementRef
+  useEffect(scrollToBottom, [element])
+
+  useEffect(() => {
+    if (wasBottomScrolled) scrollToBottom()
+  }, [value])
 }

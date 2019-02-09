@@ -1,7 +1,6 @@
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useRef } from "react"
 import MessageRow from "../message/MessageRow"
-import { Message } from "../message/types"
 import { useRootStore } from "../RootStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
@@ -19,17 +18,18 @@ type Props = {
 function ChannelRoute({ channel }: Props) {
   const { chatStore } = useRootStore()
 
-  const bottomScrollRef = useBottomScroll<HTMLUListElement>(channel.messages)
+  const messageListRef = useRef<HTMLElement>(null)
 
-  const renderMessage = (message: Message) => (
-    <MessageRow key={message.id} {...message} />
-  )
+  const lastMessage = channel.messages[channel.messages.length - 1]
+  useBottomScroll(messageListRef, lastMessage && lastMessage.id)
 
   return (
     <AppDocumentTitle title={`${chatStore.identity} - ${channel.name}`}>
       <section css={[fillArea, flexColumn]}>
-        <section css={[flexGrow, scrollVertical]} ref={bottomScrollRef}>
-          {channel.filteredMessages.map(renderMessage)}
+        <section css={[flexGrow, scrollVertical]} ref={messageListRef}>
+          {channel.filteredMessages.map((message) => (
+            <MessageRow key={message.id} {...message} />
+          ))}
         </section>
         <form
           css={inputContainerStyle}
