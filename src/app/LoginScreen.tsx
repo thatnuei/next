@@ -20,7 +20,7 @@ function LoginScreen() {
 
     try {
       await userStore.submitLogin(account.value, password.value)
-      viewStore.showCharacterSelect()
+      viewStore.setScreen({ name: "characterSelect" })
     } catch (error) {
       alert(error)
     }

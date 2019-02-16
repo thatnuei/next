@@ -8,8 +8,8 @@ import LoginScreen from "./LoginScreen"
 function App() {
   const { viewStore } = useRootStore()
 
-  switch (viewStore.screen) {
-    case "setup":
+  switch (viewStore.screen.name) {
+    case "init":
       return <p>Setting things up...</p>
 
     case "login":

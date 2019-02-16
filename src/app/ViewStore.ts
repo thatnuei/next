@@ -1,60 +1,21 @@
-import { action, computed, observable } from "mobx"
+import { action, observable } from "mobx"
 import RootStore from "../RootStore"
 
 type Screen =
-  | "setup"
-  | "login"
-  | "characterSelect"
-  | "console"
-  | "channel"
-  | "privateChat"
+  | { name: "init" }
+  | { name: "login" }
+  | { name: "characterSelect" }
+  | { name: "console" }
+  | { name: "channel"; channel: string }
+  | { name: "privateChat" } // TODO
 
 export default class ViewStore {
-  @observable screen: Screen = "setup"
-  @observable currentChannelId = ""
-  @observable currentPrivateChatName = ""
+  @observable screen: Screen = { name: "init" }
 
   constructor(private root: RootStore) {}
 
   @action
-  showSetup() {
-    this.screen = "setup"
-  }
-
-  @action
-  showLogin() {
-    this.screen = "login"
-  }
-
-  @action
-  showCharacterSelect() {
-    this.screen = "characterSelect"
-  }
-
-  @action
-  showConsole() {
-    this.screen = "console"
-  }
-
-  @action
-  showChannel(channelId: string) {
-    this.screen = "channel"
-    this.currentChannelId = channelId
-  }
-
-  @action
-  showPrivateChat(name: string) {
-    this.screen = "privateChat"
-    this.currentPrivateChatName = name
-  }
-
-  @computed
-  get currentChannel() {
-    return this.root.channelStore.channels.get(this.currentChannelId)
-  }
-
-  @computed
-  get currentPrivateChat(): never {
-    throw new Error("TODO")
+  setScreen(screen: Screen) {
+    this.screen = screen
   }
 }

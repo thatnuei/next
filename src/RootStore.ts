@@ -17,10 +17,10 @@ export default class RootStore {
   async init() {
     try {
       await this.userStore.restoreUserData()
-      this.viewStore.showCharacterSelect()
+      this.viewStore.setScreen({ name: "characterSelect" })
     } catch (error) {
       console.warn("(non-fatal) user data restore error:", error)
-      this.viewStore.showLogin()
+      this.viewStore.setScreen({ name: "login" })
     }
   }
 

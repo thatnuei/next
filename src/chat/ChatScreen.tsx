@@ -16,14 +16,17 @@ function ChatScreen() {
 export default observer(ChatScreen)
 
 function ChatRoomView() {
-  const { viewStore } = useRootStore()
+  const {
+    viewStore: { screen },
+    channelStore: { channels },
+  } = useRootStore()
 
   return useObserver(() => {
-    switch (viewStore.screen) {
+    switch (screen.name) {
       case "console":
         return <p>todo: console</p>
       case "channel":
-        return <ChannelRoomView channel={viewStore.currentChannel} />
+        return <ChannelRoomView channel={channels.get(screen.channel)} />
       case "privateChat":
         return <p>todo: private chat</p>
     }

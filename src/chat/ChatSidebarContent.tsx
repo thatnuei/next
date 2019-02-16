@@ -9,7 +9,13 @@ const ChatSidebarContent = () => {
       <ul>
         {channelStore.joinedChannels.map(({ id, name }) => (
           <li key={id}>
-            <button onClick={() => viewStore.showChannel(id)}>{name}</button>
+            <button
+              onClick={() =>
+                viewStore.setScreen({ name: "channel", channel: id })
+              }
+            >
+              {name}
+            </button>
           </li>
         ))}
       </ul>

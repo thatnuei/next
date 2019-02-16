@@ -37,8 +37,8 @@ function CharacterSelectScreen() {
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     socketStore.connectToChat(
-      () => viewStore.showChannel("Fantasy"),
-      () => viewStore.showLogin(),
+      () => viewStore.setScreen({ name: "channel", channel: "Fantasy" }),
+      () => viewStore.setScreen({ name: "login" }),
     )
   }
 
