@@ -22,6 +22,8 @@ export default function SideOverlay(props: SidebarOverlayProps) {
 }
 
 const Shade = styled.div<{ visible?: boolean }>`
+  z-index: 999;
+
   ${fullscreen}
 
   background-color: rgba(0, 0, 0, 0.5);
