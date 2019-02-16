@@ -23,12 +23,8 @@ function ChatRoomView() {
     const { channels } = channelStore
 
     switch (screen.name) {
-      case "console":
-        return <p>todo: console</p>
       case "channel":
         return <ChannelRoomView channel={channels.get(screen.channel)} />
-      case "privateChat":
-        return <p>todo: private chat</p>
     }
 
     return <p>view not found</p>
