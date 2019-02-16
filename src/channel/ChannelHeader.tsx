@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import Button from "../ui/Button"
+import Button, { buttonFlatStyle, buttonStyle } from "../ui/Button"
+import { semiBlack } from "../ui/colors"
 import { flexGrow, flexRow, flexWrap } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { css } from "../ui/styled"
@@ -13,13 +14,18 @@ type Props = {
 
 function ChannelHeader({ channel }: Props) {
   function renderFilterButton(mode: ChannelMode, text: string) {
-    const active = channel.selectedMode === mode
-    const handleClick = () => channel.setSelectedMode(mode)
+    const isActive = channel.selectedMode === mode
+    const handleActivate = () => channel.setSelectedMode(mode)
 
     return (
-      <FilterButton active={active} onClick={handleClick}>
+      <FilterInput
+        name="channel-filter"
+        id={mode}
+        checked={isActive}
+        onChange={handleActivate}
+      >
         {text}
-      </FilterButton>
+      </FilterInput>
     )
   }
 
@@ -30,21 +36,29 @@ function ChannelHeader({ channel }: Props) {
 
         {channel.mode === "chat" && (
           <FilterGroup>
-            <FilterButton disabled>Both</FilterButton>
-            <FilterButton disabled active>
+            <FilterInput name="channel-filter" id="both" disabled>
+              Both
+            </FilterInput>
+            <FilterInput name="channel-filter" id="chat" disabled checked>
               Chat
-            </FilterButton>
-            <FilterButton disabled>Ads</FilterButton>
+            </FilterInput>
+            <FilterInput name="channel-filter" id="ads" disabled>
+              Ads
+            </FilterInput>
           </FilterGroup>
         )}
 
         {channel.mode === "ads" && (
           <FilterGroup>
-            <FilterButton disabled>Both</FilterButton>
-            <FilterButton disabled>Chat</FilterButton>
-            <FilterButton disabled active>
+            <FilterInput name="channel-filter" id="both" disabled>
+              Both
+            </FilterInput>
+            <FilterInput name="channel-filter" id="chat" disabled>
+              Chat
+            </FilterInput>
+            <FilterInput name="channel-filter" id="ads" disabled checked>
               Ads
-            </FilterButton>
+            </FilterInput>
           </FilterGroup>
         )}
 
@@ -92,36 +106,46 @@ const FilterGroup = (props: { children: React.ReactNode }) => (
   </div>
 )
 
-const FilterButton = ({
-  active,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof Button> & { active?: boolean }) => (
-  <Button
-    flat
-    css={css`
-      padding: 0.5rem;
-      ${getActiveStyle({ active, ...props })}
-    `}
-    {...props}
-  />
-)
+const FilterInput = (props: React.ComponentPropsWithoutRef<"input">) => {
+  const { children, id, ...inputProps } = props
 
-const getActiveStyle = ({ active = false, disabled = false }) => {
-  if (disabled) {
+  const getLabelStyle = () => {
+    if (inputProps.disabled) {
+      return css`
+        opacity: ${inputProps.checked ? 0.7 : 0.4};
+        pointer-events: none;
+      `
+    }
+
+    if (inputProps.checked) {
+      return css`
+        opacity: 1;
+      `
+    }
+
     return css`
-      opacity: ${active ? 0.6 : 0.3};
-      pointer-events: none;
+      opacity: 0.5;
+      :hover {
+        opacity: 0.75;
+      }
     `
   }
 
-  return active
-    ? css`
-        opacity: 1;
-      `
-    : css`
-        opacity: 0.5;
-        :hover {
-          opacity: 0.75;
-        }
-      `
+  return (
+    <div>
+      <input type="radio" id={id} css={filterInputStyle} {...inputProps} />
+      <label htmlFor={id} css={[buttonStyle, buttonFlatStyle, getLabelStyle()]}>
+        {children}
+      </label>
+    </div>
+  )
 }
+
+const filterInputStyle = css`
+  opacity: 0;
+  position: absolute;
+
+  :focus + label {
+    background-color: ${semiBlack(0.2)};
+  }
+`
