@@ -30,7 +30,7 @@ function ChannelHeader({ channel }: Props) {
   }
 
   return (
-    <>
+    <div css={containerStyle}>
       <div css={nameAndFilterStyle}>
         <h2 css={channelNameStyle}>{channel.name}</h2>
 
@@ -74,10 +74,23 @@ function ChannelHeader({ channel }: Props) {
       <Button flat>
         <Icon icon="users" />
       </Button>
-    </>
+    </div>
   )
 }
 export default observer(ChannelHeader)
+
+const containerStyle = css`
+  ${flexRow};
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`
+
+const channelNameStyle = css`
+  flex: 1;
+  padding: 0.1rem 0;
+  margin-right: 0.5rem;
+`
 
 const nameAndFilterStyle = css`
   ${flexGrow};
@@ -87,18 +100,11 @@ const nameAndFilterStyle = css`
   padding: 0.5rem 0;
 `
 
-const channelNameStyle = css`
-  flex: 1 1 auto;
-  padding: 0.1rem 0;
-  margin-right: 0.5rem;
-`
-
 const FilterGroup = (props: { children: React.ReactNode }) => (
   <div
     css={css`
       display: flex;
       flex-direction: row;
-      padding: 0.1rem 0;
       margin: -0.5rem;
     `}
   >
@@ -134,12 +140,20 @@ const FilterInput = (props: React.ComponentPropsWithoutRef<"input">) => {
   return (
     <div>
       <input type="radio" id={id} css={filterInputStyle} {...inputProps} />
-      <label htmlFor={id} css={[buttonStyle, buttonFlatStyle, getLabelStyle()]}>
+      <label
+        htmlFor={id}
+        css={[buttonStyle, buttonFlatStyle, labelBaseStyle, getLabelStyle()]}
+      >
         {children}
       </label>
     </div>
   )
 }
+
+const labelBaseStyle = css`
+  display: block;
+  padding: 0.5rem;
+`
 
 const filterInputStyle = css`
   opacity: 0;
