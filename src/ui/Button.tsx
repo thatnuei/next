@@ -7,13 +7,17 @@ type ButtonProps = React.ComponentProps<"button"> & {
 
 const Button = ({ flat, ...props }: ButtonProps) => {
   return (
-    <button type="button" css={[buttonStyle, flat && flatStyle]} {...props} />
+    <button
+      type="button"
+      css={[buttonStyle, flat && buttonFlatStyle]}
+      {...props}
+    />
   )
 }
 
 export default Button
 
-const buttonStyle = css`
+export const buttonStyle = css`
   font: inherit;
   color: inherit;
   border: none;
@@ -29,7 +33,7 @@ const buttonStyle = css`
   }
 `
 
-const flatStyle = css`
+export const buttonFlatStyle = css`
   background: none;
   opacity: 0.5;
 
