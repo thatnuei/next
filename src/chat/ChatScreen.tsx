@@ -16,12 +16,12 @@ function ChatScreen() {
 export default observer(ChatScreen)
 
 function ChatRoomView() {
-  const {
-    viewStore: { screen },
-    channelStore: { channels },
-  } = useRootStore()
+  const { viewStore, channelStore } = useRootStore()
 
   return useObserver(() => {
+    const { screen } = viewStore
+    const { channels } = channelStore
+
     switch (screen.name) {
       case "console":
         return <p>todo: console</p>

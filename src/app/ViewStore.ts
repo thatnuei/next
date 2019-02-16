@@ -9,7 +9,7 @@ type Screen =
   | { name: "privateChat" } // TODO
 
 export default class ViewStore {
-  @observable screen: Screen = { name: "init" }
+  @observable.ref screen: Screen = { name: "init" }
 
   @action
   setScreen(screen: Screen) {
