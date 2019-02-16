@@ -1,5 +1,4 @@
 import { action, observable } from "mobx"
-import RootStore from "../RootStore"
 
 type Screen =
   | { name: "init" }
@@ -11,8 +10,6 @@ type Screen =
 
 export default class ViewStore {
   @observable screen: Screen = { name: "init" }
-
-  constructor(private root: RootStore) {}
 
   @action
   setScreen(screen: Screen) {

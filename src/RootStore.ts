@@ -8,7 +8,7 @@ import UserStore from "./user/UserStore"
 
 export default class RootStore {
   socketStore = new SocketStore(this)
-  viewStore = new ViewStore(this)
+  viewStore = new ViewStore()
   userStore = new UserStore()
   characterStore = new CharacterStore()
   channelStore = new ChannelStore(this)
