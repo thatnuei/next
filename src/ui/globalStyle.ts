@@ -13,7 +13,7 @@ export default css`
     font: 16px Roboto, sans-serif;
     color: ${textColor};
     background-color: ${themeBackgroundColor};
-    word-break: break-word;
+    overflow-wrap: break-word;
     line-height: 1.5;
   }
 
