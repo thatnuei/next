@@ -23,7 +23,7 @@ function ChannelRoomView({ channel }: Props) {
           <ChannelHeader channel={channel} />
         </ChatRoomHeader>
         <MessageList messages={channel.filteredMessages} />
-        <Chatbox />
+        <Chatbox onSubmit={console.log} />
       </div>
     </AppDocumentTitle>
   )
