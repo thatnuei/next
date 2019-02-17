@@ -18,8 +18,8 @@ export default class ChannelStore {
     (id) => new ChannelModel(this.root.characterStore, id),
   )
 
-  @observable.ref publicChannelListings: ChannelListing[] = []
-  @observable.ref privateChannelListings: ChannelListing[] = []
+  @observable.ref publicListings: ChannelListing[] = []
+  @observable.ref privateListings: ChannelListing[] = []
 
   constructor(private root: RootStore) {}
 
@@ -94,7 +94,7 @@ export default class ChannelStore {
     },
 
     CHA: ({ channels }) => {
-      this.publicChannelListings = channels.map(
+      this.publicListings = channels.map(
         ({ name, mode, characters }): ChannelListing => ({
           id: name,
           name,
@@ -105,7 +105,7 @@ export default class ChannelStore {
     },
 
     ORS: ({ channels }) => {
-      this.publicChannelListings = channels.map(
+      this.publicListings = channels.map(
         ({ name, title, characters }): ChannelListing => ({
           id: name,
           name: title,
