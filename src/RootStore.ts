@@ -29,10 +29,6 @@ export default class RootStore {
   }
 }
 
-export const RootStoreContext = React.createContext<RootStore>()
+export const RootStoreContext = React.createContext(new RootStore())
 
-export function useRootStore() {
-  const store = useContext(RootStoreContext)
-  if (store == null) throw new Error("Root store provider not found")
-  return store
-}
+export const useRootStore = () => useContext(RootStoreContext)
