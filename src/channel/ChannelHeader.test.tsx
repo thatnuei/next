@@ -29,7 +29,7 @@ test.skip("channel filters", () => {
   expect(chat()).toHaveAttribute("checked")
   expect(ads()).not.toHaveAttribute("checked")
 
-  fireEvent.click(both())
+  fireEvent.change(both())
 
   expect(both()).toHaveAttribute("checked")
   expect(chat()).not.toHaveAttribute("checked")
