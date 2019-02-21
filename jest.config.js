@@ -8,4 +8,5 @@ module.exports = {
     "^.+\\.tsx?$": "babel-jest",
   },
   setupFilesAfterEnv: ["<rootDir>/test/setupTests.js"],
+  collectCoverageFrom: ["<rootDir>/src/**/*.ts?(x)"],
 }
