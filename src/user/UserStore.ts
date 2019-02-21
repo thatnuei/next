@@ -1,6 +1,6 @@
 import * as idb from "idb-keyval"
 import { action, observable } from "mobx"
-import { authenticate, fetchCharacters } from "../flist/api"
+import FListApiService from "../flist/FListApiService"
 
 const credentialsKey = "credentials"
 
@@ -8,6 +8,8 @@ export default class UserStore {
   account = ""
   ticket = ""
   @observable.ref characters: string[] = []
+
+  constructor(private api = new FListApiService()) {}
 
   @action
   setUserData(account: string, ticket: string, characters: string[]) {
@@ -26,12 +28,15 @@ export default class UserStore {
     }
 
     const { account, ticket } = creds
-    const { characters } = await fetchCharacters(account, ticket)
+    const { characters } = await this.api.fetchCharacters(account, ticket)
     this.setUserData(account, ticket, characters)
   }
 
   async submitLogin(account: string, password: string) {
-    const { ticket, characters } = await authenticate(account, password)
+    const { ticket, characters } = await this.api.authenticate(
+      account,
+      password,
+    )
     this.setUserData(account, ticket, characters)
     idb.set(credentialsKey, { account, ticket })
   }
