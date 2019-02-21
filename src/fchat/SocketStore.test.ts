@@ -56,9 +56,13 @@ test("connectToChat - connect and disconnect callbacks", async () => {
 
   store.connectToChat(onConnect, onDisconnect)
   await wait(200)
+
+  expect(socket.readyState).toBe(WebSocket.OPEN)
+
   socket.close()
   await wait(200)
 
+  expect(socket.readyState).toBe(WebSocket.CLOSED)
   expect(onConnect).toHaveBeenCalledTimes(1)
   expect(onDisconnect).toHaveBeenCalledTimes(1)
 }, 1000)
