@@ -12,7 +12,7 @@ export default class UserStore {
   constructor(private api = new FListApiService(), private storage = idb) {}
 
   @action
-  setUserData(account: string, ticket: string, characters: string[]) {
+  private setUserData(account: string, ticket: string, characters: string[]) {
     this.account = account
     this.ticket = ticket
     this.characters = characters

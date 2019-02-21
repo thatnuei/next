@@ -37,12 +37,6 @@ const assertUserData = (store: UserStore) => {
   expect(store.characters).toBe(characters)
 }
 
-test("setUserData", async () => {
-  const { store } = createStore()
-  store.setUserData(account, ticket, characters)
-  assertUserData(store)
-})
-
 test("submitLogin", async () => {
   const { store, mockStorage } = createStore()
 
