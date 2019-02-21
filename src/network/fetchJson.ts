@@ -30,7 +30,7 @@ function createFormData(bodyObject: BodyObject) {
   return data
 }
 
-interface FetchJsonOptions {
+type FetchJsonOptions = {
   method?: "get" | "post" | "patch"
   body?: BodyObject
   query?: QueryObject
