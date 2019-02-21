@@ -7,13 +7,16 @@ import { ClientCommandMap } from "./types"
 export default class SocketStore {
   private socket?: WebSocket
 
-  constructor(private root: RootStore) {}
+  constructor(
+    private root: RootStore,
+    private createSocket = defaultCreateSocket,
+  ) {}
 
   connectToChat(onConnect: () => void, onDisconnect: () => void) {
     const { account, ticket } = this.root.userStore
     const { identity } = this.root.chatStore
 
-    const socket = (this.socket = new WebSocket(chatServerUrl))
+    const socket = (this.socket = this.createSocket(chatServerUrl))
 
     socket.onopen = () => {
       this.sendSocketCommand("IDN", {
@@ -84,3 +87,5 @@ export default class SocketStore {
     },
   })
 }
+
+const defaultCreateSocket = (url: string) => new WebSocket(url)
