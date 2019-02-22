@@ -1,6 +1,5 @@
-import * as idb from "idb-keyval"
 import { action, observable } from "mobx"
-import FListApiService from "../flist/FListApiService"
+import RootStore from "../RootStore"
 
 export const credentialsKey = "credentials"
 
@@ -9,7 +8,7 @@ export default class UserStore {
   ticket = ""
   @observable.ref characters: string[] = []
 
-  constructor(private api = new FListApiService(), private storage = idb) {}
+  constructor(private root: RootStore) {}
 
   @action
   private setUserData(account: string, ticket: string, characters: string[]) {
@@ -19,7 +18,7 @@ export default class UserStore {
   }
 
   async restoreUserData() {
-    const creds = await this.storage.get<
+    const creds = await this.root.storage.get<
       { account: string; ticket: string } | undefined
     >(credentialsKey)
 
@@ -28,16 +27,16 @@ export default class UserStore {
     }
 
     const { account, ticket } = creds
-    const { characters } = await this.api.fetchCharacters(account, ticket)
+    const { characters } = await this.root.api.fetchCharacters(account, ticket)
     this.setUserData(account, ticket, characters)
   }
 
   async submitLogin(account: string, password: string) {
-    const { ticket, characters } = await this.api.authenticate(
+    const { ticket, characters } = await this.root.api.authenticate(
       account,
       password,
     )
     this.setUserData(account, ticket, characters)
-    this.storage.set(credentialsKey, { account, ticket })
+    this.root.storage.set(credentialsKey, { account, ticket })
   }
 }

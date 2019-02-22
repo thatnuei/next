@@ -1,4 +1,5 @@
 import FListApiService from "../flist/FListApiService"
+import RootStore from "../RootStore"
 import UserStore, { credentialsKey } from "./UserStore"
 
 const account = "ayylmao"
@@ -26,9 +27,9 @@ const createStore = () => {
     },
   }
 
-  const store = new UserStore(new MockApi(), mockStorage as any)
+  const store = new RootStore(new MockApi(), mockStorage as any)
 
-  return { store, mockStorage }
+  return { store: store.userStore, mockStorage }
 }
 
 const assertUserData = (store: UserStore) => {

@@ -11,12 +11,12 @@ import UserStore from "./user/UserStore"
 export default class RootStore {
   socketStore = new SocketStore(this)
   viewStore = new ViewStore()
-  userStore = new UserStore(this.api, this.storage)
+  userStore = new UserStore(this)
   characterStore = new CharacterStore()
   channelStore = new ChannelStore(this)
   chatStore = new ChatStore(this)
 
-  constructor(private api = new FListApiService(), private storage = idb) {}
+  constructor(public api = new FListApiService(), public storage = idb) {}
 
   async init() {
     try {
