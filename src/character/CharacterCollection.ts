@@ -32,8 +32,6 @@ export default class CharacterCollection {
 
   @computed
   get characters() {
-    return [...this.nameSet].map((name) =>
-      this.characterStore.characters.get(name),
-    )
+    return this.names.map(this.characterStore.characters.get)
   }
 }
