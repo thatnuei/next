@@ -7,7 +7,7 @@ export default class FactoryMap<T extends object> {
   constructor(private createItem: (id: string) => T) {}
 
   @action
-  get(id: string) {
+  get = (id: string) => {
     const item = this.items.get(id)
     if (item) return item
 
@@ -17,19 +17,19 @@ export default class FactoryMap<T extends object> {
   }
 
   @action
-  set(id: string, newItem: T) {
+  set = (id: string, newItem: T) => {
     this.items.set(id, newItem)
   }
 
   @action
-  update(id: string, updateFn: (item: T) => T | void) {
+  update = (id: string, updateFn: (item: T) => T | void) => {
     const item = this.items.get(id) || this.createItem(id)
     const newItem = updateFn(item) || item
     this.items.set(id, newItem)
   }
 
   @action
-  delete(id: string) {
+  delete = (id: string) => {
     this.items.delete(id)
   }
 
