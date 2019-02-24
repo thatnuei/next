@@ -68,7 +68,7 @@ export default class SocketStore {
   }
 
   @action
-  private handleSocketCommand = createCommandHandler({
+  handleSocketCommand = createCommandHandler({
     IDN: () => {
       // join some test channels
       this.sendSocketCommand("JCH", { channel: "Frontpage" })
