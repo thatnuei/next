@@ -1,2 +1,2 @@
-export { css } from "@emotion/core"
+export { css, keyframes } from "@emotion/core"
 export { default as styled } from "@emotion/styled"
