@@ -1,10 +1,15 @@
 import React from "react"
 import { fireEvent, render } from "react-testing-library"
+import { CharacterMenuProvider } from "./CharacterMenuContext"
 import CharacterName from "./CharacterName"
 
 describe("CharacterName", () => {
   const setup = () =>
-    render(<CharacterName name="Testificate" gender="Male" status="online" />)
+    render(
+      <CharacterMenuProvider>
+        <CharacterName name="Testificate" gender="Male" status="online" />
+      </CharacterMenuProvider>,
+    )
 
   it("renders the character name", () => {
     const { queryByText } = setup()
@@ -28,19 +33,19 @@ describe("CharacterName", () => {
 
     // menu should not exist initially
     menuOptionPatterns.forEach((pattern) => {
-      expect(queryByText(pattern)).toBeNull()
+      expect(queryByText(pattern)).not.toBeVisible()
     })
 
     fireEvent.click(getByText("Testificate"))
 
     menuOptionPatterns.forEach((pattern) => {
-      expect(queryByText(pattern)).not.toBeNull()
+      expect(queryByText(pattern)).toBeVisible()
     })
 
     fireEvent.click(container)
 
     menuOptionPatterns.forEach((pattern) => {
-      expect(queryByText(pattern)).toBeNull()
+      expect(queryByText(pattern)).not.toBeVisible()
     })
   })
 })
