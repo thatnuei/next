@@ -73,6 +73,7 @@ export default class SocketStore {
       // join some test channels
       this.sendSocketCommand("JCH", { channel: "Frontpage" })
       this.sendSocketCommand("JCH", { channel: "Fantasy" })
+      this.sendSocketCommand("JCH", { channel: "Femboy" })
       this.sendSocketCommand("JCH", { channel: "Story Driven LFRP" })
       this.sendSocketCommand("JCH", { channel: "Development" })
     },
