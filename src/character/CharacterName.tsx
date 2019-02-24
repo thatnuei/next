@@ -1,5 +1,6 @@
 import React from "react"
 import { css } from "../ui/styled"
+import { useCharacterMenuContext } from "./CharacterMenuContext"
 import { genderColors, statusColors } from "./colors"
 import { CharacterStatus, Gender } from "./types"
 
@@ -10,8 +11,10 @@ type CharacterNameProps = {
 }
 
 const CharacterName = (props: CharacterNameProps) => {
+  const menu = useCharacterMenuContext()
+
   return (
-    <a href="#" css={containerStyle}>
+    <button css={containerStyle} onClick={menu.handleTargetClick}>
       <span
         css={[statusDotStyle, { backgroundColor: statusColors[props.status] }]}
         title={`Status: ${props.status}`}
@@ -22,7 +25,7 @@ const CharacterName = (props: CharacterNameProps) => {
       >
         {props.name}
       </span>
-    </a>
+    </button>
   )
 }
 

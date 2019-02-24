@@ -1,5 +1,5 @@
 import React from "react"
-import { render } from "react-testing-library"
+import { fireEvent, render } from "react-testing-library"
 import CharacterName from "./CharacterName"
 
 describe("CharacterName", () => {
@@ -19,5 +19,28 @@ describe("CharacterName", () => {
   it("has accessible gender", () => {
     const { queryByTitle } = setup()
     expect(queryByTitle(/male/i)).not.toBeNull()
+  })
+
+  it("has a menu opened on click", () => {
+    const { getByText, queryByText, container } = setup()
+
+    const menuOptionPatterns = [/message/i, /profile/i, /ignore/i]
+
+    // menu should not exist initially
+    menuOptionPatterns.forEach((pattern) => {
+      expect(queryByText(pattern)).toBeNull()
+    })
+
+    fireEvent.click(getByText("Testificate"))
+
+    menuOptionPatterns.forEach((pattern) => {
+      expect(queryByText(pattern)).not.toBeNull()
+    })
+
+    fireEvent.click(container)
+
+    menuOptionPatterns.forEach((pattern) => {
+      expect(queryByText(pattern)).toBeNull()
+    })
   })
 })

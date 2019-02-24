@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import ChannelRoomView from "../channel/ChannelRoomView"
+import { CharacterMenuProvider } from "../character/CharacterMenuContext"
 import { useRootStore } from "../RootStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 
@@ -20,6 +21,10 @@ const ChatScreen = () => {
     }
   }
 
-  return <AppDocumentTitle title={identity}>{renderRoom()}</AppDocumentTitle>
+  return (
+    <AppDocumentTitle title={identity}>
+      <CharacterMenuProvider>{renderRoom()}</CharacterMenuProvider>
+    </AppDocumentTitle>
+  )
 }
 export default observer(ChatScreen)
