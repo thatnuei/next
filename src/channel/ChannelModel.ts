@@ -11,7 +11,7 @@ export default class ChannelModel {
   @observable selectedMode: ChannelMode = "chat"
   @observable.shallow users = new CharacterCollection(this.characterStore)
   @observable.shallow ops = new CharacterCollection(this.characterStore)
-  @observable.shallow messages: MessageModel[] = []
+  @observable.ref messages: MessageModel[] = []
 
   constructor(private characterStore: CharacterStore, public id: string) {}
 
@@ -37,10 +37,10 @@ export default class ChannelModel {
 
   @action
   addMessage(message: MessageModel) {
-    this.messages.push(message)
+    this.messages = [...this.messages, message]
   }
 
-  @computed
+  @computed.struct
   get filteredMessages() {
     if (this.mode !== "both") return this.messages
 
