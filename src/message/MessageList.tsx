@@ -1,9 +1,10 @@
+import { observer } from "mobx-react-lite"
 import React, { useLayoutEffect, useRef } from "react"
 import { flexGrow, scrollVertical } from "../ui/helpers"
 import MessageListItem from "./MessageListItem"
 import MessageModel from "./MessageModel"
 
-export default function MessageList(props: { messages: MessageModel[] }) {
+function MessageList(props: { messages: MessageModel[] }) {
   const messageListRef = useRef<HTMLUListElement>(null)
 
   useBottomScroll(messageListRef, props.messages[props.messages.length - 1])
@@ -16,6 +17,7 @@ export default function MessageList(props: { messages: MessageModel[] }) {
     </ul>
   )
 }
+export default observer(MessageList)
 
 function useBottomScroll(
   elementRef: React.RefObject<HTMLElement>,

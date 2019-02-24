@@ -4,7 +4,7 @@ import MessageList from "./MessageList"
 import MessageModel from "./MessageModel"
 
 test("showing messages", async () => {
-  const messages = [
+  let messages = [
     new MessageModel("aoi", "hello world", "chat"),
     new MessageModel("aoi", "message text", "chat"),
   ]
@@ -15,7 +15,7 @@ test("showing messages", async () => {
   expect(queryByText("hello world")).not.toBeNull()
   expect(queryByText("message text")).not.toBeNull()
 
-  messages.push(new MessageModel("aoi", "new message!", "chat"))
+  messages = [...messages, new MessageModel("aoi", "new message!", "chat")]
 
   rerender(<MessageList messages={messages} />)
 

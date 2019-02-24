@@ -1,26 +1,18 @@
 import React from "react"
 import { act, render } from "react-testing-library"
-import RootStore, { RootStoreContext } from "../RootStore"
+import CharacterStore from "../character/CharacterStore"
+import MessageModel from "../message/MessageModel"
+import ChannelModel from "./ChannelModel"
 import ChannelRoomView from "./ChannelRoomView"
 
 test("shows new messages", () => {
-  const store = new RootStore()
+  const channel = new ChannelModel(new CharacterStore(), "Frontpage")
 
-  const { queryByText } = render(
-    <RootStoreContext.Provider value={store}>
-      <ChannelRoomView channel={store.channelStore.channels.get("Frontpage")} />
-    </RootStoreContext.Provider>,
-  )
+  const { queryByText } = render(<ChannelRoomView channel={channel} />)
 
   act(() => {
-    store.channelStore.handleSocketCommand({
-      type: "MSG",
-      params: {
-        channel: "Frontpage",
-        character: "Testificate",
-        message: "hello world",
-      },
-    })
+    channel.setMode("chat")
+    channel.addMessage(new MessageModel("Testificate", "hello world", "chat"))
   })
 
   expect(queryByText("hello world")).not.toBeNull()
