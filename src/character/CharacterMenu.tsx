@@ -3,7 +3,7 @@ import { getProfileUrl } from "../flist/helpers"
 import Button, { buttonStyle } from "../ui/Button"
 import { themeColor } from "../ui/colors"
 import ExternalLink from "../ui/ExternalLink"
-import Flex from "../ui/Flex"
+import { flex } from "../ui/flex"
 import { boxShadow } from "../ui/helpers"
 import { css, keyframes } from "../ui/styled"
 import { useCharacterMenuContext } from "./CharacterMenuContext"
@@ -16,9 +16,9 @@ const CharacterMenu = (props: CharacterMenuProps) => {
   const menu = useCharacterMenuContext()
 
   return (
-    <Flex
-      direction="column"
+    <div
       css={[
+        flex({ direction: "column" }),
         css`
           background-color: ${themeColor};
         `,
@@ -34,7 +34,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
       <Button>Bookmark</Button>
       <Button>Ignore</Button>
       <Button>Report</Button>
-    </Flex>
+    </div>
   )
 }
 
