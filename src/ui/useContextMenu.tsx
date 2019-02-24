@@ -1,12 +1,16 @@
 import Popper from "popper.js"
 import React, { useEffect, useMemo, useState } from "react"
-import useWindowEvent from "../ui/useWindowEvent"
+import useWindowEvent from "./useWindowEvent"
 
-export default function useContextMenu(menuRef: React.RefObject<Element>) {
+export default function useContextMenu(menuRef: React.RefObject<HTMLElement>) {
   const [target, setTarget] = useState<Element>()
 
   useEffect(() => {
-    if (!menuRef.current || !target) return
+    if (!menuRef.current) return
+    menuRef.current.style.display = "none"
+
+    if (!target) return
+    menuRef.current.style.display = "initial"
 
     const popper = new Popper(target, menuRef.current, {
       placement: "bottom-start",
