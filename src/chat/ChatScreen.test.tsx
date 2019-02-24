@@ -17,7 +17,7 @@ test("bug - continues to show new messages after switching channels", () => {
 
     store.viewStore.setScreen({
       name: "channel",
-      channel: "Frontpage",
+      channel: "Fantasy",
     })
 
     store.channelStore.handleSocketCommand({
@@ -26,6 +26,15 @@ test("bug - continues to show new messages after switching channels", () => {
         channel: "Frontpage",
         title: "Frontpage",
         character: { identity: "Testificate" },
+      },
+    })
+
+    store.channelStore.handleSocketCommand({
+      type: "ICH",
+      params: {
+        channel: "Frontpage",
+        mode: "chat",
+        users: [{ identity: "Testificate" }],
       },
     })
 
@@ -41,24 +50,6 @@ test("bug - continues to show new messages after switching channels", () => {
     store.channelStore.handleSocketCommand({
       type: "MSG",
       params: {
-        channel: "Frontpage",
-        character: "Testificate",
-        message: "hello frontpage",
-      },
-    })
-  })
-
-  expect(queryByText("hello frontpage")).not.toBeNull()
-
-  act(() => {
-    store.viewStore.setScreen({
-      name: "channel",
-      channel: "Fantasy",
-    })
-
-    store.channelStore.handleSocketCommand({
-      type: "MSG",
-      params: {
         channel: "Fantasy",
         character: "Testificate",
         message: "hello fantasy",
@@ -66,6 +57,24 @@ test("bug - continues to show new messages after switching channels", () => {
     })
   })
 
-  expect(queryByText("hello frontpage")).toBeNull()
   expect(queryByText("hello fantasy")).not.toBeNull()
+
+  act(() => {
+    store.viewStore.setScreen({
+      name: "channel",
+      channel: "Frontpage",
+    })
+
+    store.channelStore.handleSocketCommand({
+      type: "MSG",
+      params: {
+        channel: "Frontpage",
+        character: "Testificate",
+        message: "hello frontpage",
+      },
+    })
+  })
+
+  expect(queryByText("hello fantasy")).toBeNull()
+  expect(queryByText("hello frontpage")).not.toBeNull()
 })
