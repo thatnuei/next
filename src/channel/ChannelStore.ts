@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx"
+import { action, computed } from "mobx"
 import { createCommandHandler } from "../fchat/helpers"
 import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
@@ -13,15 +13,27 @@ type ChannelListing = {
   mode?: ChannelMode
 }
 
+type ChannelStoreListings = {
+  public: ChannelListing[]
+  private: ChannelListing[]
+}
+
 export default class ChannelStore {
   channels = new FactoryMap(
     (id) => new ChannelModel(this.root.characterStore, id),
   )
 
-  @observable.ref publicListings: ChannelListing[] = []
-  @observable.ref privateListings: ChannelListing[] = []
+  listings: ChannelStoreListings = {
+    public: [],
+    private: [],
+  }
 
   constructor(private root: RootStore) {}
+
+  @action
+  setListings(kind: keyof ChannelStoreListings, listings: ChannelListing[]) {
+    this.listings[kind] = listings
+  }
 
   @computed
   get joinedChannels() {
@@ -47,7 +59,6 @@ export default class ChannelStore {
     return this.joinedChannels.some((channel) => channel.id === channelId)
   }
 
-  @action
   handleSocketCommand = createCommandHandler({
     ICH: ({ channel: id, mode, users }) => {
       const channel = this.channels.get(id)
@@ -56,9 +67,11 @@ export default class ChannelStore {
     },
 
     CDS: ({ channel: id, description }) => {
-      this.channels.update(id, (channel) => {
-        channel.description = description
-      })
+      const channel = this.channels.get(id)
+      channel.setDescription(description)
+      // this.channels.update(id, (channel) => {
+      //   channel.description = description
+      // })
     },
 
     COL: ({ channel: id, oplist }) => {
@@ -94,7 +107,7 @@ export default class ChannelStore {
     },
 
     CHA: ({ channels }) => {
-      this.publicListings = channels.map(
+      const listings = channels.map(
         ({ name, mode, characters }): ChannelListing => ({
           id: name,
           name,
@@ -102,16 +115,18 @@ export default class ChannelStore {
           userCount: characters,
         }),
       )
+      this.setListings("public", listings)
     },
 
     ORS: ({ channels }) => {
-      this.publicListings = channels.map(
+      const listings = channels.map(
         ({ name, title, characters }): ChannelListing => ({
           id: name,
           name: title,
           userCount: characters,
         }),
       )
+      this.setListings("private", listings)
     },
   })
 }
