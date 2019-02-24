@@ -6,13 +6,12 @@ export default class FactoryMap<T extends object> {
 
   constructor(private createItem: (id: string) => T) {}
 
-  @action
   get = (id: string) => {
     const item = this.items.get(id)
     if (item) return item
 
     const newItem = this.createItem(id)
-    this.items.set(id, newItem)
+    this.set(id, newItem)
     return newItem
   }
 
