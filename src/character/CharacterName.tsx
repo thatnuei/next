@@ -1,4 +1,6 @@
 import React from "react"
+import { getProfileUrl } from "../flist/helpers"
+import ExternalLink from "../ui/ExternalLink"
 import { css } from "../ui/styled"
 import { useCharacterMenuContext } from "./CharacterMenuContext"
 import { genderColors, statusColors } from "./colors"
@@ -13,8 +15,17 @@ type CharacterNameProps = {
 const CharacterName = (props: CharacterNameProps) => {
   const menu = useCharacterMenuContext()
 
+  const handleContextMenu = (event: React.MouseEvent) => {
+    event.preventDefault()
+    menu.open(props.name, event)
+  }
+
   return (
-    <button css={containerStyle} onClick={menu.handleTargetClick}>
+    <ExternalLink
+      href={getProfileUrl(props.name)}
+      css={containerStyle}
+      onContextMenu={handleContextMenu}
+    >
       <span
         css={[statusDotStyle, { backgroundColor: statusColors[props.status] }]}
         title={`Status: ${props.status}`}
@@ -25,7 +36,7 @@ const CharacterName = (props: CharacterNameProps) => {
       >
         {props.name}
       </span>
-    </button>
+    </ExternalLink>
   )
 }
 

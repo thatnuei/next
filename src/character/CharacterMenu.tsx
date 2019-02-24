@@ -1,20 +1,56 @@
 import React from "react"
+import { getProfileUrl } from "../flist/helpers"
+import Button, { buttonStyle } from "../ui/Button"
+import { themeColor } from "../ui/colors"
+import ExternalLink from "../ui/ExternalLink"
+import Flex from "../ui/Flex"
+import { boxShadow } from "../ui/helpers"
+import { css, keyframes } from "../ui/styled"
+import { useCharacterMenuContext } from "./CharacterMenuContext"
 
-type CharacterMenuProps = {}
+type CharacterMenuProps = {
+  characterName: string
+}
 
-const CharacterMenu = (
-  props: CharacterMenuProps,
-  ref: React.Ref<HTMLDivElement>,
-) => {
+const CharacterMenu = (props: CharacterMenuProps) => {
+  const menu = useCharacterMenuContext()
+
   return (
-    <div ref={ref}>
-      <button>Profile</button>
-      <button>Open Private Message</button>
-      <button>Bookmark</button>
-      <button>Ignore</button>
-      <button>Report</button>
-    </div>
+    <Flex
+      direction="column"
+      css={[
+        css`
+          background-color: ${themeColor};
+        `,
+        boxShadow,
+        slideDown,
+      ]}
+      onClick={menu.close}
+    >
+      <ExternalLink css={buttonStyle} href={getProfileUrl(props.characterName)}>
+        Profile
+      </ExternalLink>
+      <Button>Open Private Message</Button>
+      <Button>Bookmark</Button>
+      <Button>Ignore</Button>
+      <Button>Report</Button>
+    </Flex>
   )
 }
 
-export default React.forwardRef(CharacterMenu)
+export default CharacterMenu
+
+const slideDownKeyframes = keyframes`
+  from {
+    transform: translateY(-1rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`
+
+const slideDown = css`
+  animation: ${slideDownKeyframes} 0.2s;
+`

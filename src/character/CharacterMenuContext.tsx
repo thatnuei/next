@@ -1,11 +1,10 @@
-import React, { useContext, useRef } from "react"
+import React, { useContext, useRef, useState } from "react"
 import useContextMenu from "../ui/useContextMenu"
 import CharacterMenu from "./CharacterMenu"
 
 const CharacterMenuContext = React.createContext({
-  open: (target: Element) => {},
+  open: (characterName: string, event: React.MouseEvent) => {},
   close: () => {},
-  handleTargetClick: (event: React.MouseEvent) => {},
 })
 
 export const CharacterMenuProvider = ({
@@ -15,10 +14,22 @@ export const CharacterMenuProvider = ({
 }) => {
   const menuRef = useRef<HTMLDivElement>(null)
   const menuActions = useContextMenu(menuRef)
+  const [characterName, setCharacterName] = useState<string>()
+
+  const context = {
+    open: (newCharacterName: string, event: React.MouseEvent) => {
+      setCharacterName(newCharacterName)
+      menuActions.handleTargetClick(event)
+    },
+    close: menuActions.close,
+  }
+
   return (
-    <CharacterMenuContext.Provider value={menuActions}>
+    <CharacterMenuContext.Provider value={context}>
       {children}
-      <CharacterMenu ref={menuRef} />
+      <div ref={menuRef}>
+        {characterName ? <CharacterMenu characterName={characterName} /> : null}
+      </div>
     </CharacterMenuContext.Provider>
   )
 }
