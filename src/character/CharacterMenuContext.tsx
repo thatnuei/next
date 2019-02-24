@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from "react"
+import useContextMenu from "../ui/useContextMenu"
 import CharacterMenu from "./CharacterMenu"
-import useContextMenu from "./useContextMenu"
 
 const CharacterMenuContext = React.createContext({
   open: (target: Element) => {},
