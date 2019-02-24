@@ -69,9 +69,6 @@ export default class ChannelStore {
     CDS: ({ channel: id, description }) => {
       const channel = this.channels.get(id)
       channel.setDescription(description)
-      // this.channels.update(id, (channel) => {
-      //   channel.description = description
-      // })
     },
 
     COL: ({ channel: id, oplist }) => {
