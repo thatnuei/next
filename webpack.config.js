@@ -46,6 +46,15 @@ const baseConfig = {
     children: false,
     excludeAssets: (assetName) => /\.map$/.test(assetName),
   },
+}
+
+/** @type {webpack.Configuration} */
+const devConfig = {
+  mode: "development",
+  devtool: "eval-source-map",
+  performance: {
+    maxAssetSize: Infinity,
+  },
   optimization: {
     runtimeChunk: "single",
     splitChunks: {
@@ -61,15 +70,6 @@ const baseConfig = {
 }
 
 /** @type {webpack.Configuration} */
-const devConfig = {
-  mode: "development",
-  devtool: "eval-source-map",
-  performance: {
-    maxAssetSize: Infinity,
-  },
-}
-
-/** @type {webpack.Configuration} */
 const prodConfig = {
   mode: "production",
   devtool: "source-map",
@@ -77,6 +77,9 @@ const prodConfig = {
     filename: "js/[name].[contenthash].js",
   },
   plugins: [new webpack.HashedModuleIdsPlugin()],
+  optimization: {
+    runtimeChunk: "single",
+  },
 }
 
 module.exports =
