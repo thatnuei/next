@@ -1,26 +1,33 @@
 import { observer } from "mobx-react-lite"
-import React from "react"
-import ChatScreen from "../chat/ChatScreen"
+import React, { Suspense } from "react"
 import { useRootStore } from "../RootStore"
-import CharacterSelectScreen from "./CharacterSelectScreen"
-import LoginScreen from "./LoginScreen"
+
+const ChatScreen = React.lazy(() => import("../chat/ChatScreen"))
+const CharacterSelectScreen = React.lazy(() =>
+  import("./CharacterSelectScreen"),
+)
+const LoginScreen = React.lazy(() => import("./LoginScreen"))
 
 function App() {
   const { viewStore } = useRootStore()
 
-  switch (viewStore.screen.name) {
-    case "init":
-      return <p>Setting things up...</p>
+  const renderScreen = () => {
+    switch (viewStore.screen.name) {
+      case "init":
+        return <p>Setting things up...</p>
 
-    case "login":
-      return <LoginScreen />
+      case "login":
+        return <LoginScreen />
 
-    case "characterSelect":
-      return <CharacterSelectScreen />
+      case "characterSelect":
+        return <CharacterSelectScreen />
 
-    default:
-      return <ChatScreen />
+      default:
+        return <ChatScreen />
+    }
   }
+
+  return <Suspense fallback={<p>Loading...</p>}>{renderScreen()}</Suspense>
 }
 
 export default observer(App)
