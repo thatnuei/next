@@ -6,8 +6,8 @@ import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
 import FullscreenCenterContainer from "../ui/FullscreenCenterContainer"
+import Panel from "../ui/Panel"
 import PanelHeader from "../ui/PanelHeader"
-import RaisedPanel from "../ui/RaisedPanel"
 import { styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
 
@@ -30,7 +30,7 @@ function LoginScreen() {
   return (
     <AppDocumentTitle title="Login">
       <FullscreenCenterContainer>
-        <RaisedPanel>
+        <Panel raised>
           <PanelHeader>next</PanelHeader>
           <PanelBody onSubmit={handleSubmit}>
             <FormField labelText="Username">
@@ -45,7 +45,7 @@ function LoginScreen() {
             </FormField>
             <Button type="submit">Submit</Button>
           </PanelBody>
-        </RaisedPanel>
+        </Panel>
       </FullscreenCenterContainer>
     </AppDocumentTitle>
   )

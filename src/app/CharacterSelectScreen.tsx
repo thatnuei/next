@@ -7,8 +7,8 @@ import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
 import FullscreenCenterContainer from "../ui/FullscreenCenterContainer"
+import Panel from "../ui/Panel"
 import PanelHeader from "../ui/PanelHeader"
-import RaisedPanel from "../ui/RaisedPanel"
 import { styled } from "../ui/styled"
 
 const lastCharacterKey = (account: string) => `${account}:lastCharacter`
@@ -46,7 +46,7 @@ function CharacterSelectScreen() {
   return (
     <AppDocumentTitle title="Select Character">
       <FullscreenCenterContainer>
-        <RaisedPanel>
+        <Panel raised>
           <PanelHeader>Select a Character</PanelHeader>
           <PanelBody onSubmit={handleSubmit}>
             <FormField>
@@ -63,7 +63,7 @@ function CharacterSelectScreen() {
             </FormField>
             <Button type="submit">Enter Chat</Button>
           </PanelBody>
-        </RaisedPanel>
+        </Panel>
       </FullscreenCenterContainer>
     </AppDocumentTitle>
   )

@@ -2,8 +2,8 @@ import { themeColor } from "./colors"
 import { boxShadow } from "./helpers"
 import { styled } from "./styled"
 
-const RaisedPanel = styled.div`
+const Panel = styled.div<{ raised?: boolean }>`
   background-color: ${themeColor};
-  ${boxShadow};
+  ${(props) => props.raised && boxShadow};
 `
-export default RaisedPanel
+export default Panel
