@@ -1,9 +1,9 @@
-import css from "@emotion/css"
 import React from "react"
 import { useRootStore } from "../RootStore"
 import useInput from "../state/useInput"
 import Button from "../ui/Button"
 import { themeColor } from "../ui/colors"
+import { css } from "../ui/styled"
 import TextArea from "../ui/TextArea"
 
 type Props = {

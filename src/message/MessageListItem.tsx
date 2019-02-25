@@ -1,6 +1,6 @@
-import { Interpolation } from "@emotion/core"
 import { observer } from "mobx-react-lite"
 import React from "react"
+import { CSSObject } from "styled-components"
 import CharacterName from "../character/CharacterName"
 import { useRootStore } from "../RootStore"
 import { semiBlack } from "../ui/colors"
@@ -39,7 +39,7 @@ const MessageListItem = ({ senderName, text, type, time }: Props) => {
 
 export default observer(MessageListItem)
 
-const highlightStyles: { [K in MessageType]?: Interpolation } = {
+const highlightStyles: { [K in MessageType]?: CSSObject } = {
   lfrp: { backgroundColor: "rgba(39, 174, 96, 0.2)" },
   system: { backgroundColor: semiBlack(0.5) },
   admin: { backgroundColor: "rgb(192, 57, 43, 0.2)" },

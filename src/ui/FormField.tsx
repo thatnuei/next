@@ -10,7 +10,7 @@ export default class FormField extends React.Component<Props> {
   render() {
     const { labelText, htmlFor, children, ...props } = this.props
     return (
-      <div css={{ marginBottom: "1rem" }} {...props}>
+      <div css={containerStyle} {...props}>
         {labelText ? (
           <label css={labelStyle} htmlFor={htmlFor}>
             {labelText}
@@ -21,6 +21,10 @@ export default class FormField extends React.Component<Props> {
     )
   }
 }
+
+const containerStyle = css`
+  margin-bottom: 1rem;
+`
 
 const labelStyle = css`
   display: block;

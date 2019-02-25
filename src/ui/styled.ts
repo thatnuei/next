@@ -1,2 +1,2 @@
-export { css, keyframes } from "@emotion/core"
-export { default as styled } from "@emotion/styled"
+/// <reference types="styled-components/cssprop" />
+export { css, default as styled, keyframes } from "styled-components"

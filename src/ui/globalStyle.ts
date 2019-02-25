@@ -1,8 +1,9 @@
 import { lighten, shade } from "polished"
+import { createGlobalStyle } from "styled-components"
 import { textColor, themeBackgroundColor, themeColor } from "./colors"
 import { css } from "./styled"
 
-export default css`
+const globalStyle = css`
   * {
     margin: 0;
     padding: 0;
@@ -73,3 +74,9 @@ export default css`
     background-color: ${lighten(0.2, themeColor)};
   }
 `
+
+const GlobalStyle = createGlobalStyle`
+  ${globalStyle};
+`
+
+export default GlobalStyle
