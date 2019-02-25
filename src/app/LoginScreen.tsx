@@ -5,9 +5,10 @@ import useInput from "../state/useInput"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
-import ModalBody from "../ui/ModalBody"
-import ModalOverlay from "../ui/ModalOverlay"
-import ModalTitle from "../ui/ModalTitle"
+import FullscreenCenterContainer from "../ui/FullscreenCenterContainer"
+import PanelHeader from "../ui/PanelHeader"
+import RaisedPanel from "../ui/RaisedPanel"
+import { styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
 
 function LoginScreen() {
@@ -28,10 +29,10 @@ function LoginScreen() {
 
   return (
     <AppDocumentTitle title="Login">
-      <ModalOverlay>
-        <ModalTitle>next</ModalTitle>
-        <ModalBody css={{ width: "100%" }}>
-          <form onSubmit={handleSubmit}>
+      <FullscreenCenterContainer>
+        <RaisedPanel>
+          <PanelHeader>next</PanelHeader>
+          <PanelBody onSubmit={handleSubmit}>
             <FormField labelText="Username">
               <TextInput placeholder="awesomeuser" {...account.bind} />
             </FormField>
@@ -43,10 +44,14 @@ function LoginScreen() {
               />
             </FormField>
             <Button type="submit">Submit</Button>
-          </form>
-        </ModalBody>
-      </ModalOverlay>
+          </PanelBody>
+        </RaisedPanel>
+      </FullscreenCenterContainer>
     </AppDocumentTitle>
   )
 }
 export default observer(LoginScreen)
+
+const PanelBody = styled.form`
+  padding: 1rem;
+`
