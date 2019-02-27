@@ -1,4 +1,3 @@
-import "jest-dom/extend-expect"
 import React from "react"
 import { act, fireEvent, render } from "react-testing-library"
 import CharacterStore from "../character/CharacterStore"
