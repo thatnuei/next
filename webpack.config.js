@@ -2,7 +2,7 @@
 const webpack = require("webpack")
 const { join } = require("path")
 const HtmlPlugin = require("html-webpack-plugin")
-const CleanPlugin = require("clean-webpack-plugin")
+const CleanPlugin = require("clean-webpack-plugin").default
 const CopyPlugin = require("copy-webpack-plugin")
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin")
 const merge = require("webpack-merge")
@@ -32,7 +32,7 @@ const baseConfig = {
     new HtmlPlugin({
       template: join(sourceFolder, "index.html"),
     }),
-    new CleanPlugin(buildFolder, { verbose: false }),
+    new CleanPlugin(),
     new CopyPlugin([{ from: publicFolder, to: buildFolder }]),
     new ForkTsCheckerWebpackPlugin(),
   ],
