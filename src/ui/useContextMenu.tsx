@@ -17,7 +17,7 @@ export default function useContextMenu(menuRef: React.RefObject<HTMLElement>) {
     })
 
     return () => popper.destroy()
-  }, [target])
+  }, [menuRef, target])
 
   useWindowEvent("click", (event) => {
     if (!menuRef.current) return

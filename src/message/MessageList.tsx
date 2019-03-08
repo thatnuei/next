@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { useLayoutEffect, useRef } from "react"
+import React, { useCallback, useLayoutEffect, useRef } from "react"
 import { flexGrow, scrollVertical } from "../ui/helpers"
 import MessageListItem from "./MessageListItem"
 import MessageModel from "./MessageModel"
@@ -28,14 +28,14 @@ function useBottomScroll(
     element != null &&
     element.scrollTop >= element.scrollHeight - element.clientHeight - 100
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     const element = elementRef.current
     if (element) element.scrollTop = element.scrollHeight
-  }
+  }, [elementRef])
 
   useLayoutEffect(() => {
     if (wasBottomScrolled) scrollToBottom()
-  }, [value])
+  }, [scrollToBottom, wasBottomScrolled, value])
 
   useLayoutEffect(scrollToBottom, [element])
 }

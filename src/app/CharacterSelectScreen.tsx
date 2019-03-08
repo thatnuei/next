@@ -16,23 +16,22 @@ const lastCharacterKey = (account: string) => `${account}:lastCharacter`
 function CharacterSelectScreen() {
   const { userStore, viewStore, chatStore, socketStore } = useRootStore()
 
-  const { characters } = userStore
+  const { characters, account } = userStore
   const { identity } = chatStore
 
   useEffect(() => {
+    async function restoreIdentity() {
+      const key = lastCharacterKey(account)
+      const storedIdentity = await idb.get<string>(key)
+      chatStore.setIdentity(storedIdentity || characters[0])
+    }
     restoreIdentity()
-  }, [])
-
-  async function restoreIdentity() {
-    const key = lastCharacterKey(userStore.account)
-    const storedIdentity = await idb.get<string>(key)
-    chatStore.setIdentity(storedIdentity || characters[0])
-  }
+  }, [characters, chatStore, account])
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const newIdentity = event.target.value
     chatStore.setIdentity(newIdentity)
-    idb.set(lastCharacterKey(userStore.account), newIdentity)
+    idb.set(lastCharacterKey(account), newIdentity)
   }
 
   function handleSubmit(event: React.FormEvent) {
