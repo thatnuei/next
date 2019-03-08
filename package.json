@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "jest --watch",
     "test:run": "jest",
-    "test:cov": "jest --coverage"
+    "test:cov": "jest --coverage",
+    "lint": "eslint \"src/**/*.ts?(x)\""
   },
   "dependencies": {
     "@babel/runtime": "^7.3.1",
@@ -65,11 +66,16 @@
     "@types/webpack-dev-server": "^3.1.2",
     "@types/webpack-env": "^1.13.7",
     "@types/webpack-merge": "^4.1.3",
+    "@typescript-eslint/eslint-plugin": "^1.4.2",
+    "@typescript-eslint/parser": "^1.4.2",
     "babel-jest": "^24.1.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-styled-components": "^1.10.0",
     "clean-webpack-plugin": "^1.0.1",
     "copy-webpack-plugin": "^4.6.0",
+    "eslint": "^5.15.1",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-react-hooks": "^1.5.0",
     "fork-ts-checker-webpack-plugin": "^0.5.2",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^24.1.0",
