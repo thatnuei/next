@@ -1,7 +1,7 @@
-import React from "react"
+import React, { ComponentPropsWithoutRef } from "react"
 import { css } from "./styled"
 
-interface Props extends React.HTMLAttributes<HTMLElement> {
+type Props = ComponentPropsWithoutRef<"label"> & {
   labelText?: string
   htmlFor?: string
 }
@@ -10,21 +10,23 @@ export default class FormField extends React.Component<Props> {
   render() {
     const { labelText, htmlFor, children, ...props } = this.props
     return (
-      <div css={containerStyle} {...props}>
-        {labelText ? (
-          <label css={labelStyle} htmlFor={htmlFor}>
-            {labelText}
-          </label>
-        ) : null}
+      <label {...props}>
+        <div>{labelText}</div>
         {children}
-      </div>
+      </label>
+      // <div css={containerStyle} {...props}>
+      //   {labelText ? (
+      //     <label css={labelStyle} htmlFor={htmlFor}>
+      //       {labelText}
+      //     </label>
+      //   ) : null}
+      //   {children}
+      // </div>
     )
   }
 }
 
-const containerStyle = css`
-  margin-bottom: 1rem;
-`
+const containerStyle = css``
 
 const labelStyle = css`
   display: block;

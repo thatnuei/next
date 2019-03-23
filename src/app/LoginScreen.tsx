@@ -54,4 +54,8 @@ export default observer(LoginScreen)
 
 const PanelBody = styled.form`
   padding: 1rem;
+
+  display: grid;
+  grid-gap: 1rem;
+  justify-items: start;
 `

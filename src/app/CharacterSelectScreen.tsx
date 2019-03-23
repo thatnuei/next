@@ -5,7 +5,6 @@ import Avatar from "../character/Avatar"
 import { useRootStore } from "../RootStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
-import FormField from "../ui/FormField"
 import FullscreenScrollingContainer from "../ui/FullscreenScrollingContainer"
 import Panel from "../ui/Panel"
 import PanelHeader from "../ui/PanelHeader"
@@ -48,18 +47,16 @@ function CharacterSelectScreen() {
         <Panel raised>
           <PanelHeader>Select a Character</PanelHeader>
           <PanelBody onSubmit={handleSubmit}>
-            <FormField>
-              <Avatar key={identity} name={identity} />
-            </FormField>
-            <FormField>
-              <select name="character" value={identity} onChange={handleChange}>
-                {characters.map((name) => (
-                  <option value={name} key={name}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </FormField>
+            <Avatar key={identity} name={identity} />
+
+            <select name="character" value={identity} onChange={handleChange}>
+              {characters.map((name) => (
+                <option value={name} key={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+
             <Button type="submit">Enter Chat</Button>
           </PanelBody>
         </Panel>
@@ -72,7 +69,9 @@ export default observer(CharacterSelectScreen)
 const PanelBody = styled.form`
   padding: 1rem;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: max-content;
+  justify-items: center;
+  justify-content: center;
 `
