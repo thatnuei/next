@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import React, { useEffect } from "react"
 import Avatar from "../character/Avatar"
 import { useRootStore } from "../RootStore"
+import Anchor from "../ui/Anchor"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import FullscreenScrollingContainer from "../ui/FullscreenScrollingContainer"
@@ -41,6 +42,10 @@ function CharacterSelectScreen() {
     )
   }
 
+  function showLogin() {
+    viewStore.setScreen({ name: "login" })
+  }
+
   return (
     <AppDocumentTitle title="Select Character">
       <FullscreenScrollingContainer>
@@ -58,6 +63,10 @@ function CharacterSelectScreen() {
             </select>
 
             <Button type="submit">Enter Chat</Button>
+
+            <Anchor as="button" type="button" onClick={showLogin}>
+              Return to Login
+            </Anchor>
           </PanelBody>
         </Panel>
       </FullscreenScrollingContainer>
@@ -70,7 +79,7 @@ const PanelBody = styled.form`
   padding: 1rem;
 
   display: grid;
-  grid-gap: 1rem;
+  grid-gap: 1.5rem;
   grid-template-columns: max-content;
   justify-items: center;
   justify-content: center;
