@@ -9,6 +9,7 @@ import Button from "../ui/Button"
 import FullscreenScrollingContainer from "../ui/FullscreenScrollingContainer"
 import Panel from "../ui/Panel"
 import PanelHeader from "../ui/PanelHeader"
+import Select from "../ui/Select"
 import { styled } from "../ui/styled"
 
 const lastCharacterKey = (account: string) => `${account}:lastCharacter`
@@ -54,13 +55,13 @@ function CharacterSelectScreen() {
           <PanelBody onSubmit={handleSubmit}>
             <Avatar key={identity} name={identity} />
 
-            <select name="character" value={identity} onChange={handleChange}>
+            <Select name="character" value={identity} onChange={handleChange}>
               {characters.map((name) => (
                 <option value={name} key={name}>
                   {name}
                 </option>
               ))}
-            </select>
+            </Select>
 
             <Button type="submit">Enter Chat</Button>
 
