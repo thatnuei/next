@@ -2,6 +2,7 @@ import React from "react"
 import { getProfileUrl } from "../flist/helpers"
 import Button from "../ui/Button"
 import { themeColor } from "../ui/colors"
+import ExternalLink from "../ui/ExternalLink"
 import { flex } from "../ui/flex"
 import { boxShadow } from "../ui/helpers"
 import { css, keyframes } from "../ui/styled"
@@ -26,9 +27,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
       ]}
       onClick={menu.close}
     >
-      <Button as="a" href={getProfileUrl(props.characterName)}>
-        Profile
-      </Button>
+      <LinkButton href={getProfileUrl(props.characterName)}>Profile</LinkButton>
       <Button>Open Private Message</Button>
       <Button>Bookmark</Button>
       <Button>Ignore</Button>
@@ -53,3 +52,5 @@ const slideDownKeyframes = keyframes`
 const slideDown = css`
   animation: ${slideDownKeyframes} 0.2s;
 `
+
+const LinkButton = Button.withComponent(ExternalLink)

@@ -1,6 +1,6 @@
 import React from "react"
-import Button from "../ui/Button"
 import { themeColor } from "../ui/colors"
+import FlatButton from "../ui/FlatButton"
 import Icon from "../ui/Icon"
 import SideOverlay from "../ui/SideOverlay"
 import { css } from "../ui/styled"
@@ -15,24 +15,26 @@ const ChatRoomHeader = (props: ChatRoomHeaderProps) => {
   const sidebar = useOverlayState()
 
   return (
-    <header css={headerStyle}>
-      <Button flat onClick={sidebar.open}>
-        <Icon icon="menu" />
-      </Button>
-
-      {props.children}
+    <>
+      <header css={headerStyle}>
+        <FlatButton onClick={sidebar.open}>
+          <Icon icon="menu" />
+        </FlatButton>
+        <div>{props.children}</div>
+      </header>
 
       <SideOverlay {...sidebar.bind}>
         <ChatSidebarContent />
       </SideOverlay>
-    </header>
+    </>
   )
 }
 export default ChatRoomHeader
 
 export const headerStyle = css`
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 0.5rem;
   background-color: ${themeColor};
   min-height: 50px;
 `

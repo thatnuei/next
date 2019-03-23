@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import Button from "../ui/Button"
 import { semiBlack } from "../ui/colors"
+import FlatButton from "../ui/FlatButton"
 import { flexGrow, flexRow, flexWrap } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { css } from "../ui/styled"
@@ -71,9 +71,9 @@ function ChannelHeader({ channel }: Props) {
         )}
       </div>
 
-      <Button flat>
+      <FlatButton>
         <Icon icon="users" />
-      </Button>
+      </FlatButton>
     </div>
   )
 }
