@@ -1,44 +1,21 @@
 import { shade } from "polished"
-import React from "react"
-import { themeColor } from "./colors"
-import { css } from "./styled"
+import { primaryColor, semiBlack } from "./colors"
+import { styled } from "./styled"
 
-type ButtonProps = React.ComponentProps<"button"> & {
-  flat?: boolean
-}
+const Button = styled.button`
+  padding: 0.4rem 0.7rem;
+  background-color: ${primaryColor};
+  box-shadow: 0px 4px 6px ${semiBlack(0.2)};
+  transition: 0.2s;
+  transition-property: background-color;
 
-const Button = ({ flat, ...props }: ButtonProps) => {
-  return (
-    <button
-      type="button"
-      css={[buttonStyle, flat && buttonFlatStyle]}
-      {...props}
-    />
-  )
+  :hover {
+    background-color: ${shade(0.2, primaryColor)};
+  }
+`
+
+Button.defaultProps = {
+  type: "button",
 }
 
 export default Button
-
-export const buttonStyle = css`
-  background-color: ${shade(0.3, themeColor)};
-  padding: 0.5rem 0.7rem;
-  transition: 0.2s;
-  transition-property: background-color;
-  cursor: pointer;
-
-  :hover {
-    background-color: ${shade(0.6, themeColor)};
-  }
-
-  :focus {
-    outline: 2px solid rgba(255, 255, 255, 0.15);
-  }
-`
-
-export const buttonFlatStyle = css`
-  background-color: ${themeColor};
-
-  :hover {
-    background-color: ${shade(0.3, themeColor)};
-  }
-`

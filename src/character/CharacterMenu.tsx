@@ -1,8 +1,7 @@
 import React from "react"
 import { getProfileUrl } from "../flist/helpers"
-import Button, { buttonStyle } from "../ui/Button"
+import Button from "../ui/Button"
 import { themeColor } from "../ui/colors"
-import ExternalLink from "../ui/ExternalLink"
 import { flex } from "../ui/flex"
 import { boxShadow } from "../ui/helpers"
 import { css, keyframes } from "../ui/styled"
@@ -27,9 +26,9 @@ const CharacterMenu = (props: CharacterMenuProps) => {
       ]}
       onClick={menu.close}
     >
-      <ExternalLink css={buttonStyle} href={getProfileUrl(props.characterName)}>
+      <Button as="a" href={getProfileUrl(props.characterName)}>
         Profile
-      </ExternalLink>
+      </Button>
       <Button>Open Private Message</Button>
       <Button>Bookmark</Button>
       <Button>Ignore</Button>

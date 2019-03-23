@@ -1,6 +1,6 @@
 import { Icon as MdiIcon } from "@mdi/react"
 import React from "react"
-import { clouds } from "./colors"
+import { textColor } from "./colors"
 import * as icons from "./icons"
 import { styled } from "./styled"
 
@@ -10,7 +10,7 @@ type IconProps = {
   size?: number
 }
 
-const Icon = ({ icon, color = clouds, size = 1 }: IconProps) => {
+const Icon = ({ icon, color = textColor, size = 1 }: IconProps) => {
   const path = icons[icon]
   return (
     <IconContainer>

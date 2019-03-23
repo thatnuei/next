@@ -1,6 +1,11 @@
 import { lighten, shade } from "polished"
 import { createGlobalStyle } from "styled-components"
-import { textColor, themeBackgroundColor, themeColor } from "./colors"
+import {
+  primaryColor,
+  textColor,
+  themeBackgroundColor,
+  themeColor,
+} from "./colors"
 import { css } from "./styled"
 
 const globalStyle = css`
@@ -19,7 +24,7 @@ const globalStyle = css`
   }
 
   :focus {
-    outline: 2px solid hsla(219, 63%, 24%, 0.5);
+    outline: 2px solid ${primaryColor};
     outline-offset: -2px;
   }
 

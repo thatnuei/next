@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import Button, { buttonFlatStyle, buttonStyle } from "../ui/Button"
+import Button from "../ui/Button"
 import { semiBlack } from "../ui/colors"
 import { flexGrow, flexRow, flexWrap } from "../ui/helpers"
 import Icon from "../ui/Icon"
@@ -140,10 +140,7 @@ const FilterInput = (props: React.ComponentPropsWithoutRef<"input">) => {
   return (
     <div>
       <input type="radio" id={id} css={filterInputStyle} {...inputProps} />
-      <label
-        htmlFor={id}
-        css={[buttonStyle, buttonFlatStyle, labelBaseStyle, getLabelStyle()]}
-      >
+      <label htmlFor={id} css={[labelBaseStyle, getLabelStyle()]}>
         {children}
       </label>
     </div>
