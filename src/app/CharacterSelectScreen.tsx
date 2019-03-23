@@ -6,7 +6,7 @@ import { useRootStore } from "../RootStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
-import FullscreenCenterContainer from "../ui/FullscreenCenterContainer"
+import FullscreenScrollingContainer from "../ui/FullscreenScrollingContainer"
 import Panel from "../ui/Panel"
 import PanelHeader from "../ui/PanelHeader"
 import { styled } from "../ui/styled"
@@ -44,7 +44,7 @@ function CharacterSelectScreen() {
 
   return (
     <AppDocumentTitle title="Select Character">
-      <FullscreenCenterContainer>
+      <FullscreenScrollingContainer>
         <Panel raised>
           <PanelHeader>Select a Character</PanelHeader>
           <PanelBody onSubmit={handleSubmit}>
@@ -63,7 +63,7 @@ function CharacterSelectScreen() {
             <Button type="submit">Enter Chat</Button>
           </PanelBody>
         </Panel>
-      </FullscreenCenterContainer>
+      </FullscreenScrollingContainer>
     </AppDocumentTitle>
   )
 }
