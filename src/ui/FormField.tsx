@@ -1,34 +1,19 @@
 import React, { ComponentPropsWithoutRef } from "react"
-import { css } from "./styled"
+import { styled } from "./styled"
 
 type Props = ComponentPropsWithoutRef<"label"> & {
-  labelText?: string
-  htmlFor?: string
+  labelText: string
 }
 
-export default class FormField extends React.Component<Props> {
-  render() {
-    const { labelText, htmlFor, children, ...props } = this.props
-    return (
-      <label {...props}>
-        <div>{labelText}</div>
-        {children}
-      </label>
-      // <div css={containerStyle} {...props}>
-      //   {labelText ? (
-      //     <label css={labelStyle} htmlFor={htmlFor}>
-      //       {labelText}
-      //     </label>
-      //   ) : null}
-      //   {children}
-      // </div>
-    )
-  }
+export default function FormField({ labelText, children, ...props }: Props) {
+  return (
+    <label {...props}>
+      <LabelText>{labelText}</LabelText>
+      {children}
+    </label>
+  )
 }
 
-const containerStyle = css``
-
-const labelStyle = css`
-  display: block;
-  margin-bottom: 0.25rem;
+const LabelText = styled.div`
+  margin-bottom: 2px;
 `

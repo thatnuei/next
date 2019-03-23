@@ -7,9 +7,12 @@ const Button = styled.button`
   background-color: ${primaryColor};
   transition: 0.2s;
   transition-property: background-color, transform;
+  font-weight: 500;
 
-  :hover {
+  :hover,
+  :focus {
     background-color: ${shade(0.2, primaryColor)};
+    outline: none;
   }
 
   :active {

@@ -12,7 +12,7 @@ export const themeColor = midnight
 export const themeBackgroundColor = shade(0.5, themeColor)
 export const textColor = clouds
 
-export const primaryColor = shade(0.1, river)
+export const primaryColor = shade(0.25, river)
 export const successColor = emerald
 export const warningColor = carrot
 export const dangerColor = tomato

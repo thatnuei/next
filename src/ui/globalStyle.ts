@@ -11,11 +11,16 @@ const globalStyle = css`
   }
 
   :root {
+    background-color: ${themeBackgroundColor};
+
     font: 16px Roboto, sans-serif;
     color: ${textColor};
-    background-color: ${themeBackgroundColor};
-    overflow-wrap: break-word;
     line-height: 1.5;
+    letter-spacing: 0.3px;
+
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   :focus {

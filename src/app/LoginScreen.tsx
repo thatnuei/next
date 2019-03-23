@@ -56,6 +56,6 @@ const PanelBody = styled.form`
   padding: 1rem;
 
   display: grid;
-  grid-gap: 1rem;
+  grid-gap: 1.2rem;
   justify-items: start;
 `
