@@ -1,11 +1,9 @@
 import React from "react"
 import { getProfileUrl } from "../flist/helpers"
-import Button from "../ui/Button"
-import { themeColor } from "../ui/colors"
+import { semiBlack, themeColor } from "../ui/colors"
 import ExternalLink from "../ui/ExternalLink"
-import { flex } from "../ui/flex"
-import { boxShadow } from "../ui/helpers"
-import { css, keyframes } from "../ui/styled"
+import Icon from "../ui/Icon"
+import { keyframes, styled } from "../ui/styled"
 import { useCharacterMenuContext } from "./CharacterMenuContext"
 
 type CharacterMenuProps = {
@@ -16,29 +14,42 @@ const CharacterMenu = (props: CharacterMenuProps) => {
   const menu = useCharacterMenuContext()
 
   return (
-    <div
-      css={[
-        flex({ direction: "column" }),
-        css`
-          background-color: ${themeColor};
-        `,
-        boxShadow,
-        slideDown,
-      ]}
-      onClick={menu.close}
-    >
-      <LinkButton href={getProfileUrl(props.characterName)}>Profile</LinkButton>
-      <Button>Open Private Message</Button>
-      <Button>Bookmark</Button>
-      <Button>Ignore</Button>
-      <Button>Report</Button>
-    </div>
+    <Menu onClick={menu.close}>
+      <MenuOption
+        as={ExternalLink}
+        href={getProfileUrl(props.characterName)}
+        autoFocus
+      >
+        <Icon icon="user" />
+        <span>Profile</span>
+      </MenuOption>
+
+      <MenuOption>
+        <Icon icon="message" />
+        <span>Open Private Message</span>
+      </MenuOption>
+
+      <MenuOption>
+        <Icon icon="bookmark" />
+        <span>Bookmark</span>
+      </MenuOption>
+
+      <MenuOption>
+        <Icon icon="ignore" />
+        <span>Ignore</span>
+      </MenuOption>
+
+      <MenuOption>
+        <Icon icon="report" />
+        <span>Report</span>
+      </MenuOption>
+    </Menu>
   )
 }
 
 export default CharacterMenu
 
-const slideDownKeyframes = keyframes`
+const slideDown = keyframes`
   from {
     transform: translateY(-1rem);
     opacity: 0;
@@ -49,8 +60,28 @@ const slideDownKeyframes = keyframes`
   }
 `
 
-const slideDown = css`
-  animation: ${slideDownKeyframes} 0.2s;
+const Menu = styled.div`
+  background-color: ${themeColor};
+  display: grid;
+  animation: 0.2s ${slideDown};
 `
 
-const LinkButton = Button.withComponent(ExternalLink)
+const MenuOption = styled.button<{ href?: string }>`
+  padding: 0.4rem;
+  padding-right: 0.7rem;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: 0.2s;
+
+  :hover,
+  :focus {
+    opacity: 1;
+    background-color: ${semiBlack(0.25)};
+  }
+
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 5px;
+  align-items: center;
+  justify-content: start;
+`
