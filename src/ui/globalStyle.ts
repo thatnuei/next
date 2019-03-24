@@ -1,4 +1,4 @@
-import { lighten, rgba, shade } from "polished"
+import { lighten, shade } from "polished"
 import { createGlobalStyle } from "styled-components"
 import { textColor, themeBackgroundColor, themeColor } from "./colors"
 import { css } from "./styled"
@@ -24,8 +24,7 @@ const globalStyle = css`
   }
 
   :focus {
-    outline: 2px solid ${rgba("white", 0.2)};
-    /* outline-offset: -2px; */
+    outline: none;
   }
 
   h1,
