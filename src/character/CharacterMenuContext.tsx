@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react"
+import React, { useContext, useMemo, useRef, useState } from "react"
 import { css, styled } from "../ui/styled"
 import usePopup from "../ui/usePopup"
 import CharacterMenu from "./CharacterMenu"
@@ -17,15 +17,18 @@ export const CharacterMenuProvider = ({
   const popup = usePopup(menuRef)
   const [characterName, setCharacterName] = useState<string>()
 
-  const context = {
-    open: async (newCharacterName: string, event: React.MouseEvent) => {
-      setCharacterName(newCharacterName)
-      popup.openAt({ x: event.clientX, y: event.clientY })
-    },
-    close: () => {
-      popup.close()
-    },
-  }
+  const context = useMemo(
+    () => ({
+      open: async (newCharacterName: string, event: React.MouseEvent) => {
+        setCharacterName(newCharacterName)
+        popup.openAt({ x: event.clientX, y: event.clientY })
+      },
+      close: () => {
+        popup.close()
+      },
+    }),
+    [popup],
+  )
 
   return (
     <CharacterMenuContext.Provider value={context}>

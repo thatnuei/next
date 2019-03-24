@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react"
+import { useLayoutEffect, useMemo, useState } from "react"
 import useWindowEvent from "./useWindowEvent"
 
 function usePopup(ref: React.RefObject<HTMLElement>) {
@@ -22,15 +22,17 @@ function usePopup(ref: React.RefObject<HTMLElement>) {
     })
   }, [position.x, position.y, ref])
 
-  const openAt = (position: { x: number; y: number }) => {
-    setPosition(position)
-    setIsVisible(true)
-  }
+  return useMemo(() => {
+    const openAt = (position: { x: number; y: number }) => {
+      setPosition(position)
+      setIsVisible(true)
+    }
 
-  const close = () => {
-    setIsVisible(false)
-  }
+    const close = () => {
+      setIsVisible(false)
+    }
 
-  return { openAt, close, isVisible, style }
+    return { openAt, close, isVisible, style }
+  }, [isVisible, style])
 }
 export default usePopup
