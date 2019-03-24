@@ -23,7 +23,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
       <CharacterInfo name={props.characterName} onClick={stopPropagation} />
 
       <OptionsBackground>
-        <MenuOption as={ExternalLink} href={profileUrl} autoFocus>
+        <MenuOption as={ExternalLink} href={profileUrl}>
           <Icon icon="user" />
           <span>Profile</span>
         </MenuOption>
@@ -66,7 +66,7 @@ const OptionsBackground = styled.div`
   display: grid;
 `
 
-const MenuOption = styled.button<{ href?: string }>`
+const MenuOption = styled.a`
   padding: 0.4rem;
   padding-right: 0.7rem;
   opacity: 0.6;
@@ -85,3 +85,8 @@ const MenuOption = styled.button<{ href?: string }>`
   align-items: center;
   justify-content: start;
 `
+
+MenuOption.defaultProps = {
+  href: "#",
+  role: "button",
+}
