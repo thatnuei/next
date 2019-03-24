@@ -21,6 +21,8 @@ const globalStyle = css`
     word-break: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
+
+    overflow: hidden;
   }
 
   :focus {
