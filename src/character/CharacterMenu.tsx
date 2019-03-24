@@ -3,7 +3,7 @@ import { getProfileUrl } from "../flist/helpers"
 import { semiBlack, themeColor } from "../ui/colors"
 import ExternalLink from "../ui/ExternalLink"
 import Icon from "../ui/Icon"
-import { keyframes, styled } from "../ui/styled"
+import { styled } from "../ui/styled"
 import CharacterInfo from "./CharacterInfo"
 import { useCharacterMenuContext } from "./CharacterMenuContext"
 
@@ -54,20 +54,8 @@ const CharacterMenu = (props: CharacterMenuProps) => {
 
 export default CharacterMenu
 
-const slideDown = keyframes`
-  from {
-    transform: translateY(-1rem);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-`
-
 const Menu = styled.div`
   background-color: ${themeColor};
-  animation: 0.2s ${slideDown};
 
   width: 200px;
   max-width: 100%;

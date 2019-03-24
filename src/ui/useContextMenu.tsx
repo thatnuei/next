@@ -7,10 +7,7 @@ export default function useContextMenu(menuRef: React.RefObject<HTMLElement>) {
 
   useEffect(() => {
     if (!menuRef.current) return
-    menuRef.current.style.display = "none"
-
     if (!target) return
-    menuRef.current.style.display = "initial"
 
     const popper = new Popper(target, menuRef.current, {
       placement: "bottom-start",
