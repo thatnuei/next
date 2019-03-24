@@ -4,45 +4,50 @@ import { semiBlack, themeColor } from "../ui/colors"
 import ExternalLink from "../ui/ExternalLink"
 import Icon from "../ui/Icon"
 import { keyframes, styled } from "../ui/styled"
+import CharacterInfo from "./CharacterInfo"
 import { useCharacterMenuContext } from "./CharacterMenuContext"
 
 type CharacterMenuProps = {
   characterName: string
 }
 
+const stopPropagation = (event: React.MouseEvent) => event.stopPropagation()
+
 const CharacterMenu = (props: CharacterMenuProps) => {
   const menu = useCharacterMenuContext()
 
+  const profileUrl = getProfileUrl(props.characterName)
+
   return (
     <Menu onClick={menu.close}>
-      <MenuOption
-        as={ExternalLink}
-        href={getProfileUrl(props.characterName)}
-        autoFocus
-      >
-        <Icon icon="user" />
-        <span>Profile</span>
-      </MenuOption>
+      <CharacterInfo name={props.characterName} onClick={stopPropagation} />
 
-      <MenuOption>
-        <Icon icon="message" />
-        <span>Open Private Message</span>
-      </MenuOption>
+      <OptionsBackground>
+        <MenuOption as={ExternalLink} href={profileUrl} autoFocus>
+          <Icon icon="user" />
+          <span>Profile</span>
+        </MenuOption>
 
-      <MenuOption>
-        <Icon icon="bookmark" />
-        <span>Bookmark</span>
-      </MenuOption>
+        <MenuOption>
+          <Icon icon="message" />
+          <span>Message</span>
+        </MenuOption>
 
-      <MenuOption>
-        <Icon icon="ignore" />
-        <span>Ignore</span>
-      </MenuOption>
+        <MenuOption>
+          <Icon icon="bookmark" />
+          <span>Bookmark</span>
+        </MenuOption>
 
-      <MenuOption>
-        <Icon icon="report" />
-        <span>Report</span>
-      </MenuOption>
+        <MenuOption>
+          <Icon icon="ignore" />
+          <span>Ignore</span>
+        </MenuOption>
+
+        <MenuOption>
+          <Icon icon="report" />
+          <span>Report</span>
+        </MenuOption>
+      </OptionsBackground>
     </Menu>
   )
 }
@@ -62,8 +67,15 @@ const slideDown = keyframes`
 
 const Menu = styled.div`
   background-color: ${themeColor};
-  display: grid;
   animation: 0.2s ${slideDown};
+
+  width: 200px;
+  max-width: 100%;
+`
+
+const OptionsBackground = styled.div`
+  background-color: ${semiBlack(0.2)};
+  display: grid;
 `
 
 const MenuOption = styled.button<{ href?: string }>`
