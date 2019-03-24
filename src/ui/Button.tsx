@@ -7,6 +7,7 @@ const Button = styled.button`
   background-color: ${primaryColor};
   transition: 0.2s;
   transition-property: background-color, transform;
+  cursor: pointer;
 
   :hover,
   :focus {
