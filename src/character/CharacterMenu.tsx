@@ -22,7 +22,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
   const profileUrl = getProfileUrl(props.characterName)
 
   const handleMessage = () => {
-    privateChatStore.openChat("")
+    privateChatStore.openChat(props.characterName)
 
     viewStore.setScreen({
       name: "privateChat",
