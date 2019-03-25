@@ -1,15 +1,9 @@
 import { useLayoutEffect, useMemo, useState } from "react"
-import useWindowEvent from "./useWindowEvent"
 
 function usePopup(ref: React.RefObject<HTMLElement>) {
   const [isVisible, setIsVisible] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [style, setStyle] = useState<React.CSSProperties>({})
-
-  useWindowEvent("click", (event) => {
-    if (event.target === ref.current) return
-    setIsVisible(false)
-  })
 
   useLayoutEffect(() => {
     const menu = ref.current

@@ -1,6 +1,7 @@
 import React, { useContext, useMemo, useRef, useState } from "react"
 import { css, styled } from "../ui/styled"
 import usePopup from "../ui/usePopup"
+import useWindowEvent from "../ui/useWindowEvent"
 import CharacterMenu from "./CharacterMenu"
 
 const CharacterMenuContext = React.createContext({
@@ -22,6 +23,9 @@ export const CharacterMenuProvider = ({
       open: async (newCharacterName: string, event: React.MouseEvent) => {
         setCharacterName(newCharacterName)
         popup.openAt({ x: event.clientX, y: event.clientY })
+
+        // keep the window click listener from closing the popup immediately
+        event.stopPropagation()
       },
       close: () => {
         popup.close()
@@ -29,6 +33,11 @@ export const CharacterMenuProvider = ({
     }),
     [popup],
   )
+
+  useWindowEvent("click", (event) => {
+    if (event.target === menuRef.current) return
+    popup.close()
+  })
 
   return (
     <CharacterMenuContext.Provider value={context}>
