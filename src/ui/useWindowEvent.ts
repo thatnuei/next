@@ -7,5 +7,5 @@ export default function useWindowEvent<E extends keyof WindowEventMap>(
   useEffect(() => {
     window.addEventListener(event, handler)
     return () => window.removeEventListener(event, handler)
-  })
+  }, [event, handler])
 }
