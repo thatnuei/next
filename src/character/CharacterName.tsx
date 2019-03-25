@@ -1,7 +1,7 @@
 import React from "react"
 import { getProfileUrl } from "../flist/helpers"
 import ExternalLink from "../ui/ExternalLink"
-import { css } from "../ui/styled"
+import { styled } from "../ui/styled"
 import { useCharacterMenuContext } from "./CharacterMenuContext"
 import { genderColors, statusColors } from "./colors"
 import { CharacterStatus, Gender } from "./types"
@@ -15,44 +15,39 @@ type CharacterNameProps = {
 const CharacterName = (props: CharacterNameProps) => {
   const menu = useCharacterMenuContext()
 
-  const handleContextMenu = (event: React.MouseEvent) => {
+  const profileUrl = getProfileUrl(props.name)
+
+  const nameStyle = { color: genderColors[props.gender] }
+  const statusDotStyle = { backgroundColor: statusColors[props.status] }
+
+  const openCharacterMenu = (event: React.MouseEvent) => {
     event.preventDefault()
     menu.open(props.name, event)
   }
 
   return (
-    <ExternalLink
-      href={getProfileUrl(props.name)}
-      css={containerStyle}
-      onContextMenu={handleContextMenu}
-    >
-      <span
-        css={[statusDotStyle, { backgroundColor: statusColors[props.status] }]}
-        title={`Status: ${props.status}`}
-      />
-      <span
-        title={`${props.name} - ${props.gender}`}
-        css={[nameStyle, { color: genderColors[props.gender] }]}
-      >
+    <ContainerLink href={profileUrl} onContextMenu={openCharacterMenu}>
+      <StatusDot title={`Status: ${props.status}`} style={statusDotStyle} />
+      <NameText title={`${props.name} - ${props.gender}`} style={nameStyle}>
         {props.name}
-      </span>
-    </ExternalLink>
+      </NameText>
+    </ContainerLink>
   )
 }
 
 export default React.memo(CharacterName)
 
-const containerStyle = css`
+const ContainerLink = styled(ExternalLink)`
   display: inline-flex;
   align-items: center;
   vertical-align: top;
 `
 
-const nameStyle = css`
+const NameText = styled.span`
   font-weight: 500;
 `
 
-const statusDotStyle = css`
+const StatusDot = styled.span`
   width: 6px;
   height: 6px;
   border-radius: 50%;
