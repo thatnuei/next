@@ -2,6 +2,7 @@ import React from "react"
 import { getProfileUrl } from "../flist/helpers"
 import { semiBlack, themeColor } from "../ui/colors"
 import ExternalLink from "../ui/ExternalLink"
+import { boxShadow } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { styled } from "../ui/styled"
 import CharacterInfo from "./CharacterInfo"
@@ -59,6 +60,8 @@ const Menu = styled.div`
 
   width: 200px;
   max-width: 100%;
+
+  ${boxShadow};
 `
 
 const OptionsBackground = styled.div`
