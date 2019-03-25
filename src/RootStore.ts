@@ -6,6 +6,7 @@ import CharacterStore from "./character/CharacterStore"
 import ChatStore from "./chat/ChatStore"
 import SocketStore from "./fchat/SocketStore"
 import FListApiService from "./flist/FListApiService"
+import PrivateChatStore from "./private-chat/PrivateChatStore"
 import UserStore from "./user/UserStore"
 
 export default class RootStore {
@@ -14,6 +15,7 @@ export default class RootStore {
   userStore = new UserStore(this)
   characterStore = new CharacterStore()
   channelStore = new ChannelStore(this)
+  privateChatStore = new PrivateChatStore(this)
   chatStore = new ChatStore(this)
 
   constructor(public api = new FListApiService(), public storage = idb) {}

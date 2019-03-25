@@ -1,5 +1,6 @@
 import React from "react"
 import { getProfileUrl } from "../flist/helpers"
+import { useRootStore } from "../RootStore"
 import { semiBlack, themeColor } from "../ui/colors"
 import ExternalLink from "../ui/ExternalLink"
 import { boxShadow } from "../ui/helpers"
@@ -16,8 +17,18 @@ const stopPropagation = (event: React.MouseEvent) => event.stopPropagation()
 
 const CharacterMenu = (props: CharacterMenuProps) => {
   const menu = useCharacterMenuContext()
+  const { privateChatStore, viewStore } = useRootStore()
 
   const profileUrl = getProfileUrl(props.characterName)
+
+  const handleMessage = () => {
+    privateChatStore.openChat("")
+
+    viewStore.setScreen({
+      name: "privateChat",
+      partnerName: props.characterName,
+    })
+  }
 
   return (
     <Menu onClick={menu.close}>
@@ -29,7 +40,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
           <span>Profile</span>
         </MenuOption>
 
-        <MenuOption>
+        <MenuOption onClick={handleMessage}>
           <Icon icon="message" />
           <span>Message</span>
         </MenuOption>

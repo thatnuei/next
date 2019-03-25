@@ -6,7 +6,7 @@ type Screen =
   | { name: "characterSelect" }
   | { name: "console" }
   | { name: "channel"; channel: string }
-  | { name: "privateChat" } // TODO
+  | { name: "privateChat"; partnerName: string }
 
 export default class ViewStore {
   @observable.ref screen: Screen = { name: "init" }
