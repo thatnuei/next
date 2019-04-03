@@ -4,7 +4,7 @@ import ChatRoomHeader from "../chat/ChatRoomHeader"
 import MessageList from "../message/MessageList"
 import { useRootStore } from "../RootStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
-import { flexColumn, fullscreen } from "../ui/helpers"
+import { styled } from "../ui/styled"
 
 type PrivateChatRoomViewProps = {
   partnerName: string
@@ -16,15 +16,21 @@ const PrivateChatRoomView = (props: PrivateChatRoomViewProps) => {
 
   return (
     <AppDocumentTitle title={`${chatStore.identity} - ${props.partnerName}`}>
-      <div css={[fullscreen, flexColumn]}>
+      <Container>
         <ChatRoomHeader>
           <h2>{props.partnerName}</h2>
         </ChatRoomHeader>
         <MessageList messages={chat.messages} />
         <Chatbox onSubmit={console.log} />
-      </div>
+      </Container>
     </AppDocumentTitle>
   )
 }
 
 export default PrivateChatRoomView
+
+const Container = styled.div`
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+`

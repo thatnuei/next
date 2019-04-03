@@ -1,6 +1,5 @@
 import { observer } from "mobx-react-lite"
 import React, { useCallback, useLayoutEffect, useRef } from "react"
-import { flexGrow, scrollVertical } from "../ui/helpers"
 import MessageListItem from "./MessageListItem"
 import MessageModel from "./MessageModel"
 
@@ -10,7 +9,7 @@ function MessageList(props: { messages: MessageModel[] }) {
   useBottomScroll(messageListRef, props.messages[props.messages.length - 1])
 
   return (
-    <ul css={[flexGrow, scrollVertical]} ref={messageListRef}>
+    <ul ref={messageListRef}>
       {props.messages.slice(-300).map((message) => (
         <MessageListItem key={message.id} {...message} />
       ))}

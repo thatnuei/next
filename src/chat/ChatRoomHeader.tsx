@@ -1,40 +1,41 @@
 import React from "react"
 import { themeColor } from "../ui/colors"
-import FlatButton from "../ui/FlatButton"
 import Icon from "../ui/Icon"
-import SideOverlay from "../ui/SideOverlay"
-import { css } from "../ui/styled"
-import useOverlayState from "../ui/useOverlayState"
-import ChatSidebarContent from "./ChatSidebarContent"
+import { styled } from "../ui/styled"
 
 type ChatRoomHeaderProps = {
   children?: React.ReactNode
 }
 
 const ChatRoomHeader = (props: ChatRoomHeaderProps) => {
-  const sidebar = useOverlayState()
-
   return (
-    <>
-      <header css={headerStyle}>
-        <FlatButton onClick={sidebar.open}>
-          <Icon icon="menu" />
-        </FlatButton>
-        <div>{props.children}</div>
-      </header>
-
-      <SideOverlay {...sidebar.bind}>
-        <ChatSidebarContent />
-      </SideOverlay>
-    </>
+    <Container>
+      <IconButton onClick={() => {}}>
+        <Icon icon="menu" />
+      </IconButton>
+      <div>{props.children}</div>
+    </Container>
   )
 }
 export default ChatRoomHeader
 
-export const headerStyle = css`
+const Container = styled.header`
   display: grid;
   grid-template-columns: auto 1fr;
   grid-gap: 0.5rem;
+  align-items: center;
+
   background-color: ${themeColor};
-  min-height: 50px;
+`
+
+const IconButton = styled.button`
+  padding: 0.7rem;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: 0.3s;
+
+  :hover,
+  :focus {
+    opacity: 1;
+  }
 `

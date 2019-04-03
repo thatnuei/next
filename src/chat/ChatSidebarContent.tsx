@@ -5,7 +5,7 @@ const ChatSidebarContent = () => {
   const { channelStore, privateChatStore, viewStore } = useRootStore()
 
   return (
-    <nav>
+    <>
       <ul>
         {channelStore.joinedChannels.map(({ id, name }) => (
           <li key={id}>
@@ -33,7 +33,7 @@ const ChatSidebarContent = () => {
           </li>
         ))}
       </ul>
-    </nav>
+    </>
   )
 }
 export default ChatSidebarContent

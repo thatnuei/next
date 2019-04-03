@@ -5,7 +5,8 @@ import ChatRoomHeader from "../chat/ChatRoomHeader"
 import MessageList from "../message/MessageList"
 import { useRootStore } from "../RootStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
-import { flexColumn, fullscreen } from "../ui/helpers"
+import { scrollVertical } from "../ui/helpers"
+import { styled } from "../ui/styled"
 import ChannelHeader from "./ChannelHeader"
 import ChannelModel from "./ChannelModel"
 
@@ -18,14 +19,27 @@ function ChannelRoomView({ channel }: Props) {
 
   return (
     <AppDocumentTitle title={`${chatStore.identity} - ${channel.name}`}>
-      <div css={[fullscreen, flexColumn]}>
+      <Container>
         <ChatRoomHeader>
           <ChannelHeader channel={channel} />
         </ChatRoomHeader>
-        <MessageList messages={channel.filteredMessages} />
+
+        <MessageListContainer>
+          <MessageList messages={channel.filteredMessages} />
+        </MessageListContainer>
+
         <Chatbox onSubmit={console.log} />
-      </div>
+      </Container>
     </AppDocumentTitle>
   )
 }
 export default observer(ChannelRoomView)
+
+const Container = styled.div`
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+`
+const MessageListContainer = styled.div`
+  ${scrollVertical};
+`
