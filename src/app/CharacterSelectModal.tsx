@@ -1,3 +1,4 @@
+import { Layer } from "grommet"
 import * as idb from "idb-keyval"
 import { observer } from "mobx-react-lite"
 import React, { useEffect } from "react"
@@ -6,15 +7,14 @@ import { useRootStore } from "../RootStore"
 import Anchor from "../ui/Anchor"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
-import FullscreenScrollingContainer from "../ui/FullscreenScrollingContainer"
-import Panel from "../ui/Panel"
-import PanelHeader from "../ui/PanelHeader"
+import ModalPanel from "../ui/ModalPanel"
+import ModalPanelHeader from "../ui/ModalPanelHeader"
 import Select from "../ui/Select"
 import { styled } from "../ui/styled"
 
 const lastCharacterKey = (account: string) => `${account}:lastCharacter`
 
-function CharacterSelectScreen() {
+function CharacterSelectModal() {
   const { userStore, viewStore, chatStore, socketStore } = useRootStore()
 
   const { characters, account } = userStore
@@ -39,19 +39,20 @@ function CharacterSelectScreen() {
     event.preventDefault()
     socketStore.connectToChat(
       () => viewStore.setScreen({ name: "channel", channel: "Fantasy" }),
-      () => viewStore.setScreen({ name: "login" }),
+      showLogin,
     )
   }
 
   function showLogin() {
-    viewStore.setScreen({ name: "login" })
+    viewStore.showModal({ name: "login" })
   }
 
   return (
     <AppDocumentTitle title="Select Character">
-      <FullscreenScrollingContainer>
-        <Panel raised>
-          <PanelHeader>Select a Character</PanelHeader>
+      <Layer animate={false}>
+        <ModalPanel>
+          <ModalPanelHeader>Select a Character</ModalPanelHeader>
+
           <PanelBody onSubmit={handleSubmit}>
             <Avatar key={identity} name={identity} />
 
@@ -69,12 +70,12 @@ function CharacterSelectScreen() {
               Return to Login
             </Anchor>
           </PanelBody>
-        </Panel>
-      </FullscreenScrollingContainer>
+        </ModalPanel>
+      </Layer>
     </AppDocumentTitle>
   )
 }
-export default observer(CharacterSelectScreen)
+export default observer(CharacterSelectModal)
 
 const PanelBody = styled.form`
   padding: 1rem;
