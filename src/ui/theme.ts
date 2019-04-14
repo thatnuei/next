@@ -41,6 +41,10 @@ export const darkTheme = {
       xxlarge: "1600px",
       full: "100%",
     },
+    breakpoints: {
+      // disables default responsive sizing
+      small: { value: 0 },
+    },
   },
   heading: {
     font: { family: "Roboto Condensed" },
