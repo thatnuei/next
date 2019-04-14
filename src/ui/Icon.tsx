@@ -4,16 +4,21 @@ import { textColor } from "./colors"
 import * as icons from "./icons"
 import { styled } from "./styled"
 
-type IconProps = {
+type IconProps = React.ComponentPropsWithoutRef<"div"> & {
   icon: keyof typeof icons
   color?: string
   size?: number
 }
 
-const Icon = ({ icon, color = textColor, size = 1 }: IconProps) => {
+const Icon = ({
+  icon,
+  color = textColor,
+  size = 1,
+  ...divProps
+}: IconProps) => {
   const path = icons[icon]
   return (
-    <IconContainer>
+    <IconContainer {...divProps}>
       <MdiIcon path={path} color={color} size={size} />
     </IconContainer>
   )
