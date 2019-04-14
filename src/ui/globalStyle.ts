@@ -55,7 +55,6 @@ const globalStyle = css`
     color: inherit;
     text-decoration: none;
   }
-  /*
 
   ul,
   li {
@@ -67,6 +66,7 @@ const globalStyle = css`
     vertical-align: top;
   }
 
+  /*
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;

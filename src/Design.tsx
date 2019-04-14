@@ -4,6 +4,7 @@ import React from "react"
 import Avatar from "./character/Avatar"
 import CharacterInfo from "./character/CharacterInfo"
 import CharacterName from "./character/CharacterName"
+import MessageListItem from "./message/MessageListItem"
 import GlobalStyle from "./ui/globalStyle"
 import Icon from "./ui/Icon"
 import { darkTheme, ThemeColor } from "./ui/theme"
@@ -63,7 +64,7 @@ const Design = () => {
                 align="center"
               >
                 <Avatar name="Subaru-chan" size={20} />
-                <span>Subaru Chan</span>
+                <span>Subaru-chan</span>
               </Box>
             </Box>
           </Box>
@@ -77,8 +78,43 @@ const Design = () => {
               <Box background={ThemeColor.bg} pad="small">
                 room description / info
               </Box>
-              <Box pad="small" flex>
-                messages
+              <Box as="ul" pad={{ vertical: "xsmall" }} flex>
+                <MessageListItem
+                  senderName="Subaru-chan"
+                  text="this is a message"
+                  type="chat"
+                  time={Date.now()}
+                />
+                <MessageListItem
+                  senderName="Subaru-chan"
+                  text="this is a message"
+                  type="chat"
+                  time={Date.now()}
+                />
+                <MessageListItem
+                  senderName="Subaru-chan"
+                  text="this is a message"
+                  type="chat"
+                  time={Date.now()}
+                />
+                <MessageListItem
+                  senderName="Subaru-chan"
+                  text="this is a message"
+                  type="chat"
+                  time={Date.now()}
+                />
+                <MessageListItem
+                  senderName="Subaru-chan"
+                  text="Numquam dolore quae et sit perspiciatis saepe eaque. Exercitationem reiciendis id unde eaque quidem dolorem maiores sunt. Et sed autem qui minima aperiam accusantium illum assumenda. Ab quibusdam quis harum. Sit distinctio velit voluptatem iste autem autem quo sed. Voluptate quidem et reprehenderit suscipit nisi eligendi."
+                  type="chat"
+                  time={Date.now()}
+                />
+                <MessageListItem
+                  senderName="Subaru-chan"
+                  text="this is a message"
+                  type="chat"
+                  time={Date.now()}
+                />
               </Box>
             </Box>
 
