@@ -1,5 +1,5 @@
+import { Box, Text } from "grommet"
 import React, { ComponentPropsWithoutRef } from "react"
-import { styled } from "./styled"
 
 type Props = ComponentPropsWithoutRef<"label"> & {
   labelText: string
@@ -8,12 +8,10 @@ type Props = ComponentPropsWithoutRef<"label"> & {
 export default function FormField({ labelText, children, ...props }: Props) {
   return (
     <label {...props}>
-      <LabelText>{labelText}</LabelText>
+      <Box margin={{ bottom: "xxsmall" }}>
+        <Text>{labelText}</Text>
+      </Box>
       {children}
     </label>
   )
 }
-
-const LabelText = styled.div`
-  margin-bottom: 2px;
-`
