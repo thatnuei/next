@@ -1,9 +1,8 @@
-import { Box } from "grommet"
+import { Box, TextArea } from "grommet"
 import React from "react"
 import { useRootStore } from "../RootStore"
 import useInput from "../state/useInput"
 import Button from "../ui/Button"
-import TextArea from "../ui/TextArea"
 
 type Props = {
   onSubmit: (message: string) => void
@@ -40,7 +39,7 @@ const Chatbox = (props: Props) => {
           style={textAreaStyle}
         />
       </Box>
-      <Button onClick={submit}>Send</Button>
+      <Button onClick={submit} label="Send" />
     </Box>
   )
 }

@@ -63,7 +63,7 @@ function CharacterSelectScreen() {
               ))}
             </Select>
 
-            <Button type="submit">Enter Chat</Button>
+            <Button primary type="submit" label="Enter Chat" />
 
             <Anchor as="button" type="button" onClick={showLogin}>
               Return to Login

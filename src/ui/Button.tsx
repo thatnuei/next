@@ -1,28 +1,18 @@
+import { Button as BaseButton } from "grommet"
 import { shade } from "polished"
-import { primaryColor } from "./colors"
 import { styled } from "./styled"
+import { ThemeColor } from "./theme"
 
-const Button = styled.button`
-  padding: 0.4rem 0.7rem;
-  background-color: ${primaryColor};
-  transition: 0.2s;
-  transition-property: background-color, transform;
-  cursor: pointer;
+const Button = styled(BaseButton)`
+  :hover {
+    box-shadow: unset;
 
-  :hover,
-  :focus {
-    background-color: ${shade(0.2, primaryColor)};
-    outline: none;
-  }
+    background-color: ${({ theme }) =>
+      shade(0.15, theme.global.colors[ThemeColor.primary])};
 
-  :active {
-    transition-duration: 0s;
-    transform: translateY(3px);
+    border-color: ${({ theme }) =>
+      shade(0.15, theme.global.colors[ThemeColor.primary])};
   }
 `
-
-Button.defaultProps = {
-  type: "button",
-}
 
 export default Button

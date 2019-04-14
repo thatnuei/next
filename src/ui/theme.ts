@@ -9,7 +9,7 @@ const tomato = rgb(231, 76, 60)
 const carrot = rgb(230, 126, 34)
 
 const themeColor = midnight
-const primaryColor = river
+const primaryColor = shade(0.15, river)
 const textColor = clouds
 
 export type AppTheme = typeof darkTheme
@@ -44,6 +44,7 @@ export const darkTheme = {
       [ThemeColor.bgShaded]: rgba("black", 0.25),
       [ThemeColor.text]: textColor,
       [ThemeColor.primary]: primaryColor,
+      control: primaryColor,
       brand: primaryColor,
     },
     size: {
@@ -102,17 +103,23 @@ export const darkTheme = {
     },
   },
   button: {
-    color: {
-      dark: textColor,
-      light: themeColor,
-    },
+    color: textColor,
     border: {
-      radius: "4px",
+      radius: "3px",
     },
     primary: {},
   },
   textInput: {
     extend: {
+      fontWeight: 400,
+      background: rgba("black", 0.5),
+      border: "none",
+      borderRadius: 0,
+    },
+  },
+  textArea: {
+    extend: {
+      fontFamily: "inherit",
       fontWeight: 400,
       background: rgba("black", 0.5),
       border: "none",
