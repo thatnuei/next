@@ -29,7 +29,7 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
       <Avatar key={name} name={name} size={80} />
 
       <Box background={ThemeColor.bgShaded} pad="xsmall">
-        <Text size="small" style={{ fontStyle: "italic" }}>
+        <Text size="xsmall" style={{ fontStyle: "italic" }}>
           <span style={statusStyle}>{status}</span>
           <span>
             {" "}

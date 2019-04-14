@@ -1,6 +1,7 @@
 import { Box, Grommet } from "grommet"
 import { cover } from "polished"
 import React from "react"
+import Avatar from "./character/Avatar"
 import CharacterInfo from "./character/CharacterInfo"
 import CharacterName from "./character/CharacterName"
 import GlobalStyle from "./ui/globalStyle"
@@ -26,59 +27,118 @@ const Design = () => {
             <Box background={ThemeColor.bg} pad="small">
               <CharacterInfo name="Yuko Hirayama" />
             </Box>
-            <Box pad="small" flex>
-              room navigation
+            <Box flex>
+              <Box
+                pad={{ horizontal: "small", vertical: "xsmall" }}
+                direction="row"
+                gap="xsmall"
+                align="center"
+              >
+                <Icon icon="channels" size={0.9} />
+                <span>Frontpage</span>
+              </Box>
+              <Box
+                background={ThemeColor.bg}
+                pad={{ horizontal: "small", vertical: "xsmall" }}
+                direction="row"
+                gap="xsmall"
+                align="center"
+              >
+                <Icon icon="channels" size={0.9} />
+                <span>Story Driven LFRP</span>
+              </Box>
+              <Box
+                pad={{ horizontal: "small", vertical: "xsmall" }}
+                direction="row"
+                gap="xsmall"
+                align="center"
+              >
+                <Icon icon="channels" size={0.9} />
+                <span>Private Channel with Annoyingly Long Name</span>
+              </Box>
+              <Box
+                pad={{ horizontal: "small", vertical: "xsmall" }}
+                direction="row"
+                gap="xsmall"
+                align="center"
+              >
+                <Avatar name="Subaru-chan" size={20} />
+                <span>Subaru Chan</span>
+              </Box>
             </Box>
           </Box>
         </Box>
 
-        <Box as="main" direction="row" flex gap="xsmall">
-          <Box flex>
-            <Box background={ThemeColor.bg} pad="small">
-              room description / info
+        {/* chat room view */}
+        <Box as="main" flex>
+          {/* room content */}
+          <Box direction="row" flex gap="xsmall">
+            <Box flex>
+              <Box background={ThemeColor.bg} pad="small">
+                room description / info
+              </Box>
+              <Box pad="small" flex>
+                messages
+              </Box>
             </Box>
-            <Box pad="small" flex>
-              messages
-            </Box>
-            <Box background={ThemeColor.bg} pad="small">
-              chatbox
+
+            <Box width="small">
+              <Box background={ThemeColor.bg} pad="xsmall">
+                Characters: 420
+              </Box>
+              <Box
+                pad="xsmall"
+                gap="xsmall"
+                flex
+                overflow={{ vertical: "scroll" }}
+              >
+                <CharacterName
+                  name="Subaru-chan"
+                  gender="Female"
+                  status="online"
+                />
+                <CharacterName
+                  name="Subaru-chan"
+                  gender="Transgender"
+                  status="online"
+                />
+                <CharacterName
+                  name="Subaru-chan"
+                  gender="None"
+                  status="online"
+                />
+                <CharacterName
+                  name="Subaru-chan"
+                  gender="Cunt-boy"
+                  status="online"
+                />
+                <CharacterName
+                  name="Subaru-chan"
+                  gender="Male"
+                  status="online"
+                />
+                <CharacterName
+                  name="Subaru-chan"
+                  gender="Male-Herm"
+                  status="online"
+                />
+                <CharacterName
+                  name="Subaru-chan"
+                  gender="Shemale"
+                  status="online"
+                />
+                <CharacterName
+                  name="Subaru-chan"
+                  gender="Herm"
+                  status="online"
+                />
+              </Box>
             </Box>
           </Box>
 
-          <Box width="small">
-            <Box background={ThemeColor.bg} pad="xsmall">
-              Characters: 420
-            </Box>
-            <Box pad="xsmall" gap="xsmall">
-              <CharacterName
-                name="Subaru-chan"
-                gender="Female"
-                status="online"
-              />
-              <CharacterName
-                name="Subaru-chan"
-                gender="Transgender"
-                status="online"
-              />
-              <CharacterName name="Subaru-chan" gender="None" status="online" />
-              <CharacterName
-                name="Subaru-chan"
-                gender="Cunt-boy"
-                status="online"
-              />
-              <CharacterName name="Subaru-chan" gender="Male" status="online" />
-              <CharacterName
-                name="Subaru-chan"
-                gender="Male-Herm"
-                status="online"
-              />
-              <CharacterName
-                name="Subaru-chan"
-                gender="Shemale"
-                status="online"
-              />
-              <CharacterName name="Subaru-chan" gender="Herm" status="online" />
-            </Box>
+          {/* chatbox */}
+          <Box pad="small" background={ThemeColor.bg}>
+            chatbox
           </Box>
         </Box>
       </Box>

@@ -8,6 +8,8 @@ const globalStyle = css`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    /* border: 1px solid black; */
   }
 
   :root {
@@ -16,7 +18,6 @@ const globalStyle = css`
       
     color: ${(props) => props.theme.global.colors[ThemeColor.text]};
 
-    font: 16px Roboto, sans-serif;
     line-height: 1.5;
     letter-spacing: 0.3px;
 
@@ -41,15 +42,13 @@ const globalStyle = css`
     line-height: 1.2;
   }
 
-  /* button {
+  button {
     background: transparent;
-    margin: 0;
-    padding: 0;
     font: inherit;
     color: inherit;
     border: none;
     text-align: left;
-  } */
+  }
 
   a {
     font: inherit;

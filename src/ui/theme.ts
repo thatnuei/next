@@ -19,6 +19,10 @@ export enum ThemeColor {
 
 export const darkTheme = {
   global: {
+    font: {
+      family: "Roboto, sans-serif",
+      size: "15px",
+    },
     colors: {
       [ThemeColor.bg]: midnight,
       [ThemeColor.bgDark]: shade(0.5, midnight),
