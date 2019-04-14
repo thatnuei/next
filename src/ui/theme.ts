@@ -28,7 +28,7 @@ export const darkTheme = {
     size: {
       xxsmall: "50px",
       xsmall: "100px",
-      small: "220px",
+      small: "200px",
       medium: "400px",
       large: "800px",
       xlarge: "1200px",
