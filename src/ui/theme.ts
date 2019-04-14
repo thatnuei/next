@@ -18,6 +18,14 @@ export enum ThemeColor {
   text = "text",
 }
 
+const generateHeadingLevels = (sizes: string[]) => {
+  const result: Record<number, object> = {}
+  for (const [index, size] of sizes.entries()) {
+    result[index + 1] = { medium: { size, height: size } }
+  }
+  return result
+}
+
 export const darkTheme = {
   global: {
     font: {
@@ -45,10 +53,41 @@ export const darkTheme = {
       // disables default responsive sizing
       small: { value: 0 },
     },
+    elevation: {
+      light: {
+        none: "none",
+        xsmall: "0px 1px 2px rgba(0, 0, 0, 0.5)",
+        small: "0px 2px 4px rgba(0, 0, 0, 0.5)",
+        medium: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+        large: "0px 8px 16px rgba(0, 0, 0, 0.5)",
+        xlarge: "0px 12px 24px rgba(0, 0, 0, 0.5)",
+      },
+    },
   },
   heading: {
     font: { family: "Roboto Condensed" },
     weight: 300,
+    height: "auto",
+    level: generateHeadingLevels(["30px", "24px", "20px"]),
+  },
+  layer: {
+    background: "none",
+  },
+  text: {
+    small: {
+      size: "12px",
+      height: "16px",
+    },
+    medium: {
+      size: "15px",
+      height: "18px",
+      maxWidth: "432px",
+    },
+    large: {
+      size: "20px",
+      height: "28px",
+      maxWidth: "528px",
+    },
   },
 }
 
