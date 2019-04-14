@@ -4,6 +4,7 @@ import React from "react"
 import Avatar from "./character/Avatar"
 import CharacterInfo from "./character/CharacterInfo"
 import CharacterName from "./character/CharacterName"
+import Chatbox from "./chat/Chatbox"
 import MessageListItem from "./message/MessageListItem"
 import GlobalStyle from "./ui/globalStyle"
 import Icon from "./ui/Icon"
@@ -26,7 +27,7 @@ const Design = () => {
           </Box>
           <Box gap="xsmall" width="small">
             <Box background={ThemeColor.bg} pad="small">
-              <CharacterInfo name="Yuko Hirayama" />
+              <CharacterInfo name="Serena Gardener" />
             </Box>
             <Box flex>
               <Box
@@ -111,7 +112,7 @@ const Design = () => {
                 />
                 <MessageListItem
                   senderName="Subaru-chan"
-                  text="this is a message"
+                  text="/me does design maybe"
                   type="chat"
                   time={Date.now()}
                 />
@@ -173,8 +174,8 @@ const Design = () => {
           </Box>
 
           {/* chatbox */}
-          <Box pad="small" background={ThemeColor.bg}>
-            chatbox
+          <Box background={ThemeColor.bg}>
+            <Chatbox onSubmit={console.log} />
           </Box>
         </Box>
       </Box>

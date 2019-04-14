@@ -1,6 +1,7 @@
 import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
+import CharacterModel from "./character/CharacterModel"
 import Root from "./Root"
 import RootStore, { RootStoreContext } from "./RootStore"
 
@@ -20,6 +21,25 @@ function initStoreAndRender() {
 
   store = new RootStore()
   store.init()
+
+  // temporary
+  store.chatStore.setIdentity("Serena Gardener")
+
+  store.characterStore.characters.set(
+    "Serena Gardener",
+    new CharacterModel(
+      "Serena Gardener",
+      "Female",
+      "busy",
+      "look at my amazing status message isn't it great holy shit",
+    ),
+  )
+
+  store.characterStore.characters.set(
+    "Subaru-chan",
+    new CharacterModel("Subaru-chan", "Female", "online"),
+  )
+
   renderApp(store)
 }
 

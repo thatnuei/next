@@ -31,11 +31,6 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
       <Box background={ThemeColor.bgShaded} pad="xsmall">
         <Text size="xsmall" style={{ fontStyle: "italic" }}>
           <span style={statusStyle}>{status}</span>
-          <span>
-            {" "}
-            - insert a status message here fsdf sdf sdf sdfsdfsdfas
-            dfasfasdfasfsadfsfsadfsdfdfasdfsdfsdfsdajikflsdjk;fajds sdf das
-          </span>
           <span>{statusMessage ? ` - ${statusMessage}` : ""}</span>
         </Text>
       </Box>
