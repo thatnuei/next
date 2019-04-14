@@ -26,7 +26,7 @@ export const darkTheme = {
     colors: {
       [ThemeColor.bg]: midnight,
       [ThemeColor.bgDark]: shade(0.5, midnight),
-      [ThemeColor.bgShaded]: rgba("black", 0.3),
+      [ThemeColor.bgShaded]: rgba("black", 0.25),
       [ThemeColor.text]: clouds,
     },
     size: {
