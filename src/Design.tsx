@@ -1,4 +1,4 @@
-import { Box, Grommet, Heading, Text } from "grommet"
+import { Box, Button, Grommet, Heading, Layer, Text, TextInput } from "grommet"
 import { cover } from "polished"
 import React from "react"
 import Avatar from "./character/Avatar"
@@ -6,6 +6,7 @@ import CharacterInfo from "./character/CharacterInfo"
 import CharacterName from "./character/CharacterName"
 import Chatbox from "./chat/Chatbox"
 import MessageListItem from "./message/MessageListItem"
+import FormField from "./ui/FormField"
 import GlobalStyle from "./ui/globalStyle"
 import Icon from "./ui/Icon"
 import { darkTheme, ThemeColor } from "./ui/theme"
@@ -99,9 +100,7 @@ const Design = () => {
               <Box background={ThemeColor.bg}>
                 <Box pad="small" direction="row" align="center">
                   <Box direction="row" align="center" gap="xsmall" flex>
-                    <Heading level="2" size="small">
-                      Story Driven LFRP
-                    </Heading>
+                    <Heading level="3">Story Driven LFRP</Heading>
                     <Icon icon="about" size={1} style={{ opacity: 0.5 }} />
                   </Box>
                   <Box direction="row" gap="small">
@@ -245,6 +244,28 @@ const Design = () => {
           </Box>
         </Box>
       </Box>
+
+      <Layer animate={false}>
+        <Box background={ThemeColor.bg} elevation="medium">
+          <Box background={ThemeColor.bgDark} pad="small">
+            <Heading level="1" textAlign="center">
+              next
+            </Heading>
+          </Box>
+
+          <Box as="form" pad="small" gap="small">
+            <FormField labelText="Username">
+              <TextInput name="account" required />
+            </FormField>
+            <FormField labelText="Password">
+              <TextInput name="password" type="password" required />
+            </FormField>
+            <Box direction="row" justify="start">
+              <Button type="submit" label="Submit" />
+            </Box>
+          </Box>
+        </Box>
+      </Layer>
     </Grommet>
   )
 }
