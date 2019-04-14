@@ -153,13 +153,13 @@ const Design = () => {
                 />
                 <MessageListItem
                   senderName="Subaru-chan"
-                  text="this is a message"
+                  text="this is an admin message"
                   type="admin"
                   time={Date.now()}
                 />
                 <MessageListItem
                   senderName="Subaru-chan"
-                  text="this is a message"
+                  text="this is an ad"
                   type="lfrp"
                   time={Date.now()}
                 />
