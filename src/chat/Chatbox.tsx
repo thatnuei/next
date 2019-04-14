@@ -31,7 +31,7 @@ const Chatbox = (props: Props) => {
   }
 
   return (
-    <Box direction="row" gap="xsmall" pad="xsmall">
+    <Box direction="row" gap="xsmall">
       <Box flex>
         <TextArea
           {...messageInput.bind}

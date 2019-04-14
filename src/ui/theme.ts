@@ -13,6 +13,7 @@ export type AppTheme = typeof darkTheme
 export enum ThemeColor {
   bg = "bg",
   bgDark = "bgDark",
+  bgDivision = "bgDivision",
   bgShaded = "bgShaded",
   text = "text",
 }
@@ -25,7 +26,8 @@ export const darkTheme = {
     },
     colors: {
       [ThemeColor.bg]: midnight,
-      [ThemeColor.bgDark]: shade(0.5, midnight),
+      [ThemeColor.bgDark]: shade(0.35, midnight),
+      [ThemeColor.bgDivision]: shade(0.7, midnight),
       [ThemeColor.bgShaded]: rgba("black", 0.25),
       [ThemeColor.text]: clouds,
     },

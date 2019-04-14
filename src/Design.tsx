@@ -15,7 +15,12 @@ const Design = () => {
     <Grommet theme={darkTheme}>
       <GlobalStyle />
 
-      <Box direction="row" gap="xsmall" style={cover()}>
+      <Box
+        direction="row"
+        gap="xsmall"
+        style={cover()}
+        background={ThemeColor.bgDivision}
+      >
         <Box as="nav" direction="row">
           <Box pad="small">
             <Box flex gap="medium">
@@ -25,7 +30,8 @@ const Design = () => {
             </Box>
             <Icon icon="logout" style={{ opacity: 0.5 }} />
           </Box>
-          <Box gap="xsmall" width="small">
+
+          <Box gap="xsmall" width="small" background={ThemeColor.bgDark}>
             <Box background={ThemeColor.bg} pad="small">
               <CharacterInfo name="Serena Gardener" />
             </Box>
@@ -73,7 +79,7 @@ const Design = () => {
         </Box>
 
         {/* chat room view */}
-        <Box as="main" flex>
+        <Box as="main" flex gap="xsmall">
           {/* room content */}
           <Box direction="row" flex gap="xsmall">
             <Box flex>
@@ -127,7 +133,12 @@ const Design = () => {
                 </Box>
               </Box>
 
-              <Box as="ul" pad={{ vertical: "xsmall" }} flex>
+              <Box
+                as="ul"
+                pad={{ vertical: "xsmall" }}
+                flex
+                background={ThemeColor.bgDark}
+              >
                 <MessageListItem
                   senderName="Subaru-chan"
                   text="this is a message"
@@ -176,6 +187,7 @@ const Design = () => {
                 gap="xsmall"
                 flex
                 overflow={{ vertical: "scroll" }}
+                background={ThemeColor.bgDark}
               >
                 <CharacterName
                   name="Subaru-chan"
@@ -222,7 +234,7 @@ const Design = () => {
           </Box>
 
           {/* chatbox */}
-          <Box background={ThemeColor.bg}>
+          <Box background={ThemeColor.bg} pad="xsmall">
             <Chatbox onSubmit={console.log} />
           </Box>
         </Box>
