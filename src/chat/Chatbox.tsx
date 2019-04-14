@@ -1,9 +1,8 @@
+import { Box } from "grommet"
 import React from "react"
 import { useRootStore } from "../RootStore"
 import useInput from "../state/useInput"
 import Button from "../ui/Button"
-import { themeColor } from "../ui/colors"
-import { css } from "../ui/styled"
 import TextArea from "../ui/TextArea"
 
 type Props = {
@@ -26,23 +25,23 @@ const Chatbox = (props: Props) => {
     }
   }
 
+  const textAreaStyle: React.CSSProperties = {
+    fontStyle: messageInput.value === "" ? "italic" : undefined,
+    resize: "none",
+  }
+
   return (
-    <div css={inputContainerStyle}>
-      <TextArea
-        placeholder={`Chatting as ${chatStore.identity}...`}
-        onKeyDown={handleKeyDown}
-        {...messageInput.bind}
-      />
+    <Box direction="row" gap="xsmall" pad="xsmall">
+      <Box flex>
+        <TextArea
+          {...messageInput.bind}
+          placeholder={`Chatting as ${chatStore.identity}...`}
+          onKeyDown={handleKeyDown}
+          style={textAreaStyle}
+        />
+      </Box>
       <Button onClick={submit}>Send</Button>
-    </div>
+    </Box>
   )
 }
 export default Chatbox
-
-const inputContainerStyle = css`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-gap: 0.5rem;
-  padding: 0.5rem;
-  background-color: ${themeColor};
-`
