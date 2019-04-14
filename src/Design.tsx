@@ -1,4 +1,4 @@
-import { Box, Grommet } from "grommet"
+import { Box, Grommet, Heading, Text } from "grommet"
 import { cover } from "polished"
 import React from "react"
 import Avatar from "./character/Avatar"
@@ -19,16 +19,17 @@ const Design = () => {
         <Box as="nav" direction="row">
           <Box pad="small">
             <Box flex gap="medium">
-              <Icon icon="channels" />
-              <Icon icon="updateStatus" />
-              <Icon icon="about" />
+              <Icon style={{ opacity: 0.5 }} icon="channels" />
+              <Icon style={{ opacity: 0.5 }} icon="updateStatus" />
+              <Icon style={{ opacity: 0.5 }} icon="about" />
             </Box>
-            <Icon icon="logout" />
+            <Icon icon="logout" style={{ opacity: 0.5 }} />
           </Box>
           <Box gap="xsmall" width="small">
             <Box background={ThemeColor.bg} pad="small">
               <CharacterInfo name="Serena Gardener" />
             </Box>
+
             <Box flex>
               <Box
                 pad={{ horizontal: "small", vertical: "xsmall" }}
@@ -76,9 +77,56 @@ const Design = () => {
           {/* room content */}
           <Box direction="row" flex gap="xsmall">
             <Box flex>
-              <Box background={ThemeColor.bg} pad="small">
-                room description / info
+              <Box background={ThemeColor.bg} direction="row">
+                <Box>
+                  <Box pad="small" direction="row" align="center">
+                    <Box direction="row" align="center" gap="xsmall" flex>
+                      <Heading level="2" size="small">
+                        Story Driven LFRP
+                      </Heading>
+                      <Icon icon="about" size={1} style={{ opacity: 0.5 }} />
+                    </Box>
+                    <Box direction="row" gap="small">
+                      <Text size="normal" style={{ opacity: 0.5 }}>
+                        Both
+                      </Text>
+                      <Text size="normal">Chat</Text>
+                      <Text size="normal" style={{ opacity: 0.5 }}>
+                        Ads
+                      </Text>
+                    </Box>
+                  </Box>
+                  <Box
+                    pad="small"
+                    height="small"
+                    overflow={{ vertical: "scroll" }}
+                    background={ThemeColor.bgShaded}
+                  >
+                    <Text size="small" style={{ whiteSpace: "pre-line" }}>
+                      Numquam dolore quae et sit perspiciatis saepe eaque.
+                      Exercitationem reiciendis id unde eaque quidem dolorem
+                      maiores sunt. Et sed autem qui minima aperiam accusantium
+                      illum assumenda. Ab quibusdam quis harum. Sit distinctio
+                      velit voluptatem iste autem autem quo sed. Voluptate
+                      quidem et reprehenderit suscipit nisi eligendi.{"\n\n"}
+                      Nemo rerum expedita dolore rerum. Voluptas in qui ea. Quas
+                      ut voluptatum saepe tempore consequatur accusantium. Iste
+                      qui tempora et cum. Voluptatem magni culpa ex veniam
+                      placeat et similique.{"\n\n"}
+                      Similique consequuntur suscipit dolor vitae quibusdam.
+                      Voluptate rem ab soluta sit laudantium. Sit hic in ea
+                      molestias est. Necessitatibus dignissimos exercitationem
+                      autem beatae.{"\n\n"}
+                      Magni ea in quia ea provident nemo. Commodi aut et quo
+                      neque laudantium. Vero consequuntur est eligendi magnam
+                      quia iure est. Vel maxime natus asperiores delectus est.
+                      Odit ut sed dolores voluptas voluptatem odit. Veritatis
+                      culpa id veritatis rerum quia.
+                    </Text>
+                  </Box>
+                </Box>
               </Box>
+
               <Box as="ul" pad={{ vertical: "xsmall" }} flex>
                 <MessageListItem
                   senderName="Subaru-chan"
