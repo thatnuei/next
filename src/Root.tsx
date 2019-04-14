@@ -1,13 +1,12 @@
 import React from "react"
-import App from "./app/App"
-import AppDocumentTitle from "./ui/AppDocumentTitle"
-import GlobalStyle from "./ui/globalStyle"
+import Design from "./Design"
 
-const Root = () => (
-  <AppDocumentTitle>
-    <App />
-    <GlobalStyle />
-  </AppDocumentTitle>
-)
+// const Root = () => (
+//   <AppDocumentTitle>
+//     <App />
+//     <GlobalStyle />
+//   </AppDocumentTitle>
+// )
+const Root = () => <Design />
 
 export default Root

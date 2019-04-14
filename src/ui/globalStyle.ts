@@ -1,7 +1,7 @@
 import { lighten, shade } from "polished"
 import { createGlobalStyle } from "styled-components"
-import { textColor, themeBackgroundColor, themeColor } from "./colors"
-import { css } from "./styled"
+import { themeBackgroundColor, themeColor } from "./colors"
+import { css, ThemeColor } from "./theme"
 
 const globalStyle = css`
   * {
@@ -11,23 +11,24 @@ const globalStyle = css`
   }
 
   :root {
-    background-color: ${themeBackgroundColor};
+    background-color: ${(props) =>
+      props.theme.global.colors[ThemeColor.bgDark]};
+      
+    color: ${(props) => props.theme.global.colors[ThemeColor.text]};
 
     font: 16px Roboto, sans-serif;
-    color: ${textColor};
     line-height: 1.5;
     letter-spacing: 0.3px;
 
     word-break: break-word;
     overflow-wrap: break-word;
-    hyphens: auto;
 
     overflow: hidden;
   }
 
-  :focus {
+  /* :focus {
     outline: none;
-  }
+  } */
 
   h1,
   h2,
@@ -40,7 +41,7 @@ const globalStyle = css`
     line-height: 1.2;
   }
 
-  button {
+  /* button {
     background: transparent;
     margin: 0;
     padding: 0;
@@ -48,13 +49,14 @@ const globalStyle = css`
     color: inherit;
     border: none;
     text-align: left;
-  }
+  } */
 
   a {
     font: inherit;
     color: inherit;
     text-decoration: none;
   }
+  /*
 
   ul,
   li {
@@ -78,7 +80,7 @@ const globalStyle = css`
 
   ::-webkit-scrollbar-thumb {
     background-color: ${lighten(0.2, themeColor)};
-  }
+  } */
 `
 
 const GlobalStyle = createGlobalStyle`

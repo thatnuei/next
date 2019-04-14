@@ -1,9 +1,9 @@
+import { Box, Heading, Text } from "grommet"
 import React, { ComponentPropsWithoutRef } from "react"
 import { getProfileUrl } from "../flist/helpers"
 import { useRootStore } from "../RootStore"
-import { semiBlack } from "../ui/colors"
 import ExternalLink from "../ui/ExternalLink"
-import { styled } from "../ui/styled"
+import { ThemeColor } from "../ui/theme"
 import Avatar from "./Avatar"
 import { genderColors, statusColors } from "./colors"
 
@@ -19,40 +19,28 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
   const statusStyle = { color: statusColors[status] }
 
   return (
-    <Container {...containerProps}>
+    <Box gap="small" {...containerProps}>
       <ExternalLink href={getProfileUrl(name)}>
-        <NameText style={nameStyle} title={`${name} (${gender})`}>
+        <Heading level="3" style={nameStyle}>
           {name}
-        </NameText>
+        </Heading>
       </ExternalLink>
 
       <Avatar key={name} name={name} size={80} />
 
-      <StatusText>
-        <span style={statusStyle}>{status}</span>
-        <span>{statusMessage ? ` - ${statusMessage}` : ""}</span>
-      </StatusText>
-    </Container>
+      <Box background={ThemeColor.bgShaded} pad="xsmall">
+        <Text size="small" style={{ fontStyle: "italic" }}>
+          <span style={statusStyle}>{status}</span>
+          <span>
+            {" "}
+            - insert a status message here fsdf sdf sdf sdfsdfsdfas
+            dfasfasdfasfsadfsfsadfsdfdfasdfsdfsdfsdajikflsdjk;fajds sdf das
+          </span>
+          <span>{statusMessage ? ` - ${statusMessage}` : ""}</span>
+        </Text>
+      </Box>
+    </Box>
   )
 }
 
 export default CharacterInfo
-
-const Container = styled.div`
-  padding: 0.5rem;
-
-  display: grid;
-  grid-gap: 0.5rem;
-`
-
-const NameText = styled.h3`
-  font-weight: 500;
-  font-size: 24px;
-`
-
-const StatusText = styled.p`
-  background-color: ${semiBlack(0.3)};
-  font-size: 0.7rem;
-  font-style: italic;
-  padding: 0.5rem;
-`
