@@ -4,6 +4,7 @@ export {
   mdiAccountSettings as updateStatus,
   mdiAlertCircle as report,
   mdiBookmark as bookmark,
+  mdiCodeTags as console,
   mdiComment as message,
   mdiForum as channels,
   mdiInformation as about,

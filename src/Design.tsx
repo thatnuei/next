@@ -43,9 +43,20 @@ const Design = () => {
                 gap="xsmall"
                 align="center"
               >
+                <Icon icon="console" size={0.9} />
+                <span>Console</span>
+              </Box>
+
+              <Box
+                pad={{ horizontal: "small", vertical: "xsmall" }}
+                direction="row"
+                gap="xsmall"
+                align="center"
+              >
                 <Icon icon="channels" size={0.9} />
                 <span>Frontpage</span>
               </Box>
+
               <Box
                 background={ThemeColor.bg}
                 pad={{ horizontal: "small", vertical: "xsmall" }}
@@ -56,6 +67,7 @@ const Design = () => {
                 <Icon icon="channels" size={0.9} />
                 <span>Story Driven LFRP</span>
               </Box>
+
               <Box
                 pad={{ horizontal: "small", vertical: "xsmall" }}
                 direction="row"
@@ -65,6 +77,7 @@ const Design = () => {
                 <Icon icon="channels" size={0.9} />
                 <span>Private Channel with Annoyingly Long Name</span>
               </Box>
+
               <Box
                 pad={{ horizontal: "small", vertical: "xsmall" }}
                 direction="row"
