@@ -8,6 +8,10 @@ const emerald = rgb(46, 204, 113)
 const tomato = rgb(231, 76, 60)
 const carrot = rgb(230, 126, 34)
 
+const themeColor = midnight
+const primaryColor = river
+const textColor = clouds
+
 export type AppTheme = typeof darkTheme
 
 export enum ThemeColor {
@@ -16,6 +20,7 @@ export enum ThemeColor {
   bgDivision = "bgDivision",
   bgShaded = "bgShaded",
   text = "text",
+  primary = "primary",
 }
 
 const generateHeadingLevels = (sizes: string[]) => {
@@ -33,11 +38,13 @@ export const darkTheme = {
       size: "15px",
     },
     colors: {
-      [ThemeColor.bg]: midnight,
-      [ThemeColor.bgDark]: shade(0.35, midnight),
-      [ThemeColor.bgDivision]: shade(0.7, midnight),
+      [ThemeColor.bg]: themeColor,
+      [ThemeColor.bgDark]: shade(0.35, themeColor),
+      [ThemeColor.bgDivision]: shade(0.7, themeColor),
       [ThemeColor.bgShaded]: rgba("black", 0.25),
-      [ThemeColor.text]: clouds,
+      [ThemeColor.text]: textColor,
+      [ThemeColor.primary]: primaryColor,
+      brand: primaryColor,
     },
     size: {
       xxsmall: "50px",
@@ -61,6 +68,11 @@ export const darkTheme = {
         medium: "0px 4px 8px rgba(0, 0, 0, 0.5)",
         large: "0px 8px 16px rgba(0, 0, 0, 0.5)",
         xlarge: "0px 12px 24px rgba(0, 0, 0, 0.5)",
+      },
+    },
+    focus: {
+      border: {
+        color: primaryColor,
       },
     },
   },
@@ -87,6 +99,24 @@ export const darkTheme = {
       size: "20px",
       height: "28px",
       maxWidth: "528px",
+    },
+  },
+  button: {
+    color: {
+      dark: textColor,
+      light: themeColor,
+    },
+    border: {
+      radius: "4px",
+    },
+    primary: {},
+  },
+  textInput: {
+    extend: {
+      fontWeight: 400,
+      background: rgba("black", 0.5),
+      border: "none",
+      borderRadius: 0,
     },
   },
 }

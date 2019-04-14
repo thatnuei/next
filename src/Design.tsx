@@ -261,6 +261,9 @@ const Design = () => {
               <TextInput name="password" type="password" required />
             </FormField>
             <Box direction="row" justify="start">
+              <Button primary type="submit" label="Submit" />
+            </Box>
+            <Box direction="row" justify="start">
               <Button type="submit" label="Submit" />
             </Box>
           </Box>
