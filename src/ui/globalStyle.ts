@@ -56,6 +56,10 @@ const globalStyle = css`
     text-decoration: none;
   }
 
+  strong {
+    font-weight: 500;
+  }
+
   ul,
   li {
     list-style: none;

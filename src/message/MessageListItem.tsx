@@ -30,7 +30,7 @@ const MessageListItem = ({ senderName, text, type, time }: Props) => {
     <li css={[containerStyle, highlightStyles[type], isAction && actionStyle]}>
       <span css={dateStyle}>{new Date(time).toLocaleTimeString()}</span>
       <span css={senderStyle}>
-        {sender ? <CharacterName {...sender} /> : "System"}
+        {sender ? <CharacterName {...sender} /> : <strong>System</strong>}
       </span>
       {parsedText}
     </li>
@@ -41,7 +41,7 @@ export default observer(MessageListItem)
 
 const highlightStyles: { [K in MessageType]?: CSSObject } = {
   lfrp: { backgroundColor: "rgba(39, 174, 96, 0.2)" },
-  system: { backgroundColor: semiBlack(0.5) },
+  system: { backgroundColor: semiBlack(0.3) },
   admin: { backgroundColor: "rgb(192, 57, 43, 0.2)" },
 }
 
