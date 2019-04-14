@@ -144,12 +144,7 @@ const Design = () => {
                 </Box>
               </Box>
 
-              <Box
-                as="ul"
-                pad={{ vertical: "xsmall" }}
-                flex
-                background={ThemeColor.bgDark}
-              >
+              <Box as="ul" flex background={ThemeColor.bgDark}>
                 <MessageListItem
                   senderName="Subaru-chan"
                   text="this is a message"
@@ -169,7 +164,7 @@ const Design = () => {
                   time={Date.now()}
                 />
                 <MessageListItem
-                  text="this is a message"
+                  text="announcement: you suck"
                   type="system"
                   time={Date.now()}
                 />
