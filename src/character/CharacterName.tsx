@@ -52,4 +52,5 @@ const StatusDot = styled.span`
   height: 6px;
   border-radius: 50%;
   margin-right: 4px;
+  flex-shrink: 0; /* prevents being squished when word-wrapping */
 `
