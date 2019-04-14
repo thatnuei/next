@@ -12,7 +12,7 @@ export const genderColors: Record<fchat.Character.Gender, string> = {
 }
 
 export const statusColors: Record<fchat.Character.Status, string> = {
-  online: "rgb(33, 150, 243)",
+  online: "rgb(40, 170, 243)",
   looking: "rgba(32, 223, 108, 0.884)",
   busy: "rgb(255, 152, 0)",
   away: "rgb(255, 241, 118)",

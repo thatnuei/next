@@ -30,7 +30,7 @@ function initStoreAndRender() {
     new CharacterModel(
       "Serena Gardener",
       "Female",
-      "busy",
+      "online",
       "look at my amazing status message isn't it great holy shit",
     ),
   )
