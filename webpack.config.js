@@ -5,7 +5,9 @@ const HtmlPlugin = require("html-webpack-plugin")
 const CleanPlugin = require("clean-webpack-plugin").default
 const CopyPlugin = require("copy-webpack-plugin")
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin")
+const WebpackPwaManifest = require("webpack-pwa-manifest")
 const merge = require("webpack-merge")
+const { rgb } = require("polished")
 
 const rootFolder = __dirname
 const sourceFolder = join(rootFolder, "src")
@@ -31,6 +33,21 @@ const baseConfig = {
   plugins: [
     new HtmlPlugin({
       template: join(sourceFolder, "index.html"),
+    }),
+    new WebpackPwaManifest({
+      short_name: "next",
+      name: "next",
+      icons: [
+        {
+          src: join(rootFolder, "public/favicon.ico"),
+          sizes: [64, 32, 24, 16],
+        },
+      ],
+      start_url: "/index.html",
+      display: "standalone",
+      theme_color: rgb(60, 60, 60),
+      background_color: rgb(30, 30, 30),
+      inject: true,
     }),
     new CleanPlugin(),
     new CopyPlugin([{ from: publicFolder, to: buildFolder }]),
