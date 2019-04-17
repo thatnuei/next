@@ -9,7 +9,8 @@ const Anchor = styled.a`
   line-height: 1;
   padding-bottom: 3px;
 
-  :hover {
+  :hover,
+  :focus {
     opacity: 0.9;
     cursor: pointer;
   }
