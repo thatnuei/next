@@ -37,14 +37,14 @@ function CharacterSelectModal() {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    socketStore.connectToChat(
-      () => viewStore.setScreen({ name: "channel", channel: "Fantasy" }),
-      showLogin,
-    )
+    socketStore.connectToChat(() => {
+      viewStore.showChat()
+      viewStore.showChannel("Fantasy")
+    }, showLogin)
   }
 
   function showLogin() {
-    viewStore.showModal({ name: "login" })
+    viewStore.showLogin()
   }
 
   return (

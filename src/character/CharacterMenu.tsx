@@ -23,11 +23,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
 
   const handleMessage = () => {
     privateChatStore.openChat(props.characterName)
-
-    viewStore.setScreen({
-      name: "privateChat",
-      partnerName: props.characterName,
-    })
+    viewStore.showPrivateChat(props.characterName)
   }
 
   return (

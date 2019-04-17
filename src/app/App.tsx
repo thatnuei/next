@@ -1,6 +1,5 @@
 import { Box, Heading, Text } from "grommet"
 import { observer } from "mobx-react-lite"
-import { cover } from "polished"
 import React from "react"
 import Avatar from "../character/Avatar"
 import CharacterInfo from "../character/CharacterInfo"
@@ -10,10 +9,8 @@ import MessageListItem from "../message/MessageListItem"
 import { useRootStore } from "../RootStore"
 import Icon from "../ui/Icon"
 import { ThemeColor } from "../ui/theme"
-import CharacterSelectModal from "./CharacterSelectModal"
-import LoginModal from "./LoginModal"
 
-function AppNavigation() {
+function ChatNavigation() {
   return (
     <Box as="nav" direction="row">
       <Box pad="small">
@@ -227,26 +224,18 @@ function ChannelView() {
 
 function App() {
   const { viewStore } = useRootStore()
-
-  return (
-    <>
-      <Box
-        direction="row"
-        gap="xsmall"
-        style={cover()}
-        background={ThemeColor.bgDivision}
-      >
-        <AppNavigation />
-        <ChannelView />
-      </Box>
-
-      {viewStore.modal && viewStore.modal.name === "login" && <LoginModal />}
-
-      {viewStore.modal && viewStore.modal.name === "character-select" && (
-        <CharacterSelectModal />
-      )}
-    </>
-  )
+  return viewStore.renderScreen()
+  // <>
+  //   <Box
+  //     direction="row"
+  //     gap="xsmall"
+  //     style={cover()}
+  //     background={ThemeColor.bgDivision}
+  //   >
+  //     <ChatNavigation />
+  //     <ChannelView />
+  //   </Box>
+  // </>
 }
 
 export default observer(App)

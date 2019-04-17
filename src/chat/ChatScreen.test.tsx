@@ -15,10 +15,7 @@ test("bug - continues to show new messages after switching channels", () => {
   act(() => {
     store.chatStore.setIdentity("Testificate")
 
-    store.viewStore.setScreen({
-      name: "channel",
-      channel: "Fantasy",
-    })
+    store.viewStore.showChannel("Fantasy")
 
     store.channelStore.handleSocketCommand({
       type: "JCH",
@@ -60,10 +57,7 @@ test("bug - continues to show new messages after switching channels", () => {
   expect(queryByText("hello fantasy")).not.toBeNull()
 
   act(() => {
-    store.viewStore.setScreen({
-      name: "channel",
-      channel: "Frontpage",
-    })
+    store.viewStore.showChannel("Frontpage")
 
     store.channelStore.handleSocketCommand({
       type: "MSG",

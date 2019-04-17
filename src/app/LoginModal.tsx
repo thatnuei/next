@@ -18,7 +18,7 @@ function LoginModal() {
 
     try {
       await userStore.submitLogin(account.value, password.value)
-      viewStore.showModal({ name: "character-select" })
+      viewStore.showCharacterSelect()
     } catch (error) {
       alert(error)
     }
