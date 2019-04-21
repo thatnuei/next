@@ -50,4 +50,15 @@ export default class ViewStore {
   showPrivateChat(partnerName: string) {
     this.chatRoom = { name: "privateChat", partnerName }
   }
+
+  isChannelActive(id: string) {
+    return this.chatRoom.name === "channel" && this.chatRoom.channel === id
+  }
+
+  isPrivateChatActive(partnerName: string) {
+    return (
+      this.chatRoom.name === "privateChat" &&
+      this.chatRoom.partnerName === partnerName
+    )
+  }
 }
