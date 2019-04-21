@@ -2,6 +2,7 @@ import { Box } from "grommet"
 import { observer } from "mobx-react-lite"
 import { cover } from "polished"
 import React from "react"
+import ChannelView from "../channel/ChannelView"
 import { CharacterMenuProvider } from "../character/CharacterMenuContext"
 import { useRootStore } from "../RootStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
@@ -10,13 +11,29 @@ import { ThemeColor } from "../ui/theme"
 import ChatNavigation from "./ChatNavigation"
 
 const ChatScreen = () => {
-  const {
-    chatStore: { identity },
-    viewStore,
-  } = useRootStore()
+  const { chatStore, channelStore, viewStore } = useRootStore()
+
+  function renderChatRoom() {
+    const { chatRoom } = viewStore
+
+    switch (chatRoom.name) {
+      case "console": {
+        return <p>console</p>
+      }
+
+      case "channel": {
+        const channel = channelStore.channels.get(chatRoom.channel)
+        return <ChannelView channel={channel} />
+      }
+
+      case "privateChat": {
+        return <p>privateChat</p>
+      }
+    }
+  }
 
   return (
-    <AppDocumentTitle title={identity}>
+    <AppDocumentTitle title={chatStore.identity}>
       <CharacterMenuProvider>
         <Box
           direction="row"
@@ -25,7 +42,7 @@ const ChatScreen = () => {
           background={ThemeColor.bgDivision}
         >
           <ChatNavigation />
-          {viewStore.renderChatRoom()}
+          {renderChatRoom()}
         </Box>
       </CharacterMenuProvider>
     </AppDocumentTitle>
