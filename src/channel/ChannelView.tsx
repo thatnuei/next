@@ -9,10 +9,10 @@ import ChannelModel from "./ChannelModel"
 
 type Props = { channel: ChannelModel }
 
-export default function ChannelView(props: Props) {
+export default function ChannelView({ channel }: Props) {
   const channelHeader = (
     <Box direction="row" align="center" gap="xsmall" flex>
-      <Heading level="3">Story Driven LFRP</Heading>
+      <Heading level="3">{channel.name}</Heading>
       <Icon icon="about" size={1} style={{ opacity: 0.5 }} />
     </Box>
   )
@@ -33,25 +33,14 @@ export default function ChannelView(props: Props) {
     <Box
       pad="small"
       height="small"
-      overflow={{ vertical: "scroll" }}
+      overflow={{ vertical: "auto" }}
       background={ThemeColor.bgShaded}
     >
-      <Text size="small" style={{ whiteSpace: "pre-line" }}>
-        dolore quae et sit perspiciatis saepe eaque. Exercitationem reiciendis
-        id unde eaque quidem dolorem maiores sunt. Et sed autem qui minima
-        aperiam accusantium illum assumenda. Ab quibusdam quis harum. Sit
-        distinctio velit voluptatem iste autem autem quo sed. Voluptate quidem
-        et reprehenderit suscipit nisi eligendi.{"\n\n"}
-        expedita dolore rerum. Voluptas in qui ea. Quas ut voluptatum saepe
-        tempore consequatur accusantium. Iste qui tempora et cum. Voluptatem
-        magni culpa ex veniam placeat et similique.{"\n\n"}
-        consequuntur suscipit dolor vitae quibusdam. Voluptate rem ab soluta sit
-        laudantium. Sit hic in ea molestias est. Necessitatibus dignissimos
-        exercitationem autem beatae.{"\n\n"}n quia ea provident nemo.Commodi aut
-        et quo neque lauda quuntur est eligendi magnam quia iure est. Vel maxime
-        natus ctus est.Odit ut sed dolores voluptas voluptatem odit.Ve veritatis
-        rerum quia.
-      </Text>
+      <Text
+        size="small"
+        style={{ whiteSpace: "pre-line" }}
+        dangerouslySetInnerHTML={{ __html: channel.description }}
+      />
     </Box>
   )
 
@@ -103,7 +92,7 @@ export default function ChannelView(props: Props) {
             background={ThemeColor.bgDark}
             overflow={{ vertical: "auto" }}
           >
-            <MessageList messages={props.channel.messages} />
+            <MessageList messages={channel.messages} />
           </Box>
         </Box>
 
