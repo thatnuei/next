@@ -6,41 +6,7 @@ import CharacterInfo from "../character/CharacterInfo"
 import { useRootStore } from "../RootStore"
 import Icon from "../ui/Icon"
 import { ThemeColor } from "../ui/theme"
-
-function RoomTab({
-  icon = <></> as React.ReactNode,
-  title = <></> as React.ReactNode,
-  active = false,
-  onClick = () => {},
-  onClose = undefined as (() => void) | undefined,
-}) {
-  return (
-    <Box
-      direction="row"
-      gap="xsmall"
-      background={active ? ThemeColor.bg : undefined}
-      style={{ opacity: active ? 1 : 0.5 }}
-    >
-      <Box
-        as="button"
-        flex
-        direction="row"
-        gap="xsmall"
-        pad="xsmall"
-        align="center"
-        onClick={onClick}
-      >
-        {icon}
-        <Box flex>{title}</Box>
-      </Box>
-      {onClose && (
-        <Box as="button" pad="xsmall" justify="center" onClick={onClose}>
-          <Icon icon="close" size={0.8} />
-        </Box>
-      )}
-    </Box>
-  )
-}
+import RoomTab from "./RoomTab"
 
 function ChatNavigation() {
   const { chatStore, channelStore, viewStore } = useRootStore()
