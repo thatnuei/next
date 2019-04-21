@@ -35,7 +35,7 @@ export default function RoomTab({ onClick = () => {}, ...props }: Props) {
 
       {props.onClose && (
         <Box as="button" pad="xsmall" justify="center" onClick={props.onClose}>
-          <Icon icon="close" size={0.8} />
+          <Icon icon="close" size={0.7} />
         </Box>
       )}
     </Box>
