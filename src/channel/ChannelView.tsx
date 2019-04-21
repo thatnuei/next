@@ -1,4 +1,5 @@
 import { Box, Heading, Text } from "grommet"
+import { observer } from "mobx-react-lite"
 import React from "react"
 import CharacterName from "../character/CharacterName"
 import Chatbox from "../chat/Chatbox"
@@ -9,7 +10,7 @@ import ChannelModel from "./ChannelModel"
 
 type Props = { channel: ChannelModel }
 
-export default function ChannelView({ channel }: Props) {
+function ChannelView({ channel }: Props) {
   const channelHeader = (
     <Box direction="row" align="center" gap="xsmall" flex>
       <Heading level="3">{channel.name}</Heading>
@@ -106,3 +107,4 @@ export default function ChannelView({ channel }: Props) {
     </Box>
   )
 }
+export default observer(ChannelView)
