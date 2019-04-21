@@ -1,4 +1,5 @@
 import { Box, Heading, Text } from "grommet"
+import { observer } from "mobx-react-lite"
 import React, { ComponentPropsWithoutRef } from "react"
 import { getProfileUrl } from "../flist/helpers"
 import { useRootStore } from "../RootStore"
@@ -38,4 +39,4 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
   )
 }
 
-export default CharacterInfo
+export default observer(CharacterInfo)
