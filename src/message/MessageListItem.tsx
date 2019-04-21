@@ -1,4 +1,3 @@
-import { Text } from "grommet"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import styled, { CSSObject } from "styled-components"
@@ -50,15 +49,15 @@ const Container = styled.li`
   padding: 4px 12px;
 `
 
-const SenderText = styled(Text)`
+const SenderText = styled.span`
   margin-right: 8px;
 `
 
-const MessageText = styled(Text)`
+const MessageText = styled.span`
   white-space: pre-line;
 `
 
-const DateText = styled(Text)`
+const DateText = styled.span`
   float: right;
   margin-left: 1rem;
   opacity: 0.75;
