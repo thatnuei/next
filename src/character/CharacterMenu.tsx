@@ -1,3 +1,4 @@
+import { Box } from "grommet"
 import React from "react"
 import { getProfileUrl } from "../flist/helpers"
 import { useRootStore } from "../RootStore"
@@ -28,7 +29,9 @@ const CharacterMenu = (props: CharacterMenuProps) => {
 
   return (
     <Menu onClick={menu.close}>
-      <CharacterInfo name={props.characterName} onClick={stopPropagation} />
+      <Box pad="small">
+        <CharacterInfo name={props.characterName} onClick={stopPropagation} />
+      </Box>
 
       <OptionsBackground>
         <MenuOption as={ExternalLink} href={profileUrl}>
