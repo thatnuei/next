@@ -48,7 +48,7 @@ function ChannelView({ channel }: Props) {
   const userList = (
     <Box width="small">
       <Box background={ThemeColor.bg} pad="xsmall">
-        Characters: 420
+        Characters: {channel.users.size}
       </Box>
 
       <Box
@@ -58,18 +58,9 @@ function ChannelView({ channel }: Props) {
         overflow={{ vertical: "auto" }}
         background={ThemeColor.bgDark}
       >
-        <CharacterName name="Subaru-chan" gender="Female" status="online" />
-        <CharacterName
-          name="Subaru-chan"
-          gender="Transgender"
-          status="online"
-        />
-        <CharacterName name="Subaru-chan" gender="None" status="online" />
-        <CharacterName name="Subaru-chan" gender="Cunt-boy" status="online" />
-        <CharacterName name="Subaru-chan" gender="Male" status="online" />
-        <CharacterName name="Subaru-chan" gender="Male-Herm" status="online" />
-        <CharacterName name="Subaru-chan" gender="Shemale" status="online" />
-        <CharacterName name="Subaru-chan" gender="Herm" status="online" />
+        {channel.users.characters.map((character) => (
+          <CharacterName key={character.name} {...character} />
+        ))}
       </Box>
     </Box>
   )
