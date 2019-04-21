@@ -7,8 +7,43 @@ import { useRootStore } from "../RootStore"
 import Icon from "../ui/Icon"
 import { ThemeColor } from "../ui/theme"
 
+function RoomTab({
+  icon = <></> as React.ReactNode,
+  title = <></> as React.ReactNode,
+  active = false,
+  onClick = () => {},
+  onClose = undefined as (() => void) | undefined,
+}) {
+  return (
+    <Box
+      direction="row"
+      gap="xsmall"
+      background={active ? ThemeColor.bg : undefined}
+      style={{ opacity: active ? 1 : 0.5 }}
+    >
+      <Box
+        as="button"
+        flex
+        direction="row"
+        gap="xsmall"
+        pad="xsmall"
+        align="center"
+        onClick={onClick}
+      >
+        {icon}
+        <Box flex>{title}</Box>
+      </Box>
+      {onClose && (
+        <Box as="button" pad="xsmall" justify="center" onClick={onClose}>
+          <Icon icon="close" size={0.8} />
+        </Box>
+      )}
+    </Box>
+  )
+}
+
 function ChatNavigation() {
-  const { chatStore } = useRootStore()
+  const { chatStore, channelStore, viewStore } = useRootStore()
 
   return (
     <Box as="nav" direction="row">
@@ -21,62 +56,31 @@ function ChatNavigation() {
         <Icon icon="logout" style={{ opacity: 0.5 }} />
       </Box>
 
-      <Box gap="xsmall" width="small" background={ThemeColor.bgDark}>
+      <Box width="small" background={ThemeColor.bgDark}>
         <Box background={ThemeColor.bg} pad="small">
           <CharacterInfo name={chatStore.identity} />
         </Box>
 
         <Box flex>
-          <Box
-            pad={{ horizontal: "small", vertical: "xsmall" }}
-            direction="row"
-            gap="xsmall"
-            align="center"
-          >
-            <Icon icon="console" size={0.9} />
-            <span>Console</span>
-          </Box>
+          <RoomTab
+            icon={<Icon icon="console" size={0.9} />}
+            title={<span>Console</span>}
+          />
 
-          <Box
-            pad={{ horizontal: "small", vertical: "xsmall" }}
-            direction="row"
-            gap="xsmall"
-            align="center"
-          >
-            <Icon icon="channels" size={0.9} />
-            <span>Frontpage</span>
-          </Box>
+          {channelStore.channels.values.map((channel) => (
+            <RoomTab
+              icon={<Icon icon="channels" size={0.9} />}
+              title={<span>{channel.name}</span>}
+              active={viewStore.isChannelActive(channel.id)}
+              onClick={() => viewStore.showChannel(channel.id)}
+              onClose={() => channelStore.leave(channel.id)}
+            />
+          ))}
 
-          <Box
-            background={ThemeColor.bg}
-            pad={{ horizontal: "small", vertical: "xsmall" }}
-            direction="row"
-            gap="xsmall"
-            align="center"
-          >
-            <Icon icon="channels" size={0.9} />
-            <span>Story Driven LFRP</span>
-          </Box>
-
-          <Box
-            pad={{ horizontal: "small", vertical: "xsmall" }}
-            direction="row"
-            gap="xsmall"
-            align="center"
-          >
-            <Icon icon="channels" size={0.9} />
-            <span>Private Channel with Annoyingly Long Name</span>
-          </Box>
-
-          <Box
-            pad={{ horizontal: "small", vertical: "xsmall" }}
-            direction="row"
-            gap="xsmall"
-            align="center"
-          >
-            <Avatar name="Subaru-chan" size={20} />
-            <span>Subaru-chan</span>
-          </Box>
+          <RoomTab
+            icon={<Avatar name="Subaru-chan" size={20} />}
+            title={<span>Subaru-chan</span>}
+          />
         </Box>
       </Box>
     </Box>
