@@ -28,15 +28,12 @@ function ChatNavigation() {
         </Box>
 
         <Box flex>
-          <RoomTab
-            icon={<Icon icon="console" size={0.9} />}
-            title={<span>Console</span>}
-          />
+          <RoomTab icon={<Icon icon="console" size={0.9} />} title="Console" />
 
           {channelStore.channels.values.map((channel) => (
             <RoomTab
               icon={<Icon icon="channels" size={0.9} />}
-              title={<span>{channel.name}</span>}
+              title={channel.name}
               active={viewStore.isChannelActive(channel.id)}
               onClick={() => viewStore.showChannel(channel.id)}
               onClose={() => channelStore.leave(channel.id)}
@@ -45,7 +42,7 @@ function ChatNavigation() {
 
           <RoomTab
             icon={<Avatar name="Subaru-chan" size={20} />}
-            title={<span>Subaru-chan</span>}
+            title="Subaru-chan"
           />
         </Box>
       </Box>

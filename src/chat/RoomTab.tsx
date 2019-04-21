@@ -1,4 +1,4 @@
-import { Box } from "grommet"
+import { Box, Text } from "grommet"
 import React from "react"
 import Icon from "../ui/Icon"
 import { ThemeColor } from "../ui/theme"
@@ -28,7 +28,9 @@ export default function RoomTab({ onClick = () => {}, ...props }: Props) {
         onClick={onClick}
       >
         {props.icon}
-        <Box flex>{props.title}</Box>
+        <Box flex pad={{ vertical: "xxsmall" }}>
+          <Text>{props.title}</Text>
+        </Box>
       </Box>
 
       {props.onClose && (
