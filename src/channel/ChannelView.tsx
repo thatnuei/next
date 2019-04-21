@@ -65,7 +65,7 @@ export default function ChannelView(props: Props) {
         pad="xsmall"
         gap="xxsmall"
         flex
-        overflow={{ vertical: "scroll" }}
+        overflow={{ vertical: "auto" }}
         background={ThemeColor.bgDark}
       >
         <CharacterName name="Subaru-chan" gender="Female" status="online" />
@@ -101,7 +101,7 @@ export default function ChannelView(props: Props) {
           <Box
             flex
             background={ThemeColor.bgDark}
-            overflow={{ vertical: "scroll" }}
+            overflow={{ vertical: "auto" }}
           >
             <MessageList messages={props.channel.messages} />
           </Box>
