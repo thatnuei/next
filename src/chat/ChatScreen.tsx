@@ -1,3 +1,4 @@
+import { Box } from "grommet"
 import { observer } from "mobx-react-lite"
 import { cover } from "polished"
 import React from "react"
@@ -5,7 +6,8 @@ import { CharacterMenuProvider } from "../character/CharacterMenuContext"
 import { useRootStore } from "../RootStore"
 import AppDocumentTitle from "../ui/AppDocumentTitle"
 import { styled } from "../ui/styled"
-import ChatSidebarContent from "./ChatSidebarContent"
+import { ThemeColor } from "../ui/theme"
+import ChatNavigation from "./ChatNavigation"
 
 const ChatScreen = () => {
   const {
@@ -16,12 +18,15 @@ const ChatScreen = () => {
   return (
     <AppDocumentTitle title={identity}>
       <CharacterMenuProvider>
-        <Container>
-          <SidebarContainer>
-            <ChatSidebarContent />
-          </SidebarContainer>
+        <Box
+          direction="row"
+          gap="xsmall"
+          style={cover()}
+          background={ThemeColor.bgDivision}
+        >
+          <ChatNavigation />
           {viewStore.renderChatRoom()}
-        </Container>
+        </Box>
       </CharacterMenuProvider>
     </AppDocumentTitle>
   )

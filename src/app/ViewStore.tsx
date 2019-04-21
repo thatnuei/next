@@ -1,6 +1,8 @@
 import { action, observable } from "mobx"
 import React from "react"
+import ChannelView from "../channel/ChannelView"
 import ChatScreen from "../chat/ChatScreen"
+import RootStore from "../RootStore"
 import CharacterSelectModal from "./CharacterSelectModal"
 import LoginModal from "./LoginModal"
 
@@ -21,6 +23,8 @@ export default class ViewStore {
 
   @observable.ref
   private chatRoom: ChatRoom = { name: "console" }
+
+  constructor(private root: RootStore) {}
 
   @action
   showLogin() {
@@ -67,12 +71,19 @@ export default class ViewStore {
 
   renderChatRoom() {
     switch (this.chatRoom.name) {
-      case "console":
+      case "console": {
         return <p>console</p>
-      case "channel":
-        return <p>channel</p>
-      case "privateChat":
+      }
+
+      case "channel": {
+        const { channels } = this.root.channelStore
+        const channel = channels.get(this.chatRoom.channel)
+        return <ChannelView channel={channel} />
+      }
+
+      case "privateChat": {
         return <p>privateChat</p>
+      }
     }
   }
 }
