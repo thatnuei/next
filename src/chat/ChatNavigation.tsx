@@ -1,11 +1,15 @@
 import { Box } from "grommet"
+import { observer } from "mobx-react-lite"
 import React from "react"
 import Avatar from "../character/Avatar"
 import CharacterInfo from "../character/CharacterInfo"
+import { useRootStore } from "../RootStore"
 import Icon from "../ui/Icon"
 import { ThemeColor } from "../ui/theme"
 
-export default function ChatNavigation() {
+function ChatNavigation() {
+  const { chatStore } = useRootStore()
+
   return (
     <Box as="nav" direction="row">
       <Box pad="small">
@@ -19,7 +23,7 @@ export default function ChatNavigation() {
 
       <Box gap="xsmall" width="small" background={ThemeColor.bgDark}>
         <Box background={ThemeColor.bg} pad="small">
-          <CharacterInfo name="Serena Gardener" />
+          <CharacterInfo name={chatStore.identity} />
         </Box>
 
         <Box flex>
@@ -78,3 +82,4 @@ export default function ChatNavigation() {
     </Box>
   )
 }
+export default observer(ChatNavigation)
