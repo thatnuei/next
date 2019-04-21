@@ -1,6 +1,7 @@
+import { Text } from "grommet"
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { CSSObject } from "styled-components"
+import styled, { CSSObject } from "styled-components"
 import CharacterName from "../character/CharacterName"
 import { useRootStore } from "../RootStore"
 import { semiBlack } from "../ui/colors"
@@ -27,13 +28,13 @@ const MessageListItem = ({ senderName, text, type, time }: Props) => {
   const parsedText = text.replace(actionRegex, "")
 
   return (
-    <li css={[containerStyle, highlightStyles[type], isAction && actionStyle]}>
-      <span css={dateStyle}>{new Date(time).toLocaleTimeString()}</span>
-      <span css={senderStyle}>
+    <Container css={[highlightStyles[type], isAction && actionStyle]}>
+      <DateText>{new Date(time).toLocaleTimeString()}</DateText>
+      <SenderText>
         {sender ? <CharacterName {...sender} /> : <strong>System</strong>}
-      </span>
-      {parsedText}
-    </li>
+      </SenderText>
+      <MessageText dangerouslySetInnerHTML={{ __html: parsedText }} />
+    </Container>
   )
 }
 
@@ -45,22 +46,26 @@ const highlightStyles: { [K in MessageType]?: CSSObject } = {
   admin: { backgroundColor: "rgb(192, 57, 43, 0.2)" },
 }
 
-const containerStyle = css`
+const Container = styled.li`
   padding: 4px 12px;
 `
 
-const senderStyle = css`
+const SenderText = styled(Text)`
   margin-right: 8px;
 `
 
-const actionStyle = css`
-  font-style: italic;
+const MessageText = styled(Text)`
+  white-space: pre-line;
 `
 
-const dateStyle = css`
+const DateText = styled(Text)`
   float: right;
   margin-left: 1rem;
   opacity: 0.75;
   font-size: 80%;
+  font-style: italic;
+`
+
+const actionStyle = css`
   font-style: italic;
 `
