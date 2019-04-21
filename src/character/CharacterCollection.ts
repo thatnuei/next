@@ -34,4 +34,9 @@ export default class CharacterCollection {
   get characters() {
     return this.names.map(this.characterStore.characters.get)
   }
+
+  @computed
+  get size() {
+    return this.nameSet.size
+  }
 }
