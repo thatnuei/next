@@ -19,9 +19,7 @@ type ChannelStoreListings = {
 }
 
 export default class ChannelStore {
-  channels = new FactoryMap(
-    (id) => new ChannelModel(this.root.characterStore, id),
-  )
+  channels = new FactoryMap((id) => new ChannelModel(this.root, id))
 
   listings: ChannelStoreListings = {
     public: [],

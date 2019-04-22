@@ -1,7 +1,9 @@
+import { sortBy } from "lodash"
 import { action, computed, observable } from "mobx"
 import CharacterCollection from "../character/CharacterCollection"
-import CharacterStore from "../character/CharacterStore"
+import CharacterModel from "../character/CharacterModel"
 import MessageModel from "../message/MessageModel"
+import RootStore from "../RootStore"
 import { ChannelMode } from "./types"
 
 export default class ChannelModel {
@@ -9,11 +11,11 @@ export default class ChannelModel {
   @observable description = ""
   @observable mode: ChannelMode = "both"
   @observable selectedMode: ChannelMode = "chat"
-  @observable.shallow users = new CharacterCollection(this.characterStore)
-  @observable.shallow ops = new CharacterCollection(this.characterStore)
+  @observable.shallow users = new CharacterCollection(this.root.characterStore)
+  @observable.shallow ops = new CharacterCollection(this.root.characterStore)
   @observable.shallow messages: MessageModel[] = []
 
-  constructor(private characterStore: CharacterStore, public id: string) {}
+  constructor(private root: RootStore, public id: string) {}
 
   @action
   setName(name: string) {
@@ -50,5 +52,20 @@ export default class ChannelModel {
       if (this.selectedMode === "chat") return msg.type !== "lfrp"
       return true
     })
+  }
+
+  @computed
+  get sortedUsers() {
+    const { characters } = this.users
+
+    const getSortWeight = (char: CharacterModel) => {
+      if (this.root.chatStore.isFriend(char.name)) return 0
+      if (this.root.chatStore.isAdmin(char.name)) return 1
+      if (this.ops.has(char.name)) return 2
+      if (char.status === "looking") return 3
+      return 4
+    }
+
+    return sortBy(characters, getSortWeight, "name")
   }
 }

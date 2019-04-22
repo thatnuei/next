@@ -8,13 +8,13 @@ import { ThemeColor } from "../ui/theme"
 import ChannelModel from "./ChannelModel"
 
 function ChannelUserList({ channel }: { channel: ChannelModel }) {
-  const { users } = channel
+  const { sortedUsers } = channel
 
   const listRef = useRef(null)
   const rect: ClientRect | null = useRect(listRef)
 
   const renderUser = ({ index, style }: ListChildComponentProps) => {
-    const character = users.characters[index]
+    const character = sortedUsers[index]
     return (
       <Box pad="xsmall" justify="center" style={style}>
         <CharacterName key={character.name} {...character} />
@@ -25,14 +25,14 @@ function ChannelUserList({ channel }: { channel: ChannelModel }) {
   return (
     <Box width="small" height="100%">
       <Box background={ThemeColor.bg} pad="xsmall">
-        Characters: {users.size}
+        Characters: {sortedUsers.length}
       </Box>
 
       <Box gap="xxsmall" flex background={ThemeColor.bgDark} ref={listRef}>
         <FixedSizeList
           width={rect ? rect.width : 0}
           height={rect ? rect.height : 0}
-          itemCount={users.size}
+          itemCount={sortedUsers.length}
           itemSize={30}
           overscanCount={10}
         >
