@@ -12,8 +12,8 @@ function ChatNavigation() {
   const { chatStore, channelStore, viewStore } = useRootStore()
 
   return (
-    <Box as="nav" direction="row">
-      <Box pad="small">
+    <Box as="nav" direction="row" style={{ height: "100%" }}>
+      <Box pad="small" background={ThemeColor.bgDivision}>
         <Box flex gap="medium">
           <Icon style={{ opacity: 0.5 }} icon="channels" />
           <Icon style={{ opacity: 0.5 }} icon="updateStatus" />
@@ -22,12 +22,20 @@ function ChatNavigation() {
         <Icon icon="logout" style={{ opacity: 0.5 }} />
       </Box>
 
-      <Box width="small" background={ThemeColor.bgDark}>
-        <Box background={ThemeColor.bg} pad="small">
+      <Box
+        width="small"
+        background={ThemeColor.bgDark}
+        overflow={{ vertical: "auto" }}
+      >
+        <Box
+          background={ThemeColor.bg}
+          pad="small"
+          flex={{ grow: 0, shrink: 0 }}
+        >
           <CharacterInfo name={chatStore.identity} />
         </Box>
 
-        <Box flex>
+        <Box flex={{ grow: 1, shrink: 0 }}>
           <RoomTab icon={<Icon icon="console" size={0.9} />} title="Console" />
 
           {channelStore.channels.values.map((channel) => (
