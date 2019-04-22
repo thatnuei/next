@@ -1,7 +1,6 @@
 import { Box, Heading, Text } from "grommet"
 import { observer } from "mobx-react-lite"
 import React, { useContext } from "react"
-import CharacterName from "../character/CharacterName"
 import Chatbox from "../chat/Chatbox"
 import { NavigationOverlayContext } from "../chat/ChatScreen"
 import MessageList from "../message/MessageList"
@@ -12,6 +11,7 @@ import { ThemeColor } from "../ui/theme"
 import useMedia from "../ui/useMedia"
 import useToggleState from "../ui/useToggleState"
 import ChannelModel from "./ChannelModel"
+import ChannelUserList from "./ChannelUserList"
 
 const userListBreakpoint = 1200
 
@@ -86,26 +86,6 @@ function ChannelView({ channel }: Props) {
     </Box>
   )
 
-  const userList = (
-    <Box width="small" height="100%">
-      <Box background={ThemeColor.bg} pad="xsmall">
-        Characters: {channel.users.size}
-      </Box>
-
-      <Box
-        pad="xsmall"
-        gap="xxsmall"
-        flex
-        overflow={{ vertical: "auto" }}
-        background={ThemeColor.bgDark}
-      >
-        {channel.users.characters.map((character) => (
-          <CharacterName key={character.name} {...character} />
-        ))}
-      </Box>
-    </Box>
-  )
-
   return (
     <>
       <Box as="main" flex gap="xsmall">
@@ -114,16 +94,12 @@ function ChannelView({ channel }: Props) {
           <Box flex>
             {channelHeader}
 
-            <Box
-              flex
-              background={ThemeColor.bgDark}
-              overflow={{ vertical: "auto" }}
-            >
+            <Box flex background={ThemeColor.bgDark}>
               <MessageList messages={channel.messages} />
             </Box>
           </Box>
 
-          {userListVisible && userList}
+          {userListVisible && <ChannelUserList channel={channel} />}
         </Box>
 
         {/* chatbox */}
@@ -139,7 +115,7 @@ function ChannelView({ channel }: Props) {
           onClick={userListOverlay.disable}
         >
           <Box elevation="large" onClick={(e) => e.stopPropagation()}>
-            {userList}
+            <ChannelUserList channel={channel} />
           </Box>
         </SideOverlay>
       )}
