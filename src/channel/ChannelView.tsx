@@ -1,22 +1,27 @@
 import { Box, Heading, Text } from "grommet"
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useContext } from "react"
 import CharacterName from "../character/CharacterName"
 import Chatbox from "../chat/Chatbox"
+import { NavigationOverlayContext } from "../chat/ChatScreen"
 import MessageList from "../message/MessageList"
+import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
+import SideOverlay from "../ui/SideOverlay"
 import { ThemeColor } from "../ui/theme"
+import useMedia from "../ui/useMedia"
+import useToggleState from "../ui/useToggleState"
 import ChannelModel from "./ChannelModel"
+
+const userListBreakpoint = 1200
 
 type Props = { channel: ChannelModel }
 
 function ChannelView({ channel }: Props) {
-  const channelHeader = (
-    <Box direction="row" align="center" gap="xsmall" flex>
-      <Heading level="3">{channel.name}</Heading>
-      <Icon icon="about" size={1} style={{ opacity: 0.5 }} />
-    </Box>
-  )
+  const userListVisible = useMedia(`(min-width: ${userListBreakpoint}px)`)
+  const descriptionUi = useToggleState()
+  const userListOverlay = useToggleState()
+  const navOverlayContext = useContext(NavigationOverlayContext)
 
   const channelFilters = (
     <Box direction="row" gap="small">
@@ -33,20 +38,56 @@ function ChannelView({ channel }: Props) {
   const channelDescription = (
     <Box
       pad="small"
-      height="small"
       overflow={{ vertical: "auto" }}
-      background={ThemeColor.bgShaded}
+      background={ThemeColor.bgDark}
+      style={{
+        position: "absolute",
+        top: "100%",
+        zIndex: 1,
+        maxHeight: "50vh",
+      }}
     >
       <Text
-        size="small"
         style={{ whiteSpace: "pre-line" }}
         dangerouslySetInnerHTML={{ __html: channel.description }}
       />
     </Box>
   )
 
+  const channelHeader = (
+    <Box background={ThemeColor.bg} style={{ position: "relative" }}>
+      <Box pad="small" gap="small" direction="row" align="center">
+        <Box direction="row" align="center" gap="xsmall" flex>
+          {navOverlayContext.isOverlayVisible && (
+            <FadedButton onClick={navOverlayContext.show}>
+              <Icon icon="menu" />
+            </FadedButton>
+          )}
+
+          <Box direction="row" gap="xsmall" align="center">
+            <Heading level="3">{channel.name}</Heading>
+
+            <FadedButton onClick={descriptionUi.toggle}>
+              <Icon icon="about" />
+            </FadedButton>
+          </Box>
+        </Box>
+
+        {channelFilters}
+
+        {!userListVisible && (
+          <FadedButton onClick={userListOverlay.enable}>
+            <Icon icon="users" />
+          </FadedButton>
+        )}
+      </Box>
+
+      {descriptionUi.on && channelDescription}
+    </Box>
+  )
+
   const userList = (
-    <Box width="small">
+    <Box width="small" height="100%">
       <Box background={ThemeColor.bg} pad="xsmall">
         Characters: {channel.users.size}
       </Box>
@@ -66,36 +107,43 @@ function ChannelView({ channel }: Props) {
   )
 
   return (
-    <Box as="main" flex gap="xsmall">
-      {/* room content */}
-      <Box direction="row" flex gap="xsmall">
-        <Box flex>
-          <Box background={ThemeColor.bg}>
-            <Box pad="small" direction="row" align="center">
-              {channelHeader}
-              {channelFilters}
+    <>
+      <Box as="main" flex gap="xsmall">
+        {/* room content */}
+        <Box direction="row" flex gap="xsmall">
+          <Box flex>
+            {channelHeader}
+
+            <Box
+              flex
+              background={ThemeColor.bgDark}
+              overflow={{ vertical: "auto" }}
+            >
+              <MessageList messages={channel.messages} />
             </Box>
-
-            {channelDescription}
           </Box>
 
-          <Box
-            flex
-            background={ThemeColor.bgDark}
-            overflow={{ vertical: "auto" }}
-          >
-            <MessageList messages={channel.messages} />
-          </Box>
+          {userListVisible && userList}
         </Box>
 
-        {userList}
+        {/* chatbox */}
+        <Box background={ThemeColor.bg} pad="xsmall">
+          <Chatbox onSubmit={console.log} />
+        </Box>
       </Box>
 
-      {/* chatbox */}
-      <Box background={ThemeColor.bg} pad="xsmall">
-        <Chatbox onSubmit={console.log} />
-      </Box>
-    </Box>
+      {!userListVisible && (
+        <SideOverlay
+          anchor="right"
+          visible={userListOverlay.on}
+          onClick={userListOverlay.disable}
+        >
+          <Box elevation="large" onClick={(e) => e.stopPropagation()}>
+            {userList}
+          </Box>
+        </SideOverlay>
+      )}
+    </>
   )
 }
 export default observer(ChannelView)
