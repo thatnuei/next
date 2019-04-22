@@ -71,6 +71,14 @@ export const darkTheme = {
         large: "0px 8px 16px rgba(0, 0, 0, 0.5)",
         xlarge: "0px 12px 24px rgba(0, 0, 0, 0.5)",
       },
+      dark: {
+        none: "none",
+        xsmall: "0px 1px 2px rgba(0, 0, 0, 0.5)",
+        small: "0px 2px 4px rgba(0, 0, 0, 0.5)",
+        medium: "0px 4px 8px rgba(0, 0, 0, 0.5)",
+        large: "0px 8px 16px rgba(0, 0, 0, 0.5)",
+        xlarge: "0px 12px 24px rgba(0, 0, 0, 0.5)",
+      },
     },
     focus: {
       border: {
