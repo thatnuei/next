@@ -1,3 +1,4 @@
+import { base as baseTheme } from "grommet/themes"
 import { rgb, rgba, shade } from "polished"
 import * as styledComponents from "styled-components"
 
@@ -12,7 +13,7 @@ const themeColor = midnight
 const primaryColor = shade(0.15, river)
 const textColor = clouds
 
-export type AppTheme = typeof darkTheme
+export type AppTheme = typeof baseTheme
 
 export enum ThemeColor {
   bg = "bg",
