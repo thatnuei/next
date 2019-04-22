@@ -1,5 +1,4 @@
 import React from "react"
-import { themeColor } from "./colors"
 import { fullscreen } from "./helpers"
 import { css, styled } from "./styled"
 
@@ -45,7 +44,6 @@ const Panel = styled.div<{ anchor: "left" | "right"; visible?: boolean }>`
   top: 0;
   bottom: 0;
   width: max-content;
-  background-color: ${themeColor};
   transition: 0.3s;
   ${(props) => props.anchor}: 0;
 
@@ -53,6 +51,10 @@ const Panel = styled.div<{ anchor: "left" | "right"; visible?: boolean }>`
     ${(props) => (props.anchor === "left" ? "-100%" : "100%")}
   );
   ${(props) => props.visible && `transform: translateX(0);`}
+
+  > * {
+    height: 100%;
+  }
 `
 
 const noop = () => {}
