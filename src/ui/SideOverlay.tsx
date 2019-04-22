@@ -21,7 +21,7 @@ export default function SideOverlay(props: SidebarOverlayProps) {
 }
 
 const Shade = styled.div<{ visible?: boolean }>`
-  z-index: 999;
+  z-index: 2;
 
   ${fullscreen}
 

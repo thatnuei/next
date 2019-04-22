@@ -72,4 +72,7 @@ const FadeSlideAnimation = styled.div<{ visible?: boolean }>`
           opacity: 0;
           visibility: hidden;
         `}
+
+  /* to appear over the overlays and channel description */
+  z-index: 3;
 `
