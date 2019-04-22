@@ -13,7 +13,7 @@ const themeColor = midnight
 const primaryColor = shade(0.15, river)
 const textColor = clouds
 
-export type AppTheme = typeof baseTheme
+export type AppTheme = typeof baseTheme & typeof darkTheme
 
 export enum ThemeColor {
   bg = "bg",
