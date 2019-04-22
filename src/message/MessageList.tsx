@@ -1,19 +1,24 @@
+import { Box } from "grommet"
 import { observer } from "mobx-react-lite"
 import React, { useCallback, useLayoutEffect, useRef } from "react"
 import MessageListItem from "./MessageListItem"
 import MessageModel from "./MessageModel"
 
 function MessageList(props: { messages: MessageModel[] }) {
-  const messageListRef = useRef<HTMLUListElement>(null)
+  const messageListRef = useRef<HTMLElement>(null)
 
   useBottomScroll(messageListRef, props.messages[props.messages.length - 1])
 
   return (
-    <ul ref={messageListRef}>
+    <Box
+      ref={messageListRef as any}
+      overflow={{ vertical: "auto" }}
+      style={{ transform: "translateZ(0)" }}
+    >
       {props.messages.slice(-300).map((message) => (
         <MessageListItem key={message.id} {...message} />
       ))}
-    </ul>
+    </Box>
   )
 }
 export default observer(MessageList)
