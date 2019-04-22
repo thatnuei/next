@@ -39,6 +39,7 @@ export default class SocketStore {
       if (command.type === "IDN") onConnect()
 
       this.handleSocketCommand(command)
+      this.root.chatStore.handleSocketCommand(command)
       this.root.characterStore.handleSocketCommand(command)
       this.root.channelStore.handleSocketCommand(command)
     }
