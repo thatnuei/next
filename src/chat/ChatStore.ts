@@ -20,17 +20,9 @@ export default class ChatStore {
     this.identity = identity
   }
 
-  isFriend = (name: string) => {
-    return this.friends.has(name)
-  }
-
-  isAdmin = (name: string) => {
-    return this.admins.has(name)
-  }
-
-  isIgnored = (name: string) => {
-    return this.ignored.has(name)
-  }
+  isFriend = (name: string) => this.friends.has(name)
+  isAdmin = (name: string) => this.admins.has(name)
+  isIgnored = (name: string) => this.ignored.has(name)
 
   @action
   handleSocketCommand = createCommandHandler({
