@@ -1,11 +1,11 @@
 import React from "react"
 import { act, fireEvent, render } from "react-testing-library"
-import CharacterStore from "../character/CharacterStore"
+import RootStore from "../RootStore"
 import ChannelHeader from "./ChannelHeader"
 import ChannelModel from "./ChannelModel"
 
 const setup = () => {
-  const channel = new ChannelModel(new CharacterStore(), "Fantasy")
+  const channel = new ChannelModel(new RootStore(), "Fantasy")
   const result = render(<ChannelHeader channel={channel} />)
   return { channel, ...result }
 }
