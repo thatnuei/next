@@ -1,18 +1,26 @@
-import { textColor } from "./colors"
 import { styled } from "./styled"
 
 const Anchor = styled.a`
-  opacity: 0.7;
-  transition: 0.2s opacity;
-  border-bottom: 1px solid ${textColor};
   display: inline-block;
-  line-height: 1;
-  padding-bottom: 3px;
 
+  /* hover reveal reansition */
+  opacity: 0.8;
+  transition: 0.2s opacity;
   :hover,
   :focus {
     opacity: 1;
     cursor: pointer;
+  }
+
+  /* white underline */
+  position: relative;
+  ::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 1px;
+    border-bottom: 1px solid currentColor;
   }
 `
 export default Anchor
