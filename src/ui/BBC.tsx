@@ -6,20 +6,15 @@ import Anchor from "./Anchor"
 import Icon from "./Icon"
 import { styled } from "./theme"
 
-const colors: { [color in string]?: string } = {
-  white: "rgb(236, 240, 241)",
-  black: "rgb(52, 73, 94)",
-  red: "rgb(236, 93, 93)",
-  blue: "rgb(52, 152, 219)",
-  yellow: "rgb(241, 196, 15)",
-  green: "rgb(46, 204, 113)",
-  pink: "rgb(255,164,156)",
-  gray: "rgb(149, 165, 166)",
-  orange: "rgb(230, 126, 34)",
-  purple: "rgb(201,135,228)",
-  brown: "rgb(211, 84, 0)",
-  cyan: "rgb(85, 175, 236)",
+type Props = {
+  text: string
 }
+
+function BBC(props: Props) {
+  return <Container>{renderTree(bbc.toTree(props.text))}</Container>
+}
+
+export default React.memo(BBC)
 
 const Container = styled.span`
   white-space: pre-line;
@@ -40,6 +35,21 @@ const Sup = styled.span`
 const Sub = styled.span`
   font-size: 75%;
 `
+
+const colors: { [color in string]?: string } = {
+  white: "rgb(236, 240, 241)",
+  black: "rgb(52, 73, 94)",
+  red: "rgb(236, 93, 93)",
+  blue: "rgb(52, 152, 219)",
+  yellow: "rgb(241, 196, 15)",
+  green: "rgb(46, 204, 113)",
+  pink: "rgb(255,164,156)",
+  gray: "rgb(149, 165, 166)",
+  orange: "rgb(230, 126, 34)",
+  purple: "rgb(201,135,228)",
+  brown: "rgb(211, 84, 0)",
+  cyan: "rgb(85, 175, 236)",
+}
 
 const Color = styled.span`
   color: ${({ color }: { color: string }) => colors[color] || "inherit"};
@@ -93,8 +103,12 @@ function renderTagNode(node: bbc.TagNode, index: number): React.ReactNode {
     case "url":
       return (
         <>
-          <LinkIcon icon="link" />
-          <Anchor href={node.value} target="_blank">
+          <Anchor
+            href={node.value}
+            target="_blank"
+            title={getDomain(node.value)}
+          >
+            <LinkIcon icon="link" />
             {renderTree(node.children)}
           </Anchor>
         </>
@@ -153,12 +167,11 @@ function getNodeText(node: bbc.TagNode): string {
   return first.text
 }
 
-type Props = {
-  text: string
+function getDomain(urlString: string) {
+  try {
+    const url = new URL(urlString)
+    return url.host
+  } catch {
+    return ""
+  }
 }
-
-function BBC(props: Props) {
-  return <Container>{renderTree(bbc.toTree(props.text))}</Container>
-}
-
-export default React.memo(BBC)
