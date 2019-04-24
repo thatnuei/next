@@ -3,7 +3,6 @@ import Chatbox from "../chat/Chatbox"
 import ChatRoomHeader from "../chat/ChatRoomHeader"
 import MessageList from "../message/MessageList"
 import { useRootStore } from "../RootStore"
-import AppDocumentTitle from "../ui/AppDocumentTitle"
 import { styled } from "../ui/styled"
 
 type PrivateChatRoomViewProps = {
@@ -11,19 +10,17 @@ type PrivateChatRoomViewProps = {
 }
 
 const PrivateChatRoomView = (props: PrivateChatRoomViewProps) => {
-  const { chatStore, privateChatStore } = useRootStore()
+  const { privateChatStore } = useRootStore()
   const chat = privateChatStore.privateChats.get(props.partnerName)
 
   return (
-    <AppDocumentTitle title={`${chatStore.identity} - ${props.partnerName}`}>
-      <Container>
-        <ChatRoomHeader>
-          <h2>{props.partnerName}</h2>
-        </ChatRoomHeader>
-        <MessageList messages={chat.messages} />
-        <Chatbox onSubmit={console.log} />
-      </Container>
-    </AppDocumentTitle>
+    <Container>
+      <ChatRoomHeader>
+        <h2>{props.partnerName}</h2>
+      </ChatRoomHeader>
+      <MessageList messages={chat.messages} />
+      <Chatbox onSubmit={console.log} />
+    </Container>
   )
 }
 

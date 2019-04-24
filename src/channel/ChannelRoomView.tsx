@@ -3,8 +3,6 @@ import React from "react"
 import Chatbox from "../chat/Chatbox"
 import ChatRoomHeader from "../chat/ChatRoomHeader"
 import MessageList from "../message/MessageList"
-import { useRootStore } from "../RootStore"
-import AppDocumentTitle from "../ui/AppDocumentTitle"
 import { scrollVertical } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import ChannelHeader from "./ChannelHeader"
@@ -15,22 +13,18 @@ type Props = {
 }
 
 function ChannelRoomView({ channel }: Props) {
-  const { chatStore } = useRootStore()
-
   return (
-    <AppDocumentTitle title={`${chatStore.identity} - ${channel.name}`}>
-      <Container>
-        <ChatRoomHeader>
-          <ChannelHeader channel={channel} />
-        </ChatRoomHeader>
+    <Container>
+      <ChatRoomHeader>
+        <ChannelHeader channel={channel} />
+      </ChatRoomHeader>
 
-        <MessageListContainer>
-          <MessageList messages={channel.filteredMessages} />
-        </MessageListContainer>
+      <MessageListContainer>
+        <MessageList messages={channel.filteredMessages} />
+      </MessageListContainer>
 
-        <Chatbox onSubmit={console.log} />
-      </Container>
-    </AppDocumentTitle>
+      <Chatbox onSubmit={console.log} />
+    </Container>
   )
 }
 export default observer(ChannelRoomView)

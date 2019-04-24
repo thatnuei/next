@@ -5,7 +5,6 @@ import React, { useEffect } from "react"
 import Avatar from "../character/Avatar"
 import { useRootStore } from "../RootStore"
 import Anchor from "../ui/Anchor"
-import AppDocumentTitle from "../ui/AppDocumentTitle"
 import Button from "../ui/Button"
 import ModalPanel from "../ui/ModalPanel"
 import ModalPanelHeader from "../ui/ModalPanelHeader"
@@ -48,31 +47,29 @@ function CharacterSelectModal() {
   }
 
   return (
-    <AppDocumentTitle title="Select Character">
-      <Layer animate={false}>
-        <ModalPanel>
-          <ModalPanelHeader>Select a Character</ModalPanelHeader>
+    <Layer animate={false}>
+      <ModalPanel>
+        <ModalPanelHeader>Select a Character</ModalPanelHeader>
 
-          <PanelBody onSubmit={handleSubmit}>
-            <Avatar key={identity} name={identity} />
+        <PanelBody onSubmit={handleSubmit}>
+          <Avatar key={identity} name={identity} />
 
-            <Select name="character" value={identity} onChange={handleChange}>
-              {characters.map((name) => (
-                <option value={name} key={name}>
-                  {name}
-                </option>
-              ))}
-            </Select>
+          <Select name="character" value={identity} onChange={handleChange}>
+            {characters.map((name) => (
+              <option value={name} key={name}>
+                {name}
+              </option>
+            ))}
+          </Select>
 
-            <Button primary type="submit" label="Enter Chat" />
+          <Button primary type="submit" label="Enter Chat" />
 
-            <Anchor as="button" type="button" onClick={showLogin}>
-              Return to Login
-            </Anchor>
-          </PanelBody>
-        </ModalPanel>
-      </Layer>
-    </AppDocumentTitle>
+          <Anchor as="button" type="button" onClick={showLogin}>
+            Return to Login
+          </Anchor>
+        </PanelBody>
+      </ModalPanel>
+    </Layer>
   )
 }
 export default observer(CharacterSelectModal)
