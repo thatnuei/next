@@ -2,7 +2,7 @@ import { textColor } from "./colors"
 import { styled } from "./styled"
 
 const Anchor = styled.a`
-  opacity: 0.6;
+  opacity: 0.7;
   transition: 0.2s opacity;
   border-bottom: 1px solid ${textColor};
   display: inline-block;
@@ -11,7 +11,7 @@ const Anchor = styled.a`
 
   :hover,
   :focus {
-    opacity: 0.9;
+    opacity: 1;
     cursor: pointer;
   }
 `
