@@ -3,6 +3,7 @@ import React from "react"
 import styled, { CSSObject } from "styled-components"
 import CharacterName from "../character/CharacterName"
 import { useRootStore } from "../RootStore"
+import BBC from "../ui/BBC"
 import { semiBlack } from "../ui/colors"
 import { css } from "../ui/styled"
 import { MessageType } from "./types"
@@ -16,6 +17,7 @@ type Props = {
 
 const actionRegex = /^\s*\/me\s*/
 
+// TODO: rename to Message
 const MessageListItem = ({ senderName, text, type, time }: Props) => {
   const { characterStore } = useRootStore()
 
@@ -32,7 +34,7 @@ const MessageListItem = ({ senderName, text, type, time }: Props) => {
       <SenderText>
         {sender ? <CharacterName {...sender} /> : <strong>System</strong>}
       </SenderText>
-      <MessageText dangerouslySetInnerHTML={{ __html: parsedText }} />
+      <BBC text={parsedText} />
     </Container>
   )
 }
@@ -51,10 +53,6 @@ const Container = styled.li`
 
 const SenderText = styled.span`
   margin-right: 8px;
-`
-
-const MessageText = styled.span`
-  white-space: pre-line;
 `
 
 const DateText = styled.span`

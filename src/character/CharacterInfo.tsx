@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import React, { ComponentPropsWithoutRef } from "react"
 import { getProfileUrl } from "../flist/helpers"
 import { useRootStore } from "../RootStore"
+import BBC from "../ui/BBC"
 import ExternalLink from "../ui/ExternalLink"
 import { ThemeColor } from "../ui/theme"
 import Avatar from "./Avatar"
@@ -32,7 +33,12 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
       <Box background={ThemeColor.bgShaded} pad="xsmall">
         <Text size="small" style={{ fontStyle: "italic" }}>
           <span style={statusStyle}>{status}</span>
-          <span>{statusMessage ? ` - ${statusMessage}` : ""}</span>
+          {statusMessage ? (
+            <span>
+              {" "}
+              - <BBC text={statusMessage} />
+            </span>
+          ) : null}
         </Text>
       </Box>
     </Box>

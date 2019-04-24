@@ -7,3 +7,7 @@ export function getAvatarUrl(name: string) {
 export function getProfileUrl(name: string) {
   return `https://www.f-list.net/c/${lowerEncode(name)}`
 }
+
+export function getIconUrl(name: string) {
+  return `https://static.f-list.net/images/eicon/${lowerEncode(name)}.gif`
+}

@@ -19,6 +19,7 @@
     "@mdi/js": "^3.5.95",
     "@mdi/react": "^1.1.0",
     "@reach/rect": "^0.2.1",
+    "bbc.js": "https://github.com/kingdaro/bbc.js.git",
     "cross-env": "^5.2.0",
     "fchat": "^1.4.0",
     "grommet": "^2.6.5",

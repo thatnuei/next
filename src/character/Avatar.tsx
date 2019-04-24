@@ -21,6 +21,7 @@ const Avatar = (props: Props) => {
       width={props.size || 100}
       height={props.size || 100}
       style={style}
+      title={props.name}
       onLoad={handleLoad}
       alt=""
       role="presentation"

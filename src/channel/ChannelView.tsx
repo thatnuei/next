@@ -4,6 +4,7 @@ import React, { useContext } from "react"
 import Chatbox from "../chat/Chatbox"
 import { NavigationOverlayContext } from "../chat/ChatScreen"
 import MessageList from "../message/MessageList"
+import BBC from "../ui/BBC"
 import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
 import SideOverlay from "../ui/SideOverlay"
@@ -35,6 +36,7 @@ function ChannelView({ channel }: Props) {
     </Box>
   )
 
+  // TODO: animate this
   const channelDescription = (
     <Box
       pad="small"
@@ -47,10 +49,7 @@ function ChannelView({ channel }: Props) {
         maxHeight: "50vh",
       }}
     >
-      <Text
-        style={{ whiteSpace: "pre-line" }}
-        dangerouslySetInnerHTML={{ __html: channel.description }}
-      />
+      <BBC text={channel.description} />
     </Box>
   )
 
@@ -112,6 +111,8 @@ function ChannelView({ channel }: Props) {
         <SideOverlay
           anchor="right"
           visible={userListOverlay.on}
+          // TODO: instead of stopping propagation, use an onShadeClick prop
+          // stopPropagation prevents the user menu from closing
           onClick={userListOverlay.disable}
         >
           <Box elevation="large" onClick={(e) => e.stopPropagation()}>

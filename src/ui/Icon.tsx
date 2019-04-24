@@ -5,7 +5,7 @@ import * as icons from "./icons"
 import { styled } from "./styled"
 
 type IconProps = React.ComponentPropsWithoutRef<"div"> & {
-  icon: keyof typeof icons
+  icon: keyof typeof icons // TODO: rename to "name"
   color?: string
   size?: number
 }
