@@ -20,7 +20,12 @@ export default class RootStore {
 
   constructor(public api = new FListApiService(), public storage = idb) {}
 
-  async init() {
+  init() {
+    this.restoreSession().catch(console.error)
+    this.viewStore.createDocumentTitleReaction()
+  }
+
+  private async restoreSession() {
     try {
       await this.userStore.restoreUserData()
       this.viewStore.showCharacterSelect()
@@ -32,6 +37,7 @@ export default class RootStore {
 
   cleanup() {
     this.socketStore.disconnectFromChat()
+    this.viewStore.removeDocumentTitleReaction()
   }
 }
 
