@@ -5433,12 +5433,7 @@ mem@^4.0.0:
     mimic-fn "^2.0.0"
     p-is-promise "^2.0.0"
 
-memoize-one@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.npmjs.org/memoize-one/-/memoize-one-3.1.1.tgz#ef609811e3bc28970eac2884eece64d167830d17"
-  integrity sha512-YqVh744GsMlZu6xkhGslPSqSurOv6P+kLN2J3ysBZfagLcL5FdRK/0UpgLoL8hwjjEvvAVkjJZyFP+1T6p1vgA==
-
-memoize-one@^5.0.0:
+"memoize-one@>=3.1.1 <6", memoize-one@^5.0.0:
   version "5.0.4"
   resolved "https://registry.npmjs.org/memoize-one/-/memoize-one-5.0.4.tgz#005928aced5c43d890a4dfab18ca908b0ec92cbc"
   integrity sha512-P0z5IeAH6qHHGkJIXWw0xC2HNEgkx/9uWWBQw64FJj3/ol14VYdfVGWWr0fXfjhhv3TKVIqUq65os6O4GUNksA==
@@ -6615,13 +6610,13 @@ react-testing-library@^6.1.2:
     "@babel/runtime" "^7.4.2"
     dom-testing-library "^3.19.0"
 
-react-window@^1.6.0-alpha.1:
-  version "1.6.0-alpha.1"
-  resolved "https://registry.npmjs.org/react-window/-/react-window-1.6.0-alpha.1.tgz#6ffbf8168a1325512fe0127582ee2672ecadb67a"
-  integrity sha512-Q4Yg/rnVHTSjHdqVuTnZFTD3cwEzXFxFMyEZ5ihK3qu/NLiiFA67M1WM/Q558VmGUQumtJAW5oxKoo5JcdqoOQ==
+react-window@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.npmjs.org/react-window/-/react-window-1.8.1.tgz#12f1db71d91552ed2263790e57cc77d950803db1"
+  integrity sha512-iNzekymggL9zAnil3QbmRG74RDMfIbO+plE/soP3M/zskicA1DwoLthC6/QA6xu9dr+A5UoawCTsEYcva2mfeA==
   dependencies:
     "@babel/runtime" "^7.0.0"
-    memoize-one "^3.1.1"
+    memoize-one ">=3.1.1 <6"
 
 react@^16.8.6:
   version "16.8.6"

@@ -33,7 +33,7 @@
     "react": "^16.8.6",
     "react-document-title": "https://github.com/serprex/react-document-title.git#8a5277204ee8d2427457275379e8c6248a7a45df",
     "react-dom": "^16.8.6",
-    "react-window": "^1.6.0-alpha.1",
+    "react-window": "^1.8.1",
     "styled-components": "^4.2.0",
     "uuid": "^3.3.2"
   },
