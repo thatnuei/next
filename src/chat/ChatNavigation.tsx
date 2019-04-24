@@ -40,6 +40,7 @@ function ChatNavigation() {
 
           {channelStore.channels.values.map((channel) => (
             <RoomTab
+              key={channel.id}
               icon={<Icon icon="channels" size={0.9} />}
               title={channel.name}
               active={viewStore.isChannelActive(channel.id)}
