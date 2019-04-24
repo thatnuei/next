@@ -21,6 +21,7 @@
     "@reach/rect": "^0.2.1",
     "bbc.js": "https://github.com/kingdaro/bbc.js.git",
     "cross-env": "^5.2.0",
+    "eslint-plugin-react": "^7.12.4",
     "fchat": "^1.4.0",
     "grommet": "^2.6.5",
     "idb-keyval": "^3.2.0",
