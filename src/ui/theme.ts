@@ -1,6 +1,7 @@
-import { base as baseTheme } from "grommet/themes"
+import { base as baseGrommetTheme } from "grommet/themes"
 import { rgb, rgba, shade } from "polished"
 import * as styledComponents from "styled-components"
+import { baseTheme } from "./theme.new"
 
 const midnight = rgb(38, 65, 94)
 const clouds = rgb(236, 240, 241)
@@ -13,7 +14,7 @@ const themeColor = midnight
 const primaryColor = shade(0.15, river)
 const textColor = clouds
 
-export type AppTheme = typeof baseTheme & typeof darkTheme
+export type AppTheme = typeof baseGrommetTheme & typeof darkTheme
 
 export enum ThemeColor {
   bg = "bg",
@@ -33,6 +34,7 @@ const generateHeadingLevels = (sizes: string[]) => {
 }
 
 export const darkTheme = {
+  ...baseTheme,
   global: {
     font: {
       family: "Roboto, sans-serif",

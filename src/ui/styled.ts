@@ -1,2 +1,9 @@
 /// <reference types="styled-components/cssprop" />
-export { css, keyframes, styled } from "./theme"
+import * as sc from "styled-components"
+import { AppTheme } from "./theme.new"
+
+export const {
+  default: styled,
+  css,
+  keyframes,
+} = sc as sc.ThemedStyledComponentsModule<AppTheme>
