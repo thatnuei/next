@@ -1,17 +1,18 @@
-import { Box, Heading } from "grommet"
+import { shade } from "polished"
 import React from "react"
-import { ThemeColor } from "./theme"
+import { withTheme } from "styled-components"
+import Box from "./Box"
+import { AppTheme } from "./theme.new"
 
 type Props = {
   children?: React.ReactNode
+  theme: AppTheme
 }
 
 const ModalPanelHeader = (props: Props) => (
-  <Box background={ThemeColor.bgDark} pad="small">
-    <Heading level="1" textAlign="center">
-      {props.children}
-    </Heading>
+  <Box background={shade(0.3, props.theme.colors.theme)} pad="12px 24px">
+    <h1>{props.children}</h1>
   </Box>
 )
 
-export default ModalPanelHeader
+export default withTheme(ModalPanelHeader)

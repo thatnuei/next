@@ -1,11 +1,12 @@
-import { Box } from "grommet"
 import React from "react"
-import { ThemeColor } from "./theme"
+import { withTheme } from "styled-components"
+import Box from "./Box"
+import { AppTheme } from "./theme.new"
 
-const ModalPanel = (props: { children?: React.ReactNode }) => (
-  <Box background={ThemeColor.bg} elevation="medium">
+const ModalPanel = (props: { children?: React.ReactNode; theme: AppTheme }) => (
+  <Box background={props.theme.colors.theme} elevated>
     {props.children}
   </Box>
 )
 
-export default ModalPanel
+export default withTheme(ModalPanel)

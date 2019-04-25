@@ -1,15 +1,14 @@
-import { Layer } from "grommet"
 import * as idb from "idb-keyval"
 import { observer } from "mobx-react-lite"
 import React, { useEffect } from "react"
 import Avatar from "../character/Avatar"
 import { useRootStore } from "../RootStore"
 import Anchor from "../ui/Anchor"
+import Box from "../ui/Box"
 import Button from "../ui/Button"
 import ModalPanel from "../ui/ModalPanel"
 import ModalPanelHeader from "../ui/ModalPanelHeader"
 import Select from "../ui/Select"
-import { styled } from "../ui/styled"
 
 const lastCharacterKey = (account: string) => `${account}:lastCharacter`
 
@@ -47,11 +46,11 @@ function CharacterSelectModal() {
   }
 
   return (
-    <Layer animate={false}>
+    <Box height="100vh" align="center" justify="center">
       <ModalPanel>
         <ModalPanelHeader>Select a Character</ModalPanelHeader>
 
-        <PanelBody onSubmit={handleSubmit}>
+        <Box as="form" align="center" gap={16} pad={16} onSubmit={handleSubmit}>
           <Avatar key={identity} name={identity} />
 
           <Select name="character" value={identity} onChange={handleChange}>
@@ -67,19 +66,9 @@ function CharacterSelectModal() {
           <Anchor as="button" type="button" onClick={showLogin}>
             Return to Login
           </Anchor>
-        </PanelBody>
+        </Box>
       </ModalPanel>
-    </Layer>
+    </Box>
   )
 }
 export default observer(CharacterSelectModal)
-
-const PanelBody = styled.form`
-  padding: 1rem;
-
-  display: grid;
-  grid-gap: 1.5rem;
-  grid-template-columns: max-content;
-  justify-items: center;
-  justify-content: center;
-`
