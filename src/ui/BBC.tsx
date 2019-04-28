@@ -78,12 +78,12 @@ function renderTree(nodes: bbc.Node[]): React.ReactNode {
           <span key={index} dangerouslySetInnerHTML={{ __html: node.text }} />
         )
       case "tag":
-        return <Fragment key={index}>{renderTagNode(node, index)}</Fragment>
+        return <Fragment key={index}>{renderTagNode(node)}</Fragment>
     }
   })
 }
 
-function renderTagNode(node: bbc.TagNode, index: number): React.ReactNode {
+function renderTagNode(node: bbc.TagNode): React.ReactNode {
   switch (node.tag) {
     case "b":
       return <Strong>{renderTree(node.children)}</Strong>
@@ -102,16 +102,10 @@ function renderTagNode(node: bbc.TagNode, index: number): React.ReactNode {
 
     case "url":
       return (
-        <>
-          <Anchor
-            href={node.value}
-            target="_blank"
-            title={getDomain(node.value)}
-          >
-            <LinkIcon icon="link" />
-            {renderTree(node.children)}
-          </Anchor>
-        </>
+        <Anchor href={node.value} target="_blank" title={getDomain(node.value)}>
+          <LinkIcon icon="link" />
+          {renderTree(node.children)}
+        </Anchor>
       )
 
     case "channel":
@@ -167,7 +161,7 @@ function getNodeText(node: bbc.TagNode): string {
   return first.text
 }
 
-function getDomain(urlString: string) {
+function getDomain(urlString: string): string {
   try {
     const url = new URL(urlString)
     return url.host
