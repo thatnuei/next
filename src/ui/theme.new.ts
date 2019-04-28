@@ -19,5 +19,15 @@ export const baseTheme = {
   },
 }
 
+export const gapSizes = {
+  none: "0",
+  hair: "1px",
+  xxsmall: "2px",
+  xsmall: "4px",
+  small: "6px",
+  medium: "10px",
+  large: "16px",
+}
+
 export type AppTheme = typeof baseTheme
 export type AppThemeColor = keyof AppTheme["colors"]

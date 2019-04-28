@@ -1,6 +1,7 @@
 import {} from "polished"
 import React, { ComponentPropsWithoutRef } from "react"
 import styled from "styled-components"
+import { gapSizes } from "./theme.new"
 
 type BoxProps = {
   as?: React.ElementType
@@ -33,7 +34,7 @@ type BoxProps = {
   gap?: number | string | boolean
 }
 
-const defaultGap = "6px"
+const defaultGap = gapSizes.small
 
 const Box = ({
   gap,
