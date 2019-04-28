@@ -1,13 +1,13 @@
 import {} from "polished"
 import React, { ComponentPropsWithoutRef } from "react"
-import styled from "styled-components"
-import { gapSizes } from "./theme.new"
+import { styled } from "./styled"
+import { AppThemeColor, gapSizes } from "./theme.new"
 
 type BoxProps = {
   as?: React.ElementType
   width?: number | string
   height?: number | string
-  background?: string
+  background?: AppThemeColor
   elevated?: boolean
   direction?: "row" | "column"
   align?: "center" | "flex-start" | "flex-end" | "stretch" | "baseline"
@@ -23,7 +23,7 @@ type BoxProps = {
   flexGrow?: number
   flexShrink?: number
   basis?: string | number
-  pad?: string | number
+  pad?: string | number | PadObject
 
   /**
    * @example
@@ -34,7 +34,14 @@ type BoxProps = {
   gap?: number | string | boolean
 }
 
-const defaultGap = gapSizes.small
+type PadObject = {
+  left?: string | number
+  right?: string | number
+  top?: string | number
+  bottom?: string | number
+  vertical?: string | number
+  horizontal?: string | number
+}
 
 const Box = ({
   gap,
@@ -59,6 +66,8 @@ const Box = ({
 
 export default Box
 
+const defaultGap = gapSizes.small
+
 const resolveUnit = (value: number | string | undefined) => {
   if (typeof value === "number") return `${value}px`
   return value
@@ -76,13 +85,34 @@ const resolveGapUnit = (value: BoxProps["gap"]) => {
   return resolveUnit(value)! // already checked for undefined
 }
 
+const resolvePad = (value: BoxProps["pad"]) => {
+  if (value == null) return ""
+
+  if (typeof value === "string" || typeof value === "number") {
+    return `padding: ${resolveUnit(value)}`
+  }
+
+  const left = resolveUnit(value.horizontal || value.left)
+  const right = resolveUnit(value.horizontal || value.right)
+  const top = resolveUnit(value.vertical || value.top)
+  const bottom = resolveUnit(value.vertical || value.bottom)
+
+  return `
+    padding-left: ${left};
+    padding-right: ${right};
+    padding-top: ${top};
+    padding-bottom: ${bottom};
+  `
+}
+
 const BoxElement = styled.div<BoxProps>`
   display: flex;
   flex-direction: ${(props) => props.direction || "column"};
   width: ${(props) => resolveUnit(props.width)};
   height: ${(props) => resolveUnit(props.height)};
-  padding: ${(props) => resolveUnit(props.pad)};
-  background-color: ${(props) => props.background};
+  ${(props) => resolvePad(props.pad)};
+  background-color: ${(props) =>
+    props.background ? props.theme.colors[props.background] : "transparent"};
   box-shadow: ${(props) => props.elevated && `0px 6px 8px rgba(0, 0, 0, 0.5)`};
   justify-content: ${(props) => props.justify};
   align-items: ${(props) => props.align};
