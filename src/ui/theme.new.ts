@@ -25,11 +25,12 @@ export const baseTheme = {
 export const gapSizes = {
   none: "0",
   hair: "1px",
-  xxsmall: "2px",
-  xsmall: "4px",
-  small: "6px",
-  medium: "12px",
-  large: "16px",
+  thin: "2px",
+  xxsmall: "3px",
+  xsmall: "6px",
+  small: "12px",
+  medium: "24px",
+  large: "32px",
 }
 
 export type AppTheme = typeof baseTheme

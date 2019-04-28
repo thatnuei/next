@@ -10,7 +10,7 @@ type Props = {
 }
 
 const ModalPanelHeader = (props: Props) => (
-  <Box background="theme1" pad={gapSizes.medium}>
+  <Box background="theme1" pad={gapSizes.small}>
     <Heading>{props.children}</Heading>
   </Box>
 )
