@@ -4,7 +4,7 @@ import Box from "./Box"
 import { AppTheme } from "./theme.new"
 
 const ModalPanel = (props: { children?: React.ReactNode; theme: AppTheme }) => (
-  <Box background={props.theme.colors.theme} elevated>
+  <Box background="theme0" elevated>
     {props.children}
   </Box>
 )
