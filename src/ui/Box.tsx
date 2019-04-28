@@ -113,7 +113,7 @@ const BoxElement = styled.div<BoxProps>`
   ${(props) => resolvePad(props.pad)};
   background-color: ${(props) =>
     props.background ? props.theme.colors[props.background] : "transparent"};
-  box-shadow: ${(props) => props.elevated && `0px 6px 8px rgba(0, 0, 0, 0.5)`};
+  box-shadow: ${(props) => props.elevated && `0px 6px 8px rgba(0, 0, 0, 0.3)`};
   justify-content: ${(props) => props.justify};
   align-items: ${(props) => props.align};
   align-content: ${(props) => props.alignContent};
