@@ -1,6 +1,7 @@
 import * as bbc from "bbc.js"
 import React, { Fragment } from "react"
 import Avatar from "../character/Avatar"
+import CharacterName from "../character/CharacterName"
 import { getIconUrl, getProfileUrl } from "../flist/helpers"
 import Anchor from "./Anchor"
 import Icon from "./Icon"
@@ -124,14 +125,17 @@ function renderTagNode(node: bbc.TagNode): React.ReactNode {
         </>
       )
 
-    case "icon":
-    case "user": {
+    case "icon": {
       const userName = getNodeText(node)
       return (
         <a href={getProfileUrl(userName)} target="_blank">
           <Avatar name={userName} size={50} />
         </a>
       )
+    }
+
+    case "user": {
+      return <CharacterName name={getNodeText(node)} />
     }
 
     case "eicon": {
