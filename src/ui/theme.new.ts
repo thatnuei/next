@@ -13,7 +13,10 @@ const textColor = clouds
 
 export const baseTheme = {
   colors: {
-    theme: themeColor,
+    theme0: themeColor,
+    theme1: shade(0.3, themeColor),
+    theme2: shade(0.5, themeColor),
+    theme3: shade(0.8, themeColor),
     primary: primaryColor,
     text: textColor,
   },
@@ -25,7 +28,7 @@ export const gapSizes = {
   xxsmall: "2px",
   xsmall: "4px",
   small: "6px",
-  medium: "10px",
+  medium: "12px",
   large: "16px",
 }
 
