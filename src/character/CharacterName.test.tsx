@@ -1,15 +1,27 @@
 import React from "react"
 import { fireEvent, render } from "react-testing-library"
+import RootStore, { RootStoreContext } from "../RootStore"
 import { CharacterMenuProvider } from "./CharacterMenuContext"
+import CharacterModel from "./CharacterModel"
 import CharacterName from "./CharacterName"
 
 describe("CharacterName", () => {
-  const setup = () =>
-    render(
-      <CharacterMenuProvider>
-        <CharacterName name="Testificate" gender="Male" status="online" />
-      </CharacterMenuProvider>,
+  const setup = () => {
+    const store = new RootStore()
+
+    store.characterStore.characters.set(
+      "Testificate",
+      new CharacterModel("Testificate", "Male", "online"),
     )
+
+    return render(
+      <RootStoreContext.Provider value={store}>
+        <CharacterMenuProvider>
+          <CharacterName name="Testificate" />
+        </CharacterMenuProvider>
+      </RootStoreContext.Provider>,
+    )
+  }
 
   it("renders the character name", () => {
     const { queryByText } = setup()

@@ -32,7 +32,11 @@ const MessageListItem = ({ senderName, text, type, time }: Props) => {
     <Container css={[highlightStyles[type], isAction && actionStyle]}>
       <DateText>{new Date(time).toLocaleTimeString()}</DateText>
       <SenderText>
-        {sender ? <CharacterName {...sender} /> : <strong>System</strong>}
+        {sender ? (
+          <CharacterName name={sender.name} />
+        ) : (
+          <strong>System</strong>
+        )}
       </SenderText>
       <BBC text={parsedText} />
     </Container>

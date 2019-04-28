@@ -32,7 +32,7 @@ function ChannelUserList({ channel }: { channel: ChannelModel }) {
 
     return (
       <Box pad="xsmall" justify="center" style={fullStyle}>
-        <CharacterName key={character.name} {...character} />
+        <CharacterName name={character.name} />
       </Box>
     )
   }

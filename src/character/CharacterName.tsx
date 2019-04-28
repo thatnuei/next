@@ -1,24 +1,21 @@
 import React from "react"
 import { getProfileUrl } from "../flist/helpers"
+import { useRootStore } from "../RootStore"
 import ExternalLink from "../ui/ExternalLink"
 import { styled } from "../ui/styled"
 import { useCharacterMenuContext } from "./CharacterMenuContext"
 import { genderColors, statusColors } from "./colors"
-import { CharacterStatus, Gender } from "./types"
 
-type CharacterNameProps = {
-  name: string
-  gender: Gender
-  status: CharacterStatus
-}
+const CharacterName = (props: { name: string }) => {
+  const { characterStore } = useRootStore()
+  const char = characterStore.characters.get(props.name)
 
-const CharacterName = (props: CharacterNameProps) => {
   const menu = useCharacterMenuContext()
 
   const profileUrl = getProfileUrl(props.name)
 
-  const nameStyle = { color: genderColors[props.gender] }
-  const statusDotStyle = { backgroundColor: statusColors[props.status] }
+  const nameStyle = { color: genderColors[char.gender] }
+  const statusDotStyle = { backgroundColor: statusColors[char.status] }
 
   const openCharacterMenu = (event: React.MouseEvent) => {
     event.preventDefault()
@@ -27,15 +24,15 @@ const CharacterName = (props: CharacterNameProps) => {
 
   return (
     <ContainerLink href={profileUrl} onContextMenu={openCharacterMenu}>
-      <StatusDot title={`Status: ${props.status}`} style={statusDotStyle} />
-      <NameText title={`${props.name} - ${props.gender}`} style={nameStyle}>
+      <StatusDot title={`Status: ${char.status}`} style={statusDotStyle} />
+      <NameText title={`${props.name} - ${char.gender}`} style={nameStyle}>
         {props.name}
       </NameText>
     </ContainerLink>
   )
 }
 
-export default React.memo(CharacterName)
+export default CharacterName
 
 const ContainerLink = styled(ExternalLink)`
   display: inline-flex;
