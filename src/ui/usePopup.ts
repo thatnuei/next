@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useState } from "react"
+import { useLayoutEffect, useState } from "react"
 
 function usePopup(ref: React.RefObject<HTMLElement>) {
   const [isVisible, setIsVisible] = useState(false)
@@ -16,17 +16,15 @@ function usePopup(ref: React.RefObject<HTMLElement>) {
     })
   }, [position.x, position.y, ref])
 
-  return useMemo(() => {
-    const openAt = (position: { x: number; y: number }) => {
-      setPosition(position)
-      setIsVisible(true)
-    }
+  const openAt = (position: { x: number; y: number }) => {
+    setPosition(position)
+    setIsVisible(true)
+  }
 
-    const close = () => {
-      setIsVisible(false)
-    }
+  const close = () => {
+    setIsVisible(false)
+  }
 
-    return { openAt, close, isVisible, style }
-  }, [isVisible, style])
+  return { openAt, close, isVisible, style }
 }
 export default usePopup
