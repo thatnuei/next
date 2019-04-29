@@ -4,6 +4,7 @@ import Avatar from "../character/Avatar"
 import CharacterInfo from "../character/CharacterInfo"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
+import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
 import { gapSizes } from "../ui/theme"
 import { NavigationOverlayContext } from "./ChatScreen"
@@ -17,11 +18,19 @@ function ChatNavigation() {
     <Box as="nav" direction="row" style={{ height: "100%" }}>
       <Box pad={gapSizes.small} background="theme2">
         <Box flex gap={gapSizes.medium}>
-          <Icon style={{ opacity: 0.5 }} icon="channels" />
-          <Icon style={{ opacity: 0.5 }} icon="updateStatus" />
-          <Icon style={{ opacity: 0.5 }} icon="about" />
+          <FadedButton>
+            <Icon icon="channels" />
+          </FadedButton>
+          <FadedButton>
+            <Icon icon="updateStatus" />
+          </FadedButton>
+          <FadedButton>
+            <Icon icon="about" />
+          </FadedButton>
         </Box>
-        <Icon icon="logout" style={{ opacity: 0.5 }} />
+        <FadedButton>
+          <Icon icon="logout" style={{ opacity: 0.5 }} />
+        </FadedButton>
       </Box>
 
       <Box width={200} background="theme1" overflowY="auto">
