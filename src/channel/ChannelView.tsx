@@ -1,6 +1,5 @@
 import { observer } from "mobx-react-lite"
 import React, { useContext } from "react"
-import ChannelFilters from "../chat/ChannelFilters"
 import Chatbox from "../chat/Chatbox"
 import { NavigationOverlayContext } from "../chat/ChatScreen"
 import MessageList from "../message/MessageList"
@@ -12,6 +11,8 @@ import SideOverlay from "../ui/SideOverlay"
 import { gapSizes } from "../ui/theme"
 import useMedia from "../ui/useMedia"
 import useToggleState from "../ui/useToggleState"
+import ChannelDescriptionOverlay from "./ChannelDescriptionOverlay"
+import ChannelFilters from "./ChannelFilters"
 import ChannelModel from "./ChannelModel"
 import ChannelUserList from "./ChannelUserList"
 
@@ -21,26 +22,9 @@ type Props = { channel: ChannelModel }
 
 function ChannelView({ channel }: Props) {
   const userListVisible = useMedia(`(min-width: ${userListBreakpoint}px)`)
-  const descriptionUi = useToggleState()
+  const descriptionUi = useToggleState(true)
   const userListOverlay = useToggleState()
   const navOverlayContext = useContext(NavigationOverlayContext)
-
-  // TODO: animate this
-  const channelDescription = (
-    <Box
-      pad={gapSizes.small}
-      overflowY="auto"
-      background="theme1"
-      style={{
-        position: "absolute",
-        top: "100%",
-        zIndex: 1,
-        maxHeight: "50vh",
-      }}
-    >
-      <BBC text={channel.description} />
-    </Box>
-  )
 
   const channelHeader = (
     <Box background="theme0" style={{ position: "relative" }}>
@@ -74,8 +58,6 @@ function ChannelView({ channel }: Props) {
           </FadedButton>
         )}
       </Box>
-
-      {descriptionUi.on && channelDescription}
     </Box>
   )
 
@@ -87,7 +69,14 @@ function ChannelView({ channel }: Props) {
           <Box flex>
             {channelHeader}
 
-            <Box flex background="theme1">
+            <Box flex background="theme1" style={{ position: "relative" }}>
+              <ChannelDescriptionOverlay
+                isVisible={descriptionUi.on}
+                onClose={descriptionUi.disable}
+              >
+                <BBC text={channel.description} />
+              </ChannelDescriptionOverlay>
+
               <MessageList messages={channel.filteredMessages} />
             </Box>
           </Box>
