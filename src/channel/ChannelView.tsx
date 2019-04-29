@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, { useContext } from "react"
+import ChannelFilters from "../chat/ChannelFilters"
 import Chatbox from "../chat/Chatbox"
 import { NavigationOverlayContext } from "../chat/ChatScreen"
 import MessageList from "../message/MessageList"
@@ -23,14 +24,6 @@ function ChannelView({ channel }: Props) {
   const descriptionUi = useToggleState()
   const userListOverlay = useToggleState()
   const navOverlayContext = useContext(NavigationOverlayContext)
-
-  const channelFilters = (
-    <Box direction="row" gap={gapSizes.small}>
-      <span style={{ opacity: 0.5 }}>Both</span>
-      <span>Chat</span>
-      <span style={{ opacity: 0.5 }}>Ads</span>
-    </Box>
-  )
 
   // TODO: animate this
   const channelDescription = (
@@ -73,7 +66,7 @@ function ChannelView({ channel }: Props) {
           </Box>
         </Box>
 
-        {channelFilters}
+        <ChannelFilters channel={channel} />
 
         {!userListVisible && (
           <FadedButton onClick={userListOverlay.enable}>
@@ -95,7 +88,7 @@ function ChannelView({ channel }: Props) {
             {channelHeader}
 
             <Box flex background="theme1">
-              <MessageList messages={channel.messages} />
+              <MessageList messages={channel.filteredMessages} />
             </Box>
           </Box>
 
