@@ -1,5 +1,12 @@
-import { styled } from "./styled"
+import { css, styled } from "./styled"
 import { gapSizes } from "./theme"
+
+export const pressEffect = css`
+  :active {
+    transform: translateY(2px);
+    transition: none;
+  }
+`
 
 const Button = styled.button`
   padding: ${gapSizes.xsmall} ${gapSizes.small};
@@ -17,11 +24,7 @@ const Button = styled.button`
     background-color: rgba(0, 0, 0, 0.8);
   }
 
-  /* press effect */
-  :active {
-    transform: translateY(2px);
-    transition: none;
-  }
+  ${pressEffect};
 `
 
 Button.defaultProps = {
