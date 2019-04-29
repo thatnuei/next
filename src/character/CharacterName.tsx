@@ -33,8 +33,7 @@ export default observer(CharacterName)
 
 const ContainerButton = styled.button`
   display: inline-flex;
-  align-items: center;
-  vertical-align: top;
+  align-items: baseline;
   cursor: pointer;
   :focus {
     outline: none;
@@ -51,4 +50,5 @@ const StatusDot = styled.span`
   border-radius: 50%;
   margin-right: 4px;
   flex-shrink: 0; /* prevents being squished when word-wrapping */
+  align-self: center;
 `
