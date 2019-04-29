@@ -63,7 +63,7 @@ function ChannelView({ channel }: Props) {
 
   return (
     <>
-      <Box as="main" flex gap={gapSizes.xsmall}>
+      <Box as="main" flex>
         {/* room content */}
         <Box direction="row" flex gap={gapSizes.xsmall}>
           <Box flex>
