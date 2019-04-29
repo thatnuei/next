@@ -1,4 +1,3 @@
-import { TextInput } from "grommet"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRootStore } from "../RootStore"
@@ -7,6 +6,7 @@ import Box from "../ui/Box"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
 import ModalPanelHeader from "../ui/ModalPanelHeader"
+import TextInput from "../ui/TextInput"
 import { gapSizes } from "../ui/theme.new"
 
 function LoginModal() {

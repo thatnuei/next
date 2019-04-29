@@ -1,5 +1,6 @@
-import { Box, Text } from "grommet"
 import React, { ComponentPropsWithoutRef } from "react"
+import Box from "./Box"
+import { gapSizes } from "./theme.new"
 
 type Props = ComponentPropsWithoutRef<"label"> & {
   labelText: string
@@ -8,9 +9,7 @@ type Props = ComponentPropsWithoutRef<"label"> & {
 export default function FormField({ labelText, children, ...props }: Props) {
   return (
     <label {...props}>
-      <Box margin={{ bottom: "xxsmall" }}>
-        <Text>{labelText}</Text>
-      </Box>
+      <Box margin={{ bottom: gapSizes.xxsmall }}>{labelText}</Box>
       {children}
     </label>
   )

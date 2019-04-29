@@ -1,11 +1,10 @@
-import { Box, Heading, Text } from "grommet"
 import { observer } from "mobx-react-lite"
 import React, { ComponentPropsWithoutRef } from "react"
 import { getProfileUrl } from "../flist/helpers"
 import { useRootStore } from "../RootStore"
 import BBC from "../ui/BBC"
+import Box from "../ui/Box"
 import ExternalLink from "../ui/ExternalLink"
-import { ThemeColor } from "../ui/theme"
 import Avatar from "./Avatar"
 import { genderColors, statusColors } from "./colors"
 
@@ -22,24 +21,20 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
 
   return (
     <Box gap="small" {...containerProps}>
-      <ExternalLink href={getProfileUrl(name)}>
-        <Heading level="2" style={nameStyle}>
-          {name}
-        </Heading>
+      <ExternalLink href={getProfileUrl(name)} style={nameStyle}>
+        {name}
       </ExternalLink>
 
       <Avatar key={name} name={name} size={80} />
 
-      <Box background={ThemeColor.bgShaded} pad="xsmall">
-        <Text size="small" style={{ fontStyle: "italic" }}>
-          <span style={statusStyle}>{status}</span>
-          {statusMessage ? (
-            <span>
-              {" "}
-              - <BBC text={statusMessage} />
-            </span>
-          ) : null}
-        </Text>
+      <Box background="theme2" pad="xsmall" style={{ fontStyle: "italic" }}>
+        <span style={statusStyle}>{status}</span>
+        {statusMessage ? (
+          <span>
+            {" "}
+            - <BBC text={statusMessage} />
+          </span>
+        ) : null}
       </Box>
     </Box>
   )

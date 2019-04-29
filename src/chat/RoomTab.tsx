@@ -1,7 +1,6 @@
-import { Box, Text } from "grommet"
 import React from "react"
+import Box from "../ui/Box"
 import Icon from "../ui/Icon"
-import { ThemeColor } from "../ui/theme"
 
 type Props = {
   icon?: React.ReactNode
@@ -15,7 +14,7 @@ export default function RoomTab({ onClick = () => {}, ...props }: Props) {
   return (
     <Box
       direction="row"
-      background={props.active ? ThemeColor.bg : undefined}
+      background={props.active ? "theme0" : undefined}
       style={{ opacity: props.active ? 1 : 0.5 }}
     >
       <Box
@@ -29,7 +28,7 @@ export default function RoomTab({ onClick = () => {}, ...props }: Props) {
       >
         {props.icon}
         <Box flex pad={{ vertical: "xxsmall" }}>
-          <Text>{props.title}</Text>
+          {props.title}
         </Box>
       </Box>
 

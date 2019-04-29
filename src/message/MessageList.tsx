@@ -1,6 +1,6 @@
-import { Box } from "grommet"
 import { observer } from "mobx-react-lite"
 import React, { useCallback, useLayoutEffect, useRef } from "react"
+import Box from "../ui/Box"
 import MessageListItem from "./MessageListItem"
 import MessageModel from "./MessageModel"
 

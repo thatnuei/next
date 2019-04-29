@@ -1,8 +1,9 @@
-import { Box, TextArea } from "grommet"
 import React from "react"
 import { useRootStore } from "../RootStore"
 import useInput from "../state/useInput"
+import Box from "../ui/Box"
 import Button from "../ui/Button"
+import TextArea from "../ui/TextArea"
 
 type Props = {
   onSubmit: (message: string) => void

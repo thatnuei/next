@@ -24,6 +24,7 @@ type BoxProps = {
   flexShrink?: number
   basis?: string | number
   pad?: string | number | PadObject
+  margin?: any // TODO
 
   /**
    * @example
@@ -32,6 +33,8 @@ type BoxProps = {
    * gap          // shorthand, use default gap
    */
   gap?: number | string | boolean
+
+  overflow?: any // TODO (also add translateZ(0))
 }
 
 type PadObject = {
@@ -43,11 +46,10 @@ type PadObject = {
   horizontal?: string | number
 }
 
-const Box = ({
-  gap,
-  children,
-  ...props
-}: ComponentPropsWithoutRef<"div"> & BoxProps) => {
+const Box = (
+  { gap, children, ...props }: ComponentPropsWithoutRef<"div"> & BoxProps,
+  ref: React.Ref<HTMLDivElement>,
+) => {
   let elements: React.ReactNode[] = []
 
   const gapUnit = resolveGapUnit(gap)
@@ -61,10 +63,14 @@ const Box = ({
     elements.push(childrenArray[childrenArray.length - 1])
   }
 
-  return <BoxElement {...props}>{elements}</BoxElement>
+  return (
+    <BoxElement {...props} ref={ref}>
+      {elements}
+    </BoxElement>
+  )
 }
 
-export default Box
+export default React.forwardRef(Box)
 
 const defaultGap = gapSizes.small
 

@@ -1,12 +1,11 @@
-import { Box } from "grommet"
 import { observer } from "mobx-react-lite"
 import { cover } from "polished"
 import React, { useMemo } from "react"
 import ChannelView from "../channel/ChannelView"
 import { CharacterMenuProvider } from "../character/CharacterMenuContext"
 import { useRootStore } from "../RootStore"
+import Box from "../ui/Box"
 import SideOverlay from "../ui/SideOverlay"
-import { ThemeColor } from "../ui/theme"
 import useMedia from "../ui/useMedia"
 import useToggleState from "../ui/useToggleState"
 import ChatNavigation from "./ChatNavigation"
@@ -48,12 +47,7 @@ const ChatScreen = () => {
 
   return (
     <CharacterMenuProvider>
-      <Box
-        direction="row"
-        gap="xsmall"
-        style={cover()}
-        background={ThemeColor.bgDivision}
-      >
+      <Box direction="row" gap="xsmall" style={cover()} background="theme2">
         {navigationVisible && <ChatNavigation />}
 
         <NavigationOverlayContext.Provider value={navigationOverlayContext}>
@@ -66,7 +60,7 @@ const ChatScreen = () => {
         visible={navigationOverlay.on}
         onClick={navigationOverlay.disable}
       >
-        <Box elevation="large" onClick={(e) => e.stopPropagation()}>
+        <Box elevated onClick={(e) => e.stopPropagation()}>
           <ChatNavigation />
         </Box>
       </SideOverlay>

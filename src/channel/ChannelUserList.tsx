@@ -1,19 +1,19 @@
 import { useRect } from "@reach/rect"
-import { Box } from "grommet"
 import { observer } from "mobx-react-lite"
 import { rgba } from "polished"
 import React, { CSSProperties, useRef } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
 import CharacterName from "../character/CharacterName"
 import { useRootStore } from "../RootStore"
-import { ThemeColor } from "../ui/theme"
+import Box from "../ui/Box"
+import { gapSizes } from "../ui/theme.new"
 import ChannelModel from "./ChannelModel"
 
 function ChannelUserList({ channel }: { channel: ChannelModel }) {
   const { chatStore } = useRootStore()
   const { sortedUsers } = channel
 
-  const listRef = useRef(null)
+  const listRef = useRef<HTMLDivElement>(null)
   const rect: ClientRect | null = useRect(listRef)
 
   const getHighlight = (name: string) => {
@@ -39,11 +39,11 @@ function ChannelUserList({ channel }: { channel: ChannelModel }) {
 
   return (
     <Box width="small" height="100%">
-      <Box background={ThemeColor.bg} pad="xsmall">
+      <Box background="theme0" pad="xsmall">
         Characters: {sortedUsers.length}
       </Box>
 
-      <Box gap="xxsmall" flex background={ThemeColor.bgDark} ref={listRef}>
+      <Box gap={gapSizes.xxsmall} flex background="theme1" ref={listRef}>
         <FixedSizeList
           width={rect ? rect.width : 0}
           height={rect ? rect.height : 0}

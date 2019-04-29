@@ -1,11 +1,10 @@
-import { Box } from "grommet"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import Avatar from "../character/Avatar"
 import CharacterInfo from "../character/CharacterInfo"
 import { useRootStore } from "../RootStore"
+import Box from "../ui/Box"
 import Icon from "../ui/Icon"
-import { ThemeColor } from "../ui/theme"
 import RoomTab from "./RoomTab"
 
 function ChatNavigation() {
@@ -13,7 +12,7 @@ function ChatNavigation() {
 
   return (
     <Box as="nav" direction="row" style={{ height: "100%" }}>
-      <Box pad="small" background={ThemeColor.bgDivision}>
+      <Box pad="small" background="theme2">
         <Box flex gap="medium">
           <Icon style={{ opacity: 0.5 }} icon="channels" />
           <Icon style={{ opacity: 0.5 }} icon="updateStatus" />
@@ -22,20 +21,12 @@ function ChatNavigation() {
         <Icon icon="logout" style={{ opacity: 0.5 }} />
       </Box>
 
-      <Box
-        width="small"
-        background={ThemeColor.bgDark}
-        overflow={{ vertical: "auto" }}
-      >
-        <Box
-          background={ThemeColor.bg}
-          pad="small"
-          flex={{ grow: 0, shrink: 0 }}
-        >
+      <Box width="small" background="theme1" overflow={{ vertical: "auto" }}>
+        <Box background="theme0" pad="small" flexGrow={0} flexShrink={0}>
           <CharacterInfo name={chatStore.identity} />
         </Box>
 
-        <Box flex={{ grow: 1, shrink: 0 }}>
+        <Box flexGrow={1} flexShrink={0}>
           <RoomTab icon={<Icon icon="console" size={0.9} />} title="Console" />
 
           {channelStore.channels.values.map((channel) => (

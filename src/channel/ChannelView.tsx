@@ -1,14 +1,14 @@
-import { Box, Heading, Text } from "grommet"
 import { observer } from "mobx-react-lite"
 import React, { useContext } from "react"
 import Chatbox from "../chat/Chatbox"
 import { NavigationOverlayContext } from "../chat/ChatScreen"
 import MessageList from "../message/MessageList"
 import BBC from "../ui/BBC"
+import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
 import SideOverlay from "../ui/SideOverlay"
-import { ThemeColor } from "../ui/theme"
+import { gapSizes } from "../ui/theme.new"
 import useMedia from "../ui/useMedia"
 import useToggleState from "../ui/useToggleState"
 import ChannelModel from "./ChannelModel"
@@ -26,13 +26,9 @@ function ChannelView({ channel }: Props) {
 
   const channelFilters = (
     <Box direction="row" gap="small">
-      <Text size="normal" style={{ opacity: 0.5 }}>
-        Both
-      </Text>
-      <Text size="normal">Chat</Text>
-      <Text size="normal" style={{ opacity: 0.5 }}>
-        Ads
-      </Text>
+      <span style={{ opacity: 0.5 }}>Both</span>
+      <span>Chat</span>
+      <span style={{ opacity: 0.5 }}>Ads</span>
     </Box>
   )
 
@@ -41,7 +37,7 @@ function ChannelView({ channel }: Props) {
     <Box
       pad="small"
       overflow={{ vertical: "auto" }}
-      background={ThemeColor.bgDark}
+      background="theme1"
       style={{
         position: "absolute",
         top: "100%",
@@ -54,8 +50,8 @@ function ChannelView({ channel }: Props) {
   )
 
   const channelHeader = (
-    <Box background={ThemeColor.bg} style={{ position: "relative" }}>
-      <Box pad="small" gap="small" direction="row" align="center">
+    <Box background="theme0" style={{ position: "relative" }}>
+      <Box pad={gapSizes.small} gap="small" direction="row" align="center">
         <Box direction="row" align="center" gap="xsmall" flex>
           {navOverlayContext.isOverlayVisible && (
             <FadedButton onClick={navOverlayContext.show}>
@@ -64,7 +60,7 @@ function ChannelView({ channel }: Props) {
           )}
 
           <Box direction="row" gap="xsmall" align="center">
-            <Heading level="3">{channel.name}</Heading>
+            <h3>{channel.name}</h3>
 
             <FadedButton onClick={descriptionUi.toggle}>
               <Icon icon="about" />
@@ -93,7 +89,7 @@ function ChannelView({ channel }: Props) {
           <Box flex>
             {channelHeader}
 
-            <Box flex background={ThemeColor.bgDark}>
+            <Box flex background="theme1">
               <MessageList messages={channel.messages} />
             </Box>
           </Box>
@@ -102,7 +98,7 @@ function ChannelView({ channel }: Props) {
         </Box>
 
         {/* chatbox */}
-        <Box background={ThemeColor.bg} pad="xsmall">
+        <Box background="theme0" pad="xsmall">
           <Chatbox onSubmit={console.log} />
         </Box>
       </Box>
@@ -115,7 +111,7 @@ function ChannelView({ channel }: Props) {
           // stopPropagation prevents the user menu from closing
           onClick={userListOverlay.disable}
         >
-          <Box elevation="large" onClick={(e) => e.stopPropagation()}>
+          <Box elevated onClick={(e) => e.stopPropagation()}>
             <ChannelUserList channel={channel} />
           </Box>
         </SideOverlay>

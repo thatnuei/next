@@ -1,7 +1,7 @@
-import { Box } from "grommet"
 import React from "react"
 import { getProfileUrl } from "../flist/helpers"
 import { useRootStore } from "../RootStore"
+import Box from "../ui/Box"
 import { semiBlack, themeColor } from "../ui/colors"
 import ExternalLink from "../ui/ExternalLink"
 import { boxShadow } from "../ui/helpers"
