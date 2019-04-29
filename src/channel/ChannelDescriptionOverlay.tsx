@@ -20,10 +20,14 @@ const ChannelDescriptionOverlay = (props: Props) => {
   }
 
   return (
-    <Shade isVisible={props.isVisible} onClick={handleShadeClick}>
+    <Shade
+      pad={gapSizes.small}
+      isVisible={props.isVisible}
+      onClick={handleShadeClick}
+    >
       <ShadeContent
         isVisible={props.isVisible}
-        gap={gapSizes.xsmall}
+        gap={gapSizes.small}
         align="flex-start"
       >
         <FadedButton onClick={props.onClose}>
@@ -50,7 +54,6 @@ type VisibilityProps = { isVisible: boolean }
 const Shade = styled(Box)<VisibilityProps>`
   ${cover()};
   background-color: rgba(0, 0, 0, 0.7);
-  padding: ${gapSizes.small};
 
   transition: 0.2s;
   opacity: ${(props) => (props.isVisible ? 1 : 0)};
@@ -62,4 +65,10 @@ const Shade = styled(Box)<VisibilityProps>`
 const ShadeContent = styled(Box)<VisibilityProps>`
   transition: 0.2s;
   transform: translateY(${(props) => (props.isVisible ? 0 : "-16px")});
+
+  /* ignore click events on this element, but not the children */
+  pointer-events: none;
+  > * {
+    pointer-events: all;
+  }
 `
