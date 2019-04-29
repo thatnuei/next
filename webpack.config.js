@@ -86,6 +86,8 @@ const devConfig = {
   },
 }
 
+const sizeLimit = 500 * 1000 // 500KB
+
 /** @type {webpack.Configuration} */
 const prodConfig = {
   mode: "production",
@@ -96,6 +98,10 @@ const prodConfig = {
   plugins: [new webpack.HashedModuleIdsPlugin()],
   optimization: {
     runtimeChunk: "single",
+  },
+  performance: {
+    maxAssetSize: sizeLimit,
+    maxEntrypointSize: sizeLimit,
   },
 }
 
