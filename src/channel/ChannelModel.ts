@@ -11,8 +11,8 @@ export default class ChannelModel {
   @observable description = ""
   @observable mode: ChannelMode = "both"
   @observable selectedMode: ChannelMode = "chat"
-  @observable.shallow users = new CharacterCollection(this.root.characterStore)
-  @observable.shallow ops = new CharacterCollection(this.root.characterStore)
+  users = new CharacterCollection(this.root.characterStore)
+  ops = new CharacterCollection(this.root.characterStore)
   @observable.shallow messages: MessageModel[] = []
 
   constructor(private root: RootStore, public id: string) {}
