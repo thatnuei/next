@@ -38,7 +38,7 @@ function ChannelUserList({ channel }: { channel: ChannelModel }) {
   }
 
   return (
-    <Box width="small" height="100%">
+    <Box width={220} height="100%">
       <Box background="theme0" pad={gapSizes.xsmall}>
         Characters: {sortedUsers.length}
       </Box>

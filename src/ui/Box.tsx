@@ -34,7 +34,8 @@ type BoxProps = {
    */
   gap?: number | string | boolean
 
-  overflow?: any // TODO (also add translateZ(0))
+  overflowX?: "auto" | "scroll"
+  overflowY?: "auto" | "scroll"
 }
 
 type PadObject = {
@@ -116,6 +117,8 @@ const resolvePad = (value: BoxProps["pad"]) => {
 
 const BoxElement = styled.div<BoxProps>`
   display: flex;
+  min-width: 0;
+  min-height: 0;
   flex-direction: ${(props) => props.direction || "column"};
   width: ${(props) => resolveUnit(props.width)};
   height: ${(props) => resolveUnit(props.height)};
@@ -130,6 +133,10 @@ const BoxElement = styled.div<BoxProps>`
   flex-grow: ${(props) => props.flexGrow};
   flex-shrink: ${(props) => props.flexShrink};
   flex-basis: ${(props) => resolveUnit(props.basis)};
+  overflow-x: ${(props) => props.overflowX};
+  overflow-y: ${(props) => props.overflowY};
+  ${(props) =>
+    (props.overflowX || props.overflowY) && "transform: translateZ(0)"};
 `
 
 const BoxGap = styled.div<{ size: string }>`

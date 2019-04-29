@@ -36,7 +36,7 @@ function ChannelView({ channel }: Props) {
   const channelDescription = (
     <Box
       pad={gapSizes.small}
-      overflow={{ vertical: "auto" }}
+      overflowY="auto"
       background="theme1"
       style={{
         position: "absolute",

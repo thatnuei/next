@@ -22,7 +22,7 @@ function ChatNavigation() {
         <Icon icon="logout" style={{ opacity: 0.5 }} />
       </Box>
 
-      <Box width="small" background="theme1" overflow={{ vertical: "auto" }}>
+      <Box width={200} background="theme1" overflowY="auto">
         <Box
           background="theme0"
           pad={gapSizes.small}
