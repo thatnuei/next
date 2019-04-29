@@ -73,6 +73,11 @@ const IconImage = styled.img`
   margin-bottom: 4px;
 `
 
+const IconAvatar = styled(Avatar)`
+  vertical-align: middle;
+  margin-bottom: 4px;
+`
+
 function renderTree(nodes: bbc.Node[]): React.ReactNode {
   return nodes.map((node, index) => {
     switch (node.type) {
@@ -131,7 +136,7 @@ function renderTagNode(node: bbc.TagNode): React.ReactNode {
       const userName = getNodeText(node)
       return (
         <a href={getProfileUrl(userName)} target="_blank">
-          <Avatar name={userName} size={50} />
+          <IconAvatar name={userName} size={50} />
         </a>
       )
     }
