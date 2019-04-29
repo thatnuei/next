@@ -17,4 +17,9 @@ const FadedButton = styled.button`
   ${fadedRevealStyle};
   ${pressEffect};
 `
+
+FadedButton.defaultProps = {
+  type: "button",
+}
+
 export default FadedButton
