@@ -1,7 +1,5 @@
 import React from "react"
-import { getProfileUrl } from "../flist/helpers"
 import { useRootStore } from "../RootStore"
-import ExternalLink from "../ui/ExternalLink"
 import { styled } from "../ui/styled"
 import { useCharacterMenuContext } from "./CharacterMenuContext"
 import { genderColors, statusColors } from "./colors"
@@ -12,8 +10,6 @@ const CharacterName = (props: { name: string }) => {
 
   const menu = useCharacterMenuContext()
 
-  const profileUrl = getProfileUrl(props.name)
-
   const nameStyle = { color: genderColors[char.gender] }
   const statusDotStyle = { backgroundColor: statusColors[char.status] }
 
@@ -23,21 +19,25 @@ const CharacterName = (props: { name: string }) => {
   }
 
   return (
-    <ContainerLink href={profileUrl} onContextMenu={openCharacterMenu}>
+    <ContainerButton onClick={openCharacterMenu}>
       <StatusDot title={`Status: ${char.status}`} style={statusDotStyle} />
       <NameText title={`${props.name} - ${char.gender}`} style={nameStyle}>
         {props.name}
       </NameText>
-    </ContainerLink>
+    </ContainerButton>
   )
 }
 
 export default CharacterName
 
-const ContainerLink = styled(ExternalLink)`
+const ContainerButton = styled.button`
   display: inline-flex;
   align-items: center;
   vertical-align: top;
+  cursor: pointer;
+  :focus {
+    outline: none;
+  }
 `
 
 const NameText = styled.span`
