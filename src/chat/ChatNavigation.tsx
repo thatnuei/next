@@ -25,6 +25,9 @@ function ChatNavigation() {
             <Icon icon="updateStatus" />
           </FadedButton>
           <FadedButton>
+            <Icon icon="heart" />
+          </FadedButton>
+          <FadedButton>
             <Icon icon="about" />
           </FadedButton>
         </Box>

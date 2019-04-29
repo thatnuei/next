@@ -9,6 +9,7 @@ export {
   mdiComment as message,
   mdiEarth as public,
   mdiForum as channels,
+  mdiHeart as heart,
   mdiInformation as about,
   mdiKey as private,
   mdiLinkVariant as link,
