@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRootStore } from "../RootStore"
 import { styled } from "../ui/styled"
@@ -28,7 +29,7 @@ const CharacterName = (props: { name: string }) => {
   )
 }
 
-export default CharacterName
+export default observer(CharacterName)
 
 const ContainerButton = styled.button`
   display: inline-flex;
