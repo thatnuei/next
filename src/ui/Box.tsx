@@ -1,6 +1,6 @@
 import {} from "polished"
 import React, { ComponentPropsWithoutRef } from "react"
-import { styled } from "./styled"
+import { css, styled } from "./styled"
 import { AppThemeColor, gapSizes } from "./theme"
 
 type BoxProps = {
@@ -68,9 +68,9 @@ const Box = (
   }
 
   return (
-    <BoxElement {...props} ref={ref}>
+    <div {...props} css={boxStyle(props)} ref={ref}>
       {elements}
-    </BoxElement>
+    </div>
   )
 }
 
@@ -115,28 +115,27 @@ const resolvePad = (value: BoxProps["pad"]) => {
   `
 }
 
-const BoxElement = styled.div<BoxProps>`
+const boxStyle = (props: BoxProps) => css`
   display: flex;
   min-width: 0;
   min-height: 0;
-  flex-direction: ${(props) => props.direction || "column"};
-  width: ${(props) => resolveUnit(props.width)};
-  height: ${(props) => resolveUnit(props.height)};
-  ${(props) => resolvePad(props.pad)};
-  background-color: ${(props) =>
-    props.background ? props.theme.colors[props.background] : "transparent"};
-  box-shadow: ${(props) => props.elevated && `0px 4px 8px rgba(0, 0, 0, 0.3)`};
-  justify-content: ${(props) => props.justify};
-  align-items: ${(props) => props.align};
-  align-content: ${(props) => props.alignContent};
-  flex: ${(props) => resolveFlex(props.flex)};
-  flex-grow: ${(props) => props.flexGrow};
-  flex-shrink: ${(props) => props.flexShrink};
-  flex-basis: ${(props) => resolveUnit(props.basis)};
-  overflow-x: ${(props) => props.overflowX};
-  overflow-y: ${(props) => props.overflowY};
-  ${(props) =>
-    (props.overflowX || props.overflowY) && "transform: translateZ(0)"};
+  flex-direction: ${props.direction || "column"};
+  width: ${resolveUnit(props.width)};
+  height: ${resolveUnit(props.height)};
+  ${resolvePad(props.pad)};
+  background-color: ${({ theme }) =>
+    props.background ? theme.colors[props.background] : "transparent"};
+  box-shadow: ${props.elevated && `0px 4px 8px rgba(0, 0, 0, 0.3)`};
+  justify-content: ${props.justify};
+  align-items: ${props.align};
+  align-content: ${props.alignContent};
+  flex: ${resolveFlex(props.flex)};
+  flex-grow: ${props.flexGrow};
+  flex-shrink: ${props.flexShrink};
+  flex-basis: ${resolveUnit(props.basis)};
+  overflow-x: ${props.overflowX};
+  overflow-y: ${props.overflowY};
+  ${(props.overflowX || props.overflowY) && "transform: translateZ(0)"};
 `
 
 const BoxGap = styled.div<{ size: string }>`
