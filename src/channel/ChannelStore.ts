@@ -29,7 +29,10 @@ export default class ChannelStore {
   constructor(private root: RootStore) {}
 
   @action
-  setListings(kind: keyof ChannelStoreListings, listings: ChannelListing[]) {
+  private setListings(
+    kind: keyof ChannelStoreListings,
+    listings: ChannelListing[],
+  ) {
     this.listings[kind] = listings
   }
 
