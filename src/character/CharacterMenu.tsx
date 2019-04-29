@@ -109,5 +109,5 @@ const CloseButton = styled(FadedButton)`
   position: absolute;
   top: 0;
   right: 0;
-  padding: ${gapSizes.xsmall};
+  padding: ${gapSizes.small};
 `
