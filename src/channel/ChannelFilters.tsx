@@ -1,11 +1,11 @@
 import { capitalize } from "lodash"
 import { observer } from "mobx-react-lite"
 import React from "react"
-import ChannelModel from "../channel/ChannelModel"
-import { ChannelMode } from "../channel/types"
 import Box from "../ui/Box"
 import { css, styled } from "../ui/styled"
 import { gapSizes } from "../ui/theme"
+import ChannelModel from "./ChannelModel"
+import { ChannelMode } from "./types"
 
 type Props = { channel: ChannelModel }
 
