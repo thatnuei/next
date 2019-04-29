@@ -5,6 +5,7 @@ import { useRootStore } from "../RootStore"
 import BBC from "../ui/BBC"
 import Box from "../ui/Box"
 import ExternalLink from "../ui/ExternalLink"
+import { styled } from "../ui/styled"
 import { gapSizes } from "../ui/theme"
 import Avatar from "./Avatar"
 import { genderColors, statusColors } from "./colors"
@@ -28,21 +29,24 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
 
       <Avatar key={name} name={name} size={80} />
 
-      <Box
-        background="theme2"
-        pad={gapSizes.xsmall}
-        style={{ fontStyle: "italic" }}
-      >
-        <span style={statusStyle}>{status}</span>
-        {statusMessage ? (
-          <span>
-            {" "}
-            - <BBC text={statusMessage} />
-          </span>
-        ) : null}
+      <Box background="theme2" pad={gapSizes.xsmall}>
+        <StatusText>
+          <span style={statusStyle}>{status}</span>
+          {statusMessage ? (
+            <>
+              {" "}
+              - <BBC text={statusMessage} />
+            </>
+          ) : null}
+        </StatusText>
       </Box>
     </Box>
   )
 }
 
 export default observer(CharacterInfo)
+
+const StatusText = styled.span`
+  font-style: italic;
+  font-size: 80%;
+`
