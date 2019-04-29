@@ -8,6 +8,7 @@ import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
 import SideOverlay from "../ui/SideOverlay"
+import { styled } from "../ui/styled"
 import { gapSizes } from "../ui/theme"
 import useMedia from "../ui/useMedia"
 import useToggleState from "../ui/useToggleState"
@@ -41,12 +42,15 @@ function ChannelView({ channel }: Props) {
             </FadedButton>
           )}
 
-          <Box direction="row" gap={gapSizes.xsmall} align="center">
+          <Box
+            as={ChannelTitleButton}
+            direction="row"
+            gap={gapSizes.xsmall}
+            align="center"
+            onClick={descriptionUi.toggle}
+          >
             <h3>{channel.name}</h3>
-
-            <FadedButton onClick={descriptionUi.toggle}>
-              <Icon icon="about" />
-            </FadedButton>
+            <Icon icon="about" style={{ opacity: 0.5 }} />
           </Box>
         </Box>
 
@@ -105,3 +109,12 @@ function ChannelView({ channel }: Props) {
   )
 }
 export default observer(ChannelView)
+
+const ChannelTitleButton = styled(FadedButton)`
+  opacity: 0.7;
+
+  :hover,
+  :focus {
+    opacity: 1;
+  }
+`
