@@ -58,7 +58,10 @@ const Box = (
   } else {
     const childrenArray = React.Children.toArray(children)
     for (let i = 0; i < childrenArray.length - 1; i++) {
-      elements.push(childrenArray[i], <BoxGap size={gapUnit} />)
+      elements.push(
+        childrenArray[i],
+        <BoxGap size={gapUnit} key={`gap-${i}`} />,
+      )
     }
     elements.push(childrenArray[childrenArray.length - 1])
   }
