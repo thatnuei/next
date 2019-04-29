@@ -1,18 +1,21 @@
-import { Button as BaseButton } from "grommet"
-import { shade } from "polished"
 import { styled } from "./styled"
-import { ThemeColor } from "./theme"
+import { gapSizes } from "./theme.new"
 
-const Button = styled(BaseButton)`
-  :hover {
-    box-shadow: unset;
+const Button = styled.button`
+  padding: ${gapSizes.xsmall} ${gapSizes.small};
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: 0.2s background-color;
+  cursor: pointer;
 
-    background-color: ${({ theme }) =>
-      shade(0.15, theme.global.colors[ThemeColor.primary])};
-
-    border-color: ${({ theme }) =>
-      shade(0.15, theme.global.colors[ThemeColor.primary])};
+  :hover,
+  :focus {
+    background-color: rgba(0, 0, 0, 0.6);
+    outline: none;
   }
 `
+
+Button.defaultProps = {
+  type: "button",
+}
 
 export default Button

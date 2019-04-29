@@ -39,7 +39,7 @@ const Chatbox = (props: Props) => {
           style={textAreaStyle}
         />
       </Box>
-      <Button onClick={submit} label="Send" />
+      <Button onClick={submit}>Send</Button>
     </Box>
   )
 }

@@ -55,7 +55,7 @@ function LoginModal() {
             />
           </FormField>
 
-          <Button primary type="submit" label="Submit" />
+          <Button type="submit">Submit</Button>
         </Box>
       </Box>
     </Box>

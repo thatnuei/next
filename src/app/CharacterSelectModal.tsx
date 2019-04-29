@@ -68,7 +68,7 @@ function CharacterSelectModal() {
             ))}
           </Select>
 
-          <Button primary type="submit" label="Enter Chat" />
+          <Button type="submit">Enter Chat</Button>
 
           <Anchor as="button" type="button" onClick={showLogin}>
             Return to Login
