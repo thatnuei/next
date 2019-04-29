@@ -17,8 +17,7 @@ type Props = {
 
 const actionRegex = /^\s*\/me\s*/
 
-// TODO: rename to Message
-const MessageListItem = ({ senderName, text, type, time }: Props) => {
+const Message = ({ senderName, text, type, time }: Props) => {
   const { characterStore } = useRootStore()
 
   const sender = senderName
@@ -43,7 +42,7 @@ const MessageListItem = ({ senderName, text, type, time }: Props) => {
   )
 }
 
-export default observer(MessageListItem)
+export default observer(Message)
 
 const highlightStyles: { [K in MessageType]?: CSSObject } = {
   lfrp: { backgroundColor: "rgba(39, 174, 96, 0.2)" },

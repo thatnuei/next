@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React, { useCallback, useLayoutEffect, useRef } from "react"
 import Box from "../ui/Box"
-import MessageListItem from "./MessageListItem"
+import Message from "./Message"
 import MessageModel from "./MessageModel"
 
 function MessageList(props: { messages: MessageModel[] }) {
@@ -16,7 +16,7 @@ function MessageList(props: { messages: MessageModel[] }) {
       style={{ transform: "translateZ(0)" }}
     >
       {props.messages.slice(-300).map((message) => (
-        <MessageListItem key={message.id} {...message} />
+        <Message key={message.id} {...message} />
       ))}
     </Box>
   )

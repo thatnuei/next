@@ -1,10 +1,10 @@
 import React from "react"
 import { render } from "react-testing-library"
 import RootStore, { RootStoreContext } from "../RootStore"
-import MessageListItem from "./MessageListItem"
+import Message from "./Message"
 import MessageModel from "./MessageModel"
 
-describe("MessageListItem", () => {
+describe(Message.name, () => {
   const store = new RootStore()
 
   const message = new MessageModel("Testificate", "hi there", "chat")
@@ -12,7 +12,7 @@ describe("MessageListItem", () => {
   const setup = (extra: Partial<MessageModel> = {}) =>
     render(
       <RootStoreContext.Provider value={store}>
-        <MessageListItem {...message} {...extra} />
+        <Message {...message} {...extra} />
       </RootStoreContext.Provider>,
     )
 
