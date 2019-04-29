@@ -25,12 +25,11 @@ const ChannelDescriptionOverlay = (props: Props) => {
       isVisible={props.isVisible}
       onClick={handleShadeClick}
     >
-      <ShadeContent
-        isVisible={props.isVisible}
-        gap={gapSizes.small}
-        align="flex-start"
-      >
-        <FadedButton onClick={props.onClose}>
+      <ShadeContent isVisible={props.isVisible} gap={gapSizes.small}>
+        <FadedButton
+          onClick={props.onClose}
+          style={{ alignSelf: "flex-start" }}
+        >
           <Icon icon="close" />
         </FadedButton>
         <Box
