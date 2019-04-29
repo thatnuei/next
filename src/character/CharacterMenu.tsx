@@ -4,7 +4,7 @@ import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
 import { semiBlack, themeColor } from "../ui/colors"
 import ExternalLink from "../ui/ExternalLink"
-import { boxShadow } from "../ui/helpers"
+import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
 import { styled } from "../ui/styled"
 import { gapSizes } from "../ui/theme"
@@ -29,7 +29,11 @@ const CharacterMenu = (props: CharacterMenuProps) => {
   }
 
   return (
-    <Menu onClick={menu.close}>
+    <Menu onClick={menu.close} width={200} elevated>
+      <CloseButton>
+        <Icon icon="close" />
+      </CloseButton>
+
       <Box pad={gapSizes.small}>
         <CharacterInfo name={props.characterName} onClick={stopPropagation} />
       </Box>
@@ -66,13 +70,9 @@ const CharacterMenu = (props: CharacterMenuProps) => {
 
 export default CharacterMenu
 
-const Menu = styled.div`
+const Menu = styled(Box)`
   background-color: ${themeColor};
-
-  width: 200px;
-  max-width: 100%;
-
-  ${boxShadow};
+  position: relative;
 `
 
 const OptionsBackground = styled.div`
@@ -104,3 +104,10 @@ MenuOption.defaultProps = {
   href: "#",
   role: "button",
 }
+
+const CloseButton = styled(FadedButton)`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: ${gapSizes.xsmall};
+`
