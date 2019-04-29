@@ -7,6 +7,7 @@ import ExternalLink from "../ui/ExternalLink"
 import { boxShadow } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { styled } from "../ui/styled"
+import { gapSizes } from "../ui/theme"
 import CharacterInfo from "./CharacterInfo"
 import { useCharacterMenuContext } from "./CharacterMenuContext"
 
@@ -29,7 +30,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
 
   return (
     <Menu onClick={menu.close}>
-      <Box pad="small">
+      <Box pad={gapSizes.small}>
         <CharacterInfo name={props.characterName} onClick={stopPropagation} />
       </Box>
 

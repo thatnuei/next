@@ -5,6 +5,7 @@ import CharacterInfo from "../character/CharacterInfo"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
 import Icon from "../ui/Icon"
+import { gapSizes } from "../ui/theme"
 import RoomTab from "./RoomTab"
 
 function ChatNavigation() {
@@ -12,8 +13,8 @@ function ChatNavigation() {
 
   return (
     <Box as="nav" direction="row" style={{ height: "100%" }}>
-      <Box pad="small" background="theme2">
-        <Box flex gap="medium">
+      <Box pad={gapSizes.small} background="theme2">
+        <Box flex gap={gapSizes.medium}>
           <Icon style={{ opacity: 0.5 }} icon="channels" />
           <Icon style={{ opacity: 0.5 }} icon="updateStatus" />
           <Icon style={{ opacity: 0.5 }} icon="about" />
@@ -22,7 +23,12 @@ function ChatNavigation() {
       </Box>
 
       <Box width="small" background="theme1" overflow={{ vertical: "auto" }}>
-        <Box background="theme0" pad="small" flexGrow={0} flexShrink={0}>
+        <Box
+          background="theme0"
+          pad={gapSizes.small}
+          flexGrow={0}
+          flexShrink={0}
+        >
           <CharacterInfo name={chatStore.identity} />
         </Box>
 

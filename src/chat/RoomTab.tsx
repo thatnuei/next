@@ -1,6 +1,7 @@
 import React from "react"
 import Box from "../ui/Box"
 import Icon from "../ui/Icon"
+import { gapSizes } from "../ui/theme"
 
 type Props = {
   icon?: React.ReactNode
@@ -21,8 +22,8 @@ export default function RoomTab({ onClick = () => {}, ...props }: Props) {
         as="button"
         flex
         direction="row"
-        gap="xsmall"
-        pad="xsmall"
+        gap={gapSizes.xsmall}
+        pad={gapSizes.xsmall}
         align="center"
         onClick={onClick}
       >
@@ -33,7 +34,12 @@ export default function RoomTab({ onClick = () => {}, ...props }: Props) {
       </Box>
 
       {props.onClose && (
-        <Box as="button" pad="xsmall" justify="center" onClick={props.onClose}>
+        <Box
+          as="button"
+          pad={gapSizes.xsmall}
+          justify="center"
+          onClick={props.onClose}
+        >
           <Icon icon="close" size={0.7} />
         </Box>
       )}

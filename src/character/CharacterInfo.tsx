@@ -5,6 +5,7 @@ import { useRootStore } from "../RootStore"
 import BBC from "../ui/BBC"
 import Box from "../ui/Box"
 import ExternalLink from "../ui/ExternalLink"
+import { gapSizes } from "../ui/theme"
 import Avatar from "./Avatar"
 import { genderColors, statusColors } from "./colors"
 
@@ -20,14 +21,18 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
   const statusStyle = { color: statusColors[status] }
 
   return (
-    <Box gap="small" {...containerProps}>
+    <Box gap={gapSizes.small} {...containerProps}>
       <ExternalLink href={getProfileUrl(name)} style={nameStyle}>
         {name}
       </ExternalLink>
 
       <Avatar key={name} name={name} size={80} />
 
-      <Box background="theme2" pad="xsmall" style={{ fontStyle: "italic" }}>
+      <Box
+        background="theme2"
+        pad={gapSizes.xsmall}
+        style={{ fontStyle: "italic" }}
+      >
         <span style={statusStyle}>{status}</span>
         {statusMessage ? (
           <span>

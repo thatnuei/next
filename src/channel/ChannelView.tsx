@@ -25,7 +25,7 @@ function ChannelView({ channel }: Props) {
   const navOverlayContext = useContext(NavigationOverlayContext)
 
   const channelFilters = (
-    <Box direction="row" gap="small">
+    <Box direction="row" gap={gapSizes.small}>
       <span style={{ opacity: 0.5 }}>Both</span>
       <span>Chat</span>
       <span style={{ opacity: 0.5 }}>Ads</span>
@@ -35,7 +35,7 @@ function ChannelView({ channel }: Props) {
   // TODO: animate this
   const channelDescription = (
     <Box
-      pad="small"
+      pad={gapSizes.small}
       overflow={{ vertical: "auto" }}
       background="theme1"
       style={{
@@ -51,15 +51,20 @@ function ChannelView({ channel }: Props) {
 
   const channelHeader = (
     <Box background="theme0" style={{ position: "relative" }}>
-      <Box pad={gapSizes.small} gap="small" direction="row" align="center">
-        <Box direction="row" align="center" gap="xsmall" flex>
+      <Box
+        pad={gapSizes.small}
+        gap={gapSizes.small}
+        direction="row"
+        align="center"
+      >
+        <Box direction="row" align="center" gap={gapSizes.xsmall} flex>
           {navOverlayContext.isOverlayVisible && (
             <FadedButton onClick={navOverlayContext.show}>
               <Icon icon="menu" />
             </FadedButton>
           )}
 
-          <Box direction="row" gap="xsmall" align="center">
+          <Box direction="row" gap={gapSizes.xsmall} align="center">
             <h3>{channel.name}</h3>
 
             <FadedButton onClick={descriptionUi.toggle}>
@@ -83,9 +88,9 @@ function ChannelView({ channel }: Props) {
 
   return (
     <>
-      <Box as="main" flex gap="xsmall">
+      <Box as="main" flex gap={gapSizes.xsmall}>
         {/* room content */}
-        <Box direction="row" flex gap="xsmall">
+        <Box direction="row" flex gap={gapSizes.xsmall}>
           <Box flex>
             {channelHeader}
 
@@ -98,7 +103,7 @@ function ChannelView({ channel }: Props) {
         </Box>
 
         {/* chatbox */}
-        <Box background="theme0" pad="xsmall">
+        <Box background="theme0" pad={gapSizes.xsmall}>
           <Chatbox onSubmit={console.log} />
         </Box>
       </Box>

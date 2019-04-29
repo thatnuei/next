@@ -4,6 +4,7 @@ import useInput from "../state/useInput"
 import Box from "../ui/Box"
 import Button from "../ui/Button"
 import TextArea from "../ui/TextArea"
+import { gapSizes } from "../ui/theme"
 
 type Props = {
   onSubmit: (message: string) => void
@@ -31,7 +32,7 @@ const Chatbox = (props: Props) => {
   }
 
   return (
-    <Box direction="row" gap="xsmall">
+    <Box direction="row" gap={gapSizes.xsmall}>
       <Box flex>
         <TextArea
           {...messageInput.bind}

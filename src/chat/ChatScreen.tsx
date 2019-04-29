@@ -6,6 +6,7 @@ import { CharacterMenuProvider } from "../character/CharacterMenuContext"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
 import SideOverlay from "../ui/SideOverlay"
+import { gapSizes } from "../ui/theme"
 import useMedia from "../ui/useMedia"
 import useToggleState from "../ui/useToggleState"
 import ChatNavigation from "./ChatNavigation"
@@ -47,7 +48,12 @@ const ChatScreen = () => {
 
   return (
     <CharacterMenuProvider>
-      <Box direction="row" gap="xsmall" style={cover()} background="theme2">
+      <Box
+        direction="row"
+        gap={gapSizes.xsmall}
+        style={cover()}
+        background="theme2"
+      >
         {navigationVisible && <ChatNavigation />}
 
         <NavigationOverlayContext.Provider value={navigationOverlayContext}>
