@@ -69,6 +69,8 @@ const LinkIcon = styled(Icon)`
 const IconImage = styled.img`
   width: 50px;
   height: 50px;
+  vertical-align: middle;
+  margin-bottom: 4px;
 `
 
 function renderTree(nodes: bbc.Node[]): React.ReactNode {
