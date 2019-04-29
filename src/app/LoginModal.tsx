@@ -7,7 +7,7 @@ import Button from "../ui/Button"
 import FormField from "../ui/FormField"
 import ModalPanelHeader from "../ui/ModalPanelHeader"
 import TextInput from "../ui/TextInput"
-import { gapSizes } from "../ui/theme.new"
+import { gapSizes } from "../ui/theme"
 
 function LoginModal() {
   const { userStore, viewStore } = useRootStore()

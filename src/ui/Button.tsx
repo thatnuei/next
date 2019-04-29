@@ -1,5 +1,5 @@
 import { styled } from "./styled"
-import { gapSizes } from "./theme.new"
+import { gapSizes } from "./theme"
 
 const Button = styled.button`
   padding: ${gapSizes.xsmall} ${gapSizes.small};

@@ -2,7 +2,7 @@ import React from "react"
 import { withTheme } from "styled-components"
 import Box from "./Box"
 import { styled } from "./styled"
-import { AppTheme, gapSizes } from "./theme.new"
+import { AppTheme, gapSizes } from "./theme"
 
 type Props = {
   children?: React.ReactNode

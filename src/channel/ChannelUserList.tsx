@@ -6,7 +6,7 @@ import { FixedSizeList, ListChildComponentProps } from "react-window"
 import CharacterName from "../character/CharacterName"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
-import { gapSizes } from "../ui/theme.new"
+import { gapSizes } from "../ui/theme"
 import ChannelModel from "./ChannelModel"
 
 function ChannelUserList({ channel }: { channel: ChannelModel }) {

@@ -9,7 +9,7 @@ import Button from "../ui/Button"
 import ModalPanel from "../ui/ModalPanel"
 import ModalPanelHeader from "../ui/ModalPanelHeader"
 import Select from "../ui/Select"
-import { gapSizes } from "../ui/theme.new"
+import { gapSizes } from "../ui/theme"
 
 const lastCharacterKey = (account: string) => `${account}:lastCharacter`
 

@@ -1,6 +1,6 @@
 import React, { ComponentPropsWithoutRef } from "react"
 import Box from "./Box"
-import { gapSizes } from "./theme.new"
+import { gapSizes } from "./theme"
 
 type Props = ComponentPropsWithoutRef<"label"> & {
   labelText: string

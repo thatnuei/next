@@ -2,7 +2,7 @@ import React from "react"
 import { ThemeProvider } from "styled-components"
 import App from "./app/App"
 import GlobalStyle from "./ui/globalStyle"
-import { baseTheme } from "./ui/theme.new"
+import { baseTheme } from "./ui/theme"
 
 const Root = () => (
   <ThemeProvider theme={baseTheme}>

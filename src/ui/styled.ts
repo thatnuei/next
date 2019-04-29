@@ -1,6 +1,6 @@
 /// <reference types="styled-components/cssprop" />
 import * as sc from "styled-components"
-import { AppTheme } from "./theme.new"
+import { AppTheme } from "./theme"
 
 export const {
   default: styled,
