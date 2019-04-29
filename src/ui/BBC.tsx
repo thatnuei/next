@@ -5,7 +5,7 @@ import CharacterName from "../character/CharacterName"
 import { getIconUrl, getProfileUrl } from "../flist/helpers"
 import Anchor from "./Anchor"
 import Icon from "./Icon"
-import { styled } from "./theme"
+import { styled } from "./styled"
 
 type Props = {
   text: string

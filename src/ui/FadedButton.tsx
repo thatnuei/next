@@ -1,4 +1,4 @@
-import { css, styled } from "./theme"
+import { css, styled } from "./styled"
 
 const fadedRevealStyle = css`
   opacity: 0.4;

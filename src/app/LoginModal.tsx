@@ -16,6 +16,7 @@ function LoginModal() {
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
+    return
 
     try {
       await userStore.submitLogin(account.value, password.value)

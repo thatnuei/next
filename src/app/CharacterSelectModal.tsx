@@ -54,8 +54,8 @@ function CharacterSelectModal() {
         <Box
           as="form"
           align="center"
-          gap={gapSizes.large}
-          pad={gapSizes.large}
+          gap={gapSizes.medium}
+          pad={gapSizes.medium}
           onSubmit={handleSubmit}
         >
           <Avatar key={identity} name={identity} />

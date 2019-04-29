@@ -1,7 +1,7 @@
 import { lighten, shade } from "polished"
 import { createGlobalStyle } from "styled-components"
 import { themeBackgroundColor, themeColor } from "./colors"
-import { css, ThemeColor } from "./theme"
+import { css } from "./styled"
 
 const globalStyle = css`
   * {
@@ -13,11 +13,9 @@ const globalStyle = css`
   }
 
   :root {
-    background-color: ${(props) =>
-      props.theme.global.colors[ThemeColor.bgDark]};
-      
-    color: ${(props) => props.theme.global.colors[ThemeColor.text]};
-
+    font: 16px Roboto, 'sans-serif';
+    background-color: ${(props) => props.theme.colors.theme2};
+    color: ${(props) => props.theme.colors.text};
     line-height: 1.5;
     letter-spacing: 0.3px;
 
