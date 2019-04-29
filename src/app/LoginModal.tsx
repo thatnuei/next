@@ -1,12 +1,13 @@
-import { Box, Layer, TextInput } from "grommet"
+import { TextInput } from "grommet"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRootStore } from "../RootStore"
 import useInput from "../state/useInput"
+import Box from "../ui/Box"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
-import ModalPanel from "../ui/ModalPanel"
 import ModalPanelHeader from "../ui/ModalPanelHeader"
+import { gapSizes } from "../ui/theme.new"
 
 function LoginModal() {
   const { userStore, viewStore } = useRootStore()
@@ -25,15 +26,14 @@ function LoginModal() {
   }
 
   return (
-    <Layer animate={false}>
-      <ModalPanel>
+    <Box height="100vh" pad={gapSizes.large} style={{ overflowY: "auto" }}>
+      <Box background="theme0" style={{ margin: "auto" }} elevated>
         <ModalPanelHeader>Login</ModalPanelHeader>
-
         <Box
           as="form"
-          pad="small"
-          gap="small"
-          align="start"
+          pad={gapSizes.small}
+          gap={gapSizes.small}
+          align="flex-start"
           onSubmit={handleSubmit}
         >
           <FormField labelText="Username">
@@ -57,8 +57,8 @@ function LoginModal() {
 
           <Button primary type="submit" label="Submit" />
         </Box>
-      </ModalPanel>
-    </Layer>
+      </Box>
+    </Box>
   )
 }
 export default observer(LoginModal)
