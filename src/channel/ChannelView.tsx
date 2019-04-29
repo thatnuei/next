@@ -22,7 +22,7 @@ type Props = { channel: ChannelModel }
 
 function ChannelView({ channel }: Props) {
   const userListVisible = useMedia(`(min-width: ${userListBreakpoint}px)`)
-  const descriptionUi = useToggleState(true)
+  const descriptionUi = useToggleState()
   const userListOverlay = useToggleState()
   const navOverlayContext = useContext(NavigationOverlayContext)
 
