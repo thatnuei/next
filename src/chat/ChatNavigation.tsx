@@ -1,15 +1,17 @@
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useContext } from "react"
 import Avatar from "../character/Avatar"
 import CharacterInfo from "../character/CharacterInfo"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
 import Icon from "../ui/Icon"
 import { gapSizes } from "../ui/theme"
+import { NavigationOverlayContext } from "./ChatScreen"
 import RoomTab from "./RoomTab"
 
 function ChatNavigation() {
   const { chatStore, channelStore, viewStore } = useRootStore()
+  const navOverlay = useContext(NavigationOverlayContext)
 
   return (
     <Box as="nav" direction="row" style={{ height: "100%" }}>
@@ -41,7 +43,10 @@ function ChatNavigation() {
               icon={<Icon icon="channels" size={0.9} />}
               title={channel.name}
               active={viewStore.isChannelActive(channel.id)}
-              onClick={() => viewStore.showChannel(channel.id)}
+              onClick={() => {
+                viewStore.showChannel(channel.id)
+                navOverlay.hide()
+              }}
               onClose={() => channelStore.leave(channel.id)}
             />
           ))}

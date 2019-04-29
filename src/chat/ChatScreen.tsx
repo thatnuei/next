@@ -42,40 +42,50 @@ const ChatScreen = () => {
     () => ({
       isOverlayVisible: !navigationVisible,
       show: navigationOverlay.enable,
+      hide: navigationOverlay.disable,
     }),
-    [navigationOverlay.enable, navigationVisible],
+    [navigationOverlay.disable, navigationOverlay.enable, navigationVisible],
   )
 
   return (
     <CharacterMenuProvider>
-      <Box
-        direction="row"
-        gap={gapSizes.xsmall}
-        style={cover()}
-        background="theme2"
-      >
-        {navigationVisible && <ChatNavigation />}
+      <NavigationOverlayContext.Provider value={navigationOverlayContext}>
+        <Box
+          direction="row"
+          gap={gapSizes.xsmall}
+          style={cover()}
+          background="theme2"
+        >
+          {navigationVisible && <ChatNavigation />}
 
-        <NavigationOverlayContext.Provider value={navigationOverlayContext}>
           {renderChatRoom()}
-        </NavigationOverlayContext.Provider>
-      </Box>
-
-      <SideOverlay
-        anchor="left"
-        visible={navigationOverlay.on}
-        onShadeClick={navigationOverlay.disable}
-      >
-        <Box elevated>
-          <ChatNavigation />
         </Box>
-      </SideOverlay>
+
+        <SideOverlay
+          anchor="left"
+          visible={navigationOverlay.on}
+          onShadeClick={navigationOverlay.disable}
+        >
+          <Box elevated>
+            <ChatNavigation />
+          </Box>
+        </SideOverlay>
+      </NavigationOverlayContext.Provider>
     </CharacterMenuProvider>
   )
 }
 export default observer(ChatScreen)
 
 export const NavigationOverlayContext = React.createContext({
-  show: () => {},
-  isOverlayVisible: false,
+  // TODO: use a custom consumer hook instead of having these warnings here
+  show: () => {
+    console.error("Attempt to use nav context outside provider")
+  },
+  hide: () => {
+    console.error("Attempt to use nav context outside provider")
+  },
+  get isOverlayVisible() {
+    console.error("Attempt to use nav context outside provider")
+    return false
+  },
 })
