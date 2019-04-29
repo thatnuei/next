@@ -1,6 +1,5 @@
-import { lighten, shade } from "polished"
+import { lighten } from "polished"
 import { createGlobalStyle } from "styled-components"
-import { themeBackgroundColor, themeColor } from "./colors"
 import { css } from "./styled"
 
 const globalStyle = css`
@@ -13,7 +12,7 @@ const globalStyle = css`
   }
 
   :root {
-    font: 16px Roboto, 'sans-serif';
+    font: 16px Roboto, sans-serif;
     background-color: ${(props) => props.theme.colors.theme2};
     color: ${(props) => props.theme.colors.text};
     line-height: 1.5;
@@ -68,7 +67,6 @@ const globalStyle = css`
     vertical-align: top;
   }
 
-  /*
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -76,12 +74,12 @@ const globalStyle = css`
 
   ::-webkit-scrollbar-track,
   ::-webkit-scrollbar-corner {
-    background-color: ${shade(0.5, themeBackgroundColor)};
+    background-color: ${({ theme }) => theme.colors.theme2};
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: ${lighten(0.2, themeColor)};
-  } */
+    background-color: ${({ theme }) => lighten(0.2, theme.colors.theme0)};
+  }
 `
 
 const GlobalStyle = createGlobalStyle`
