@@ -12,6 +12,7 @@ type SidebarOverlayProps = {
 export default function SideOverlay(props: SidebarOverlayProps) {
   const { onClick = noop } = props
   return (
+    // TODO: add close button
     <Shade visible={props.visible} onClick={() => onClick()}>
       <Panel anchor={props.anchor || "left"} visible={props.visible}>
         {props.children}
