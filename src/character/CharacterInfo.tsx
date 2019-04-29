@@ -23,11 +23,13 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
 
   return (
     <Box gap={gapSizes.small} {...containerProps}>
-      <ExternalLink href={getProfileUrl(name)} style={nameStyle}>
-        {name}
+      <ExternalLink href={getProfileUrl(name)}>
+        <h2 style={nameStyle}>{name}</h2>
       </ExternalLink>
 
-      <Avatar key={name} name={name} size={80} />
+      <ExternalLink href={getProfileUrl(name)}>
+        <Avatar key={name} name={name} size={80} />
+      </ExternalLink>
 
       <Box background="theme2" pad={gapSizes.xsmall}>
         <StatusText>
