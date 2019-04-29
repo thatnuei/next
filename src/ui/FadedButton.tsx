@@ -6,6 +6,7 @@ const fadedRevealStyle = css`
   :hover,
   :focus {
     opacity: 0.7;
+    outline: none;
   }
 `
 
