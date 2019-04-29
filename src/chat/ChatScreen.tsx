@@ -64,9 +64,9 @@ const ChatScreen = () => {
       <SideOverlay
         anchor="left"
         visible={navigationOverlay.on}
-        onClick={navigationOverlay.disable}
+        onShadeClick={navigationOverlay.disable}
       >
-        <Box elevated onClick={(e) => e.stopPropagation()}>
+        <Box elevated>
           <ChatNavigation />
         </Box>
       </SideOverlay>

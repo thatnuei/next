@@ -94,11 +94,9 @@ function ChannelView({ channel }: Props) {
         <SideOverlay
           anchor="right"
           visible={userListOverlay.on}
-          // TODO: instead of stopping propagation, use an onShadeClick prop
-          // stopPropagation prevents the user menu from closing
-          onClick={userListOverlay.disable}
+          onShadeClick={userListOverlay.disable}
         >
-          <Box elevated onClick={(e) => e.stopPropagation()}>
+          <Box elevated>
             <ChannelUserList channel={channel} />
           </Box>
         </SideOverlay>
