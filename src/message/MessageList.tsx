@@ -12,7 +12,7 @@ function MessageList(props: { messages: MessageModel[] }) {
   return (
     <Box
       ref={messageListRef as any}
-      overflow={{ vertical: "auto" }}
+      overflowY="auto"
       style={{ transform: "translateZ(0)" }}
     >
       {props.messages.slice(-300).map((message) => (
