@@ -49,7 +49,7 @@ function ChatNavigation() {
         <Box flexGrow={1} flexShrink={0}>
           <RoomTab icon={<Icon icon="console" size={0.9} />} title="Console" />
 
-          {channelStore.channels.values.map((channel) => (
+          {channelStore.joinedChannels.map((channel) => (
             <RoomTab
               key={channel.id}
               icon={<Icon icon="channels" size={0.9} />}
