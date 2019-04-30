@@ -1,17 +1,15 @@
-import { action, observable } from "mobx"
+import { action, computed, observable } from "mobx"
 import CharacterCollection from "../character/CharacterCollection"
+import { CharacterStatus } from "../character/types"
 import { createCommandHandler } from "../fchat/helpers"
 import RootStore from "../RootStore"
 
 export default class ChatStore {
   @observable identity = ""
-  @observable.shallow friends = new CharacterCollection(
-    this.root.characterStore,
-  )
-  @observable.shallow admins = new CharacterCollection(this.root.characterStore)
-  @observable.shallow ignored = new CharacterCollection(
-    this.root.characterStore,
-  )
+
+  friends = new CharacterCollection(this.root.characterStore)
+  admins = new CharacterCollection(this.root.characterStore)
+  ignored = new CharacterCollection(this.root.characterStore)
 
   constructor(private root: RootStore) {}
 
@@ -23,6 +21,15 @@ export default class ChatStore {
   isFriend = (name: string) => this.friends.has(name)
   isAdmin = (name: string) => this.admins.has(name)
   isIgnored = (name: string) => this.ignored.has(name)
+
+  updateStatus = (status: CharacterStatus, statusmsg: string) => {
+    this.root.socketStore.sendSocketCommand("STA", { status, statusmsg })
+  }
+
+  @computed
+  get identityCharacter() {
+    return this.root.characterStore.characters.get(this.identity)
+  }
 
   @action
   handleSocketCommand = createCommandHandler({
