@@ -117,8 +117,6 @@ const resolvePad = (value: BoxProps["pad"]) => {
 
 const boxStyle = (props: BoxProps) => css`
   display: flex;
-  min-width: 0;
-  min-height: 0;
   flex-direction: ${props.direction || "column"};
   width: ${resolveUnit(props.width)};
   height: ${resolveUnit(props.height)};
@@ -136,6 +134,9 @@ const boxStyle = (props: BoxProps) => css`
   overflow-x: ${props.overflowX};
   overflow-y: ${props.overflowY};
   ${(props.overflowX || props.overflowY) && "transform: translateZ(0)"};
+
+  ${(props.flex || props.flexGrow) && "min-width: 0"};
+  ${(props.flex || props.flexGrow) && "min-height: 0"};
 `
 
 const BoxGap = styled.div<{ size: string }>`
