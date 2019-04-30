@@ -39,7 +39,7 @@ export default class ChannelModel {
 
   @action
   addMessage(message: MessageModel) {
-    this.messages.push(message)
+    this.messages = [...this.messages.slice(-300), message]
   }
 
   @computed
