@@ -124,7 +124,7 @@ const boxStyle = (props: BoxProps) => css`
   height: ${resolveUnit(props.height)};
   ${resolvePad(props.pad)};
   background-color: ${({ theme }) =>
-    props.background ? theme.colors[props.background] : "transparent"};
+    props.background && theme.colors[props.background]};
   box-shadow: ${props.elevated && `0px 4px 8px rgba(0, 0, 0, 0.3)`};
   justify-content: ${props.justify};
   align-items: ${props.align};
