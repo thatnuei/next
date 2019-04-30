@@ -1,12 +1,11 @@
-import React from "react"
-import { withTheme } from "styled-components"
 import Box from "./Box"
-import { AppTheme } from "./theme"
+import { styled } from "./styled"
 
-const ModalPanel = (props: { children?: React.ReactNode; theme: AppTheme }) => (
-  <Box background="theme0" elevated>
-    {props.children}
-  </Box>
-)
+const ModalPanel = styled(Box)``
 
-export default withTheme(ModalPanel)
+ModalPanel.defaultProps = {
+  background: "theme0",
+  elevated: true,
+}
+
+export default ModalPanel
