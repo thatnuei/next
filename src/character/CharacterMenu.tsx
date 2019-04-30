@@ -2,7 +2,7 @@ import React from "react"
 import { getProfileUrl } from "../flist/helpers"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
-import { semiBlack, themeColor } from "../ui/colors"
+import { semiBlack } from "../ui/colors"
 import ExternalLink from "../ui/ExternalLink"
 import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
@@ -29,7 +29,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
   }
 
   return (
-    <Menu onClick={menu.close} width={200} elevated>
+    <Menu background="theme0" onClick={menu.close} width={200} elevated>
       <CloseButton>
         <Icon icon="close" />
       </CloseButton>
@@ -71,7 +71,6 @@ const CharacterMenu = (props: CharacterMenuProps) => {
 export default CharacterMenu
 
 const Menu = styled(Box)`
-  background-color: ${themeColor};
   position: relative;
 `
 
