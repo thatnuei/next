@@ -1,11 +1,9 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import Chatbox from "../chat/Chatbox"
-import ChatNavigation from "../chat/ChatNavigation"
+import ChatNavigationOverlay from "../chat/ChatNavigationOverlay"
 import useChatNavBreakpoint from "../chat/useChatNavBreakpoint"
 import MessageList from "../message/MessageList"
-import OverlayShade from "../overlay/OverlayShade"
-import OverlaySidePanel from "../overlay/OverlaySidePanel"
 import { useRootStore } from "../RootStore"
 import BBC from "../ui/BBC"
 import Box from "../ui/Box"
@@ -33,13 +31,7 @@ function ChannelView({ channel }: Props) {
   const isChatNavVisible = useChatNavBreakpoint()
 
   const showChatNav = () => {
-    overlayStore.open(
-      <OverlayShade>
-        <OverlaySidePanel>
-          <ChatNavigation />
-        </OverlaySidePanel>
-      </OverlayShade>,
-    )
+    overlayStore.open(<ChatNavigationOverlay />, ChatNavigationOverlay.key)
   }
 
   const channelHeader = (
