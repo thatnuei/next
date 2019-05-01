@@ -1,35 +1,35 @@
 import React from "react"
+import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
 import { gapSizes } from "../ui/theme"
+import StatusOverlay from "./StatusOverlay"
 
-type Props = {
-  onChannels?: () => void
-  onUpdateStatus?: () => void
-  onFriends?: () => void
-  onAbout?: () => void
-  onLogout?: () => void
-}
+export default function NavigationActions() {
+  const { overlayStore } = useRootStore()
 
-export default function NavigationActions(props: Props) {
+  const openStatusForm = () => {
+    overlayStore.open(<StatusOverlay />)
+  }
+
   return (
     <Box pad={gapSizes.small} background="theme2">
       <Box flex gap={gapSizes.medium}>
-        <FadedButton onClick={props.onChannels}>
+        <FadedButton>
           <Icon icon="channels" />
         </FadedButton>
-        <FadedButton onClick={props.onUpdateStatus}>
+        <FadedButton onClick={openStatusForm}>
           <Icon icon="updateStatus" />
         </FadedButton>
-        <FadedButton onClick={props.onFriends}>
+        <FadedButton>
           <Icon icon="heart" />
         </FadedButton>
-        <FadedButton onClick={props.onAbout}>
+        <FadedButton>
           <Icon icon="about" />
         </FadedButton>
       </Box>
-      <FadedButton onClick={props.onLogout}>
+      <FadedButton>
         <Icon icon="logout" />
       </FadedButton>
     </Box>
