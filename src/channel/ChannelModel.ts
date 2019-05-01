@@ -66,6 +66,6 @@ export default class ChannelModel {
       return 4
     }
 
-    return sortBy(characters, getSortWeight, "name")
+    return sortBy(characters, getSortWeight, (char) => char.name.toLowerCase())
   }
 }
