@@ -4,7 +4,6 @@ import Box from "../ui/Box"
 import { semiBlack } from "../ui/colors"
 import { fullscreen } from "../ui/helpers"
 import { styled } from "../ui/styled"
-import { gapSizes } from "../ui/theme"
 import { useOverlay } from "./OverlayContext"
 
 type Props = {
@@ -31,7 +30,6 @@ export default function OverlayShade(props: Props) {
   return (
     <Shade
       overflowY="auto"
-      pad={gapSizes.medium}
       {...props}
       style={style}
       onClick={onlyOnSelf(overlay.close)}
