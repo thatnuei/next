@@ -1,8 +1,12 @@
 import { observer } from "mobx-react-lite"
-import React, { useContext } from "react"
+import React from "react"
 import Chatbox from "../chat/Chatbox"
-import { NavigationOverlayContext } from "../chat/ChatScreen"
+import ChatNavigation from "../chat/ChatNavigation"
+import useChatNavBreakpoint from "../chat/useChatNavBreakpoint"
 import MessageList from "../message/MessageList"
+import OverlayShade from "../overlay/OverlayShade"
+import OverlaySidePanel from "../overlay/OverlaySidePanel"
+import { useRootStore } from "../RootStore"
 import BBC from "../ui/BBC"
 import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
@@ -22,10 +26,21 @@ const userListBreakpoint = 1200
 type Props = { channel: ChannelModel }
 
 function ChannelView({ channel }: Props) {
+  const { overlayStore } = useRootStore()
   const userListVisible = useMedia(`(min-width: ${userListBreakpoint}px)`)
   const descriptionUi = useToggleState()
   const userListOverlay = useToggleState()
-  const navOverlayContext = useContext(NavigationOverlayContext)
+  const isChatNavVisible = useChatNavBreakpoint()
+
+  const showChatNav = () => {
+    overlayStore.open(
+      <OverlayShade>
+        <OverlaySidePanel>
+          <ChatNavigation />
+        </OverlaySidePanel>
+      </OverlayShade>,
+    )
+  }
 
   const channelHeader = (
     <Box background="theme0" style={{ position: "relative" }}>
@@ -36,8 +51,8 @@ function ChannelView({ channel }: Props) {
         align="center"
       >
         <Box direction="row" align="center" gap={gapSizes.xsmall} flex>
-          {navOverlayContext.isOverlayVisible && (
-            <FadedButton onClick={navOverlayContext.show}>
+          {!isChatNavVisible && (
+            <FadedButton onClick={showChatNav}>
               <Icon icon="menu" />
             </FadedButton>
           )}

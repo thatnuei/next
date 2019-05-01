@@ -1,23 +1,17 @@
 import { observer } from "mobx-react-lite"
 import { cover } from "polished"
-import React, { useMemo } from "react"
+import React from "react"
 import ChannelView from "../channel/ChannelView"
 import { CharacterMenuProvider } from "../character/CharacterMenuContext"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
-import SideOverlay from "../ui/SideOverlay"
 import { gapSizes } from "../ui/theme"
-import useMedia from "../ui/useMedia"
-import useToggleState from "../ui/useToggleState"
 import ChatNavigation from "./ChatNavigation"
-
-const navigationBreakpoint = 950
+import useChatNavBreakpoint from "./useChatNavBreakpoint"
 
 const ChatScreen = () => {
   const { channelStore, viewStore } = useRootStore()
-
-  const navigationVisible = useMedia(`(min-width: ${navigationBreakpoint}px)`)
-  const navigationOverlay = useToggleState()
+  const navigationVisible = useChatNavBreakpoint()
 
   function renderChatRoom() {
     const { chatRoom } = viewStore
@@ -38,54 +32,18 @@ const ChatScreen = () => {
     }
   }
 
-  const navigationOverlayContext = useMemo(
-    () => ({
-      isOverlayVisible: !navigationVisible,
-      show: navigationOverlay.enable,
-      hide: navigationOverlay.disable,
-    }),
-    [navigationOverlay.disable, navigationOverlay.enable, navigationVisible],
-  )
-
   return (
     <CharacterMenuProvider>
-      <NavigationOverlayContext.Provider value={navigationOverlayContext}>
-        <Box
-          direction="row"
-          gap={gapSizes.xsmall}
-          style={cover()}
-          background="theme2"
-        >
-          {navigationVisible && <ChatNavigation />}
-
-          {renderChatRoom()}
-        </Box>
-
-        <SideOverlay
-          anchor="left"
-          visible={navigationOverlay.on}
-          onShadeClick={navigationOverlay.disable}
-        >
-          <Box elevated>
-            <ChatNavigation />
-          </Box>
-        </SideOverlay>
-      </NavigationOverlayContext.Provider>
+      <Box
+        direction="row"
+        gap={gapSizes.xsmall}
+        style={cover()}
+        background="theme2"
+      >
+        {navigationVisible && <ChatNavigation />}
+        {renderChatRoom()}
+      </Box>
     </CharacterMenuProvider>
   )
 }
 export default observer(ChatScreen)
-
-export const NavigationOverlayContext = React.createContext({
-  // TODO: use a custom consumer hook instead of having these warnings here
-  show: () => {
-    console.error("Attempt to use nav context outside provider")
-  },
-  hide: () => {
-    console.error("Attempt to use nav context outside provider")
-  },
-  get isOverlayVisible() {
-    console.error("Attempt to use nav context outside provider")
-    return false
-  },
-})

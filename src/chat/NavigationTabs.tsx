@@ -1,14 +1,12 @@
 import { observer } from "mobx-react-lite"
-import React, { useContext } from "react"
+import React from "react"
 import Avatar from "../character/Avatar"
 import { useRootStore } from "../RootStore"
 import Icon from "../ui/Icon"
-import { NavigationOverlayContext } from "./ChatScreen"
 import RoomTab from "./RoomTab"
 
 function NavigationTabs() {
   const { channelStore, viewStore } = useRootStore()
-  const navOverlay = useContext(NavigationOverlayContext)
 
   return (
     <>
@@ -22,7 +20,7 @@ function NavigationTabs() {
           active={viewStore.isChannelActive(channel.id)}
           onClick={() => {
             viewStore.showChannel(channel.id)
-            navOverlay.hide()
+            // hide chat nav
           }}
           onClose={() => channelStore.leave(channel.id)}
         />
