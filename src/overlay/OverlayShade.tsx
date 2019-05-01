@@ -29,6 +29,7 @@ export default function OverlayShade(props: Props) {
 
   return (
     <Shade
+      overflowX="hidden"
       overflowY="auto"
       {...props}
       style={style}
