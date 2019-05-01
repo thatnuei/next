@@ -4,12 +4,13 @@ import Chatbox from "../chat/Chatbox"
 import ChatNavigationOverlay from "../chat/ChatNavigationOverlay"
 import useChatNavBreakpoint from "../chat/useChatNavBreakpoint"
 import MessageList from "../message/MessageList"
+import OverlayShade from "../overlay/OverlayShade"
+import OverlaySidePanel from "../overlay/OverlaySidePanel"
 import { useRootStore } from "../RootStore"
 import BBC from "../ui/BBC"
 import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
-import SideOverlay from "../ui/SideOverlay"
 import { styled } from "../ui/styled"
 import { gapSizes } from "../ui/theme"
 import useMedia from "../ui/useMedia"
@@ -27,11 +28,20 @@ function ChannelView({ channel }: Props) {
   const { overlayStore } = useRootStore()
   const userListVisible = useMedia(`(min-width: ${userListBreakpoint}px)`)
   const descriptionUi = useToggleState()
-  const userListOverlay = useToggleState()
   const isChatNavVisible = useChatNavBreakpoint()
 
   const showChatNav = () => {
     overlayStore.open(<ChatNavigationOverlay />, ChatNavigationOverlay.key)
+  }
+
+  const showUsersOverlay = () => {
+    overlayStore.open(
+      <OverlayShade>
+        <OverlaySidePanel side="right">
+          <ChannelUserList channel={channel} />
+        </OverlaySidePanel>
+      </OverlayShade>,
+    )
   }
 
   const channelHeader = (
@@ -64,7 +74,7 @@ function ChannelView({ channel }: Props) {
         <ChannelFilters channel={channel} />
 
         {!userListVisible && (
-          <FadedButton onClick={userListOverlay.enable}>
+          <FadedButton onClick={showUsersOverlay}>
             <Icon icon="users" />
           </FadedButton>
         )}
@@ -100,18 +110,6 @@ function ChannelView({ channel }: Props) {
           <Chatbox onSubmit={console.log} />
         </Box>
       </Box>
-
-      {!userListVisible && (
-        <SideOverlay
-          anchor="right"
-          visible={userListOverlay.on}
-          onShadeClick={userListOverlay.disable}
-        >
-          <Box elevated>
-            <ChannelUserList channel={channel} />
-          </Box>
-        </SideOverlay>
-      )}
     </>
   )
 }
