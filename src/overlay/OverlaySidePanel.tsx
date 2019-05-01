@@ -19,7 +19,7 @@ const OverlaySidePanel = (props: Props) => {
     side === "left" ? { left: 0 } : { right: 0 }
 
   const transitionStyle: CSSProperties = overlay.isEntering
-    ? { transform: `translateX(1%)` }
+    ? { transform: `translateX(0)` }
     : { transform: `translateX(${translation})` }
 
   const style: CSSProperties = {
