@@ -3,6 +3,7 @@ import { cover } from "polished"
 import React from "react"
 import ChannelView from "../channel/ChannelView"
 import { CharacterMenuProvider } from "../character/CharacterMenuContext"
+import OverlayRenderer from "../overlay/OverlayRenderer"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
 import { gapSizes } from "../ui/theme"
@@ -43,6 +44,7 @@ const ChatScreen = () => {
         {navigationVisible && <ChatNavigation />}
         {renderChatRoom()}
       </Box>
+      <OverlayRenderer />
     </CharacterMenuProvider>
   )
 }
