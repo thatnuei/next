@@ -12,6 +12,7 @@ type BoxProps = {
   direction?: "row" | "column"
   align?: "center" | "flex-start" | "flex-end" | "stretch" | "baseline"
   alignContent?: "center" | "flex-start" | "flex-end" | "stretch" | "baseline"
+  alignSelf?: "center" | "flex-start" | "flex-end" | "stretch" | "baseline"
   justify?:
     | "flex-start"
     | "center"
@@ -130,6 +131,7 @@ const boxStyle = (props: BoxProps) => css`
   justify-content: ${props.justify};
   align-items: ${props.align};
   align-content: ${props.alignContent};
+  align-self: ${props.alignSelf};
   flex: ${resolveFlex(props.flex)};
   flex-grow: ${props.flexGrow};
   flex-shrink: ${props.flexShrink};
