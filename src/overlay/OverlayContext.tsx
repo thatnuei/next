@@ -1,4 +1,4 @@
-import React, { ProviderProps, useContext, useEffect } from "react"
+import React, { ProviderProps, useContext } from "react"
 import {
   ENTERED,
   ENTERING,
@@ -22,7 +22,6 @@ export function OverlayProvider(props: ProviderProps<OverlayContextType>) {
   return <OverlayContext.Provider {...props} />
 }
 
-let count = 0
 export function useOverlay() {
   const context = useContext(OverlayContext)
   if (!context) {
@@ -31,10 +30,6 @@ export function useOverlay() {
 
   const { transitionStatus, transitionTimeout } = context
   const { overlayStore } = useRootStore()
-
-  useEffect(() => {
-    console.log(`render #${++count}`)
-  })
 
   const isEntering =
     transitionStatus === ENTERING || transitionStatus === ENTERED
