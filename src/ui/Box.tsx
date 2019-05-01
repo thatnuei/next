@@ -34,8 +34,8 @@ type BoxProps = {
    */
   gap?: number | string | boolean
 
-  overflowX?: "auto" | "scroll"
-  overflowY?: "auto" | "scroll"
+  overflowX?: "auto" | "scroll" | "hidden"
+  overflowY?: "auto" | "scroll" | "hidden"
 }
 
 type PadObject = {
