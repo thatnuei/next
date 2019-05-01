@@ -25,7 +25,7 @@ const OverlayPanel = (props: Props) => {
   return (
     <Container align="flex-end" gap={gapSizes.small} style={style}>
       <OverlayCloseButton />
-      <Box background="theme0" elevated style={{ width: "100%" }}>
+      <Box background="theme0" elevated>
         {props.children}
       </Box>
     </Container>
