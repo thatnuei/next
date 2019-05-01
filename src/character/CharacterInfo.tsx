@@ -22,7 +22,7 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
   const statusStyle = { color: statusColors[status] }
 
   return (
-    <Box gap={gapSizes.small} {...containerProps}>
+    <Box gap={gapSizes.small} align="flex-start" {...containerProps}>
       <ExternalLink href={getProfileUrl(name)}>
         <h2 style={nameStyle}>{name}</h2>
       </ExternalLink>
@@ -31,7 +31,7 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
         <Avatar key={name} name={name} size={80} />
       </ExternalLink>
 
-      <Box background="theme2" pad={gapSizes.xsmall}>
+      <Box background="theme2" pad={gapSizes.xsmall} alignSelf="stretch">
         <StatusText>
           <span style={statusStyle}>{status}</span>
           {statusMessage ? (
