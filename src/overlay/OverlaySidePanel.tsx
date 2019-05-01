@@ -11,15 +11,22 @@ type Props = {
 const OverlaySidePanel = (props: Props) => {
   const overlay = useOverlay()
 
-  const style: CSSProperties = overlay.isEntering
-    ? {
-        transition: `${overlay.transitionTimeout}ms`,
-        transform: `translateX(0)`,
-      }
-    : {
-        transition: `${overlay.transitionTimeout}ms`,
-        transform: `translateX(-100%)`,
-      }
+  const side = props.side || "left"
+
+  const translation = side === "left" ? `-100%` : `100%`
+
+  const positionStyle: CSSProperties =
+    side === "left" ? { left: 0 } : { right: 0 }
+
+  const transitionStyle: CSSProperties = overlay.isEntering
+    ? { transform: `translateX(1%)` }
+    : { transform: `translateX(${translation})` }
+
+  const style: CSSProperties = {
+    transition: `${overlay.transitionTimeout}ms`,
+    ...positionStyle,
+    ...transitionStyle,
+  }
 
   return (
     <Panel elevated style={style}>
