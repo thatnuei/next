@@ -37,9 +37,10 @@ function ChannelUserList({ channel }: { channel: ChannelModel }) {
     )
   }
 
+  const countPadding = { vertical: gapSizes.xsmall, horizontal: gapSizes.small }
   return (
     <Box width={220} height="100%">
-      <Box background="theme0" pad={gapSizes.xsmall}>
+      <Box background="theme0" pad={countPadding}>
         Characters: {sortedUsers.length}
       </Box>
 
