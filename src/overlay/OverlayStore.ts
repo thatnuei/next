@@ -10,8 +10,7 @@ export default class OverlayStore {
   overlays: OverlayInfo[] = []
 
   @action
-  open = (content: React.ReactElement) => {
-    const key = String(Math.random())
+  open = (content: React.ReactElement, key = String(Math.random())) => {
     this.overlays.push({ content, key })
     return key
   }
