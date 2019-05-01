@@ -51,12 +51,12 @@ const Box = (
   { gap, children, ...props }: ComponentPropsWithoutRef<"div"> & BoxProps,
   ref: React.Ref<HTMLDivElement>,
 ) => {
-  let elements: React.ReactNode[] = []
+  const getChildElements = () => {
+    const gapUnit = resolveGapUnit(gap)
+    if (gapUnit === "0") return children
 
-  const gapUnit = resolveGapUnit(gap)
-  if (gapUnit === "0") {
-    elements = [children]
-  } else {
+    const elements: React.ReactNode[] = []
+
     const childrenArray = React.Children.toArray(children)
     for (let i = 0; i < childrenArray.length - 1; i++) {
       elements.push(
@@ -64,12 +64,15 @@ const Box = (
         <BoxGap size={gapUnit} key={`gap-${i}`} />,
       )
     }
+
     elements.push(childrenArray[childrenArray.length - 1])
+
+    return elements
   }
 
   return (
     <div {...props} css={boxStyle(props)} ref={ref}>
-      {elements}
+      {getChildElements()}
     </div>
   )
 }
