@@ -43,3 +43,20 @@ export const scrollVertical = css`
 export const boxShadow = css`
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.5);
 `
+
+export const fadedRevealStyle = css`
+  transition: 0.2s;
+  opacity: 0.4;
+
+  :hover,
+  :focus {
+    opacity: 0.9;
+    outline: none;
+  }
+`
+export const pressEffect = css`
+  :active {
+    transform: translateY(2px);
+    transition: none;
+  }
+`

@@ -35,7 +35,6 @@ export default observer(ChannelFilters)
 
 const FilterButton = styled.button<{ active?: boolean }>`
   transition: 0.2s;
-  cursor: pointer;
   padding: 0 ${gapSizes.xsmall};
 
   :focus {

@@ -31,7 +31,6 @@ const Container = styled.header`
 const IconButton = styled.button`
   padding: 0.7rem;
   opacity: 0.5;
-  cursor: pointer;
   transition: 0.3s;
 
   :hover,

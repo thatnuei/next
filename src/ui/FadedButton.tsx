@@ -1,19 +1,7 @@
-import { pressEffect } from "./Button"
-import { css, styled } from "./styled"
-
-const fadedRevealStyle = css`
-  transition: 0.2s;
-  opacity: 0.4;
-
-  :hover,
-  :focus {
-    opacity: 0.9;
-    outline: none;
-  }
-`
+import { fadedRevealStyle, pressEffect } from "./helpers"
+import { styled } from "./styled"
 
 const FadedButton = styled.button`
-  cursor: pointer;
   ${fadedRevealStyle};
   ${pressEffect};
 `

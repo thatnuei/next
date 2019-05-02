@@ -79,11 +79,10 @@ const OptionsBackground = styled.div`
   display: grid;
 `
 
-const MenuOption = styled.a`
+const MenuOption = styled.button<{ href?: string }>`
   padding: 0.4rem;
   padding-right: 0.7rem;
   opacity: 0.6;
-  cursor: pointer;
   transition: 0.2s;
 
   :hover,

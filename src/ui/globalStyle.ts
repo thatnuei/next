@@ -45,6 +45,7 @@ const globalStyle = css`
     color: inherit;
     border: none;
     text-align: left;
+    cursor: pointer;
   }
 
   a {

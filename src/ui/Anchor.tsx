@@ -2,6 +2,7 @@ import { styled } from "./styled"
 
 const Anchor = styled.a`
   display: inline-block;
+  cursor: pointer;
 
   /* hover reveal reansition */
   opacity: 0.8;
@@ -9,7 +10,6 @@ const Anchor = styled.a`
   :hover,
   :focus {
     opacity: 1;
-    cursor: pointer;
   }
 
   /* white underline */

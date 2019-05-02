@@ -34,7 +34,6 @@ export default observer(CharacterName)
 const ContainerButton = styled.button`
   display: inline-flex;
   align-items: baseline;
-  cursor: pointer;
   :focus {
     outline: none;
   }

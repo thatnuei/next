@@ -1,8 +1,9 @@
 import React from "react"
 import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
+import { fadedRevealStyle } from "../ui/helpers"
 import Icon from "../ui/Icon"
-import { css, styled } from "../ui/styled"
+import { styled } from "../ui/styled"
 import { gapSizes } from "../ui/theme"
 
 type Props = {
@@ -46,22 +47,11 @@ export default function RoomTab({ onClick = () => {}, ...props }: Props) {
 }
 
 const TitleButton = styled.button<{ active?: boolean }>`
-  ${(props) => (props.active ? "" : inactiveStyle)};
+  ${(props) => (props.active ? "" : fadedRevealStyle)};
 
   flex: 1;
 
   :focus {
     outline: none;
-  }
-`
-
-const inactiveStyle = css`
-  cursor: pointer;
-  transition: 0.2s;
-  opacity: 0.4;
-
-  :hover,
-  :focus {
-    opacity: 0.7;
   }
 `
