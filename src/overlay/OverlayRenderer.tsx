@@ -6,7 +6,7 @@ import { useRootStore } from "../RootStore"
 import { OverlayContextType, OverlayProvider } from "./OverlayContext"
 import { OverlayInfo } from "./OverlayStore"
 
-const transitionTimeout = 400
+const transitionTimeout = 300
 
 function OverlayRenderer() {
   const { overlayStore } = useRootStore()
