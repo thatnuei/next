@@ -91,11 +91,10 @@ const MenuOption = styled.button<{ href?: string }>`
     background-color: ${semiBlack(0.25)};
   }
 
-  display: grid;
-  grid-auto-flow: column;
-  grid-gap: 5px;
-  align-items: center;
-  justify-content: start;
+  display: flex;
+  > * + * {
+    margin-left: ${gapSizes.xsmall};
+  }
 `
 
 MenuOption.defaultProps = {
