@@ -3,8 +3,10 @@ import React from "react"
 import * as icons from "./icons"
 import { styled } from "./styled"
 
-type IconProps = React.ComponentPropsWithoutRef<"div"> & {
-  icon: keyof typeof icons // TODO: rename to "name"
+export type IconName = keyof typeof icons
+
+export type IconProps = React.ComponentPropsWithoutRef<"div"> & {
+  icon: IconName // TODO: rename to "name"
   color?: string
   size?: number
 }
