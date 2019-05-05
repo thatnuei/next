@@ -8,7 +8,6 @@ const tomato = rgb(231, 76, 60)
 const carrot = rgb(230, 126, 34)
 
 const themeColor = midnight
-const primaryColor = shade(0.15, river)
 const textColor = clouds
 
 export const baseTheme = {
@@ -17,7 +16,7 @@ export const baseTheme = {
     theme1: shade(0.3, themeColor),
     theme2: shade(0.5, themeColor),
     theme3: shade(0.8, themeColor),
-    primary: primaryColor,
+    primary: river,
     text: textColor,
     success: emerald,
   },
