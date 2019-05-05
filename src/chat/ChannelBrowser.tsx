@@ -1,6 +1,7 @@
 import fuzzysearch from "fuzzysearch"
+import sortBy from "lodash/sortBy"
 import { observer } from "mobx-react-lite"
-import React, { useEffect, useLayoutEffect, useRef } from "react"
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { ChannelListing } from "../channel/ChannelStore"
 import { useOverlay } from "../overlay/OverlayContext"
 import OverlayPanel, { OverlayPanelHeader } from "../overlay/OverlayPanel"
@@ -17,12 +18,11 @@ import { gapSizes } from "../ui/theme"
 
 function ChannelBrowser() {
   const { channelStore } = useRootStore()
-  useEffect(() => channelStore.requestListings(), [channelStore])
-
   const searchInput = useInput()
-
   const overlay = useOverlay()
   const searchInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => channelStore.requestListings(), [channelStore])
 
   useLayoutEffect(() => {
     if (overlay.isVisible && searchInputRef.current) {
@@ -30,9 +30,22 @@ function ChannelBrowser() {
     }
   }, [overlay.isVisible])
 
-  const processedEntries = channelStore.listings.public.filter((entry) =>
+  const [sortMode, setSortMode] = useState<"alpha" | "userCount">("userCount")
+
+  const entries = channelStore.listings.public
+
+  const sortedEntries =
+    sortMode === "alpha"
+      ? sortBy(entries, "name")
+      : sortBy(entries, "userCount").reverse()
+
+  const processedEntries = sortedEntries.filter((entry) =>
     fuzzysearch(searchInput.value.toLowerCase(), entry.name.toLowerCase()),
   )
+
+  const toggleSortMode = () => {
+    setSortMode((mode) => (mode === "alpha" ? "userCount" : "alpha"))
+  }
 
   const handleJoin = (entry: ChannelListing) => {
     if (channelStore.isJoined(entry.id)) {
@@ -98,7 +111,7 @@ function ChannelBrowser() {
             ref={searchInputRef}
             {...searchInput.bind}
           />
-          <Button>
+          <Button onClick={toggleSortMode}>
             <Icon icon="sortAlphabetical" />
           </Button>
         </Box>
