@@ -25,6 +25,7 @@ const OverlayPanel = (props: Props) => {
   return (
     <Container
       align="flex-end"
+      justify="center"
       pad={gapSizes.medium}
       gap={gapSizes.small}
       style={{ ...baseStyle, ...transitionStyle }}
@@ -49,6 +50,7 @@ const Container = styled(Box)`
   margin: auto;
   transition: 0.3s;
   width: 100%;
+  height: 100%;
 
   /* ignore click events on this element, but not the children */
   pointer-events: none;
