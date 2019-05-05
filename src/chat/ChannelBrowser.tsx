@@ -1,7 +1,8 @@
 import fuzzysearch from "fuzzysearch"
 import { observer } from "mobx-react-lite"
-import React, { useEffect } from "react"
+import React, { useEffect, useLayoutEffect, useRef } from "react"
 import { ChannelListing } from "../channel/ChannelStore"
+import { useOverlay } from "../overlay/OverlayContext"
 import OverlayPanel, { OverlayPanelHeader } from "../overlay/OverlayPanel"
 import OverlayShade from "../overlay/OverlayShade"
 import { useRootStore } from "../RootStore"
@@ -20,6 +21,19 @@ function ChannelBrowser() {
 
   const searchInput = useInput()
 
+  const overlay = useOverlay()
+  const searchInputRef = useRef<HTMLInputElement>(null)
+
+  useLayoutEffect(() => {
+    if (overlay.isVisible && searchInputRef.current) {
+      searchInputRef.current.focus()
+    }
+  }, [overlay.isVisible])
+
+  const processedEntries = channelStore.listings.public.filter((entry) =>
+    fuzzysearch(searchInput.value.toLowerCase(), entry.name.toLowerCase()),
+  )
+
   const handleJoin = (entry: ChannelListing) => {
     if (channelStore.isJoined(entry.id)) {
       channelStore.leave(entry.id)
@@ -27,10 +41,6 @@ function ChannelBrowser() {
       channelStore.join(entry.id)
     }
   }
-
-  const processedEntries = channelStore.listings.public.filter((entry) =>
-    fuzzysearch(searchInput.value.toLowerCase(), entry.name.toLowerCase()),
-  )
 
   return (
     <OverlayShade>
@@ -85,6 +95,7 @@ function ChannelBrowser() {
           <TextInput
             style={{ flex: 1 }}
             placeholder="Search..."
+            ref={searchInputRef}
             {...searchInput.bind}
           />
           <Button>
