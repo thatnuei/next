@@ -23,6 +23,7 @@
     "cross-env": "^5.2.0",
     "eslint-plugin-react": "^7.12.4",
     "fchat": "^1.4.0",
+    "fuzzysearch": "^1.0.3",
     "grommet": "^2.6.5",
     "idb-keyval": "^3.2.0",
     "lodash": "^4.17.11",
