@@ -39,7 +39,7 @@ function ChannelBrowser() {
       ? sortBy(entries, "name")
       : sortBy(entries, "userCount").reverse()
 
-  const processedEntries = sortedEntries.filter((entry) =>
+  const filteredEntries = sortedEntries.filter((entry) =>
     fuzzysearch(searchInput.value.toLowerCase(), entry.name.toLowerCase()),
   )
 
@@ -67,7 +67,7 @@ function ChannelBrowser() {
           overflowY="auto"
           background="theme2"
         >
-          {processedEntries.map((entry) => {
+          {filteredEntries.map((entry) => {
             const joined = channelStore.isJoined(entry.id)
             const onChange = () => handleJoin(entry)
 
