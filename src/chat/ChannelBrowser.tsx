@@ -16,6 +16,12 @@ import { styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
 import { gapSizes } from "../ui/theme"
 
+/**
+ * Lowercases and removes white space,
+ * to make more appropriate for fuzzysearching
+ */
+const queryify = (text: string) => text.replace(/[^a-z]+/gi, "").toLowerCase()
+
 function ChannelBrowser() {
   const { channelStore } = useRootStore()
   const searchInput = useInput()
@@ -40,7 +46,7 @@ function ChannelBrowser() {
       : sortBy(entries, "userCount").reverse()
 
   const filteredEntries = sortedEntries.filter((entry) =>
-    fuzzysearch(searchInput.value.toLowerCase(), entry.name.toLowerCase()),
+    fuzzysearch(queryify(searchInput.value), queryify(entry.name)),
   )
 
   const toggleSortMode = () => {
