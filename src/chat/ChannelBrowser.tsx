@@ -11,22 +11,17 @@ import useInput from "../state/useInput"
 import Box from "../ui/Box"
 import Button from "../ui/Button"
 import { fadedRevealStyle } from "../ui/helpers"
-import Icon from "../ui/Icon"
+import Icon, { IconName } from "../ui/Icon"
 import { styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
 import { gapSizes } from "../ui/theme"
-
-/**
- * Lowercases and removes white space,
- * to make more appropriate for fuzzysearching
- */
-const queryify = (text: string) => text.replace(/[^a-z]+/gi, "").toLowerCase()
 
 function ChannelBrowser() {
   const { channelStore } = useRootStore()
   const searchInput = useInput()
   const overlay = useOverlay()
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const { sortMode, cycleSortMode } = useChannelListSorting()
 
   useEffect(() => channelStore.requestListings(), [channelStore])
 
@@ -36,22 +31,13 @@ function ChannelBrowser() {
     }
   }, [overlay.isVisible])
 
-  const [sortMode, setSortMode] = useState<"alpha" | "userCount">("userCount")
-
   const entries = channelStore.listings.public
 
-  const sortedEntries =
-    sortMode === "alpha"
-      ? sortBy(entries, "name")
-      : sortBy(entries, "userCount").reverse()
+  const sortedEntries = sortMode.sortEntries(entries)
 
   const filteredEntries = sortedEntries.filter((entry) =>
     fuzzysearch(queryify(searchInput.value), queryify(entry.name)),
   )
-
-  const toggleSortMode = () => {
-    setSortMode((mode) => (mode === "alpha" ? "userCount" : "alpha"))
-  }
 
   const handleJoin = (entry: ChannelListing) => {
     if (channelStore.isJoined(entry.id)) {
@@ -117,8 +103,8 @@ function ChannelBrowser() {
             ref={searchInputRef}
             {...searchInput.bind}
           />
-          <Button onClick={toggleSortMode}>
-            <Icon icon="sortAlphabetical" />
+          <Button onClick={cycleSortMode}>
+            <Icon icon={sortMode.icon} />
           </Button>
         </Box>
       </OverlayPanel>
@@ -146,3 +132,36 @@ const EntryInput = styled.input`
     color: ${(props) => props.theme.colors.success};
   }
 `
+
+function useChannelListSorting() {
+  type SortMode = {
+    icon: IconName
+    sortEntries: (entries: ChannelListing[]) => ChannelListing[]
+  }
+
+  const sortModes: SortMode[] = [
+    {
+      icon: "sortAlphabetical",
+      sortEntries: (entries) => sortBy(entries, "name"),
+    },
+    {
+      icon: "sortNumeric",
+      sortEntries: (entries) => sortBy(entries, "userCount").reverse(),
+    },
+  ]
+
+  const [sortModeIndex, setSortModeIndex] = useState(0)
+  const sortMode = sortModes[sortModeIndex]
+
+  const cycleSortMode = () => {
+    setSortModeIndex((index) => (index + 1) % sortModes.length)
+  }
+
+  return { sortMode, cycleSortMode }
+}
+
+/**
+ * Lowercases and removes white space,
+ * to make more appropriate for fuzzysearching
+ */
+const queryify = (text: string) => text.replace(/[^a-z]+/gi, "").toLowerCase()
