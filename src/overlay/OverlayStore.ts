@@ -1,22 +1,7 @@
-import { action, observable } from "mobx"
-
-export type OverlayInfo = {
-  key: string
-  content: React.ReactElement
-}
+import OverlayViewModel from "./OverlayViewModel"
 
 export default class OverlayStore {
-  @observable
-  overlays: OverlayInfo[] = []
-
-  @action
-  open = (content: React.ReactElement, key = String(Math.random())) => {
-    this.overlays.push({ content, key })
-    return key
-  }
-
-  @action
-  close = (key: string) => {
-    this.overlays = this.overlays.filter((entry) => entry.key !== key)
-  }
+  chatNav = new OverlayViewModel()
+  userList = new OverlayViewModel()
+  updateStatus = new OverlayViewModel()
 }

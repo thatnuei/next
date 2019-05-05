@@ -1,24 +1,9 @@
 import React, { ProviderProps, useContext } from "react"
-import {
-  ENTERED,
-  ENTERING,
-  EXITED,
-  EXITING,
-  TransitionStatus,
-} from "react-transition-group/Transition"
-import { useRootStore } from "../RootStore"
+import OverlayViewModel from "./OverlayViewModel"
 
-export type OverlayContextType = {
-  transitionStatus: TransitionStatus
-  transitionTimeout: number
-  key: string
-}
+const OverlayContext = React.createContext<OverlayViewModel>()
 
-export type OverlayHelpers = ReturnType<typeof useOverlay>
-
-const OverlayContext = React.createContext<OverlayContextType>()
-
-export function OverlayProvider(props: ProviderProps<OverlayContextType>) {
+export function OverlayProvider(props: ProviderProps<OverlayViewModel>) {
   return <OverlayContext.Provider {...props} />
 }
 
@@ -27,22 +12,5 @@ export function useOverlay() {
   if (!context) {
     throw new Error("useOverlay can only be used in overlay contexts")
   }
-
-  const { transitionStatus, transitionTimeout } = context
-  const { overlayStore } = useRootStore()
-
-  const isEntering =
-    transitionStatus === ENTERING || transitionStatus === ENTERED
-
-  const isExiting = transitionStatus === EXITING || transitionStatus === EXITED
-
-  const close = () => overlayStore.close(context.key)
-
-  return {
-    isEntering,
-    isExiting,
-    transitionTimeout,
-    transitionStatus,
-    close,
-  }
+  return context
 }

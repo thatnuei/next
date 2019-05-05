@@ -4,13 +4,12 @@ import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
 import { gapSizes } from "../ui/theme"
-import StatusOverlay from "./StatusOverlay"
 
 export default function NavigationActions() {
   const { overlayStore } = useRootStore()
 
   const openStatusForm = () => {
-    overlayStore.open(<StatusOverlay />)
+    overlayStore.updateStatus.open()
   }
 
   return (

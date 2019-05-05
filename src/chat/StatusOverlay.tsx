@@ -2,7 +2,7 @@ import React from "react"
 import { CharacterStatus } from "../character/types"
 import { preventDefault } from "../common/eventHelpers"
 import { useOverlay } from "../overlay/OverlayContext"
-import OverlayPanel from "../overlay/OverlayPanel"
+import OverlayPanel, { OverlayPanelHeader } from "../overlay/OverlayPanel"
 import OverlayShade from "../overlay/OverlayShade"
 import { useRootStore } from "../RootStore"
 import useInput from "../state/useInput"
@@ -33,7 +33,7 @@ export default function StatusOverlay(props: Props) {
   return (
     <OverlayShade>
       <OverlayPanel>
-        <OverlayPanel.Header>Update Status</OverlayPanel.Header>
+        <OverlayPanelHeader>Update Status</OverlayPanelHeader>
         <Box
           as="form"
           pad={gapSizes.small}

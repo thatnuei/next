@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import React, { CSSProperties } from "react"
 import Box from "../ui/Box"
 import { styled } from "../ui/styled"
@@ -12,15 +13,9 @@ type Props = {
 const OverlayPanel = (props: Props) => {
   const overlay = useOverlay()
 
-  const style: CSSProperties = overlay.isEntering
-    ? {
-        transition: `${overlay.transitionTimeout}ms`,
-        transform: `translateY(0)`,
-      }
-    : {
-        transition: `${overlay.transitionTimeout}ms`,
-        transform: `translateY(-30px)`,
-      }
+  const style: CSSProperties = overlay.isVisible
+    ? { transform: `translateY(0)` }
+    : { transform: `translateY(-30px)` }
 
   return (
     <Container
@@ -37,9 +32,9 @@ const OverlayPanel = (props: Props) => {
   )
 }
 
-export default OverlayPanel
+export default observer(OverlayPanel)
 
-OverlayPanel.Header = (props: Props) => (
+export const OverlayPanelHeader = (props: Props) => (
   <Box background="theme1" pad={gapSizes.small} align="center">
     <h2>{props.children}</h2>
   </Box>
@@ -47,7 +42,7 @@ OverlayPanel.Header = (props: Props) => (
 
 const Container = styled(Box)`
   margin: auto;
-  transition: 0.2s;
+  transition: 0.3s;
   width: 100%;
   max-width: max-content;
 

@@ -3,7 +3,6 @@ import React from "react"
 import Avatar from "../character/Avatar"
 import { useRootStore } from "../RootStore"
 import Icon from "../ui/Icon"
-import ChatNavigationOverlay from "./ChatNavigationOverlay"
 import RoomTab from "./RoomTab"
 
 function NavigationTabs() {
@@ -21,7 +20,7 @@ function NavigationTabs() {
           active={viewStore.isChannelActive(channel.id)}
           onClick={() => {
             viewStore.showChannel(channel.id)
-            overlayStore.close(ChatNavigationOverlay.key)
+            overlayStore.chatNav.close()
           }}
           onClose={() => channelStore.leave(channel.id)}
         />

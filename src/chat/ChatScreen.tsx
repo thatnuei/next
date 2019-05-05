@@ -3,15 +3,17 @@ import { cover } from "polished"
 import React from "react"
 import ChannelView from "../channel/ChannelView"
 import { CharacterMenuProvider } from "../character/CharacterMenuContext"
-import OverlayRenderer from "../overlay/OverlayRenderer"
+import { OverlayProvider } from "../overlay/OverlayContext"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
 import { gapSizes } from "../ui/theme"
 import ChatNavigation from "./ChatNavigation"
+import ChatNavigationOverlay from "./ChatNavigationOverlay"
+import StatusOverlay from "./StatusOverlay"
 import useChatNavBreakpoint from "./useChatNavBreakpoint"
 
 const ChatScreen = () => {
-  const { channelStore, viewStore } = useRootStore()
+  const { channelStore, viewStore, overlayStore } = useRootStore()
   const navigationVisible = useChatNavBreakpoint()
 
   function renderChatRoom() {
@@ -44,7 +46,14 @@ const ChatScreen = () => {
         {navigationVisible && <ChatNavigation />}
         {renderChatRoom()}
       </Box>
-      <OverlayRenderer />
+
+      <OverlayProvider value={overlayStore.chatNav}>
+        <ChatNavigationOverlay />
+      </OverlayProvider>
+
+      <OverlayProvider value={overlayStore.updateStatus}>
+        <StatusOverlay />
+      </OverlayProvider>
     </CharacterMenuProvider>
   )
 }
