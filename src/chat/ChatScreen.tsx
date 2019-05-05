@@ -7,6 +7,7 @@ import { OverlayProvider } from "../overlay/OverlayContext"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
 import { gapSizes } from "../ui/theme"
+import ChannelBrowser from "./ChannelBrowser"
 import ChatNavigation from "./ChatNavigation"
 import ChatNavigationOverlay from "./ChatNavigationOverlay"
 import StatusOverlay from "./StatusOverlay"
@@ -53,6 +54,10 @@ const ChatScreen = () => {
 
       <OverlayProvider value={overlayStore.updateStatus}>
         <StatusOverlay />
+      </OverlayProvider>
+
+      <OverlayProvider value={overlayStore.channelBrowser}>
+        <ChannelBrowser />
       </OverlayProvider>
     </CharacterMenuProvider>
   )

@@ -6,7 +6,7 @@ import FactoryMap from "../state/FactoryMap"
 import ChannelModel from "./ChannelModel"
 import { ChannelMode } from "./types"
 
-type ChannelListing = {
+export type ChannelListing = {
   id: string
   name: string
   userCount: number

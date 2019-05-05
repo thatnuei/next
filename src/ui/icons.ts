@@ -17,4 +17,6 @@ export {
   mdiMenu as menu,
   mdiMinusCircle as ignore,
   mdiSettings as settings,
+  mdiSortAlphabetical as sortAlphabetical,
+  mdiSortNumeric as sortNumeric,
 } from "@mdi/js"

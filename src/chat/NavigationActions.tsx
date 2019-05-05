@@ -15,7 +15,7 @@ export default function NavigationActions() {
   return (
     <Box pad={gapSizes.small} background="theme2">
       <Box flex gap={gapSizes.medium}>
-        <FadedButton>
+        <FadedButton onClick={overlayStore.channelBrowser.open}>
           <Icon icon="channels" />
         </FadedButton>
         <FadedButton onClick={openStatusForm}>
