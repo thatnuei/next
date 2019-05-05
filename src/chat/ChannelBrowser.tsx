@@ -161,7 +161,7 @@ function useChannelListSorting() {
 }
 
 /**
- * Lowercases and removes white space,
+ * Lowercases and removes non-letters,
  * to make more appropriate for fuzzysearching
  */
 const queryify = (text: string) => text.replace(/[^a-z]+/gi, "").toLowerCase()
