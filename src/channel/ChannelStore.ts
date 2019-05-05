@@ -105,8 +105,8 @@ export default class ChannelStore {
     },
 
     CHA: ({ channels }) => {
-      const listings = channels.map(
-        ({ name, mode, characters }): ChannelListing => ({
+      const listings = channels.map<ChannelListing>(
+        ({ name, mode, characters }) => ({
           id: name,
           name,
           mode,
@@ -117,8 +117,8 @@ export default class ChannelStore {
     },
 
     ORS: ({ channels }) => {
-      const listings = channels.map(
-        ({ name, title, characters }): ChannelListing => ({
+      const listings = channels.map<ChannelListing>(
+        ({ name, title, characters }) => ({
           id: name,
           name: title,
           userCount: characters,
