@@ -8,12 +8,17 @@ import { useOverlay } from "./OverlayContext"
 
 type Props = {
   children?: React.ReactNode
+  maxWidth?: string | number
 }
 
 const OverlayPanel = (props: Props) => {
   const overlay = useOverlay()
 
-  const style: CSSProperties = overlay.isVisible
+  const baseStyle: CSSProperties = {
+    maxWidth: props.maxWidth || "max-content",
+  }
+
+  const transitionStyle: CSSProperties = overlay.isVisible
     ? { transform: `translateY(0)` }
     : { transform: `translateY(-30px)` }
 
@@ -22,10 +27,10 @@ const OverlayPanel = (props: Props) => {
       align="flex-end"
       pad={gapSizes.medium}
       gap={gapSizes.small}
-      style={style}
+      style={{ ...baseStyle, ...transitionStyle }}
     >
       <OverlayCloseButton />
-      <Box background="theme0" elevated>
+      <Box width="100%" background="theme0" elevated>
         {props.children}
       </Box>
     </Container>
@@ -44,7 +49,6 @@ const Container = styled(Box)`
   margin: auto;
   transition: 0.3s;
   width: 100%;
-  max-width: max-content;
 
   /* ignore click events on this element, but not the children */
   pointer-events: none;
