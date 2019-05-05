@@ -4,6 +4,8 @@ export {
   mdiAccountSettings as updateStatus,
   mdiAlertCircle as report,
   mdiBookmark as bookmark,
+  mdiCheckboxBlankOutline as checkOutline,
+  mdiCheckboxMarkedOutline as checkFilled,
   mdiClose as close,
   mdiCodeTags as console,
   mdiComment as message,

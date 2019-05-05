@@ -19,6 +19,7 @@ export const baseTheme = {
     theme3: shade(0.8, themeColor),
     primary: primaryColor,
     text: textColor,
+    success: emerald,
   },
 }
 
