@@ -1,15 +1,13 @@
 import { observer } from "mobx-react-lite"
 import React, { CSSProperties } from "react"
 import { onlyOnSelf } from "../common/eventHelpers"
-import Box from "../ui/Box"
+import Box, { BoxProps } from "../ui/Box"
 import { semiBlack } from "../ui/colors"
 import { fullscreen } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { useOverlay } from "./OverlayContext"
 
-type Props = {
-  children?: React.ReactNode
-}
+type Props = BoxProps
 
 function OverlayShade(props: Props) {
   const overlay = useOverlay()
