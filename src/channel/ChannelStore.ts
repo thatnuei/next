@@ -18,6 +18,8 @@ type ChannelStoreListings = {
   private: ChannelListing[]
 }
 
+export type ChannelListingType = keyof ChannelStoreListings
+
 export default class ChannelStore {
   channels = new FactoryMap((id) => new ChannelModel(this.root, id))
 

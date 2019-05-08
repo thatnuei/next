@@ -2,20 +2,25 @@ import { useRect } from "@reach/rect"
 import fuzzysearch from "fuzzysearch"
 import sortBy from "lodash/sortBy"
 import { observer, useObserver } from "mobx-react-lite"
-import React, { useEffect, useRef, useState } from "react"
+import React, {
+  ComponentPropsWithoutRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
-import { ChannelListing } from "../channel/ChannelStore"
+import { ChannelListing, ChannelListingType } from "../channel/ChannelStore"
 import OverlayCloseButton from "../overlay/OverlayCloseButton"
 import OverlayContent from "../overlay/OverlayContent"
 import { OverlayPanelHeader } from "../overlay/OverlayPanel"
 import OverlayShade from "../overlay/OverlayShade"
 import { useRootStore } from "../RootStore"
 import useInput from "../state/useInput"
-import Box from "../ui/Box"
+import Box, { boxStyle } from "../ui/Box"
 import Button from "../ui/Button"
 import { fadedRevealStyle } from "../ui/helpers"
 import Icon, { IconName } from "../ui/Icon"
-import { styled } from "../ui/styled"
+import { css, styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
 import { gapSizes } from "../ui/theme"
 
@@ -29,7 +34,14 @@ function ChannelBrowser() {
   const { sortMode, cycleSortMode } = useChannelListSorting()
   const searchInput = useInput()
 
-  const allEntries = channelStore.listings.public
+  const [listingTab, setListingTab] = useState<ChannelListingType>("public")
+
+  const getTabProps = (type: ChannelListingType) => ({
+    active: listingTab === type,
+    onClick: () => setListingTab(type),
+  })
+
+  const allEntries = channelStore.listings[listingTab]
 
   const sortedEntries = sortMode.sortEntries(allEntries)
 
@@ -49,10 +61,10 @@ function ChannelBrowser() {
         style={{ maxWidth: "500px" }}
       >
         <Box
+          background="theme2"
           width="100%"
           height="100%"
           style={{ maxHeight: "800px" }}
-          background="theme0"
           elevated
         >
           <OverlayPanelHeader style={{ position: "relative" }}>
@@ -70,7 +82,18 @@ function ChannelBrowser() {
             </Box>
           </OverlayPanelHeader>
 
-          <Box flex background="theme2" ref={listContainerRef}>
+          <Box direction="row">
+            <Tab {...getTabProps("public")}>
+              <Icon icon="public" />
+              <span>Public</span>
+            </Tab>
+            <Tab {...getTabProps("private")}>
+              <Icon icon="private" />
+              <span>Private</span>
+            </Tab>
+          </Box>
+
+          <Box flex ref={listContainerRef}>
             <FixedSizeList
               width={rect.width}
               height={rect.height}
@@ -82,7 +105,12 @@ function ChannelBrowser() {
             />
           </Box>
 
-          <Box direction="row" pad={gapSizes.xsmall} gap={gapSizes.xsmall}>
+          <Box
+            background="theme0"
+            direction="row"
+            pad={gapSizes.xsmall}
+            gap={gapSizes.xsmall}
+          >
             <TextInput
               style={{ flex: 1 }}
               placeholder="Search..."
@@ -162,6 +190,33 @@ const EntryInput = styled.input`
     color: ${(props) => props.theme.colors.success};
   }
 `
+
+function Tab(props: ComponentPropsWithoutRef<"button"> & { active?: boolean }) {
+  const baseStyle = css`
+    ${boxStyle({
+      flex: true,
+      direction: "row",
+      justify: "center",
+      pad: gapSizes.small,
+      background: props.active ? "theme1" : undefined,
+    })};
+
+    /* can't use gap prop :( */
+    > * + * {
+      margin-left: ${gapSizes.xsmall};
+    }
+
+    transition-property: opacity;
+
+    :focus {
+      outline: none;
+    }
+  `
+
+  return (
+    <button css={[baseStyle, !props.active && fadedRevealStyle]} {...props} />
+  )
+}
 
 function useChannelListSorting() {
   type SortMode = {
