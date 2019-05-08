@@ -226,12 +226,12 @@ function useChannelListSorting() {
 
   const sortModes: SortMode[] = [
     {
-      icon: "sortAlphabetical",
-      sortEntries: (entries) => sortBy(entries, "name"),
-    },
-    {
       icon: "sortNumeric",
       sortEntries: (entries) => sortBy(entries, "userCount").reverse(),
+    },
+    {
+      icon: "sortAlphabetical",
+      sortEntries: (entries) => sortBy(entries, "name"),
     },
   ]
 
