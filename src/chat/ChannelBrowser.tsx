@@ -122,7 +122,10 @@ function ChannelBrowserEntry({
               size={0.8}
               style={{ position: "relative", top: "-1px" }}
             />
-            <div style={{ flex: 1, lineHeight: 1 }}>{entry.name}</div>
+            <div
+              style={{ flex: 1, lineHeight: 1 }}
+              dangerouslySetInnerHTML={{ __html: entry.name }}
+            />
             <div>{entry.userCount}</div>
           </Box>
         </Entry>
