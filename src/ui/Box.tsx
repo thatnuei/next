@@ -119,7 +119,7 @@ const resolvePad = (value: BoxProps["pad"]) => {
   `
 }
 
-const boxStyle = (props: BoxProps) => css`
+export const boxStyle = (props: BoxProps) => css`
   display: flex;
   flex-direction: ${props.direction || "column"};
   width: ${resolveUnit(props.width)};
