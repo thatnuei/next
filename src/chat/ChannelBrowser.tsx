@@ -43,8 +43,18 @@ function ChannelBrowser() {
 
   return (
     <OverlayShade>
-      <OverlayContent justify={undefined} style={{ maxWidth: "500px" }}>
-        <Box width="100%" height="100%" background="theme0" elevated>
+      <OverlayContent
+        pad={gapSizes.small}
+        justify="center"
+        style={{ maxWidth: "500px" }}
+      >
+        <Box
+          width="100%"
+          height="100%"
+          style={{ maxHeight: "800px" }}
+          background="theme0"
+          elevated
+        >
           <OverlayPanelHeader style={{ position: "relative" }}>
             Channels
             <Box
