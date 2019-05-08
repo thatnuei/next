@@ -32,12 +32,12 @@ function ChannelBrowser() {
 
   const sortedEntries = sortMode.sortEntries(allEntries)
 
-  const finalEntries = sortedEntries.filter((entry) => {
+  const displayedEntries = sortedEntries.filter((entry) => {
     return fuzzysearch(queryify(searchInput.value), queryify(entry.name))
   })
 
   const renderEntry = (props: ListChildComponentProps) => (
-    <ChannelBrowserEntry {...props} entry={finalEntries[props.index]} />
+    <ChannelBrowserEntry {...props} entry={displayedEntries[props.index]} />
   )
 
   return (
@@ -50,9 +50,9 @@ function ChannelBrowser() {
             <FixedSizeList
               width={rect.width}
               height={rect.height}
-              itemCount={finalEntries.length}
+              itemCount={displayedEntries.length}
               itemSize={36}
-              itemKey={(index) => finalEntries[index].id}
+              itemKey={(index) => displayedEntries[index].id}
               children={renderEntry}
               overscanCount={10}
             />
