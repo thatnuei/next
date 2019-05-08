@@ -3,7 +3,7 @@ import React, { ComponentPropsWithoutRef } from "react"
 import { css, styled } from "./styled"
 import { AppThemeColor, gapSizes } from "./theme"
 
-type BoxProps = {
+export type BoxProps = ComponentPropsWithoutRef<"div"> & {
   as?: React.ElementType
   width?: number | string
   height?: number | string
@@ -39,7 +39,7 @@ type BoxProps = {
   overflowY?: "auto" | "scroll" | "hidden"
 }
 
-type PadObject = {
+export type PadObject = {
   left?: string | number
   right?: string | number
   top?: string | number
@@ -49,7 +49,7 @@ type PadObject = {
 }
 
 const Box = (
-  { gap, children, ...props }: ComponentPropsWithoutRef<"div"> & BoxProps,
+  { gap, children, ...props }: BoxProps,
   ref: React.Ref<HTMLDivElement>,
 ) => {
   const getChildElements = () => {
