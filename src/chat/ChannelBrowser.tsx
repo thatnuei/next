@@ -5,6 +5,7 @@ import { observer, useObserver } from "mobx-react-lite"
 import React, { useEffect, useRef, useState } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
 import { ChannelListing } from "../channel/ChannelStore"
+import OverlayCloseButton from "../overlay/OverlayCloseButton"
 import OverlayContent from "../overlay/OverlayContent"
 import { OverlayPanelHeader } from "../overlay/OverlayPanel"
 import OverlayShade from "../overlay/OverlayShade"
@@ -44,7 +45,20 @@ function ChannelBrowser() {
     <OverlayShade>
       <OverlayContent justify={undefined} style={{ maxWidth: "500px" }}>
         <Box width="100%" height="100%" background="theme0" elevated>
-          <OverlayPanelHeader>Channels</OverlayPanelHeader>
+          <OverlayPanelHeader style={{ position: "relative" }}>
+            Channels
+            <Box
+              justify="center"
+              style={{
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                right: gapSizes.small,
+              }}
+            >
+              <OverlayCloseButton />
+            </Box>
+          </OverlayPanelHeader>
 
           <Box flex background="theme2" ref={listContainerRef}>
             <FixedSizeList
