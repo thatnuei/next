@@ -1,10 +1,12 @@
+import { useRect } from "@reach/rect"
 import fuzzysearch from "fuzzysearch"
 import sortBy from "lodash/sortBy"
-import { observer } from "mobx-react-lite"
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
+import { observer, useObserver } from "mobx-react-lite"
+import React, { useEffect, useRef, useState } from "react"
+import { FixedSizeList, ListChildComponentProps } from "react-window"
 import { ChannelListing } from "../channel/ChannelStore"
-import { useOverlay } from "../overlay/OverlayContext"
-import OverlayPanel, { OverlayPanelHeader } from "../overlay/OverlayPanel"
+import OverlayContent from "../overlay/OverlayContent"
+import { OverlayPanelHeader } from "../overlay/OverlayPanel"
 import OverlayShade from "../overlay/OverlayShade"
 import { useRootStore } from "../RootStore"
 import useInput from "../state/useInput"
@@ -18,101 +20,102 @@ import { gapSizes } from "../ui/theme"
 
 function ChannelBrowser() {
   const { channelStore } = useRootStore()
-  const searchInput = useInput()
-  const overlay = useOverlay()
-  const searchInputRef = useRef<HTMLInputElement>(null)
-  const { sortMode, cycleSortMode } = useChannelListSorting()
-
   useEffect(() => channelStore.requestListings(), [channelStore])
 
-  useLayoutEffect(() => {
-    if (overlay.isVisible && searchInputRef.current) {
-      searchInputRef.current.focus()
-    }
-  }, [overlay.isVisible])
+  const listContainerRef = useRef<HTMLDivElement>(null)
+  const rect = useRect(listContainerRef) || { width: 0, height: 0 }
 
-  const entries = channelStore.listings.public
+  const { sortMode, cycleSortMode } = useChannelListSorting()
+  const searchInput = useInput()
 
-  const sortedEntries = sortMode.sortEntries(entries)
+  const allEntries = channelStore.listings.public
 
-  const filteredEntries = sortedEntries.filter((entry) =>
-    fuzzysearch(queryify(searchInput.value), queryify(entry.name)),
+  const sortedEntries = sortMode.sortEntries(allEntries)
+
+  const finalEntries = sortedEntries.filter((entry) => {
+    return fuzzysearch(queryify(searchInput.value), queryify(entry.name))
+  })
+
+  const renderEntry = (props: ListChildComponentProps) => (
+    <ChannelBrowserEntry {...props} entry={finalEntries[props.index]} />
   )
-
-  const handleJoin = (entry: ChannelListing) => {
-    if (channelStore.isJoined(entry.id)) {
-      channelStore.leave(entry.id)
-    } else {
-      channelStore.join(entry.id)
-    }
-  }
 
   return (
     <OverlayShade>
-      <OverlayPanel maxWidth="500px">
-        <OverlayPanelHeader>Channels</OverlayPanelHeader>
+      <OverlayContent justify={undefined} style={{ maxWidth: "500px" }}>
+        <Box width="100%" height="100%" background="theme0" elevated>
+          <OverlayPanelHeader>Channels</OverlayPanelHeader>
 
-        <Box
-          width="100%"
-          height="100%"
-          flex
-          overflowY="auto"
-          background="theme2"
-        >
-          {filteredEntries.map((entry) => {
-            const joined = channelStore.isJoined(entry.id)
-            const onChange = () => handleJoin(entry)
+          <Box flex background="theme2" ref={listContainerRef}>
+            <FixedSizeList
+              width={rect.width}
+              height={rect.height}
+              itemCount={finalEntries.length}
+              itemSize={36}
+              itemKey={(index) => finalEntries[index].id}
+              children={renderEntry}
+              overscanCount={10}
+            />
+          </Box>
 
-            const pad = {
-              vertical: gapSizes.xsmall,
-              horizontal: gapSizes.small,
-            }
-
-            return (
-              <label key={entry.id}>
-                <Entry direction="row" align="center" pad={pad}>
-                  <EntryInput
-                    type="checkbox"
-                    checked={joined}
-                    onChange={onChange}
-                  />
-                  <Box
-                    direction="row"
-                    flex
-                    align="center"
-                    gap={gapSizes.xsmall}
-                  >
-                    <Icon
-                      icon={joined ? "checkFilled" : "checkOutline"}
-                      size={0.8}
-                      style={{ position: "relative", top: "-1px" }}
-                    />
-                    <div style={{ flex: 1, lineHeight: 1 }}>{entry.name}</div>
-                    <div>{entry.userCount}</div>
-                  </Box>
-                </Entry>
-              </label>
-            )
-          })}
+          <Box direction="row" pad={gapSizes.xsmall} gap={gapSizes.xsmall}>
+            <TextInput
+              style={{ flex: 1 }}
+              placeholder="Search..."
+              {...searchInput.bind}
+            />
+            <Button onClick={cycleSortMode}>
+              <Icon icon={sortMode.icon} />
+            </Button>
+          </Box>
         </Box>
-
-        <Box direction="row" pad={gapSizes.xsmall} gap={gapSizes.xsmall}>
-          <TextInput
-            style={{ flex: 1 }}
-            placeholder="Search..."
-            ref={searchInputRef}
-            {...searchInput.bind}
-          />
-          <Button onClick={cycleSortMode}>
-            <Icon icon={sortMode.icon} />
-          </Button>
-        </Box>
-      </OverlayPanel>
+      </OverlayContent>
     </OverlayShade>
   )
 }
 
 export default observer(ChannelBrowser)
+
+function ChannelBrowserEntry({
+  entry,
+  style,
+}: ListChildComponentProps & { entry: ChannelListing }) {
+  const { channelStore } = useRootStore()
+
+  return useObserver(() => {
+    const joined = channelStore.isJoined(entry.id)
+
+    const toggleJoin = () => {
+      if (joined) {
+        channelStore.leave(entry.id)
+      } else {
+        channelStore.join(entry.id)
+      }
+    }
+
+    const pad = {
+      vertical: gapSizes.xsmall,
+      horizontal: gapSizes.small,
+    }
+
+    return (
+      <label key={entry.id} style={style}>
+        <Entry height="100%" direction="row" align="center" pad={pad}>
+          <EntryInput type="checkbox" checked={joined} onChange={toggleJoin} />
+          <Box direction="row" flex align="center" gap={gapSizes.xsmall}>
+            <Icon
+              icon={joined ? "checkFilled" : "checkOutline"}
+              size={0.8}
+              style={{ position: "relative", top: "-1px" }}
+            />
+            <div style={{ flex: 1, lineHeight: 1 }}>{entry.name}</div>
+            <div>{entry.userCount}</div>
+          </Box>
+        </Entry>
+      </label>
+    )
+  })
+}
 
 const Entry = styled(Box)`
   ${fadedRevealStyle};
