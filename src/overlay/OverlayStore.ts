@@ -5,4 +5,5 @@ export default class OverlayStore {
   userList = new OverlayViewModel()
   updateStatus = new OverlayViewModel()
   channelBrowser = new OverlayViewModel()
+  whosOnline = new OverlayViewModel()
 }

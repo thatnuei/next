@@ -12,6 +12,7 @@ import ChatNavigation from "./ChatNavigation"
 import ChatNavigationOverlay from "./ChatNavigationOverlay"
 import StatusOverlay from "./StatusOverlay"
 import useChatNavBreakpoint from "./useChatNavBreakpoint"
+import WhosOnline from "./WhosOnline"
 
 const ChatScreen = () => {
   const { channelStore, viewStore, overlayStore } = useRootStore()
@@ -58,6 +59,10 @@ const ChatScreen = () => {
 
       <OverlayProvider value={overlayStore.channelBrowser}>
         <ChannelBrowser />
+      </OverlayProvider>
+
+      <OverlayProvider value={overlayStore.whosOnline}>
+        <WhosOnline />
       </OverlayProvider>
     </CharacterMenuProvider>
   )

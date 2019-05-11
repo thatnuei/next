@@ -8,27 +8,36 @@ import { gapSizes } from "../ui/theme"
 export default function NavigationActions() {
   const { overlayStore } = useRootStore()
 
-  const openStatusForm = () => {
-    overlayStore.updateStatus.open()
-  }
-
   return (
     <Box pad={gapSizes.small} background="theme2">
       <Box flex gap={gapSizes.medium}>
-        <FadedButton onClick={overlayStore.channelBrowser.open}>
+        <FadedButton
+          onClick={overlayStore.channelBrowser.open}
+          title="Channels"
+        >
           <Icon icon="channels" />
         </FadedButton>
-        <FadedButton onClick={openStatusForm}>
+
+        <FadedButton
+          onClick={overlayStore.updateStatus.open}
+          title="Update Status"
+        >
           <Icon icon="updateStatus" />
         </FadedButton>
-        <FadedButton>
-          <Icon icon="heart" />
+
+        <FadedButton
+          onClick={overlayStore.whosOnline.open}
+          title="Who's Online"
+        >
+          <Icon icon="users" />
         </FadedButton>
-        <FadedButton>
+
+        <FadedButton title="About">
           <Icon icon="about" />
         </FadedButton>
       </Box>
-      <FadedButton>
+
+      <FadedButton title="Logout">
         <Icon icon="logout" />
       </FadedButton>
     </Box>
