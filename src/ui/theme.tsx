@@ -1,4 +1,6 @@
 import { rgb, shade } from "polished"
+import React, { useContext } from "react"
+import { StyledThemeProvider, ThemeContext } from "./styled"
 
 const midnight = rgb(38, 65, 94)
 const clouds = rgb(236, 240, 241)
@@ -35,3 +37,16 @@ export const gapSizes = {
 
 export type AppTheme = typeof baseTheme
 export type AppThemeColor = keyof AppTheme["colors"]
+
+export function ThemeProvider(props: {
+  theme: AppTheme
+  children: React.ReactNode
+}) {
+  return (
+    <StyledThemeProvider theme={props.theme}>
+      <>{props.children}</>
+    </StyledThemeProvider>
+  )
+}
+
+export const useTheme = () => useContext(ThemeContext)

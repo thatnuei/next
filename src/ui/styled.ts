@@ -6,4 +6,6 @@ export const {
   default: styled,
   css,
   keyframes,
+  ThemeContext,
+  ThemeProvider: StyledThemeProvider,
 } = sc as sc.ThemedStyledComponentsModule<AppTheme>
