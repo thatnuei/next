@@ -5,13 +5,15 @@ import Box, { BoxProps } from "../ui/Box"
 import { gapSizes } from "../ui/theme"
 import { useOverlay } from "./OverlayContext"
 
-type Props = BoxProps
+type Props = BoxProps & {
+  maxWidth?: string | number
+}
 
-const OverlayContent = ({ style, ...props }: Props) => {
+const OverlayContent = ({ style, maxWidth, ...props }: Props) => {
   const overlay = useOverlay()
 
   const baseStyle = {
-    maxWidth: "max-content",
+    maxWidth: maxWidth || "max-content",
     ...style,
   }
 

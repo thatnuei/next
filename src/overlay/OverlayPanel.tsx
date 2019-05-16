@@ -12,7 +12,7 @@ type Props = {
 
 const OverlayPanel = (props: Props) => {
   return (
-    <OverlayContent>
+    <OverlayContent maxWidth={props.maxWidth}>
       <OverlayCloseButton />
       <Box width="100%" background="theme0" elevated>
         {props.children}
