@@ -1,11 +1,7 @@
 import { action, autorun, computed, observable } from "mobx"
 import RootStore from "../RootStore"
 
-type Screen =
-  | { name: "init" }
-  | { name: "login" }
-  | { name: "characterSelect" }
-  | { name: "chat" }
+type Screen = { name: "login" } | { name: "characterSelect" } | { name: "chat" }
 
 type ChatRoom =
   | { name: "console" }
@@ -14,7 +10,7 @@ type ChatRoom =
 
 export default class ViewStore {
   @observable.ref
-  screen: Screen = { name: "init" }
+  screen: Screen = { name: "login" }
 
   @observable.ref
   chatRoom: ChatRoom = { name: "console" }

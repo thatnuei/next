@@ -23,18 +23,7 @@ export default class RootStore {
   constructor(public api = new FListApiService(), public storage = idb) {}
 
   init() {
-    this.restoreSession().catch(console.error)
     this.viewStore.createDocumentTitleReaction()
-  }
-
-  private async restoreSession() {
-    try {
-      await this.userStore.restoreUserData()
-      this.viewStore.showCharacterSelect()
-    } catch (error) {
-      console.warn("(non-fatal) user data restore error:", error)
-      this.viewStore.showLogin()
-    }
   }
 
   cleanup() {

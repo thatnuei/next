@@ -50,17 +50,3 @@ test("submitLogin", async () => {
     ticket,
   })
 })
-
-test("restoreSession", async () => {
-  const { store, mockStorage } = createStore()
-
-  await mockStorage.set(credentialsKey, { account, ticket })
-  await store.restoreUserData()
-
-  assertUserData(store)
-})
-
-test("restoreSession - errors if credentials not stored", async () => {
-  const { store } = createStore()
-  expect(store.restoreUserData()).rejects.toHaveProperty("message")
-})

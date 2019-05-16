@@ -8,8 +8,6 @@ import LoginModal from "./LoginModal"
 function App() {
   const { viewStore } = useRootStore()
   switch (viewStore.screen.name) {
-    case "init":
-      return <p>Setting things up...</p>
     case "login":
       return <LoginModal />
     case "characterSelect":
