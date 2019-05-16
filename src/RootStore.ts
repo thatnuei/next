@@ -8,12 +8,10 @@ import SocketStore from "./fchat/SocketStore"
 import FListApiService from "./flist/FListApiService"
 import OverlayStore from "./overlay/OverlayStore"
 import PrivateChatStore from "./private-chat/PrivateChatStore"
-import UserStore from "./user/UserStore"
 
 export default class RootStore {
   socketStore = new SocketStore(this)
   viewStore = new ViewStore(this)
-  userStore = new UserStore(this)
   characterStore = new CharacterStore()
   channelStore = new ChannelStore(this)
   privateChatStore = new PrivateChatStore(this)
