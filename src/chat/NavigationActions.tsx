@@ -26,7 +26,7 @@ export default function NavigationActions() {
         </FadedButton>
 
         <FadedButton
-          onClick={overlayStore.whosOnline.open}
+          onClick={overlayStore.onlineUsers.open}
           title="Who's Online"
         >
           <Icon icon="users" />

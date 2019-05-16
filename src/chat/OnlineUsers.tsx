@@ -7,7 +7,7 @@ import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
 import { gapSizes } from "../ui/theme"
 
-function WhosOnline() {
+function OnlineUsers() {
   const { chatStore } = useRootStore()
   const friends = chatStore.friends.characters.filter(
     (char) => char.status !== "offline",
@@ -34,4 +34,4 @@ function WhosOnline() {
   )
 }
 
-export default observer(WhosOnline)
+export default observer(OnlineUsers)

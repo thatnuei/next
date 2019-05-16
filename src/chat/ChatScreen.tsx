@@ -10,9 +10,9 @@ import { gapSizes } from "../ui/theme"
 import ChannelBrowser from "./ChannelBrowser"
 import ChatNavigation from "./ChatNavigation"
 import ChatNavigationOverlay from "./ChatNavigationOverlay"
+import OnlineUsers from "./OnlineUsers"
 import StatusOverlay from "./StatusOverlay"
 import useChatNavBreakpoint from "./useChatNavBreakpoint"
-import WhosOnline from "./WhosOnline"
 
 const ChatScreen = () => {
   const { channelStore, viewStore, overlayStore } = useRootStore()
@@ -61,8 +61,8 @@ const ChatScreen = () => {
         <ChannelBrowser />
       </OverlayProvider>
 
-      <OverlayProvider value={overlayStore.whosOnline}>
-        <WhosOnline />
+      <OverlayProvider value={overlayStore.onlineUsers}>
+        <OnlineUsers />
       </OverlayProvider>
     </CharacterMenuProvider>
   )
