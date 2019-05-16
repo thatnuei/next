@@ -7,7 +7,7 @@ export const characterListUrl =
 
 type ApiResponse<D> = { error: string } | { error: "" } & D
 
-export type GetTicketResponse = ApiResponse<{
+export type LoginResponse = {
   ticket: string
   characters: string[]
   bookmarks: { name: string }[]
@@ -20,24 +20,24 @@ export type GetTicketResponse = ApiResponse<{
     /** Their character */
     source_name: string
   }[]
-}>
+}
 
-export type CharacterListResponse = ApiResponse<{
+export type CharacterListResponse = {
   characters: string[]
-}>
+}
 
 export default class FListApiService {
-  private account = ""
+  account = ""
   // store the password so we can get a new ticket if needed
   // the F-list team told me this was safe, and this is being done in 3.0 desktop,
   // so I'll take their word for it
   private password = ""
-  private ticket = ""
+  ticket = ""
 
   constructor(private fetch = fetchJson) {}
 
   async authenticate(account: string, password: string) {
-    const res = await this.fetch<GetTicketResponse>(getTicketUrl, {
+    const res = await this.fetch<ApiResponse<LoginResponse>>(getTicketUrl, {
       method: "post",
       body: { account, password },
     })
@@ -65,10 +65,14 @@ export default class FListApiService {
 
   async fetchCharacters() {
     const { account, ticket } = this
-    const res = await this.fetch<CharacterListResponse>(characterListUrl, {
-      method: "post",
-      body: { account, ticket },
-    })
+
+    const res = await this.fetch<ApiResponse<CharacterListResponse>>(
+      characterListUrl,
+      {
+        method: "post",
+        body: { account, ticket },
+      },
+    )
 
     if (!("characters" in res)) {
       throw new Error(res.error)
