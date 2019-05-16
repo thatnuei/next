@@ -56,9 +56,5 @@ export async function fetchJson<T = any>(
     throw new Error("Unknown network error")
   }
 
-  if (data.error) {
-    throw new Error(data.error)
-  }
-
   return data
 }

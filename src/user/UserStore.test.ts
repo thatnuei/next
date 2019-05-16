@@ -8,7 +8,7 @@ const characters = ["alli", "iki", "yui"]
 
 class MockApi extends FListApiService {
   async authenticate() {
-    return { ticket, characters }
+    return { ticket, characters, friends: [], bookmarks: [] }
   }
 
   async fetchCharacters() {

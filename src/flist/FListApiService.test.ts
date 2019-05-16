@@ -1,8 +1,8 @@
 import { FetchJsonOptions } from "../network/fetchJson"
 import FListApiService, {
-  ApiTicketResponse,
   CharacterListResponse,
   characterListUrl,
+  GetTicketResponse,
   getTicketUrl,
 } from "./FListApiService"
 
@@ -25,9 +25,12 @@ const mockFetch = async (
       options.body.account === account &&
       options.body.password === password
     ) {
-      const res: ApiTicketResponse = {
+      const res: GetTicketResponse = {
         characters: userCharacters,
         ticket: ticket,
+        friends: [],
+        bookmarks: [],
+        error: "",
       }
       return res
     }
@@ -43,6 +46,7 @@ const mockFetch = async (
     ) {
       const res: CharacterListResponse = {
         characters: userCharacters,
+        error: "",
       }
       return res
     }
@@ -62,6 +66,7 @@ test("authenticate", async () => {
 })
 
 test("character list", async () => {
-  const res = await api.fetchCharacters(account, ticket)
+  await api.authenticate(account, password)
+  const res = await api.fetchCharacters()
   expect(res.characters).toEqual(userCharacters)
 })
