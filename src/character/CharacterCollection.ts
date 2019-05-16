@@ -2,7 +2,8 @@ import { action, computed, observable } from "mobx"
 import CharacterStore from "./CharacterStore"
 
 export default class CharacterCollection {
-  @observable.shallow private nameSet = new Set<string>()
+  @observable.shallow
+  private nameSet = new Set<string>()
 
   constructor(private characterStore: CharacterStore) {}
 
