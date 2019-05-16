@@ -26,7 +26,6 @@ import { gapSizes } from "../ui/theme"
 
 function ChannelBrowser() {
   const { channelStore } = useRootStore()
-  useEffect(() => channelStore.requestListings(), [channelStore])
 
   const listContainerRef = useRef<HTMLDivElement>(null)
   const rect = useRect(listContainerRef) || { width: 0, height: 0 }
