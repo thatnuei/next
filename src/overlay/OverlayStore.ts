@@ -14,4 +14,10 @@ export default class OverlayStore {
     this.root.channelStore.requestListings()
     this.channelBrowser.open()
   }
+
+  showOnlineUsers() {
+    this.onlineUsers.open()
+    // this.root.chatStore.fetchFriends()
+    // this.root.chatStore.fetchBookmarks()
+  }
 }
