@@ -2,14 +2,10 @@ import { useRect } from "@reach/rect"
 import fuzzysearch from "fuzzysearch"
 import sortBy from "lodash/sortBy"
 import { observer, useObserver } from "mobx-react-lite"
-import React, {
-  ComponentPropsWithoutRef,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import React, { ComponentPropsWithoutRef, useRef, useState } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
 import { ChannelListing, ChannelListingType } from "../channel/ChannelStore"
+import queryify from "../common/queryify"
 import OverlayCloseButton from "../overlay/OverlayCloseButton"
 import OverlayContent from "../overlay/OverlayContent"
 import { OverlayPanelHeader } from "../overlay/OverlayPanel"
@@ -243,9 +239,3 @@ function useChannelListSorting() {
 
   return { sortMode, cycleSortMode }
 }
-
-/**
- * Lowercases and removes non-letters,
- * to make more appropriate for fuzzysearching
- */
-const queryify = (text: string) => text.replace(/[^a-z]+/gi, "").toLowerCase()
