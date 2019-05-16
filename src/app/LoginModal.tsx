@@ -10,7 +10,7 @@ import TextInput from "../ui/TextInput"
 import { gapSizes } from "../ui/theme"
 
 function LoginModal() {
-  const { userStore, viewStore } = useRootStore()
+  const { chatStore, viewStore } = useRootStore()
   const account = useInput()
   const password = useInput()
 
@@ -18,7 +18,7 @@ function LoginModal() {
     event.preventDefault()
 
     try {
-      await userStore.submitLogin(account.value, password.value)
+      await chatStore.submitLogin(account.value, password.value)
       viewStore.showCharacterSelect()
     } catch (error) {
       alert(error)

@@ -13,7 +13,7 @@ export default class SocketStore {
   ) {}
 
   connectToChat(onConnect: () => void, onDisconnect: () => void) {
-    const { account, ticket } = this.root.userStore
+    const { account, ticket } = this.root.api
     const { identity } = this.root.chatStore
 
     const socket = (this.socket = this.createSocket(chatServerUrl))

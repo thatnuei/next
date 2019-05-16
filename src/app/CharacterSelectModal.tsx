@@ -14,10 +14,10 @@ import { gapSizes } from "../ui/theme"
 const lastCharacterKey = (account: string) => `${account}:lastCharacter`
 
 function CharacterSelectModal() {
-  const { userStore, viewStore, chatStore, socketStore } = useRootStore()
+  const { api, viewStore, chatStore, socketStore } = useRootStore()
 
-  const { characters, account } = userStore
-  const { identity } = chatStore
+  const { account } = api
+  const { characters, identity } = chatStore
 
   useEffect(() => {
     async function restoreIdentity() {
