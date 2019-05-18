@@ -2,16 +2,16 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import ChatScreen from "../chat/ChatScreen"
 import { useRootStore } from "../RootStore"
-import CharacterSelectModal from "./CharacterSelectModal"
-import LoginModal from "./LoginModal"
+import CharacterSelect from "./CharacterSelect"
+import Login from "./Login"
 
 function App() {
   const { viewStore } = useRootStore()
   switch (viewStore.screen.name) {
     case "login":
-      return <LoginModal />
+      return <Login />
     case "characterSelect":
-      return <CharacterSelectModal />
+      return <CharacterSelect />
     case "chat":
       return <ChatScreen />
   }
