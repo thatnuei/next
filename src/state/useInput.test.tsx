@@ -10,18 +10,18 @@ test("useInput", () => {
     return <input {...input.bind} />
   }
 
-  const { queryByValue, getByValue } = render(<Test />)
+  const { queryByDisplayValue, getByDisplayValue } = render(<Test />)
 
-  expect(queryByValue("")).not.toBeNull()
+  expect(queryByDisplayValue("")).not.toBeNull()
 
   act(() => {
     input.setValue("hi")
   })
 
-  expect(queryByValue("hi")).not.toBeNull()
+  expect(queryByDisplayValue("hi")).not.toBeNull()
 
   act(() => {
-    fireEvent.change(getByValue("hi"), { target: { value: "awesome" } })
+    fireEvent.change(getByDisplayValue("hi"), { target: { value: "awesome" } })
   })
 
   expect(input.value).toBe("awesome")
