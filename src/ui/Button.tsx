@@ -8,11 +8,6 @@ const Button = styled.button`
   transition: 0.2s;
   transition-property: background-color, transform;
 
-  :focus {
-    background-color: rgba(0, 0, 0, 0.55);
-    outline: none;
-  }
-
   :hover {
     background-color: rgba(0, 0, 0, 0.8);
   }

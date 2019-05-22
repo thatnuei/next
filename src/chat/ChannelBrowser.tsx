@@ -202,10 +202,6 @@ function Tab(props: ComponentPropsWithoutRef<"button"> & { active?: boolean }) {
     }
 
     transition-property: opacity;
-
-    :focus {
-      outline: none;
-    }
   `
 
   return (

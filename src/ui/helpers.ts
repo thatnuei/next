@@ -48,12 +48,11 @@ export const fadedRevealStyle = css`
   transition: 0.2s;
   opacity: 0.4;
 
-  :hover,
-  :focus {
+  :hover {
     opacity: 0.9;
-    outline: none;
   }
 `
+
 export const pressEffect = css`
   :active {
     transform: translateY(2px);

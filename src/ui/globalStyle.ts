@@ -1,14 +1,11 @@
 import { lighten } from "polished"
-import { createGlobalStyle } from "styled-components"
-import { css } from "./styled"
+import { createGlobalStyle, css } from "./styled"
 
 const globalStyle = css`
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-
-    /* border: 1px solid black; */
   }
 
   :root {
@@ -23,10 +20,6 @@ const globalStyle = css`
 
     overflow: hidden;
   }
-
-  /* :focus {
-    outline: none;
-  } */
 
   h1,
   h2,
@@ -66,6 +59,17 @@ const globalStyle = css`
   img,
   svg {
     vertical-align: top;
+  }
+
+  /* see https://github.com/WICG/focus-visible */
+  /* :not(:focus-visible) {
+    outline: none;
+  } */
+  .js-focus-visible :focus:not(.focus-visible) {
+    outline: 0;
+  }
+  .js-focus-visible :focus:not([data-focus-visible-added]) {
+    outline: 0;
   }
 
   ::-webkit-scrollbar {

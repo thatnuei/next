@@ -120,8 +120,7 @@ export default observer(ChannelView)
 const ChannelTitleButton = styled(FadedButton)`
   opacity: 0.7;
 
-  :hover,
-  :focus {
+  :hover {
     opacity: 1;
   }
 `

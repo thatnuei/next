@@ -8,8 +8,7 @@ const flatStyle = css`
   background: none;
   opacity: 0.5;
 
-  :hover,
-  :focus {
+  :hover {
     background: none;
     opacity: 1;
   }
@@ -25,8 +24,7 @@ export const Button = styled.button<ButtonProps>`
   transition-property: background-color, opacity;
   cursor: pointer;
 
-  :hover,
-  :focus {
+  :hover {
     background: rgba(0, 0, 0, 0.8);
   }
 

@@ -34,9 +34,6 @@ export default observer(CharacterName)
 const ContainerButton = styled.button`
   display: inline-flex;
   align-items: baseline;
-  :focus {
-    outline: none;
-  }
 `
 
 const NameText = styled.span`

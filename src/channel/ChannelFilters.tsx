@@ -37,11 +37,6 @@ const FilterButton = styled.button<{ active?: boolean }>`
   transition: 0.2s;
   padding: 0 ${gapSizes.xsmall};
 
-  :focus {
-    background-color: rgba(0, 0, 0, 0.3);
-    outline: none;
-  }
-
   :disabled {
     cursor: default;
     pointer-events: none;

@@ -16,10 +16,11 @@ const inputBase = css`
   :hover {
     background: rgba(0, 0, 0, 0.55);
   }
-
-  :focus {
-    background: rgba(0, 0, 0, 0.7);
-    outline: none;
-  }
 `
 export default inputBase
+
+export const inputFocus = css`
+  :focus {
+    background: rgba(0, 0, 0, 0.7);
+  }
+`

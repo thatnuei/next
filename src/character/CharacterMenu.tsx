@@ -1,15 +1,15 @@
-import React from "react"
-import { getProfileUrl } from "../flist/helpers"
-import { useRootStore } from "../RootStore"
-import Box from "../ui/Box"
-import { semiBlack } from "../ui/colors"
-import ExternalLink from "../ui/ExternalLink"
-import FadedButton from "../ui/FadedButton"
-import Icon from "../ui/Icon"
-import { styled } from "../ui/styled"
-import { gapSizes } from "../ui/theme"
-import CharacterInfo from "./CharacterInfo"
-import { useCharacterMenuContext } from "./CharacterMenuContext"
+import React from "react";
+import { getProfileUrl } from "../flist/helpers";
+import { useRootStore } from "../RootStore";
+import Box from "../ui/Box";
+import { semiBlack } from "../ui/colors";
+import ExternalLink from "../ui/ExternalLink";
+import FadedButton from "../ui/FadedButton";
+import Icon from "../ui/Icon";
+import { styled } from "../ui/styled";
+import { gapSizes } from "../ui/theme";
+import CharacterInfo from "./CharacterInfo";
+import { useCharacterMenuContext } from "./CharacterMenuContext";
 
 type CharacterMenuProps = {
   characterName: string
@@ -85,8 +85,7 @@ const MenuOption = styled.button<{ href?: string }>`
   opacity: 0.6;
   transition: 0.2s;
 
-  :hover,
-  :focus {
+  :hover {
     opacity: 1;
     background-color: ${semiBlack(0.25)};
   }

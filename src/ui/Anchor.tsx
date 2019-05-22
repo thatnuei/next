@@ -7,8 +7,7 @@ const Anchor = styled.a`
   /* hover reveal reansition */
   opacity: 0.8;
   transition: 0.2s opacity;
-  :hover,
-  :focus {
+  :hover {
     opacity: 1;
   }
 

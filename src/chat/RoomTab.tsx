@@ -48,10 +48,5 @@ export default function RoomTab({ onClick = () => {}, ...props }: Props) {
 
 const TitleButton = styled.button<{ active?: boolean }>`
   ${(props) => (props.active ? "" : fadedRevealStyle)};
-
   flex: 1;
-
-  :focus {
-    outline: none;
-  }
 `

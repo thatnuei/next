@@ -8,4 +8,5 @@ export const {
   keyframes,
   ThemeContext,
   ThemeProvider: StyledThemeProvider,
+  createGlobalStyle,
 } = sc as sc.ThemedStyledComponentsModule<AppTheme>

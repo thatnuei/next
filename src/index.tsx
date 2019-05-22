@@ -1,3 +1,4 @@
+import "focus-visible"
 import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"

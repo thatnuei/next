@@ -10,12 +10,12 @@ export default class OverlayStore {
 
   constructor(private root: RootStore) {}
 
-  showChannelBrowser() {
+  showChannelBrowser = () => {
     this.root.channelStore.requestListings()
     this.channelBrowser.open()
   }
 
-  showOnlineUsers() {
+  showOnlineUsers = () => {
     this.onlineUsers.open()
     // this.root.chatStore.fetchFriends()
     // this.root.chatStore.fetchBookmarks()
