@@ -61,17 +61,6 @@ const globalStyle = css`
     vertical-align: top;
   }
 
-  /* see https://github.com/WICG/focus-visible */
-  /* :not(:focus-visible) {
-    outline: none;
-  } */
-  .js-focus-visible :focus:not(.focus-visible) {
-    outline: 0;
-  }
-  .js-focus-visible :focus:not([data-focus-visible-added]) {
-    outline: 0;
-  }
-
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -89,6 +78,14 @@ const globalStyle = css`
 
 const GlobalStyle = createGlobalStyle`
   ${globalStyle};
+
+  /* see https://github.com/WICG/focus-visible */
+  /* this has to be here and not in the "css" block */
+  /* otherwise a bug in SC will remove the space between the class and the :focus */
+  .js-focus-visible :focus:not(.focus-visible),
+  .js-focus-visible :focus:not([data-focus-visible-added]) {
+    outline: none;
+  }
 `
 
 export default GlobalStyle
