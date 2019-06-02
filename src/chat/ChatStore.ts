@@ -82,8 +82,21 @@ export default class ChatStore {
       }
     },
 
-    RTB: () => {
-      // TODO
+    RTB: (params) => {
+      switch (params.type) {
+        case "friendadd":
+        case "friendremove":
+          // refetch friends from API?
+          break
+
+        case "trackadd":
+          this.bookmarks.add(params.name)
+          break
+
+        case "trackrem":
+          this.bookmarks.remove(params.name)
+          break
+      }
     },
   })
 }
