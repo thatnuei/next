@@ -2,7 +2,7 @@
 const webpack = require("webpack")
 const { join } = require("path")
 const HtmlPlugin = require("html-webpack-plugin")
-const CleanPlugin = require("clean-webpack-plugin").default
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 const CopyPlugin = require("copy-webpack-plugin")
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin")
 const WebpackPwaManifest = require("webpack-pwa-manifest")
@@ -49,7 +49,7 @@ const baseConfig = {
       background_color: rgb(30, 30, 30),
       inject: true,
     }),
-    new CleanPlugin(),
+    new CleanWebpackPlugin(),
     new CopyPlugin([{ from: publicFolder, to: buildFolder }]),
     new ForkTsCheckerWebpackPlugin(),
   ],
