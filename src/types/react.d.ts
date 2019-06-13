@@ -5,7 +5,7 @@ declare module "react" {
 
   function useState<S>(): [
     S | undefined,
-    Dispatch<SetStateAction<S | undefined>>
+    Dispatch<SetStateAction<S | undefined>>,
   ]
 
   function useRef<T>(): MutableRefObject<T | undefined>
