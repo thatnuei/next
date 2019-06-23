@@ -4,7 +4,6 @@ import sortBy from "lodash/sortBy"
 import { observer, useObserver } from "mobx-react-lite"
 import React, { ComponentPropsWithoutRef, useRef, useState } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
-import { ChannelListing, ChannelListingType } from "../channel/ChannelStore"
 import queryify from "../common/queryify"
 import OverlayCloseButton from "../overlay/OverlayCloseButton"
 import OverlayContent from "../overlay/OverlayContent"
@@ -19,6 +18,7 @@ import Icon, { IconName } from "../ui/Icon"
 import { css, styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
 import { gapSizes } from "../ui/theme"
+import { ChannelListing, ChannelListingType } from "./ChannelStore"
 
 function ChannelBrowser() {
   const { channelStore } = useRootStore()
@@ -109,9 +109,10 @@ function ChannelBrowser() {
             <TextInput
               style={{ flex: 1 }}
               placeholder="Search..."
+              aria-label="Search"
               {...searchInput.bind}
             />
-            <Button onClick={cycleSortMode}>
+            <Button title="Switch sort mode" onClick={cycleSortMode}>
               <Icon icon={sortMode.icon} />
             </Button>
           </Box>
