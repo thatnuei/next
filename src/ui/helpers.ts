@@ -45,7 +45,7 @@ export const boxShadow = css`
 `
 
 export const fadedRevealStyle = css`
-  transition: 0.2s;
+  transition: 0.2s opacity;
   opacity: 0.4;
 
   :hover {
