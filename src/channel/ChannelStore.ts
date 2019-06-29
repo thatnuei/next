@@ -1,4 +1,4 @@
-import { action, computed } from "mobx"
+import { action, computed, observable } from "mobx"
 import { createCommandHandler } from "../fchat/helpers"
 import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
@@ -23,6 +23,7 @@ export type ChannelListingType = keyof ChannelStoreListings
 export default class ChannelStore {
   channels = new FactoryMap((id) => new ChannelModel(this.root, id))
 
+  @observable.shallow
   listings: ChannelStoreListings = {
     public: [],
     private: [],
