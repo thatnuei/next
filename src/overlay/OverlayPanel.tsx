@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import Box, { BoxProps } from "../ui/Box"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 import OverlayCloseButton from "./OverlayCloseButton"
 import OverlayContent from "./OverlayContent"
 
@@ -24,7 +24,7 @@ const OverlayPanel = (props: Props) => {
 export default observer(OverlayPanel)
 
 export const OverlayPanelHeader = (props: BoxProps) => (
-  <Box background="theme1" pad={gapSizes.small} align="center" {...props}>
+  <Box background="theme1" pad={spacing.small} align="center" {...props}>
     <h2>{props.children}</h2>
   </Box>
 )

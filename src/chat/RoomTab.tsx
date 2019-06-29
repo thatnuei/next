@@ -4,7 +4,7 @@ import FadedButton from "../ui/FadedButton"
 import { fadedRevealStyle } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { styled } from "../ui/styled"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 
 type Props = {
   icon?: React.ReactNode
@@ -20,8 +20,8 @@ export default function RoomTab({ onClick = () => {}, ...props }: Props) {
       <TitleButton active={props.active}>
         <Box
           direction="row"
-          gap={gapSizes.xsmall}
-          pad={gapSizes.xsmall}
+          gap={spacing.xsmall}
+          pad={spacing.xsmall}
           align="center"
           onClick={onClick}
         >
@@ -35,7 +35,7 @@ export default function RoomTab({ onClick = () => {}, ...props }: Props) {
       {props.onClose && (
         <Box
           as={FadedButton}
-          pad={gapSizes.xsmall}
+          pad={spacing.xsmall}
           justify="center"
           onClick={props.onClose}
         >

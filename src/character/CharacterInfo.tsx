@@ -6,7 +6,7 @@ import BBC from "../ui/BBC"
 import Box from "../ui/Box"
 import ExternalLink from "../ui/ExternalLink"
 import { styled } from "../ui/styled"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 import Avatar from "./Avatar"
 import { genderColors, statusColors } from "./colors"
 
@@ -22,7 +22,7 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
   const statusStyle = { color: statusColors[status] }
 
   return (
-    <Box gap={gapSizes.small} align="flex-start" {...containerProps}>
+    <Box gap={spacing.small} align="flex-start" {...containerProps}>
       <ExternalLink href={getProfileUrl(name)}>
         <h2 style={nameStyle}>{name}</h2>
       </ExternalLink>
@@ -31,7 +31,7 @@ const CharacterInfo = ({ name, ...containerProps }: CharacterInfoProps) => {
         <Avatar key={name} name={name} size={80} />
       </ExternalLink>
 
-      <Box background="theme2" pad={gapSizes.xsmall} alignSelf="stretch">
+      <Box background="theme2" pad={spacing.xsmall} alignSelf="stretch">
         <StatusText>
           <span style={statusStyle}>{status}</span>
           {statusMessage ? (

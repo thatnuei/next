@@ -3,14 +3,14 @@ import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 
 export default function NavigationActions() {
   const { overlayStore } = useRootStore()
 
   return (
-    <Box pad={gapSizes.small} background="theme2">
-      <Box flex gap={gapSizes.medium}>
+    <Box pad={spacing.small} background="theme2">
+      <Box flex gap={spacing.medium}>
         <FadedButton onClick={overlayStore.showChannelBrowser} title="Channels">
           <Icon icon="channels" />
         </FadedButton>

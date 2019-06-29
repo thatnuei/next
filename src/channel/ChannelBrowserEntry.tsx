@@ -6,7 +6,7 @@ import Box from "../ui/Box"
 import { fadedRevealStyle } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { styled } from "../ui/styled"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 import { ChannelListing } from "./ChannelStore"
 
 type Props = ListChildComponentProps & {
@@ -27,15 +27,15 @@ function ChannelBrowserEntry({ entry, style }: Props) {
   }
 
   const pad = {
-    vertical: gapSizes.xsmall,
-    horizontal: gapSizes.small,
+    vertical: spacing.xsmall,
+    horizontal: spacing.small,
   }
 
   return (
     <label key={entry.id} style={style}>
       <Entry height="100%" direction="row" align="center" pad={pad}>
         <EntryInput type="checkbox" checked={joined} onChange={toggleJoin} />
-        <Box direction="row" flex align="center" gap={gapSizes.xsmall}>
+        <Box direction="row" flex align="center" gap={spacing.xsmall}>
           <Icon
             icon={joined ? "checkFilled" : "checkOutline"}
             size={0.8}

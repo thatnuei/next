@@ -4,7 +4,7 @@ import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
 import { styled } from "../ui/styled"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 
 type Props = {
   children: React.ReactNode
@@ -21,11 +21,11 @@ const ChannelDescriptionOverlay = (props: Props) => {
 
   return (
     <Shade
-      pad={gapSizes.small}
+      pad={spacing.small}
       isVisible={props.isVisible}
       onClick={handleShadeClick}
     >
-      <ShadeContent isVisible={props.isVisible} gap={gapSizes.small}>
+      <ShadeContent isVisible={props.isVisible} gap={spacing.small}>
         <FadedButton
           onClick={props.onClose}
           style={{ alignSelf: "flex-start" }}
@@ -35,7 +35,7 @@ const ChannelDescriptionOverlay = (props: Props) => {
         <Box
           background="theme0"
           elevated
-          pad={gapSizes.small}
+          pad={spacing.small}
           style={{ maxHeight: "45vh" }}
           overflowY="auto"
         >

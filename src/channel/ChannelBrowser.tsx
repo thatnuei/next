@@ -16,7 +16,7 @@ import { fadedRevealStyle } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 import ChannelBrowserEntry from "./ChannelBrowserEntry"
 import { ChannelListingType } from "./ChannelStore"
 import useChannelListSorting from "./useChannelListSorting"
@@ -52,7 +52,7 @@ function ChannelBrowser() {
   return (
     <OverlayShade>
       <OverlayContent
-        pad={gapSizes.small}
+        pad={spacing.small}
         justify="center"
         style={{ maxWidth: "500px" }}
       >
@@ -71,7 +71,7 @@ function ChannelBrowser() {
                 position: "absolute",
                 top: 0,
                 bottom: 0,
-                right: gapSizes.small,
+                right: spacing.small,
               }}
             >
               <OverlayCloseButton />
@@ -104,8 +104,8 @@ function ChannelBrowser() {
           <Box
             background="theme0"
             direction="row"
-            pad={gapSizes.xsmall}
-            gap={gapSizes.xsmall}
+            pad={spacing.xsmall}
+            gap={spacing.xsmall}
           >
             <TextInput
               style={{ flex: 1 }}
@@ -134,10 +134,10 @@ const Tab = styled.button<{ active?: boolean }>`
 
   background-color: ${({ active, theme }) =>
     active ? theme.colors.theme1 : "transparent"};
-  padding: ${gapSizes.small};
+  padding: ${spacing.small};
 
   > * + * {
-    margin-left: ${gapSizes.xsmall};
+    margin-left: ${spacing.xsmall};
   }
 
   ${(props) => (props.active ? "" : fadedRevealStyle)};

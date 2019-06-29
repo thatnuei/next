@@ -9,7 +9,7 @@ import Button from "../ui/Button"
 import ModalPanel from "../ui/ModalPanel"
 import ModalPanelHeader from "../ui/ModalPanelHeader"
 import Select from "../ui/Select"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 
 const lastCharacterKey = (account: string) => `${account}:lastCharacter`
 
@@ -54,8 +54,8 @@ function CharacterSelect() {
         <Box
           as="form"
           align="center"
-          gap={gapSizes.medium}
-          pad={gapSizes.medium}
+          gap={spacing.medium}
+          pad={spacing.medium}
           onSubmit={handleSubmit}
         >
           <Avatar key={identity} name={identity} />

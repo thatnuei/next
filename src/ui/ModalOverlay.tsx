@@ -6,7 +6,7 @@ import FadedButton from "./FadedButton"
 import { fullscreen } from "./helpers"
 import Icon from "./Icon"
 import { styled } from "./styled"
-import { gapSizes } from "./theme"
+import { spacing } from "./theme"
 
 type ModalOverlayProps = {
   children?: React.ReactNode
@@ -17,13 +17,13 @@ type ModalOverlayProps = {
 const ModalOverlay = (props: ModalOverlayProps) => {
   return (
     <Shade
-      pad={gapSizes.large}
+      pad={spacing.large}
       overflowY="auto"
       isVisible={props.isVisible}
       onClick={onlyOnSelf(props.onClose)}
     >
       <ContentContainer
-        gap={gapSizes.xsmall}
+        gap={spacing.xsmall}
         align="flex-end"
         isVisible={props.isVisible}
       >

@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import React, { CSSProperties } from "react"
 import styled from "styled-components"
 import Box, { BoxProps } from "../ui/Box"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 import { useOverlay } from "./OverlayContext"
 
 type Props = BoxProps & {
@@ -25,8 +25,8 @@ const OverlayContent = ({ style, maxWidth, ...props }: Props) => {
     <Container
       align="flex-end"
       justify="center"
-      pad={gapSizes.medium}
-      gap={gapSizes.small}
+      pad={spacing.medium}
+      gap={spacing.small}
       style={{ ...transitionStyle, ...baseStyle }}
       {...props}
     >

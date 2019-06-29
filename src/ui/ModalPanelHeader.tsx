@@ -2,7 +2,7 @@ import React from "react"
 import { withTheme } from "styled-components"
 import Box from "./Box"
 import { styled } from "./styled"
-import { AppTheme, gapSizes } from "./theme"
+import { AppTheme, spacing } from "./theme"
 
 type Props = {
   children?: React.ReactNode
@@ -10,7 +10,7 @@ type Props = {
 }
 
 const ModalPanelHeader = (props: Props) => (
-  <Box background="theme1" pad={gapSizes.small}>
+  <Box background="theme1" pad={spacing.small}>
     <Heading>{props.children}</Heading>
   </Box>
 )

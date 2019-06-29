@@ -7,7 +7,7 @@ import ExternalLink from "../ui/ExternalLink"
 import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
 import { styled } from "../ui/styled"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 import CharacterInfo from "./CharacterInfo"
 import { useCharacterMenuContext } from "./CharacterMenuContext"
 
@@ -34,7 +34,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
         <Icon icon="close" />
       </CloseButton>
 
-      <Box pad={gapSizes.small}>
+      <Box pad={spacing.small}>
         <CharacterInfo name={props.characterName} onClick={stopPropagation} />
       </Box>
 
@@ -92,7 +92,7 @@ const MenuOption = styled.button<{ href?: string }>`
 
   display: flex;
   > * + * {
-    margin-left: ${gapSizes.xsmall};
+    margin-left: ${spacing.xsmall};
   }
 `
 
@@ -105,5 +105,5 @@ const CloseButton = styled(FadedButton)`
   position: absolute;
   top: 0;
   right: 0;
-  padding: ${gapSizes.small};
+  padding: ${spacing.small};
 `

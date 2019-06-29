@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import Box from "../ui/Box"
 import { css, styled } from "../ui/styled"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 import ChannelModel from "./ChannelModel"
 import { ChannelMode } from "./types"
 
@@ -35,7 +35,7 @@ export default observer(ChannelFilters)
 
 const FilterButton = styled.button<{ active?: boolean }>`
   transition: 0.2s;
-  padding: 0 ${gapSizes.xsmall};
+  padding: 0 ${spacing.xsmall};
 
   :disabled {
     cursor: default;

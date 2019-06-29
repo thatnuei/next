@@ -7,7 +7,7 @@ import Button from "../ui/Button"
 import FormField from "../ui/FormField"
 import ModalPanelHeader from "../ui/ModalPanelHeader"
 import TextInput from "../ui/TextInput"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 
 function Login() {
   const { chatStore, viewStore } = useRootStore()
@@ -26,13 +26,13 @@ function Login() {
   }
 
   return (
-    <Box height="100vh" pad={gapSizes.large} style={{ overflowY: "auto" }}>
+    <Box height="100vh" pad={spacing.large} style={{ overflowY: "auto" }}>
       <Box background="theme0" style={{ margin: "auto" }} elevated>
         <ModalPanelHeader>Login</ModalPanelHeader>
         <Box
           as="form"
-          pad={gapSizes.small}
-          gap={gapSizes.small}
+          pad={spacing.small}
+          gap={spacing.small}
           align="flex-start"
           onSubmit={handleSubmit}
         >

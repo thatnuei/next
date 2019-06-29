@@ -12,7 +12,7 @@ import FadedButton from "../ui/FadedButton"
 import FormField from "../ui/FormField"
 import Select from "../ui/Select"
 import TextArea from "../ui/TextArea"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 
 type Props = {}
 
@@ -36,8 +36,8 @@ export default function StatusOverlay(props: Props) {
         <OverlayPanelHeader>Update Status</OverlayPanelHeader>
         <Box
           as="form"
-          pad={gapSizes.small}
-          gap={gapSizes.small}
+          pad={spacing.small}
+          gap={spacing.small}
           onSubmit={preventDefault(handleSubmit)}
         >
           <FormField labelText="Status">
@@ -58,7 +58,7 @@ export default function StatusOverlay(props: Props) {
               {...statusMessage.bind}
             />
           </FormField>
-          <Box direction="row" gap={gapSizes.small} justify="flex-end">
+          <Box direction="row" gap={spacing.small} justify="flex-end">
             <FadedButton onClick={overlay.close}>Cancel</FadedButton>
             <Button type="submit">Update status</Button>
           </Box>

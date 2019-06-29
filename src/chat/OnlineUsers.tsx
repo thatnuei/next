@@ -6,7 +6,7 @@ import OverlayPanel, { OverlayPanelHeader } from "../overlay/OverlayPanel"
 import OverlayShade from "../overlay/OverlayShade"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 
 function OnlineUsers() {
   const { chatStore } = useRootStore()
@@ -21,7 +21,7 @@ function OnlineUsers() {
       <OverlayPanel maxWidth={300}>
         <OverlayPanelHeader>Online Users</OverlayPanelHeader>
 
-        <Box pad={gapSizes.small} gap={gapSizes.small}>
+        <Box pad={spacing.small} gap={spacing.small}>
           <h3>Friends</h3>
           <ol>
             {friends.map((char) => (

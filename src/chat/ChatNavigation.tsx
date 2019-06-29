@@ -3,7 +3,7 @@ import React from "react"
 import CharacterInfo from "../character/CharacterInfo"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 import NavigationActions from "./NavigationActions"
 import NavigationTabs from "./NavigationTabs"
 
@@ -15,7 +15,7 @@ function ChatNavigation() {
       <NavigationActions />
 
       <Box width={200} background="theme1" overflowY="auto">
-        <Box background="theme0" pad={gapSizes.small}>
+        <Box background="theme0" pad={spacing.small}>
           <CharacterInfo name={chatStore.identity} />
         </Box>
 

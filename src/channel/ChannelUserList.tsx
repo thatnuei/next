@@ -6,7 +6,7 @@ import { FixedSizeList, ListChildComponentProps } from "react-window"
 import CharacterName from "../character/CharacterName"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 import ChannelModel from "./ChannelModel"
 
 function ChannelUserList({ channel }: { channel: ChannelModel }) {
@@ -31,20 +31,20 @@ function ChannelUserList({ channel }: { channel: ChannelModel }) {
     }
 
     return (
-      <Box pad={gapSizes.xsmall} justify="center" style={fullStyle}>
+      <Box pad={spacing.xsmall} justify="center" style={fullStyle}>
         <CharacterName name={character.name} />
       </Box>
     )
   }
 
-  const countPadding = { vertical: gapSizes.xsmall, horizontal: gapSizes.small }
+  const countPadding = { vertical: spacing.xsmall, horizontal: spacing.small }
   return (
     <Box width={220} height="100%">
       <Box background="theme0" pad={countPadding}>
         Characters: {sortedUsers.length}
       </Box>
 
-      <Box gap={gapSizes.xxsmall} flex background="theme1" ref={listRef}>
+      <Box gap={spacing.xxsmall} flex background="theme1" ref={listRef}>
         <FixedSizeList
           width={rect ? rect.width : 0}
           height={rect ? rect.height : 0}

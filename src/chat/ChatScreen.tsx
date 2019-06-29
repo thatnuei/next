@@ -1,13 +1,13 @@
 import { observer } from "mobx-react-lite"
 import { cover } from "polished"
 import React from "react"
+import ChannelBrowser from "../channel/ChannelBrowser"
 import ChannelView from "../channel/ChannelView"
 import { CharacterMenuProvider } from "../character/CharacterMenuContext"
 import { OverlayProvider } from "../overlay/OverlayContext"
 import { useRootStore } from "../RootStore"
 import Box from "../ui/Box"
-import { gapSizes } from "../ui/theme"
-import ChannelBrowser from "../channel/ChannelBrowser"
+import { spacing } from "../ui/theme"
 import ChatNavigation from "./ChatNavigation"
 import ChatNavigationOverlay from "./ChatNavigationOverlay"
 import OnlineUsers from "./OnlineUsers"
@@ -41,7 +41,7 @@ const ChatScreen = () => {
     <CharacterMenuProvider>
       <Box
         direction="row"
-        gap={gapSizes.xsmall}
+        gap={spacing.xsmall}
         style={cover()}
         background="theme2"
       >

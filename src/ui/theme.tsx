@@ -24,7 +24,7 @@ export const baseTheme = {
   },
 }
 
-export const gapSizes = {
+export const spacing = {
   none: "0",
   hair: "1px",
   thin: "2px",

@@ -12,7 +12,7 @@ import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
 import Icon from "../ui/Icon"
 import { styled } from "../ui/styled"
-import { gapSizes } from "../ui/theme"
+import { spacing } from "../ui/theme"
 import useMedia from "../ui/useMedia"
 import useToggleState from "../ui/useToggleState"
 import ChannelDescriptionOverlay from "./ChannelDescriptionOverlay"
@@ -41,12 +41,12 @@ function ChannelView({ channel }: Props) {
   const channelHeader = (
     <Box background="theme0" style={{ position: "relative" }}>
       <Box
-        pad={gapSizes.small}
-        gap={gapSizes.small}
+        pad={spacing.small}
+        gap={spacing.small}
         direction="row"
         align="center"
       >
-        <Box direction="row" align="center" gap={gapSizes.xsmall} flex>
+        <Box direction="row" align="center" gap={spacing.xsmall} flex>
           {!isChatNavVisible && (
             <FadedButton onClick={showChatNav}>
               <Icon icon="menu" />
@@ -56,7 +56,7 @@ function ChannelView({ channel }: Props) {
           <Box
             as={ChannelTitleButton}
             direction="row"
-            gap={gapSizes.xsmall}
+            gap={spacing.xsmall}
             align="center"
             onClick={descriptionUi.toggle}
           >
@@ -80,7 +80,7 @@ function ChannelView({ channel }: Props) {
     <>
       <Box as="main" flex>
         {/* room content */}
-        <Box direction="row" flex gap={gapSizes.xsmall}>
+        <Box direction="row" flex gap={spacing.xsmall}>
           <Box flex>
             {channelHeader}
 
@@ -100,7 +100,7 @@ function ChannelView({ channel }: Props) {
         </Box>
 
         {/* chatbox */}
-        <Box background="theme0" pad={gapSizes.xsmall}>
+        <Box background="theme0" pad={spacing.xsmall}>
           <Chatbox onSubmit={console.log} />
         </Box>
       </Box>
