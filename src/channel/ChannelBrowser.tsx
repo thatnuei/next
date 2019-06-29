@@ -1,5 +1,6 @@
 import { useRect } from "@reach/rect"
 import fuzzysearch from "fuzzysearch"
+import sortBy from "lodash/sortBy"
 import { observer } from "mobx-react-lite"
 import React, { useRef, useState } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
@@ -9,17 +10,22 @@ import OverlayContent from "../overlay/OverlayContent"
 import { OverlayPanelHeader } from "../overlay/OverlayPanel"
 import OverlayShade from "../overlay/OverlayShade"
 import { useRootStore } from "../RootStore"
+import useCycle from "../state/useCycle"
 import useInput from "../state/useInput"
 import Box from "../ui/Box"
 import Button from "../ui/Button"
 import { fadedRevealStyle } from "../ui/helpers"
-import Icon from "../ui/Icon"
+import Icon, { IconName } from "../ui/Icon"
 import { styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
 import { spacing } from "../ui/theme"
 import ChannelBrowserEntry from "./ChannelBrowserEntry"
-import { ChannelListingType } from "./ChannelStore"
-import useChannelListSorting from "./useChannelListSorting"
+import { ChannelListing, ChannelListingType } from "./ChannelStore"
+
+type SortMode = {
+  icon: IconName
+  sortEntries: (entries: ChannelListing[]) => ChannelListing[]
+}
 
 function ChannelBrowser() {
   const { channelStore } = useRootStore()
@@ -27,7 +33,19 @@ function ChannelBrowser() {
   const listContainerRef = useRef<HTMLDivElement>(null)
   const rect = useRect(listContainerRef) || { width: 0, height: 0 }
 
-  const { sortMode, cycleSortMode } = useChannelListSorting()
+  const sortModeCycle = useCycle<SortMode>([
+    {
+      icon: "sortNumeric",
+      sortEntries: (entries) => sortBy(entries, "userCount").reverse(),
+    },
+    {
+      icon: "sortAlphabetical",
+      sortEntries: (entries) => sortBy(entries, "name"),
+    },
+  ])
+
+  const sortMode = sortModeCycle.current
+
   const searchInput = useInput()
 
   const [listingTab, setListingTab] = useState<ChannelListingType>("public")
@@ -113,7 +131,7 @@ function ChannelBrowser() {
               aria-label="Search"
               {...searchInput.bind}
             />
-            <Button title="Switch sort mode" onClick={cycleSortMode}>
+            <Button title="Switch sort mode" onClick={sortModeCycle.next}>
               <Icon icon={sortMode.icon} />
             </Button>
           </Box>
