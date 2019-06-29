@@ -2,7 +2,7 @@ import { useRect } from "@reach/rect"
 import fuzzysearch from "fuzzysearch"
 import sortBy from "lodash/sortBy"
 import { observer, useObserver } from "mobx-react-lite"
-import React, { ComponentPropsWithoutRef, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
 import queryify from "../common/queryify"
 import OverlayCloseButton from "../overlay/OverlayCloseButton"
@@ -11,11 +11,11 @@ import { OverlayPanelHeader } from "../overlay/OverlayPanel"
 import OverlayShade from "../overlay/OverlayShade"
 import { useRootStore } from "../RootStore"
 import useInput from "../state/useInput"
-import Box, { boxStyle } from "../ui/Box"
+import Box from "../ui/Box"
 import Button from "../ui/Button"
 import { fadedRevealStyle } from "../ui/helpers"
 import Icon, { IconName } from "../ui/Icon"
-import { css, styled } from "../ui/styled"
+import { styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
 import { gapSizes } from "../ui/theme"
 import { ChannelListing, ChannelListingType } from "./ChannelStore"
@@ -187,28 +187,23 @@ const EntryInput = styled.input`
   }
 `
 
-function Tab(props: ComponentPropsWithoutRef<"button"> & { active?: boolean }) {
-  const baseStyle = css`
-    ${boxStyle({
-      flex: true,
-      direction: "row",
-      justify: "center",
-      pad: gapSizes.small,
-      background: props.active ? "theme1" : undefined,
-    })};
+const Tab = styled.button<{ active?: boolean }>`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 
-    /* can't use gap prop :( */
-    > * + * {
-      margin-left: ${gapSizes.xsmall};
-    }
+  flex: 1;
 
-    transition-property: opacity;
-  `
+  background-color: ${({ active, theme }) =>
+    active ? theme.colors.theme1 : "transparent"};
+  padding: ${gapSizes.small};
 
-  return (
-    <button css={[baseStyle, !props.active && fadedRevealStyle]} {...props} />
-  )
-}
+  > * + * {
+    margin-left: ${gapSizes.xsmall};
+  }
+
+  ${(props) => (props.active ? "" : fadedRevealStyle)};
+`
 
 function useChannelListSorting() {
   type SortMode = {
