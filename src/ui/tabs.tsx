@@ -6,10 +6,12 @@ import React, {
 import createContextWrapper from "../common/createContextWrapper"
 
 function createTabs<TabName extends string>(tabs: readonly TabName[]) {
-  const [TabProvider, useTabContext] = createContextWrapper(() => {
+  function useTabState() {
     const [currentTab, setCurrentTab] = useState(tabs[0])
     return { currentTab, setCurrentTab }
-  })
+  }
+
+  const [TabProvider, useTabContext] = createContextWrapper(useTabState)
 
   function TabLink(props: ComponentPropsWithoutRef<"div"> & { tab: TabName }) {
     const context = useTabContext()
