@@ -25,7 +25,14 @@ function createTabs<TabName extends string>(tabs: readonly TabName[]) {
     const className = [activeClass, props.className].filter(Boolean).join(" ")
 
     // TODO: make accessible
-    return <div {...props} onClick={handleClick} className={className} />
+    return (
+      <div
+        {...props}
+        onClick={handleClick}
+        className={className}
+        style={{ cursor: "pointer", ...props.style }}
+      />
+    )
   }
 
   function TabContent(props: PropsWithChildren<{ tab: TabName }>) {
