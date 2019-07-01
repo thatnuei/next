@@ -1,29 +1,24 @@
-import { useRect } from "@reach/rect";
-import sortBy from "lodash/sortBy";
-import { observer } from "mobx-react-lite";
-import React, { useRef } from "react";
-import OverlayCloseButton from "../overlay/OverlayCloseButton";
-import OverlayContent from "../overlay/OverlayContent";
-import { OverlayPanelHeader } from "../overlay/OverlayPanel";
-import OverlayShade from "../overlay/OverlayShade";
-import { useRootStore } from "../RootStore";
-import useCycle from "../state/useCycle";
-import useInput from "../state/useInput";
-import Box from "../ui/Box";
-import Button from "../ui/Button";
-import { fadedRevealStyle } from "../ui/helpers";
-import Icon from "../ui/Icon";
-import { styled } from "../ui/styled";
-import createTabs from "../ui/tabs";
-import TextInput from "../ui/TextInput";
-import { spacing } from "../ui/theme";
-import ChannelBrowserEntryList from "./ChannelBrowserEntryList";
-import { ChannelBrowserSortMode } from "./types";
-
-const { TabProvider, TabPanel, Tab, TabList } = createTabs([
-  "public",
-  "private",
-] as const)
+import { useRect } from "@reach/rect"
+import sortBy from "lodash/sortBy"
+import { observer } from "mobx-react-lite"
+import React, { useRef } from "react"
+import { Tab, TabList, TabPanel, useTabState } from "reakit/Tab"
+import OverlayCloseButton from "../overlay/OverlayCloseButton"
+import OverlayContent from "../overlay/OverlayContent"
+import { OverlayPanelHeader } from "../overlay/OverlayPanel"
+import OverlayShade from "../overlay/OverlayShade"
+import { useRootStore } from "../RootStore"
+import useCycle from "../state/useCycle"
+import useInput from "../state/useInput"
+import Box from "../ui/Box"
+import Button from "../ui/Button"
+import { fadedRevealStyle } from "../ui/helpers"
+import Icon from "../ui/Icon"
+import { styled } from "../ui/styled"
+import TextInput from "../ui/TextInput"
+import { spacing } from "../ui/theme"
+import ChannelBrowserEntryList from "./ChannelBrowserEntryList"
+import { ChannelBrowserSortMode } from "./types"
 
 function ChannelBrowser() {
   const { channelStore } = useRootStore()
@@ -44,6 +39,8 @@ function ChannelBrowser() {
     },
   ])
   const sortMode = sortModeCycle.current
+
+  const tab = useTabState()
 
   const entryListProps = {
     listHeight: rect.height,
@@ -80,33 +77,36 @@ function ChannelBrowser() {
             </Box>
           </OverlayPanelHeader>
 
-          <TabProvider>
-            <Box as={TabList} direction="row">
-              <StyledTab tab="public">
-                <Icon icon="public" />
-                <span>Public</span>
-              </StyledTab>
-              <StyledTab tab="private">
-                <Icon icon="private" />
-                <span>Private</span>
-              </StyledTab>
-            </Box>
+          <Box
+            as={TabList}
+            {...tab}
+            aria-label="Public / Private channel tabs"
+            direction="row"
+          >
+            <StyledTab {...tab} stopId="public">
+              <Icon icon="public" />
+              <span>Public</span>
+            </StyledTab>
+            <StyledTab {...tab} stopId="private">
+              <Icon icon="private" />
+              <span>Private</span>
+            </StyledTab>
+          </Box>
 
-            <Box flex ref={listContainerRef}>
-              <TabPanel tab="public">
-                <ChannelBrowserEntryList
-                  entries={channelStore.listings.public}
-                  {...entryListProps}
-                />
-              </TabPanel>
-              <TabPanel tab="private">
-                <ChannelBrowserEntryList
-                  entries={channelStore.listings.private}
-                  {...entryListProps}
-                />
-              </TabPanel>
-            </Box>
-          </TabProvider>
+          <Box flex ref={listContainerRef}>
+            <StyledTabPanel {...tab} stopId="public">
+              <ChannelBrowserEntryList
+                entries={channelStore.listings.public}
+                {...entryListProps}
+              />
+            </StyledTabPanel>
+            <StyledTabPanel {...tab} stopId="private">
+              <ChannelBrowserEntryList
+                entries={channelStore.listings.private}
+                {...entryListProps}
+              />
+            </StyledTabPanel>
+          </Box>
 
           <Box
             background="theme0"
@@ -131,6 +131,10 @@ function ChannelBrowser() {
 }
 
 export default observer(ChannelBrowser)
+
+const StyledTabPanel = styled(TabPanel)`
+  flex: 1;
+`
 
 const StyledTab = styled(Tab)`
   display: flex;
