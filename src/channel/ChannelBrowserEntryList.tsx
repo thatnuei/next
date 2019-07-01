@@ -15,7 +15,7 @@ type Props = {
 
 export default function ChannelBrowserEntryList(props: Props) {
   const searchQuery = queryify(props.searchValue)
-  const entries = props.entries.filter((entry) => {
+  const entries = props.sortMode.sortEntries(props.entries).filter((entry) => {
     return fuzzysearch(searchQuery, queryify(entry.name))
   })
 
