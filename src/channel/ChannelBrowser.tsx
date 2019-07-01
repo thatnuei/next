@@ -14,7 +14,7 @@ import Box from "../ui/Box"
 import Button from "../ui/Button"
 import { fadedRevealStyle } from "../ui/helpers"
 import Icon from "../ui/Icon"
-import { styled } from "../ui/styled"
+import { css, styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
 import { spacing } from "../ui/theme"
 import ChannelBrowserEntryList from "./ChannelBrowserEntryList"
@@ -40,7 +40,9 @@ function ChannelBrowser() {
   ])
   const sortMode = sortModeCycle.current
 
-  const tab = useTabState()
+  const tab = useTabState({
+    currentId: "public",
+  })
 
   const entryListProps = {
     listHeight: rect.height,
@@ -149,11 +151,10 @@ const StyledTab = styled(Tab)`
     margin-left: ${spacing.xsmall};
   }
 
-  &.active {
-    background-color: ${({ theme }) => theme.colors.theme1};
-  }
+  ${(props) =>
+    props.stopId === props.currentId ? activeTabStyle : fadedRevealStyle};
+`
 
-  &:not(.active) {
-    ${fadedRevealStyle};
-  }
+const activeTabStyle = css`
+  background-color: ${(props) => props.theme.colors.theme1};
 `
