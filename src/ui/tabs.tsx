@@ -13,8 +13,13 @@ function createTabs<TabName extends string>(tabs: readonly TabName[]) {
 
   const [TabProvider, useTabContext] = createContextWrapper(useTabState)
 
-  function TabLink(props: ComponentPropsWithoutRef<"div"> & { tab: TabName }) {
+  function TabList(props: ComponentPropsWithoutRef<"div">) {
+    return <div {...props} role="tablist" />
+  }
+
+  function Tab(props: ComponentPropsWithoutRef<"div"> & { tab: TabName }) {
     const context = useTabContext()
+    const isSelected = context.currentTab === props.tab
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
       context.setCurrentTab(props.tab)
@@ -24,26 +29,30 @@ function createTabs<TabName extends string>(tabs: readonly TabName[]) {
     const activeClass = context.currentTab === props.tab && "active"
     const className = [activeClass, props.className].filter(Boolean).join(" ")
 
-    // TODO: make accessible
     return (
       <div
         {...props}
         onClick={handleClick}
         className={className}
         style={{ cursor: "pointer", ...props.style }}
+        role="tab"
+        aria-selected={isSelected}
+        aria-controls={props.tab}
+        tabIndex={0}
       />
     )
   }
 
-  function TabContent(props: PropsWithChildren<{ tab: TabName }>) {
+  function TabPanel(props: PropsWithChildren<{ tab: TabName }>) {
     const context = useTabContext()
     return <>{props.tab === context.currentTab ? props.children : null}</>
   }
 
   return {
     TabProvider,
-    TabLink,
-    TabContent,
+    TabList,
+    Tab,
+    TabPanel,
   }
 }
 

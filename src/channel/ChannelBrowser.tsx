@@ -1,26 +1,26 @@
-import { useRect } from "@reach/rect"
-import sortBy from "lodash/sortBy"
-import { observer } from "mobx-react-lite"
-import React, { useRef } from "react"
-import OverlayCloseButton from "../overlay/OverlayCloseButton"
-import OverlayContent from "../overlay/OverlayContent"
-import { OverlayPanelHeader } from "../overlay/OverlayPanel"
-import OverlayShade from "../overlay/OverlayShade"
-import { useRootStore } from "../RootStore"
-import useCycle from "../state/useCycle"
-import useInput from "../state/useInput"
-import Box from "../ui/Box"
-import Button from "../ui/Button"
-import { fadedRevealStyle } from "../ui/helpers"
-import Icon from "../ui/Icon"
-import { styled } from "../ui/styled"
-import createTabs from "../ui/tabs"
-import TextInput from "../ui/TextInput"
-import { spacing } from "../ui/theme"
-import ChannelBrowserEntryList from "./ChannelBrowserEntryList"
-import { ChannelBrowserSortMode } from "./types"
+import { useRect } from "@reach/rect";
+import sortBy from "lodash/sortBy";
+import { observer } from "mobx-react-lite";
+import React, { useRef } from "react";
+import OverlayCloseButton from "../overlay/OverlayCloseButton";
+import OverlayContent from "../overlay/OverlayContent";
+import { OverlayPanelHeader } from "../overlay/OverlayPanel";
+import OverlayShade from "../overlay/OverlayShade";
+import { useRootStore } from "../RootStore";
+import useCycle from "../state/useCycle";
+import useInput from "../state/useInput";
+import Box from "../ui/Box";
+import Button from "../ui/Button";
+import { fadedRevealStyle } from "../ui/helpers";
+import Icon from "../ui/Icon";
+import { styled } from "../ui/styled";
+import createTabs from "../ui/tabs";
+import TextInput from "../ui/TextInput";
+import { spacing } from "../ui/theme";
+import ChannelBrowserEntryList from "./ChannelBrowserEntryList";
+import { ChannelBrowserSortMode } from "./types";
 
-const { TabProvider, TabContent, TabLink } = createTabs([
+const { TabProvider, TabPanel, Tab, TabList } = createTabs([
   "public",
   "private",
 ] as const)
@@ -81,30 +81,30 @@ function ChannelBrowser() {
           </OverlayPanelHeader>
 
           <TabProvider>
-            <Box direction="row">
-              <StyledTabLink tab="public">
+            <Box as={TabList} direction="row">
+              <StyledTab tab="public">
                 <Icon icon="public" />
                 <span>Public</span>
-              </StyledTabLink>
-              <StyledTabLink tab="private">
+              </StyledTab>
+              <StyledTab tab="private">
                 <Icon icon="private" />
                 <span>Private</span>
-              </StyledTabLink>
+              </StyledTab>
             </Box>
 
             <Box flex ref={listContainerRef}>
-              <TabContent tab="public">
+              <TabPanel tab="public">
                 <ChannelBrowserEntryList
                   entries={channelStore.listings.public}
                   {...entryListProps}
                 />
-              </TabContent>
-              <TabContent tab="private">
+              </TabPanel>
+              <TabPanel tab="private">
                 <ChannelBrowserEntryList
                   entries={channelStore.listings.private}
                   {...entryListProps}
                 />
-              </TabContent>
+              </TabPanel>
             </Box>
           </TabProvider>
 
@@ -132,7 +132,7 @@ function ChannelBrowser() {
 
 export default observer(ChannelBrowser)
 
-const StyledTabLink = styled(TabLink)`
+const StyledTab = styled(Tab)`
   display: flex;
   flex-direction: row;
   justify-content: center;
