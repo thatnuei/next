@@ -22,6 +22,7 @@ function Login() {
     event.preventDefault()
 
     await chatStore.submitLogin(account.value, password.value)
+    await chatStore.restoreIdentity()
     viewStore.showCharacterSelect()
   }
 

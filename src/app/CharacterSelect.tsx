@@ -13,7 +13,7 @@ import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
 
 function CharacterSelect() {
-  const { viewStore, chatStore, socketStore } = useRootStore()
+  const { api, viewStore, chatStore, socketHandler } = useRootStore()
   const async = useAsync()
 
   const { characters, identity } = chatStore
@@ -22,12 +22,18 @@ function CharacterSelect() {
     chatStore.setIdentity(event.target.value)
   }
 
-  function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    socketStore.connectToChat(() => {
-      viewStore.showChat()
-      viewStore.showChannel("Fantasy")
-    }, showLogin)
+
+    // probably move all the below to the chatStore(?)
+    await socketHandler.connect({
+      account: api.account,
+      ticket: api.ticket,
+      character: identity,
+    })
+
+    viewStore.showChat()
+    viewStore.showChannel("Fantasy")
   }
 
   function showLogin() {
@@ -38,32 +44,45 @@ function CharacterSelect() {
     <FullscreenRaisedPanel>
       <ModalPanelHeader>Select a Character</ModalPanelHeader>
 
-      <Form onSubmit={handleSubmit}>
-        <Avatar key={identity} name={identity} />
+      <form onSubmit={async.bind(handleSubmit)}>
+        <FieldSet disabled={async.loading}>
+          <FieldsContainer>
+            <Avatar key={identity} name={identity} />
 
-        <Select name="character" value={identity} onChange={handleChange}>
-          {characters.map((name) => (
-            <option value={name} key={name}>
-              {name}
-            </option>
-          ))}
-        </Select>
+            <Select name="character" value={identity} onChange={handleChange}>
+              {characters.map((name) => (
+                <option value={name} key={name}>
+                  {name}
+                </option>
+              ))}
+            </Select>
 
-        <Button type="submit">Enter Chat</Button>
+            <Button type="submit">Enter Chat</Button>
 
-        <Anchor as="button" type="button" onClick={showLogin}>
-          Return to Login
-        </Anchor>
-      </Form>
+            <Anchor as="button" type="button" onClick={showLogin}>
+              Return to Login
+            </Anchor>
+          </FieldsContainer>
+        </FieldSet>
+      </form>
     </FullscreenRaisedPanel>
   )
 }
 export default observer(CharacterSelect)
 
-const Form = styled.form`
+const FieldSet = styled.fieldset`
+  transition: 0.2s opacity;
+  :disabled {
+    opacity: 0.5;
+  }
+`
+
+// fieldsets can't be flex containers https://stackoverflow.com/a/28078942/1332403
+const FieldsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: ${spacing.small};
-  ${spacedChildrenVertical()};
+
+  padding: ${spacing.medium};
+  ${spacedChildrenVertical(spacing.medium)};
 `

@@ -1,10 +1,15 @@
 import { action } from "mobx"
 import { createCommandHandler } from "../fchat/helpers"
+import RootStore from "../RootStore"
 import FactoryMap from "../state/FactoryMap"
 import CharacterModel from "./CharacterModel"
 
 export default class CharacterStore {
   characters = new FactoryMap((name) => new CharacterModel(name))
+
+  constructor(root: RootStore) {
+    root.socketHandler.listen("command", this.handleSocketCommand)
+  }
 
   @action
   handleSocketCommand = createCommandHandler({

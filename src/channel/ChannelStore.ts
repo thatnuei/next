@@ -29,7 +29,9 @@ export default class ChannelStore {
     private: [],
   }
 
-  constructor(private root: RootStore) {}
+  constructor(private root: RootStore) {
+    root.socketHandler.listen("command", this.handleSocketCommand)
+  }
 
   @action
   private setListings(
@@ -47,16 +49,16 @@ export default class ChannelStore {
   }
 
   requestListings() {
-    this.root.socketStore.sendSocketCommand("CHA", undefined)
-    this.root.socketStore.sendSocketCommand("ORS", undefined)
+    this.root.socketHandler.send("CHA", undefined)
+    this.root.socketHandler.send("ORS", undefined)
   }
 
   join(channelId: string) {
-    this.root.socketStore.sendSocketCommand("JCH", { channel: channelId })
+    this.root.socketHandler.send("JCH", { channel: channelId })
   }
 
   leave(channelId: string) {
-    this.root.socketStore.sendSocketCommand("LCH", { channel: channelId })
+    this.root.socketHandler.send("LCH", { channel: channelId })
   }
 
   isJoined(channelId: string) {

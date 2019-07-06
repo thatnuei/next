@@ -1,8 +1,9 @@
+import RootStore from "../RootStore"
 import CharacterCollection from "./CharacterCollection"
 import CharacterStore from "./CharacterStore"
 
 test("CharacterCollection - generic", async () => {
-  const store = new CharacterStore()
+  const store = new CharacterStore(new RootStore())
   const collection = new CharacterCollection(store)
 
   expect(collection.names).toEqual([])

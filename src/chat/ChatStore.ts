@@ -16,7 +16,9 @@ export default class ChatStore {
   admins = new CharacterCollection(this.root.characterStore)
   ignored = new CharacterCollection(this.root.characterStore)
 
-  constructor(private root: RootStore) {}
+  constructor(private root: RootStore) {
+    root.socketHandler.listen("command", this.handleSocketCommand)
+  }
 
   async submitLogin(account: string, password: string) {
     const response = await this.root.api.authenticate(account, password)
@@ -53,7 +55,7 @@ export default class ChatStore {
   isIgnored = (name: string) => this.ignored.has(name)
 
   updateStatus = (status: CharacterStatus, statusmsg: string) => {
-    this.root.socketStore.sendSocketCommand("STA", { status, statusmsg })
+    this.root.socketHandler.send("STA", { status, statusmsg })
   }
 
   @computed
@@ -70,6 +72,24 @@ export default class ChatStore {
 
   @action
   handleSocketCommand = createCommandHandler({
+    IDN: () => {
+      // join some test channels
+      this.root.socketHandler.send("JCH", { channel: "Frontpage" })
+      this.root.socketHandler.send("JCH", { channel: "Fantasy" })
+      this.root.socketHandler.send("JCH", { channel: "Femboy" })
+      this.root.socketHandler.send("JCH", { channel: "Story Driven LFRP" })
+      this.root.socketHandler.send("JCH", { channel: "Development" })
+    },
+    HLO: ({ message }) => {
+      console.info(message)
+    },
+    CON: ({ count }) => {
+      console.info(`There are ${count} characters in chat`)
+    },
+    PIN: () => {
+      this.root.socketHandler.send("PIN", undefined)
+    },
+
     ADL: ({ ops }) => {
       this.admins.set(ops)
     },

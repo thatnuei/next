@@ -14,7 +14,9 @@ export default class PrivateChatStore {
   @observable.shallow
   chatPartnerNames = new Set<string>()
 
-  constructor(private root: RootStore) {}
+  constructor(private root: RootStore) {
+    root.socketHandler.listen("command", this.handleSocketCommand)
+  }
 
   @action
   openChat = (name: string) => {
