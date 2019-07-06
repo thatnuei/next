@@ -6,6 +6,8 @@ import { LoginResponse } from "../flist/FListApiService"
 import RootStore from "../RootStore"
 import { Friendship } from "./types"
 
+const lastCharacterKey = (account: string) => `${account}:lastCharacter`
+
 export default class ChatStore {
   @observable identity = ""
   @observable.ref characters: string[] = []
@@ -34,6 +36,13 @@ export default class ChatStore {
   @action
   setIdentity = (identity: string) => {
     this.identity = identity
+    this.root.storage.set(lastCharacterKey(this.root.api.account), identity)
+  }
+
+  restoreIdentity = async () => {
+    const key = lastCharacterKey(this.root.api.account)
+    const storedIdentity = await this.root.storage.get<string>(key)
+    this.setIdentity(storedIdentity || this.characters[0])
   }
 
   isFriend = (name: string) =>
