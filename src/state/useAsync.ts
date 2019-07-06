@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useReducer, useRef } from "react"
+import { useMemo, useReducer } from "react"
 import extractErrorMessage from "../common/extractErrorMessage"
 import useIsMounted from "./useIsMounted"
+
+type AsyncCallback<A extends unknown[]> = (...args: A) => Promise<unknown>
 
 type AsyncState = {
   loading: boolean
@@ -23,31 +25,21 @@ function reducer(_: AsyncState, action: AsyncAction): AsyncState {
   }
 }
 
-function useAsyncReducer() {
-  return useReducer(reducer, { loading: false })
-}
-
-function useAsyncCallback<A extends unknown[]>(
-  callback: (...args: A) => Promise<unknown>,
-) {
-  const [state, dispatch] = useAsyncReducer()
+function useAsync() {
+  const [state, dispatch] = useReducer(reducer, { loading: false })
   const isMounted = useIsMounted()
 
-  // we want to ref the callback to avoid useMemo invalidating every render
-  // if an inline callback is passed
-  const callbackRef = useRef(callback)
-  useEffect(() => {
-    callbackRef.current = callback
-  }, [callback])
-
   return useMemo(() => {
-    async function run(...args: A) {
+    async function run<A extends unknown[]>(
+      callback: AsyncCallback<A>,
+      ...args: A
+    ) {
       if (state.loading) return
 
       dispatch({ type: "loading" })
 
       try {
-        await callbackRef.current(...args)
+        await callback(...args)
         dispatch({ type: "success" })
       } catch (error) {
         // checking mounted status to avoid setting state when unmounted
@@ -57,13 +49,12 @@ function useAsyncCallback<A extends unknown[]>(
       }
     }
 
-    const buttonProps = {
-      onClick: run,
-      disabled: state.loading,
+    function bind<A extends unknown[]>(callback: AsyncCallback<A>) {
+      return (...args: A) => run(callback, ...args)
     }
 
-    return { ...state, run, buttonProps }
+    return { ...state, run, bind }
   }, [dispatch, isMounted, state])
 }
 
-export default useAsyncCallback
+export default useAsync

@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRootStore } from "../RootStore"
-import useAsyncCallback from "../state/useAsyncCallback"
+import useAsync from "../state/useAsync"
 import useInput from "../state/useInput"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
@@ -13,23 +13,22 @@ import { spacing } from "../ui/theme"
 
 function Login() {
   const { chatStore, viewStore } = useRootStore()
+  const async = useAsync()
   const account = useInput()
   const password = useInput()
 
-  const handleSubmit = useAsyncCallback(async function handleSubmit(
-    event: React.FormEvent,
-  ) {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
 
     await chatStore.submitLogin(account.value, password.value)
     viewStore.showCharacterSelect()
-  })
+  }
 
   return (
     <FullscreenRaisedPanel>
       <ModalPanelHeader>Login</ModalPanelHeader>
-      <Form onSubmit={handleSubmit.run}>
-        <FieldSet disabled={handleSubmit.loading}>
+      <Form onSubmit={async.bind(handleSubmit)}>
+        <FieldSet disabled={async.loading}>
           <FormField labelText="Username">
             <TextInput
               name="username"
@@ -52,9 +51,7 @@ function Login() {
           <Button type="submit">Submit</Button>
         </FieldSet>
 
-        {handleSubmit.error ? (
-          <ErrorText>{handleSubmit.error}</ErrorText>
-        ) : null}
+        {async.error ? <ErrorText>{async.error}</ErrorText> : null}
       </Form>
     </FullscreenRaisedPanel>
   )
