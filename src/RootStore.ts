@@ -26,6 +26,7 @@ export default class RootStore {
 
   cleanup() {
     this.socketHandler.disconnect()
+    this.socketHandler.removeListeners()
     this.viewStore.removeDocumentTitleReaction()
   }
 }
