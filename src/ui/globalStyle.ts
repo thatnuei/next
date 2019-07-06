@@ -61,6 +61,10 @@ const globalStyle = css`
     vertical-align: top;
   }
 
+  fieldset {
+    border: none;
+  }
+
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
