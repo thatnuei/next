@@ -10,7 +10,16 @@ export default class TypedEmitter<EventMap extends object> {
     const listeners = this.getListeners(event)
 
     listeners.add(callback)
-    return () => listeners.delete(callback)
+
+    const unlisten = () => {
+      listeners.delete(callback)
+
+      if (listeners.size === 0) {
+        this.listeners.delete(event)
+      }
+    }
+
+    return unlisten
   }
 
   notify<K extends keyof EventMap>(event: K, value: EventMap[K]) {
