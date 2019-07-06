@@ -6,6 +6,7 @@ import useInput from "../state/useInput"
 import Button from "../ui/Button"
 import FormField from "../ui/FormField"
 import FullscreenRaisedPanel from "../ui/FullscreenRaisedPanel"
+import { spacedChildrenVertical } from "../ui/helpers"
 import ModalPanelHeader from "../ui/ModalPanelHeader"
 import { styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
@@ -63,10 +64,7 @@ const Form = styled.form`
   flex-direction: column;
   align-items: flex-start;
   padding: ${spacing.small};
-
-  > * + * {
-    margin-top: ${spacing.small};
-  }
+  ${spacedChildrenVertical()};
 `
 
 const ErrorText = styled.p`
@@ -81,7 +79,5 @@ const FieldSet = styled.fieldset`
     opacity: 0.5;
   }
 
-  > * + * {
-    margin-top: ${spacing.small};
-  }
+  ${spacedChildrenVertical()};
 `

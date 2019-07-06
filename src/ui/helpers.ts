@@ -1,4 +1,5 @@
 import { css } from "./styled"
+import { spacing } from "./theme"
 
 export const fullscreen = css`
   position: fixed;
@@ -63,5 +64,11 @@ export const pressEffect = css`
   :active {
     transform: translateY(2px);
     transition: none;
+  }
+`
+
+export const spacedChildrenVertical = (distance = spacing.small) => css`
+  > * + * {
+    margin-top: ${distance};
   }
 `
