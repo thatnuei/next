@@ -27,6 +27,10 @@ export default class TypedEmitter<EventMap extends object> {
     listeners.forEach((callback) => callback(value))
   }
 
+  removeListeners() {
+    this.listeners.clear()
+  }
+
   private getListeners<K extends keyof EventMap>(event: K) {
     let listeners = this.listeners.get(event)
     if (!listeners) {
