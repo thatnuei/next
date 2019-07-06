@@ -1,5 +1,6 @@
 import React, { ComponentPropsWithoutRef } from "react"
 import Box from "./Box"
+import { styled } from "./styled"
 import { spacing } from "./theme"
 
 type Props = ComponentPropsWithoutRef<"label"> & {
@@ -8,9 +9,14 @@ type Props = ComponentPropsWithoutRef<"label"> & {
 
 export default function FormField({ labelText, children, ...props }: Props) {
   return (
-    <label {...props}>
+    <Label {...props}>
       <Box margin={{ bottom: spacing.xxsmall }}>{labelText}</Box>
       {children}
-    </label>
+    </Label>
   )
 }
+
+const Label = styled.label`
+  display: block;
+  width: 100%;
+`

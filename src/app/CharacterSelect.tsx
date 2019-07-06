@@ -6,7 +6,7 @@ import { useRootStore } from "../RootStore"
 import Anchor from "../ui/Anchor"
 import Box from "../ui/Box"
 import Button from "../ui/Button"
-import ModalPanel from "../ui/ModalPanel"
+import FullscreenRaisedPanel from "../ui/FullscreenRaisedPanel"
 import ModalPanelHeader from "../ui/ModalPanelHeader"
 import Select from "../ui/Select"
 import { spacing } from "../ui/theme"
@@ -47,35 +47,33 @@ function CharacterSelect() {
   }
 
   return (
-    <Box height="100vh" align="center" justify="center">
-      <ModalPanel>
-        <ModalPanelHeader>Select a Character</ModalPanelHeader>
+    <FullscreenRaisedPanel>
+      <ModalPanelHeader>Select a Character</ModalPanelHeader>
 
-        <Box
-          as="form"
-          align="center"
-          gap={spacing.medium}
-          pad={spacing.medium}
-          onSubmit={handleSubmit}
-        >
-          <Avatar key={identity} name={identity} />
+      <Box
+        as="form"
+        align="center"
+        gap={spacing.medium}
+        pad={spacing.medium}
+        onSubmit={handleSubmit}
+      >
+        <Avatar key={identity} name={identity} />
 
-          <Select name="character" value={identity} onChange={handleChange}>
-            {characters.map((name) => (
-              <option value={name} key={name}>
-                {name}
-              </option>
-            ))}
-          </Select>
+        <Select name="character" value={identity} onChange={handleChange}>
+          {characters.map((name) => (
+            <option value={name} key={name}>
+              {name}
+            </option>
+          ))}
+        </Select>
 
-          <Button type="submit">Enter Chat</Button>
+        <Button type="submit">Enter Chat</Button>
 
-          <Anchor as="button" type="button" onClick={showLogin}>
-            Return to Login
-          </Anchor>
-        </Box>
-      </ModalPanel>
-    </Box>
+        <Anchor as="button" type="button" onClick={showLogin}>
+          Return to Login
+        </Anchor>
+      </Box>
+    </FullscreenRaisedPanel>
   )
 }
 export default observer(CharacterSelect)
