@@ -35,6 +35,10 @@ export const spacing = {
   large: "32px",
 }
 
+export const shadows = {
+  normal: "0px 4px 8px rgba(0, 0, 0, 0.3)",
+}
+
 export type AppTheme = typeof baseTheme
 export type AppThemeColor = keyof AppTheme["colors"]
 
