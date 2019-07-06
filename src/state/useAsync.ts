@@ -54,7 +54,7 @@ function useAsync() {
     }
 
     return { ...state, run, bind }
-  }, [dispatch, isMounted, state])
+  }, [isMounted, state])
 }
 
 export default useAsync
