@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import Chatbox from "../chat/Chatbox"
-import useChatNavBreakpoint from "../chat/useChatNavBreakpoint"
+import ChatMenuButton from "../chat/ChatMenuButton"
 import MessageList from "../message/MessageList"
 import { OverlayProvider } from "../overlay/OverlayContext"
 import OverlayShade from "../overlay/OverlayShade"
@@ -29,11 +29,6 @@ function ChannelView({ channel }: Props) {
   const { overlayStore, channelStore } = useRootStore()
   const userListVisible = useMedia(`(min-width: ${userListBreakpoint}px)`)
   const descriptionUi = useToggleState()
-  const isChatNavVisible = useChatNavBreakpoint()
-
-  const showChatNav = () => {
-    overlayStore.chatNav.open()
-  }
 
   const showUsersOverlay = () => {
     overlayStore.userList.open()
@@ -52,11 +47,7 @@ function ChannelView({ channel }: Props) {
         align="center"
       >
         <Box direction="row" align="center" gap={spacing.xsmall} flex>
-          {!isChatNavVisible && (
-            <FadedButton onClick={showChatNav}>
-              <Icon icon="menu" />
-            </FadedButton>
-          )}
+          <ChatMenuButton />
 
           <Box
             as={ChannelTitleButton}
