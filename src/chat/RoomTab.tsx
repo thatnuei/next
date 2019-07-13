@@ -1,7 +1,11 @@
 import React from "react"
-import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
-import { fadedRevealStyle } from "../ui/helpers"
+import {
+  fadedRevealStyle,
+  flexCenter,
+  flexRow,
+  spacedChildrenHorizontal,
+} from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
@@ -16,37 +20,47 @@ type Props = {
 
 export default function RoomTab({ onClick = () => {}, ...props }: Props) {
   return (
-    <Box direction="row" background={props.active ? "theme0" : undefined}>
-      <TitleButton active={props.active}>
-        <Box
-          direction="row"
-          gap={spacing.xsmall}
-          pad={spacing.xsmall}
-          align="center"
-          onClick={onClick}
-        >
+    <Container active={props.active}>
+      <TitleButton active={props.active} onClick={onClick}>
+        <TitleAndIconContainer>
           {props.icon}
-          <Box flex pad={{ vertical: "xxsmall" }}>
-            {props.title}
-          </Box>
-        </Box>
+          <TitleText>{props.title}</TitleText>
+        </TitleAndIconContainer>
       </TitleButton>
 
       {props.onClose && (
-        <Box
-          as={FadedButton}
-          pad={spacing.xsmall}
-          justify="center"
-          onClick={props.onClose}
-        >
+        <CloseButton onClick={props.onClose}>
           <Icon icon="close" size={0.7} />
-        </Box>
+        </CloseButton>
       )}
-    </Box>
+    </Container>
   )
 }
+
+const Container = styled.div<{ active?: boolean }>`
+  ${flexRow};
+
+  background-color: ${(props) =>
+    props.active ? props.theme.colors.theme0 : "transparent"};
+`
 
 const TitleButton = styled.button<{ active?: boolean }>`
   ${(props) => (props.active ? "" : fadedRevealStyle)};
   flex: 1;
+`
+
+const TitleAndIconContainer = styled.div`
+  ${flexRow};
+  align-items: center;
+  padding: ${spacing.xsmall};
+  ${spacedChildrenHorizontal(spacing.xsmall)};
+`
+
+const TitleText = styled.div`
+  flex: 1;
+`
+
+const CloseButton = styled(FadedButton)`
+  ${flexCenter};
+  padding: ${spacing.xsmall};
 `
