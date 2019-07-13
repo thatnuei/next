@@ -19,13 +19,13 @@ export default class PrivateChatStore {
   }
 
   @action
-  openChat = (name: string) => {
+  createChat = (name: string) => {
     this.chatPartnerNames.add(name)
     this.saveChats()
   }
 
   @action
-  closeChat = (name: string) => {
+  removeChat = (name: string) => {
     this.chatPartnerNames.delete(name)
     this.saveChats()
   }
@@ -80,7 +80,7 @@ export default class PrivateChatStore {
       const privateChat = this.privateChats.get(params.character)
       const message = new MessageModel(params.character, params.message, "chat")
       privateChat.messages.push(message)
-      this.openChat(params.character)
+      this.createChat(params.character)
     },
 
     TPN: (params) => {

@@ -41,7 +41,7 @@ function NavigationTabs() {
             viewStore.showPrivateChat(chat.partner)
             overlayStore.chatNav.close()
           }}
-          onClose={() => privateChatStore.closeChat(chat.partner)}
+          onClose={() => privateChatStore.removeChat(chat.partner)}
         />
       ))}
     </>

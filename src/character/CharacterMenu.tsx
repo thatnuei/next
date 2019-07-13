@@ -24,7 +24,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
   const profileUrl = getProfileUrl(props.characterName)
 
   const handleMessage = () => {
-    privateChatStore.openChat(props.characterName)
+    privateChatStore.createChat(props.characterName)
     viewStore.showPrivateChat(props.characterName)
   }
 
