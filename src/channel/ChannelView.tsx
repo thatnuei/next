@@ -25,7 +25,7 @@ const userListBreakpoint = 1200
 type Props = { channel: ChannelModel }
 
 function ChannelView({ channel }: Props) {
-  const { overlayStore } = useRootStore()
+  const { overlayStore, channelStore } = useRootStore()
   const userListVisible = useMedia(`(min-width: ${userListBreakpoint}px)`)
   const descriptionUi = useToggleState()
   const isChatNavVisible = useChatNavBreakpoint()
@@ -36,6 +36,10 @@ function ChannelView({ channel }: Props) {
 
   const showUsersOverlay = () => {
     overlayStore.userList.open()
+  }
+
+  const sendMessage = (message: string) => {
+    channelStore.sendMessage(channel.id, message)
   }
 
   const channelHeader = (
@@ -101,7 +105,7 @@ function ChannelView({ channel }: Props) {
 
         {/* chatbox */}
         <Box background="theme0" pad={spacing.xsmall}>
-          <Chatbox onSubmit={console.log} />
+          <Chatbox onSubmit={sendMessage} />
         </Box>
       </Box>
 

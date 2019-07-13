@@ -65,6 +65,15 @@ export default class ChannelStore {
     return this.joinedChannels.some((channel) => channel.id === channelId)
   }
 
+  sendMessage(channelId: string, message: string) {
+    this.root.socketHandler.send("MSG", { channel: channelId, message })
+    this.channels
+      .get(channelId)
+      .addMessage(
+        new MessageModel(this.root.chatStore.identity, message, "chat"),
+      )
+  }
+
   handleSocketCommand = createCommandHandler({
     ICH: ({ channel: id, mode, users }) => {
       const channel = this.channels.get(id)
