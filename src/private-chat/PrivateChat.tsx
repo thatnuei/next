@@ -65,6 +65,7 @@ const HeaderContainer = styled.header`
 `
 
 const MessageListContainer = styled.div`
+  background-color: ${(props) => props.theme.colors.theme1};
   flex: 1;
 `
 
