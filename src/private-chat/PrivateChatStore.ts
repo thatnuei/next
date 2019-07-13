@@ -87,6 +87,7 @@ export default class PrivateChatStore {
 
       if (!this.root.viewStore.isPrivateChatActive(params.character)) {
         newMessageSound.play()
+        privateChat.markUnread()
       }
     },
 

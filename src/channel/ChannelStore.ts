@@ -111,6 +111,10 @@ export default class ChannelStore {
     MSG: ({ channel: id, character, message }) => {
       const channel = this.channels.get(id)
       channel.addMessage(new MessageModel(character, message, "chat"))
+
+      if (!this.root.viewStore.isChannelActive(id)) {
+        channel.markUnread()
+      }
     },
 
     LRP: ({ channel: id, character, message }) => {
