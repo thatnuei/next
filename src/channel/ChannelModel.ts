@@ -3,7 +3,6 @@ import { action, computed, observable } from "mobx"
 import CharacterCollection from "../character/CharacterCollection"
 import CharacterModel from "../character/CharacterModel"
 import ChatRoomModel from "../chat/ChatRoomModel"
-import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
 import { ChannelMode } from "./types"
 
@@ -45,11 +44,6 @@ export default class ChannelModel extends ChatRoomModel {
   @action
   setSelectedMode(selectedMode: ChannelMode) {
     this.selectedMode = selectedMode
-  }
-
-  @action
-  addMessage(message: MessageModel) {
-    this.messages = [...this.messages.slice(-300), message]
   }
 
   @computed

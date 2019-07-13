@@ -9,6 +9,11 @@ export default abstract class ChatRoomModel {
   unread = false
 
   @action
+  addMessage(message: MessageModel) {
+    this.messages = [...this.messages.slice(-300), message]
+  }
+
+  @action
   markRead() {
     this.unread = false
   }

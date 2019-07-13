@@ -79,8 +79,10 @@ export default class PrivateChatStore {
 
     PRI: (params) => {
       const privateChat = this.privateChats.get(params.character)
+
       const message = new MessageModel(params.character, params.message, "chat")
-      privateChat.messages.push(message)
+      privateChat.addMessage(message)
+
       this.createChat(params.character)
 
       if (!this.root.viewStore.isPrivateChatActive(params.character)) {
