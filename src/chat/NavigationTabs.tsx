@@ -23,9 +23,11 @@ function NavigationTabs() {
           icon={<Icon icon="channels" size={0.9} />}
           title={channel.name}
           active={viewStore.isChannelActive(channel.id)}
+          unread={channel.unread}
           onClick={() => {
             viewStore.showChannel(channel.id)
             overlayStore.chatNav.close()
+            channel.markRead()
           }}
           onClose={() => channelStore.leave(channel.id)}
         />
@@ -37,9 +39,11 @@ function NavigationTabs() {
           icon={<Avatar name={chat.partner} size={20} />}
           title={chat.partner}
           active={viewStore.isPrivateChatActive(chat.partner)}
+          unread={chat.unread}
           onClick={() => {
             viewStore.showPrivateChat(chat.partner)
             overlayStore.chatNav.close()
+            chat.markRead()
           }}
           onClose={() => privateChatStore.removeChat(chat.partner)}
         />
