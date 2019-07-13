@@ -72,3 +72,9 @@ export const spacedChildrenVertical = (distance = spacing.small) => css`
     margin-top: ${distance};
   }
 `
+
+export const spacedChildrenHorizontal = (distance = spacing.small) => css`
+  > * + * {
+    margin-left: ${distance};
+  }
+`

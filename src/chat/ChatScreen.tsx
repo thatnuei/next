@@ -6,7 +6,8 @@ import ChannelView from "../channel/ChannelView"
 import { CharacterMenuProvider } from "../character/CharacterMenuContext"
 import { OverlayProvider } from "../overlay/OverlayContext"
 import { useRootStore } from "../RootStore"
-import Box from "../ui/Box"
+import { spacedChildrenHorizontal } from "../ui/helpers"
+import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
 import ChatNavigation from "./ChatNavigation"
 import ChatNavigationOverlay from "./ChatNavigationOverlay"
@@ -39,15 +40,10 @@ const ChatScreen = () => {
 
   return (
     <CharacterMenuProvider>
-      <Box
-        direction="row"
-        gap={spacing.xsmall}
-        style={cover()}
-        background="theme2"
-      >
+      <Container>
         {navigationVisible && <ChatNavigation />}
         {renderChatRoom()}
-      </Box>
+      </Container>
 
       <OverlayProvider value={overlayStore.chatNav}>
         <ChatNavigationOverlay />
@@ -68,3 +64,10 @@ const ChatScreen = () => {
   )
 }
 export default observer(ChatScreen)
+
+const Container = styled.div`
+  background-color: ${({ theme }) => theme.colors.theme2};
+  display: flex;
+  ${cover()};
+  ${spacedChildrenHorizontal(spacing.xsmall)};
+`
