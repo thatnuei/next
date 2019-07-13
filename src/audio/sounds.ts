@@ -1,5 +1,6 @@
 function createSoundEffect(sources: string[]) {
   const sound = new Audio()
+  sound.volume = 0.5
 
   for (const src of sources) {
     const source = document.createElement("source")
