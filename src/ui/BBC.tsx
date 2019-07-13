@@ -4,6 +4,7 @@ import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
 import { getIconUrl, getProfileUrl } from "../flist/helpers"
 import Anchor from "./Anchor"
+import ExternalLink from "./ExternalLink"
 import Icon from "./Icon"
 import { styled } from "./styled"
 
@@ -88,6 +89,7 @@ function renderTree(nodes: bbc.Node[]): React.ReactNode {
       case "tag":
         return <Fragment key={index}>{renderTagNode(node)}</Fragment>
     }
+    return null
   })
 }
 
@@ -135,9 +137,9 @@ function renderTagNode(node: bbc.TagNode): React.ReactNode {
     case "icon": {
       const userName = getNodeText(node)
       return (
-        <a href={getProfileUrl(userName)} target="_blank">
+        <ExternalLink href={getProfileUrl(userName)}>
           <IconAvatar name={userName} size={50} />
-        </a>
+        </ExternalLink>
       )
     }
 

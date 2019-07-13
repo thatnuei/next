@@ -1,5 +1,5 @@
 /// <reference types="styled-components/cssprop" />
-import * as sc from "styled-components"
+import * as sc from "styled-components/macro"
 import { AppTheme } from "./theme"
 
 export const {

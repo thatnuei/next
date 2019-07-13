@@ -21,6 +21,6 @@ function createSoundEffect(sources: string[]) {
 }
 
 export const newMessageSound = createSoundEffect([
-  `/public/audio/notify.ogg`,
-  `/public/audio/notify.mp3`,
+  `${process.env.PUBLIC_URL}/audio/notify.mp3`,
+  `${process.env.PUBLIC_URL}/audio/notify.ogg`,
 ])
