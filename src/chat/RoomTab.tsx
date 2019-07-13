@@ -1,4 +1,6 @@
+import { transparentize } from "polished"
 import React from "react"
+import pick from "../common/pick"
 import FadedButton from "../ui/FadedButton"
 import {
   fadedRevealStyle,
@@ -14,14 +16,15 @@ type Props = {
   icon?: React.ReactNode
   title?: React.ReactNode
   active?: boolean
+  unread?: boolean
   onClick?: () => void
   onClose?: () => void
 }
 
 export default function RoomTab(props: Props) {
   return (
-    <Container active={props.active}>
-      <TitleButton active={props.active} onClick={props.onClick}>
+    <Container {...pick(props, "active", "unread")}>
+      <TitleButton {...pick(props, "active", "onClick")}>
         <TitleAndIconContainer>
           {props.icon}
           <TitleText>{props.title}</TitleText>
@@ -37,11 +40,14 @@ export default function RoomTab(props: Props) {
   )
 }
 
-const Container = styled.div<{ active?: boolean }>`
+const Container = styled.div<{ active?: boolean; unread?: boolean }>`
   ${flexRow};
 
-  background-color: ${(props) =>
-    props.active ? props.theme.colors.theme0 : "transparent"};
+  background-color: ${({ active, unread, theme }) => {
+    if (active) return theme.colors.theme0
+    if (unread) return transparentize(0.9, theme.colors.success)
+    return "transparent"
+  }};
 `
 
 const TitleButton = styled.button<{ active?: boolean }>`
