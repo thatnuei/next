@@ -5,7 +5,7 @@ import { styled } from "../ui/styled"
 import { useCharacterMenuContext } from "./CharacterMenuContext"
 import { genderColors, statusColors } from "./colors"
 
-const CharacterName = (props: { name: string }) => {
+const CharacterName = (props: { name: string; hideStatusDot?: boolean }) => {
   const { characterStore } = useRootStore()
   const char = characterStore.characters.get(props.name)
 
@@ -21,7 +21,9 @@ const CharacterName = (props: { name: string }) => {
 
   return (
     <ContainerButton onClick={openCharacterMenu}>
-      <StatusDot title={`Status: ${char.status}`} style={statusDotStyle} />
+      {props.hideStatusDot ? null : (
+        <StatusDot title={`Status: ${char.status}`} style={statusDotStyle} />
+      )}
       <NameText title={`${props.name} - ${char.gender}`} style={nameStyle}>
         {props.name}
       </NameText>
