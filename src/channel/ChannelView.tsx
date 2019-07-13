@@ -10,6 +10,7 @@ import { useRootStore } from "../RootStore"
 import BBC from "../ui/BBC"
 import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
+import { fillArea, flexColumn } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
@@ -82,7 +83,7 @@ function ChannelView({ channel }: Props) {
 
   return (
     <>
-      <Box as="main" flex>
+      <Container>
         {/* room content */}
         <Box direction="row" flex gap={spacing.xsmall}>
           <Box flex>
@@ -107,7 +108,7 @@ function ChannelView({ channel }: Props) {
         <Box background="theme0" pad={spacing.xsmall}>
           <Chatbox onSubmit={sendMessage} />
         </Box>
-      </Box>
+      </Container>
 
       <OverlayProvider value={overlayStore.userList}>
         <OverlayShade>
@@ -120,6 +121,11 @@ function ChannelView({ channel }: Props) {
   )
 }
 export default observer(ChannelView)
+
+const Container = styled.div`
+  ${flexColumn};
+  ${fillArea};
+`
 
 const ChannelTitleButton = styled(FadedButton)`
   opacity: 0.7;

@@ -5,6 +5,7 @@ import ChannelBrowser from "../channel/ChannelBrowser"
 import ChannelView from "../channel/ChannelView"
 import { CharacterMenuProvider } from "../character/CharacterMenuContext"
 import { OverlayProvider } from "../overlay/OverlayContext"
+import PrivateChat from "../private-chat/PrivateChat"
 import { useRootStore } from "../RootStore"
 import { spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
@@ -16,7 +17,12 @@ import StatusOverlay from "./StatusOverlay"
 import useChatNavBreakpoint from "./useChatNavBreakpoint"
 
 const ChatScreen = () => {
-  const { channelStore, viewStore, overlayStore } = useRootStore()
+  const {
+    channelStore,
+    privateChatStore,
+    viewStore,
+    overlayStore,
+  } = useRootStore()
   const navigationVisible = useChatNavBreakpoint()
 
   function renderChatRoom() {
@@ -33,7 +39,8 @@ const ChatScreen = () => {
       }
 
       case "privateChat": {
-        return <p>privateChat</p>
+        const chat = privateChatStore.privateChats.get(chatRoom.partnerName)
+        return <PrivateChat privateChat={chat} />
       }
     }
   }
@@ -42,7 +49,7 @@ const ChatScreen = () => {
     <CharacterMenuProvider>
       <Container>
         {navigationVisible && <ChatNavigation />}
-        {renderChatRoom()}
+        <RoomContainer>{renderChatRoom()}</RoomContainer>
       </Container>
 
       <OverlayProvider value={overlayStore.chatNav}>
@@ -70,4 +77,8 @@ const Container = styled.div`
   display: flex;
   ${cover()};
   ${spacedChildrenHorizontal(spacing.xsmall)};
+`
+
+const RoomContainer = styled.div`
+  flex: 1;
 `
