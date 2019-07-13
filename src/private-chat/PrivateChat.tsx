@@ -6,6 +6,7 @@ import CharacterStatus from "../character/CharacterStatus"
 import Chatbox from "../chat/Chatbox"
 import ChatMenuButton from "../chat/ChatMenuButton"
 import MessageList from "../message/MessageList"
+import { useRootStore } from "../RootStore"
 import { fillArea, flexColumn, spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
@@ -14,6 +15,12 @@ import { PrivateChatModel } from "./PrivateChatModel"
 type Props = { privateChat: PrivateChatModel }
 
 function PrivateChat({ privateChat }: Props) {
+  const { privateChatStore } = useRootStore()
+
+  const handleChatboxSubmit = (message: string) => {
+    privateChatStore.sendMessage(privateChat.partner, message)
+  }
+
   return (
     <Container>
       <HeaderContainer>
@@ -30,7 +37,7 @@ function PrivateChat({ privateChat }: Props) {
       </MessageListContainer>
 
       <ChatboxContainer>
-        <Chatbox onSubmit={console.log} />
+        <Chatbox onSubmit={handleChatboxSubmit} />
       </ChatboxContainer>
     </Container>
   )

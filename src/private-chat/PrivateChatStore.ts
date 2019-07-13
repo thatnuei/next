@@ -35,6 +35,16 @@ export default class PrivateChatStore {
     return [...this.chatPartnerNames].map(this.privateChats.get)
   }
 
+  sendMessage = (recipient: string, message: string) => {
+    this.root.socketHandler.send("PRI", { recipient, message })
+
+    this.privateChats
+      .get(recipient)
+      .messages.push(
+        new MessageModel(this.root.chatStore.identity, message, "chat"),
+      )
+  }
+
   private saveChats = async () => {
     const data: StoredPrivateChat[] = [...this.chatPartnerNames].map(
       (name) => ({
