@@ -6,7 +6,12 @@ import Icon from "../ui/Icon"
 import RoomTab from "./RoomTab"
 
 function NavigationTabs() {
-  const { channelStore, viewStore, overlayStore } = useRootStore()
+  const {
+    channelStore,
+    privateChatStore,
+    viewStore,
+    overlayStore,
+  } = useRootStore()
 
   return (
     <>
@@ -26,10 +31,19 @@ function NavigationTabs() {
         />
       ))}
 
-      <RoomTab
-        icon={<Avatar name="Subaru-chan" size={20} />}
-        title="Subaru-chan"
-      />
+      {privateChatStore.chats.map((chat) => (
+        <RoomTab
+          key={chat.partner}
+          icon={<Avatar name={chat.partner} size={20} />}
+          title={chat.partner}
+          active={viewStore.isPrivateChatActive(chat.partner)}
+          onClick={() => {
+            viewStore.showPrivateChat(chat.partner)
+            overlayStore.chatNav.close()
+          }}
+          onClose={() => privateChatStore.closeChat(chat.partner)}
+        />
+      ))}
     </>
   )
 }
