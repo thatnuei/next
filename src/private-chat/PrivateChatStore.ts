@@ -1,5 +1,6 @@
 import * as idb from "idb-keyval"
 import { action, computed, observable, runInAction } from "mobx"
+import { newMessageSound } from "../audio/sounds"
 import { createCommandHandler } from "../fchat/helpers"
 import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
@@ -81,6 +82,10 @@ export default class PrivateChatStore {
       const message = new MessageModel(params.character, params.message, "chat")
       privateChat.messages.push(message)
       this.createChat(params.character)
+
+      if (!this.root.viewStore.isPrivateChatActive(params.character)) {
+        newMessageSound.play()
+      }
     },
 
     TPN: (params) => {
