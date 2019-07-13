@@ -2,20 +2,30 @@ import { sortBy } from "lodash"
 import { action, computed, observable } from "mobx"
 import CharacterCollection from "../character/CharacterCollection"
 import CharacterModel from "../character/CharacterModel"
+import ChatRoomModel from "../chat/ChatRoomModel"
 import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
 import { ChannelMode } from "./types"
 
-export default class ChannelModel {
-  @observable name = this.id
-  @observable description = ""
-  @observable mode: ChannelMode = "both"
-  @observable selectedMode: ChannelMode = "chat"
+export default class ChannelModel extends ChatRoomModel {
+  @observable
+  name = this.id
+
+  @observable
+  description = ""
+
+  @observable
+  mode: ChannelMode = "both"
+
+  @observable
+  selectedMode: ChannelMode = "chat"
+
   users = new CharacterCollection(this.root.characterStore)
   ops = new CharacterCollection(this.root.characterStore)
-  @observable.shallow messages: MessageModel[] = []
 
-  constructor(private root: RootStore, public id: string) {}
+  constructor(private root: RootStore, public id: string) {
+    super()
+  }
 
   @action
   setName(name: string) {

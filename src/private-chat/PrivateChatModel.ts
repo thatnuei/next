@@ -1,11 +1,8 @@
 import * as fchat from "fchat"
 import { observable } from "mobx"
-import MessageModel from "../message/MessageModel"
+import ChatRoomModel from "../chat/ChatRoomModel"
 
-export class PrivateChatModel {
-  @observable
-  messages: MessageModel[] = []
-
+export class PrivateChatModel extends ChatRoomModel {
   @observable
   partner: string
 
@@ -16,6 +13,7 @@ export class PrivateChatModel {
   partnerTypingStatus: fchat.Character.TypingStatus = "clear"
 
   constructor(partner: string) {
+    super()
     this.partner = partner
   }
 }
