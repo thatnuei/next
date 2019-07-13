@@ -18,10 +18,10 @@ type Props = {
   onClose?: () => void
 }
 
-export default function RoomTab({ onClick = () => {}, ...props }: Props) {
+export default function RoomTab(props: Props) {
   return (
     <Container active={props.active}>
-      <TitleButton active={props.active} onClick={onClick}>
+      <TitleButton active={props.active} onClick={props.onClick}>
         <TitleAndIconContainer>
           {props.icon}
           <TitleText>{props.title}</TitleText>
