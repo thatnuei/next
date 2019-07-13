@@ -20,6 +20,17 @@ import { spacing } from "../ui/theme"
 import ChannelBrowserEntryList from "./ChannelBrowserEntryList"
 import { ChannelBrowserSortMode } from "./types"
 
+const sortModes: ChannelBrowserSortMode[] = [
+  {
+    icon: "sortNumeric",
+    sortEntries: (entries) => sortBy(entries, "userCount").reverse(),
+  },
+  {
+    icon: "sortAlphabetical",
+    sortEntries: (entries) => sortBy(entries, "name"),
+  },
+]
+
 function ChannelBrowser() {
   const { channelStore } = useRootStore()
 
@@ -28,16 +39,7 @@ function ChannelBrowser() {
 
   const searchInput = useInput()
 
-  const sortModeCycle = useCycle<ChannelBrowserSortMode>([
-    {
-      icon: "sortNumeric",
-      sortEntries: (entries) => sortBy(entries, "userCount").reverse(),
-    },
-    {
-      icon: "sortAlphabetical",
-      sortEntries: (entries) => sortBy(entries, "name"),
-    },
-  ])
+  const sortModeCycle = useCycle<ChannelBrowserSortMode>(sortModes)
   const sortMode = sortModeCycle.current
 
   const tab = useTabState({
