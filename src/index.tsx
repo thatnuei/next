@@ -6,7 +6,7 @@ import RootStore, { RootStoreContext } from "./RootStore"
 
 function HotReloader() {
   const [store, setStore] = useState(() => new RootStore())
-  const [_, update] = useState(false)
+  const [, update] = useState(false)
 
   useEffect(() => {
     store.init()
