@@ -1,3 +1,6 @@
+import notifyMp3 from "./notify.mp3"
+import notifyOgg from "./notify.ogg"
+
 function createSoundEffect(sources: string[]) {
   const sound = new Audio()
   sound.volume = 0.5
@@ -20,7 +23,4 @@ function createSoundEffect(sources: string[]) {
   }
 }
 
-export const newMessageSound = createSoundEffect([
-  `/public/audio/notify.ogg`,
-  `/public/audio/notify.mp3`,
-])
+export const newMessageSound = createSoundEffect([notifyOgg, notifyMp3])
