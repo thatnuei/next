@@ -62,6 +62,8 @@ function CharacterSelect() {
             <Anchor as="button" type="button" onClick={showLogin}>
               Return to Login
             </Anchor>
+
+            {async.error && <ErrorText>{async.error}</ErrorText>}
           </FieldsContainer>
         </FieldSet>
       </form>
@@ -85,4 +87,8 @@ const FieldsContainer = styled.div`
 
   padding: ${spacing.medium};
   ${spacedChildrenVertical(spacing.medium)};
+`
+
+const ErrorText = styled.p`
+  max-width: 100%;
 `
