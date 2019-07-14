@@ -39,6 +39,21 @@ const baseConfig = {
   plugins: [
     new HtmlPlugin({
       template: join(sourceFolder, "index.html"),
+      meta: [
+        {
+          "http-equiv": "Content-Security-Policy",
+          content: `
+            default-src 'self' 'unsafe-inline'
+            ${process.env.NODE_ENV === "production" ? "" : "'unsafe-eval'"}
+            data:
+            https://fonts.googleapis.com
+            https://fonts.gstatic.com
+            https://www.f-list.net
+            https://static.f-list.net
+            wss://chat.f-list.net
+          `,
+        },
+      ],
     }),
     new WebpackPwaManifest({
       short_name: "next",
