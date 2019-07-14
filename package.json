@@ -3,16 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --hot",
+    "dev": "npm-run-all --parallel --race dev:*",
+    "dev:server": "webpack-dev-server --inline --hot",
+    "dev:electron": "electron app.js",
     "build": "cross-env NODE_ENV=production webpack",
     "build:dev": "webpack",
+    "build:electron": "cross-env NODE_ENV=production webpack --env.electron",
     "format": "prettier --write \"@(src|public)/**/*.@(ts|tsx|html|json)\"",
     "stats": "cross-env NODE_ENV=production webpack --reporter json > ./stats.json",
     "typecheck": "tsc --noEmit",
     "test": "jest --watch",
     "test:run": "jest",
     "test:cov": "jest --coverage",
-    "lint": "eslint \"src/**/*.ts?(x)\""
+    "lint": "eslint \"src/**/*.ts?(x)\"",
+    "start:electron": "cross-env NODE_ENV=production electron app.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.4",
@@ -29,6 +33,7 @@
     "lodash": "^4.17.14",
     "mobx": "^5.11.0",
     "mobx-react-lite": "^1.4.1",
+    "npm-run-all": "^4.1.5",
     "polished": "^3.4.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
@@ -77,6 +82,7 @@
     "babel-plugin-styled-components": "^1.10.6",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.0.3",
+    "electron": "^5.0.6",
     "eslint": "^6.0.1",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-react-hooks": "^1.6.1",

@@ -111,7 +111,18 @@ const prodConfig = {
   },
 }
 
-module.exports =
-  process.env.NODE_ENV === "production"
-    ? merge(baseConfig, prodConfig)
+/** @type {webpack.Configuration} */
+const electronConfig = {
+  target: "electron-renderer",
+  output: {
+    publicPath: ".",
+  },
+}
+
+function getConfig(env) {
+  return process.env.NODE_ENV === "production"
+    ? merge(baseConfig, prodConfig, env.electron ? electronConfig : {})
     : merge(baseConfig, devConfig)
+}
+
+module.exports = getConfig
