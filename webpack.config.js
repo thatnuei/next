@@ -23,7 +23,13 @@ const baseConfig = {
     publicPath: "/",
   },
   module: {
-    rules: [{ test: /\.tsx?$/, use: "babel-loader", include: [sourceFolder] }],
+    rules: [
+      { test: /\.tsx?$/, use: "babel-loader", include: [sourceFolder] },
+      {
+        test: /\.(png|jpg|ttf|woff|woff2|mp3|ogg|wav)$/,
+        use: { loader: "url-loader", options: { name: "[name].[hash].ext" } },
+      },
+    ],
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
