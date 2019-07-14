@@ -6,7 +6,7 @@
     "dev": "webpack-dev-server --inline --hot",
     "build": "cross-env NODE_ENV=production webpack",
     "build:dev": "webpack",
-    "format": "prettier --write \"@(src|public)/**/*.@(ts|tsx|html|json)\"",
+    "format": "prettier --write \"**/*.@(js|ts|tsx|html|json|md)\"",
     "stats": "cross-env NODE_ENV=production webpack --reporter json > ./stats.json",
     "typecheck": "tsc --noEmit",
     "test": "jest --watch",
