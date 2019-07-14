@@ -3,12 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm-run-all --parallel --race dev:*",
-    "dev:server": "webpack-dev-server --inline --hot",
-    "dev:electron": "electron app.js",
+    "dev": "webpack-dev-server --inline --hot",
     "build": "cross-env NODE_ENV=production webpack",
     "build:dev": "webpack",
-    "build:electron": "cross-env NODE_ENV=production webpack --env.electron",
     "format": "prettier --write \"@(src|public)/**/*.@(ts|tsx|html|json)\"",
     "stats": "cross-env NODE_ENV=production webpack --reporter json > ./stats.json",
     "typecheck": "tsc --noEmit",
@@ -16,7 +13,10 @@
     "test:run": "jest",
     "test:cov": "jest --coverage",
     "lint": "eslint \"src/**/*.ts?(x)\"",
-    "start:electron": "cross-env NODE_ENV=production electron app.js"
+    "desktop:dev:app": "electron app.js",
+    "desktop:dev": "npm-run-all --parallel --race desktop:dev:app dev",
+    "desktop:build": "cross-env NODE_ENV=production webpack --env.electron",
+    "desktop:start": "cross-env NODE_ENV=production electron app.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.4",
