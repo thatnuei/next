@@ -16,7 +16,7 @@
     "desktop:dev:app": "electron app.js",
     "desktop:dev": "npm-run-all --parallel --race desktop:dev:app dev",
     "desktop:build": "cross-env NODE_ENV=production webpack --env.electron",
-    "desktop:start": "cross-env NODE_ENV=production electron app.js"
+    "desktop:start": "cross-env NODE_ENV=production electron desktop/main.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.4",
