@@ -26,7 +26,9 @@ export default class ChatNavigationStore {
     const index = this.tabs.findIndex((other) => isEqual(tab, other))
     if (index < 0) return
 
-    this.showTab(this.tabs[clamp(index, 0, this.tabs.length - 1)])
+    const newIndex = clamp(index + 1, 0, this.tabs.length - 1)
+    this.showTab(this.tabs[newIndex])
+
     this.tabs.splice(index, 1)
   }
 
