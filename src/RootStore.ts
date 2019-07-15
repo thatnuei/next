@@ -17,7 +17,7 @@ export default class RootStore {
   channelStore = new ChannelStore(this)
   privateChatStore = new PrivateChatStore(this)
   chatStore = new ChatStore(this)
-  chatNavigationStore = new ChatNavigationStore()
+  chatNavigationStore = new ChatNavigationStore(this)
   overlayStore = new OverlayStore(this)
 
   constructor(public api = new FListApiService(), public storage = idb) {}
