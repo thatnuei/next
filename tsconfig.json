@@ -15,24 +15,13 @@
     "plugins": [
       {
         "name": "typescript-styled-plugin",
-        "tags": [
-          "styled",
-          "css",
-          "injectGlobal"
-        ]
+        "tags": ["styled", "css", "injectGlobal"]
       }
     ],
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
   },
-  "include": [
-    "src",
-    "test"
-  ]
+  "include": ["src", "desktop"]
 }
