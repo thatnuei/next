@@ -9,7 +9,7 @@
     "lint": "eslint \"src/**/*.ts?(x)\"",
     "format": "prettier --write \"**/*.@(js|ts|tsx|html|json|md)\"",
     "typecheck": "tsc --noEmit",
-    "desktop:dev:app": "electron app.js",
+    "desktop:dev:app": "electron desktop/main.js",
     "desktop:dev": "npm-run-all --parallel --race desktop:dev:app dev",
     "desktop:build": "cross-env PUBLIC_URL=. yarn build",
     "desktop:start": "cross-env NODE_ENV=production electron desktop/main.js"
