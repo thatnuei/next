@@ -3,53 +3,81 @@ import React from "react"
 import Avatar from "../character/Avatar"
 import { useRootStore } from "../RootStore"
 import Icon from "../ui/Icon"
+import { ChatTab } from "./ChatNavigationStore"
 import RoomTab from "./RoomTab"
 
 function NavigationTabs() {
   const {
     channelStore,
     privateChatStore,
-    viewStore,
     overlayStore,
+    chatNavigationStore,
   } = useRootStore()
 
-  return (
-    <>
-      <RoomTab icon={<Icon icon="console" size={0.9} />} title="Console" />
+  const renderTab = (tab: ChatTab) => {
+    const active = chatNavigationStore.isActive(tab)
 
-      {channelStore.joinedChannels.map((channel) => (
-        <RoomTab
-          key={channel.id}
-          icon={<Icon icon="channels" size={0.9} />}
-          title={channel.name}
-          active={viewStore.isChannelActive(channel.id)}
-          unread={channel.unread}
-          onClick={() => {
-            viewStore.showChannel(channel.id)
-            overlayStore.chatNav.close()
-            channel.markRead()
-          }}
-          onClose={() => channelStore.leave(channel.id)}
-        />
-      ))}
+    const handleActivate = () => {
+      chatNavigationStore.showTab(tab)
+      overlayStore.chatNav.close()
+    }
 
-      {privateChatStore.chats.map((chat) => (
-        <RoomTab
-          key={chat.partner}
-          icon={<Avatar name={chat.partner} size={20} />}
-          title={chat.partner}
-          active={viewStore.isPrivateChatActive(chat.partner)}
-          unread={chat.unread}
-          onClick={() => {
-            viewStore.showPrivateChat(chat.partner)
-            overlayStore.chatNav.close()
-            chat.markRead()
-          }}
-          onClose={() => privateChatStore.removeChat(chat.partner)}
-        />
-      ))}
-    </>
-  )
+    const handleClose = () => {
+      chatNavigationStore.removeTab(tab)
+    }
+
+    switch (tab.type) {
+      case "console":
+        return (
+          <RoomTab
+            icon={<Icon icon="console" size={0.9} />}
+            title="Console"
+            active={active}
+            onClick={handleActivate}
+          />
+        )
+
+      case "channel": {
+        const channel = channelStore.channels.get(tab.channelId)
+        return (
+          <RoomTab
+            key={channel.id}
+            icon={<Icon icon="channels" size={0.9} />}
+            title={channel.name}
+            active={active}
+            unread={channel.unread}
+            onClick={() => {
+              handleActivate()
+              channel.markRead()
+            }}
+            onClose={handleClose}
+          />
+        )
+      }
+
+      case "privateChat": {
+        const chat = privateChatStore.privateChats.get(tab.partnerName)
+        return (
+          <RoomTab
+            key={chat.partner}
+            icon={<Avatar name={chat.partner} size={20} />}
+            title={chat.partner}
+            active={active}
+            unread={chat.unread}
+            onClick={() => {
+              handleActivate()
+              chat.markRead()
+            }}
+            onClose={handleClose}
+          />
+        )
+      }
+    }
+  }
+
+  return chatNavigationStore.tabs.map((tab, index) => (
+    <React.Fragment key={index}>{renderTab(tab)}</React.Fragment>
+  )) as any
 }
 
 export default observer(NavigationTabs)

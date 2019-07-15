@@ -19,13 +19,15 @@ const stopPropagation = (event: React.MouseEvent) => event.stopPropagation()
 
 const CharacterMenu = (props: CharacterMenuProps) => {
   const menu = useCharacterMenuContext()
-  const { privateChatStore, viewStore } = useRootStore()
+  const { chatNavigationStore } = useRootStore()
 
   const profileUrl = getProfileUrl(props.characterName)
 
   const handleMessage = () => {
-    privateChatStore.createChat(props.characterName)
-    viewStore.showPrivateChat(props.characterName)
+    chatNavigationStore.showTab({
+      type: "privateChat",
+      partnerName: props.characterName,
+    })
   }
 
   return (

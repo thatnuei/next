@@ -15,7 +15,10 @@ test("bug - continues to show new messages after switching channels", () => {
   act(() => {
     store.chatStore.setIdentity("Testificate")
 
-    store.viewStore.showChannel("Fantasy")
+    store.chatNavigationStore.showTab({
+      type: "channel",
+      channelId: "Fantasy",
+    })
 
     store.channelStore.handleSocketCommand({
       type: "JCH",
@@ -57,7 +60,10 @@ test("bug - continues to show new messages after switching channels", () => {
   expect(queryByText("hello fantasy")).not.toBeNull()
 
   act(() => {
-    store.viewStore.showChannel("Frontpage")
+    store.chatNavigationStore.showTab({
+      type: "channel",
+      channelId: "Frontpage",
+    })
 
     store.channelStore.handleSocketCommand({
       type: "MSG",

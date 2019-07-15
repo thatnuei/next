@@ -1,13 +1,11 @@
-import * as idb from "idb-keyval"
-import { action, computed, observable, runInAction } from "mobx"
+import { action, computed, observable } from "mobx"
 import { newMessageSound } from "../audio/sounds"
+import { PrivateChatTab } from "../chat/ChatNavigationStore"
 import { createCommandHandler } from "../fchat/helpers"
 import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
 import FactoryMap from "../state/FactoryMap"
 import { PrivateChatModel } from "./PrivateChatModel"
-
-type StoredPrivateChat = { name: string }
 
 export default class PrivateChatStore {
   privateChats = new FactoryMap((name) => new PrivateChatModel(name))
@@ -17,18 +15,6 @@ export default class PrivateChatStore {
 
   constructor(private root: RootStore) {
     root.socketHandler.listen("command", this.handleSocketCommand)
-  }
-
-  @action
-  createChat = (name: string) => {
-    this.chatPartnerNames.add(name)
-    this.saveChats()
-  }
-
-  @action
-  removeChat = (name: string) => {
-    this.chatPartnerNames.delete(name)
-    this.saveChats()
   }
 
   @computed
@@ -46,46 +32,22 @@ export default class PrivateChatStore {
       )
   }
 
-  private saveChats = async () => {
-    const data: StoredPrivateChat[] = [...this.chatPartnerNames].map(
-      (name) => ({
-        name,
-      }),
-    )
-
-    await idb.set(this.storageKey, data)
-  }
-
-  private restoreChats = async () => {
-    const loadedData =
-      (await idb.get<StoredPrivateChat[]>(this.storageKey)) || []
-
-    const names = loadedData.map((entry) => entry.name)
-
-    runInAction("setRestoredPrivateChats", () => {
-      this.chatPartnerNames = new Set(names)
-    })
-  }
-
-  private get storageKey() {
-    return `privateChats:${this.root.chatStore.identity}`
-  }
-
   @action
   handleSocketCommand = createCommandHandler({
-    IDN: () => {
-      this.restoreChats()
-    },
-
     PRI: (params) => {
       const privateChat = this.privateChats.get(params.character)
 
       const message = new MessageModel(params.character, params.message, "chat")
       privateChat.addMessage(message)
 
-      this.createChat(params.character)
+      const tab: PrivateChatTab = {
+        type: "privateChat",
+        partnerName: params.character,
+      }
+      this.root.chatNavigationStore.addTab(tab)
 
-      if (!this.root.viewStore.isPrivateChatActive(params.character)) {
+      const isPrivateChatActive = this.root.chatNavigationStore.isActive(tab)
+      if (!isPrivateChatActive) {
         newMessageSound.play()
         privateChat.markUnread()
       }

@@ -33,7 +33,6 @@ function CharacterSelect() {
     })
 
     viewStore.showChat()
-    viewStore.showChannel("Fantasy")
   }
 
   function showLogin() {
