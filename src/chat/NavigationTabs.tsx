@@ -1,3 +1,4 @@
+import { sortBy } from "lodash"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import Avatar from "../character/Avatar"
@@ -75,7 +76,31 @@ function NavigationTabs() {
     }
   }
 
-  return chatNavigationStore.tabs.map((tab, index) => (
+  const getTypeOrder = (tab: ChatTab) => {
+    const typeOrder: Record<ChatTab["type"], number> = {
+      console: 0,
+      channel: 1,
+      privateChat: 2,
+    }
+    return typeOrder[tab.type]
+  }
+
+  const getTitle = (tab: ChatTab) => {
+    if (tab.type === "channel") {
+      const channel = channelStore.channels.get(tab.channelId)
+      return channel.name
+    }
+
+    if (tab.type === "privateChat") {
+      return tab.partnerName
+    }
+
+    return "Console"
+  }
+
+  const sortedTabs = sortBy(chatNavigationStore.tabs, getTypeOrder, getTitle)
+
+  return sortedTabs.map((tab, index) => (
     <React.Fragment key={index}>{renderTab(tab)}</React.Fragment>
   )) as any
 }
