@@ -10,7 +10,7 @@ function createWindow() {
   if (process.env.NODE_ENV === "production") {
     win.loadFile("../build/index.html")
   } else {
-    win.loadURL(`http://localhost:3000/`)
+    win.loadURL(`http://localhost:8080/`)
   }
 }
 
