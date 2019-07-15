@@ -10,7 +10,7 @@ export default abstract class ChatRoomModel {
 
   @action
   addMessage(message: MessageModel) {
-    this.messages = [...this.messages.slice(-300), message]
+    this.messages = [...this.messages, message].slice(-300)
   }
 
   @action

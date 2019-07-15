@@ -20,26 +20,26 @@ const ChatScreen = () => {
   const {
     channelStore,
     privateChatStore,
-    viewStore,
     overlayStore,
+    chatNavigationStore,
   } = useRootStore()
+
   const navigationVisible = useChatNavBreakpoint()
 
   function renderChatRoom() {
-    const { chatRoom } = viewStore
-
-    switch (chatRoom.name) {
+    const { activeTab: currentTab } = chatNavigationStore
+    switch (currentTab.type) {
       case "console": {
         return <p>console</p>
       }
 
       case "channel": {
-        const channel = channelStore.channels.get(chatRoom.channel)
+        const channel = channelStore.channels.get(currentTab.channelId)
         return <ChannelView channel={channel} />
       }
 
       case "privateChat": {
-        const chat = privateChatStore.privateChats.get(chatRoom.partnerName)
+        const chat = privateChatStore.privateChats.get(currentTab.partnerName)
         return <PrivateChat privateChat={chat} />
       }
     }

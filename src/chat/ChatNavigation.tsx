@@ -2,7 +2,8 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import CharacterInfo from "../character/CharacterInfo"
 import { useRootStore } from "../RootStore"
-import Box from "../ui/Box"
+import { flexColumn, flexRow, spacedChildrenVertical } from "../ui/helpers"
+import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
 import NavigationActions from "./NavigationActions"
 import NavigationTabs from "./NavigationTabs"
@@ -11,17 +12,35 @@ function ChatNavigation() {
   const { chatStore } = useRootStore()
 
   return (
-    <Box as="nav" direction="row" style={{ height: "100%" }}>
+    <Nav>
       <NavigationActions />
-
-      <Box width={200} background="theme1" overflowY="auto">
-        <Box background="theme0" pad={spacing.small}>
+      <UserInfoAndTabsContainer>
+        <UserInfoContainer>
           <CharacterInfo name={chatStore.identity} />
-        </Box>
-
-        <NavigationTabs />
-      </Box>
-    </Box>
+        </UserInfoContainer>
+        <div>
+          <NavigationTabs />
+        </div>
+      </UserInfoAndTabsContainer>
+    </Nav>
   )
 }
 export default observer(ChatNavigation)
+
+const Nav = styled.nav`
+  ${flexRow};
+  height: 100%;
+`
+
+const UserInfoAndTabsContainer = styled.div`
+  ${flexColumn};
+  width: 200px;
+  background-color: ${(props) => props.theme.colors.theme1};
+  overflow-y: auto;
+  ${spacedChildrenVertical(spacing.xsmall)};
+`
+
+const UserInfoContainer = styled.div`
+  background-color: ${(props) => props.theme.colors.theme0};
+  padding: ${spacing.small};
+`

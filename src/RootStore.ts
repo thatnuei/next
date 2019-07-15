@@ -3,6 +3,7 @@ import React, { useContext } from "react"
 import ViewStore from "./app/ViewStore"
 import ChannelStore from "./channel/ChannelStore"
 import CharacterStore from "./character/CharacterStore"
+import ChatNavigationStore from "./chat/ChatNavigationStore"
 import ChatStore from "./chat/ChatStore"
 import SocketHandler from "./fchat/SocketHandler"
 import FListApiService from "./flist/FListApiService"
@@ -16,6 +17,7 @@ export default class RootStore {
   channelStore = new ChannelStore(this)
   privateChatStore = new PrivateChatStore(this)
   chatStore = new ChatStore(this)
+  chatNavigationStore = new ChatNavigationStore(this)
   overlayStore = new OverlayStore(this)
 
   constructor(public api = new FListApiService(), public storage = idb) {}

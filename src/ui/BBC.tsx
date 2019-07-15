@@ -80,17 +80,13 @@ const IconAvatar = styled(Avatar)`
 `
 
 function renderTree(nodes: bbc.Node[]): React.ReactNode {
-  return nodes.map((node, index) => {
-    switch (node.type) {
-      case "text":
-        return (
-          <span key={index} dangerouslySetInnerHTML={{ __html: node.text }} />
-        )
-      case "tag":
-        return <Fragment key={index}>{renderTagNode(node)}</Fragment>
-    }
-    return null
-  })
+  return nodes.map((node, index) =>
+    node.type === "text" ? (
+      <span key={index} dangerouslySetInnerHTML={{ __html: node.text }} />
+    ) : (
+      <Fragment key={index}>{renderTagNode(node)}</Fragment>
+    ),
+  )
 }
 
 function renderTagNode(node: bbc.TagNode): React.ReactNode {

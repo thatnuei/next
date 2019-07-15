@@ -1,9 +1,8 @@
 declare module "*.mp3" {
-  const path: string
-  export = path
+  const url: string
+  export = url
 }
-
 declare module "*.ogg" {
-  const path: string
-  export = path
+  const url: string
+  export = url
 }

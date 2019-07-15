@@ -36,7 +36,7 @@ export default class SocketHandler extends TypedEmitter<EventTypes> {
 
       socket.onclose = () => {
         this.unbindListeners()
-        reject()
+        reject(new Error("Socket closed"))
         this.notify("close", undefined)
       }
 
@@ -56,6 +56,10 @@ export default class SocketHandler extends TypedEmitter<EventTypes> {
 
         this.notify("command", command)
         this.notify(command.type, command.params)
+      }
+
+      socket.onerror = () => {
+        reject(new Error("Failed to connect"))
       }
     })
   }

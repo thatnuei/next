@@ -72,14 +72,6 @@ export default class ChatStore {
 
   @action
   handleSocketCommand = createCommandHandler({
-    IDN: () => {
-      // join some test channels
-      this.root.socketHandler.send("JCH", { channel: "Frontpage" })
-      this.root.socketHandler.send("JCH", { channel: "Fantasy" })
-      this.root.socketHandler.send("JCH", { channel: "Femboy" })
-      this.root.socketHandler.send("JCH", { channel: "Story Driven LFRP" })
-      this.root.socketHandler.send("JCH", { channel: "Development" })
-    },
     HLO: ({ message }) => {
       console.info(message)
     },

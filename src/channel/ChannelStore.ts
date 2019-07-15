@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx"
+import { action, observable } from "mobx"
 import { createCommandHandler } from "../fchat/helpers"
 import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
@@ -41,13 +41,6 @@ export default class ChannelStore {
     this.listings[kind] = listings
   }
 
-  @computed
-  get joinedChannels() {
-    return this.channels.values.filter((channel) =>
-      channel.users.has(this.root.chatStore.identity),
-    )
-  }
-
   requestListings() {
     this.root.socketHandler.send("CHA", undefined)
     this.root.socketHandler.send("ORS", undefined)
@@ -59,10 +52,6 @@ export default class ChannelStore {
 
   leave(channelId: string) {
     this.root.socketHandler.send("LCH", { channel: channelId })
-  }
-
-  isJoined(channelId: string) {
-    return this.joinedChannels.some((channel) => channel.id === channelId)
   }
 
   sendMessage(channelId: string, message: string) {
@@ -95,11 +84,25 @@ export default class ChannelStore {
       const channel = this.channels.get(id)
       channel.setName(title)
       channel.users.add(character.identity)
+
+      if (character.identity === this.root.chatStore.identity) {
+        this.root.chatNavigationStore.addTab({
+          type: "channel",
+          channelId: id,
+        })
+      }
     },
 
     LCH: ({ channel: id, character }) => {
       const channel = this.channels.get(id)
       channel.users.remove(character)
+
+      if (character === this.root.chatStore.identity) {
+        this.root.chatNavigationStore.removeTab({
+          type: "channel",
+          channelId: id,
+        })
+      }
     },
 
     FLN: ({ character }) => {
@@ -112,7 +115,11 @@ export default class ChannelStore {
       const channel = this.channels.get(id)
       channel.addMessage(new MessageModel(character, message, "chat"))
 
-      if (!this.root.viewStore.isChannelActive(id)) {
+      const isChannelActive = this.root.chatNavigationStore.isActive({
+        type: "channel",
+        channelId: id,
+      })
+      if (!isChannelActive) {
         channel.markUnread()
       }
     },

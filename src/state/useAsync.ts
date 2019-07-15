@@ -40,9 +40,12 @@ function useAsync() {
 
       try {
         await callback(...args)
-        dispatch({ type: "success" })
-      } catch (error) {
+
         // checking mounted status to avoid setting state when unmounted
+        if (isMounted()) {
+          dispatch({ type: "success" })
+        }
+      } catch (error) {
         if (isMounted()) {
           dispatch({ type: "error", error: extractErrorMessage(error) })
         }

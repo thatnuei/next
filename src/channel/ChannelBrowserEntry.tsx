@@ -14,9 +14,12 @@ type Props = ListChildComponentProps & {
 }
 
 function ChannelBrowserEntry({ entry, style }: Props) {
-  const { channelStore } = useRootStore()
+  const { channelStore, chatNavigationStore } = useRootStore()
 
-  const joined = channelStore.isJoined(entry.id)
+  const joined = chatNavigationStore.hasTab({
+    type: "channel",
+    channelId: entry.id,
+  })
 
   const toggleJoin = () => {
     if (joined) {
