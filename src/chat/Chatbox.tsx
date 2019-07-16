@@ -5,17 +5,25 @@ import Box from "../ui/Box"
 import Button from "../ui/Button"
 import TextArea from "../ui/TextArea"
 import { spacing } from "../ui/theme"
+import { TypingStatus } from "./types"
+import useTypingStatus from "./useTypingStatus"
 
 type Props = {
   onSubmit: (message: string) => void
+  onTypingStatus?: (status: TypingStatus) => void
 }
 
 const Chatbox = (props: Props) => {
   const { chatStore } = useRootStore()
+
   const messageInput = useInput()
+  const trimmedInput = messageInput.value.trim()
+
+  const { onTypingStatus } = props
+  useTypingStatus(trimmedInput, onTypingStatus)
 
   const submit = () => {
-    props.onSubmit(messageInput.value)
+    props.onSubmit(trimmedInput)
     messageInput.setValue("")
   }
 
