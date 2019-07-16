@@ -18,6 +18,7 @@ export {
   mdiLogout as logout,
   mdiMenu as menu,
   mdiMinusCircle as ignore,
+  mdiPencil as pencil,
   mdiSettings as settings,
   mdiSortAlphabetical as sortAlphabetical,
   mdiSortNumeric as sortNumeric,
