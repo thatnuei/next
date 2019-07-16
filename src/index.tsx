@@ -4,12 +4,20 @@ import ReactDOM from "react-dom"
 import Root from "./Root"
 import RootStore, { RootStoreContext } from "./RootStore"
 
+declare global {
+  interface Window {
+    store?: RootStore
+  }
+}
+
 function HotReloader() {
   const [store, setStore] = useState(() => new RootStore())
   const [, update] = useState(false)
 
   useEffect(() => {
     store.init()
+    window.store = store
+
     return () => store.cleanup()
   }, [store])
 
@@ -20,6 +28,10 @@ function HotReloader() {
     }
   }, [])
 
+  return renderRoot(store)
+}
+
+function renderRoot(store = new RootStore()) {
   return (
     <RootStoreContext.Provider value={store}>
       <Root />
@@ -27,18 +39,13 @@ function HotReloader() {
   )
 }
 
-function renderApp() {
+function main() {
   if (process.env.NODE_ENV === "development") {
     ReactDOM.render(<HotReloader />, document.querySelector("#root"))
     return
   }
 
-  ReactDOM.render(
-    <RootStoreContext.Provider value={new RootStore()}>
-      <Root />
-    </RootStoreContext.Provider>,
-    document.querySelector("#root"),
-  )
+  ReactDOM.render(renderRoot(), document.querySelector("#root"))
 }
 
-renderApp()
+main()
