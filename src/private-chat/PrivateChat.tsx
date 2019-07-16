@@ -6,6 +6,7 @@ import CharacterStatus from "../character/CharacterStatus"
 import Chatbox from "../chat/Chatbox"
 import ChatMenuButton from "../chat/ChatMenuButton"
 import { TypingStatus } from "../chat/types"
+import TypingStatusIndicator from "../chat/TypingStatusIndicator"
 import MessageList from "../message/MessageList"
 import { useRootStore } from "../RootStore"
 import { fillArea, flexColumn, spacedChildrenHorizontal } from "../ui/helpers"
@@ -41,6 +42,13 @@ function PrivateChat({ privateChat }: Props) {
         <MessageList messages={privateChat.messages} />
       </MessageListContainer>
 
+      <TypingStatusContainer>
+        <TypingStatusIndicator
+          name={privateChat.partner}
+          status={privateChat.partnerTypingStatus}
+        />
+      </TypingStatusContainer>
+
       <ChatboxContainer>
         <Chatbox
           onSubmit={handleChatboxSubmit}
@@ -75,6 +83,11 @@ const HeaderContainer = styled.header`
 const MessageListContainer = styled.div`
   background-color: ${(props) => props.theme.colors.theme1};
   flex: 1;
+`
+
+const TypingStatusContainer = styled.div`
+  background-color: ${(props) => props.theme.colors.theme1};
+  padding: ${spacing.xsmall} ${spacing.small};
 `
 
 const NameAndStatusContainer = styled.div`
