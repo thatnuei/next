@@ -1,16 +1,16 @@
-import * as fchat from "fchat"
 import { observable } from "mobx"
 import ChatRoomModel from "../chat/ChatRoomModel"
+import { TypingStatus } from "../chat/types"
 
 export class PrivateChatModel extends ChatRoomModel {
   @observable
   partner: string
 
   @observable
-  typingStatus: fchat.Character.TypingStatus = "clear"
+  typingStatus: TypingStatus = "clear"
 
   @observable
-  partnerTypingStatus: fchat.Character.TypingStatus = "clear"
+  partnerTypingStatus: TypingStatus = "clear"
 
   constructor(partner: string) {
     super()
