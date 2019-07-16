@@ -5,6 +5,7 @@ import CharacterName from "../character/CharacterName"
 import CharacterStatus from "../character/CharacterStatus"
 import Chatbox from "../chat/Chatbox"
 import ChatMenuButton from "../chat/ChatMenuButton"
+import { TypingStatus } from "../chat/types"
 import MessageList from "../message/MessageList"
 import { useRootStore } from "../RootStore"
 import { fillArea, flexColumn, spacedChildrenHorizontal } from "../ui/helpers"
@@ -19,6 +20,10 @@ function PrivateChat({ privateChat }: Props) {
 
   const handleChatboxSubmit = (message: string) => {
     privateChatStore.sendMessage(privateChat.partner, message)
+  }
+
+  const handleTypingStatus = (status: TypingStatus) => {
+    privateChatStore.updateTypingStatus(privateChat.partner, status)
   }
 
   return (
@@ -37,7 +42,10 @@ function PrivateChat({ privateChat }: Props) {
       </MessageListContainer>
 
       <ChatboxContainer>
-        <Chatbox onSubmit={handleChatboxSubmit} />
+        <Chatbox
+          onSubmit={handleChatboxSubmit}
+          onTypingStatus={handleTypingStatus}
+        />
       </ChatboxContainer>
     </Container>
   )

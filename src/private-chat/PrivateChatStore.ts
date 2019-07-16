@@ -1,6 +1,7 @@
 import { action, computed, observable } from "mobx"
 import { newMessageSound } from "../audio/sounds"
 import { PrivateChatTab } from "../chat/ChatNavigationStore"
+import { TypingStatus } from "../chat/types"
 import { createCommandHandler } from "../fchat/helpers"
 import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
@@ -30,6 +31,10 @@ export default class PrivateChatStore {
       .messages.push(
         new MessageModel(this.root.chatStore.identity, message, "chat"),
       )
+  }
+
+  updateTypingStatus = (partnerName: string, status: TypingStatus) => {
+    this.root.socketHandler.send("TPN", { character: partnerName, status })
   }
 
   @action
