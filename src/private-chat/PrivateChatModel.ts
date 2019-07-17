@@ -7,9 +7,6 @@ export class PrivateChatModel extends ChatRoomModel {
   partner: string
 
   @observable
-  typingStatus: TypingStatus = "clear"
-
-  @observable
   partnerTypingStatus: TypingStatus = "clear"
 
   constructor(partner: string) {
