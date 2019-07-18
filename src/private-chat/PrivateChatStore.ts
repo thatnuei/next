@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx"
+import { action, observable } from "mobx"
 import { newMessageSound } from "../audio/sounds"
 import { PrivateChatTab } from "../chat/ChatNavigationStore"
 import { TypingStatus } from "../chat/types"
@@ -16,11 +16,6 @@ export default class PrivateChatStore {
 
   constructor(private root: RootStore) {
     root.socketHandler.listen("command", this.handleSocketCommand)
-  }
-
-  @computed
-  get chats() {
-    return [...this.chatPartnerNames].map(this.privateChats.get)
   }
 
   sendMessage = (recipient: string, message: string) => {
