@@ -22,14 +22,11 @@ export default class RootStore {
 
   constructor(public api = new FListApiService(), public storage = idb) {}
 
-  init() {
-    this.viewStore.createDocumentTitleReaction()
-  }
+  init() {}
 
   cleanup() {
     this.socketHandler.disconnect()
     this.socketHandler.removeListeners()
-    this.viewStore.removeDocumentTitleReaction()
   }
 }
 
