@@ -1,6 +1,7 @@
 import "focus-visible"
 import React, { useEffect, useState } from "react"
 import ReactDOM from "react-dom"
+import useAppNavigation from "./app/useAppNavigation"
 import Root from "./Root"
 import RootStore, { RootStoreContext } from "./RootStore"
 
@@ -34,7 +35,9 @@ function HotReloader() {
 function renderRoot(store = new RootStore()) {
   return (
     <RootStoreContext.Provider value={store}>
-      <Root />
+      <useAppNavigation.Provider>
+        <Root />
+      </useAppNavigation.Provider>
     </RootStoreContext.Provider>
   )
 }
