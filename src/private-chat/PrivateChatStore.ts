@@ -52,7 +52,7 @@ export default class PrivateChatStore {
       this.root.chatNavigationStore.addTab(tab)
 
       const isPrivateChatActive = this.root.chatNavigationStore.isActive(tab)
-      if (!isPrivateChatActive) {
+      if (!isPrivateChatActive || document.hidden) {
         newMessageSound.play()
         privateChat.markUnread()
       }
