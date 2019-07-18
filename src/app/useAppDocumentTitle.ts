@@ -1,18 +1,15 @@
 import { useObserver } from "mobx-react-lite"
 import { useEffect } from "react"
 import { useRootStore } from "../RootStore"
+import { useAppNavigation } from "./appNavigation"
 
 export default function useAppDocumentTitle() {
-  const {
-    viewStore,
-    chatStore,
-    chatNavigationStore,
-    privateChatStore,
-  } = useRootStore()
+  const { chatStore, chatNavigationStore, privateChatStore } = useRootStore()
+  const { screen } = useAppNavigation()
 
   const title = useObserver(() => {
     const titleContent = (() => {
-      switch (viewStore.screen.name) {
+      switch (screen.name) {
         case "login":
           return "Login - next"
         case "characterSelect":

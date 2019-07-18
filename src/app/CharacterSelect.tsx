@@ -11,10 +11,12 @@ import ModalPanelHeader from "../ui/ModalPanelHeader"
 import Select from "../ui/Select"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
+import { useAppNavigation } from "./appNavigation"
 
 function CharacterSelect() {
-  const { api, viewStore, chatStore, socketHandler } = useRootStore()
+  const { api, chatStore, socketHandler } = useRootStore()
   const async = useAsync()
+  const appNav = useAppNavigation()
 
   const { characters, identity } = chatStore
 
@@ -32,11 +34,11 @@ function CharacterSelect() {
       character: identity,
     })
 
-    viewStore.showChat()
+    appNav.showChat()
   }
 
   function showLogin() {
-    viewStore.showLogin()
+    appNav.showLogin()
   }
 
   return (

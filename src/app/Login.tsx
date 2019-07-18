@@ -11,19 +11,21 @@ import ModalPanelHeader from "../ui/ModalPanelHeader"
 import { styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
 import { spacing } from "../ui/theme"
+import { useAppNavigation } from "./appNavigation"
 
 function Login() {
-  const { chatStore, viewStore } = useRootStore()
+  const { chatStore } = useRootStore()
   const async = useAsync()
   const account = useInput()
   const password = useInput()
+  const appNav = useAppNavigation()
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
 
     await chatStore.submitLogin(account.value, password.value)
     await chatStore.restoreIdentity()
-    viewStore.showCharacterSelect()
+    appNav.showCharacterSelect()
   }
 
   return (

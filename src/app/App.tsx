@@ -1,17 +1,16 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import ChatScreen from "../chat/ChatScreen"
-import { useRootStore } from "../RootStore"
+import { useAppNavigation } from "./appNavigation"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 import useAppDocumentTitle from "./useAppDocumentTitle"
 
 function App() {
-  const { viewStore } = useRootStore()
+  const { screen } = useAppNavigation()
 
   useAppDocumentTitle()
 
-  switch (viewStore.screen.name) {
+  switch (screen.name) {
     case "login":
       return <Login />
     case "characterSelect":
@@ -21,4 +20,4 @@ function App() {
   }
 }
 
-export default observer(App)
+export default App

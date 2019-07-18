@@ -1,6 +1,5 @@
 import * as idb from "idb-keyval"
 import React, { useContext } from "react"
-import ViewStore from "./app/ViewStore"
 import ChannelStore from "./channel/ChannelStore"
 import CharacterStore from "./character/CharacterStore"
 import ChatNavigationStore from "./chat/ChatNavigationStore"
@@ -12,7 +11,6 @@ import PrivateChatStore from "./private-chat/PrivateChatStore"
 
 export default class RootStore {
   socketHandler = new SocketHandler()
-  viewStore = new ViewStore(this)
   characterStore = new CharacterStore(this)
   channelStore = new ChannelStore(this)
   privateChatStore = new PrivateChatStore(this)
