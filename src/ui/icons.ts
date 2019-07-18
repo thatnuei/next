@@ -19,6 +19,7 @@ export {
   mdiMenu as menu,
   mdiMinusCircle as ignore,
   mdiPencil as pencil,
+  mdiRefresh as refresh,
   mdiSettings as settings,
   mdiSortAlphabetical as sortAlphabetical,
   mdiSortNumeric as sortNumeric,
