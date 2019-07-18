@@ -1,7 +1,7 @@
 import { useObserver } from "mobx-react-lite"
 import { useEffect } from "react"
 import { useRootStore } from "../RootStore"
-import { useAppNavigation } from "./appNavigation"
+import useAppNavigation from "./useAppNavigation"
 
 export default function useAppDocumentTitle() {
   const { chatStore, chatNavigationStore, privateChatStore } = useRootStore()

@@ -1,9 +1,9 @@
 import React from "react"
 import ChatScreen from "../chat/ChatScreen"
-import { useAppNavigation } from "./appNavigation"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 import useAppDocumentTitle from "./useAppDocumentTitle"
+import useAppNavigation from "./useAppNavigation"
 
 function App() {
   const { screen } = useAppNavigation()

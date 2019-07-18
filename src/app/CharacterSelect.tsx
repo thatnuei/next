@@ -11,7 +11,7 @@ import ModalPanelHeader from "../ui/ModalPanelHeader"
 import Select from "../ui/Select"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
-import { useAppNavigation } from "./appNavigation"
+import useAppNavigation from "./useAppNavigation"
 
 function CharacterSelect() {
   const { api, chatStore, socketHandler } = useRootStore()

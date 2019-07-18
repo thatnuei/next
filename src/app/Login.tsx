@@ -11,7 +11,7 @@ import ModalPanelHeader from "../ui/ModalPanelHeader"
 import { styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
 import { spacing } from "../ui/theme"
-import { useAppNavigation } from "./appNavigation"
+import useAppNavigation from "./useAppNavigation"
 
 function Login() {
   const { chatStore } = useRootStore()
