@@ -41,7 +41,7 @@ export default class ChannelStore {
     this.listings[kind] = listings
   }
 
-  requestListings() {
+  requestListings = () => {
     this.root.socketHandler.send("CHA", undefined)
     this.root.socketHandler.send("ORS", undefined)
   }

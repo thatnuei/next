@@ -12,7 +12,11 @@ import useCycle from "../state/useCycle"
 import useInput from "../state/useInput"
 import Box from "../ui/Box"
 import Button from "../ui/Button"
-import { fadedRevealStyle } from "../ui/helpers"
+import {
+  fadedRevealStyle,
+  flexRow,
+  spacedChildrenHorizontal,
+} from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { css, styled } from "../ui/styled"
 import TextInput from "../ui/TextInput"
@@ -112,12 +116,7 @@ function ChannelBrowser() {
             </StyledTabPanel>
           </Box>
 
-          <Box
-            background="theme0"
-            direction="row"
-            pad={spacing.xsmall}
-            gap={spacing.xsmall}
-          >
+          <ActionRow>
             <TextInput
               style={{ flex: 1 }}
               placeholder="Search..."
@@ -127,7 +126,13 @@ function ChannelBrowser() {
             <Button title="Switch sort mode" onClick={sortModeCycle.next}>
               <Icon icon={sortMode.icon} />
             </Button>
-          </Box>
+            <Button
+              title="Refresh channels"
+              onClick={channelStore.requestListings}
+            >
+              <Icon icon="refresh" />
+            </Button>
+          </ActionRow>
         </Box>
       </OverlayContent>
     </OverlayShade>
@@ -135,6 +140,13 @@ function ChannelBrowser() {
 }
 
 export default observer(ChannelBrowser)
+
+const ActionRow = styled.div`
+  ${flexRow};
+  background-color: ${(props) => props.theme.colors.theme0};
+  padding: ${spacing.xsmall};
+  ${spacedChildrenHorizontal(spacing.xsmall)};
+`
 
 const StyledTabPanel = styled(TabPanel)`
   flex: 1;
