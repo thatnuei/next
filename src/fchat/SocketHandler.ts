@@ -48,10 +48,15 @@ export default class SocketHandler extends TypedEmitter<EventTypes> {
           resolve()
         }
 
-        // only reject if we haven't identified
-        // if we've identified, the error might not be fatal
-        if (command.type === "ERR" && !identified) {
-          reject(command.params.message)
+        if (command.type === "ERR") {
+          const { message, number } = command.params
+          console.error(`Socket error (${number}): ${message}`)
+
+          // only reject if we haven't identified
+          // if we've identified, the error might not be fatal
+          if (!identified) {
+            reject(message)
+          }
         }
 
         this.notify("command", command)
