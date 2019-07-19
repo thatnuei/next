@@ -10,6 +10,7 @@ import useTypingStatus from "./useTypingStatus"
 
 type Props = {
   onSubmit: (message: string) => void
+  onSubmitCommand?: (command: string, ...args: string[]) => void
   onTypingStatus?: (status: TypingStatus) => void
 }
 
@@ -23,7 +24,15 @@ const Chatbox = (props: Props) => {
   useTypingStatus(trimmedInput, onTypingStatus)
 
   const submit = () => {
-    props.onSubmit(trimmedInput)
+    if (trimmedInput.startsWith("/")) {
+      if (props.onSubmitCommand) {
+        const [command, ...args] = trimmedInput.slice(1).split(/\s+/)
+        props.onSubmitCommand(command, ...args)
+      }
+    } else {
+      props.onSubmit(trimmedInput)
+    }
+
     messageInput.setValue("")
   }
 
