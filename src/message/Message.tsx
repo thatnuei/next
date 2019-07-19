@@ -30,13 +30,13 @@ const Message = ({ senderName, text, type, time }: Props) => {
   return (
     <Container css={[highlightStyles[type], isAction && actionStyle]}>
       <DateText>{new Date(time).toLocaleTimeString()}</DateText>
-      <SenderText>
-        {sender ? (
+
+      {sender && (
+        <SenderText>
           <CharacterName name={sender.name} />
-        ) : (
-          <strong>System</strong>
-        )}
-      </SenderText>
+        </SenderText>
+      )}
+
       <BBC text={parsedText} />
     </Container>
   )
