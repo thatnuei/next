@@ -27,6 +27,19 @@ function PrivateChat({ privateChat }: Props) {
     privateChatStore.updateTypingStatus(privateChat.partner, status)
   }
 
+  const handleCommand = (command: string, ...args: string[]) => {
+    switch (command) {
+      case "roll": {
+        const dice = args.length > 0 ? args.join(" ") : "1d20"
+        privateChatStore.sendRoll(privateChat.partner, dice)
+        break
+      }
+
+      default:
+        console.error(`Unknown command /${command} ${args.join(" ")}`)
+    }
+  }
+
   return (
     <Container>
       <HeaderContainer>
@@ -52,6 +65,7 @@ function PrivateChat({ privateChat }: Props) {
       <ChatboxContainer>
         <Chatbox
           onSubmit={handleChatboxSubmit}
+          onSubmitCommand={handleCommand}
           onTypingStatus={handleTypingStatus}
         />
       </ChatboxContainer>

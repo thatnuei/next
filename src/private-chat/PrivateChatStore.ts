@@ -32,6 +32,10 @@ export default class PrivateChatStore {
     this.root.socketHandler.send("TPN", { character: partnerName, status })
   }
 
+  sendRoll = (partnerName: string, dice: string) => {
+    this.root.socketHandler.send("RLL", { recipient: partnerName, dice })
+  }
+
   @action
   handleSocketCommand = createCommandHandler({
     PRI: (params) => {
@@ -54,8 +58,8 @@ export default class PrivateChatStore {
     },
 
     RLL: (params) => {
-      if ("character" in params) {
-        const chat = this.privateChats.get(params.character)
+      if ("recipient" in params) {
+        const chat = this.privateChats.get(params.recipient)
         const message = new MessageModel(undefined, params.message, "system")
         chat.addMessage(message)
       }

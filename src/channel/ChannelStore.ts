@@ -63,6 +63,14 @@ export default class ChannelStore {
       )
   }
 
+  sendRoll(channelId: string, dice: string) {
+    this.root.socketHandler.send("RLL", { channel: channelId, dice })
+  }
+
+  sendBottle(channelId: string) {
+    this.root.socketHandler.send("RLL", { channel: channelId, dice: "bottle" })
+  }
+
   handleSocketCommand = createCommandHandler({
     ICH: ({ channel: id, mode, users }) => {
       const channel = this.channels.get(id)

@@ -38,6 +38,23 @@ function ChannelView({ channel }: Props) {
     channelStore.sendMessage(channel.id, message)
   }
 
+  const handleCommand = (command: string, ...args: string[]) => {
+    switch (command) {
+      case "roll": {
+        const dice = args.length > 0 ? args.join(" ") : "1d20"
+        channelStore.sendRoll(channel.id, dice)
+        break
+      }
+
+      case "bottle":
+        channelStore.sendBottle(channel.id)
+        break
+
+      default:
+        console.error(`Unknown command /${command} ${args.join(" ")}`)
+    }
+  }
+
   const channelHeader = (
     <Box background="theme0" style={{ position: "relative" }}>
       <Box
@@ -97,7 +114,7 @@ function ChannelView({ channel }: Props) {
 
         {/* chatbox */}
         <Box background="theme0" pad={spacing.xsmall}>
-          <Chatbox onSubmit={sendMessage} />
+          <Chatbox onSubmit={sendMessage} onSubmitCommand={handleCommand} />
         </Box>
       </Container>
 
