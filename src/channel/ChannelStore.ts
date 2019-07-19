@@ -129,6 +129,14 @@ export default class ChannelStore {
       channel.addMessage(new MessageModel(character, message, "lfrp"))
     },
 
+    RLL: (params) => {
+      if ("channel" in params) {
+        const channel = this.channels.get(params.channel)
+        const message = new MessageModel(undefined, params.message, "system")
+        channel.addMessage(message)
+      }
+    },
+
     CHA: ({ channels }) => {
       const listings = channels.map<ChannelListing>(
         ({ name, mode, characters }) => ({

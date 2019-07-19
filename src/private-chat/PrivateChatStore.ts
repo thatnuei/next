@@ -53,6 +53,14 @@ export default class PrivateChatStore {
       }
     },
 
+    RLL: (params) => {
+      if ("character" in params) {
+        const chat = this.privateChats.get(params.character)
+        const message = new MessageModel(undefined, params.message, "system")
+        chat.addMessage(message)
+      }
+    },
+
     TPN: (params) => {
       const privateChat = this.privateChats.get(params.character)
       privateChat.partnerTypingStatus = params.status
