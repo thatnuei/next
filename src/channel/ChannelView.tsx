@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
+import BBC from "../bbc/BBC"
 import Chatbox from "../chat/Chatbox"
 import ChatMenuButton from "../chat/ChatMenuButton"
 import MessageList from "../message/MessageList"
@@ -7,7 +8,6 @@ import { OverlayProvider } from "../overlay/OverlayContext"
 import OverlayShade from "../overlay/OverlayShade"
 import OverlaySidePanel from "../overlay/OverlaySidePanel"
 import { useRootStore } from "../RootStore"
-import BBC from "../bbc/BBC"
 import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
 import { fillArea, flexColumn } from "../ui/helpers"
@@ -114,7 +114,12 @@ function ChannelView({ channel }: Props) {
 
         {/* chatbox */}
         <Box background="theme0" pad={spacing.xsmall}>
-          <Chatbox onSubmit={sendMessage} onSubmitCommand={handleCommand} />
+          <Chatbox
+            value={channel.chatboxInput}
+            onValueChange={channel.setChatboxInput}
+            onSubmit={sendMessage}
+            onSubmitCommand={handleCommand}
+          />
         </Box>
       </Container>
 

@@ -1,6 +1,5 @@
 import React from "react"
 import { useRootStore } from "../RootStore"
-import useInput from "../state/useInput"
 import Box from "../ui/Box"
 import Button from "../ui/Button"
 import TextArea from "../ui/TextArea"
@@ -9,6 +8,8 @@ import { TypingStatus } from "./types"
 import useTypingStatus from "./useTypingStatus"
 
 type Props = {
+  value: string
+  onValueChange: (value: string) => void
   onSubmit: (message: string) => void
   onSubmitCommand?: (command: string, ...args: string[]) => void
   onTypingStatus?: (status: TypingStatus) => void
@@ -17,23 +18,22 @@ type Props = {
 const Chatbox = (props: Props) => {
   const { chatStore } = useRootStore()
 
-  const messageInput = useInput()
-  const trimmedInput = messageInput.value.trim()
+  const trimmedInput = props.value.trim()
 
   const { onTypingStatus } = props
   useTypingStatus(trimmedInput, onTypingStatus)
 
   const submit = () => {
-    if (trimmedInput.startsWith("/")) {
+    if (props.value.match(/^\/[a-z]+/i)) {
       if (props.onSubmitCommand) {
-        const [command, ...args] = trimmedInput.slice(1).split(/\s+/)
+        const [command, ...args] = props.value.slice(1).split(/\s+/)
         props.onSubmitCommand(command, ...args)
       }
     } else {
       props.onSubmit(trimmedInput)
     }
 
-    messageInput.setValue("")
+    props.onValueChange("")
   }
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -44,7 +44,7 @@ const Chatbox = (props: Props) => {
   }
 
   const textAreaStyle: React.CSSProperties = {
-    fontStyle: messageInput.value === "" ? "italic" : undefined,
+    fontStyle: props.value === "" ? "italic" : undefined,
     resize: "none",
   }
 
@@ -52,7 +52,8 @@ const Chatbox = (props: Props) => {
     <Box direction="row" gap={spacing.xsmall}>
       <Box flex>
         <TextArea
-          {...messageInput.bind}
+          value={props.value}
+          onChange={(event) => props.onValueChange(event.target.value)}
           placeholder={`Chatting as ${chatStore.identity}...`}
           onKeyDown={handleKeyDown}
           style={textAreaStyle}

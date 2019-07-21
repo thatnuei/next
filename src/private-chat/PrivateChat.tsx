@@ -64,6 +64,8 @@ function PrivateChat({ privateChat }: Props) {
 
       <ChatboxContainer>
         <Chatbox
+          value={privateChat.chatboxInput}
+          onValueChange={privateChat.setChatboxInput}
           onSubmit={handleChatboxSubmit}
           onSubmitCommand={handleCommand}
           onTypingStatus={handleTypingStatus}

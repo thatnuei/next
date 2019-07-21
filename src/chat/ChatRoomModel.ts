@@ -8,6 +8,9 @@ export default abstract class ChatRoomModel {
   @observable
   unread = false
 
+  @observable
+  chatboxInput = ""
+
   @action
   addMessage(message: MessageModel) {
     this.messages = [...this.messages, message].slice(-300)
@@ -21,5 +24,10 @@ export default abstract class ChatRoomModel {
   @action
   markUnread() {
     this.unread = true
+  }
+
+  @action
+  setChatboxInput = (input: string) => {
+    this.chatboxInput = input
   }
 }
