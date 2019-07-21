@@ -51,7 +51,7 @@ function NavigationTabs() {
               handleActivate()
               channel.markRead()
             }}
-            onClose={handleClose}
+            onClose={() => channelStore.leave(channel.id)}
           />
         )
       }
