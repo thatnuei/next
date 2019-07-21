@@ -88,14 +88,14 @@ function NavigationTabs() {
   const getTitle = (tab: ChatTab) => {
     if (tab.type === "channel") {
       const channel = channelStore.channels.get(tab.channelId)
-      return channel.name
+      return channel.name.toLowerCase()
     }
 
     if (tab.type === "privateChat") {
-      return tab.partnerName
+      return tab.partnerName.toLowerCase()
     }
 
-    return "Console"
+    return "console"
   }
 
   const sortedTabs = sortBy(chatNavigationStore.tabs, getTypeOrder, getTitle)
