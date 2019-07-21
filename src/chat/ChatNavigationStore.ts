@@ -12,10 +12,10 @@ export type ChatTab = ConsoleTab | ChannelTab | PrivateChatTab
 
 export default class ChatNavigationStore {
   @observable.shallow
-  tabs: ChatTab[] = [{ type: "console" }]
+  tabs: ChatTab[] = []
 
   @observable.ref
-  activeTab = this.tabs[0]
+  activeTab?: ChatTab
 
   constructor(private root: RootStore) {
     root.socketHandler.listen("IDN", this.restoreTabs)
