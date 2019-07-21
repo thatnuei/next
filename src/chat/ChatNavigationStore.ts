@@ -24,8 +24,11 @@ export default class ChatNavigationStore {
   @action
   addTab = (tab: ChatTab) => {
     if (this.tabs.some((other) => isEqual(tab, other))) return
+
     this.tabs.push(tab)
     this.saveTabs()
+
+    if (!this.activeTab) this.showTab(tab)
   }
 
   @action
