@@ -3,9 +3,10 @@ import React, { Fragment } from "react"
 import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
 import { getIconUrl, getProfileUrl } from "../flist/helpers"
+import { useRootStore } from "../RootStore"
 import Anchor from "../ui/Anchor"
 import ExternalLink from "../ui/ExternalLink"
-import Icon from "../ui/Icon"
+import Icon, { IconName } from "../ui/Icon"
 import { styled } from "../ui/styled"
 
 type Props = {
@@ -114,21 +115,17 @@ function renderTagNode(node: bbc.TagNode): React.ReactNode {
         </Anchor>
       )
 
-    case "channel":
-      return (
-        <>
-          <LinkIcon icon="public" />
-          <Anchor>{renderTree(node.children)}</Anchor>
-        </>
-      )
+    case "channel": {
+      const id = getNodeText(node)
+      return <ChannelLink id={id} title={id} icon="public" />
+    }
 
-    case "session":
-      return (
-        <>
-          <LinkIcon icon="private" />
-          <Anchor>{node.value}</Anchor>
-        </>
-      )
+    case "session": {
+      // i hate this
+      const id = getNodeText(node)
+      const title = node.value
+      return <ChannelLink id={id} title={title} icon="private" />
+    }
 
     case "icon": {
       const userName = getNodeText(node)
@@ -177,4 +174,14 @@ function getDomain(urlString: string): string {
   } catch {
     return ""
   }
+}
+
+function ChannelLink(props: { id: string; title: string; icon: IconName }) {
+  const { channelStore } = useRootStore()
+  return (
+    <>
+      <LinkIcon icon={props.icon} />
+      <Anchor onClick={() => channelStore.join(props.id)}>{props.title}</Anchor>
+    </>
+  )
 }
