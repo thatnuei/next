@@ -3,10 +3,10 @@ import React, { Fragment } from "react"
 import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
 import { getIconUrl, getProfileUrl } from "../flist/helpers"
-import Anchor from "./Anchor"
-import ExternalLink from "./ExternalLink"
-import Icon from "./Icon"
-import { styled } from "./styled"
+import Anchor from "../ui/Anchor"
+import ExternalLink from "../ui/ExternalLink"
+import Icon from "../ui/Icon"
+import { styled } from "../ui/styled"
 
 type Props = {
   text: string

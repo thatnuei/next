@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRootStore } from "../RootStore"
-import BBC from "../ui/BBC"
+import BBC from "../chat/BBC"
 import { styled } from "../ui/styled"
 import { statusColors } from "./colors"
 
