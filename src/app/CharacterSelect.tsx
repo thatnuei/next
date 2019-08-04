@@ -14,7 +14,7 @@ import { spacing } from "../ui/theme"
 import useAppNavigation from "./useAppNavigation"
 
 function CharacterSelect() {
-  const { api, chatStore, socketHandler } = useRootStore()
+  const { chatStore } = useRootStore()
   const async = useAsync()
   const appNav = useAppNavigation()
 
@@ -26,14 +26,7 @@ function CharacterSelect() {
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-
-    // probably move all the below to the chatStore(?)
-    await socketHandler.connect({
-      account: api.account,
-      ticket: api.ticket,
-      character: identity,
-    })
-
+    await chatStore.connectToServer()
     appNav.showChat()
   }
 

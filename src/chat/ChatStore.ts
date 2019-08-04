@@ -35,6 +35,18 @@ export default class ChatStore {
     }))
   }
 
+  async connectToServer() {
+    const { api, socketHandler, chatNavigationStore } = this.root
+
+    await socketHandler.connect({
+      account: api.account,
+      ticket: api.ticket,
+      character: this.identity,
+    })
+
+    chatNavigationStore.restoreTabs()
+  }
+
   @action
   setIdentity = (identity: string) => {
     this.identity = identity

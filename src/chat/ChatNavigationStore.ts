@@ -17,9 +17,7 @@ export default class ChatNavigationStore {
   @observable.ref
   activeTab?: ChatTab
 
-  constructor(private root: RootStore) {
-    root.socketHandler.listen("IDN", this.restoreTabs)
-  }
+  constructor(private root: RootStore) {}
 
   @action
   addTab = (tab: ChatTab) => {
@@ -62,15 +60,7 @@ export default class ChatNavigationStore {
 
   hasTab = (tab: ChatTab) => this.tabs.some((other) => isEqual(tab, other))
 
-  private get storageKey() {
-    return `${this.root.chatStore.identity}:tabs`
-  }
-
-  private saveTabs = () => {
-    idb.set(this.storageKey, toJS(this.tabs))
-  }
-
-  private restoreTabs = async () => {
+  restoreTabs = async () => {
     const tabs = await idb.get<ChatTab[] | undefined>(this.storageKey)
     if (tabs) {
       for (const tab of tabs) {
@@ -82,5 +72,13 @@ export default class ChatNavigationStore {
         }
       }
     }
+  }
+
+  private saveTabs = () => {
+    idb.set(this.storageKey, toJS(this.tabs))
+  }
+
+  private get storageKey() {
+    return `${this.root.chatStore.identity}:tabs`
   }
 }
