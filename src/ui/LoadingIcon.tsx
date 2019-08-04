@@ -1,10 +1,11 @@
 import React from "react"
 import { keyframes, styled } from "./styled"
+import { getIconSize } from "./theme"
 
 type Props = { size?: string | number }
 
-function LoadingIcon({ size = "1em", ...props }: Props) {
-  const realSize = typeof size === "number" ? `${size * 1.5}rem` : size
+function LoadingIcon({ size = 1 }: Props) {
+  const realSize = getIconSize(size)
 
   return (
     <Svg width={realSize} height={realSize} viewBox="0 0 100 100">

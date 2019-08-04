@@ -42,6 +42,12 @@ export const shadows = {
   normal: "0px 4px 8px rgba(0, 0, 0, 0.3)",
 }
 
+/**
+ * Returns an actual icon size for styling based on a given scale value
+ */
+export const getIconSize = (value: number | string) =>
+  typeof value === "number" ? `${value * 1.5}em` : value
+
 // from https://github.com/jacobbuck/easings-css/blob/master/easings.json
 export const easing = {
   easeInSine: "cubic-bezier(0.47, 0, 0.745, 0.715)",
