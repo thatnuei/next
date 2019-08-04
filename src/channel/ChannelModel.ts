@@ -19,6 +19,11 @@ export default class ChannelModel extends ChatRoomModel {
   @observable
   selectedMode: ChannelMode = "chat"
 
+  // it seems like the socket API doesn't tell us whether or not a room is open
+  // so I guess this is just a placeholder for now
+  @observable
+  isOpen = true
+
   users = new CharacterCollection(this.root.characterStore)
   ops = new CharacterCollection(this.root.characterStore)
 
@@ -71,5 +76,15 @@ export default class ChannelModel extends ChatRoomModel {
     }
 
     return sortBy(characters, getSortWeight, (char) => char.name.toLowerCase())
+  }
+
+  @computed
+  get isPublic() {
+    // public channels are keyed by their name,
+    // where private channels will have an id like `ADL-n34r3jd490m` or something
+    // there might be some case where a private channel has the same ID and name,
+    // but this works for most instances.
+    // the proper solution is complicated (fetching from CHA/ORS)
+    return this.id === this.name
   }
 }
