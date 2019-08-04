@@ -1,10 +1,17 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import ChatMenuButton from "../chat/ChatMenuButton"
-import Box from "../ui/Box"
 import FadedButton from "../ui/FadedButton"
-import Icon from "../ui/Icon"
+import {
+  flexColumn,
+  flexRow,
+  spacedChildrenHorizontal,
+  spacedChildrenVertical,
+} from "../ui/helpers"
+import Icon, { IconName, IconProps } from "../ui/Icon"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
+import useMedia from "../ui/useMedia"
 import ChannelFilters from "./ChannelFilters"
 import ChannelModel from "./ChannelModel"
 
@@ -14,44 +21,92 @@ type Props = {
   onToggleDescription: () => void
 }
 
-function ChannelHeader(props: Props) {
+function ChannelHeader({ channel, ...props }: Props) {
+  const iconProps: IconProps = channel.isPublic
+    ? { icon: "public", title: "Public room" }
+    : { icon: "lock", title: "Private room" }
+
   return (
-    <Box background="theme0">
-      <Box
-        pad={spacing.small}
-        gap={spacing.small}
-        direction="row"
-        align="center"
-      >
-        <Box direction="row" align="center" gap={spacing.xsmall} flex>
-          <ChatMenuButton />
+    <Container>
+      <ChatMenuButton />
 
-          <Box
-            as={ChannelTitleButton}
-            direction="row"
-            gap={spacing.xsmall}
-            align="center"
+      <TitleAndActionsContainer>
+        <TitleRow>
+          <h3>{channel.name}</h3>
+          <Icon {...iconProps} size={0.9} faded />
+        </TitleRow>
+        <ActionsRow>
+          <ActionButton
+            icon="about"
+            text="Description"
             onClick={props.onToggleDescription}
-          >
-            <h3>{props.channel.name}</h3>
-            <Icon icon="about" style={{ opacity: 0.5 }} />
-          </Box>
-        </Box>
+          />
+          {/* <ActionButton icon="pencilSquare" text="Manage" />
+          <ActionButton icon="warning" text="Report" />
+          <ActionButton icon="envelope" text="Invite" /> */}
+        </ActionsRow>
+      </TitleAndActionsContainer>
 
-        <ChannelFilters channel={props.channel} />
+      <ChannelFilters channel={channel} />
 
-        {props.userListButton}
-      </Box>
-    </Box>
+      {props.userListButton}
+    </Container>
   )
 }
 
-export default ChannelHeader
+export default observer(ChannelHeader)
 
-const ChannelTitleButton = styled(FadedButton)`
-  opacity: 0.7;
+const Container = styled.div`
+  background-color: ${(props) => props.theme.colors.theme0};
 
-  :hover {
-    opacity: 1;
+  ${flexRow};
+  align-items: center;
+
+  padding: ${spacing.small};
+  ${spacedChildrenHorizontal(spacing.small)};
+`
+
+const TitleAndActionsContainer = styled.div`
+  flex: 1;
+  ${flexColumn};
+  justify-content: center;
+  ${spacedChildrenVertical(spacing.xsmall)};
+`
+
+const TitleRow = styled.div`
+  ${flexRow};
+  ${spacedChildrenHorizontal(spacing.xsmall)};
+`
+
+const ActionsRow = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+
+  > * {
+    margin-right: ${spacing.small};
   }
+`
+
+function ActionButton(props: {
+  text: string
+  icon: IconName
+  onClick: () => void
+}) {
+  const showText = useMedia("(min-width: 600px)")
+  return (
+    <ActionButtonContainer
+      title={showText ? undefined : props.text}
+      onClick={props.onClick}
+    >
+      <Icon icon={props.icon} size={0.8} />
+      {showText ? <span>{props.text}</span> : null}
+    </ActionButtonContainer>
+  )
+}
+
+const ActionButtonContainer = styled(FadedButton)`
+  ${flexRow};
+  ${spacedChildrenHorizontal(spacing.xxsmall)};
+  align-items: center;
+  font-size: 90%;
 `
