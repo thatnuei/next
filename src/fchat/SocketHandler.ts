@@ -1,7 +1,7 @@
 import TypedEmitter from "../state/TypedEmitter"
 import { chatServerUrl } from "./constants"
 import { parseCommand } from "./helpers"
-import { ClientCommandMap, ServerCommand, ServerCommandMap } from "./types"
+import { ClientCommandMap, ServerCommand } from "./types"
 
 type ConnectOptions = {
   account: string
@@ -13,13 +13,14 @@ type EventTypes = {
   open: void
   close: void
   command: ServerCommand
-} & ServerCommandMap
+}
 
 export default class SocketHandler extends TypedEmitter<EventTypes> {
   private socket?: WebSocket
+  // private identity = ""
 
   connect(options: ConnectOptions) {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       let identified = false
 
       const socket = (this.socket = new WebSocket(chatServerUrl))
@@ -55,12 +56,11 @@ export default class SocketHandler extends TypedEmitter<EventTypes> {
           // only reject if we haven't identified
           // if we've identified, the error might not be fatal
           if (!identified) {
-            reject(message)
+            reject(new Error(message))
           }
         }
 
         this.notify("command", command)
-        this.notify(command.type, command.params)
       }
 
       socket.onerror = () => {
@@ -76,6 +76,7 @@ export default class SocketHandler extends TypedEmitter<EventTypes> {
     this.socket.close()
   }
 
+  // TODO: rename to "sendCommand", make private(?)
   send<K extends keyof ClientCommandMap>(cmd: K, params: ClientCommandMap[K]) {
     if (!this.socket) return
 
@@ -83,6 +84,69 @@ export default class SocketHandler extends TypedEmitter<EventTypes> {
       this.socket.send(`${cmd} ${JSON.stringify(params)}`)
     } else {
       this.socket.send(cmd)
+    }
+  }
+
+  async waitForCommand() {
+    const result = await this.waitForEvent("command")
+    return result.value
+  }
+
+  async joinChannel(channelId: string, identity: string) {
+    this.send("JCH", { channel: channelId })
+
+    while (true) {
+      const command = await this.waitForCommand()
+
+      if (command.type === "JCH") {
+        const { params } = command
+
+        const isSelf =
+          params.channel === channelId && params.character.identity === identity
+
+        if (isSelf) {
+          break
+        }
+      }
+
+      if (command.type === "ERR") {
+        const { params } = command
+
+        // https://wiki.f-list.net/F-Chat_Error_Codes
+        const joinErrors = [26, 28, 44, 48]
+        if (joinErrors.includes(params.number)) {
+          throw new Error(params.message)
+        }
+      }
+    }
+  }
+
+  async leaveChannel(channelId: string, identity: string) {
+    this.send("LCH", { channel: channelId })
+
+    while (true) {
+      const command = await this.waitForCommand()
+
+      if (command.type === "LCH") {
+        const { params } = command
+
+        const isSelf =
+          params.channel === channelId && params.character === identity
+
+        if (isSelf) {
+          break
+        }
+      }
+
+      if (command.type === "ERR") {
+        const { params } = command
+
+        // https://wiki.f-list.net/F-Chat_Error_Codes
+        const leaveErrors = [49]
+        if (leaveErrors.includes(params.number)) {
+          throw new Error(params.message)
+        }
+      }
     }
   }
 

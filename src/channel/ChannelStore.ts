@@ -47,73 +47,17 @@ export default class ChannelStore {
   }
 
   async join(channelId: string) {
-    const { socketHandler, chatStore } = this.root
-
-    socketHandler.send("JCH", { channel: channelId })
-
-    while (true) {
-      const result = await Promise.race([
-        socketHandler.waitForEvent("JCH"),
-        socketHandler.waitForEvent("ERR"),
-      ])
-
-      if (result.type === "JCH") {
-        const params = result.value
-
-        const isSelf =
-          params.channel === channelId &&
-          params.character.identity === chatStore.identity
-
-        if (isSelf) {
-          break
-        }
-      }
-
-      if (result.type === "ERR") {
-        const params = result.value
-
-        // https://wiki.f-list.net/F-Chat_Error_Codes
-        const joinErrors = [26, 28, 44, 48]
-        if (joinErrors.includes(params.number)) {
-          throw new Error(params.message)
-        }
-      }
-    }
+    await this.root.socketHandler.joinChannel(
+      channelId,
+      this.root.chatStore.identity,
+    )
   }
 
   async leave(channelId: string) {
-    const { socketHandler, chatStore } = this.root
-
-    socketHandler.send("LCH", { channel: channelId })
-
-    while (true) {
-      const result = await Promise.race([
-        socketHandler.waitForEvent("LCH"),
-        socketHandler.waitForEvent("ERR"),
-      ])
-
-      if (result.type === "LCH") {
-        const params = result.value
-
-        const isSelf =
-          params.channel === channelId &&
-          params.character === chatStore.identity
-
-        if (isSelf) {
-          break
-        }
-      }
-
-      if (result.type === "ERR") {
-        const params = result.value
-
-        // https://wiki.f-list.net/F-Chat_Error_Codes
-        const leaveErrors = [49]
-        if (leaveErrors.includes(params.number)) {
-          throw new Error(params.message)
-        }
-      }
-    }
+    await this.root.socketHandler.leaveChannel(
+      channelId,
+      this.root.chatStore.identity,
+    )
   }
 
   sendMessage(channelId: string, message: string) {
