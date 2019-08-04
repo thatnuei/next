@@ -9,7 +9,7 @@ const globalStyle = css`
   }
 
   :root {
-    font: 16px Roboto, sans-serif;
+    font: 15px Roboto, sans-serif;
     background-color: ${(props) => props.theme.colors.theme2};
     color: ${(props) => props.theme.colors.text};
     line-height: 1.5;
