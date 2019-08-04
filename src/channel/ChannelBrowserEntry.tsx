@@ -58,11 +58,11 @@ function ChannelBrowserEntry({ entry, style }: Props) {
 
         <Box direction="row" flex align="center" gap={spacing.xsmall}>
           {async.loading ? (
-            <LoadingIcon size={1} />
+            <LoadingIcon size={0.9} />
           ) : (
             <Icon
               icon={joined ? "checkFilled" : "checkOutline"}
-              size={1}
+              size={0.9}
               style={{ position: "relative", top: "-1px" }}
             />
           )}
