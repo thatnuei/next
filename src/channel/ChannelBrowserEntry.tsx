@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import { ListChildComponentProps } from "react-window"
 import { useRootStore } from "../RootStore"
+import useAsync from "../state/useAsync"
 import Box from "../ui/Box"
 import { fadedRevealStyle } from "../ui/helpers"
 import Icon from "../ui/Icon"
@@ -15,17 +16,18 @@ type Props = ListChildComponentProps & {
 
 function ChannelBrowserEntry({ entry, style }: Props) {
   const { channelStore, chatNavigationStore } = useRootStore()
+  const async = useAsync()
 
   const joined = chatNavigationStore.hasTab({
     type: "channel",
     channelId: entry.id,
   })
 
-  const toggleJoin = () => {
+  const toggleJoin = async () => {
     if (joined) {
-      channelStore.leave(entry.id)
+      await channelStore.leave(entry.id)
     } else {
-      channelStore.join(entry.id)
+      await channelStore.join(entry.id)
     }
   }
 
@@ -35,9 +37,17 @@ function ChannelBrowserEntry({ entry, style }: Props) {
   }
 
   return (
+    // this shouldn't use a checkbox
+    // would be easier to have a button with role="checkbox"
     <label key={entry.id} style={style}>
       <Entry height="100%" direction="row" align="center" pad={pad}>
-        <EntryInput type="checkbox" checked={joined} onChange={toggleJoin} />
+        <EntryInput
+          type="checkbox"
+          checked={joined}
+          onChange={async.bind(toggleJoin)}
+          disabled={async.loading}
+        />
+
         <Box direction="row" flex align="center" gap={spacing.xsmall}>
           <Icon
             icon={joined ? "checkFilled" : "checkOutline"}
@@ -73,5 +83,10 @@ const EntryInput = styled.input`
 
   &:checked + * {
     color: ${(props) => props.theme.colors.success};
+  }
+
+  &:disabled + * {
+    opacity: 0.5;
+    pointer-events: none;
   }
 `
