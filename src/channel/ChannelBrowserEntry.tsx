@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useEffect } from "react"
 import { ListChildComponentProps } from "react-window"
 import { useRootStore } from "../RootStore"
 import useAsync from "../state/useAsync"
@@ -22,6 +22,13 @@ function ChannelBrowserEntry({ entry, style }: Props) {
     type: "channel",
     channelId: entry.id,
   })
+
+  useEffect(() => {
+    if (async.error) {
+      // TODO: show toast
+      alert(async.error)
+    }
+  }, [async.error])
 
   const toggleJoin = async () => {
     if (joined) {
