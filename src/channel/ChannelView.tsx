@@ -2,7 +2,6 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import BBC from "../bbc/BBC"
 import Chatbox from "../chat/Chatbox"
-import ChatMenuButton from "../chat/ChatMenuButton"
 import MessageList from "../message/MessageList"
 import { OverlayProvider } from "../overlay/OverlayContext"
 import OverlayShade from "../overlay/OverlayShade"
@@ -17,7 +16,7 @@ import { spacing } from "../ui/theme"
 import useMedia from "../ui/useMedia"
 import useToggleState from "../ui/useToggleState"
 import ChannelDescriptionOverlay from "./ChannelDescriptionOverlay"
-import ChannelFilters from "./ChannelFilters"
+import ChannelHeader from "./ChannelHeader"
 import ChannelModel from "./ChannelModel"
 import ChannelUserList from "./ChannelUserList"
 
@@ -27,8 +26,11 @@ type Props = { channel: ChannelModel }
 
 function ChannelView({ channel }: Props) {
   const { overlayStore, channelStore } = useRootStore()
-  const userListVisible = useMedia(`(min-width: ${userListBreakpoint}px)`)
   const descriptionUi = useToggleState()
+
+  const shouldShowDesktopUserList = useMedia(
+    `(min-width: ${userListBreakpoint}px)`,
+  )
 
   const showUsersOverlay = () => {
     overlayStore.userList.open()
@@ -55,38 +57,10 @@ function ChannelView({ channel }: Props) {
     }
   }
 
-  const channelHeader = (
-    <Box background="theme0" style={{ position: "relative" }}>
-      <Box
-        pad={spacing.small}
-        gap={spacing.small}
-        direction="row"
-        align="center"
-      >
-        <Box direction="row" align="center" gap={spacing.xsmall} flex>
-          <ChatMenuButton />
-
-          <Box
-            as={ChannelTitleButton}
-            direction="row"
-            gap={spacing.xsmall}
-            align="center"
-            onClick={descriptionUi.toggle}
-          >
-            <h3>{channel.name}</h3>
-            <Icon icon="about" style={{ opacity: 0.5 }} />
-          </Box>
-        </Box>
-
-        <ChannelFilters channel={channel} />
-
-        {!userListVisible && (
-          <FadedButton onClick={showUsersOverlay}>
-            <Icon icon="users" />
-          </FadedButton>
-        )}
-      </Box>
-    </Box>
+  const userListButton = shouldShowDesktopUserList ? null : (
+    <FadedButton onClick={showUsersOverlay}>
+      <Icon icon="users" />
+    </FadedButton>
   )
 
   return (
@@ -95,7 +69,11 @@ function ChannelView({ channel }: Props) {
         {/* room content */}
         <Box direction="row" flex gap={spacing.xsmall}>
           <Box flex>
-            {channelHeader}
+            <ChannelHeader
+              channel={channel}
+              userListButton={userListButton}
+              onToggleDescription={descriptionUi.toggle}
+            />
 
             <Box flex background="theme1" style={{ position: "relative" }}>
               <ChannelDescriptionOverlay
@@ -109,7 +87,7 @@ function ChannelView({ channel }: Props) {
             </Box>
           </Box>
 
-          {userListVisible && <ChannelUserList channel={channel} />}
+          {shouldShowDesktopUserList && <ChannelUserList channel={channel} />}
         </Box>
 
         {/* chatbox */}
@@ -138,12 +116,4 @@ export default observer(ChannelView)
 const Container = styled.div`
   ${flexColumn};
   ${fillArea};
-`
-
-const ChannelTitleButton = styled(FadedButton)`
-  opacity: 0.7;
-
-  :hover {
-    opacity: 1;
-  }
 `
