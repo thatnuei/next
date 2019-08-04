@@ -36,5 +36,5 @@ const Svg = styled.svg`
 `
 
 const Circle = styled.circle`
-  animation: ${spin} 1s linear infinite;
+  animation: ${spin} 0.8s infinite;
 `
