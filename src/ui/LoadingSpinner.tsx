@@ -1,58 +1,40 @@
 import React from "react"
-import { css, keyframes, styled } from "./styled"
+import { keyframes, styled } from "./styled"
 
-type Props = {}
+type Props = { size?: string | number }
 
-function LoadingSpinner(props: Props) {
+function LoadingSpinner({ size = "1em", ...props }: Props) {
   return (
-    <Container>
-      <Dot
-        css={css`
-          animation: ${bounce} 0.5s infinite alternate;
-          animation-delay: 0.1s;
-        `}
+    <Svg width={size} height={size} viewBox="0 0 100 100">
+      <Circle
+        cx={50}
+        cy={50}
+        r={30}
+        fill="none"
+        strokeWidth={10}
+        stroke="currentColor"
+        strokeDasharray={`${20 * Math.PI} ${40 * Math.PI}`}
+        strokeLinecap="round"
       />
-      <Dot
-        css={css`
-          animation: ${bounce} 0.5s infinite alternate;
-          animation-delay: 0.25s;
-        `}
-      />
-      <Dot
-        css={css`
-          animation: ${bounce} 0.5s infinite alternate;
-          animation-delay: 0.4s;
-        `}
-      />
-    </Container>
+    </Svg>
   )
 }
 
 export default LoadingSpinner
 
-const bounce = keyframes`
-  0% {
-    transform: translateY(80%);
+const spin = keyframes`
+  from {
+    stroke-dashoffset: 0;
   }
-  100% {
-    transform: translateY(-80%);
+  to {
+    stroke-dashoffset: ${60 * Math.PI};
   }
 `
 
-const Container = styled.div`
-  width: 30px;
-  height: 30px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-
-  opacity: 0.7;
+const Svg = styled.svg`
+  vertical-align: -8%;
 `
 
-const Dot = styled.div`
-  width: 15%;
-  height: 15%;
-  border-radius: 50%;
-  background-color: currentColor;
+const Circle = styled.circle`
+  animation: ${spin} 1s linear infinite;
 `
