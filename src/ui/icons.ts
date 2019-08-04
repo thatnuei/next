@@ -2,6 +2,7 @@ export {
   mdiAccount as user,
   mdiAccountMultiple as users,
   mdiAccountSettings as updateStatus,
+  mdiAlert as warning,
   mdiAlertCircle as report,
   mdiBookmark as bookmark,
   mdiCheckboxBlankOutline as checkOutline,
@@ -10,6 +11,7 @@ export {
   mdiCodeTags as console,
   mdiComment as message,
   mdiEarth as public,
+  mdiEmail as envelope,
   mdiForum as channels,
   mdiHeart as heart,
   mdiInformation as about,
@@ -25,4 +27,5 @@ export {
   mdiSettings as settings,
   mdiSortAlphabetical as sortAlphabetical,
   mdiSortNumeric as sortNumeric,
+  mdiSquareEditOutline as pencilSquare,
 } from "@mdi/js"
