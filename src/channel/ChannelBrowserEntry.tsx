@@ -6,7 +6,7 @@ import useAsync from "../state/useAsync"
 import Box from "../ui/Box"
 import { fadedRevealStyle } from "../ui/helpers"
 import Icon from "../ui/Icon"
-import LoadingSpinner from "../ui/LoadingSpinner"
+import LoadingIcon from "../ui/LoadingIcon"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
 import { ChannelListing } from "./ChannelStore"
@@ -58,7 +58,7 @@ function ChannelBrowserEntry({ entry, style }: Props) {
 
         <Box direction="row" flex align="center" gap={spacing.xsmall}>
           {async.loading ? (
-            <LoadingSpinner size={1} />
+            <LoadingIcon size={1} />
           ) : (
             <Icon
               icon={joined ? "checkFilled" : "checkOutline"}

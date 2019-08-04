@@ -3,7 +3,7 @@ import { keyframes, styled } from "./styled"
 
 type Props = { size?: string | number }
 
-function LoadingSpinner({ size = "1em", ...props }: Props) {
+function LoadingIcon({ size = "1em", ...props }: Props) {
   const realSize = typeof size === "number" ? `${size * 1.5}rem` : size
 
   return (
@@ -22,7 +22,7 @@ function LoadingSpinner({ size = "1em", ...props }: Props) {
   )
 }
 
-export default LoadingSpinner
+export default LoadingIcon
 
 const spin = keyframes`
   from {
