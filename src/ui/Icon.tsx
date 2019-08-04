@@ -9,12 +9,13 @@ export type IconProps = React.ComponentPropsWithoutRef<"div"> & {
   icon: IconName // TODO: rename to "name"
   color?: string
   size?: number
+  faded?: boolean
 }
 
-const Icon = ({ icon, color, size = 1, ...divProps }: IconProps) => {
+const Icon = ({ icon, color, size = 1, faded, ...divProps }: IconProps) => {
   const path = icons[icon]
   return (
-    <IconContainer {...divProps}>
+    <IconContainer {...divProps} style={{ opacity: faded ? 0.5 : 1 }}>
       <MdiIcon path={path} color={color} size={size} />
     </IconContainer>
   )
