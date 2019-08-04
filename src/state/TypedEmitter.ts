@@ -3,9 +3,9 @@ type AnyCallback = (value: any) => void
 export default class TypedEmitter<EventMap extends object> {
   private listeners = new Map<string | number | symbol, Set<AnyCallback>>()
 
-  listen<K extends keyof EventMap>(
-    event: K,
-    callback: (value: EventMap[K]) => void,
+  listen<E extends keyof EventMap>(
+    event: E,
+    callback: (value: EventMap[E]) => void,
   ) {
     const listeners = this.getListeners(event)
 
@@ -22,13 +22,24 @@ export default class TypedEmitter<EventMap extends object> {
     return unlisten
   }
 
-  notify<K extends keyof EventMap>(event: K, value: EventMap[K]) {
+  notify<E extends keyof EventMap>(event: E, value: EventMap[E]) {
     const listeners = this.getListeners(event)
     listeners.forEach((callback) => callback(value))
   }
 
   removeListeners() {
     this.listeners.clear()
+  }
+
+  waitForEvent<EventType extends keyof EventMap>(type: EventType) {
+    return new Promise<{ type: EventType; value: EventMap[EventType] }>(
+      (resolve) => {
+        const unlisten = this.listen(type, (value) => {
+          resolve({ type, value })
+          unlisten()
+        })
+      },
+    )
   }
 
   private getListeners<K extends keyof EventMap>(event: K) {
