@@ -15,6 +15,8 @@ export {
   mdiInformation as about,
   mdiKey as private,
   mdiLinkVariant as link,
+  mdiLock as lock,
+  mdiLockOpen as lockOpen,
   mdiLogout as logout,
   mdiMenu as menu,
   mdiMinusCircle as ignore,
