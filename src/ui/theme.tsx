@@ -16,6 +16,7 @@ const textColor = clouds
 
 export const baseTheme = {
   colors: {
+    // TODO: rename these to "base" instead of "theme"
     theme0: themeColor,
     theme1: shade(0.3, themeColor),
     theme2: shade(0.5, themeColor),
