@@ -4,8 +4,10 @@ import { keyframes, styled } from "./styled"
 type Props = { size?: string | number }
 
 function LoadingSpinner({ size = "1em", ...props }: Props) {
+  const realSize = typeof size === "number" ? `${size * 1.5}rem` : size
+
   return (
-    <Svg width={size} height={size} viewBox="0 0 100 100">
+    <Svg width={realSize} height={realSize} viewBox="0 0 100 100">
       <Circle
         cx={50}
         cy={50}
