@@ -3,21 +3,21 @@ import React, { useEffect } from "react"
 import { ListChildComponentProps } from "react-window"
 import { useRootStore } from "../RootStore"
 import useAsync from "../state/useAsync"
-import Box from "../ui/Box"
-import { fadedRevealStyle } from "../ui/helpers"
+import { fadedRevealStyle, spacedChildrenHorizontal } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import LoadingIcon from "../ui/LoadingIcon"
 import { styled } from "../ui/styled"
-import { spacing } from "../ui/theme"
+import { spacing, useTheme } from "../ui/theme"
 import { ChannelListing } from "./ChannelStore"
 
 type Props = ListChildComponentProps & {
   entry: ChannelListing
 }
 
-function ChannelBrowserEntry({ entry, style }: Props) {
+function ChannelBrowserEntry({ entry, ...props }: Props) {
   const { channelStore, chatNavigationStore } = useRootStore()
   const async = useAsync()
+  const theme = useTheme()
 
   const joined = chatNavigationStore.hasTab({
     type: "channel",
@@ -31,7 +31,9 @@ function ChannelBrowserEntry({ entry, style }: Props) {
     }
   }, [async.error])
 
-  const toggleJoin = async () => {
+  const toggleJoin = async (event: React.MouseEvent) => {
+    event.preventDefault()
+
     if (joined) {
       await channelStore.leave(entry.id)
     } else {
@@ -39,67 +41,41 @@ function ChannelBrowserEntry({ entry, style }: Props) {
     }
   }
 
-  const pad = {
-    vertical: spacing.xsmall,
-    horizontal: spacing.small,
+  const style = {
+    ...props.style,
+    color: joined ? theme.colors.success : theme.colors.text,
   }
 
   return (
-    // this shouldn't use a checkbox
-    // would be easier to have a button with role="checkbox"
-    <label key={entry.id} style={style}>
-      <Entry height="100%" direction="row" align="center" pad={pad}>
-        <EntryInput
-          type="checkbox"
-          checked={joined}
-          onChange={async.bind(toggleJoin)}
-          disabled={async.loading}
-        />
+    <Container
+      href="#"
+      role="checkbox"
+      aria-checked={joined}
+      style={style}
+      css={joined ? undefined : fadedRevealStyle}
+      onClick={async.bind(toggleJoin)}
+    >
+      {async.loading ? (
+        <LoadingIcon size={0.9} />
+      ) : (
+        <Icon icon={joined ? "checkFilled" : "checkOutline"} size={0.9} />
+      )}
 
-        <Box direction="row" flex align="center" gap={spacing.xsmall}>
-          {async.loading ? (
-            <LoadingIcon size={0.9} />
-          ) : (
-            <Icon
-              icon={joined ? "checkFilled" : "checkOutline"}
-              size={0.9}
-              style={{ position: "relative", top: "-1px" }}
-            />
-          )}
-
-          <div
-            style={{ flex: 1, lineHeight: 1 }}
-            dangerouslySetInnerHTML={{ __html: entry.name }}
-          />
-          <div>{entry.userCount}</div>
-        </Box>
-      </Entry>
-    </label>
+      <TitleText dangerouslySetInnerHTML={{ __html: entry.name }} />
+      <div>{entry.userCount}</div>
+    </Container>
   )
 }
 
 export default observer(ChannelBrowserEntry)
 
-const Entry = styled(Box)`
-  ${fadedRevealStyle};
-  opacity: 0.7;
-  cursor: pointer;
-
-  :focus-within {
-    opacity: 1;
-  }
+const Container = styled.a`
+  display: flex;
+  align-items: center;
+  padding: 0 ${spacing.xsmall};
+  ${spacedChildrenHorizontal(spacing.xsmall)};
 `
 
-const EntryInput = styled.input`
-  position: absolute;
-  opacity: 0;
-
-  &:checked + * {
-    color: ${(props) => props.theme.colors.success};
-  }
-
-  &:disabled + * {
-    opacity: 0.5;
-    pointer-events: none;
-  }
+const TitleText = styled.div`
+  flex: 1;
 `
