@@ -25,6 +25,7 @@
     "focus-visible": "^5.0.2",
     "fuzzysearch": "^1.0.3",
     "idb-keyval": "^3.2.0",
+    "immer": "^3.2.0",
     "lodash": "^4.17.15",
     "mobx": "^5.13.0",
     "mobx-react-lite": "^1.4.1",
@@ -37,6 +38,8 @@
     "react-transition-group": "^4.2.2",
     "react-window": "^1.8.5",
     "reakit": "^1.0.0-beta.4",
+    "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0",
     "styled-components": "^4.3.2",
     "uuid": "^3.3.2"
   },
