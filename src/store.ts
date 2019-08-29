@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux"
 import { applyMiddleware, createStore } from "redux"
 import thunk from "redux-thunk"
-import { navigationReducer } from "./navigationReducer"
+import { navigationReducer } from "./navigation/navigationReducer"
 import { mergeReducers } from "./redux/helpers"
-import { createSocketMiddleware } from "./socketMiddleware"
-import { socketReducer } from "./socketReducer"
-import { userReducer } from "./userReducer"
+import { createSocketMiddleware } from "./socket/socketMiddleware"
+import { socketReducer } from "./socket/socketReducer"
+import { userReducer } from "./user/userReducer"
 
 export type State = {
   appView: "login" | "characterSelect" | "connecting" | "chat"

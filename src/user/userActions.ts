@@ -1,12 +1,12 @@
 import { Dispatch } from "redux"
-import extractErrorMessage from "./common/extractErrorMessage"
+import extractErrorMessage from "../common/extractErrorMessage"
 import {
   ApiResponse,
   getTicketUrl,
   LoginResponse,
-} from "./flist/FListApiService"
-import { fetchJson } from "./network/fetchJson"
-import { createAction } from "./redux/helpers"
+} from "../flist/FListApiService"
+import { fetchJson } from "../network/fetchJson"
+import { createAction } from "../redux/helpers"
 
 export const setIdentity = createAction("setIdentity", (identity: string) => ({
   identity,

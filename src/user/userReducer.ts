@@ -1,6 +1,6 @@
 import produce from "immer"
 import { Action } from "redux"
-import { State } from "./store"
+import { State } from "../store"
 import {
   loginError,
   loginSubmit,

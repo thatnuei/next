@@ -1,11 +1,11 @@
 import produce from "immer"
 import { Action } from "redux"
+import { State } from "../store"
 import {
   chatConnectError,
   chatConnectStart,
   chatConnectSuccess,
 } from "./socketActions"
-import { State } from "./store"
 
 export function socketReducer(state: State, action: Action): State {
   return produce(state, (draft) => {

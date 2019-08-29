@@ -1,13 +1,13 @@
 import { Dispatch } from "redux"
-import { chatServerUrl } from "./fchat/constants"
+import { chatServerUrl } from "../fchat/constants"
 import {
   commandAction as sendCommandAction,
   parseCommand,
-} from "./fchat/helpers"
-import { ServerCommand } from "./fchat/types"
-import { createAction } from "./redux/helpers"
+} from "../fchat/helpers"
+import { ServerCommand } from "../fchat/types"
+import { createAction } from "../redux/helpers"
+import { State } from "../store"
 import { createSocketAction, SocketHandlers } from "./socketMiddleware"
-import { State } from "./store"
 
 export const chatConnectStart = createAction("chatConnectStart")
 export const chatConnectError = createAction("chatConnectError")

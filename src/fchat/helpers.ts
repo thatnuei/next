@@ -1,4 +1,4 @@
-import { sendMessageAction } from "../socketMiddleware"
+import { sendMessageAction } from "../socket/socketMiddleware"
 import { ClientCommandMap, CommandHandlerMap, ServerCommand } from "./types"
 
 export function parseCommand(data: string) {
