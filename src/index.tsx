@@ -1,9 +1,11 @@
 import "focus-visible"
 import React, { useEffect, useState } from "react"
 import ReactDOM from "react-dom"
+import { Provider } from "react-redux"
 import useAppNavigation from "./app/useAppNavigation"
 import Root from "./Root"
 import RootStore, { RootStoreContext } from "./RootStore"
+import { createAppStore } from "./store"
 
 declare global {
   interface Window {
@@ -32,11 +34,15 @@ function HotReloader() {
   return renderRoot(store)
 }
 
+const reduxStore = createAppStore()
+
 function renderRoot(store = new RootStore()) {
   return (
     <RootStoreContext.Provider value={store}>
       <useAppNavigation.Provider>
-        <Root />
+        <Provider store={reduxStore}>
+          <Root />
+        </Provider>
       </useAppNavigation.Provider>
     </RootStoreContext.Provider>
   )

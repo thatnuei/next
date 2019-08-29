@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux"
 import { applyMiddleware, createStore } from "redux"
 import thunk from "redux-thunk"
 import { navigationReducer } from "./navigationReducer"
@@ -48,4 +49,8 @@ export function createAppStore() {
   ])
 
   return createStore(reducer, applyMiddleware(thunk, createSocketMiddleware()))
+}
+
+export function useAppSelector<V>(selector: (state: State) => V) {
+  return useSelector(selector)
 }

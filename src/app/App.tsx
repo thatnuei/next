@@ -1,16 +1,16 @@
 import React from "react"
 import ChatScreen from "../chat/ChatScreen"
+import { useAppSelector } from "../store"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 import useAppDocumentTitle from "./useAppDocumentTitle"
-import useAppNavigation from "./useAppNavigation"
 
 function App() {
-  const { screen } = useAppNavigation()
+  const screen = useAppSelector((state) => state.appView)
 
   useAppDocumentTitle()
 
-  switch (screen.name) {
+  switch (screen) {
     case "login":
       return <Login />
     case "characterSelect":
@@ -18,6 +18,8 @@ function App() {
     case "chat":
       return <ChatScreen />
   }
+
+  return null
 }
 
 export default App
