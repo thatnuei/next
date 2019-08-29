@@ -3,7 +3,10 @@ import { Action, applyMiddleware, createStore, Dispatch } from "redux"
 import thunk from "redux-thunk"
 import extractErrorMessage from "./common/extractErrorMessage"
 import { chatServerUrl } from "./fchat/constants"
-import { commandAction, parseCommand } from "./fchat/helpers"
+import {
+  commandAction as sendCommandAction,
+  parseCommand,
+} from "./fchat/helpers"
 import { ServerCommand } from "./fchat/types"
 import {
   ApiResponse,
@@ -112,7 +115,7 @@ function connectToChat() {
       onopen() {
         const { account, ticket, identity } = getState().user
         dispatch(
-          commandAction("IDN", {
+          sendCommandAction("IDN", {
             account,
             ticket,
             character: identity,
@@ -139,7 +142,7 @@ function connectToChat() {
         }
 
         if (command.type === "PIN") {
-          dispatch(commandAction("PIN", undefined))
+          dispatch(sendCommandAction("PIN", undefined))
         }
 
         dispatch(socketCommand(command))
