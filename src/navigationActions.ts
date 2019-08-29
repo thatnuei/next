@@ -1,3 +1,3 @@
-import { createSimpleAction } from "./redux/helpers"
+import { createAction } from "./redux/helpers"
 
-export const returnToLogin = createSimpleAction("returnToLogin")
+export const returnToLogin = createAction("returnToLogin")

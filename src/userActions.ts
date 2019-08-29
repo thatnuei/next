@@ -6,13 +6,13 @@ import {
   LoginResponse,
 } from "./flist/FListApiService"
 import { fetchJson } from "./network/fetchJson"
-import { createAction, createSimpleAction } from "./redux/helpers"
+import { createAction } from "./redux/helpers"
 
 export const setIdentity = createAction("setIdentity", (identity: string) => ({
   identity,
 }))
 
-export const loginSubmit = createSimpleAction("loginSubmit")
+export const loginSubmit = createAction("loginSubmit")
 
 export const loginSuccess = createAction(
   "loginSuccess",
