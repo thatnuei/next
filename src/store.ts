@@ -164,7 +164,7 @@ function reducer(state = initialState, action: Action): State {
       draft.login.loading = false
       draft.user.account = action.account
       draft.user.ticket = action.ticket
-      draft.user.characters = action.characters.sort()
+      draft.user.characters = [...action.characters].sort()
       draft.appView = "characterSelect"
     }
 
