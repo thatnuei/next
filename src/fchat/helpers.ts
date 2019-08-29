@@ -1,4 +1,5 @@
-import { CommandHandlerMap, ServerCommand } from "./types"
+import { sendMessageAction } from "../socketMiddleware"
+import { ClientCommandMap, CommandHandlerMap, ServerCommand } from "./types"
 
 export function parseCommand(data: string) {
   const type = data.slice(0, 3)
@@ -13,4 +14,18 @@ export function createCommandHandler(handlers: CommandHandlerMap) {
     ;(handler as any)(command.params)
     return true
   }
+}
+
+export function createCommandMessage<K extends keyof ClientCommandMap>(
+  command: K,
+  params: ClientCommandMap[K],
+) {
+  return params ? `${command} ${JSON.stringify(params)}` : command
+}
+
+export function commandAction<K extends keyof ClientCommandMap>(
+  command: K,
+  params: ClientCommandMap[K],
+) {
+  return sendMessageAction(createCommandMessage(command, params))
 }
