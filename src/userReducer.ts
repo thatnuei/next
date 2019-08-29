@@ -14,6 +14,7 @@ export function userReducer(state: State, action: Action): State {
       draft.login.loading = true
       draft.login.error = undefined
     }
+
     if (loginSuccess.is(action)) {
       draft.login.loading = false
       draft.user.account = action.account
@@ -21,10 +22,12 @@ export function userReducer(state: State, action: Action): State {
       draft.user.characters = [...action.characters].sort()
       draft.appView = "characterSelect"
     }
+
     if (loginError.is(action)) {
       draft.login.loading = false
       draft.login.error = action.error
     }
+
     if (setIdentity.is(action)) {
       draft.user.identity = action.identity
     }
