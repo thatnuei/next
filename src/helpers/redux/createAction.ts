@@ -1,6 +1,6 @@
-export function createAction<P extends object = {}>(type: string) {
-  function actionCreator(payload: P) {
-    return { type, ...payload }
+export function createAction<P = undefined>(type: string) {
+  function actionCreator(...args: P extends undefined ? [] : [P]) {
+    return { type, payload: args[0] }
   }
 
   actionCreator.type = type
