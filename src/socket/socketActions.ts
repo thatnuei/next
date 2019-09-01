@@ -1,13 +1,7 @@
 import { Dispatch } from "redux"
-import { chatServerUrl } from "../fchat/constants"
-import {
-  commandAction as sendCommandAction,
-  parseCommand,
-} from "../fchat/helpers"
 import { ServerCommand } from "../fchat/types"
 import { createAction } from "../redux/helpers"
 import { State } from "../store"
-import { createSocketAction, SocketHandlers } from "./socketMiddleware"
 
 export const chatConnectStart = createAction("chatConnectStart")
 export const chatConnectError = createAction("chatConnectError")
@@ -24,44 +18,44 @@ export function connectToChat() {
   return (dispatch: Dispatch, getState: () => State) => {
     dispatch({ type: "CHAT_CONNECT_START" })
 
-    const handlers: SocketHandlers = {
-      onopen() {
-        const { account, ticket, identity } = getState().user
-        dispatch(
-          sendCommandAction("IDN", {
-            account,
-            ticket,
-            character: identity,
-            cname: "next",
-            cversion: "0.0.1",
-            method: "ticket",
-          }),
-        )
-      },
+    // const handlers = {
+    //   onopen() {
+    //     const { account, ticket, identity } = getState().user
+    //     dispatch(
+    //       sendCommandAction("IDN", {
+    //         account,
+    //         ticket,
+    //         character: identity,
+    //         cname: "next",
+    //         cversion: "0.0.1",
+    //         method: "ticket",
+    //       }),
+    //     )
+    //   },
 
-      onclose() {
-        dispatch(socketClosed())
-      },
+    //   onclose() {
+    //     dispatch(socketClosed())
+    //   },
 
-      onerror() {
-        dispatch(chatConnectError())
-      },
+    //   onerror() {
+    //     dispatch(chatConnectError())
+    //   },
 
-      onmessage(event) {
-        const command = parseCommand(event.data)
+    //   onmessage(event) {
+    //     const command = parseCommand(event.data)
 
-        if (command.type === "IDN") {
-          dispatch(chatConnectSuccess())
-        }
+    //     if (command.type === "IDN") {
+    //       dispatch(chatConnectSuccess())
+    //     }
 
-        if (command.type === "PIN") {
-          dispatch(sendCommandAction("PIN", undefined))
-        }
+    //     if (command.type === "PIN") {
+    //       dispatch(sendCommandAction("PIN", undefined))
+    //     }
 
-        dispatch(socketCommand(command))
-      },
-    }
+    //     dispatch(socketCommand(command))
+    //   },
+    // }
 
-    dispatch(createSocketAction(chatServerUrl, handlers))
+    // dispatch(createSocketAction(chatServerUrl, handlers))
   }
 }

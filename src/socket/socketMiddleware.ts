@@ -1,62 +1,79 @@
-import { Middleware } from "redux"
+import { Action, Middleware } from "redux"
+import { createAction } from "../redux/helpers"
 
-export type SocketMiddlewareAction =
-  | ReturnType<typeof createSocketAction>
-  | ReturnType<typeof sendMessageAction>
-  | ReturnType<typeof closeSocketAction>
+export const socketOpened = createAction("socketOpened")
+export const socketClosed = createAction("socketClosed")
+export const socketError = createAction("socketError")
+export const socketMessage = createAction(
+  "socketMessage",
+  (event: MessageEvent) => ({ event }),
+)
 
-export type SocketHandlers = {
-  onopen: () => void
-  onclose: () => void
-  onerror: () => void
-  onmessage: (event: MessageEvent) => void
-}
+export const createSocketAction = createAction(
+  "createSocket",
+  (url: string) => ({ url }),
+)
 
-export const createSocketAction = (url: string, handlers: SocketHandlers) =>
-  ({ type: "@@SocketMiddleware/CREATE_SOCKET", url, handlers } as const)
+export const sendMessageAction = createAction(
+  "sendMessage",
+  (message: string) => ({ message }),
+)
 
-export const sendMessageAction = (message: string) =>
-  ({ type: "@@SocketMiddleware/SEND_MESSAGE", message } as const)
-
-export const closeSocketAction = () =>
-  ({ type: "@@SocketMiddleware/CLOSE_SOCKET" } as const)
+export const disconnectAction = createAction("closeSocket")
 
 export function createSocketMiddleware(): Middleware {
-  let socket: WebSocket | undefined
+  return (store) => {
+    let socket: WebSocket | undefined
 
-  function createSocket(url: string, handlers: SocketHandlers) {
-    socket = new WebSocket(url)
-    socket.onopen = handlers.onopen
-    socket.onclose = handlers.onclose
-    socket.onerror = handlers.onerror
-    socket.onmessage = handlers.onmessage
-  }
+    function createSocket(url: string) {
+      socket = new WebSocket(url)
 
-  function sendMessage(message: string) {
-    if (socket) socket.send(message)
-  }
+      socket.onopen = () => {
+        store.dispatch(socketOpened())
+      }
 
-  function closeSocket() {
-    if (!socket) return
+      socket.onclose = () => {
+        store.dispatch(socketClosed())
+      }
 
-    socket.onopen = null
-    socket.onclose = null
-    socket.onerror = null
-    socket.onmessage = null
+      socket.onerror = () => {
+        store.dispatch(socketError())
+      }
 
-    socket.close()
-  }
-
-  return () => (next) => (action: SocketMiddlewareAction) => {
-    if (action.type === "@@SocketMiddleware/CREATE_SOCKET") {
-      createSocket(action.url, action.handlers)
+      socket.onmessage = (event: MessageEvent) => {
+        store.dispatch(socketMessage(event))
+      }
     }
-    if (action.type === "@@SocketMiddleware/SEND_MESSAGE") {
-      sendMessage(action.message)
+
+    function sendMessage(message: string) {
+      if (socket) socket.send(message)
     }
-    if (action.type === "@@SocketMiddleware/CLOSE_SOCKET") {
-      closeSocket()
+
+    function disconnect() {
+      if (!socket) return
+
+      socket.onopen = null
+      socket.onclose = null
+      socket.onerror = null
+      socket.onmessage = null
+
+      socket.close()
     }
-    return next(action)
+
+    return (next) => (action: Action) => {
+      if (createSocketAction.is(action)) {
+        createSocket(action.url)
+      }
+
+      if (sendMessageAction.is(action)) {
+        sendMessage(action.message)
+      }
+
+      if (disconnectAction.is(action)) {
+        disconnect()
+      }
+
+      return next(action)
+    }
   }
 }
