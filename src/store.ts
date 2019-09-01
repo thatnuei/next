@@ -25,28 +25,24 @@ export type State = {
   }
 }
 
-function createInitialState(initialize?: (state: State) => State): State {
-  const initialState: State = {
-    appView: "login",
-    user: {
-      account: "",
-      ticket: "",
-      characters: [],
-      identity: "",
-    },
-    login: {
-      loading: false,
-    },
-    characterSelect: {
-      loading: false,
-    },
-  }
-
-  return initialize ? initialize(initialState) : initialState
+export const initialState: State = {
+  appView: "login",
+  user: {
+    account: "",
+    ticket: "",
+    characters: [],
+    identity: "",
+  },
+  login: {
+    loading: false,
+  },
+  characterSelect: {
+    loading: false,
+  },
 }
 
 export function createAppStore() {
-  const reducer = mergeReducers(createInitialState(), [
+  const reducer = mergeReducers(initialState, [
     userReducer,
     navigationReducer,
     socketReducer,
