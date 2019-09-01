@@ -10,7 +10,7 @@ export const initialState: NavigationState = {
 export const navigationReducer = produce(
   (state: NavigationState, action: Action) => {
     if (setRoute.is(action)) {
-      state.route = action.payload.route
+      state.route = action.payload
     }
   },
   initialState,
