@@ -7,17 +7,17 @@ import {
   chatConnectSuccess,
 } from "./socketActions"
 
-export function socketReducer(state: State, action: Action): State {
-  return produce(state, (draft) => {
-    if (chatConnectStart.is(action)) {
-      draft.appView = "connecting"
-    }
-    if (chatConnectError.is(action)) {
-      draft.appView = "characterSelect"
-      draft.characterSelect.error = "Failed to connect"
-    }
-    if (chatConnectSuccess.is(action)) {
-      draft.appView = "chat"
-    }
-  })
-}
+export const socketReducer = produce((state: State, action: Action) => {
+  if (chatConnectStart.is(action)) {
+    state.appView = "connecting"
+  }
+
+  if (chatConnectError.is(action)) {
+    state.appView = "characterSelect"
+    state.characterSelect.error = "Failed to connect"
+  }
+
+  if (chatConnectSuccess.is(action)) {
+    state.appView = "chat"
+  }
+})

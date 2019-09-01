@@ -1,5 +1,5 @@
 import produce from "immer"
-import { Action } from "redux"
+import { AnyAction } from "redux"
 import { State } from "../store"
 import {
   loginError,
@@ -8,28 +8,26 @@ import {
   setIdentity,
 } from "./userActions"
 
-export function userReducer(state: State, action: Action): State {
-  return produce(state, (draft) => {
-    if (loginSubmit.is(action)) {
-      draft.login.loading = true
-      draft.login.error = undefined
-    }
+export const userReducer = produce((state: State, action: AnyAction) => {
+  if (loginSubmit.is(action)) {
+    state.login.loading = true
+    state.login.error = undefined
+  }
 
-    if (loginSuccess.is(action)) {
-      draft.login.loading = false
-      draft.user.account = action.account
-      draft.user.ticket = action.ticket
-      draft.user.characters = [...action.characters].sort()
-      draft.appView = "characterSelect"
-    }
+  if (loginSuccess.is(action)) {
+    state.login.loading = false
+    state.user.account = action.account
+    state.user.ticket = action.ticket
+    state.user.characters = [...action.characters].sort()
+    state.appView = "characterSelect"
+  }
 
-    if (loginError.is(action)) {
-      draft.login.loading = false
-      draft.login.error = action.error
-    }
+  if (loginError.is(action)) {
+    state.login.loading = false
+    state.login.error = action.error
+  }
 
-    if (setIdentity.is(action)) {
-      draft.user.identity = action.identity
-    }
-  })
-}
+  if (setIdentity.is(action)) {
+    state.user.identity = action.identity
+  }
+})
