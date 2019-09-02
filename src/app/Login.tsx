@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import useInput from "../state/useInput"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
@@ -57,7 +56,8 @@ function Login() {
     </FullscreenRaisedPanel>
   )
 }
-export default observer(Login)
+
+export default Login
 
 const Form = styled.form`
   display: flex;
