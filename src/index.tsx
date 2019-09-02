@@ -2,21 +2,21 @@ import React from "react"
 import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
 import { createAppStore } from "./store"
-import App from "./view/App"
+import Root from "./view/Root"
 
 const store = createAppStore()
 
-function renderApp() {
+function renderRoot() {
   ReactDOM.render(
     <Provider store={store}>
-      <App />
+      <Root />
     </Provider>,
     document.getElementById("root"),
   )
 }
 
-renderApp()
+renderRoot()
 
 if (module.hot) {
-  module.hot.accept("./view/App", renderApp)
+  module.hot.accept("./view/Root", renderRoot)
 }
