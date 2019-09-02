@@ -1,9 +1,10 @@
 import React from "react"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
 import { showCharacterSelect, showLogin } from "../store/navigation/actions"
+import { getNavigationRoute } from "../store/navigation/selectors"
 
 function App() {
-  const route = useAppSelector((state) => state.navigation.route)
+  const route = useAppSelector(getNavigationRoute)
   const dispatch = useAppDispatch()
   return (
     <main>
