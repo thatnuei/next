@@ -1,8 +1,8 @@
 import React from "react"
+import GlobalStyle from "../ui/globalStyle"
+import { baseTheme } from "../ui/theme"
+import { ThemeProvider } from "../ui/themeContext"
 import App from "./App"
-import GlobalStyle from "./ui/globalStyle"
-import { baseTheme } from "./ui/theme"
-import { ThemeProvider } from "./ui/themeContext"
 
 function Root() {
   return (
