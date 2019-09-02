@@ -1,20 +1,21 @@
 import React from "react"
-import { useAppDispatch, useAppSelector } from "../store/hooks"
-import { showCharacterSelect, showLogin } from "../store/navigation/actions"
+import { useAppSelector } from "../store/hooks"
 import { getNavigationRoute } from "../store/navigation/selectors"
+import Login from "./Login"
 
 function App() {
   const route = useAppSelector(getNavigationRoute)
-  const dispatch = useAppDispatch()
-  return (
-    <main>
-      <p>{route.type}</p>
-      <button onClick={() => dispatch(showLogin())}>go to login</button>
-      <button onClick={() => dispatch(showCharacterSelect())}>
-        go to char select
-      </button>
-    </main>
-  )
+
+  switch (route.type) {
+    case "login":
+      return <Login />
+    case "characterSelect":
+      return <>characterSelect</>
+    case "chat":
+      return <>chat</>
+  }
+
+  return null
 }
 
 export default App
