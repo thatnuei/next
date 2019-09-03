@@ -1,7 +1,7 @@
 import {} from "polished"
 import React, { ComponentPropsWithoutRef } from "react"
-import { css, styled } from "./styled"
-import { AppThemeColor, spacing } from "./theme"
+import { css, styled } from "../styled"
+import { AppThemeColor, spacing } from "../theme"
 
 export type BoxProps = ComponentPropsWithoutRef<"div"> & {
   as?: React.ElementType

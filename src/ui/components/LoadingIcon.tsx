@@ -1,6 +1,6 @@
 import React from "react"
-import { keyframes, styled } from "./styled"
-import { getIconSize } from "./theme"
+import { keyframes, styled } from "../styled"
+import { getIconSize } from "../theme"
 
 type Props = { size?: string | number }
 

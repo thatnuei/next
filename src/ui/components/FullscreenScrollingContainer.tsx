@@ -1,7 +1,7 @@
 import { cover } from "polished"
 import React from "react"
-import { scrollVertical } from "./helpers"
-import { styled } from "./styled"
+import { scrollVertical } from "../helpers"
+import { styled } from "../styled"
 
 const FullscreenScrollingContainer = (props: { children: React.ReactNode }) => (
   <Outer>

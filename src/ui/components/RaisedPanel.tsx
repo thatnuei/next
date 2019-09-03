@@ -1,5 +1,5 @@
-import { styled } from "./styled"
-import { shadows } from "./theme"
+import { styled } from "../styled"
+import { shadows } from "../theme"
 
 const RaisedPanel = styled.div`
   background-color: ${({ theme }) => theme.colors.theme0};

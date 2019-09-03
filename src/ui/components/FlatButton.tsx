@@ -1,5 +1,5 @@
+import { styled } from "../styled"
 import Button from "./Button"
-import { styled } from "./styled"
 
 const FlatButton = styled(Button)`
   padding: 0;

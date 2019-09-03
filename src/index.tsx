@@ -1,7 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
-import Root from "./app/Root"
+import Root from "./app/components/Root"
 import { createAppStore } from "./store"
 
 const store = createAppStore()

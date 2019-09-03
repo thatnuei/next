@@ -1,5 +1,5 @@
 import React from "react"
-import useMedia from "../dom/useMedia"
+import useMedia from "../hooks/useMedia"
 
 type Props = {
   query: string

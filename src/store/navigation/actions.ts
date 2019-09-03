@@ -1,4 +1,4 @@
-import { createAction } from "../../redux/createAction"
+import { createAction } from "../../redux/helpers/createAction"
 import { Route } from "./types"
 
 export const setRoute = createAction<Route>("navigation/setRoute")

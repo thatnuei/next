@@ -1,7 +1,7 @@
 import React, { ComponentPropsWithoutRef } from "react"
+import { styled } from "../styled"
+import { spacing } from "../theme"
 import Box from "./Box"
-import { styled } from "./styled"
-import { spacing } from "./theme"
 
 type Props = ComponentPropsWithoutRef<"label"> & {
   labelText: string

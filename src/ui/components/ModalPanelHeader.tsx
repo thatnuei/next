@@ -1,8 +1,8 @@
 import React from "react"
 import { withTheme } from "styled-components"
+import { styled } from "../styled"
+import { AppTheme, spacing } from "../theme"
 import Box from "./Box"
-import { styled } from "./styled"
-import { AppTheme, spacing } from "./theme"
 
 type Props = {
   children?: React.ReactNode

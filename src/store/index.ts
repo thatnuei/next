@@ -1,6 +1,6 @@
 import { applyMiddleware, combineReducers, createStore } from "redux"
 import thunk from "redux-thunk"
-import { StateFromReducerMap } from "../redux/StateFromReducerMap"
+import { StateFromReducerMap } from "../redux/types/StateFromReducerMap"
 import { loginReducer } from "./login/reducer"
 import { navigationReducer } from "./navigation/reducer"
 import { userReducer } from "./user/reducer"

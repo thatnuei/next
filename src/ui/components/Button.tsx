@@ -1,6 +1,6 @@
-import { pressEffect } from "./helpers"
-import { styled } from "./styled"
-import { spacing } from "./theme"
+import { pressEffect } from "../helpers"
+import { styled } from "../styled"
+import { spacing } from "../theme"
 
 const Button = styled.button`
   padding: ${spacing.xsmall} ${spacing.small};

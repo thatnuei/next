@@ -1,5 +1,5 @@
-import inputBase from "./inputBase"
-import { styled } from "./styled"
+import inputBase from "../inputBase"
+import { styled } from "../styled"
 
 const Select = styled.select`
   ${inputBase};

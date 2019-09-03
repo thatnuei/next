@@ -1,6 +1,6 @@
 import React from "react"
-import { useAppSelector } from "../store/hooks"
-import { getNavigationRoute } from "../store/navigation/selectors"
+import { useAppSelector } from "../../store/hooks"
+import { getNavigationRoute } from "../../store/navigation/selectors"
 import Login from "./Login"
 
 function App() {

@@ -1,5 +1,5 @@
 import React from "react"
-import { useRequiredContext } from "../react/useRequiredContext"
+import { useRequiredContext } from "../react/hooks/useRequiredContext"
 import { StyledThemeProvider, ThemeContext } from "./styled"
 import { AppTheme } from "./theme"
 

@@ -1,6 +1,6 @@
-import extractErrorMessage from "../../common/extractErrorMessage"
-import { login } from "../../flist/login"
-import { createAction } from "../../redux/createAction"
+import extractErrorMessage from "../../common/helpers/extractErrorMessage"
+import { login } from "../../flist/helpers/login"
+import { createAction } from "../../redux/helpers/createAction"
 import { ThunkAction } from "../types"
 
 export const loginStart = createAction("loginStart")

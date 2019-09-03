@@ -1,6 +1,6 @@
 import React from "react"
-import { fullscreen } from "./helpers"
-import { css, styled } from "./styled"
+import { fullscreen } from "../helpers"
+import { css, styled } from "../styled"
 
 type SidebarOverlayProps = {
   visible?: boolean

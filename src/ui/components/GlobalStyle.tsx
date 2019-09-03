@@ -1,5 +1,5 @@
 import { lighten } from "polished"
-import { createGlobalStyle, css } from "./styled"
+import { createGlobalStyle, css } from "../styled"
 
 const globalStyle = css`
   * {

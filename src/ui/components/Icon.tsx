@@ -1,8 +1,8 @@
 import { Icon as MdiIcon } from "@mdi/react"
 import React from "react"
-import * as icons from "./icons"
-import { styled } from "./styled"
-import { getIconSize } from "./theme"
+import * as icons from "../icons"
+import { styled } from "../styled"
+import { getIconSize } from "../theme"
 
 export type IconName = keyof typeof icons
 

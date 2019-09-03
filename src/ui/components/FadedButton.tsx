@@ -1,5 +1,5 @@
-import { fadedRevealStyle, pressEffect } from "./helpers"
-import { styled } from "./styled"
+import { fadedRevealStyle, pressEffect } from "../helpers"
+import { styled } from "../styled"
 
 const FadedButton = styled.button`
   ${fadedRevealStyle};

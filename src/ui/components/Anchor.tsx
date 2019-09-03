@@ -1,4 +1,4 @@
-import { styled } from "./styled"
+import { styled } from "../styled"
 
 const Anchor = styled.a`
   display: inline-block;

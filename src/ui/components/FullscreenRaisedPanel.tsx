@@ -1,8 +1,8 @@
 import React, { PropsWithChildren } from "react"
-import { flexCenter } from "./helpers"
+import { flexCenter } from "../helpers"
+import { styled } from "../styled"
+import { spacing } from "../theme"
 import RaisedPanel from "./RaisedPanel"
-import { styled } from "./styled"
-import { spacing } from "./theme"
 
 type Props = PropsWithChildren<{}>
 
