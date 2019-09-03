@@ -1,5 +1,5 @@
 import React from "react"
-import useInput from "../state/useInput"
+import useInput from "../dom/useInput"
 import { useAppDispatch, useAppSelector } from "../store/hooks"
 import { submitLogin } from "../store/login/actions"
 import { getLoginState } from "../store/login/selectors"
