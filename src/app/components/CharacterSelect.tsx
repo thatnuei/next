@@ -17,7 +17,7 @@ function CharacterSelect() {
       user: { characters },
       characterSelect: { loading, error },
     },
-    actions: { setIdentity, showLogin },
+    actions: { setIdentity, showLogin, connectToChat },
   } = useStore()
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -26,8 +26,7 @@ function CharacterSelect() {
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    // await chatStore.connectToServer()
-    // appNav.showChat()
+    connectToChat()
   }
 
   return (
