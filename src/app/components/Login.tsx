@@ -1,8 +1,6 @@
 import React from "react"
 import useInput from "../../dom/hooks/useInput"
-import { useAppDispatch, useAppSelector } from "../../store/hooks"
-import { submitLogin } from "../../store/login/actions"
-import { getLoginState } from "../../store/login/selectors"
+import { useStore } from "../../store"
 import Button from "../../ui/components/Button"
 import FormField from "../../ui/components/FormField"
 import FullscreenRaisedPanel from "../../ui/components/FullscreenRaisedPanel"
@@ -13,15 +11,20 @@ import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 
 function Login() {
-  const { loading, error } = useAppSelector(getLoginState)
-  const dispatch = useAppDispatch()
+  const store = useStore()
+  const { loading, error } = store.state.login
+  const { submitLogin } = store.actions
 
   const account = useInput()
   const password = useInput()
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    dispatch(submitLogin(account.value, password.value))
+
+    submitLogin({
+      account: account.value,
+      password: password.value,
+    })
   }
 
   return (

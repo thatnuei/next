@@ -1,12 +1,11 @@
 import React from "react"
-import { useAppSelector } from "../../store/hooks"
-import { getNavigationRoute } from "../../store/navigation/selectors"
+import { useStore } from "../../store"
 import Login from "./Login"
 
 function App() {
-  const route = useAppSelector(getNavigationRoute)
+  const { state } = useStore()
 
-  switch (route.type) {
+  switch (state.view) {
     case "login":
       return <Login />
     case "characterSelect":

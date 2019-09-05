@@ -1,14 +1,14 @@
+import { Provider } from "overmind-react"
 import React from "react"
 import ReactDOM from "react-dom"
-import { Provider } from "react-redux"
 import Root from "./app/components/Root"
-import { createAppStore } from "./store"
+import { createAppStore } from "./store/index"
 
 const store = createAppStore()
 
 function renderRoot() {
   ReactDOM.render(
-    <Provider store={store}>
+    <Provider value={store}>
       <Root />
     </Provider>,
     document.getElementById("root"),
