@@ -12,11 +12,12 @@ export const submitLogin: AsyncAction<{
 
   try {
     const { ticket, characters } = await effects.flist.login(account, password)
+    const identity = await effects.storedIdentity.get(account)
 
     state.user.account = account
     state.user.ticket = ticket
     state.user.characters = [...characters].sort()
-
+    state.chat.identity = identity || characters[0]
     state.view = "characterSelect"
   } catch (error) {
     state.login.error = extractErrorMessage(error)
