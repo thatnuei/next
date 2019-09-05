@@ -1,5 +1,6 @@
 import { createOvermind, IConfig } from "overmind"
 import { createHook } from "overmind-react"
+import { showLogin } from "../app/actions"
 import { setIdentity } from "../chat/actions"
 import { identityStorage } from "../chat/effects"
 import { socket } from "../fchat/effects"
@@ -13,6 +14,7 @@ const config = {
   actions: {
     submitLogin,
     setIdentity,
+    showLogin,
   },
 
   effects: {

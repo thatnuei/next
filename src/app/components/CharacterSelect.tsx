@@ -17,7 +17,7 @@ function CharacterSelect() {
       user: { characters },
       characterSelect: { loading, error },
     },
-    actions: { setIdentity },
+    actions: { setIdentity, showLogin },
   } = useStore()
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -28,10 +28,6 @@ function CharacterSelect() {
     event.preventDefault()
     // await chatStore.connectToServer()
     // appNav.showChat()
-  }
-
-  function showLogin() {
-    // appNav.showLogin()
   }
 
   return (
