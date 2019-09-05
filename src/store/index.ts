@@ -1,7 +1,7 @@
 import { createOvermind, IConfig } from "overmind"
 import { createHook } from "overmind-react"
 import { setIdentity } from "../chat/actions"
-import { storedIdentity } from "../chat/effects"
+import { identityStorage } from "../chat/effects"
 import { socket } from "../fchat/effects"
 import { submitLogin } from "../flist/actions"
 import { flist } from "../flist/effects"
@@ -17,7 +17,7 @@ const config = {
 
   effects: {
     flist,
-    storedIdentity,
+    identityStorage,
     socket,
   },
 }

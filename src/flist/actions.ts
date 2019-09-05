@@ -12,7 +12,7 @@ export const submitLogin: AsyncAction<{
 
   try {
     const { ticket, characters } = await effects.flist.login(account, password)
-    const identity = await effects.storedIdentity.get(account)
+    const identity = await effects.identityStorage.get(account)
 
     state.user.account = account
     state.user.ticket = ticket

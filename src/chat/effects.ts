@@ -1,5 +1,5 @@
 import { createStorageEffect } from "../storage/helpers"
 
-export const storedIdentity = createStorageEffect<string>(
+export const identityStorage = createStorageEffect<string>(
   (account) => `identity:${account}`,
 )
