@@ -15,7 +15,7 @@ export const handleCharacterCommand: Action<ServerCommand> = (
     createCharacter,
   )
 
-  const handlers = createCommandHandler({
+  const handler = createCommandHandler({
     LIS(params) {
       for (const [name, gender, status, statusMessage] of params.characters) {
         state.chat.characters[name] = createCharacter(
@@ -46,5 +46,5 @@ export const handleCharacterCommand: Action<ServerCommand> = (
     },
   })
 
-  handlers(command)
+  handler(command)
 }
