@@ -17,9 +17,7 @@ export const addSocketListeners: Action = ({ actions, effects }) => {
   })
 
   effects.socket.events.listen("command", (command) => {
-    if (command.type === "IDN") {
-      actions.handleChatIdentifySuccess()
-    }
+    actions.handleChatCommand(command)
   })
 }
 
@@ -30,10 +28,5 @@ export const handleSocketClose: Action = ({ state, actions }) => {
 
 export const handleSocketError: Action = ({ state, actions }) => {
   actions.showLogin()
-  state.characterSelect.loading = false
-}
-
-export const handleChatIdentifySuccess: Action = ({ state, actions }) => {
-  state.view = "chat"
   state.characterSelect.loading = false
 }
