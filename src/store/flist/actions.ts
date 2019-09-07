@@ -1,5 +1,5 @@
 import { AsyncAction } from "overmind"
-import extractErrorMessage from "../common/helpers/extractErrorMessage"
+import extractErrorMessage from "../../common/helpers/extractErrorMessage"
 
 export const submitLogin: AsyncAction<{
   account: string

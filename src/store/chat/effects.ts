@@ -1,4 +1,4 @@
-import { createStorageEffect } from "../storage/helpers"
+import { createStorageEffect } from "../../storage/helpers"
 
 export const identityStorage = createStorageEffect<string>(
   (account) => `identity:${account}`,

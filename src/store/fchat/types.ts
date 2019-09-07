@@ -1,5 +1,5 @@
 import * as fchat from "fchat"
-import { Values } from "../common/types"
+import { Values } from "../../common/types"
 
 export type ClientCommandMap = fchat.Connection.ClientCommands
 export type ServerCommandMap = fchat.Connection.ServerCommands

@@ -1,4 +1,4 @@
-import { fetchJson } from "../http/helpers/fetchJson"
+import { fetchJson } from "../../http/helpers/fetchJson"
 import { ApiResponse, LoginResponse } from "./types"
 
 const getTicketUrl = "https://www.f-list.net/json/getApiTicket.php"

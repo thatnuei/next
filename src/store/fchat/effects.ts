@@ -1,4 +1,4 @@
-import TypedEmitter from "../state/classes/TypedEmitter"
+import TypedEmitter from "../../state/classes/TypedEmitter"
 import { chatServerUrl } from "./constants"
 import { parseCommand } from "./helpers"
 import { ClientCommandMap, ServerCommand } from "./types"
