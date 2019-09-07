@@ -1,12 +1,13 @@
 import { createOvermind, IConfig } from "overmind"
 import { createHook } from "overmind-react"
+import * as characterActions from "./character/actions"
 import * as chatActions from "./chat/actions"
 import { identityStorage } from "./chat/effects"
 import * as fchatActions from "./fchat/actions"
 import { socket } from "./fchat/effects"
 import * as flistActions from "./flist/actions"
 import { flist } from "./flist/effects"
-import * as appActions from "./navigation/actions"
+import * as navigationActions from "./navigation/actions"
 import { onInitialize } from "./onInitialize"
 import { state } from "./state"
 
@@ -16,7 +17,8 @@ const config = {
   actions: {
     ...flistActions,
     ...chatActions,
-    ...appActions,
+    ...navigationActions,
+    ...characterActions,
     ...fchatActions,
   },
 
