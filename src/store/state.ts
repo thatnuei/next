@@ -20,6 +20,7 @@ export type State = {
   chat: {
     identity: string
     characters: Dictionary<Character>
+    updatingStatus: boolean
     readonly identityCharacter: Character
   }
 }
@@ -40,6 +41,7 @@ export const state: State = {
   chat: {
     identity: "",
     characters: {},
+    updatingStatus: false,
     get identityCharacter() {
       const { characters, identity } = this
       return characters[identity] || createCharacter(identity)

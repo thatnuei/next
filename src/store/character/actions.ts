@@ -1,19 +1,22 @@
-import { Action } from "overmind"
+import { Action, AsyncAction } from "overmind"
 import { createCharacter } from "../../character/helpers"
-import { Character } from "../../character/types"
+import { CharacterStatus } from "../../character/types"
 import createFactoryUpdate from "../../common/helpers/createFactoryUpdate"
-import { Dictionary } from "../../common/types"
+import sleep from "../../common/helpers/sleep"
+import { errorCodes } from "../fchat/constants"
 import { createCommandHandler } from "../fchat/helpers"
 import { ServerCommand } from "../fchat/types"
+import { State } from "../state"
+
+function createUpdateCharacter(state: State) {
+  return createFactoryUpdate(state.chat.characters, createCharacter)
+}
 
 export const handleCharacterCommand: Action<ServerCommand> = (
   { state },
   command,
 ) => {
-  const updateCharacter = createFactoryUpdate(
-    state.chat.characters as Dictionary<Character>, // bug in overmind types
-    createCharacter,
-  )
+  const updateCharacter = createUpdateCharacter(state as State) // bug in overmind types
 
   const handler = createCommandHandler({
     LIS(params) {
@@ -43,8 +46,37 @@ export const handleCharacterCommand: Action<ServerCommand> = (
         char.status = status
         char.statusMessage = statusmsg
       })
+
+      if (character === state.chat.identity) {
+        state.chat.updatingStatus = false
+      }
+    },
+
+    ERR({ number }) {
+      if (number === errorCodes.statusUpdateCooldown) {
+        state.chat.updatingStatus = false
+        // show error message
+      }
     },
   })
 
   handler(command)
+}
+
+export const updateStatus: AsyncAction<UpdatedStatus> = async (
+  { state, effects },
+  { status, statusMessage },
+) => {
+  effects.socket.sendCommand("STA", { status, statusmsg: statusMessage })
+  state.chat.updatingStatus = true
+
+  // make sure that we can still _try_ to update our status,
+  // even if we don't get a successful result
+  await sleep(3000)
+  state.chat.updatingStatus = false
+}
+
+type UpdatedStatus = {
+  status: CharacterStatus
+  statusMessage: ""
 }
