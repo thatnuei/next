@@ -13,7 +13,7 @@ function createUpdateCharacter(state: State) {
 }
 
 export const handleCharacterCommand: Action<ServerCommand> = (
-  { state },
+  { state, actions },
   command,
 ) => {
   const updateCharacter = createUpdateCharacter(state as State) // bug in overmind types
@@ -53,9 +53,16 @@ export const handleCharacterCommand: Action<ServerCommand> = (
     },
 
     ERR({ number }) {
-      if (number === errorCodes.statusUpdateCooldown) {
+      if (
+        state.chat.updatingStatus &&
+        number === errorCodes.statusUpdateCooldown
+      ) {
         state.chat.updatingStatus = false
-        // show error message
+
+        actions.showUiMessage({
+          text: "Please wait 1 second between status updates.",
+          level: "error",
+        })
       }
     },
   })

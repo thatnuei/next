@@ -10,6 +10,7 @@ import { flist } from "./flist/effects"
 import * as navigationActions from "./navigation/actions"
 import { onInitialize } from "./onInitialize"
 import { state } from "./state"
+import * as uiActions from "./ui/actions"
 
 const config = {
   state,
@@ -20,6 +21,7 @@ const config = {
     ...navigationActions,
     ...characterActions,
     ...fchatActions,
+    ...uiActions,
   },
 
   effects: {

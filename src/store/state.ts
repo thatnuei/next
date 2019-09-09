@@ -1,6 +1,7 @@
 import { createCharacter } from "../character/helpers"
 import { Character } from "../character/types"
 import { Dictionary } from "../common/types"
+import { UiMessage } from "./ui/types"
 
 export type State = {
   view: "login" | "characterSelect" | "chat"
@@ -23,6 +24,7 @@ export type State = {
     updatingStatus: boolean
     readonly identityCharacter: Character
   }
+  uiMessages: UiMessage[]
 }
 
 export const state: State = {
@@ -47,4 +49,5 @@ export const state: State = {
       return characters[identity] || createCharacter(identity)
     },
   },
+  uiMessages: [],
 }
