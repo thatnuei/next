@@ -18,6 +18,7 @@ export const addSocketListeners: Action = ({ actions, effects }) => {
 
   effects.socket.events.listen("command", (command) => {
     actions.handleChatCommand(command)
+    actions.handleCharacterCommand(command)
   })
 }
 
