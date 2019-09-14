@@ -11,9 +11,16 @@ import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 
 function Login() {
-  const store = useStore()
-  const { loading, error } = store.state.login
-  const { submitLogin } = store.actions
+  const {
+    state: {
+      user: {
+        login: { loading, error },
+      },
+    },
+    actions: {
+      user: { submitLogin },
+    },
+  } = useStore()
 
   const account = useInput()
   const password = useInput()

@@ -5,23 +5,22 @@ export const submitLogin: AsyncAction<{
   account: string
   password: string
 }> = async ({ state, effects }, { account, password }) => {
-  if (state.login.loading) return
+  if (state.user.login.loading) return
 
-  state.login.loading = true
-  state.login.error = undefined
+  state.user.login = { loading: true }
 
   try {
     const { ticket, characters } = await effects.flist.login(account, password)
-    const identity = await effects.identityStorage.get(account)
+    const identity = await effects.chat.identityStorage.get(account)
 
     state.user.account = account
     state.user.ticket = ticket
     state.user.characters = [...characters].sort()
     state.chat.identity = identity || characters[0]
     state.view = "characterSelect"
-  } catch (error) {
-    state.login.error = extractErrorMessage(error)
-  }
 
-  state.login.loading = false
+    state.user.login = { loading: false }
+  } catch (error) {
+    state.user.login = { loading: false, error: extractErrorMessage(error) }
+  }
 }

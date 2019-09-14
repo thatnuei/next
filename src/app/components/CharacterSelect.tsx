@@ -13,11 +13,13 @@ import { spacing } from "../../ui/theme"
 function CharacterSelect() {
   const {
     state: {
-      chat: { identity },
+      chat: { identity, connecting },
       user: { characters },
-      characterSelect: { loading, error },
     },
-    actions: { setIdentity, showLogin, connectToChat },
+    actions: {
+      showLogin,
+      chat: { setIdentity, connectToChat },
+    },
   } = useStore()
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -34,7 +36,7 @@ function CharacterSelect() {
       <ModalPanelHeader>Select a Character</ModalPanelHeader>
 
       <form onSubmit={handleSubmit}>
-        <FieldSet disabled={loading}>
+        <FieldSet disabled={connecting}>
           <FieldsContainer>
             <Avatar key={identity} name={identity} />
 
@@ -51,8 +53,6 @@ function CharacterSelect() {
             <Anchor as="button" type="button" onClick={showLogin}>
               Return to Login
             </Anchor>
-
-            {error && <ErrorText>{error}</ErrorText>}
           </FieldsContainer>
         </FieldSet>
       </form>

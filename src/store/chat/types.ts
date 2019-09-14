@@ -1,14 +1,9 @@
-import { ChannelRoom, Message } from "../channel/types"
+import * as fchat from "fchat"
+import { Values } from "../../common/types"
 
-export type ChatRoomBase<T extends string> = {
-  type: T
-  id: string
-  title: string
-  messages: Message[]
-  chatboxInput: string
-  isUnread: boolean
-}
+export type ClientCommandMap = fchat.Connection.ClientCommands
+export type ServerCommandMap = fchat.Connection.ServerCommands
 
-export type ConsoleRoom = ChatRoomBase<"console">
-
-export type ChatRoom = ConsoleRoom | ChannelRoom
+export type ServerCommand = Values<
+  { [K in keyof ServerCommandMap]: { type: K; params: ServerCommandMap[K] } }
+>
