@@ -77,7 +77,3 @@ const FieldsContainer = styled.div`
   padding: ${spacing.medium};
   ${spacedChildrenVertical(spacing.medium)};
 `
-
-const ErrorText = styled.p`
-  max-width: 100%;
-`
