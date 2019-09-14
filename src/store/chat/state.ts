@@ -51,6 +51,7 @@ export type MessageType = "chat" | "lfrp" | "admin" | "system"
 export type ChatRoom = ConsoleRoom | ChannelRoom
 
 export const state: ChatState = {
+  connecting: false,
   identity: "",
   characters: {},
   updatingStatus: false,
