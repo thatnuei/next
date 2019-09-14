@@ -4,11 +4,12 @@ import { merge, namespaced } from "overmind/config"
 import * as actions from "./actions"
 import * as chat from "./chat"
 import * as effects from "./effects"
+import { onInitialize } from "./onInitialize"
 import { state } from "./state"
 import * as user from "./user"
 
 const config = merge(
-  { effects, state, actions },
+  { effects, state, actions, onInitialize },
   namespaced({
     user,
     chat,
