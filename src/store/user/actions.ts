@@ -4,7 +4,7 @@ import extractErrorMessage from "../../common/helpers/extractErrorMessage"
 export const submitLogin: AsyncAction<{
   account: string
   password: string
-}> = async ({ state, effects }, { account, password }) => {
+}> = async ({ state, actions, effects }, { account, password }) => {
   if (state.user.login.loading) return
 
   state.user.login = { loading: true }
@@ -17,7 +17,7 @@ export const submitLogin: AsyncAction<{
     state.user.ticket = ticket
     state.user.characters = [...characters].sort()
     state.chat.identity = identity || characters[0]
-    state.view = "characterSelect"
+    actions.showCharacterSelect()
 
     state.user.login = { loading: false }
   } catch (error) {
