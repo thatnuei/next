@@ -1,6 +1,6 @@
 import React from "react"
 import Chat from "../../chat/components/Chat"
-import { useStore } from "../../hooks"
+import { useStore } from "../../store/hooks"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 
