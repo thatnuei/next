@@ -1,4 +1,5 @@
 import React from "react"
+import Chat from "../../chat/components/Chat"
 import { useStore } from "../../store"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
@@ -12,7 +13,7 @@ function App() {
     case "characterSelect":
       return <CharacterSelect />
     case "chat":
-      return <>chat</>
+      return <Chat />
   }
 
   return null

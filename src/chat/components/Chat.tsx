@@ -6,13 +6,6 @@ import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 
 function Chat() {
-  // const {
-  //   channelStore,
-  //   privateChatStore,
-  //   overlayStore,
-  //   chatNavigationStore,
-  // } = useRootStore()
-
   // const navigationVisible = useChatNavBreakpoint()
 
   const {
