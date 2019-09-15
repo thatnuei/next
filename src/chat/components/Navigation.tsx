@@ -47,8 +47,7 @@ const ActionsContainer = styled.nav`
 
   display: flex;
   flex-direction: column;
-  padding-top: ${spacing.xsmall};
-  padding-bottom: ${spacing.xsmall};
+  padding: ${spacing.xsmall} 0;
 `
 
 const Spacer = styled.div`
