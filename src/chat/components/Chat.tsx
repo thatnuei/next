@@ -1,6 +1,6 @@
 import { cover } from "polished"
 import React from "react"
-import { useStore } from "../../store"
+import { useStore } from "../../hooks"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import Navigation from "./Navigation"

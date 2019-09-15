@@ -1,6 +1,6 @@
 import React from "react"
 import Avatar from "../../character/components/Avatar"
-import { useStore } from "../../store"
+import { useStore } from "../../hooks"
 import Anchor from "../../ui/components/Anchor"
 import Button from "../../ui/components/Button"
 import FullscreenRaisedPanel from "../../ui/components/FullscreenRaisedPanel"

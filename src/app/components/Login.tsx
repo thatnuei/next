@@ -1,6 +1,6 @@
 import React from "react"
 import useInput from "../../dom/hooks/useInput"
-import { useStore } from "../../store"
+import { useStore } from "../../hooks"
 import Button from "../../ui/components/Button"
 import FormField from "../../ui/components/FormField"
 import FullscreenRaisedPanel from "../../ui/components/FullscreenRaisedPanel"
