@@ -1,13 +1,11 @@
 import { cover } from "polished"
 import React from "react"
 import { useStore } from "../../store"
-import { spacedChildrenHorizontal } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
+import Navigation from "./Navigation"
 
 function Chat() {
-  // const navigationVisible = useChatNavBreakpoint()
-
   const {
     state: {
       chat: { currentRoom },
@@ -22,41 +20,17 @@ function Chat() {
 
       case "channel": {
         return <p>channel</p>
-        // const channel = channelStore.channels.get(activeTab.channelId)
-        // return <ChannelView channel={channel} />
       }
-
-      // case "privateChat": {
-      // return <p>private chat</p>
-      // const chat = privateChatStore.privateChats.get(activeTab.partnerName)
-      // return <PrivateChat privateChat={chat} />
-      // }
     }
   }
 
   return (
-    // <CharacterMenuProvider>
     <Container>
-      {/* {navigationVisible && <ChatNavigation />} */}
+      <NavigationContainer>
+        <Navigation />
+      </NavigationContainer>
       <RoomContainer>{renderChatRoom()}</RoomContainer>
     </Container>
-
-    // <OverlayProvider value={overlayStore.chatNav}>
-    //   <ChatNavigationOverlay />
-    // </OverlayProvider>
-    //
-    // <OverlayProvider value={overlayStore.updateStatus}>
-    //   <StatusOverlay />
-    // </OverlayProvider>
-    //
-    // <OverlayProvider value={overlayStore.channelBrowser}>
-    //   <ChannelBrowser />
-    // </OverlayProvider>
-    //
-    // <OverlayProvider value={overlayStore.onlineUsers}>
-    //   <OnlineUsers />
-    // </OverlayProvider>
-    // </CharacterMenuProvider>
   )
 }
 
@@ -64,11 +38,18 @@ export default Chat
 
 const Container = styled.div`
   background-color: ${({ theme }) => theme.colors.theme2};
-  display: flex;
   ${cover()};
-  ${spacedChildrenHorizontal(spacing.xsmall)};
+
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 220px auto;
+  grid-gap: ${spacing.xsmall};
 `
 
-const RoomContainer = styled.div`
-  flex: 1;
+const NavigationContainer = styled.nav`
+  @media (max-width: 950px) {
+    display: none;
+  }
 `
+
+const RoomContainer = styled.section``
