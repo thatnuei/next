@@ -1,12 +1,15 @@
 import React from "react"
+import CharacterInfo from "../../character/components/CharacterInfo"
+import { getChatIdentity } from "../../store/chat/selectors"
+import { useSelector } from "../../store/hooks"
 import { fillArea } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import NavigationAction from "./NavigationAction"
 
-type Props = {}
+function Navigation() {
+  const identity = useSelector(getChatIdentity)
 
-function Navigation(props: Props) {
   return (
     <Container>
       <ActionsContainer>
@@ -17,7 +20,9 @@ function Navigation(props: Props) {
         <Spacer />
         <NavigationAction title="Logout" icon="logout" />
       </ActionsContainer>
-      <CharacterInfoContainer>char info</CharacterInfoContainer>
+      <CharacterInfoContainer>
+        <CharacterInfo name={identity} />
+      </CharacterInfoContainer>
       <RoomsContainer>rooms</RoomsContainer>
     </Container>
   )
@@ -53,6 +58,7 @@ const Spacer = styled.div`
 const CharacterInfoContainer = styled.div`
   grid-area: character-info;
   background-color: ${(props) => props.theme.colors.theme0};
+  padding: ${spacing.small};
 `
 
 const RoomsContainer = styled.div`

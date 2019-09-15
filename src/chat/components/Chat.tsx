@@ -42,7 +42,7 @@ const Container = styled.div`
 
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-columns: 220px auto;
+  grid-template-columns: 240px auto;
   grid-gap: ${spacing.xsmall};
 `
 
