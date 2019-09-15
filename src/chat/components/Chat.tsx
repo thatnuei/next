@@ -37,19 +37,20 @@ function Chat() {
 export default Chat
 
 const Container = styled.div`
+  display: flex;
   background-color: ${({ theme }) => theme.colors.theme2};
   ${cover()};
-
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: 240px auto;
-  grid-gap: ${spacing.xsmall};
 `
 
 const NavigationContainer = styled.div`
+  width: 240px;
+  margin-right: ${spacing.xsmall};
+
   @media (max-width: 950px) {
     display: none;
   }
 `
 
-const RoomContainer = styled.section``
+const RoomContainer = styled.section`
+  flex: 1;
+`
