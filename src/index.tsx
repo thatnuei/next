@@ -2,6 +2,7 @@ import { Provider } from "overmind-react"
 import React from "react"
 import ReactDOM from "react-dom"
 import Root from "./app/components/Root"
+import "./polyfills"
 import { createAppStore } from "./store/index"
 
 const store = createAppStore()
