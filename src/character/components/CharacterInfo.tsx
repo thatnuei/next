@@ -1,0 +1,38 @@
+import React, { ComponentPropsWithoutRef } from "react"
+import { getProfileUrl } from "../../flist/helpers"
+import { getCharacter } from "../../store/chat/selectors"
+import { useSelector } from "../../store/hooks"
+import Box from "../../ui/components/Box"
+import ExternalLink from "../../ui/components/ExternalLink"
+import { spacing } from "../../ui/theme"
+import Avatar from "./Avatar"
+import CharacterStatus from "./CharacterStatus"
+import { genderColors } from "./colors"
+
+type CharacterInfoProps = ComponentPropsWithoutRef<"div"> & {
+  name: string
+}
+
+function CharacterInfo({ name, ...containerProps }: CharacterInfoProps) {
+  const { gender } = useSelector(getCharacter(name))
+
+  const nameStyle = { color: genderColors[gender] }
+
+  return (
+    <Box gap={spacing.small} align="flex-start" {...containerProps}>
+      <ExternalLink href={getProfileUrl(name)}>
+        <h2 style={nameStyle}>{name}</h2>
+      </ExternalLink>
+
+      <ExternalLink href={getProfileUrl(name)}>
+        <Avatar key={name} name={name} size={80} />
+      </ExternalLink>
+
+      <Box background="theme2" pad={spacing.xsmall} alignSelf="stretch">
+        <CharacterStatus name={name} />
+      </Box>
+    </Box>
+  )
+}
+
+export default CharacterInfo
