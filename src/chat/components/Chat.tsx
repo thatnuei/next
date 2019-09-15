@@ -43,7 +43,7 @@ const Container = styled.div`
 `
 
 const NavigationContainer = styled.div`
-  width: 240px;
+  flex-basis: 240px;
   margin-right: ${spacing.xsmall};
 
   @media (max-width: 950px) {
