@@ -42,7 +42,7 @@ const Container = styled.div`
   grid-row-gap: ${spacing.xsmall};
 `
 
-const ActionsContainer = styled.div`
+const ActionsContainer = styled.nav`
   grid-area: actions;
 
   display: flex;
@@ -61,7 +61,7 @@ const CharacterInfoContainer = styled.div`
   padding: ${spacing.small};
 `
 
-const RoomsContainer = styled.div`
+const RoomsContainer = styled.nav`
   grid-area: rooms;
   background-color: ${(props) => props.theme.colors.theme1};
 `

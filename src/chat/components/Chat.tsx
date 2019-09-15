@@ -46,7 +46,7 @@ const Container = styled.div`
   grid-gap: ${spacing.xsmall};
 `
 
-const NavigationContainer = styled.nav`
+const NavigationContainer = styled.div`
   @media (max-width: 950px) {
     display: none;
   }
