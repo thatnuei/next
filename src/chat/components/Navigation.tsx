@@ -56,11 +56,11 @@ const Spacer = styled.div`
 
 const CharacterInfoContainer = styled.div`
   grid-area: character-info;
-  background-color: ${(props) => props.theme.colors.theme0};
+  background-color: ${({ theme }) => theme.colors.theme0};
   padding: ${spacing.small};
 `
 
 const RoomsContainer = styled.nav`
   grid-area: rooms;
-  background-color: ${(props) => props.theme.colors.theme1};
+  background-color: ${({ theme }) => theme.colors.theme1};
 `
