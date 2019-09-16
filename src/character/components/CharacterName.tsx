@@ -1,5 +1,5 @@
 import React from "react"
-import { getCharacter } from "../../store/chat/selectors"
+import { getCharacter } from "../../store/characterStore/selectors"
 import { useSelector } from "../../store/hooks"
 import { styled } from "../../ui/styled"
 import { genderColors, statusColors } from "./colors"

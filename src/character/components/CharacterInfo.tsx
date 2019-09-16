@@ -1,7 +1,7 @@
 import React, { ComponentPropsWithoutRef } from "react"
 import ExternalLink from "../../dom/components/ExternalLink"
 import { getProfileUrl } from "../../flist/helpers"
-import { getCharacter } from "../../store/chat/selectors"
+import { getCharacter } from "../../store/characterStore/selectors"
 import { useSelector } from "../../store/hooks"
 import Box from "../../ui/components/Box"
 import { spacing } from "../../ui/theme"

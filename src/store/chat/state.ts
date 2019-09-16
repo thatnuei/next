@@ -1,4 +1,5 @@
 import * as fchat from "fchat"
+import { Derive } from "overmind"
 import { createCharacter } from "../../character/helpers"
 import { Character } from "../../character/types"
 import clamp from "../../common/helpers/clamp"
@@ -8,9 +9,7 @@ export type ChatState = {
   connecting: boolean
 
   identity: string
-  characters: Dictionary<Character>
-  updatingStatus: boolean
-  readonly identityCharacter: Character
+  identityCharacter: Derive<ChatState, Character>
 
   rooms: ChatRoom[]
   currentRoomIndex: number
@@ -52,12 +51,11 @@ export type ChatRoom = ConsoleRoom | ChannelRoom
 
 export const state: ChatState = {
   connecting: false,
+
   identity: "",
-  characters: {},
-  updatingStatus: false,
-  get identityCharacter() {
-    const { characters, identity } = this
-    return characters[identity] || createCharacter(identity)
+  identityCharacter: (state, { characterStore: character }) => {
+    const characters = character.characters as Dictionary<Character>
+    return characters[state.identity] || createCharacter(state.identity)
   },
 
   rooms: [

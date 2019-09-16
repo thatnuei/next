@@ -1,6 +1,6 @@
 import React from "react"
 import BBC from "../../bbc/BBC"
-import { getCharacter } from "../../store/chat/selectors"
+import { getCharacter } from "../../store/characterStore/selectors"
 import { useSelector } from "../../store/hooks"
 import { styled } from "../../ui/styled"
 import { statusColors } from "./colors"

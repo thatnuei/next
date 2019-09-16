@@ -1,6 +1,7 @@
 import { Config, createOvermind, IConfig, Overmind } from "overmind"
 import { merge, namespaced } from "overmind/config"
 import * as actions from "./actions"
+import * as characterStore from "./characterStore"
 import * as chat from "./chat"
 import * as effects from "./effects"
 import { onInitialize } from "./onInitialize"
@@ -12,6 +13,7 @@ export const config = merge(
   namespaced({
     user,
     chat,
+    characterStore,
   }),
 )
 
