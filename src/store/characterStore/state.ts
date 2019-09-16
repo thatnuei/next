@@ -1,12 +1,12 @@
 import { Character } from "../../character/types"
 import { Dictionary } from "../../common/types"
 
-type CharacterState = {
+type CharacterStoreState = {
   characters: Dictionary<Character>
   updatingStatus: boolean
 }
 
-export const state: CharacterState = {
+export const state: CharacterStoreState = {
   characters: {},
   updatingStatus: false,
 }
