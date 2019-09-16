@@ -7,4 +7,4 @@ export const getCharacter = (name: string) => (state: State) => {
   return char || createCharacter(name)
 }
 
-export const getChatIdentity = (state: State) => state.chat.identity
+export const getChatIdentity = () => (state: State) => state.chat.identity

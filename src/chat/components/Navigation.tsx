@@ -8,7 +8,7 @@ import { spacing } from "../../ui/theme"
 import NavigationAction from "./NavigationAction"
 
 function Navigation() {
-  const identity = useSelector(getChatIdentity)
+  const identity = useSelector(getChatIdentity())
 
   return (
     <Container>
