@@ -4,7 +4,7 @@ import { getChatIdentity } from "../../store/chat/selectors"
 import { useSelector } from "../../store/hooks"
 import { fillArea } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
-import { spacing } from "../../ui/theme"
+import { getThemeColor, spacing } from "../../ui/theme"
 import NavigationAction from "./NavigationAction"
 
 function Navigation() {
@@ -56,11 +56,11 @@ const Spacer = styled.div`
 
 const CharacterInfoContainer = styled.div`
   grid-area: character-info;
-  background-color: ${({ theme }) => theme.colors.theme0};
+  background-color: ${getThemeColor("theme0")};
   padding: ${spacing.small};
 `
 
 const RoomsContainer = styled.nav`
   grid-area: rooms;
-  background-color: ${({ theme }) => theme.colors.theme1};
+  background-color: ${getThemeColor("theme1")};
 `
