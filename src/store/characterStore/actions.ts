@@ -16,10 +16,7 @@ function createUpdateCharacter(state: State) {
   )
 }
 
-export const handleCharacterCommand: Action<ServerCommand> = (
-  { state },
-  command,
-) => {
+export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
   const updateCharacter = createUpdateCharacter(state)
 
   const handler = createCommandHandler({

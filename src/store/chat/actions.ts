@@ -24,8 +24,12 @@ export const addSocketListeners: Action = ({ actions, effects }) => {
   })
 
   effects.chat.socket.events.listen("command", (command) => {
-    actions.chat.handleChatCommand(command)
-    actions.characterStore.handleCharacterCommand(command)
+    const handlers = [
+      actions.chat.handleCommand,
+      actions.characterStore.handleCommand,
+      actions.channelStore.handleCommand,
+    ]
+    handlers.forEach((handle) => handle(command))
   })
 }
 
@@ -39,7 +43,7 @@ export const handleSocketError: Action = ({ state, actions }) => {
   actions.showLogin()
 }
 
-export const handleChatCommand: Action<ServerCommand> = (
+export const handleCommand: Action<ServerCommand> = (
   { state, actions },
   command,
 ) => {
