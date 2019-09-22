@@ -1,22 +1,14 @@
 import { Config, createOvermind, IConfig, Overmind } from "overmind"
 import { merge, namespaced } from "overmind/config"
 import * as actions from "./actions"
-import * as characterStore from "./characterStore"
-import * as chat from "./chat"
 import * as effects from "./effects"
+import namespaces from "./namespaces"
 import { onInitialize } from "./onInitialize"
-import * as roomStore from "./roomStore"
 import { state } from "./state"
-import * as user from "./user"
 
 export const config = merge(
   { effects, state, actions, onInitialize },
-  namespaced({
-    user,
-    chat,
-    characterStore,
-    roomStore,
-  }),
+  namespaced(namespaces),
 )
 
 export function createAppStore() {
