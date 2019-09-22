@@ -1,7 +1,9 @@
 import { Action } from "overmind"
 import { State } from ".."
 import createFactoryUpdate from "../../common/helpers/createFactoryUpdate"
+import exists from "../../common/helpers/exists"
 import { Dictionary } from "../../common/types"
+import { errorCodes } from "../chat/constants"
 import { createCommandHandler } from "../chat/helpers"
 import { ServerCommand } from "../chat/types"
 import { createChannel, createMessage } from "./helpers"
@@ -31,6 +33,10 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
       updateChannel(id, (channel) => {
         channel.memberNames.push(character.identity)
         channel.title = title
+
+        if (character.identity === state.chat.identity) {
+          channel.joining = false
+        }
       })
     },
 
@@ -65,6 +71,21 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
       updateChannel(id, (channel) => {
         channel.messages.push(createMessage(character, message, "lfrp"))
       })
+    },
+
+    ERR({ number }) {
+      const joinFailureCodes = [
+        errorCodes.alreadyInChannel,
+        errorCodes.bannedFromChannel,
+        errorCodes.canOnlyJoinChannelWithInvite,
+        errorCodes.couldNotLocateChannel,
+      ]
+
+      if (joinFailureCodes.includes(number)) {
+        Object.values(state.channelStore.channels as Dictionary<Channel>)
+          .filter(exists)
+          .forEach((channel) => (channel.joining = false))
+      }
     },
   })
 

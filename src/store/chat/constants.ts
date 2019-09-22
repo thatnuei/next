@@ -4,4 +4,8 @@ export const chatServerUrl = `wss://chat.f-list.net/chat2`
 export const errorCodes = {
   channelMessageCooldown: 5,
   statusUpdateCooldown: 5, // this is dumb but it is what it is
-} as const
+  couldNotLocateChannel: 26,
+  alreadyInChannel: 28,
+  canOnlyJoinChannelWithInvite: 44,
+  bannedFromChannel: 48,
+}
