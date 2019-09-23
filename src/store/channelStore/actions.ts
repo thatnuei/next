@@ -19,7 +19,7 @@ export const joinChannel: Action<string> = ({ state, effects }, channelId) => {
     channel.joining = true
   })
 
-  effects.chat.socket.sendCommand("JCH", { channel: channelId })
+  effects.socket.sendCommand("JCH", { channel: channelId })
 }
 
 export const handleCommand: Action<ServerCommand> = ({ state }, command) => {

@@ -72,7 +72,7 @@ export const updateStatus: AsyncAction<UpdatedStatus> = async (
   { state, effects },
   { status, statusMessage },
 ) => {
-  effects.chat.socket.sendCommand("STA", { status, statusmsg: statusMessage })
+  effects.socket.sendCommand("STA", { status, statusmsg: statusMessage })
   state.updatingStatus = true
 
   // make sure that we can still _try_ to update our status,

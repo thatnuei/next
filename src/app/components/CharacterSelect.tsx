@@ -18,7 +18,7 @@ function CharacterSelect() {
       user: { characters },
     },
     actions: {
-      showLogin,
+      app: { showLogin },
       chat: { setIdentity, connectToChat },
     },
   } = useStore()
