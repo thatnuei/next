@@ -10,10 +10,7 @@ import { createChannel, createMessage } from "./helpers"
 import { Channel } from "./types"
 
 const createUpdateChannel = (state: State) =>
-  createFactoryUpdate(
-    state.channelStore.channels as Dictionary<Channel>,
-    createChannel,
-  )
+  createFactoryUpdate(state.channels as Dictionary<Channel>, createChannel)
 
 export const joinChannel: Action<string> = ({ state, effects }, channelId) => {
   const updateChannel = createUpdateChannel(state)
@@ -34,7 +31,7 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
         channel.memberNames.push(character.identity)
         channel.title = title
 
-        if (character.identity === state.chat.identity) {
+        if (character.identity === state.identity) {
           channel.joining = false
         }
       })
@@ -82,7 +79,7 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
       ]
 
       if (joinFailureCodes.includes(number)) {
-        Object.values(state.channelStore.channels as Dictionary<Channel>)
+        Object.values(state.channels as Dictionary<Channel>)
           .filter(exists)
           .forEach((channel) => (channel.joining = false))
       }

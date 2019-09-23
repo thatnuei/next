@@ -16,7 +16,7 @@ export const submitLogin: AsyncAction<{
     state.user.account = account
     state.user.ticket = ticket
     state.user.characters = [...characters].sort()
-    state.chat.identity = identity || characters[0]
+    state.identity = identity || characters[0]
     actions.showCharacterSelect()
 
     state.user.login = { loading: false }

@@ -1,7 +1,7 @@
 import React from "react"
 import CharacterInfo from "../../character/components/CharacterInfo"
-import { getChatIdentity } from "../../store/chat/selectors"
 import { useSelector } from "../../store/hooks"
+import { getChatIdentity } from "../../store/selectors"
 import { fillArea } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { getThemeColor, spacing } from "../../ui/theme"

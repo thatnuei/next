@@ -1,6 +1,6 @@
 import React from "react"
-import { getCharacter } from "../../store/characterStore/selectors"
 import { useSelector } from "../../store/hooks"
+import { getCharacter } from "../../store/selectors"
 import { styled } from "../../ui/styled"
 import { genderColors, statusColors } from "./colors"
 

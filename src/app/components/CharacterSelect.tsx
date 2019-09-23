@@ -13,7 +13,8 @@ import { spacing } from "../../ui/theme"
 function CharacterSelect() {
   const {
     state: {
-      chat: { identity, connecting },
+      identity,
+      connecting,
       user: { characters },
     },
     actions: {

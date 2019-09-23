@@ -11,7 +11,7 @@ import { ServerCommand } from "../chat/types"
 
 function createUpdateCharacter(state: State) {
   return createFactoryUpdate(
-    state.characterStore.characters as Dictionary<Character>, // bug in overmind types
+    state.characters as Dictionary<Character>, // bug in overmind types
     createCharacter,
   )
 }
@@ -22,7 +22,7 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
   const handler = createCommandHandler({
     LIS(params) {
       for (const [name, gender, status, statusMessage] of params.characters) {
-        state.characterStore.characters[name] = createCharacter(
+        state.characters[name] = createCharacter(
           name,
           gender,
           status,
@@ -48,17 +48,14 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
         char.statusMessage = statusmsg
       })
 
-      if (character === state.chat.identity) {
-        state.characterStore.updatingStatus = false
+      if (character === state.identity) {
+        state.updatingStatus = false
       }
     },
 
     ERR({ number }) {
-      if (
-        state.characterStore.updatingStatus &&
-        number === errorCodes.statusUpdateCooldown
-      ) {
-        state.characterStore.updatingStatus = false
+      if (state.updatingStatus && number === errorCodes.statusUpdateCooldown) {
+        state.updatingStatus = false
 
         // actions.showUiMessage({
         //   text: "Please wait 1 second between status updates.",
@@ -76,12 +73,12 @@ export const updateStatus: AsyncAction<UpdatedStatus> = async (
   { status, statusMessage },
 ) => {
   effects.chat.socket.sendCommand("STA", { status, statusmsg: statusMessage })
-  state.characterStore.updatingStatus = true
+  state.updatingStatus = true
 
   // make sure that we can still _try_ to update our status,
   // even if we don't get a successful result
   await sleep(3000)
-  state.characterStore.updatingStatus = false
+  state.updatingStatus = false
 }
 
 type UpdatedStatus = {

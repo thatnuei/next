@@ -3,15 +3,15 @@ import { ServerCommand } from "../chat/types"
 import { createCommandHandler } from "./helpers"
 
 export const setIdentity: Action<string> = ({ state, effects }, identity) => {
-  state.chat.identity = identity
+  state.identity = identity
   effects.chat.identityStorage.set(state.user.account, identity)
 }
 
 export const connectToChat: Action = ({ state, effects }) => {
   const { account, ticket } = state.user
-  const { identity } = state.chat
+  const { identity } = state
   effects.chat.socket.connect(account, ticket, identity)
-  state.chat.connecting = true
+  state.connecting = true
 }
 
 export const addSocketListeners: Action = ({ actions, effects }) => {
@@ -34,12 +34,12 @@ export const addSocketListeners: Action = ({ actions, effects }) => {
 }
 
 export const handleSocketClose: Action = ({ state, actions }) => {
-  state.chat.connecting = false
+  state.connecting = false
   actions.showLogin()
 }
 
 export const handleSocketError: Action = ({ state, actions }) => {
-  state.chat.connecting = false
+  state.connecting = false
   actions.showLogin()
 }
 
@@ -49,7 +49,7 @@ export const handleCommand: Action<ServerCommand> = (
 ) => {
   const handler = createCommandHandler({
     IDN() {
-      state.chat.connecting = false
+      state.connecting = false
       actions.showChat()
     },
   })

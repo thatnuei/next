@@ -1,7 +1,7 @@
 import { cover } from "polished"
 import React from "react"
 import { useSelector } from "../../store/hooks"
-import { getCurrentRoom } from "../../store/roomStore/selectors"
+import { getCurrentRoom } from "../../store/selectors"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import Navigation from "./Navigation"
