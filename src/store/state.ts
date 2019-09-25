@@ -17,12 +17,16 @@ type State = {
     }
   }
 
+  // core chat data
   identity: string
   channels: Dictionary<Channel>
   characters: Dictionary<Character>
 
+  // loading states
   updatingStatus: boolean
   connecting: boolean
+
+  // derivations
   readonly identityCharacter: Character
 }
 
