@@ -1,15 +1,15 @@
 import { Action } from "overmind"
-import { State } from ".."
-import createFactoryUpdate from "../../common/helpers/createFactoryUpdate"
-import exists from "../../common/helpers/exists"
-import { Dictionary } from "../../common/types"
 import { errorCodes } from "../chat/constants"
 import { createCommandHandler } from "../chat/helpers"
 import { ServerCommand } from "../chat/types"
+import createFactoryUpdate from "../common/helpers/createFactoryUpdate"
+import exists from "../common/helpers/exists"
+import { Dictionary } from "../common/types"
+import { StoreState } from "../store"
 import { createChannel, createMessage } from "./helpers"
 import { Channel } from "./types"
 
-const createUpdateChannel = (state: State) =>
+const createUpdateChannel = (state: StoreState) =>
   createFactoryUpdate(state.channels as Dictionary<Channel>, createChannel)
 
 export const joinChannel: Action<string> = ({ state, effects }, channelId) => {

@@ -1,6 +1,6 @@
-import TypedEmitter from "../../state/classes/TypedEmitter"
-import { createStorageEffect } from "../../storage/helpers"
 import { ClientCommandMap, ServerCommand } from "../chat/types"
+import TypedEmitter from "../state/classes/TypedEmitter"
+import { createStorageEffect } from "../storage/helpers"
 import { chatServerUrl } from "./constants"
 import { parseCommand } from "./helpers"
 

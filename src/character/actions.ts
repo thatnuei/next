@@ -1,15 +1,15 @@
 import { Action, AsyncAction } from "overmind"
-import { State } from ".."
-import { createCharacter } from "../../character/helpers"
-import { Character, CharacterStatus } from "../../character/types"
-import createFactoryUpdate from "../../common/helpers/createFactoryUpdate"
-import sleep from "../../common/helpers/sleep"
-import { Dictionary } from "../../common/types"
 import { errorCodes } from "../chat/constants"
 import { createCommandHandler } from "../chat/helpers"
 import { ServerCommand } from "../chat/types"
+import createFactoryUpdate from "../common/helpers/createFactoryUpdate"
+import sleep from "../common/helpers/sleep"
+import { Dictionary } from "../common/types"
+import { StoreState } from "../store"
+import { createCharacter } from "./helpers"
+import { Character, CharacterStatus } from "./types"
 
-function createUpdateCharacter(state: State) {
+function createUpdateCharacter(state: StoreState) {
   return createFactoryUpdate(
     state.characters as Dictionary<Character>, // bug in overmind types
     createCharacter,

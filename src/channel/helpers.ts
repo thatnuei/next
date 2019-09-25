@@ -1,4 +1,4 @@
-import createUniqueId from "../../common/helpers/createUniqueId"
+import createUniqueId from "../common/helpers/createUniqueId"
 import { Channel, Message, MessageType } from "./types"
 
 export function createChannel(id: string): Channel {

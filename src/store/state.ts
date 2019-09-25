@@ -1,9 +1,9 @@
+import { Channel } from "../channel/types"
 import { createCharacter } from "../character/helpers"
 import { Character } from "../character/types"
 import { Dictionary } from "../common/types"
-import { Channel } from "./channelStore/types"
 
-type RootState = {
+type State = {
   view: "login" | "characterSelect" | "chat"
 
   user: {
@@ -26,7 +26,7 @@ type RootState = {
   readonly identityCharacter: Character
 }
 
-export const state: RootState = {
+export const state: State = {
   view: "login",
 
   user: {

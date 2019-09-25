@@ -1,9 +1,9 @@
 import { createHook } from "overmind-react"
-import { config, State } from "./index"
+import { config, StoreState } from "./index"
 
 export const useStore = createHook<typeof config>()
 
-export function useSelector<T>(getValue: (state: State) => T) {
+export function useSelector<T>(getValue: (state: StoreState) => T) {
   const { state } = useStore()
   return getValue(state)
 }
