@@ -69,8 +69,6 @@ function ChannelBrowserModal() {
   const sortButtonIcon =
     sortMode.current === "title" ? "sortAlphabetical" : "sortNumeric"
 
-  console.log(state.fetchingAvailableChannels)
-
   const refreshIcon = state.fetchingAvailableChannels ? (
     <LoadingIcon />
   ) : (

@@ -4,76 +4,51 @@ import { createCharacter } from "../character/helpers"
 import { Character } from "../character/types"
 import { Dictionary } from "../common/types"
 
-type State = {
-  view: "login" | "characterSelect" | "chat"
-  modal?: AppModal
-
-  user: {
-    account: string
-    ticket: string
-    characters: string[]
-
-    login: {
-      loading: boolean
-      error?: string
-    }
-  }
-
-  // core chat data
-  identity: string
-  characters: Dictionary<Character>
-  readonly identityCharacter: Character
-
-  // channel data
-  channels: Dictionary<Channel>
-  availableChannels: {
-    public: ChannelBrowserEntry[]
-    private: ChannelBrowserEntry[]
-  }
-
-  // loading states
-  updatingStatus: boolean
-  connecting: boolean
-  fetchingPublicChannels: boolean
-  fetchingPrivateChannels: boolean
-  readonly fetchingAvailableChannels: boolean
+type AvailableChannels = {
+  public: ChannelBrowserEntry[]
+  private: ChannelBrowserEntry[]
 }
 
-export const state: State = {
-  view: "login",
+type AsyncState = { loading: boolean; error?: string }
 
-  user: {
-    account: "",
-    ticket: "",
-    characters: [],
-    login: {
-      loading: false,
-    },
-  },
+class UserState {
+  account = ""
+  ticket = ""
+  characters: string[] = []
+  login: AsyncState = {
+    loading: false,
+  }
+}
+
+class State {
+  view: "login" | "characterSelect" | "chat" = "login"
+  modal?: AppModal
+
+  user = new UserState()
 
   // core chat data
-  identity: "",
-  characters: {},
+  identity = ""
+  characters: Dictionary<Character> = {}
+  updatingStatus = false
+  connecting = false
 
   get identityCharacter() {
     const characters = this.characters as Dictionary<Character>
     return characters[this.identity] || createCharacter(this.identity)
-  },
+  }
 
   // channel data
-  channels: {},
-  availableChannels: {
+  channels: Dictionary<Channel> = {}
+  availableChannels: AvailableChannels = {
     public: [],
     private: [],
-  },
-
-  // loading states
-  updatingStatus: false,
-  connecting: false,
-  fetchingPublicChannels: false,
-  fetchingPrivateChannels: false,
+  }
+  fetchingPublicChannels = false
+  fetchingPrivateChannels = false
 
   get fetchingAvailableChannels() {
     return this.fetchingPublicChannels || this.fetchingPrivateChannels
-  },
+  }
 }
+
+export const state = new State()
