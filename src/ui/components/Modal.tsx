@@ -21,12 +21,12 @@ type Props = {
 
 type FillMode = "full" | "contained"
 
-function Modal(props: Props) {
+function Modal({ visible = false, ...props }: Props) {
   return (
-    <Shade visible={props.visible} fillMode={props.fillMode}>
-      <Panel visible={props.visible}>
+    <Shade visible={visible} fillMode={props.fillMode}>
+      <Panel visible={visible}>
         <FocusOn
-          enabled={props.visible}
+          enabled={visible}
           onEscapeKey={props.onClose}
           onClickOutside={props.onClose}
         >
