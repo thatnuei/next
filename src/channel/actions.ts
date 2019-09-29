@@ -29,7 +29,7 @@ export const leaveChannel: Action<string> = ({ state, effects }, channelId) => {
     channel.entryAction = "leaving"
   })
 
-  effects.socket.sendCommand("JCH", { channel: channelId })
+  effects.socket.sendCommand("LCH", { channel: channelId })
 }
 
 export const requestAvailableChannels: Action = ({ effects }) => {
