@@ -23,6 +23,7 @@ function VirtualizedList<T>(props: Props<T>) {
         itemSize={props.itemHeight}
         itemCount={props.items.length}
         itemKey={(index) => props.getItemKey(props.items[index])}
+        overscanCount={10}
         children={({ index, style }) => (
           <div style={style}>{props.renderItem(props.items[index])}</div>
         )}
