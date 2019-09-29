@@ -1,5 +1,7 @@
 import { sortBy } from "lodash"
 import React, { useMemo } from "react"
+import queryify from "../common/helpers/queryify"
+import useInput from "../dom/hooks/useInput"
 import useCycle from "../state/hooks/useCycle"
 import { useSelector, useStore } from "../store/hooks"
 import {
@@ -33,25 +35,38 @@ function ChannelBrowserModal() {
   const channels = useSelector(getAvailableChannels())
   const { actions } = useStore()
 
+  const searchInput = useInput()
+  const searchQuery = queryify(searchInput.value)
+
   const sortMode = useCycle(["userCount", "title"] as const)
+  const currentSortMode = sortMode.current
+
+  const createListItem = (type: ListItem["type"]) => (
+    entry: ChannelBrowserEntry,
+  ) => ({ entry, type })
 
   const listItems = useMemo(() => {
     const sortChannels = (entries: ChannelBrowserEntry[]) =>
-      sortMode.current === "title"
+      currentSortMode === "title"
         ? sortBy(entries, "title")
         : sortBy(entries, "userCount").reverse()
 
+    const filterChannels = (entries: ChannelBrowserEntry[]) =>
+      entries.filter((entry) => queryify(entry.title).includes(searchQuery))
+
+    const processChannels = (
+      entries: ChannelBrowserEntry[],
+      type: ListItem["type"],
+    ) => sortChannels(filterChannels(entries)).map(createListItem(type))
+
     return [
-      ...sortChannels(channels.public).map<ListItem>((entry) => ({
-        entry,
-        type: "public",
-      })),
-      ...sortChannels(channels.private).map<ListItem>((entry) => ({
-        entry,
-        type: "private",
-      })),
+      ...processChannels(channels.public, "public"),
+      ...processChannels(channels.private, "private"),
     ]
-  }, [channels.private, channels.public, sortMode])
+  }, [channels.private, channels.public, searchQuery, currentSortMode])
+
+  const sortButtonIcon =
+    sortMode.current === "title" ? "sortAlphabetical" : "sortNumeric"
 
   return (
     <Modal
@@ -75,16 +90,11 @@ function ChannelBrowserModal() {
             )}
           />
         </ChannelListContainer>
+
         <Footer>
-          <TextInput placeholder="Search..." />
+          <TextInput placeholder="Search..." {...searchInput.bind} />
           <Button onClick={sortMode.next}>
-            <Icon
-              icon={
-                sortMode.current === "title"
-                  ? "sortAlphabetical"
-                  : "sortNumeric"
-              }
-            />
+            <Icon icon={sortButtonIcon} />
           </Button>
           <Button>
             <Icon icon="refresh" />
