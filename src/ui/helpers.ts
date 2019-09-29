@@ -78,3 +78,6 @@ export const spacedChildrenHorizontal = (distance = spacing.small) => css`
     margin-left: ${distance};
   }
 `
+
+export const resolveStyleUnit = (value: number | string) =>
+  typeof value === "number" ? `${value}px` : value
