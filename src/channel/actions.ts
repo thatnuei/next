@@ -7,7 +7,7 @@ import exists from "../common/helpers/exists"
 import { Dictionary } from "../common/types"
 import { StoreState } from "../store"
 import { createChannel, createMessage } from "./helpers"
-import { Channel } from "./types"
+import { Channel, ChannelBrowserEntry } from "./types"
 
 const createUpdateChannel = (state: StoreState) =>
   createFactoryUpdate(state.channels as Dictionary<Channel>, createChannel)
@@ -16,10 +16,25 @@ export const joinChannel: Action<string> = ({ state, effects }, channelId) => {
   const updateChannel = createUpdateChannel(state)
 
   updateChannel(channelId, (channel) => {
-    channel.joining = true
+    channel.entryAction = "joining"
   })
 
   effects.socket.sendCommand("JCH", { channel: channelId })
+}
+
+export const leaveChannel: Action<string> = ({ state, effects }, channelId) => {
+  const updateChannel = createUpdateChannel(state)
+
+  updateChannel(channelId, (channel) => {
+    channel.entryAction = "leaving"
+  })
+
+  effects.socket.sendCommand("JCH", { channel: channelId })
+}
+
+export const requestAvailableChannels: Action = ({ effects }) => {
+  effects.socket.sendCommand("CHA", undefined)
+  effects.socket.sendCommand("ORS", undefined)
 }
 
 export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
@@ -32,7 +47,7 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
         channel.title = title
 
         if (character.identity === state.identity) {
-          channel.joining = false
+          channel.entryAction = undefined
         }
       })
     },
@@ -42,6 +57,10 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
         channel.memberNames = channel.memberNames.filter(
           (name) => name !== character,
         )
+
+        if (character === state.identity) {
+          channel.entryAction = undefined
+        }
       })
     },
 
@@ -70,6 +89,27 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
       })
     },
 
+    CHA({ channels }) {
+      state.availableChannels.public = channels.map<ChannelBrowserEntry>(
+        (entry) => ({
+          id: entry.name,
+          title: entry.name,
+          userCount: entry.characters,
+          mode: entry.mode,
+        }),
+      )
+    },
+
+    ORS({ channels }) {
+      state.availableChannels.private = channels.map<ChannelBrowserEntry>(
+        (entry) => ({
+          id: entry.name,
+          title: entry.title,
+          userCount: entry.characters,
+        }),
+      )
+    },
+
     ERR({ number }) {
       const joinFailureCodes = [
         errorCodes.alreadyInChannel,
@@ -81,7 +121,7 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
       if (joinFailureCodes.includes(number)) {
         Object.values(state.channels as Dictionary<Channel>)
           .filter(exists)
-          .forEach((channel) => (channel.joining = false))
+          .forEach((channel) => (channel.entryAction = undefined))
       }
     },
   })

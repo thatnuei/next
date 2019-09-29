@@ -1,4 +1,4 @@
-import { Channel } from "../channel/types"
+import { Channel, ChannelBrowserEntry } from "../channel/types"
 import { createCharacter } from "../character/helpers"
 import { Character } from "../character/types"
 import { Dictionary } from "../common/types"
@@ -19,8 +19,12 @@ type State = {
 
   // core chat data
   identity: string
-  channels: Dictionary<Channel>
   characters: Dictionary<Character>
+  channels: Dictionary<Channel>
+  availableChannels: {
+    public: ChannelBrowserEntry[]
+    private: ChannelBrowserEntry[]
+  }
 
   // loading states
   updatingStatus: boolean
@@ -46,6 +50,10 @@ export const state: State = {
   identity: "",
   channels: {},
   characters: {},
+  availableChannels: {
+    public: [],
+    private: [],
+  },
 
   // loading states
   updatingStatus: false,

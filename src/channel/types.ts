@@ -11,7 +11,7 @@ export type Channel = {
   selectedMode: ChannelMode
   memberNames: string[]
   opNames: string[]
-  joining: boolean
+  entryAction?: "joining" | "leaving"
 }
 
 export type ChannelMode = fchat.Channel.Mode
@@ -25,3 +25,10 @@ export type Message = {
 }
 
 export type MessageType = "chat" | "lfrp" | "admin" | "system"
+
+export type ChannelBrowserEntry = {
+  id: string
+  title: string
+  userCount: number
+  mode?: ChannelMode
+}
