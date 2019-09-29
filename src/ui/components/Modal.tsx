@@ -1,15 +1,17 @@
 import React from "react"
 import { FocusOn } from "react-focus-on"
-import { flexCenter, fullscreen } from "../helpers"
+import { flexCenter, flexGrow, fullscreen, resolveStyleUnit } from "../helpers"
 import { styled } from "../styled"
-import { getThemeColor, shadows } from "../theme"
+import { getThemeColor, shadows, spacing } from "../theme"
 import FadedButton from "./FadedButton"
 import Icon from "./Icon"
 
 type Props = {
-  visible?: boolean
-  children: React.ReactNode
   title: string
+  visible?: boolean
+  panelWidth?: number
+  panelHeight?: number
+  children: React.ReactNode
   onClose?: () => void
 
   /**
@@ -21,10 +23,16 @@ type Props = {
 
 type FillMode = "full" | "contained"
 
-function Modal({ visible = false, ...props }: Props) {
+function Modal({
+  visible = false,
+  panelWidth = 300,
+  panelHeight = 400,
+  fillMode = "full",
+  ...props
+}: Props) {
   return (
-    <Shade visible={visible} fillMode={props.fillMode}>
-      <Panel visible={visible}>
+    <Shade visible={visible} fillMode={fillMode}>
+      <Panel visible={visible} maxWidth={panelWidth} maxHeight={panelHeight}>
         <FocusOn
           enabled={visible}
           onEscapeKey={props.onClose}
@@ -39,8 +47,7 @@ function Modal({ visible = false, ...props }: Props) {
               </FadedButton>
             </HeaderSlot>
           </Header>
-
-          {props.children}
+          <PanelBody>{props.children}</PanelBody>
         </FocusOn>
       </Panel>
     </Shade>
@@ -49,7 +56,9 @@ function Modal({ visible = false, ...props }: Props) {
 
 export default Modal
 
-const Shade = styled.div<{ visible?: boolean; fillMode?: FillMode }>`
+type ShadeProps = { visible: boolean; fillMode: FillMode }
+
+const Shade = styled.div<ShadeProps>`
   ${fullscreen};
 
   background-color: rgba(0, 0, 0, 0.5);
@@ -57,8 +66,9 @@ const Shade = styled.div<{ visible?: boolean; fillMode?: FillMode }>`
 
   display: flex;
   flex-direction: column;
+  padding: ${spacing.small};
 
-  ${({ fillMode = "full" }) =>
+  ${({ fillMode }) =>
     fillMode === "full" ? { position: "fixed" } : { position: "absolute" }};
 
   ${(props) =>
@@ -67,16 +77,41 @@ const Shade = styled.div<{ visible?: boolean; fillMode?: FillMode }>`
       : { opacity: 0, visibility: "hidden" }}
 `
 
-const Panel = styled.div<{ visible?: boolean }>`
+type PanelProps = { visible: boolean; maxWidth: number; maxHeight: number }
+
+const Panel = styled.div<PanelProps>`
   margin: auto;
   box-shadow: ${shadows.normal};
   background-color: ${getThemeColor("theme0")};
   transition: 0.3s transform;
 
+  width: 100%;
+  height: 100%;
+  max-width: ${(props) => resolveStyleUnit(props.maxWidth)};
+  max-height: ${(props) => resolveStyleUnit(props.maxHeight)};
+
   ${(props) =>
     props.visible
       ? { transform: `translateY(0)` }
       : { transform: `translateY(20px)` }}
+
+  /* content-size the FocusOn div, which can't be styled directly */
+  > div {
+    width: 100%;
+    height: 100%;
+  }
+
+  > div > div {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+  }
+`
+
+const PanelBody = styled.div`
+  ${flexGrow};
 `
 
 const Header = styled.div`
