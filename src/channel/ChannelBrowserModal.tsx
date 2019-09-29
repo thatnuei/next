@@ -10,6 +10,7 @@ import {
 } from "../store/selectors"
 import Button from "../ui/components/Button"
 import Icon from "../ui/components/Icon"
+import LoadingIcon from "../ui/components/LoadingIcon"
 import Modal from "../ui/components/Modal"
 import TextInput from "../ui/components/TextInput"
 import VirtualizedList from "../ui/components/VirtualizedList"
@@ -33,7 +34,7 @@ type ListItem = {
 function ChannelBrowserModal() {
   const isModalVisible = useSelector(isChannelBrowserVisible())
   const channels = useSelector(getAvailableChannels())
-  const { actions } = useStore()
+  const { actions, state } = useStore()
 
   const searchInput = useInput()
   const searchQuery = queryify(searchInput.value)
@@ -68,6 +69,14 @@ function ChannelBrowserModal() {
   const sortButtonIcon =
     sortMode.current === "title" ? "sortAlphabetical" : "sortNumeric"
 
+  console.log(state.fetchingAvailableChannels)
+
+  const refreshIcon = state.fetchingAvailableChannels ? (
+    <LoadingIcon />
+  ) : (
+    <Icon icon="refresh" />
+  )
+
   return (
     <Modal
       title="Channels"
@@ -96,8 +105,11 @@ function ChannelBrowserModal() {
           <Button onClick={sortMode.next}>
             <Icon icon={sortButtonIcon} />
           </Button>
-          <Button>
-            <Icon icon="refresh" />
+          <Button
+            onClick={actions.channel.requestAvailableChannels}
+            disabled={state.fetchingAvailableChannels}
+          >
+            {refreshIcon}
           </Button>
         </Footer>
       </Content>

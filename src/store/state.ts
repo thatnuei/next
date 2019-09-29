@@ -22,6 +22,9 @@ type State = {
   // core chat data
   identity: string
   characters: Dictionary<Character>
+  readonly identityCharacter: Character
+
+  // channel data
   channels: Dictionary<Channel>
   availableChannels: {
     public: ChannelBrowserEntry[]
@@ -31,9 +34,9 @@ type State = {
   // loading states
   updatingStatus: boolean
   connecting: boolean
-
-  // derivations
-  readonly identityCharacter: Character
+  fetchingPublicChannels: boolean
+  fetchingPrivateChannels: boolean
+  readonly fetchingAvailableChannels: boolean
 }
 
 export const state: State = {
@@ -50,8 +53,15 @@ export const state: State = {
 
   // core chat data
   identity: "",
-  channels: {},
   characters: {},
+
+  get identityCharacter() {
+    const characters = this.characters as Dictionary<Character>
+    return characters[this.identity] || createCharacter(this.identity)
+  },
+
+  // channel data
+  channels: {},
   availableChannels: {
     public: [],
     private: [],
@@ -60,10 +70,10 @@ export const state: State = {
   // loading states
   updatingStatus: false,
   connecting: false,
+  fetchingPublicChannels: false,
+  fetchingPrivateChannels: false,
 
-  // derivations
-  get identityCharacter() {
-    const characters = this.characters as Dictionary<Character>
-    return characters[this.identity] || createCharacter(this.identity)
+  get fetchingAvailableChannels() {
+    return this.fetchingPublicChannels || this.fetchingPrivateChannels
   },
 }

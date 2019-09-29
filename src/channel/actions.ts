@@ -1,9 +1,10 @@
-import { Action } from "overmind"
+import { Action, AsyncAction } from "overmind"
 import { errorCodes } from "../chat/constants"
 import { createCommandHandler } from "../chat/helpers"
 import { ServerCommand } from "../chat/types"
 import createFactoryUpdate from "../common/helpers/createFactoryUpdate"
 import exists from "../common/helpers/exists"
+import sleep from "../common/helpers/sleep"
 import { Dictionary } from "../common/types"
 import { StoreState } from "../store"
 import { createChannel, createMessage } from "./helpers"
@@ -32,9 +33,22 @@ export const leaveChannel: Action<string> = ({ state, effects }, channelId) => {
   effects.socket.sendCommand("LCH", { channel: channelId })
 }
 
-export const requestAvailableChannels: Action = ({ effects }) => {
+export const requestAvailableChannels: AsyncAction = async ({
+  state,
+  effects,
+}) => {
+  if (state.fetchingAvailableChannels) return
+
+  state.fetchingPublicChannels = true
+  state.fetchingPrivateChannels = true
+
   effects.socket.sendCommand("CHA", undefined)
   effects.socket.sendCommand("ORS", undefined)
+
+  // failsafe in case it takes a while
+  await sleep(3000)
+  state.fetchingPublicChannels = false
+  state.fetchingPrivateChannels = false
 }
 
 export const showChannelBrowser: Action = ({ state, actions }) => {
@@ -107,6 +121,7 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
           mode: entry.mode,
         }),
       )
+      state.fetchingPublicChannels = false
     },
 
     ORS({ channels }) {
@@ -117,6 +132,7 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
           userCount: entry.characters,
         }),
       )
+      state.fetchingPrivateChannels = false
     },
 
     ERR({ number }) {
