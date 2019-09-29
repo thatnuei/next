@@ -1,3 +1,4 @@
+import { AppModal } from "../app/types"
 import { Channel, ChannelBrowserEntry } from "../channel/types"
 import { createCharacter } from "../character/helpers"
 import { Character } from "../character/types"
@@ -5,6 +6,7 @@ import { Dictionary } from "../common/types"
 
 type State = {
   view: "login" | "characterSelect" | "chat"
+  modal?: AppModal
 
   user: {
     account: string

@@ -37,6 +37,15 @@ export const requestAvailableChannels: Action = ({ effects }) => {
   effects.socket.sendCommand("ORS", undefined)
 }
 
+export const showChannelBrowser: Action = ({ state, actions }) => {
+  state.modal = { type: "channelBrowser" }
+  actions.channel.requestAvailableChannels()
+}
+
+export const hideChannelBrowser: Action = ({ state }) => {
+  state.modal = undefined
+}
+
 export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
   const updateChannel = createUpdateChannel(state)
 
