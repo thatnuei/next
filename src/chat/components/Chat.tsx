@@ -1,4 +1,3 @@
-import { cover } from "polished"
 import React from "react"
 import { useSelector } from "../../store/hooks"
 import { getCurrentRoom } from "../../store/selectors"
@@ -36,7 +35,8 @@ export default Chat
 const Container = styled.div`
   display: flex;
   background-color: ${({ theme }) => theme.colors.theme2};
-  ${cover()};
+  width: 100vw;
+  height: 100vh;
 `
 
 const NavigationContainer = styled.div`
