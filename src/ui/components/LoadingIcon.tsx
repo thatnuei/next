@@ -35,7 +35,7 @@ const spin = keyframes`
 `
 
 const Svg = styled.svg`
-  vertical-align: -8%;
+  display: block;
 `
 
 const Circle = styled.circle`
