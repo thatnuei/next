@@ -1,4 +1,5 @@
 import React from "react"
+import ChannelBrowserModal from "../../channel/ChannelBrowserModal"
 import { useSelector } from "../../store/hooks"
 import { getCurrentRoom } from "../../store/selectors"
 import { styled } from "../../ui/styled"
@@ -26,6 +27,7 @@ function Chat() {
         <Navigation />
       </NavigationContainer>
       <RoomContainer>{renderChatRoom()}</RoomContainer>
+      <ChannelBrowserModal />
     </Container>
   )
 }

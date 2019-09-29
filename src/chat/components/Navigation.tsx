@@ -1,8 +1,7 @@
-import React, { useState } from "react"
+import React from "react"
 import CharacterInfo from "../../character/components/CharacterInfo"
-import { useSelector } from "../../store/hooks"
+import { useSelector, useStore } from "../../store/hooks"
 import { getChatIdentity } from "../../store/selectors"
-import Modal from "../../ui/components/Modal"
 import { fillArea } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { getThemeColor, spacing } from "../../ui/theme"
@@ -10,7 +9,7 @@ import NavigationAction from "./NavigationAction"
 
 function Navigation() {
   const identity = useSelector(getChatIdentity())
-  const [visible, setVisible] = useState(true)
+  const { actions } = useStore()
 
   return (
     <Container>
@@ -18,7 +17,7 @@ function Navigation() {
         <NavigationAction
           title="Channels"
           icon="channels"
-          onClick={() => setVisible(true)}
+          onClick={actions.channel.showChannelBrowser}
         />
         <NavigationAction title="Update Status" icon="updateStatus" />
         <NavigationAction title="Who's Online" icon="users" />
@@ -30,15 +29,6 @@ function Navigation() {
         <CharacterInfo name={identity} />
       </CharacterInfoContainer>
       <RoomsContainer>rooms</RoomsContainer>
-
-      <Modal
-        title="test modal"
-        visible={visible}
-        fillMode="contained"
-        onClose={() => setVisible(false)}
-      >
-        test
-      </Modal>
     </Container>
   )
 }
