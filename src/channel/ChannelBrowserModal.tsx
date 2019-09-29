@@ -21,7 +21,7 @@ import {
   spacedChildrenHorizontal,
 } from "../ui/helpers"
 import { styled } from "../ui/styled"
-import { spacing } from "../ui/theme"
+import { getThemeColor, spacing } from "../ui/theme"
 import ChannelBrowserListItem from "./ChannelBrowserListItem"
 import { ChannelBrowserEntry } from "./types"
 
@@ -110,6 +110,7 @@ export default ChannelBrowserModal
 const Content = styled.div`
   ${fillArea};
   ${flexColumn};
+  background-color: ${getThemeColor("theme2")};
 `
 
 const ChannelListContainer = styled.div`
@@ -120,4 +121,5 @@ const Footer = styled.div`
   padding: ${spacing.xsmall};
   ${flexRow};
   ${spacedChildrenHorizontal(spacing.xsmall)};
+  background-color: ${getThemeColor("theme0")};
 `
