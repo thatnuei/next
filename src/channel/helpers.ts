@@ -13,7 +13,6 @@ export function createChannel(id: string): Channel {
     selectedMode: "chat",
     memberNames: [],
     opNames: [],
-    joining: false,
   }
 }
 
