@@ -51,6 +51,11 @@ export const handleCommand: Action<ServerCommand> = (
     IDN() {
       state.connecting = false
       actions.app.showChat()
+
+      actions.channel.joinChannel("Frontpage")
+      actions.channel.joinChannel("Fantasy")
+      actions.channel.joinChannel("Development")
+      actions.channel.joinChannel("Story Driven LFRP")
     },
   })
 
