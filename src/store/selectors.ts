@@ -27,6 +27,9 @@ export const getCurrentRoom = () => (state: StoreState) => ({ type: "console" })
 export const getAvailableChannels = () => (state: StoreState) =>
   state.availableChannels
 
+export const getJoinedChannels = () => (state: StoreState) =>
+  state.joinedChannels
+
 export const isChannelBrowserVisible = () => (state: StoreState) =>
   // overmind types are broken
   state.modal && (state.modal as { type: string }).type === "channelBrowser"

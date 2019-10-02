@@ -2,6 +2,7 @@ import { AppModal } from "../app/types"
 import { Channel, ChannelBrowserEntry } from "../channel/types"
 import { createCharacter } from "../character/helpers"
 import { Character } from "../character/types"
+import exists from "../common/helpers/exists"
 import { Dictionary } from "../common/types"
 
 type State = {
@@ -30,6 +31,7 @@ type State = {
     public: ChannelBrowserEntry[]
     private: ChannelBrowserEntry[]
   }
+  readonly joinedChannels: Channel[]
 
   // loading states
   updatingStatus: boolean
@@ -62,9 +64,16 @@ export const state: State = {
 
   // channel data
   channels: {},
+
   availableChannels: {
     public: [],
     private: [],
+  },
+
+  get joinedChannels() {
+    return Object.values(this.channels)
+      .filter(exists)
+      .filter((channel) => channel.memberNames.includes(this.identity))
   },
 
   // loading states

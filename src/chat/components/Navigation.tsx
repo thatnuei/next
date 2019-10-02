@@ -5,6 +5,7 @@ import { getChatIdentity } from "../../store/selectors"
 import { fillArea } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { getThemeColor, spacing } from "../../ui/theme"
+import ChatRoomList from "./ChatRoomList"
 import NavigationAction from "./NavigationAction"
 
 function Navigation() {
@@ -28,7 +29,9 @@ function Navigation() {
       <CharacterInfoContainer>
         <CharacterInfo name={identity} />
       </CharacterInfoContainer>
-      <RoomsContainer>rooms</RoomsContainer>
+      <RoomsContainer>
+        <ChatRoomList />
+      </RoomsContainer>
     </Container>
   )
 }
