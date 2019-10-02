@@ -4,23 +4,28 @@ import { css, styled } from "../styled"
 
 type SidebarOverlayProps = {
   visible?: boolean
-  children?: React.ReactNode
   anchor?: "left" | "right"
+  children?: React.ReactNode
   onShadeClick?: () => void
 }
 
-export default function SideOverlay(props: SidebarOverlayProps) {
-  const { onShadeClick = noop } = props
-
+export default function SideOverlay({
+  visible,
+  anchor,
+  children,
+  onShadeClick,
+}: SidebarOverlayProps) {
   const handleClick = (event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) onShadeClick()
+    if (event.target === event.currentTarget) {
+      onShadeClick?.()
+    }
   }
 
   return (
     // TODO: add close button
-    <Shade visible={props.visible} onClick={handleClick}>
-      <Panel anchor={props.anchor || "left"} visible={props.visible}>
-        {props.children}
+    <Shade visible={visible} onClick={handleClick}>
+      <Panel anchor={anchor || "left"} visible={visible}>
+        {children}
       </Panel>
     </Shade>
   )

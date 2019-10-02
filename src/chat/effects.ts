@@ -22,10 +22,8 @@ export const socket = (() => {
     command: K,
     params: ClientCommandMap[K],
   ) {
-    if (!socket) return
-
     const message = params ? `${command} ${JSON.stringify(params)}` : command
-    socket.send(message)
+    socket?.send(message)
   }
 
   function connect(account: string, ticket: string, character: string) {

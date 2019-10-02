@@ -71,8 +71,8 @@ const Shade = styled.div<ShadeProps>`
   ${({ fillMode }) =>
     fillMode === "full" ? { position: "fixed" } : { position: "absolute" }};
 
-  ${(props) =>
-    props.visible
+  ${({ visible }) =>
+    visible
       ? { opacity: 1, visibility: "visible" }
       : { opacity: 0, visibility: "hidden" }}
 `
@@ -87,11 +87,11 @@ const Panel = styled.div<PanelProps>`
 
   width: 100%;
   height: 100%;
-  max-width: ${(props) => resolveStyleUnit(props.maxWidth)};
-  max-height: ${(props) => resolveStyleUnit(props.maxHeight)};
+  max-width: ${({ maxWidth }) => resolveStyleUnit(maxWidth)};
+  max-height: ${({ maxHeight }) => resolveStyleUnit(maxHeight)};
 
-  ${(props) =>
-    props.visible
+  ${({ visible }) =>
+    visible
       ? { transform: `translateY(0)` }
       : { transform: `translateY(20px)` }}
 

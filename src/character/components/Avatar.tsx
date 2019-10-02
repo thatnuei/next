@@ -13,7 +13,7 @@ type Props = ComponentPropsWithoutRef<"img"> & {
 }
 
 const Avatar = (
-  { name, size, ...props }: Props,
+  { name, size = 100, ...props }: Props,
   ref: React.Ref<HTMLImageElement>,
 ) => {
   const [loaded, setLoaded] = useState(false)
@@ -25,8 +25,8 @@ const Avatar = (
   return (
     <Image
       src={getAvatarUrl(name)}
-      width={size || 100}
-      height={size || 100}
+      width={size}
+      height={size}
       style={style}
       title={name}
       onLoad={handleLoad}

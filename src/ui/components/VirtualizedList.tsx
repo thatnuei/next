@@ -18,8 +18,8 @@ function VirtualizedList<T>(props: Props<T>) {
   return (
     <ListContainer ref={listContainerRef}>
       <FixedSizeList
-        width={listRect ? listRect.width : 0}
-        height={listRect ? listRect.height : 0}
+        width={listRect?.width ?? 0}
+        height={listRect?.height ?? 0}
         itemSize={props.itemHeight}
         itemCount={props.items.length}
         itemKey={(index) => props.getItemKey(props.items[index])}
