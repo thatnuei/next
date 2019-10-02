@@ -13,13 +13,13 @@ type Props<T> = {
 
 function VirtualizedList<T>(props: Props<T>) {
   const listContainerRef = useRef<HTMLDivElement>(null)
-  const listRect = useRect(listContainerRef)
+  const { width = 0, height = 0 } = useRect(listContainerRef) || {}
 
   return (
     <ListContainer ref={listContainerRef}>
       <FixedSizeList
-        width={listRect?.width ?? 0}
-        height={listRect?.height ?? 0}
+        width={width}
+        height={height}
         itemSize={props.itemHeight}
         itemCount={props.items.length}
         itemKey={(index) => props.getItemKey(props.items[index])}
