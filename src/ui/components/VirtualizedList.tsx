@@ -1,6 +1,6 @@
 import { useRect } from "@reach/rect"
 import React, { useRef } from "react"
-import { FixedSizeList } from "react-window"
+import { FixedSizeList, ListChildComponentProps } from "react-window"
 import { fillArea } from "../helpers"
 import { styled } from "../styled"
 
@@ -11,7 +11,12 @@ type Props<T> = {
   getItemKey: (item: T) => string | number
 }
 
-function VirtualizedList<T>(props: Props<T>) {
+function VirtualizedList<T>({
+  items,
+  itemHeight,
+  renderItem,
+  getItemKey,
+}: Props<T>) {
   const listContainerRef = useRef<HTMLDivElement>(null)
   const { width = 0, height = 0 } = useRect(listContainerRef) ?? {}
 
@@ -20,19 +25,26 @@ function VirtualizedList<T>(props: Props<T>) {
       <FixedSizeList
         width={width}
         height={height}
-        itemSize={props.itemHeight}
-        itemCount={props.items.length}
-        itemKey={(index) => props.getItemKey(props.items[index])}
+        itemSize={itemHeight}
+        itemCount={items.length}
+        itemKey={(index) => getItemKey(items[index])}
         overscanCount={10}
-        children={({ index, style }) => (
-          <div style={style}>{props.renderItem(props.items[index])}</div>
-        )}
+        itemData={{ items, renderItem }}
+        children={Row}
       />
     </ListContainer>
   )
 }
 
 export default VirtualizedList
+
+function Row(props: ListChildComponentProps) {
+  return (
+    <div style={props.style}>
+      {props.data.renderItem(props.data.items[props.index])}
+    </div>
+  )
+}
 
 const ListContainer = styled.div`
   ${fillArea};
