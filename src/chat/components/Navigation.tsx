@@ -1,15 +1,15 @@
 import React from "react"
 import CharacterInfo from "../../character/components/CharacterInfo"
-import { useSelector, useStore } from "../../store/hooks"
-import { getChatIdentity } from "../../store/selectors"
+import { useStore } from "../../store/hooks"
 import { fillArea } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { getThemeColor, spacing } from "../../ui/theme"
+import { useChatIdentity } from "../hooks"
 import ChatRoomList from "./ChatRoomList"
 import NavigationAction from "./NavigationAction"
 
 function Navigation() {
-  const identity = useSelector(getChatIdentity())
+  const { identity } = useChatIdentity()
   const { actions } = useStore()
 
   return (

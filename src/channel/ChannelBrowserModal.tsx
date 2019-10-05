@@ -3,27 +3,18 @@ import React, { useMemo } from "react"
 import queryify from "../common/helpers/queryify"
 import useInput from "../dom/hooks/useInput"
 import useCycle from "../state/hooks/useCycle"
-import { useSelector, useStore } from "../store/hooks"
-import {
-  getAvailableChannels,
-  isChannelBrowserVisible,
-} from "../store/selectors"
+import { useStore } from "../store/hooks"
 import Button from "../ui/components/Button"
 import Icon from "../ui/components/Icon"
 import LoadingIcon from "../ui/components/LoadingIcon"
 import Modal from "../ui/components/Modal"
 import TextInput from "../ui/components/TextInput"
 import VirtualizedList from "../ui/components/VirtualizedList"
-import {
-  fillArea,
-  flexColumn,
-  flexGrow,
-  flexRow,
-  spacedChildrenHorizontal,
-} from "../ui/helpers"
+import { fillArea, flexColumn, flexGrow, flexRow, spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
 import ChannelBrowserListItem from "./ChannelBrowserListItem"
+import { useAvailableChannels } from "./hooks"
 import { ChannelBrowserEntry } from "./types"
 
 type ListItem = {
@@ -32,9 +23,12 @@ type ListItem = {
 }
 
 function ChannelBrowserModal() {
-  const isModalVisible = useSelector(isChannelBrowserVisible())
-  const channels = useSelector(getAvailableChannels())
   const { actions, state } = useStore()
+
+  const isModalVisible =
+    (state.app.modal as { type: string } | undefined)?.type === "channelBrowser"
+
+  const channels = useAvailableChannels()
 
   const searchInput = useInput()
   const searchQuery = queryify(searchInput.value)

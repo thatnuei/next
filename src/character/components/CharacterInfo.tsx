@@ -1,10 +1,9 @@
 import React, { ComponentPropsWithoutRef } from "react"
 import ExternalLink from "../../dom/components/ExternalLink"
 import { getProfileUrl } from "../../flist/helpers"
-import { useSelector } from "../../store/hooks"
-import { getCharacter } from "../../store/selectors"
 import Box from "../../ui/components/Box"
 import { spacing } from "../../ui/theme"
+import { useCharacter } from "../hooks"
 import Avatar from "./Avatar"
 import CharacterStatus from "./CharacterStatus"
 import { genderColors } from "./colors"
@@ -14,7 +13,7 @@ type CharacterInfoProps = ComponentPropsWithoutRef<"div"> & {
 }
 
 function CharacterInfo({ name, ...containerProps }: CharacterInfoProps) {
-  const { gender } = useSelector(getCharacter(name))
+  const { gender } = useCharacter(name)
 
   const nameStyle = { color: genderColors[gender] }
 

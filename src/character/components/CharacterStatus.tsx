@@ -1,14 +1,13 @@
 import React from "react"
 import BBC from "../../bbc/BBC"
-import { useSelector } from "../../store/hooks"
-import { getCharacter } from "../../store/selectors"
 import { styled } from "../../ui/styled"
+import { useCharacter } from "../hooks"
 import { statusColors } from "./colors"
 
 type Props = { name: string }
 
 function CharacterStatus({ name }: Props) {
-  const { status, statusMessage } = useSelector(getCharacter(name))
+  const { status, statusMessage } = useCharacter(name)
   const statusStyle = { color: statusColors[status] }
 
   return (

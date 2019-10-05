@@ -1,13 +1,13 @@
 import React from "react"
-import { useSelector, useStore } from "../../store/hooks"
-import { getJoinedChannels } from "../../store/selectors"
+import { useJoinedChannels } from "../../channel/hooks"
+import { useStore } from "../../store/hooks"
 import Icon from "../../ui/components/Icon"
 import RoomTab from "./RoomTab"
 
 type Props = {}
 
 function ChatRoomList(props: Props) {
-  const joinedChannels = useSelector(getJoinedChannels())
+  const joinedChannels = useJoinedChannels()
   const { actions } = useStore()
   return (
     <>

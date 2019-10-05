@@ -1,11 +1,10 @@
 import React from "react"
-import { useSelector } from "../../store/hooks"
-import { getCharacter } from "../../store/selectors"
 import { styled } from "../../ui/styled"
+import { useCharacter } from "../hooks"
 import { genderColors, statusColors } from "./colors"
 
 const CharacterName = (props: { name: string; hideStatusDot?: boolean }) => {
-  const char = useSelector(getCharacter(props.name))
+  const char = useCharacter(props.name)
 
   // const menu = useCharacterMenuContext()
 

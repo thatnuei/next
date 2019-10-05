@@ -1,11 +1,11 @@
 import React from "react"
-import { useSelector, useStore } from "../store/hooks"
-import { getChannel, isChannelJoined } from "../store/selectors"
+import { useStore } from "../store/hooks"
 import Icon, { IconName } from "../ui/components/Icon"
 import LoadingIcon from "../ui/components/LoadingIcon"
 import { fillArea, spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
+import { useChannel } from "./hooks"
 import { ChannelBrowserEntry } from "./types"
 
 type Props = {
@@ -14,9 +14,9 @@ type Props = {
 }
 
 export default function ChannelBrowserListItem({ entry, icon }: Props) {
-  const channel = useSelector(getChannel(entry.id))
-  const isJoined = useSelector(isChannelJoined(entry.id))
+  const { channel, isJoined } = useChannel(entry.id)
   const isLoading = channel.entryAction != null
+
   const { actions } = useStore()
 
   const handleClick = () => {

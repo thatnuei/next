@@ -1,13 +1,11 @@
 import React from "react"
 import ChannelBrowserModal from "../../channel/ChannelBrowserModal"
-import { useSelector } from "../../store/hooks"
-import { getCurrentRoom } from "../../store/selectors"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import Navigation from "./Navigation"
 
 function Chat() {
-  const currentRoom = useSelector(getCurrentRoom())
+  const currentRoom = { type: "console" }
 
   function renderChatRoom() {
     switch (currentRoom.type) {
