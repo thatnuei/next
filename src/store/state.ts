@@ -5,57 +5,31 @@ import { Character } from "../character/types"
 import exists from "../common/helpers/exists"
 import { Dictionary } from "../common/types"
 
-type State = {
-  view: "login" | "characterSelect" | "chat"
-  modal?: AppModal
+type AppView = "login" | "characterSelect" | "chat"
 
-  user: {
-    account: string
-    ticket: string
-    characters: string[]
-
-    login: {
-      loading: boolean
-      error?: string
-    }
-  }
-
-  // core chat data
-  identity: string
-  characters: Dictionary<Character>
-  readonly identityCharacter: Character
-
-  // channel data
-  channels: Dictionary<Channel>
-  availableChannels: {
-    public: ChannelBrowserEntry[]
-    private: ChannelBrowserEntry[]
-  }
-  readonly joinedChannels: Channel[]
-
-  // loading states
-  updatingStatus: boolean
-  connecting: boolean
-  fetchingPublicChannels: boolean
-  fetchingPrivateChannels: boolean
-  readonly fetchingAvailableChannels: boolean
+type LoadingState = {
+  loading: boolean
+  error?: string
 }
 
-export const state: State = {
-  view: "login",
+export type State = typeof state
+
+export const state = {
+  view: "login" as AppView,
+  modal: undefined as AppModal | undefined,
 
   user: {
     account: "",
     ticket: "",
-    characters: [],
+    characters: [] as string[],
     login: {
       loading: false,
-    },
+    } as LoadingState,
   },
 
-  // core chat data
+  // character data
   identity: "",
-  characters: {},
+  characters: {} as Dictionary<Character>,
 
   get identityCharacter() {
     const characters = this.characters as Dictionary<Character>
@@ -63,11 +37,11 @@ export const state: State = {
   },
 
   // channel data
-  channels: {},
+  channels: {} as Dictionary<Channel>,
 
   availableChannels: {
-    public: [],
-    private: [],
+    public: [] as ChannelBrowserEntry[],
+    private: [] as ChannelBrowserEntry[],
   },
 
   get joinedChannels() {
