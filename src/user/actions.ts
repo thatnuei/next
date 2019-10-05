@@ -10,13 +10,16 @@ export const submitLogin: AsyncAction<{
   state.user.login = { loading: true }
 
   try {
-    const { ticket, characters } = await effects.flist.login(account, password)
-    const identity = await effects.identityStorage.get(account)
+    const { ticket, characters } = await effects.flist.flist.login(
+      account,
+      password,
+    )
+    const identity = await effects.chat.identityStorage.get(account)
 
     state.user.account = account
     state.user.ticket = ticket
     state.user.characters = [...characters].sort()
-    state.identity = identity || characters[0]
+    state.chat.identity = identity || characters[0]
     actions.app.showCharacterSelect()
 
     state.user.login = { loading: false }

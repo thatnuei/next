@@ -5,31 +5,32 @@ import { Character } from "../character/types"
 import { StoreState } from "../store"
 
 export const getCharacter = (name: string) => (state: StoreState) => {
-  const char = state.characters[name] as Character | undefined
+  const char = state.character.characters[name] as Character | undefined
   return char || createCharacter(name)
 }
 
 export const getChannel = (id: string) => (state: StoreState) => {
-  const channel = state.channels[id] as Channel | undefined
+  const channel = state.channel.channels[id] as Channel | undefined
   return channel || createChannel(id)
 }
 
 export const isChannelJoined = (id: string) => (state: StoreState) => {
   const channel = getChannel(id)(state)
-  return channel.memberNames.includes(state.identity)
+  return channel.memberNames.includes(state.chat.identity)
 }
 
-export const getChatIdentity = () => (state: StoreState) => state.identity
+export const getChatIdentity = () => (state: StoreState) => state.chat.identity
 
 // TODO
 export const getCurrentRoom = () => (state: StoreState) => ({ type: "console" })
 
 export const getAvailableChannels = () => (state: StoreState) =>
-  state.availableChannels
+  state.channel.availableChannels
 
 export const getJoinedChannels = () => (state: StoreState) =>
-  state.joinedChannels
+  state.channel.joinedChannels
 
 export const isChannelBrowserVisible = () => (state: StoreState) =>
   // overmind types are broken
-  state.modal && (state.modal as { type: string }).type === "channelBrowser"
+  state.app.modal &&
+  (state.app.modal as { type: string }).type === "channelBrowser"

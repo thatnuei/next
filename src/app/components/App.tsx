@@ -7,7 +7,7 @@ import Login from "./Login"
 function App() {
   const { state } = useStore()
 
-  switch (state.view) {
+  switch (state.app.view) {
     case "login":
       return <Login />
     case "characterSelect":

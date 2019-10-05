@@ -11,7 +11,10 @@ import { createChannel, createMessage } from "./helpers"
 import { Channel, ChannelBrowserEntry } from "./types"
 
 const createUpdateChannel = (state: StoreState) =>
-  createFactoryUpdate(state.channels as Dictionary<Channel>, createChannel)
+  createFactoryUpdate(
+    state.channel.channels as Dictionary<Channel>,
+    createChannel,
+  )
 
 export const joinChannel: Action<string> = ({ state, effects }, channelId) => {
   const updateChannel = createUpdateChannel(state)
@@ -20,7 +23,7 @@ export const joinChannel: Action<string> = ({ state, effects }, channelId) => {
     channel.entryAction = "joining"
   })
 
-  effects.socket.sendCommand("JCH", { channel: channelId })
+  effects.chat.socket.sendCommand("JCH", { channel: channelId })
 }
 
 export const leaveChannel: Action<string> = ({ state, effects }, channelId) => {
@@ -30,34 +33,34 @@ export const leaveChannel: Action<string> = ({ state, effects }, channelId) => {
     channel.entryAction = "leaving"
   })
 
-  effects.socket.sendCommand("LCH", { channel: channelId })
+  effects.chat.socket.sendCommand("LCH", { channel: channelId })
 }
 
 export const requestAvailableChannels: AsyncAction = async ({
   state,
   effects,
 }) => {
-  if (state.fetchingAvailableChannels) return
+  if (state.channel.fetchingAvailableChannels) return
 
-  state.fetchingPublicChannels = true
-  state.fetchingPrivateChannels = true
+  state.channel.fetchingPublicChannels = true
+  state.channel.fetchingPrivateChannels = true
 
-  effects.socket.sendCommand("CHA", undefined)
-  effects.socket.sendCommand("ORS", undefined)
+  effects.chat.socket.sendCommand("CHA", undefined)
+  effects.chat.socket.sendCommand("ORS", undefined)
 
   // failsafe in case it takes a while
   await sleep(3000)
-  state.fetchingPublicChannels = false
-  state.fetchingPrivateChannels = false
+  state.channel.fetchingPublicChannels = false
+  state.channel.fetchingPrivateChannels = false
 }
 
 export const showChannelBrowser: Action = ({ state, actions }) => {
-  state.modal = { type: "channelBrowser" }
+  state.app.modal = { type: "channelBrowser" }
   actions.channel.requestAvailableChannels()
 }
 
 export const hideChannelBrowser: Action = ({ state }) => {
-  state.modal = undefined
+  state.app.modal = undefined
 }
 
 export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
@@ -69,7 +72,7 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
         channel.memberNames.push(character.identity)
         channel.title = title
 
-        if (character.identity === state.identity) {
+        if (character.identity === state.chat.identity) {
           channel.entryAction = undefined
         }
       })
@@ -81,7 +84,7 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
           (name) => name !== character,
         )
 
-        if (character === state.identity) {
+        if (character === state.chat.identity) {
           channel.entryAction = undefined
         }
       })
@@ -113,26 +116,26 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
     },
 
     CHA({ channels }) {
-      state.availableChannels.public = channels.map<ChannelBrowserEntry>(
-        (entry) => ({
-          id: entry.name,
-          title: entry.name,
-          userCount: entry.characters,
-          mode: entry.mode,
-        }),
-      )
-      state.fetchingPublicChannels = false
+      state.channel.availableChannels.public = channels.map<
+        ChannelBrowserEntry
+      >((entry) => ({
+        id: entry.name,
+        title: entry.name,
+        userCount: entry.characters,
+        mode: entry.mode,
+      }))
+      state.channel.fetchingPublicChannels = false
     },
 
     ORS({ channels }) {
-      state.availableChannels.private = channels.map<ChannelBrowserEntry>(
-        (entry) => ({
-          id: entry.name,
-          title: entry.title,
-          userCount: entry.characters,
-        }),
-      )
-      state.fetchingPrivateChannels = false
+      state.channel.availableChannels.private = channels.map<
+        ChannelBrowserEntry
+      >((entry) => ({
+        id: entry.name,
+        title: entry.title,
+        userCount: entry.characters,
+      }))
+      state.channel.fetchingPrivateChannels = false
     },
 
     ERR({ number }) {
@@ -144,7 +147,7 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
       ]
 
       if (joinFailureCodes.includes(number)) {
-        Object.values(state.channels as Dictionary<Channel>)
+        Object.values(state.channel.channels as Dictionary<Channel>)
           .filter(exists)
           .forEach((channel) => (channel.entryAction = undefined))
       }

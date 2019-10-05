@@ -3,27 +3,27 @@ import { ServerCommand } from "../chat/types"
 import { createCommandHandler } from "./helpers"
 
 export const setIdentity: Action<string> = ({ state, effects }, identity) => {
-  state.identity = identity
-  effects.identityStorage.set(state.user.account, identity)
+  state.chat.identity = identity
+  effects.chat.identityStorage.set(state.user.account, identity)
 }
 
 export const connectToChat: Action = ({ state, effects }) => {
   const { account, ticket } = state.user
-  const { identity } = state
-  effects.socket.connect(account, ticket, identity)
-  state.connecting = true
+  const { identity } = state.chat
+  effects.chat.socket.connect(account, ticket, identity)
+  state.chat.connecting = true
 }
 
 export const addSocketListeners: Action = ({ actions, effects }) => {
-  effects.socket.events.listen("close", () => {
+  effects.chat.socket.events.listen("close", () => {
     actions.chat.handleSocketClose()
   })
 
-  effects.socket.events.listen("error", () => {
+  effects.chat.socket.events.listen("error", () => {
     actions.chat.handleSocketError()
   })
 
-  effects.socket.events.listen("command", (command) => {
+  effects.chat.socket.events.listen("command", (command) => {
     const handlers = [
       actions.chat.handleCommand,
       actions.character.handleCommand,
@@ -34,12 +34,12 @@ export const addSocketListeners: Action = ({ actions, effects }) => {
 }
 
 export const handleSocketClose: Action = ({ state, actions }) => {
-  state.connecting = false
+  state.chat.connecting = false
   actions.app.showLogin()
 }
 
 export const handleSocketError: Action = ({ state, actions }) => {
-  state.connecting = false
+  state.chat.connecting = false
   actions.app.showLogin()
 }
 
@@ -49,7 +49,7 @@ export const handleCommand: Action<ServerCommand> = (
 ) => {
   const handler = createCommandHandler({
     IDN() {
-      state.connecting = false
+      state.chat.connecting = false
       actions.app.showChat()
 
       actions.channel.joinChannel("Frontpage")

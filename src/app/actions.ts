@@ -1,13 +1,13 @@
 import { Action } from "overmind"
 
 export const showLogin: Action = ({ state }) => {
-  state.view = "login"
+  state.app.view = "login"
 }
 
 export const showCharacterSelect: Action = ({ state }) => {
-  state.view = "characterSelect"
+  state.app.view = "characterSelect"
 }
 
 export const showChat: Action = ({ state }) => {
-  state.view = "chat"
+  state.app.view = "chat"
 }

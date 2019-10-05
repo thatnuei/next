@@ -69,7 +69,7 @@ function ChannelBrowserModal() {
   const sortButtonIcon =
     sortMode.current === "title" ? "sortAlphabetical" : "sortNumeric"
 
-  const refreshIcon = state.fetchingAvailableChannels ? (
+  const refreshIcon = state.channel.fetchingAvailableChannels ? (
     <LoadingIcon />
   ) : (
     <Icon icon="refresh" />
@@ -105,7 +105,7 @@ function ChannelBrowserModal() {
           </Button>
           <Button
             onClick={actions.channel.requestAvailableChannels}
-            disabled={state.fetchingAvailableChannels}
+            disabled={state.channel.fetchingAvailableChannels}
           >
             {refreshIcon}
           </Button>

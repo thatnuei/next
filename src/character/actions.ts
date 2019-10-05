@@ -11,7 +11,7 @@ import { Character, CharacterStatus } from "./types"
 
 function createUpdateCharacter(state: StoreState) {
   return createFactoryUpdate(
-    state.characters as Dictionary<Character>, // bug in overmind types
+    state.character.characters as Dictionary<Character>, // bug in overmind types
     createCharacter,
   )
 }
@@ -22,7 +22,7 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
   const handler = createCommandHandler({
     LIS(params) {
       for (const [name, gender, status, statusMessage] of params.characters) {
-        state.characters[name] = createCharacter(
+        state.character.characters[name] = createCharacter(
           name,
           gender,
           status,
@@ -48,14 +48,17 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
         char.statusMessage = statusmsg
       })
 
-      if (character === state.identity) {
-        state.updatingStatus = false
+      if (character === state.chat.identity) {
+        state.chat.updatingStatus = false
       }
     },
 
     ERR({ number }) {
-      if (state.updatingStatus && number === errorCodes.statusUpdateCooldown) {
-        state.updatingStatus = false
+      if (
+        state.chat.updatingStatus &&
+        number === errorCodes.statusUpdateCooldown
+      ) {
+        state.chat.updatingStatus = false
 
         // actions.showUiMessage({
         //   text: "Please wait 1 second between status updates.",
@@ -72,13 +75,13 @@ export const updateStatus: AsyncAction<UpdatedStatus> = async (
   { state, effects },
   { status, statusMessage },
 ) => {
-  effects.socket.sendCommand("STA", { status, statusmsg: statusMessage })
-  state.updatingStatus = true
+  effects.chat.socket.sendCommand("STA", { status, statusmsg: statusMessage })
+  state.chat.updatingStatus = true
 
   // make sure that we can still _try_ to update our status,
   // even if we don't get a successful result
   await sleep(3000)
-  state.updatingStatus = false
+  state.chat.updatingStatus = false
 }
 
 type UpdatedStatus = {
