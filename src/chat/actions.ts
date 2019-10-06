@@ -1,14 +1,15 @@
 import { Action } from "overmind"
 import { ServerCommand } from "../chat/types"
 import { createCommandHandler } from "./helpers"
+import { ChatRoom } from "./state"
 
 export const setIdentity: Action<string> = ({ state, effects }, identity) => {
   state.chat.identity = identity
   effects.chat.identityStorage.set(state.user.account, identity)
 }
 
-export const showChannel: Action<string> = ({ state }, id) => {
-  state.chat.currentRoom = { type: "channel", id }
+export const setCurrentRoom: Action<ChatRoom> = ({ state }, room) => {
+  state.chat.currentRoom = room
 }
 
 export const connectToChat: Action = ({ state, effects }) => {
@@ -60,15 +61,6 @@ export const handleCommand: Action<ServerCommand> = (
       actions.channel.joinChannel("Fantasy")
       actions.channel.joinChannel("Development")
       actions.channel.joinChannel("Story Driven LFRP")
-    },
-
-    JCH({ character, channel: id }) {
-      if (
-        character.identity === state.chat.identity &&
-        !state.chat.currentRoom
-      ) {
-        actions.chat.showChannel(id)
-      }
     },
   })
 

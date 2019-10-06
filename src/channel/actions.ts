@@ -8,7 +8,7 @@ import sleep from "../common/helpers/sleep"
 import { Dictionary } from "../common/types"
 import { StoreState } from "../store"
 import { createChannel, createMessage } from "./helpers"
-import { Channel, ChannelBrowserEntry } from "./types"
+import { Channel, ChannelBrowserEntry, Message } from "./types"
 
 const createUpdateChannel = (state: StoreState) =>
   createFactoryUpdate(
@@ -63,7 +63,35 @@ export const hideChannelBrowser: Action = ({ state }) => {
   state.app.modal = undefined
 }
 
-export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
+export const showChannel: Action<string> = ({ state, actions }, id) => {
+  actions.chat.setCurrentRoom({ type: "channel", id })
+
+  const updateChannel = createUpdateChannel(state)
+  updateChannel(id, (channel) => {
+    channel.isUnread = false
+  })
+}
+
+export const addChannelMessage: Action<{ id: string; message: Message }> = (
+  { state },
+  { id, message },
+) => {
+  const updateChannel = createUpdateChannel(state)
+
+  updateChannel(id, (channel) => {
+    channel.messages.push(message)
+
+    const { currentChannelId, identity } = state.chat
+    if (currentChannelId !== id && message.senderName !== identity) {
+      channel.isUnread = true
+    }
+  })
+}
+
+export const handleCommand: Action<ServerCommand> = (
+  { state, actions },
+  command,
+) => {
   const updateChannel = createUpdateChannel(state)
 
   const handler = createCommandHandler({
@@ -76,6 +104,13 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
           channel.entryAction = undefined
         }
       })
+
+      if (
+        character.identity === state.chat.identity &&
+        !state.chat.currentRoom
+      ) {
+        actions.channel.showChannel(id)
+      }
     },
 
     LCH({ channel: id, character }) {
@@ -104,14 +139,16 @@ export const handleCommand: Action<ServerCommand> = ({ state }, command) => {
     },
 
     MSG({ channel: id, character, message }) {
-      updateChannel(id, (channel) => {
-        channel.messages.push(createMessage(character, message, "chat"))
+      actions.channel.addChannelMessage({
+        id,
+        message: createMessage(character, message, "chat"),
       })
     },
 
     LRP({ channel: id, character, message }) {
-      updateChannel(id, (channel) => {
-        channel.messages.push(createMessage(character, message, "lfrp"))
+      actions.channel.addChannelMessage({
+        id,
+        message: createMessage(character, message, "lfrp"),
       })
     },
 

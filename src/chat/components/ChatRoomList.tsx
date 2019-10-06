@@ -2,31 +2,23 @@ import React from "react"
 import { useJoinedChannels } from "../../channel/hooks"
 import { useStore } from "../../store/hooks"
 import Icon from "../../ui/components/Icon"
-import { ChatRoom } from "../state"
 import RoomTab from "./RoomTab"
 
-type Props = {}
-
-function ChatRoomList(props: Props) {
+function ChatRoomList() {
   const joinedChannels = useJoinedChannels()
   const { actions, state } = useStore()
-  const currentRoom = state.chat.currentRoom as (ChatRoom | undefined)
 
   return (
     <>
-      {joinedChannels.map(({ id, title, entryAction }) => (
+      {joinedChannels.map(({ id, title, isUnread, entryAction }) => (
         <RoomTab
           key={id}
           title={title}
           icon={<Icon icon={id === title ? "public" : "lock"} />}
-          active={
-            currentRoom != null &&
-            currentRoom.type === "channel" &&
-            currentRoom.id === id
-          }
-          unread={false}
+          active={state.chat.currentChannelId === id}
+          unread={isUnread}
           loading={entryAction === "leaving"}
-          onClick={() => actions.chat.showChannel(id)}
+          onClick={() => actions.channel.showChannel(id)}
           onClose={() => actions.channel.leaveChannel(id)}
         />
       ))}

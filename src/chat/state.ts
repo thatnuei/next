@@ -9,11 +9,12 @@ type ChatState = {
   updatingStatus: boolean
   connecting: boolean
   currentRoom?: ChatRoom
+  readonly currentChannelId?: string
 }
 
-export type ChatRoom =
-  | { type: "channel"; id: string }
-  | { type: "privateChat"; partnerName: string }
+export type ChatRoom = ChannelRoom | PrivateChatRoom
+type ChannelRoom = { type: "channel"; id: string }
+type PrivateChatRoom = { type: "privateChat"; partnerName: string }
 
 export const state: ChatState = {
   identity: "",
@@ -25,4 +26,10 @@ export const state: ChatState = {
 
   updatingStatus: false,
   connecting: false,
+
+  get currentChannelId() {
+    return this.currentRoom?.type === "channel"
+      ? (this.currentRoom as ChannelRoom).id
+      : undefined
+  },
 }
