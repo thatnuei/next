@@ -19,7 +19,11 @@ function ChatRoomList(props: Props) {
           key={id}
           title={title}
           icon={<Icon icon={id === title ? "public" : "lock"} />}
-          active={currentRoom?.id === id}
+          active={
+            currentRoom != null &&
+            currentRoom.type === "channel" &&
+            currentRoom.id === id
+          }
           unread={false}
           loading={entryAction === "leaving"}
           onClick={() => actions.chat.showChannel(id)}

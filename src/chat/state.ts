@@ -11,7 +11,9 @@ type ChatState = {
   currentRoom?: ChatRoom
 }
 
-export type ChatRoom = { type: "channel"; id: string }
+export type ChatRoom =
+  | { type: "channel"; id: string }
+  | { type: "privateChat"; partnerName: string }
 
 export const state: ChatState = {
   identity: "",
