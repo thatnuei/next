@@ -1,20 +1,25 @@
 import React from "react"
 import ChannelBrowserModal from "../../channel/ChannelBrowserModal"
+import { useStore } from "../../store/hooks"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
+import { ChatRoom } from "../state"
 import Navigation from "./Navigation"
 
 function Chat() {
-  const currentRoom = { type: "console" }
+  const { state } = useStore()
+
+  const currentRoom = state.chat.currentRoom as ChatRoom | undefined
 
   function renderChatRoom() {
-    switch (currentRoom.type) {
-      case "console": {
-        return <p>console</p>
-      }
+    if (!currentRoom?.type) {
+      return <p>lol</p>
+    }
 
+    switch (currentRoom.type) {
       case "channel": {
-        return <p>channel</p>
+        const channel = state.channel.getChannel(currentRoom.id)
+        return <p>{channel.title}</p>
       }
     }
   }

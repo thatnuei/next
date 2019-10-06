@@ -8,7 +8,10 @@ type ChatState = {
   identityCharacter: Derive<ChatState, Character>
   updatingStatus: boolean
   connecting: boolean
+  currentRoom?: ChatRoom
 }
+
+export type ChatRoom = { type: "channel"; id: string }
 
 export const state: ChatState = {
   identity: "",

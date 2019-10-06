@@ -7,6 +7,10 @@ export const setIdentity: Action<string> = ({ state, effects }, identity) => {
   effects.chat.identityStorage.set(state.user.account, identity)
 }
 
+export const showChannel: Action<string> = ({ state }, id) => {
+  state.chat.currentRoom = { type: "channel", id }
+}
+
 export const connectToChat: Action = ({ state, effects }) => {
   const { account, ticket } = state.user
   const { identity } = state.chat
@@ -56,6 +60,15 @@ export const handleCommand: Action<ServerCommand> = (
       actions.channel.joinChannel("Fantasy")
       actions.channel.joinChannel("Development")
       actions.channel.joinChannel("Story Driven LFRP")
+    },
+
+    JCH({ character, channel: id }) {
+      if (
+        character.identity === state.chat.identity &&
+        !state.chat.currentRoom
+      ) {
+        actions.chat.showChannel(id)
+      }
     },
   })
 
