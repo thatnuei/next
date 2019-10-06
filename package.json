@@ -7,7 +7,7 @@
     "build": "craco build",
     "test": "craco test",
     "lint": "eslint \"src/**/*.ts?(x)\"",
-    "format": "prettier --write \"**/*.@(js|ts|tsx|html|json|md)\"",
+    "format": "prettier --write \"@(src|desktop|public|scripts)/**/*.@(js|ts|tsx|html|json|md)\"",
     "typecheck": "tsc --noEmit",
     "desktop:dev:app": "electron desktop/main.js",
     "desktop:dev": "npm-run-all --parallel --race desktop:dev:app dev",
