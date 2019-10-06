@@ -1,13 +1,13 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import Chat from "../../chat/components/Chat"
-import { useStore } from "../../store/hooks"
+import useRootStore from "../../useRootStore"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 
 function App() {
-  const { state } = useStore()
-
-  switch (state.app.view) {
+  const { appStore } = useRootStore()
+  switch (appStore.view) {
     case "login":
       return <Login />
     case "characterSelect":
@@ -15,8 +15,6 @@ function App() {
     case "chat":
       return <Chat />
   }
-
-  return null
 }
 
-export default App
+export default observer(App)

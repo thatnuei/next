@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import BBC from "../../bbc/BBC"
 import { styled } from "../../ui/styled"
@@ -23,7 +24,7 @@ function CharacterStatus({ name }: Props) {
   )
 }
 
-export default CharacterStatus
+export default observer(CharacterStatus)
 
 const StatusText = styled.span`
   font-style: italic;

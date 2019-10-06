@@ -1,6 +1,6 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import Avatar from "../../character/components/Avatar"
-import { useStore } from "../../store/hooks"
 import Anchor from "../../ui/components/Anchor"
 import Button from "../../ui/components/Button"
 import FullscreenRaisedPanel from "../../ui/components/FullscreenRaisedPanel"
@@ -9,18 +9,14 @@ import Select from "../../ui/components/Select"
 import { spacedChildrenVertical } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
+import useRootStore from "../../useRootStore"
 
 function CharacterSelect() {
   const {
-    state: {
-      chat: { identity, connecting },
-      user: { characters },
-    },
-    actions: {
-      app: { showLogin },
-      chat: { setIdentity, connectToChat },
-    },
-  } = useStore()
+    appStore: { showLogin },
+    chatStore: { identity, setIdentity, connectToChat, isConnecting },
+    userStore: { characters },
+  } = useRootStore()
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     setIdentity(event.target.value)
@@ -36,7 +32,7 @@ function CharacterSelect() {
       <ModalPanelHeader>Select a Character</ModalPanelHeader>
 
       <form onSubmit={handleSubmit}>
-        <FieldSet disabled={connecting}>
+        <FieldSet disabled={isConnecting}>
           <FieldsContainer>
             <Avatar key={identity} name={identity} />
 
@@ -59,7 +55,7 @@ function CharacterSelect() {
     </FullscreenRaisedPanel>
   )
 }
-export default CharacterSelect
+export default observer(CharacterSelect)
 
 const FieldSet = styled.fieldset`
   transition: 0.2s opacity;

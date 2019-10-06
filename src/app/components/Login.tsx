@@ -1,6 +1,6 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import useInput from "../../dom/hooks/useInput"
-import { useStore } from "../../store/hooks"
 import Button from "../../ui/components/Button"
 import FormField from "../../ui/components/FormField"
 import FullscreenRaisedPanel from "../../ui/components/FullscreenRaisedPanel"
@@ -9,36 +9,29 @@ import TextInput from "../../ui/components/TextInput"
 import { spacedChildrenVertical } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
+import useRootStore from "../../useRootStore"
 
 function Login() {
   const {
-    state: {
-      user: {
-        login: { loading, error },
-      },
-    },
-    actions: {
-      user: { submitLogin },
-    },
-  } = useStore()
+    userStore: { loginState, submitLogin },
+  } = useRootStore()
+
+  const isLoading = loginState.type === "loading"
+  const error = loginState.type === "error" ? loginState.error : undefined
 
   const account = useInput()
   const password = useInput()
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-
-    submitLogin({
-      account: account.value,
-      password: password.value,
-    })
+    submitLogin(account.value, password.value)
   }
 
   return (
     <FullscreenRaisedPanel>
       <ModalPanelHeader>Login</ModalPanelHeader>
       <Form onSubmit={handleSubmit}>
-        <FieldSet disabled={loading}>
+        <FieldSet disabled={isLoading}>
           <FormField labelText="Username">
             <TextInput
               name="username"
@@ -67,7 +60,7 @@ function Login() {
   )
 }
 
-export default Login
+export default observer(Login)
 
 const Form = styled.form`
   display: flex;

@@ -1,9 +1,4 @@
-import React, {
-  ComponentPropsWithoutRef,
-  useCallback,
-  useMemo,
-  useState,
-} from "react"
+import React, { ComponentPropsWithoutRef, useCallback, useMemo, useState } from "react"
 import { getAvatarUrl } from "../../flist/helpers"
 import { styled } from "../../ui/styled"
 

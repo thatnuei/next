@@ -1,17 +1,17 @@
-import { Provider } from "overmind-react"
+import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
 import Root from "./app/components/Root"
 import "./polyfills"
-import { createAppStore } from "./store/index"
+import useRootStore from "./useRootStore"
 
-const store = createAppStore()
+configure({ enforceActions: 'observed' })
 
 function renderRoot() {
   ReactDOM.render(
-    <Provider value={store}>
+    <useRootStore.Provider>
       <Root />
-    </Provider>,
+    </useRootStore.Provider>,
     document.getElementById("root"),
   )
 }

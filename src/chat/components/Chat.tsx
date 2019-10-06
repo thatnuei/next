@@ -1,15 +1,14 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import ChannelBrowserModal from "../../channel/ChannelBrowserModal"
-import { useStore } from "../../store/hooks"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
-import { ChatRoom } from "../state"
+import useRootStore from "../../useRootStore"
 import Navigation from "./Navigation"
 
 function Chat() {
-  const { state } = useStore()
-
-  const currentRoom = state.chat.currentRoom as ChatRoom | undefined
+  const { chatStore, channelStore } = useRootStore()
+  const { currentRoom } = chatStore
 
   function renderChatRoom() {
     if (!currentRoom?.type) {
@@ -18,8 +17,8 @@ function Chat() {
 
     switch (currentRoom.type) {
       case "channel": {
-        const channel = state.channel.getChannel(currentRoom.id)
-        return <p>{channel.title}</p>
+        const channel = channelStore.channels.get(currentRoom.id)
+        return <p>{channel.name}</p>
       }
     }
   }
@@ -35,7 +34,7 @@ function Chat() {
   )
 }
 
-export default Chat
+export default observer(Chat)
 
 const Container = styled.div`
   display: flex;

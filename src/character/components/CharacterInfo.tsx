@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import React, { ComponentPropsWithoutRef } from "react"
 import ExternalLink from "../../dom/components/ExternalLink"
 import { getProfileUrl } from "../../flist/helpers"
@@ -34,4 +35,4 @@ function CharacterInfo({ name, ...containerProps }: CharacterInfoProps) {
   )
 }
 
-export default CharacterInfo
+export default observer(CharacterInfo)

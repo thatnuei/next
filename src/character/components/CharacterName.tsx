@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { styled } from "../../ui/styled"
 import { useCharacter } from "../hooks"
@@ -28,7 +29,7 @@ const CharacterName = (props: { name: string; hideStatusDot?: boolean }) => {
   )
 }
 
-export default CharacterName
+export default observer(CharacterName)
 
 const ContainerButton = styled.button`
   display: inline-flex;

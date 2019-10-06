@@ -1,20 +1,19 @@
 import { sortBy } from "lodash"
+import { observer } from "mobx-react-lite"
 import React, { useMemo } from "react"
 import queryify from "../common/helpers/queryify"
 import useInput from "../dom/hooks/useInput"
 import useCycle from "../state/hooks/useCycle"
-import { useStore } from "../store/hooks"
 import Button from "../ui/components/Button"
 import Icon from "../ui/components/Icon"
-import LoadingIcon from "../ui/components/LoadingIcon"
 import Modal from "../ui/components/Modal"
 import TextInput from "../ui/components/TextInput"
 import VirtualizedList from "../ui/components/VirtualizedList"
 import { fillArea, flexColumn, flexGrow, flexRow, spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
+import useRootStore from "../useRootStore"
 import ChannelBrowserListItem from "./ChannelBrowserListItem"
-import { useAvailableChannels } from "./hooks"
 import { ChannelBrowserEntry } from "./types"
 
 type ListItem = {
@@ -23,12 +22,12 @@ type ListItem = {
 }
 
 function ChannelBrowserModal() {
-  const { actions, state } = useStore()
+  // const { actions, state } = useStore()
+  const { appStore, channelStore } = useRootStore()
 
-  const isModalVisible =
-    (state.app.modal as { type: string } | undefined)?.type === "channelBrowser"
+  const isModalVisible = appStore.modal?.type === "channelBrowser"
 
-  const channels = useAvailableChannels()
+  const channels = channelStore.listings
 
   const searchInput = useInput()
   const searchQuery = queryify(searchInput.value)
@@ -63,11 +62,12 @@ function ChannelBrowserModal() {
   const sortButtonIcon =
     sortMode.current === "title" ? "sortAlphabetical" : "sortNumeric"
 
-  const refreshIcon = state.channel.fetchingAvailableChannels ? (
-    <LoadingIcon />
-  ) : (
-    <Icon icon="refresh" />
-  )
+  // const refreshIcon = state.channel.fetchingAvailableChannels ? (
+  //   <LoadingIcon />
+  // ) : (
+  //   <Icon icon="refresh" />
+  // )
+  const refreshIcon = <Icon icon="refresh" />
 
   return (
     <Modal
@@ -75,7 +75,7 @@ function ChannelBrowserModal() {
       visible={isModalVisible}
       panelHeight={600}
       panelWidth={400}
-      onClose={actions.channel.hideChannelBrowser}
+      onClose={appStore.clearModal}
     >
       <Content>
         <ChannelListContainer>
@@ -98,8 +98,8 @@ function ChannelBrowserModal() {
             <Icon icon={sortButtonIcon} />
           </Button>
           <Button
-            onClick={actions.channel.requestAvailableChannels}
-            disabled={state.channel.fetchingAvailableChannels}
+            onClick={channelStore.requestListings}
+            // disabled={state.channel.fetchingAvailableChannels}
           >
             {refreshIcon}
           </Button>
@@ -109,7 +109,7 @@ function ChannelBrowserModal() {
   )
 }
 
-export default ChannelBrowserModal
+export default observer(ChannelBrowserModal)
 
 const Content = styled.div`
   ${fillArea};

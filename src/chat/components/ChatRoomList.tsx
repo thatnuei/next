@@ -1,29 +1,28 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
-import { useJoinedChannels } from "../../channel/hooks"
-import { useStore } from "../../store/hooks"
 import Icon from "../../ui/components/Icon"
+import useRootStore from "../../useRootStore"
 import RoomTab from "./RoomTab"
 
 function ChatRoomList() {
-  const joinedChannels = useJoinedChannels()
-  const { actions, state } = useStore()
+  const { channelStore, chatStore } = useRootStore()
 
   return (
     <>
-      {joinedChannels.map(({ id, title, isUnread, entryAction }) => (
+      {channelStore.joinedChannels.map(({ id, name, unread }) => (
         <RoomTab
           key={id}
-          title={title}
-          icon={<Icon icon={id === title ? "public" : "lock"} />}
-          active={state.chat.currentChannelId === id}
-          unread={isUnread}
-          loading={entryAction === "leaving"}
-          onClick={() => actions.channel.showChannel(id)}
-          onClose={() => actions.channel.leaveChannel(id)}
+          title={name}
+          icon={<Icon icon={id === name ? "public" : "lock"} />}
+          active={chatStore.currentChannelId === id}
+          unread={unread}
+          loading={false}
+          onClick={() => chatStore.setCurrentRoom({ type: 'channel', id })}
+          onClose={() => channelStore.leave(id)}
         />
       ))}
     </>
   )
 }
 
-export default ChatRoomList
+export default observer(ChatRoomList)

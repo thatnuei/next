@@ -1,11 +1,11 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
-import { useStore } from "../store/hooks"
 import Icon, { IconName } from "../ui/components/Icon"
 import LoadingIcon from "../ui/components/LoadingIcon"
 import { fillArea, spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
-import { useChannel } from "./hooks"
+import useRootStore from "../useRootStore"
 import { ChannelBrowserEntry } from "./types"
 
 type Props = {
@@ -13,27 +13,26 @@ type Props = {
   icon: IconName
 }
 
-export default function ChannelBrowserListItem({ entry, icon }: Props) {
-  const { channel, isJoined } = useChannel(entry.id)
-  const isLoading = channel.entryAction != null
-
-  const { actions } = useStore()
+function ChannelBrowserListItem({ entry, icon }: Props) {
+  const { channelStore } = useRootStore()
+  const channel = channelStore.channels.get(entry.id)
+  const isLoading = false // TODO
 
   const handleClick = () => {
-    if (isJoined) {
-      actions.channel.leaveChannel(entry.id)
+    if (channel.isJoined) {
+      channelStore.leave(entry.id)
     } else {
-      actions.channel.joinChannel(entry.id)
+      channelStore.join(entry.id)
     }
   }
 
   return (
     <Container
-      active={isJoined}
+      active={channel.isJoined}
       disabled={isLoading}
       onClick={handleClick}
       role="checkbox"
-      aria-checked={isJoined}
+      aria-checked={channel.isJoined}
     >
       {isLoading ? <LoadingIcon /> : <Icon icon={icon} />}
       <Title dangerouslySetInnerHTML={{ __html: entry.title }} />
@@ -41,6 +40,8 @@ export default function ChannelBrowserListItem({ entry, icon }: Props) {
     </Container>
   )
 }
+
+export default observer(ChannelBrowserListItem)
 
 const Container = styled.button<{ active: boolean }>`
   display: flex;

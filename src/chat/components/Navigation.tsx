@@ -1,16 +1,15 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import CharacterInfo from "../../character/components/CharacterInfo"
-import { useStore } from "../../store/hooks"
 import { fillArea } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { getThemeColor, spacing } from "../../ui/theme"
-import { useChatIdentity } from "../hooks"
+import useRootStore from "../../useRootStore"
 import ChatRoomList from "./ChatRoomList"
 import NavigationAction from "./NavigationAction"
 
 function Navigation() {
-  const { identity } = useChatIdentity()
-  const { actions } = useStore()
+  const { chatStore, appStore } = useRootStore()
 
   return (
     <Container>
@@ -18,7 +17,7 @@ function Navigation() {
         <NavigationAction
           title="Channels"
           icon="channels"
-          onClick={actions.channel.showChannelBrowser}
+          onClick={() => appStore.setModal({ type: 'channelBrowser' })}
         />
         <NavigationAction title="Update Status" icon="updateStatus" />
         <NavigationAction title="Who's Online" icon="users" />
@@ -27,7 +26,7 @@ function Navigation() {
         <NavigationAction title="Logout" icon="logout" />
       </ActionsContainer>
       <CharacterInfoContainer>
-        <CharacterInfo name={identity} />
+        <CharacterInfo name={chatStore.identity} />
       </CharacterInfoContainer>
       <RoomsContainer>
         <ChatRoomList />
@@ -36,7 +35,7 @@ function Navigation() {
   )
 }
 
-export default Navigation
+export default observer(Navigation)
 
 const Container = styled.div`
   ${fillArea};

@@ -1,6 +1,6 @@
-import { useStore } from "../store/hooks"
+import useRootStore from "../useRootStore"
 
 export function useCharacter(name: string) {
-  const store = useStore()
-  return store.state.character.getCharacter(name)
+  const { characterStore } = useRootStore()
+  return characterStore.characters.get(name)
 }
