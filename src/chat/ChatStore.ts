@@ -35,7 +35,7 @@ export default class ChatStore {
 
   get currentChannelId() {
     return this.currentRoom?.type === "channel"
-      ? (this.currentRoom as ChannelRoom).id
+      ? this.currentRoom.id
       : undefined
   }
 
