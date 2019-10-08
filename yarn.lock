@@ -10372,7 +10372,7 @@ typescript-template-language-service-decorator@^2.2.0:
   resolved "https://registry.yarnpkg.com/typescript-template-language-service-decorator/-/typescript-template-language-service-decorator-2.2.0.tgz#4ee6d580f307fb9239978e69626f2775b8a59b2a"
   integrity sha512-xiolqt1i7e22rpqMaprPgSFVgU64u3b9n6EJlAaUYE61jumipKAdI1+O5khPlWslpTUj80YzjUKjJ2jxT0D74w==
 
-typescript@^3.7.0-beta:
+typescript@^3.7.0-dev.20191006:
   version "3.7.0-dev.20191006"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.0-dev.20191006.tgz#b455c0bdbc29625b6f95886e17c85ded1271f588"
   integrity sha512-0uxLQ41QwguSZdMlQ5GUXljS42Ti1+AFJ1EnTsQOSX4Z0eG2bwxHDJItIRDGV6yZGBMXJ6HGapxv2qxSeW5svA==
