@@ -5,7 +5,12 @@ import Root from "./app/components/Root"
 import "./polyfills"
 import useRootStore from "./useRootStore"
 
-configure({ enforceActions: 'observed' })
+configure({
+  enforceActions: 'observed',
+  observableRequiresReaction: true,
+  reactionRequiresObservable: true,
+  computedRequiresReaction: true,
+})
 
 function renderRoot() {
   ReactDOM.render(
