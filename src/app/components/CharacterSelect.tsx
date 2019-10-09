@@ -29,8 +29,7 @@ function CharacterSelect() {
 
   return (
     <FullscreenRaisedPanel>
-      <ModalPanelHeader>Select a Character</ModalPanelHeader>
-
+      <ModalPanelHeader center={<h1>Select a Character</h1>} />
       <form onSubmit={handleSubmit}>
         <FieldSet disabled={isConnecting}>
           <FieldsContainer>

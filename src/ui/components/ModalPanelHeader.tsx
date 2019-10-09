@@ -1,22 +1,47 @@
 import React from "react"
-import { withTheme } from "styled-components"
+import { flexCenter } from "../helpers"
 import { styled } from "../styled"
-import { AppTheme, spacing } from "../theme"
-import Box from "./Box"
+import { getThemeColor, spacing } from "../theme"
 
 type Props = {
-  children?: React.ReactNode
-  theme: AppTheme
+  left?: React.ReactNode
+  center?: React.ReactNode
+  right?: React.ReactNode
 }
 
-const ModalPanelHeader = (props: Props) => (
-  <Box background="theme1" pad={spacing.small}>
-    <Heading>{props.children}</Heading>
-  </Box>
-)
+const ModalPanelHeader = (props: Props) => {
+  const hasSides = props.left || props.right
 
-export default withTheme(ModalPanelHeader)
+  const content = hasSides ? (
+    <>
+      <HeaderSlot>{props.left}</HeaderSlot>
+      <HeaderCenter>{props.center}</HeaderCenter>
+      <HeaderSlot>{props.right}</HeaderSlot>
+    </>
+  ) : (
+      <HeaderCenter>{props.center}</HeaderCenter>
+    )
 
-const Heading = styled.h1`
+  return <Header>{content}</Header>
+}
+
+export default ModalPanelHeader
+
+const Header = styled.div`
+  background-color: ${getThemeColor("theme1")};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const HeaderSlot = styled.div`
+  width: 50px;
+  height: 50px;
+  ${flexCenter};
+`
+
+const HeaderCenter = styled.div`
+  flex: 1;
   text-align: center;
+  padding: ${spacing.small};
 `

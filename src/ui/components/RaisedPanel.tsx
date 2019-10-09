@@ -1,9 +1,8 @@
 import { styled } from "../styled"
-import { shadows } from "../theme"
+import { getThemeColor, shadows } from "../theme"
 
 const RaisedPanel = styled.div`
-  background-color: ${({ theme }) => theme.colors.theme0};
-  margin: auto;
+  background-color: ${getThemeColor('theme0')};
   box-shadow: ${shadows.normal};
   max-width: 300px;
 `

@@ -21,4 +21,8 @@ const PageContainer = styled.div`
   padding: ${spacing.large};
   overflow-y: auto;
   ${flexCenter};
+
+  > * {
+    margin: auto;
+  }
 `

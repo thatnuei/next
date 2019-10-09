@@ -29,7 +29,7 @@ function Login() {
 
   return (
     <FullscreenRaisedPanel>
-      <ModalPanelHeader>Login</ModalPanelHeader>
+      <ModalPanelHeader center={<h1>Login</h1>} />
       <Form onSubmit={handleSubmit}>
         <FieldSet disabled={isLoading}>
           <FormField labelText="Username">

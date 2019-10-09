@@ -1,10 +1,12 @@
 import React from "react"
 import { FocusOn } from "react-focus-on"
-import { flexCenter, flexGrow, focusOnFillFix, fullscreen, resolveStyleUnit } from "../helpers"
+import { flexGrow, focusOnFillFix, fullscreen, resolveStyleUnit } from "../helpers"
 import { styled } from "../styled"
-import { getThemeColor, shadows, spacing } from "../theme"
+import { spacing } from "../theme"
 import FadedButton from "./FadedButton"
 import Icon from "./Icon"
+import ModalPanelHeader from "./ModalPanelHeader"
+import RaisedPanel from "./RaisedPanel"
 
 type Props = {
   title: string
@@ -24,26 +26,23 @@ type Props = {
 type FillMode = "full" | "contained"
 
 function Modal({ panelWidth = 300, panelHeight = 400, fillMode = "full", ...props }: Props) {
+  const closeButton = (
+    <FadedButton onClick={props.onClose}>
+      <Icon icon="close" />
+    </FadedButton>
+  )
+
   return (
     <Shade visible={props.visible} fillMode={fillMode}>
-      <Panel visible={props.visible} maxWidth={panelWidth} maxHeight={panelHeight}>
-        <FocusOn
-          enabled={props.visible}
-          onEscapeKey={props.onClose}
-          onClickOutside={props.onClose}
-        >
-          <Header>
-            <HeaderSlot />
-            <HeaderText>{props.title}</HeaderText>
-            <HeaderSlot>
-              <FadedButton onClick={props.onClose}>
-                <Icon icon="close" />
-              </FadedButton>
-            </HeaderSlot>
-          </Header>
+      <ModalPanel visible={props.visible} maxWidth={panelWidth} maxHeight={panelHeight}>
+        <FocusOn enabled={props.visible} onEscapeKey={props.onClose} onClickOutside={props.onClose}>
+          <ModalPanelHeader
+            center={<h2>{props.title}</h2>}
+            right={closeButton}
+          />
           <PanelBody>{props.children}</PanelBody>
         </FocusOn>
-      </Panel>
+      </ModalPanel>
     </Shade>
   )
 }
@@ -69,20 +68,21 @@ const Shade = styled.div<ShadeProps>`
     visible
       ? { opacity: 1, visibility: "visible" }
       : { opacity: 0, visibility: "hidden" }}
+
+  > * {
+    margin: auto;
+  }
 `
 
 type PanelProps = { visible: boolean; maxWidth: number; maxHeight: number }
 
-const Panel = styled.div<PanelProps>`
-  margin: auto;
-  box-shadow: ${shadows.normal};
-  background-color: ${getThemeColor("theme0")};
-  transition: 0.3s transform;
-
+const ModalPanel = styled(RaisedPanel) <PanelProps>`
   width: 100%;
   height: 100%;
   max-width: ${({ maxWidth }) => resolveStyleUnit(maxWidth)};
   max-height: ${({ maxHeight }) => resolveStyleUnit(maxHeight)};
+
+  transition: 0.3s transform;
 
   ${({ visible }) =>
     visible
@@ -94,19 +94,4 @@ const Panel = styled.div<PanelProps>`
 
 const PanelBody = styled.div`
   ${flexGrow};
-`
-
-const Header = styled.div`
-  background-color: ${getThemeColor("theme1")};
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
-
-const HeaderText = styled.h2``
-
-const HeaderSlot = styled.div`
-  width: 50px;
-  height: 50px;
-  ${flexCenter};
 `
