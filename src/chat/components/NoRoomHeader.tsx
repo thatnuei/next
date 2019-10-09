@@ -4,9 +4,7 @@ import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import SidebarMenuButton from "./SidebarMenuButton"
 
-type Props = {}
-
-function NoRoomHeader(props: Props) {
+function NoRoomHeader() {
   return <Container>
     <SidebarMenuButton />
     <Title>next</Title>
