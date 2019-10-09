@@ -1,10 +1,12 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import ChannelBrowser from "../../channel/ChannelBrowser"
+import Drawer from "../../ui/components/Drawer"
 import Modal from "../../ui/components/Modal"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import useRootStore from "../../useRootStore"
+import { sidebarMenuBreakpoint } from "../constants"
 import ChatRoomView from "./ChatRoomView"
 import Navigation from "./Navigation"
 
@@ -20,6 +22,13 @@ function Chat() {
       <RoomContainer>
         <ChatRoomView />
       </RoomContainer>
+
+      <Drawer
+        side="left"
+        visible={chatNavigationStore.sidebarMenu.visible}
+        onClose={chatNavigationStore.sidebarMenu.hide}
+        children={<Navigation />}
+      />
 
       <Modal
         title="ChannelBrowser"
@@ -46,7 +55,7 @@ const NavigationContainer = styled.div`
   flex-basis: 240px;
   margin-right: ${spacing.xsmall};
 
-  @media (max-width: 950px) {
+  @media (max-width: ${sidebarMenuBreakpoint}px) {
     display: none;
   }
 `

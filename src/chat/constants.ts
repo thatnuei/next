@@ -9,3 +9,5 @@ export const errorCodes = {
   canOnlyJoinChannelWithInvite: 44,
   bannedFromChannel: 48,
 }
+
+export const sidebarMenuBreakpoint = 950

@@ -10,6 +10,7 @@ export default class ChatNavigationStore {
   @observable.ref
   currentRoom?: ChatRoom
 
+  sidebarMenu = new OverlayState()
   channelBrowser = new OverlayState()
 
   constructor(private root: RootStore) { }

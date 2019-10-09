@@ -1,13 +1,14 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
 import useRootStore from '../../useRootStore'
+import NoRoomHeader from './NoRoomHeader'
 
 function ChatRoomView() {
   const { chatNavigationStore, channelStore } = useRootStore()
   const { currentRoom } = chatNavigationStore
 
   if (!currentRoom?.type) {
-    return <p>lol</p>
+    return <NoRoomHeader />
   }
 
   switch (currentRoom.type) {

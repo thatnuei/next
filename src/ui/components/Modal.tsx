@@ -1,6 +1,6 @@
 import React from "react"
 import { FocusOn } from "react-focus-on"
-import { flexCenter, flexGrow, fullscreen, resolveStyleUnit } from "../helpers"
+import { flexCenter, flexGrow, focusOnFillFix, fullscreen, resolveStyleUnit } from "../helpers"
 import { styled } from "../styled"
 import { getThemeColor, shadows, spacing } from "../theme"
 import FadedButton from "./FadedButton"
@@ -89,19 +89,7 @@ const Panel = styled.div<PanelProps>`
       ? { transform: `translateY(0)` }
       : { transform: `translateY(20px)` }}
 
-  /* content-size the FocusOn div, which can't be styled directly */
-  > div {
-    width: 100%;
-    height: 100%;
-  }
-
-  > div > div {
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-  }
+  ${focusOnFillFix};
 `
 
 const PanelBody = styled.div`
