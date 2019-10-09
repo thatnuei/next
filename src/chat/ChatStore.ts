@@ -4,10 +4,6 @@ import StoredValue from "../storage/StoredValue"
 import { createCommandHandler } from "./helpers"
 import { ServerCommand } from "./types"
 
-export type ChatRoom = ChannelRoom | PrivateChatRoom
-type ChannelRoom = { type: "channel"; id: string }
-type PrivateChatRoom = { type: "privateChat"; partnerName: string }
-
 type ConnectionState = "offline" | "connecting" | "online"
 
 export default class ChatStore {
@@ -16,9 +12,6 @@ export default class ChatStore {
 
   @observable
   connectionState: ConnectionState = "offline"
-
-  @observable.ref
-  currentRoom?: ChatRoom
 
   @observable
   updatingStatus = false
@@ -31,12 +24,6 @@ export default class ChatStore {
 
   get identityCharacter() {
     return this.root.characterStore.characters.get(this.identity)
-  }
-
-  get currentChannelId() {
-    return this.currentRoom?.type === "channel"
-      ? this.currentRoom.id
-      : undefined
   }
 
   get isConnecting() {
@@ -52,11 +39,6 @@ export default class ChatStore {
   restoreIdentity = async () => {
     const identity = await this.storedIdentity.get()
     if (identity) this.setIdentity(identity)
-  }
-
-  @action
-  setCurrentRoom = (room: ChatRoom) => {
-    this.currentRoom = room
   }
 
   @action

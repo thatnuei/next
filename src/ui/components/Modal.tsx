@@ -8,7 +8,7 @@ import Icon from "./Icon"
 
 type Props = {
   title: string
-  visible?: boolean
+  visible: boolean
   panelWidth?: number
   panelHeight?: number
   children: React.ReactNode
@@ -23,18 +23,12 @@ type Props = {
 
 type FillMode = "full" | "contained"
 
-function Modal({
-  visible = false,
-  panelWidth = 300,
-  panelHeight = 400,
-  fillMode = "full",
-  ...props
-}: Props) {
+function Modal({ panelWidth = 300, panelHeight = 400, fillMode = "full", ...props }: Props) {
   return (
-    <Shade visible={visible} fillMode={fillMode}>
-      <Panel visible={visible} maxWidth={panelWidth} maxHeight={panelHeight}>
+    <Shade visible={props.visible} fillMode={fillMode}>
+      <Panel visible={props.visible} maxWidth={panelWidth} maxHeight={panelHeight}>
         <FocusOn
-          enabled={visible}
+          enabled={props.visible}
           onEscapeKey={props.onClose}
           onClickOutside={props.onClose}
         >

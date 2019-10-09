@@ -6,7 +6,6 @@ import useInput from "../dom/hooks/useInput"
 import useCycle from "../state/hooks/useCycle"
 import Button from "../ui/components/Button"
 import Icon from "../ui/components/Icon"
-import Modal from "../ui/components/Modal"
 import TextInput from "../ui/components/TextInput"
 import VirtualizedList from "../ui/components/VirtualizedList"
 import { fillArea, flexColumn, flexGrow, flexRow, spacedChildrenHorizontal } from "../ui/helpers"
@@ -21,11 +20,8 @@ type ListItem = {
   type: "public" | "private"
 }
 
-function ChannelBrowserModal() {
-  // const { actions, state } = useStore()
-  const { appStore, channelStore } = useRootStore()
-
-  const isModalVisible = appStore.modal?.type === "channelBrowser"
+function ChannelBrowser() {
+  const { channelStore } = useRootStore()
 
   const channels = channelStore.listings
 
@@ -70,48 +66,40 @@ function ChannelBrowserModal() {
   const refreshIcon = <Icon icon="refresh" />
 
   return (
-    <Modal
-      title="Channels"
-      visible={isModalVisible}
-      panelHeight={600}
-      panelWidth={400}
-      onClose={appStore.clearModal}
-    >
-      <Content>
-        <ChannelListContainer>
-          <VirtualizedList
-            items={listItems}
-            itemHeight={40}
-            getItemKey={(item) => item.entry.id}
-            renderItem={({ entry, type }) => (
-              <ChannelBrowserListItem
-                entry={entry}
-                icon={type === "public" ? "public" : "lock"}
-              />
-            )}
-          />
-        </ChannelListContainer>
+    <Container>
+      <ChannelListContainer>
+        <VirtualizedList
+          items={listItems}
+          itemHeight={40}
+          getItemKey={(item) => item.entry.id}
+          renderItem={({ entry, type }) => (
+            <ChannelBrowserListItem
+              entry={entry}
+              icon={type === "public" ? "public" : "lock"}
+            />
+          )}
+        />
+      </ChannelListContainer>
 
-        <Footer>
-          <TextInput placeholder="Search..." {...searchInput.bind} />
-          <Button onClick={sortMode.next}>
-            <Icon icon={sortButtonIcon} />
-          </Button>
-          <Button
-            onClick={channelStore.requestListings}
-            // disabled={state.channel.fetchingAvailableChannels}
-          >
-            {refreshIcon}
-          </Button>
-        </Footer>
-      </Content>
-    </Modal>
+      <Footer>
+        <TextInput placeholder="Search..." {...searchInput.bind} />
+        <Button onClick={sortMode.next}>
+          <Icon icon={sortButtonIcon} />
+        </Button>
+        <Button
+          onClick={channelStore.requestListings}
+        // disabled={state.channel.fetchingAvailableChannels}
+        >
+          {refreshIcon}
+        </Button>
+      </Footer>
+    </Container>
   )
 }
 
-export default observer(ChannelBrowserModal)
+export default observer(ChannelBrowser)
 
-const Content = styled.div`
+const Container = styled.div`
   ${fillArea};
   ${flexColumn};
   background-color: ${getThemeColor("theme2")};

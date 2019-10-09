@@ -2,14 +2,9 @@ import { action, observable } from "mobx"
 
 type AppView = "login" | "characterSelect" | "chat"
 
-export type AppModal = { type: "channelBrowser" }
-
 export default class AppStore {
   @observable
   view: AppView = "login"
-
-  @observable
-  modal?: AppModal
 
   @action
   showLogin = () => {
@@ -24,15 +19,5 @@ export default class AppStore {
   @action
   showChat = () => {
     this.view = "chat"
-  }
-
-  @action
-  setModal = (modal: AppModal) => {
-    this.modal = modal
-  }
-
-  @action
-  clearModal = () => {
-    this.modal = undefined
   }
 }

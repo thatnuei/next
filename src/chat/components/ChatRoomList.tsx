@@ -5,7 +5,7 @@ import useRootStore from "../../useRootStore"
 import RoomTab from "./RoomTab"
 
 function ChatRoomList() {
-  const { channelStore, chatStore } = useRootStore()
+  const { channelStore, chatNavigationStore } = useRootStore()
 
   return (
     <>
@@ -14,10 +14,10 @@ function ChatRoomList() {
           key={id}
           title={name}
           icon={<Icon icon={id === name ? "public" : "lock"} />}
-          active={chatStore.currentChannelId === id}
+          active={chatNavigationStore.currentChannelId === id}
           unread={unread}
           loading={false}
-          onClick={() => chatStore.setCurrentRoom({ type: 'channel', id })}
+          onClick={() => chatNavigationStore.showChannel(id)}
           onClose={() => channelStore.leave(id)}
         />
       ))}

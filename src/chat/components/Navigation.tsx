@@ -9,7 +9,7 @@ import ChatRoomList from "./ChatRoomList"
 import NavigationAction from "./NavigationAction"
 
 function Navigation() {
-  const { chatStore, appStore } = useRootStore()
+  const { chatStore, chatNavigationStore } = useRootStore()
 
   return (
     <Container>
@@ -17,7 +17,7 @@ function Navigation() {
         <NavigationAction
           title="Channels"
           icon="channels"
-          onClick={() => appStore.setModal({ type: 'channelBrowser' })}
+          onClick={chatNavigationStore.showChannelBrowser}
         />
         <NavigationAction title="Update Status" icon="updateStatus" />
         <NavigationAction title="Who's Online" icon="users" />

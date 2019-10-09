@@ -1,35 +1,34 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import ChannelBrowserModal from "../../channel/ChannelBrowserModal"
+import ChannelBrowser from "../../channel/ChannelBrowser"
+import Modal from "../../ui/components/Modal"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import useRootStore from "../../useRootStore"
+import ChatRoomView from "./ChatRoomView"
 import Navigation from "./Navigation"
 
 function Chat() {
-  const { chatStore, channelStore } = useRootStore()
-  const { currentRoom } = chatStore
-
-  function renderChatRoom() {
-    if (!currentRoom?.type) {
-      return <p>lol</p>
-    }
-
-    switch (currentRoom.type) {
-      case "channel": {
-        const channel = channelStore.channels.get(currentRoom.id)
-        return <p>{channel.name}</p>
-      }
-    }
-  }
+  const { chatNavigationStore } = useRootStore()
 
   return (
     <Container>
       <NavigationContainer>
         <Navigation />
       </NavigationContainer>
-      <RoomContainer>{renderChatRoom()}</RoomContainer>
-      <ChannelBrowserModal />
+
+      <RoomContainer>
+        <ChatRoomView />
+      </RoomContainer>
+
+      <Modal
+        title="ChannelBrowser"
+        visible={chatNavigationStore.channelBrowser.visible}
+        onClose={chatNavigationStore.channelBrowser.hide}
+        panelWidth={400}
+        panelHeight={600}
+        children={<ChannelBrowser />}
+      />
     </Container>
   )
 }

@@ -1,6 +1,7 @@
 import AppStore from "./app/AppStore"
 import ChannelStore from "./channel/ChannelStore"
 import CharacterStore from "./character/CharacterStore"
+import ChatNavigationStore from "./chat/ChatNavigationStore"
 import ChatStore from "./chat/ChatStore"
 import SocketStore from "./chat/SocketStore"
 import FListApi from "./flist/FListApi"
@@ -10,6 +11,7 @@ export default class RootStore {
   api = new FListApi()
   appStore = new AppStore()
   chatStore = new ChatStore(this)
+  chatNavigationStore = new ChatNavigationStore(this)
   characterStore = new CharacterStore()
   channelStore = new ChannelStore(this)
   socketStore = new SocketStore()
