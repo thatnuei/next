@@ -4,7 +4,7 @@ import useInput from "../../dom/hooks/useInput"
 import Button from "../../ui/components/Button"
 import FormField from "../../ui/components/FormField"
 import FullscreenRaisedPanel from "../../ui/components/FullscreenRaisedPanel"
-import ModalPanelHeader from "../../ui/components/ModalPanelHeader"
+import RaisedPanelHeader from "../../ui/components/RaisedPanelHeader"
 import TextInput from "../../ui/components/TextInput"
 import { spacedChildrenVertical } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
@@ -29,7 +29,7 @@ function Login() {
 
   return (
     <FullscreenRaisedPanel>
-      <ModalPanelHeader center={<h1>Login</h1>} />
+      <RaisedPanelHeader center={<h1>Login</h1>} />
       <Form onSubmit={handleSubmit}>
         <FieldSet disabled={isLoading}>
           <FormField labelText="Username">

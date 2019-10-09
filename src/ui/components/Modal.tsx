@@ -5,7 +5,7 @@ import { styled } from "../styled"
 import { spacing } from "../theme"
 import FadedButton from "./FadedButton"
 import Icon from "./Icon"
-import ModalPanelHeader from "./ModalPanelHeader"
+import RaisedPanelHeader from "./RaisedPanelHeader"
 import RaisedPanel from "./RaisedPanel"
 
 type Props = {
@@ -36,7 +36,7 @@ function Modal({ panelWidth = 300, panelHeight = 400, fillMode = "full", ...prop
     <Shade visible={props.visible} fillMode={fillMode}>
       <ModalPanel visible={props.visible} maxWidth={panelWidth} maxHeight={panelHeight}>
         <FocusOn enabled={props.visible} onEscapeKey={props.onClose} onClickOutside={props.onClose}>
-          <ModalPanelHeader
+          <RaisedPanelHeader
             center={<h2>{props.title}</h2>}
             right={closeButton}
           />

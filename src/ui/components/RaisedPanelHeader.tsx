@@ -9,7 +9,7 @@ type Props = {
   right?: React.ReactNode
 }
 
-const ModalPanelHeader = (props: Props) => {
+const RaisedPanelHeader = (props: Props) => {
   const hasSides = props.left || props.right
 
   const content = hasSides ? (
@@ -25,7 +25,7 @@ const ModalPanelHeader = (props: Props) => {
   return <Header>{content}</Header>
 }
 
-export default ModalPanelHeader
+export default RaisedPanelHeader
 
 const Header = styled.div`
   background-color: ${getThemeColor("theme1")};

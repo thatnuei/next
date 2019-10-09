@@ -4,7 +4,7 @@ import Avatar from "../../character/components/Avatar"
 import Anchor from "../../ui/components/Anchor"
 import Button from "../../ui/components/Button"
 import FullscreenRaisedPanel from "../../ui/components/FullscreenRaisedPanel"
-import ModalPanelHeader from "../../ui/components/ModalPanelHeader"
+import RaisedPanelHeader from "../../ui/components/RaisedPanelHeader"
 import Select from "../../ui/components/Select"
 import { spacedChildrenVertical } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
@@ -29,7 +29,7 @@ function CharacterSelect() {
 
   return (
     <FullscreenRaisedPanel>
-      <ModalPanelHeader center={<h1>Select a Character</h1>} />
+      <RaisedPanelHeader center={<h1>Select a Character</h1>} />
       <form onSubmit={handleSubmit}>
         <FieldSet disabled={isConnecting}>
           <FieldsContainer>
