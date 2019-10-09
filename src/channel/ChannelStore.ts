@@ -1,4 +1,4 @@
-import { action, observable } from "mobx"
+import { action, computed, observable } from "mobx"
 import { createCommandHandler } from "../chat/helpers"
 import MessageModel from "../chat/MessageModel"
 import RootStore from "../RootStore"
@@ -24,6 +24,7 @@ export default class ChannelStore {
     // root.socketHandler.listen("command", this.handleSocketCommand)
   }
 
+  @computed
   get joinedChannels() {
     return this.channels.values.filter((channel) => channel.isJoined)
   }
