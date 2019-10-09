@@ -7,9 +7,9 @@ import useRootStore from "./useRootStore"
 
 configure({
   enforceActions: 'observed',
-  observableRequiresReaction: true,
   reactionRequiresObservable: true,
-  computedRequiresReaction: true,
+  // this gives too many false positives
+  // observableRequiresReaction: true,
 })
 
 function renderRoot() {
