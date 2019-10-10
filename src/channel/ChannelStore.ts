@@ -96,25 +96,11 @@ export default class ChannelStore {
       const channel = this.channels.get(id)
       channel.setName(title)
       channel.users.add(character.identity)
-
-      if (character.identity === this.root.chatStore.identity) {
-        // this.root.chatNavigationStore.addTab({
-        //   type: "channel",
-        //   channelId: id,
-        // })
-      }
     },
 
     LCH: ({ channel: id, character }) => {
       const channel = this.channels.get(id)
       channel.users.remove(character)
-
-      // if (character === this.root.chatStore.identity) {
-      //   this.root.chatNavigationStore.removeTab({
-      //     type: "channel",
-      //     channelId: id,
-      //   })
-      // }
     },
 
     FLN: ({ character }) => {
