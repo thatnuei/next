@@ -1,8 +1,10 @@
 import { action, observable } from "mobx"
+import CharacterCollection from "../character/CharacterCollection"
+import { LoginResponse } from "../flist/FListApi"
 import RootStore from "../RootStore"
 import StoredValue from "../storage/StoredValue"
 import { createCommandHandler } from "./helpers"
-import { ServerCommand } from "./types"
+import { Friendship, ServerCommand } from "./types"
 
 type ConnectionState = "offline" | "connecting" | "online"
 
@@ -15,6 +17,11 @@ export default class ChatStore {
 
   @observable
   updatingStatus = false
+
+  @observable.ref friendships: Friendship[] = []
+  bookmarks = new CharacterCollection(this.root.characterStore)
+  admins = new CharacterCollection(this.root.characterStore)
+  ignored = new CharacterCollection(this.root.characterStore)
 
   constructor(private root: RootStore) {}
 
@@ -39,6 +46,16 @@ export default class ChatStore {
   restoreIdentity = async () => {
     const identity = await this.storedIdentity.get()
     if (identity) this.setIdentity(identity)
+  }
+
+  @action
+  setRelationsFromLoginResponse = (response: LoginResponse) => {
+    this.bookmarks.set(response.bookmarks.map(({ name }) => name))
+
+    this.friendships = response.friends.map((entry) => ({
+      us: entry.dest_name,
+      them: entry.source_name,
+    }))
   }
 
   @action
@@ -89,6 +106,51 @@ export default class ChatStore {
       this.root.channelStore.join("Fantasy")
       this.root.channelStore.join("Development")
       this.root.channelStore.join("Story Driven LFRP")
+    },
+
+    HLO: ({ message }) => {
+      console.info(message)
+    },
+    CON: ({ count }) => {
+      console.info(`There are ${count} characters in chat`)
+    },
+
+    ADL: ({ ops }) => {
+      this.admins.set(ops)
+    },
+
+    IGN: (params) => {
+      switch (params.action) {
+        case "init":
+        case "list":
+          this.ignored.set(params.characters)
+          break
+
+        case "add":
+          this.ignored.add(params.character)
+          break
+
+        case "delete":
+          this.ignored.remove(params.character)
+          break
+      }
+    },
+
+    RTB: (params) => {
+      switch (params.type) {
+        case "friendadd":
+        case "friendremove":
+          // refetch friends from API?
+          break
+
+        case "trackadd":
+          this.bookmarks.add(params.name)
+          break
+
+        case "trackrem":
+          this.bookmarks.remove(params.name)
+          break
+      }
     },
   })
 }

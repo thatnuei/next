@@ -9,3 +9,8 @@ export type ServerCommand = Values<
 >
 
 export type MessageType = "chat" | "lfrp" | "admin" | "system"
+
+export type Friendship = {
+  us: string
+  them: string
+}

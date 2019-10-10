@@ -30,10 +30,9 @@ export default class UserStore {
     })
 
     try {
-      const { ticket, characters } = await this.root.api.login(
-        account,
-        password,
-      )
+      const response = await this.root.api.login(account, password)
+
+      const { ticket, characters } = response
 
       runInAction(() => {
         this.account = account
@@ -43,6 +42,7 @@ export default class UserStore {
       })
 
       this.root.appStore.showCharacterSelect()
+      this.root.chatStore.setRelationsFromLoginResponse(response)
       this.root.chatStore.restoreIdentity()
     } catch (error) {
       runInAction(() => {

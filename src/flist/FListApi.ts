@@ -4,7 +4,7 @@ const getTicketUrl = "https://www.f-list.net/json/getApiTicket.php"
 
 type ApiResponse<D> = { error: string } | { error: "" } & D
 
-type LoginResponse = {
+export type LoginResponse = {
   ticket: string
   characters: string[]
   bookmarks: { name: string }[]
