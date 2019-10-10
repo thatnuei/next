@@ -70,6 +70,11 @@ export default class ChannelStore {
     })
   }
 
+  showChannelBrowser = () => {
+    this.root.chatOverlayStore.channelBrowser.show()
+    this.requestListings()
+  }
+
   handleSocketCommand = createCommandHandler({
     ICH: ({ channel: id, mode, users }) => {
       const channel = this.channels.get(id)

@@ -9,7 +9,7 @@ import ChatRoomList from "./ChatRoomList"
 import NavigationAction from "./NavigationAction"
 
 function Navigation() {
-  const { chatStore, chatNavigationStore } = useRootStore()
+  const root = useRootStore()
 
   return (
     <Container>
@@ -17,7 +17,7 @@ function Navigation() {
         <NavigationAction
           title="Channels"
           icon="channels"
-          onClick={chatNavigationStore.showChannelBrowser}
+          onClick={root.channelStore.showChannelBrowser}
         />
         <NavigationAction title="Update Status" icon="updateStatus" />
         <NavigationAction title="Who's Online" icon="users" />
@@ -26,7 +26,7 @@ function Navigation() {
         <NavigationAction title="Logout" icon="logout" />
       </ActionsContainer>
       <CharacterInfoContainer>
-        <CharacterInfo name={chatStore.identity} />
+        <CharacterInfo name={root.chatStore.identity} />
       </CharacterInfoContainer>
       <RoomsContainer>
         <ChatRoomList />

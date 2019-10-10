@@ -1,4 +1,4 @@
-import { action, observable } from "mobx"
+import { action, computed, observable } from "mobx"
 
 export default class OverlayState {
   @observable
@@ -17,5 +17,13 @@ export default class OverlayState {
   @action
   toggle = () => {
     this.visible = !this.visible
+  }
+
+  @computed
+  get overlayProps() {
+    return {
+      visible: this.visible,
+      onClose: this.hide,
+    }
   }
 }

@@ -12,7 +12,7 @@ function SidebarMenuButton() {
   const isLargeScreen = useMedia(`(min-width: ${sidebarMenuBreakpoint}px)`)
 
   return isLargeScreen ? null : (
-    <StyledFadedButton onClick={root.chatNavigationStore.sidebarMenu.show}>
+    <StyledFadedButton onClick={root.chatOverlayStore.sidebarMenu.show}>
       <Icon icon="menu" />
     </StyledFadedButton>
   )

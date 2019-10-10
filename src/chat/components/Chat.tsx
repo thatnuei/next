@@ -11,7 +11,7 @@ import ChatRoomView from "./ChatRoomView"
 import Navigation from "./Navigation"
 
 function Chat() {
-  const { chatNavigationStore } = useRootStore()
+  const root = useRootStore()
 
   return (
     <Container>
@@ -25,18 +25,16 @@ function Chat() {
 
       <Drawer
         side="left"
-        visible={chatNavigationStore.sidebarMenu.visible}
-        onClose={chatNavigationStore.sidebarMenu.hide}
         children={<Navigation />}
+        {...root.chatOverlayStore.sidebarMenu.overlayProps}
       />
 
       <Modal
         title="ChannelBrowser"
-        visible={chatNavigationStore.channelBrowser.visible}
-        onClose={chatNavigationStore.channelBrowser.hide}
         panelWidth={400}
         panelHeight={600}
         children={<ChannelBrowser />}
+        {...root.chatOverlayStore.channelBrowser.overlayProps}
       />
     </Container>
   )
