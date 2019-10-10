@@ -14,7 +14,7 @@ function ChatRoomView() {
 
   switch (currentRoom.type) {
     case "channel": {
-      const channel = channelStore.channels.get(currentRoom.id)
+      const channel = channelStore.channels.get(currentRoom.channelId)
       return <ChannelView channel={channel} />
     }
 

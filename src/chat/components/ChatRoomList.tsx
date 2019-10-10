@@ -9,18 +9,22 @@ function ChatRoomList() {
 
   return (
     <>
-      {channelStore.joinedChannels.map(({ id, name, unread }) => (
-        <RoomTab
-          key={id}
-          title={name}
-          icon={<Icon icon={id === name ? "public" : "lock"} />}
-          active={chatNavigationStore.currentChannelId === id}
-          unread={unread}
-          loading={false}
-          onClick={() => chatNavigationStore.showChannel(id)}
-          onClose={() => channelStore.leave(id)}
-        />
-      ))}
+      {chatNavigationStore.channelRooms.map((room) => {
+        const channel = channelStore.channels.get(room.channelId)
+        const icon = channel.id === channel.name ? "public" : "lock"
+        return (
+          <RoomTab
+            key={room.key}
+            title={channel.name}
+            icon={<Icon icon={icon} />}
+            active={chatNavigationStore.currentRoom === room}
+            unread={channel.unread}
+            loading={false}
+            onClick={() => chatNavigationStore.setCurrentRoom(room.key)}
+            onClose={() => channelStore.leave(channel.id)}
+          />
+        )
+      })}
     </>
   )
 }

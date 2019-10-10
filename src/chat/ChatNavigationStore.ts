@@ -1,27 +1,48 @@
-import { action, computed, observable } from 'mobx'
-import RootStore from '../RootStore'
+import { action, computed, observable } from "mobx"
+import clamp from "../common/helpers/clamp"
+import RootStore from "../RootStore"
 
+type ChatRoomBase<T extends string> = { type: T; key: string }
+type ChannelRoom = ChatRoomBase<"channel"> & { channelId: string }
+type PrivateChatRoom = ChatRoomBase<"privateChat"> & { partnerName: string }
 type ChatRoom = ChannelRoom | PrivateChatRoom
-type ChannelRoom = { type: "channel"; id: string }
-type PrivateChatRoom = { type: "privateChat"; partnerName: string }
 
 export default class ChatNavigationStore {
-  @observable.ref
-  currentRoom?: ChatRoom
+  @observable
+  currentRoomIndex = 0
 
-  constructor(private root: RootStore) { }
+  constructor(private root: RootStore) {}
 
-  @action
-  showChannel = (id: string) => {
-    this.currentRoom = { type: 'channel', id }
-    this.root.chatOverlayStore.sidebarMenu.hide()
+  @computed
+  get channelRooms(): ChannelRoom[] {
+    return this.root.channelStore.joinedChannels.map((model) => ({
+      type: "channel",
+      key: `channel-${model.id}`,
+      channelId: model.id,
+    }))
   }
 
   @computed
-  get currentChannelId() {
-    return this.currentRoom?.type === "channel"
-      ? this.currentRoom.id
-      : undefined
+  get privateChatRooms(): PrivateChatRoom[] {
+    return [] // TODO
+  }
+
+  @computed
+  get rooms(): ChatRoom[] {
+    return [...this.channelRooms, ...this.privateChatRooms]
+  }
+
+  @computed
+  get currentRoom(): ChatRoom | undefined {
+    return this.rooms[clamp(this.currentRoomIndex, 0, this.rooms.length - 1)]
+  }
+
+  @action
+  setCurrentRoom = (key: string) => {
+    const index = this.rooms.findIndex((room) => room.key === key)
+    if (index > -1) {
+      this.currentRoomIndex = index
+      this.root.chatOverlayStore.sidebarMenu.hide()
+    }
   }
 }
-
