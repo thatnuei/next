@@ -12,7 +12,7 @@ export default class RootStore {
   api = new FListApi()
   appStore = new AppStore()
   chatStore = new ChatStore(this)
-  chatNavigationStore = new ChatNavigationStore()
+  chatNavigationStore = new ChatNavigationStore(this)
   chatOverlayStore = new ChatOverlayStore()
   characterStore = new CharacterStore()
   channelStore = new ChannelStore(this)
