@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import React from 'react'
+import ChannelView from '../../channel/ChannelView'
 import useRootStore from '../../useRootStore'
 import NoRoomHeader from './NoRoomHeader'
 
@@ -14,7 +15,7 @@ function ChatRoomView() {
   switch (currentRoom.type) {
     case "channel": {
       const channel = channelStore.channels.get(currentRoom.id)
-      return <p>{channel.name}</p>
+      return <ChannelView channel={channel} />
     }
 
     case 'privateChat':
