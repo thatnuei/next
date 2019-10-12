@@ -26,7 +26,9 @@ export default class ChannelStore {
 
   @computed
   get joinedChannels() {
-    return this.channels.values.filter((channel) => channel.isJoined)
+    return this.channels.values.filter((channel) => {
+      return channel.joinState !== "left"
+    })
   }
 
   @action
@@ -42,11 +44,15 @@ export default class ChannelStore {
     this.root.socketStore.sendCommand("ORS", undefined)
   }
 
-  join(channelId: string) {
+  @action
+  join = (channelId: string) => {
+    this.channels.get(channelId).joinState = "joining"
     this.root.socketStore.sendCommand("JCH", { channel: channelId })
   }
 
-  leave(channelId: string) {
+  @action
+  leave = (channelId: string) => {
+    this.channels.get(channelId).joinState = "leaving"
     this.root.socketStore.sendCommand("LCH", { channel: channelId })
   }
 
@@ -94,13 +100,21 @@ export default class ChannelStore {
 
     JCH: ({ channel: id, character, title }) => {
       const channel = this.channels.get(id)
-      channel.setName(title)
-      channel.users.add(character.identity)
+      if (character.identity === this.root.chatStore.identity) {
+        channel.joinState = "joined"
+      } else {
+        channel.setName(title)
+        channel.users.add(character.identity)
+      }
     },
 
     LCH: ({ channel: id, character }) => {
       const channel = this.channels.get(id)
-      channel.users.remove(character)
+      if (character === this.root.chatStore.identity) {
+        channel.joinState = "left"
+      } else {
+        channel.users.remove(character)
+      }
     },
 
     FLN: ({ character }) => {

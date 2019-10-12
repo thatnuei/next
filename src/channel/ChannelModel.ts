@@ -6,6 +6,8 @@ import RoomModel from "../chat/RoomModel"
 import RootStore from "../RootStore"
 import { ChannelMode } from "./types"
 
+export type ChannelJoinState = "left" | "joining" | "joined" | "leaving"
+
 export default class ChannelModel extends RoomModel {
   @observable
   name = this.id
@@ -18,6 +20,9 @@ export default class ChannelModel extends RoomModel {
 
   @observable
   selectedMode: ChannelMode = "chat"
+
+  @observable
+  joinState: ChannelJoinState = "left"
 
   users = new CharacterCollection(this.root.characterStore)
   ops = new CharacterCollection(this.root.characterStore)
@@ -48,7 +53,12 @@ export default class ChannelModel extends RoomModel {
 
   @computed
   get isJoined() {
-    return this.users.has(this.root.chatStore.identity)
+    return this.joinState === "joined"
+  }
+
+  @computed
+  get isLoading() {
+    return this.joinState === "joining" || this.joinState === "leaving"
   }
 
   @computed

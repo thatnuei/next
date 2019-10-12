@@ -22,7 +22,7 @@ export default class ChatNavigationStore {
     }))
   }
 
-  @computed
+  // @computed
   get privateChatRooms(): PrivateChatRoom[] {
     return [] // TODO
   }

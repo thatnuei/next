@@ -16,7 +16,7 @@ type Props = {
 function ChannelBrowserListItem({ entry, icon }: Props) {
   const { channelStore } = useRootStore()
   const channel = channelStore.channels.get(entry.id)
-  const isLoading = false // TODO
+  const isLoading = channel.isLoading
 
   const handleClick = () => {
     if (channel.isJoined) {

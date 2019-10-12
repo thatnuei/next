@@ -19,7 +19,7 @@ function ChatRoomList() {
             icon={<Icon icon={icon} />}
             active={chatNavigationStore.currentRoom === room}
             unread={channel.unread}
-            loading={false}
+            loading={channel.isLoading}
             onClick={() => chatNavigationStore.setCurrentRoom(room.key)}
             onClose={() => channelStore.leave(channel.id)}
           />
