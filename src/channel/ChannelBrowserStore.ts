@@ -4,6 +4,7 @@ import { createCommandHandler } from "../chat/helpers"
 import queryify from "../common/helpers/queryify"
 import sleep from "../common/helpers/sleep"
 import RootStore from "../RootStore"
+import StateMachine from "../state/classes/StateMachine"
 import { ChannelMode } from "./types"
 
 type SortMode = "userCount" | "title"
@@ -35,14 +36,14 @@ export default class ChannelBrowserStore {
     this.root.socketStore.sendCommand("CHA", undefined)
     this.root.socketStore.sendCommand("ORS", undefined)
 
-    this.publicList.state = "refreshing"
-    this.privateList.state = "refreshing"
+    this.publicList.state.dispatch("refresh")
+    this.privateList.state.dispatch("refresh")
 
     await sleep(3000)
 
     runInAction(() => {
-      this.publicList.state = "idle"
-      this.privateList.state = "idle"
+      this.publicList.state.dispatch("timeout")
+      this.privateList.state.dispatch("timeout")
     })
   }
 
@@ -64,7 +65,7 @@ export default class ChannelBrowserStore {
   @computed
   get isRefreshing() {
     return [this.publicList.state, this.privateList.state].every(
-      (state) => state === "refreshing",
+      (state) => state.current === "refreshing",
     )
   }
 
@@ -103,7 +104,7 @@ export default class ChannelBrowserStore {
       )
 
       this.publicList.channels = entries
-      this.publicList.state = "idle"
+      this.publicList.state.dispatch("receivedItems")
     },
 
     ORS: ({ channels }) => {
@@ -116,17 +117,25 @@ export default class ChannelBrowserStore {
         }),
       )
       this.privateList.channels = entries
-      this.privateList.state = "idle"
+      this.privateList.state.dispatch("receivedItems")
     },
   })
 }
-
-type EntryListState = "idle" | "refreshing"
 
 class EntryList {
   @observable.ref
   channels: ChannelBrowserEntry[] = []
 
   @observable
-  state: EntryListState = "idle"
+  state = new StateMachine({
+    initial: "idle",
+    states: {
+      idle: {
+        on: { refresh: "refreshing" },
+      },
+      refreshing: {
+        on: { receivedItems: "idle", timeout: "idle" },
+      },
+    },
+  })
 }
