@@ -42,7 +42,7 @@ export default class ChatNavigationStore {
     const index = this.rooms.findIndex((room) => room.key === key)
     if (index > -1) {
       this.currentRoomIndex = index
-      this.root.chatOverlayStore.sidebarMenu.hide()
+      this.root.chatOverlayStore.primaryNavigation.hide()
     }
   }
 }

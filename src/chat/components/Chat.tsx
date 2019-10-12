@@ -26,7 +26,7 @@ function Chat() {
       <Drawer
         side="left"
         children={<Navigation />}
-        {...root.chatOverlayStore.sidebarMenu.overlayProps}
+        {...root.chatOverlayStore.primaryNavigation.overlayProps}
       />
 
       <Modal
