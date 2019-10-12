@@ -1,8 +1,8 @@
 import React from "react"
 import { FocusOn } from "react-focus-on"
-import { focusOnFillFix, fullscreen } from '../helpers'
-import { styled } from '../styled'
-import { getThemeColor } from '../theme'
+import { focusOnFillFix, fullscreen } from "../helpers"
+import { styled } from "../styled"
+import { getThemeColor } from "../theme"
 
 type Props = {
   visible: boolean
@@ -11,20 +11,22 @@ type Props = {
   onClose?: () => void
 }
 
-type DrawerSide = 'left' | 'right'
+type DrawerSide = "left" | "right"
 
 function Drawer(props: Props) {
-  return <Shade visible={props.visible}>
-    <Panel visible={props.visible} side={props.side}>
-      <FocusOn
-        enabled={props.visible}
-        onEscapeKey={props.onClose}
-        onClickOutside={props.onClose}
-      >
-        {props.children}
-      </FocusOn>
-    </Panel>
-  </Shade>
+  return (
+    <Shade visible={props.visible}>
+      <Panel visible={props.visible} side={props.side}>
+        <FocusOn
+          enabled={props.visible}
+          onEscapeKey={props.onClose}
+          onClickOutside={props.onClose}
+        >
+          {props.children}
+        </FocusOn>
+      </Panel>
+    </Shade>
+  )
 }
 
 export default Drawer
@@ -41,10 +43,10 @@ const Shade = styled.div<{ visible: boolean }>`
       : { opacity: 0, visibility: "hidden" }}
 `
 
-const Panel = styled.div<{ visible: boolean, side: DrawerSide }>`
+const Panel = styled.div<{ visible: boolean; side: DrawerSide }>`
   background-color: ${getThemeColor("theme2")};
   position: absolute;
-  ${props => props.side}: 0;
+  ${(props) => props.side}: 0;
   top: 0;
   bottom: 0;
 
@@ -53,7 +55,7 @@ const Panel = styled.div<{ visible: boolean, side: DrawerSide }>`
   ${({ visible, side }) =>
     visible
       ? { transform: `translateX(0)` }
-      : { transform: `translateX(${side === 'left' ? -100 : 100}%)` }}
+      : { transform: `translateX(${side === "left" ? -100 : 100}%)` }}
 
   ${focusOnFillFix};
 `

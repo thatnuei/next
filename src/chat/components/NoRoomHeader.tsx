@@ -5,10 +5,12 @@ import { spacing } from "../../ui/theme"
 import SidebarMenuButton from "./SidebarMenuButton"
 
 function NoRoomHeader() {
-  return <Container>
-    <SidebarMenuButton />
-    <Title>next</Title>
-  </Container>
+  return (
+    <Container>
+      <SidebarMenuButton />
+      <Title>next</Title>
+    </Container>
+  )
 }
 
 export default NoRoomHeader

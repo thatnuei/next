@@ -1,6 +1,11 @@
 import React from "react"
 import { FocusOn } from "react-focus-on"
-import { flexGrow, focusOnFillFix, fullscreen, resolveStyleUnit } from "../helpers"
+import {
+  flexGrow,
+  focusOnFillFix,
+  fullscreen,
+  resolveStyleUnit,
+} from "../helpers"
 import { styled } from "../styled"
 import { spacing } from "../theme"
 import FadedButton from "./FadedButton"
@@ -25,7 +30,12 @@ type Props = {
 
 type FillMode = "full" | "contained"
 
-function Modal({ panelWidth = 300, panelHeight = 400, fillMode = "full", ...props }: Props) {
+function Modal({
+  panelWidth = 300,
+  panelHeight = 400,
+  fillMode = "full",
+  ...props
+}: Props) {
   const closeButton = (
     <FadedButton onClick={props.onClose}>
       <Icon icon="close" />
@@ -34,8 +44,16 @@ function Modal({ panelWidth = 300, panelHeight = 400, fillMode = "full", ...prop
 
   return (
     <Shade visible={props.visible} fillMode={fillMode}>
-      <ModalPanel visible={props.visible} maxWidth={panelWidth} maxHeight={panelHeight}>
-        <FocusOn enabled={props.visible} onEscapeKey={props.onClose} onClickOutside={props.onClose}>
+      <ModalPanel
+        visible={props.visible}
+        maxWidth={panelWidth}
+        maxHeight={panelHeight}
+      >
+        <FocusOn
+          enabled={props.visible}
+          onEscapeKey={props.onClose}
+          onClickOutside={props.onClose}
+        >
           <RaisedPanelHeader
             center={<h2>{props.title}</h2>}
             right={closeButton}
@@ -76,7 +94,7 @@ const Shade = styled.div<ShadeProps>`
 
 type PanelProps = { visible: boolean; maxWidth: number; maxHeight: number }
 
-const ModalPanel = styled(RaisedPanel) <PanelProps>`
+const ModalPanel = styled(RaisedPanel)<PanelProps>`
   width: 100%;
   height: 100%;
   max-width: ${({ maxWidth }) => resolveStyleUnit(maxWidth)};

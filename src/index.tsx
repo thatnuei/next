@@ -6,7 +6,7 @@ import "./polyfills"
 import useRootStore from "./useRootStore"
 
 configure({
-  enforceActions: 'observed',
+  enforceActions: "observed",
   reactionRequiresObservable: true,
   // this gives too many false positives
   // observableRequiresReaction: true,

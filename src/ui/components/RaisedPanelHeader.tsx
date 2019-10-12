@@ -19,8 +19,8 @@ const RaisedPanelHeader = (props: Props) => {
       <HeaderSlot>{props.right}</HeaderSlot>
     </>
   ) : (
-      <HeaderCenter>{props.center}</HeaderCenter>
-    )
+    <HeaderCenter>{props.center}</HeaderCenter>
+  )
 
   return <Header>{content}</Header>
 }
