@@ -1,6 +1,6 @@
 import { action, observable } from "mobx"
 
-type Graph<State extends string, Event extends string> = {
+type StateGraph<State extends string, Event extends string> = {
   [_ in State]: {
     on?: {
       [_ in Event]?: State
@@ -10,19 +10,19 @@ type Graph<State extends string, Event extends string> = {
 
 type Options<State extends string, Event extends string> = {
   initial: State
-  states: Graph<State, Event>
+  states: StateGraph<State, Event>
 }
 
 export default class StateMachine<State extends string, Event extends string> {
   @observable
-  current: State = Object.keys(this.options.states)[0] as State
+  current = this.options.initial
 
   constructor(private options: Options<State, Event>) {}
 
   @action
   dispatch = (event: Event) => {
     const events = this.options.states[this.current].on
-    const newState = events && events[event]
+    const newState = events?.[event]
     if (newState) {
       this.current = newState! // TS bug?
     }
