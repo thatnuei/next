@@ -1,24 +1,12 @@
-import { action, computed, observable } from "mobx"
+import { action, computed } from "mobx"
 import { createCommandHandler } from "../chat/helpers"
 import MessageModel from "../chat/MessageModel"
 import RootStore from "../RootStore"
 import FactoryMap from "../state/classes/FactoryMap"
 import ChannelModel from "./ChannelModel"
-import { ChannelBrowserEntry } from "./types"
-
-type ChannelStoreListings = {
-  public: ChannelBrowserEntry[]
-  private: ChannelBrowserEntry[]
-}
 
 export default class ChannelStore {
   channels = new FactoryMap((id) => new ChannelModel(this.root, id))
-
-  @observable.shallow
-  listings: ChannelStoreListings = {
-    public: [],
-    private: [],
-  }
 
   constructor(private root: RootStore) {
     // root.socketHandler.listen("command", this.handleSocketCommand)
@@ -29,19 +17,6 @@ export default class ChannelStore {
     return this.channels.values.filter((channel) => {
       return channel.joinState !== "left"
     })
-  }
-
-  @action
-  private setListings(
-    kind: keyof ChannelStoreListings,
-    listings: ChannelBrowserEntry[],
-  ) {
-    this.listings[kind] = listings
-  }
-
-  requestListings = () => {
-    this.root.socketStore.sendCommand("CHA", undefined)
-    this.root.socketStore.sendCommand("ORS", undefined)
   }
 
   @action
@@ -76,11 +51,7 @@ export default class ChannelStore {
     })
   }
 
-  showChannelBrowser = () => {
-    this.root.chatOverlayStore.channelBrowser.show()
-    this.requestListings()
-  }
-
+  @action
   handleSocketCommand = createCommandHandler({
     ICH: ({ channel: id, mode, users }) => {
       const channel = this.channels.get(id)
@@ -147,29 +118,6 @@ export default class ChannelStore {
         const message = new MessageModel(undefined, params.message, "system")
         channel.addMessage(message)
       }
-    },
-
-    CHA: ({ channels }) => {
-      const listings = channels.map<ChannelBrowserEntry>(
-        ({ name, mode, characters }) => ({
-          id: name,
-          title: name,
-          mode,
-          userCount: characters,
-        }),
-      )
-      this.setListings("public", listings)
-    },
-
-    ORS: ({ channels }) => {
-      const listings = channels.map<ChannelBrowserEntry>(
-        ({ name, title, characters }) => ({
-          id: name,
-          title,
-          userCount: characters,
-        }),
-      )
-      this.setListings("private", listings)
     },
   })
 }

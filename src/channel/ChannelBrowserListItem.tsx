@@ -1,19 +1,18 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import Icon, { IconName } from "../ui/components/Icon"
+import Icon from "../ui/components/Icon"
 import LoadingIcon from "../ui/components/LoadingIcon"
 import { fillArea, spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
 import useRootStore from "../useRootStore"
-import { ChannelBrowserEntry } from "./types"
+import { ChannelBrowserEntry } from "./ChannelBrowserStore"
 
 type Props = {
   entry: ChannelBrowserEntry
-  icon: IconName
 }
 
-function ChannelBrowserListItem({ entry, icon }: Props) {
+function ChannelBrowserListItem({ entry }: Props) {
   const { channelStore } = useRootStore()
   const channel = channelStore.channels.get(entry.id)
   const isLoading = channel.isLoading
@@ -26,6 +25,12 @@ function ChannelBrowserListItem({ entry, icon }: Props) {
     }
   }
 
+  const icon = isLoading ? (
+    <LoadingIcon />
+  ) : (
+    <Icon icon={entry.type === "public" ? "public" : "lock"} />
+  )
+
   return (
     <Container
       active={channel.isJoined}
@@ -34,7 +39,7 @@ function ChannelBrowserListItem({ entry, icon }: Props) {
       role="checkbox"
       aria-checked={channel.isJoined}
     >
-      {isLoading ? <LoadingIcon /> : <Icon icon={icon} />}
+      {icon}
       <Title dangerouslySetInnerHTML={{ __html: entry.title }} />
       <UserCount>{entry.userCount}</UserCount>
     </Container>

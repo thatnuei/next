@@ -1,4 +1,5 @@
 import AppStore from "./app/AppStore"
+import ChannelBrowserStore from "./channel/ChannelBrowserStore"
 import ChannelStore from "./channel/ChannelStore"
 import CharacterStore from "./character/CharacterStore"
 import ChatNavigationStore from "./chat/ChatNavigationStore"
@@ -16,6 +17,7 @@ export default class RootStore {
   chatOverlayStore = new ChatOverlayStore()
   characterStore = new CharacterStore()
   channelStore = new ChannelStore(this)
+  channelBrowserStore = new ChannelBrowserStore(this)
   socketStore = new SocketStore()
   userStore = new UserStore(this)
 

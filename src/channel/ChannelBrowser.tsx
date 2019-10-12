@@ -1,94 +1,61 @@
-import { sortBy } from "lodash"
 import { observer } from "mobx-react-lite"
-import React, { useMemo } from "react"
-import queryify from "../common/helpers/queryify"
-import useInput from "../dom/hooks/useInput"
-import useCycle from "../state/hooks/useCycle"
+import React from "react"
 import Button from "../ui/components/Button"
 import Icon from "../ui/components/Icon"
+import LoadingIcon from "../ui/components/LoadingIcon"
 import TextInput from "../ui/components/TextInput"
 import VirtualizedList from "../ui/components/VirtualizedList"
-import { fillArea, flexColumn, flexGrow, flexRow, spacedChildrenHorizontal } from "../ui/helpers"
+import {
+  fillArea,
+  flexColumn,
+  flexGrow,
+  flexRow,
+  spacedChildrenHorizontal,
+} from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
 import useRootStore from "../useRootStore"
 import ChannelBrowserListItem from "./ChannelBrowserListItem"
-import { ChannelBrowserEntry } from "./types"
-
-type ListItem = {
-  entry: ChannelBrowserEntry
-  type: "public" | "private"
-}
 
 function ChannelBrowser() {
-  const { channelStore } = useRootStore()
-
-  const channels = channelStore.listings
-
-  const searchInput = useInput()
-  const searchQuery = queryify(searchInput.value)
-
-  const sortMode = useCycle(["userCount", "title"] as const)
-  const currentSortMode = sortMode.current
-
-  const createListItem = (type: ListItem["type"]) => (
-    entry: ChannelBrowserEntry,
-  ) => ({ entry, type })
-
-  const listItems = useMemo(() => {
-    const sortChannels = (entries: ChannelBrowserEntry[]) =>
-      currentSortMode === "title"
-        ? sortBy(entries, "title")
-        : sortBy(entries, "userCount").reverse()
-
-    const filterChannels = (entries: ChannelBrowserEntry[]) =>
-      entries.filter((entry) => queryify(entry.title).includes(searchQuery))
-
-    const processChannels = (
-      entries: ChannelBrowserEntry[],
-      type: ListItem["type"],
-    ) => sortChannels(filterChannels(entries)).map(createListItem(type))
-
-    return [
-      ...processChannels(channels.public, "public"),
-      ...processChannels(channels.private, "private"),
-    ]
-  }, [channels.private, channels.public, searchQuery, currentSortMode])
+  const { channelBrowserStore } = useRootStore()
 
   const sortButtonIcon =
-    sortMode.current === "title" ? "sortAlphabetical" : "sortNumeric"
+    channelBrowserStore.sortMode === "title"
+      ? "sortAlphabetical"
+      : "sortNumeric"
 
-  // const refreshIcon = state.channel.fetchingAvailableChannels ? (
-  //   <LoadingIcon />
-  // ) : (
-  //   <Icon icon="refresh" />
-  // )
-  const refreshIcon = <Icon icon="refresh" />
+  const refreshIcon = channelBrowserStore.isRefreshing ? (
+    <LoadingIcon />
+  ) : (
+    <Icon icon="refresh" />
+  )
 
   return (
     <Container>
       <ChannelListContainer>
         <VirtualizedList
-          items={listItems}
+          items={channelBrowserStore.displayedEntries}
           itemHeight={40}
-          getItemKey={(item) => item.entry.id}
-          renderItem={({ entry, type }) => (
-            <ChannelBrowserListItem
-              entry={entry}
-              icon={type === "public" ? "public" : "lock"}
-            />
-          )}
+          getItemKey={(item) => item.id}
+          renderItem={(entry) => <ChannelBrowserListItem entry={entry} />}
         />
       </ChannelListContainer>
 
       <Footer>
-        <TextInput placeholder="Search..." {...searchInput.bind} />
-        <Button onClick={sortMode.next}>
+        <TextInput
+          placeholder="Search..."
+          value={channelBrowserStore.searchQuery}
+          onChange={(event) =>
+            channelBrowserStore.setSearchQuery(event.target.value)
+          }
+        />
+        <Button onClick={channelBrowserStore.cycleSortMode}>
           <Icon icon={sortButtonIcon} />
         </Button>
         <Button
-          onClick={channelStore.requestListings}
-        // disabled={state.channel.fetchingAvailableChannels}
+          onClick={channelBrowserStore.refresh}
+          disabled={channelBrowserStore.isRefreshing}
         >
           {refreshIcon}
         </Button>

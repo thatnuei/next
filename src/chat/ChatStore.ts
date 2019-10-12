@@ -92,6 +92,7 @@ export default class ChatStore {
       this.handleChatCommand,
       this.root.characterStore.handleSocketCommand,
       this.root.channelStore.handleSocketCommand,
+      this.root.channelBrowserStore.handleSocketCommand,
     ]
     handlers.forEach((handle) => handle(command))
   }

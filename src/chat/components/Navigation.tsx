@@ -17,7 +17,7 @@ function Navigation() {
         <NavigationAction
           title="Channels"
           icon="channels"
-          onClick={root.channelStore.showChannelBrowser}
+          onClick={root.channelBrowserStore.showChannelBrowser}
         />
         <NavigationAction title="Update Status" icon="updateStatus" />
         <NavigationAction title="Who's Online" icon="users" />
