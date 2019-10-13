@@ -45,4 +45,11 @@ export default class ChatNavigationStore {
       this.root.chatOverlayStore.primaryNavigation.hide()
     }
   }
+
+  @computed
+  get currentChannel() {
+    return this.currentRoom?.type === "channel"
+      ? this.root.channelStore.channels.get(this.currentRoom.channelId)
+      : undefined
+  }
 }

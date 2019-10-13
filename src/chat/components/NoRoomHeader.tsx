@@ -22,6 +22,6 @@ const Container = styled.div`
   ${spacedChildrenHorizontal(spacing.small)};
 `
 
-const Title = styled.h2`
+const Title = styled.h3`
   opacity: 0.5;
 `

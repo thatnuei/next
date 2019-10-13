@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import ChannelBrowser from "../../channel/ChannelBrowser"
+import ChannelMenu from "../../channel/ChannelMenu"
 import Drawer from "../../ui/components/Drawer"
 import Modal from "../../ui/components/Modal"
 import { styled } from "../../ui/styled"
@@ -12,6 +13,7 @@ import Navigation from "./Navigation"
 
 function Chat() {
   const root = useRootStore()
+  const { currentChannel } = root.chatNavigationStore
 
   return (
     <Container>
@@ -35,6 +37,12 @@ function Chat() {
         panelHeight={600}
         children={<ChannelBrowser />}
         {...root.chatOverlayStore.channelBrowser.overlayProps}
+      />
+
+      <Drawer
+        side="right"
+        children={currentChannel && <ChannelMenu channel={currentChannel} />}
+        {...root.chatOverlayStore.channelMenu.overlayProps}
       />
     </Container>
   )

@@ -10,6 +10,7 @@ export {
   mdiClose as close,
   mdiCodeTags as console,
   mdiComment as message,
+  mdiDotsVertical as more,
   mdiEarth as public,
   mdiEmail as envelope,
   mdiForum as channels,
