@@ -7,15 +7,16 @@ import VirtualizedList from "../ui/components/VirtualizedList"
 import { fillArea, flexColumn, flexGrow, scrollVertical } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
+import useRootStore from "../useRootStore"
 import ChannelModel from "./ChannelModel"
 
 function ChannelUserList({ channel }: { channel: ChannelModel }) {
-  // const { chatStore } = useRootStore()
+  const { chatStore } = useRootStore()
   const { sortedUsers } = channel
 
   const getHighlight = (name: string) => {
-    // if (chatStore.isFriend(name)) return rgba(46, 204, 113, 0.15)
-    // if (chatStore.isAdmin(name)) return rgba(231, 76, 60, 0.15)
+    if (chatStore.isFriend(name)) return rgba(46, 204, 113, 0.15)
+    if (chatStore.isAdmin(name)) return rgba(231, 76, 60, 0.15)
     if (channel.ops.has(name)) return rgba(241, 196, 15, 0.15)
   }
 

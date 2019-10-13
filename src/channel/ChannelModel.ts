@@ -78,8 +78,8 @@ export default class ChannelModel extends RoomModel {
     const { characters } = this.users
 
     const getSortWeight = (char: CharacterModel) => {
-      // if (this.root.chatStore.isFriend(char.name)) return 0
-      // if (this.root.chatStore.isAdmin(char.name)) return 1
+      if (this.root.chatStore.isFriend(char.name)) return 0
+      if (this.root.chatStore.isAdmin(char.name)) return 1
       if (this.ops.has(char.name)) return 2
       if (char.status === "looking") return 3
       return 4

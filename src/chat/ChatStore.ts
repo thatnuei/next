@@ -58,6 +58,11 @@ export default class ChatStore {
     }))
   }
 
+  isFriend = (name: string) => this.friendships.find((f) => f.them === name)
+  isBookmark = (name: string) => this.bookmarks.has(name)
+  isAdmin = (name: string) => this.admins.has(name)
+  isIgnored = (name: string) => this.ignored.has(name)
+
   @action
   connectToChat = () => {
     const { account, ticket } = this.root.userStore
