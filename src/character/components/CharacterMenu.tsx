@@ -3,8 +3,6 @@ import ExternalLink from "../../dom/components/ExternalLink"
 import { getProfileUrl } from "../../flist/helpers"
 import { semiBlack } from "../../ui/colors"
 import Box from "../../ui/components/Box"
-import { useContextMenuContext } from "../../ui/components/ContextMenu"
-import FadedButton from "../../ui/components/FadedButton"
 import Icon from "../../ui/components/Icon"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
@@ -14,10 +12,7 @@ type CharacterMenuProps = {
   characterName: string
 }
 
-const stopPropagation = (event: React.MouseEvent) => event.stopPropagation()
-
 const CharacterMenu = (props: CharacterMenuProps) => {
-  const menu = useContextMenuContext()
   // const { chatNavigationStore } = useRootStore()
 
   const profileUrl = getProfileUrl(props.characterName)
@@ -31,12 +26,8 @@ const CharacterMenu = (props: CharacterMenuProps) => {
 
   return (
     <Container>
-      <CloseButton onClick={menu.close}>
-        <Icon icon="close" />
-      </CloseButton>
-
       <Box pad={spacing.small}>
-        <CharacterInfo name={props.characterName} onClick={stopPropagation} />
+        <CharacterInfo name={props.characterName} />
       </Box>
 
       <OptionsContainer>
@@ -101,10 +92,3 @@ MenuOption.defaultProps = {
   href: "#",
   role: "button",
 }
-
-const CloseButton = styled(FadedButton)`
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: ${spacing.small};
-`
