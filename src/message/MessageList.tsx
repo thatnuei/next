@@ -15,7 +15,7 @@ function MessageList({ messages }: Props) {
   return (
     <Container ref={setContainer}>
       {messages.map((message) => (
-        <Message model={message} />
+        <Message key={message.id} model={message} />
       ))}
     </Container>
   )
