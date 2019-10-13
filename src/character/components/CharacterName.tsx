@@ -1,20 +1,23 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { styled } from "../../ui/styled"
+import useRootStore from "../../useRootStore"
 import { useCharacter } from "../hooks"
 import { genderColors, statusColors } from "./colors"
 
 const CharacterName = (props: { name: string; hideStatusDot?: boolean }) => {
   const char = useCharacter(props.name)
-
-  // const menu = useCharacterMenuContext()
+  const root = useRootStore()
 
   const nameStyle = { color: genderColors[char.gender] }
   const statusDotStyle = { backgroundColor: statusColors[char.status] }
 
   const openCharacterMenu = (event: React.MouseEvent) => {
     event.preventDefault()
-    // menu.open(props.name, event)
+    root.chatOverlayStore.openCharacterMenu(char.name, {
+      x: event.clientX,
+      y: event.clientY,
+    })
   }
 
   return (
