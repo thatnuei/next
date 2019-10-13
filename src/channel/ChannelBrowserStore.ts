@@ -5,6 +5,7 @@ import queryify from "../common/helpers/queryify"
 import sleep from "../common/helpers/sleep"
 import RootStore from "../RootStore"
 import StateMachine from "../state/classes/StateMachine"
+import { createChannelBrowserModal } from "./overlays"
 import { ChannelMode } from "./types"
 
 type SortMode = "userCount" | "title"
@@ -47,8 +48,9 @@ export default class ChannelBrowserStore {
     })
   }
 
+  @action
   showChannelBrowser = () => {
-    this.root.chatOverlayStore.channelBrowser.show()
+    this.root.overlayStore.open(createChannelBrowserModal())
     this.refresh()
   }
 

@@ -3,10 +3,10 @@ import ChannelBrowserStore from "./channel/ChannelBrowserStore"
 import ChannelStore from "./channel/ChannelStore"
 import CharacterStore from "./character/CharacterStore"
 import ChatNavigationStore from "./chat/ChatNavigationStore"
-import ChatOverlayStore from "./chat/ChatOverlayStore"
 import ChatStore from "./chat/ChatStore"
 import SocketStore from "./chat/SocketStore"
 import FListApi from "./flist/FListApi"
+import OverlayStore from "./overlay/OverlayStore"
 import UserStore from "./user/UserStore"
 
 export default class RootStore {
@@ -14,12 +14,12 @@ export default class RootStore {
   appStore = new AppStore()
   chatStore = new ChatStore(this)
   chatNavigationStore = new ChatNavigationStore(this)
-  chatOverlayStore = new ChatOverlayStore()
   characterStore = new CharacterStore()
   channelStore = new ChannelStore(this)
   channelBrowserStore = new ChannelBrowserStore(this)
   socketStore = new SocketStore()
   userStore = new UserStore(this)
+  overlayStore = new OverlayStore()
 
   initialize() {
     this.chatStore.addSocketListeners()

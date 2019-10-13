@@ -1,6 +1,7 @@
 import { action, computed, observable } from "mobx"
 import clamp from "../common/helpers/clamp"
 import RootStore from "../RootStore"
+import { primaryNavigationKey } from "./overlays"
 
 type ChatRoomBase<T extends string> = { type: T; key: string }
 type ChannelRoom = ChatRoomBase<"channel"> & { channelId: string }
@@ -42,7 +43,7 @@ export default class ChatNavigationStore {
     const index = this.rooms.findIndex((room) => room.key === key)
     if (index > -1) {
       this.currentRoomIndex = index
-      this.root.chatOverlayStore.primaryNavigation.hide()
+      this.root.overlayStore.close(primaryNavigationKey)
     }
   }
 

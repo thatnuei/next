@@ -15,26 +15,39 @@ import { getThemeColor, spacing } from "../ui/theme"
 import useRootStore from "../useRootStore"
 import ChannelModel from "./ChannelModel"
 import { userListBreakpoint } from "./constants"
+import {
+  createChannelDescriptionModal,
+  createChannelMenuDrawer,
+} from "./overlays"
 
 type Props = { channel: ChannelModel }
 
 function ChannelHeader({ channel }: Props) {
   const root = useRootStore()
   const isChannelMenuHidden = useMedia(`(max-width: ${userListBreakpoint}px)`)
+
   return (
     <Container>
       <SidebarMenuButton />
 
       <MiddleSection>
         <TitleText>{channel.name}</TitleText>
-        <FadedButton onClick={root.chatOverlayStore.channelDescription.show}>
+        <FadedButton
+          onClick={() =>
+            root.overlayStore.open(createChannelDescriptionModal(channel))
+          }
+        >
           <span>Description</span>
           <Icon icon="about" size={0.8} />
         </FadedButton>
       </MiddleSection>
 
       {isChannelMenuHidden && (
-        <FadedButton onClick={root.chatOverlayStore.channelMenu.show}>
+        <FadedButton
+          onClick={() =>
+            root.overlayStore.open(createChannelMenuDrawer(channel))
+          }
+        >
           <Icon icon="more" />
         </FadedButton>
       )}

@@ -1,4 +1,5 @@
 import React from "react"
+import OverlayRenderer from "../../overlay/OverlayRenderer"
 import GlobalStyle from "../../ui/components/GlobalStyle"
 import { baseTheme } from "../../ui/theme"
 import { ThemeProvider } from "../../ui/themeContext"
@@ -9,6 +10,7 @@ function Root() {
     <ThemeProvider theme={baseTheme}>
       <App />
       <GlobalStyle />
+      <OverlayRenderer />
     </ThemeProvider>
   )
 }
