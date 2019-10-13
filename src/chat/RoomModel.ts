@@ -1,5 +1,5 @@
 import { action, observable } from "mobx"
-import MessageModel from "./MessageModel"
+import MessageModel from "../message/MessageModel"
 
 export default abstract class RoomModel {
   @observable.shallow

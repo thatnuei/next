@@ -8,8 +8,6 @@ export type ServerCommand = Values<
   { [K in keyof ServerCommandMap]: { type: K; params: ServerCommandMap[K] } }
 >
 
-export type MessageType = "chat" | "lfrp" | "admin" | "system"
-
 export type Friendship = {
   us: string
   them: string

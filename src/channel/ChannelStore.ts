@@ -1,6 +1,6 @@
 import { action, computed } from "mobx"
 import { createCommandHandler } from "../chat/helpers"
-import MessageModel from "../chat/MessageModel"
+import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
 import FactoryMap from "../state/classes/FactoryMap"
 import ChannelModel from "./ChannelModel"
