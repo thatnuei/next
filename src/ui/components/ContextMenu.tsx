@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { FocusOn } from "react-focus-on"
 import clamp from "../../common/helpers/clamp"
+import useElementSize from "../../dom/hooks/useElementSize"
 import useWindowDimensions from "../../dom/hooks/useWindowDimensions"
 import createContextWrapper from "../../react/helpers/createContextWrapper"
 import { resolveStyleUnit } from "../helpers"
@@ -18,26 +19,20 @@ type Props = {
 const edgeSpacing = 10
 
 function ContextMenu(props: Props) {
-  const [width, setWidth] = useState(0)
-  const [height, setHeight] = useState(0)
+  const [container, setContainer] = useState<Element | null>()
+  const containerSize = useElementSize(container)
   const windowSize = useWindowDimensions()
-
-  const getDimensions = (element: HTMLElement | null) => {
-    if (!element) return
-    setWidth(element.clientWidth || 0)
-    setHeight(element.clientHeight || 0)
-  }
 
   const boundedPosition = {
     x: clamp(
       props.position.x,
       edgeSpacing,
-      windowSize.width - width - edgeSpacing,
+      windowSize.width - containerSize.width - edgeSpacing,
     ),
     y: clamp(
       props.position.y,
       edgeSpacing,
-      windowSize.height - height - edgeSpacing,
+      windowSize.height - containerSize.height - edgeSpacing,
     ),
   }
 
@@ -45,7 +40,7 @@ function ContextMenu(props: Props) {
     <Container
       position={boundedPosition}
       visible={props.visible}
-      ref={getDimensions}
+      ref={setContainer}
     >
       <FocusOn
         enabled={props.visible}
