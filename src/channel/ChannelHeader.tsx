@@ -3,7 +3,12 @@ import React from "react"
 import SidebarMenuButton from "../chat/components/SidebarMenuButton"
 import FadedButton from "../ui/components/FadedButton"
 import Icon from "../ui/components/Icon"
-import { flexRow, spacedChildrenHorizontal } from "../ui/helpers"
+import {
+  flexColumn,
+  flexRow,
+  spacedChildrenHorizontal,
+  spacedChildrenVertical,
+} from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
 import useRootStore from "../useRootStore"
@@ -16,7 +21,15 @@ function ChannelHeader({ channel }: Props) {
   return (
     <Container>
       <SidebarMenuButton />
-      <TitleText>{channel.name}</TitleText>
+
+      <MiddleSection>
+        <TitleText>{channel.name}</TitleText>
+        <FadedButton onClick={root.chatOverlayStore.channelDescription.show}>
+          <span>Description</span>
+          <Icon icon="about" size={0.8} />
+        </FadedButton>
+      </MiddleSection>
+
       <FadedButton onClick={root.chatOverlayStore.channelMenu.show}>
         <Icon icon="more" />
       </FadedButton>
@@ -34,6 +47,12 @@ const Container = styled.header`
 
   padding: ${spacing.small};
   ${spacedChildrenHorizontal(spacing.small)};
+`
+
+const MiddleSection = styled.div`
+  flex: 1;
+  ${flexColumn};
+  ${spacedChildrenVertical(spacing.xxsmall)};
 `
 
 const TitleText = styled.h3`

@@ -4,4 +4,5 @@ export default class ChatOverlayStore {
   primaryNavigation = new OverlayState()
   channelBrowser = new OverlayState()
   channelMenu = new OverlayState()
+  channelDescription = new OverlayState()
 }
