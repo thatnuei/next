@@ -2,7 +2,7 @@ import React from "react"
 import { FocusOn } from "react-focus-on"
 import { focusOnFillFix, fullscreen } from "../helpers"
 import { styled } from "../styled"
-import { getThemeColor } from "../theme"
+import { getThemeColor, shadows } from "../theme"
 
 type Props = {
   visible: boolean
@@ -45,6 +45,8 @@ const Shade = styled.div<{ visible: boolean }>`
 
 const Panel = styled.div<{ visible: boolean; side: DrawerSide }>`
   background-color: ${getThemeColor("theme2")};
+  box-shadow: ${shadows.normal};
+
   position: absolute;
   ${(props) => props.side}: 0;
   top: 0;
