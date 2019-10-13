@@ -5,7 +5,7 @@ import { semiBlack } from "../../ui/colors"
 import Box from "../../ui/components/Box"
 import { useContextMenuContext } from "../../ui/components/ContextMenu"
 import Icon from "../../ui/components/Icon"
-import { styled } from "../../ui/styled"
+import { css, styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import CharacterInfo from "./CharacterInfo"
 
@@ -33,30 +33,30 @@ const CharacterMenu = (props: CharacterMenuProps) => {
       </Box>
 
       <OptionsContainer>
-        <MenuOption as={ExternalLink} href={profileUrl}>
+        <OptionLink href={profileUrl}>
           <Icon icon="user" />
           <span>Profile</span>
-        </MenuOption>
+        </OptionLink>
 
-        <MenuOption onClick={handleMessage}>
+        <OptionButton onClick={handleMessage}>
           <Icon icon="message" />
           <span>Message</span>
-        </MenuOption>
+        </OptionButton>
 
-        <MenuOption>
+        <OptionButton>
           <Icon icon="bookmark" />
           <span>Bookmark</span>
-        </MenuOption>
+        </OptionButton>
 
-        <MenuOption>
+        <OptionButton>
           <Icon icon="ignore" />
           <span>Ignore</span>
-        </MenuOption>
+        </OptionButton>
 
-        <MenuOption>
+        <OptionButton>
           <Icon icon="report" />
           <span>Report</span>
-        </MenuOption>
+        </OptionButton>
       </OptionsContainer>
     </Container>
   )
@@ -73,7 +73,7 @@ const OptionsContainer = styled.div`
   display: grid;
 `
 
-const MenuOption = styled.button<{ href?: string }>`
+const optionStyle = css`
   padding: 0.4rem;
   padding-right: 0.7rem;
   opacity: 0.6;
@@ -90,7 +90,15 @@ const MenuOption = styled.button<{ href?: string }>`
   }
 `
 
-MenuOption.defaultProps = {
+const OptionButton = styled.button`
+  ${optionStyle}
+`
+
+const OptionLink = styled(ExternalLink)`
+  ${optionStyle}
+`
+
+OptionLink.defaultProps = {
   href: "#",
   role: "button",
 }
