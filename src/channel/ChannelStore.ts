@@ -71,10 +71,11 @@ export default class ChannelStore {
 
     JCH: ({ channel: id, character, title }) => {
       const channel = this.channels.get(id)
+      channel.setName(title)
+
       if (character.identity === this.root.chatStore.identity) {
         channel.joinState = "joined"
       } else {
-        channel.setName(title)
         channel.users.add(character.identity)
       }
     },
