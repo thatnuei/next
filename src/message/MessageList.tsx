@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React, { useCallback, useLayoutEffect, useState } from "react"
 import { fillArea, scrollVertical } from "../ui/helpers"
 import { styled } from "../ui/styled"
@@ -22,7 +21,7 @@ function MessageList({ messages }: Props) {
   )
 }
 
-export default observer(MessageList)
+export default MessageList
 
 const Container = styled.div`
   ${fillArea};

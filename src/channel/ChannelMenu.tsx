@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { styled } from "../ui/styled"
 import ChannelModel from "./ChannelModel"
@@ -14,7 +13,7 @@ function ChannelMenu(props: Props) {
   )
 }
 
-export default observer(ChannelMenu)
+export default ChannelMenu
 
 const Container = styled.div`
   width: 200px;
