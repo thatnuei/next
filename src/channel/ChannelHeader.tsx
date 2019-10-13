@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import SidebarMenuButton from "../chat/components/SidebarMenuButton"
+import useMedia from "../dom/hooks/useMedia"
 import FadedButton from "../ui/components/FadedButton"
 import Icon from "../ui/components/Icon"
 import {
@@ -13,11 +14,13 @@ import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
 import useRootStore from "../useRootStore"
 import ChannelModel from "./ChannelModel"
+import { userListBreakpoint } from "./constants"
 
 type Props = { channel: ChannelModel }
 
 function ChannelHeader({ channel }: Props) {
   const root = useRootStore()
+  const isChannelMenuHidden = useMedia(`(max-width: ${userListBreakpoint}px)`)
   return (
     <Container>
       <SidebarMenuButton />
@@ -30,9 +33,11 @@ function ChannelHeader({ channel }: Props) {
         </FadedButton>
       </MiddleSection>
 
-      <FadedButton onClick={root.chatOverlayStore.channelMenu.show}>
-        <Icon icon="more" />
-      </FadedButton>
+      {isChannelMenuHidden && (
+        <FadedButton onClick={root.chatOverlayStore.channelMenu.show}>
+          <Icon icon="more" />
+        </FadedButton>
+      )}
     </Container>
   )
 }
