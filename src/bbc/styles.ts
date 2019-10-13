@@ -51,10 +51,8 @@ export const IconImage = styled.img`
   width: 50px;
   height: 50px;
   vertical-align: middle;
-  margin-bottom: 4px;
 `
 
 export const IconAvatar = styled(Avatar)`
   vertical-align: middle;
-  margin-bottom: 4px;
 `
