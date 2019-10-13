@@ -32,7 +32,7 @@ function Chat() {
       />
 
       <Modal
-        title="ChannelBrowser"
+        title="Channels"
         panelWidth={400}
         panelHeight={600}
         children={<ChannelBrowser />}
