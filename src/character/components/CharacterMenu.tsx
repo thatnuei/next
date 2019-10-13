@@ -3,6 +3,7 @@ import ExternalLink from "../../dom/components/ExternalLink"
 import { getProfileUrl } from "../../flist/helpers"
 import { semiBlack } from "../../ui/colors"
 import Box from "../../ui/components/Box"
+import { useContextMenuContext } from "../../ui/components/ContextMenu"
 import Icon from "../../ui/components/Icon"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
@@ -14,6 +15,7 @@ type CharacterMenuProps = {
 
 const CharacterMenu = (props: CharacterMenuProps) => {
   // const { chatNavigationStore } = useRootStore()
+  const menu = useContextMenuContext()
 
   const profileUrl = getProfileUrl(props.characterName)
 
@@ -25,7 +27,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
   }
 
   return (
-    <Container>
+    <Container onClick={menu.close}>
       <Box pad={spacing.small}>
         <CharacterInfo name={props.characterName} />
       </Box>
