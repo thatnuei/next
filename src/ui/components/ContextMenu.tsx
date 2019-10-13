@@ -1,9 +1,8 @@
-import React, { useState } from "react"
+import React, { useContext, useMemo, useState } from "react"
 import { FocusOn } from "react-focus-on"
 import clamp from "../../common/helpers/clamp"
 import useElementSize from "../../dom/hooks/useElementSize"
 import useWindowDimensions from "../../dom/hooks/useWindowDimensions"
-import createContextWrapper from "../../react/helpers/createContextWrapper"
 import { resolveStyleUnit } from "../helpers"
 import { styled } from "../styled"
 import { getThemeColor, shadows } from "../theme"
@@ -36,6 +35,13 @@ function ContextMenu(props: Props) {
     ),
   }
 
+  const contextValue = useMemo(
+    () => ({
+      close: props.onClose,
+    }),
+    [props.onClose],
+  )
+
   return (
     <Container
       position={boundedPosition}
@@ -47,9 +53,9 @@ function ContextMenu(props: Props) {
         onClickOutside={props.onClose}
         onEscapeKey={props.onClose}
       >
-        <useContextMenuContext.Provider close={props.onClose}>
+        <Context.Provider value={contextValue}>
           {props.children}
-        </useContextMenuContext.Provider>
+        </Context.Provider>
       </FocusOn>
     </Container>
   )
@@ -57,9 +63,13 @@ function ContextMenu(props: Props) {
 
 export default ContextMenu
 
-export const useContextMenuContext = createContextWrapper(
-  (props: { close: () => void }) => props,
-)
+const Context = React.createContext({
+  close: () => {},
+})
+
+export function useContextMenuContext() {
+  return useContext(Context)
+}
 
 const Container = styled.div<{ position: Position; visible: boolean }>`
   position: fixed;
