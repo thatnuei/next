@@ -10,8 +10,8 @@ import { styled } from "../styled"
 import { spacing } from "../theme"
 import FadedButton from "./FadedButton"
 import Icon from "./Icon"
-import RaisedPanelHeader from "./RaisedPanelHeader"
 import RaisedPanel from "./RaisedPanel"
+import RaisedPanelHeader from "./RaisedPanelHeader"
 
 type Props = {
   title: string
