@@ -71,10 +71,10 @@ export default class ChatNavigationStore {
   }
 
   isCurrentChannel = (channelId: string) =>
-    getChannelKey(channelId) === this.currentRoomKey
+    getChannelKey(channelId) === this.currentRoom?.key
 
   isCurrentPrivateChat = (partnerName: string) =>
-    getPrivateChatKey(partnerName) === this.currentRoomKey
+    getPrivateChatKey(partnerName) === this.currentRoom?.key
 
   @computed
   get currentChannel() {
