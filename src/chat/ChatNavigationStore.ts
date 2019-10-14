@@ -1,5 +1,5 @@
+import { sortBy } from "lodash"
 import { action, computed, observable } from "mobx"
-import clamp from "../common/helpers/clamp"
 import RootStore from "../RootStore"
 import { primaryNavigationKey } from "./overlays"
 
@@ -10,13 +10,18 @@ type ChatRoom = ChannelRoom | PrivateChatRoom
 
 export default class ChatNavigationStore {
   @observable
-  currentRoomIndex = 0
+  private currentRoomKey?: string
 
   constructor(private root: RootStore) {}
 
   @computed
   get channelRooms(): ChannelRoom[] {
-    return this.root.channelStore.joinedChannels.map((model) => ({
+    const sortedChannels = sortBy(
+      this.root.channelStore.joinedChannels,
+      (channel) => channel.name.toLowerCase(),
+    )
+
+    return sortedChannels.map((model) => ({
       type: "channel",
       key: `channel-${model.id}`,
       channelId: model.id,
@@ -35,16 +40,14 @@ export default class ChatNavigationStore {
 
   @computed
   get currentRoom(): ChatRoom | undefined {
-    return this.rooms[clamp(this.currentRoomIndex, 0, this.rooms.length - 1)]
+    const room = this.rooms.find((room) => room.key === this.currentRoomKey)
+    return room || this.rooms[0]
   }
 
   @action
   setCurrentRoom = (key: string) => {
-    const index = this.rooms.findIndex((room) => room.key === key)
-    if (index > -1) {
-      this.currentRoomIndex = index
-      this.root.overlayStore.close(primaryNavigationKey)
-    }
+    this.currentRoomKey = key
+    this.root.overlayStore.close(primaryNavigationKey)
   }
 
   @computed
