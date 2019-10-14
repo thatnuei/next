@@ -1,10 +1,11 @@
 import { sortBy } from "lodash"
 import { action, computed, observable } from "mobx"
+import ChannelModel from "../channel/ChannelModel"
 import RootStore from "../RootStore"
 import { primaryNavigationKey } from "./overlays"
 
 type ChatRoomBase<T extends string> = { type: T; key: string }
-type ChannelRoom = ChatRoomBase<"channel"> & { channelId: string }
+type ChannelRoom = ChatRoomBase<"channel"> & { channel: ChannelModel }
 type PrivateChatRoom = ChatRoomBase<"privateChat"> & { partnerName: string }
 type ChatRoom = ChannelRoom | PrivateChatRoom
 
@@ -21,10 +22,10 @@ export default class ChatNavigationStore {
       (channel) => channel.name.toLowerCase(),
     )
 
-    return sortedChannels.map((model) => ({
+    return sortedChannels.map((channel) => ({
       type: "channel",
-      key: `channel-${model.id}`,
-      channelId: model.id,
+      key: `channel-${channel.id}`,
+      channel,
     }))
   }
 
@@ -50,10 +51,12 @@ export default class ChatNavigationStore {
     this.root.overlayStore.close(primaryNavigationKey)
   }
 
+  isCurrentRoom = (key: string) => this.currentRoomKey === key
+
   @computed
   get currentChannel() {
     return this.currentRoom?.type === "channel"
-      ? this.root.channelStore.channels.get(this.currentRoom.channelId)
+      ? this.currentRoom.channel
       : undefined
   }
 }

@@ -5,7 +5,7 @@ import useRootStore from '../../useRootStore'
 import NoRoomHeader from './NoRoomHeader'
 
 function ChatRoomView() {
-  const { chatNavigationStore, channelStore } = useRootStore()
+  const { chatNavigationStore } = useRootStore()
   const { currentRoom } = chatNavigationStore
 
   if (!currentRoom?.type) {
@@ -13,11 +13,8 @@ function ChatRoomView() {
   }
 
   switch (currentRoom.type) {
-    case "channel": {
-      const channel = channelStore.channels.get(currentRoom.channelId)
-      return <ChannelView channel={channel} />
-    }
-
+    case "channel": 
+      return <ChannelView channel={currentRoom.channel} />
     case 'privateChat':
       return <p>TODO: private chat</p>
   }
