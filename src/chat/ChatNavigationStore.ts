@@ -1,13 +1,17 @@
 import { sortBy } from "lodash"
 import { action, computed, observable } from "mobx"
 import ChannelModel from "../channel/ChannelModel"
+import { PrivateChatModel } from "../private-chat/PrivateChatModel"
 import RootStore from "../RootStore"
 import { primaryNavigationKey } from "./overlays"
 
 type ChatRoomBase<T extends string> = { type: T; key: string }
 type ChannelRoom = ChatRoomBase<"channel"> & { channel: ChannelModel }
-type PrivateChatRoom = ChatRoomBase<"privateChat"> & { partnerName: string }
+type PrivateChatRoom = ChatRoomBase<"privateChat"> & { chat: PrivateChatModel }
 type ChatRoom = ChannelRoom | PrivateChatRoom
+
+const getChannelKey = (channelId: string) => `channel-${channelId}`
+const getPrivateChatKey = (partnerName: string) => `private-chat-${partnerName}`
 
 export default class ChatNavigationStore {
   @observable
@@ -24,14 +28,23 @@ export default class ChatNavigationStore {
 
     return sortedChannels.map((channel) => ({
       type: "channel",
-      key: `channel-${channel.id}`,
+      key: getChannelKey(channel.id),
       channel,
     }))
   }
 
-  // @computed
+  @computed
   get privateChatRooms(): PrivateChatRoom[] {
-    return [] // TODO
+    const sortedChats = sortBy(
+      this.root.privateChatStore.openChats,
+      (chat) => chat.partner.toLowerCase(),
+    )
+
+    return sortedChats.map(chat => ({
+      type: 'privateChat',
+      key: getPrivateChatKey(chat.partner),
+      chat,
+    }))
   }
 
   @computed
@@ -49,9 +62,19 @@ export default class ChatNavigationStore {
   setCurrentRoom = (key: string) => {
     this.currentRoomKey = key
     this.root.overlayStore.close(primaryNavigationKey)
+    
+    if (this.currentRoom?.type === 'channel') {
+      this.currentRoom.channel.markRead()
+    } else if (this.currentRoom?.type === 'privateChat') {
+      this.currentRoom.chat.markRead()
+    }
   }
 
-  isCurrentRoom = (key: string) => this.currentRoomKey === key
+  isCurrentChannel = (channelId: string) =>
+    getChannelKey(channelId) === this.currentRoomKey
+
+  isCurrentPrivateChat = (partnerName: string) =>
+    getPrivateChatKey(partnerName) === this.currentRoomKey
 
   @computed
   get currentChannel() {

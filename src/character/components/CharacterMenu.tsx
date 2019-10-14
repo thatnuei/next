@@ -7,6 +7,7 @@ import { useContextMenuContext } from "../../ui/components/ContextMenu"
 import Icon from "../../ui/components/Icon"
 import { css, styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
+import useRootStore from "../../useRootStore"
 import CharacterInfo from "./CharacterInfo"
 
 type CharacterMenuProps = {
@@ -14,16 +15,13 @@ type CharacterMenuProps = {
 }
 
 const CharacterMenu = (props: CharacterMenuProps) => {
-  // const { chatNavigationStore } = useRootStore()
+  const root = useRootStore()
   const menu = useContextMenuContext()
 
   const profileUrl = getProfileUrl(props.characterName)
 
   const handleMessage = () => {
-    // chatNavigationStore.showTab({
-    //   type: "privateChat",
-    //   partnerName: props.characterName,
-    // })
+    root.privateChatStore.openChat(props.characterName)
   }
 
   return (

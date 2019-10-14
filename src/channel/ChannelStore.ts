@@ -99,13 +99,10 @@ export default class ChannelStore {
       const channel = this.channels.get(id)
       channel.addMessage(new MessageModel(character, message, "chat"))
 
-      // const isChannelActive = this.root.chatNavigationStore.isActive({
-      //   type: "channel",
-      //   channelId: id,
-      // })
-      // if (!isChannelActive) {
-      //   channel.markUnread()
-      // }
+      const isChannelActive = this.root.chatNavigationStore.isCurrentChannel(id)
+      if (!isChannelActive && channel.selectedMode !== "ads") {
+        channel.markUnread()
+      }
     },
 
     LRP: ({ channel: id, character, message }) => {

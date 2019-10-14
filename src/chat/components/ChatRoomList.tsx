@@ -1,11 +1,12 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
+import Avatar from "../../character/components/Avatar"
 import Icon from "../../ui/components/Icon"
 import useRootStore from "../../useRootStore"
 import RoomTab from "./RoomTab"
 
 function ChatRoomList() {
-  const { channelStore, chatNavigationStore } = useRootStore()
+  const { channelStore, privateChatStore, chatNavigationStore } = useRootStore()
 
   return (
     <>
@@ -16,7 +17,7 @@ function ChatRoomList() {
             key={key}
             title={channel.name}
             icon={<Icon icon={icon} />}
-            active={chatNavigationStore.isCurrentRoom(key)}
+            active={chatNavigationStore.isCurrentChannel(channel.id)}
             unread={channel.unread}
             loading={channel.isLoading}
             onClick={() => chatNavigationStore.setCurrentRoom(key)}
@@ -24,6 +25,18 @@ function ChatRoomList() {
           />
         )
       })}
+
+      {chatNavigationStore.privateChatRooms.map(({ key, chat }) => (
+        <RoomTab
+          key={key}
+          title={chat.partner}
+          icon={<Avatar name={chat.partner} size={20} />}
+          active={chatNavigationStore.isCurrentPrivateChat(chat.partner)}
+          unread={chat.unread}
+          onClick={() => chatNavigationStore.setCurrentRoom(key)}
+          onClose={() => privateChatStore.closeChat(chat.partner)}
+        />
+      ))}
     </>
   )
 }

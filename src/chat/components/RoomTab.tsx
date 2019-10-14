@@ -18,7 +18,7 @@ type Props = {
   title: React.ReactNode
   active: boolean
   unread: boolean
-  loading: boolean
+  loading?: boolean
   onClick: () => void
   onClose: () => void
 }
@@ -46,7 +46,7 @@ export default function RoomTab(props: Props) {
     <Container {...pick(props, "active", "unread", "loading")}>
       <TitleButton {...pick(props, "active", "onClick")}>
         <TitleAndIconContainer>
-          {props.icon}
+          <IconContainer>{props.icon}</IconContainer>
           <TitleText>{props.title}</TitleText>
         </TitleAndIconContainer>
       </TitleButton>
@@ -58,7 +58,7 @@ export default function RoomTab(props: Props) {
 type ContainerProps = {
   active: boolean
   unread: boolean
-  loading: boolean
+  loading?: boolean
 }
 
 const Container = styled.div<ContainerProps>`
@@ -97,4 +97,9 @@ const CloseButton = styled(FadedButton)`
 
 const LoadingIconContainer = styled.div`
   margin: ${spacing.xsmall};
+`
+
+const IconContainer = styled.div`
+  width: 24px;
+  ${flexCenter};
 `
