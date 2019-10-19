@@ -32,7 +32,7 @@ const statuses: Record<SelectableStatus, string> = {
 function UpdateStatusForm() {
   const root = useRootStore()
   const { identityCharacter } = root.chatStore
-  const loading = root.characterStore.updatingStatus
+  const isLoading = root.characterStore.updatingStatus
 
   const status = useInput(identityCharacter.status)
   const statusMessage = useInput(identityCharacter.statusMessage)
@@ -48,7 +48,7 @@ function UpdateStatusForm() {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <FieldSet disabled={loading}>
+      <FieldSet disabled={isLoading}>
         <InnerContainer>
           <FormField labelText="Status">
             <Select {...status.bind}>
@@ -66,7 +66,7 @@ function UpdateStatusForm() {
 
           <Footer>
             <Button type="submit">
-              {loading ? <LoadingIcon /> : "Set status"}
+              {isLoading ? <LoadingIcon /> : "Set status"}
             </Button>
           </Footer>
         </InnerContainer>
