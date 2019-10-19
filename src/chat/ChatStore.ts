@@ -15,9 +15,6 @@ export default class ChatStore {
   @observable
   connectionState: ConnectionState = "offline"
 
-  @observable
-  updatingStatus = false
-
   @observable.ref friendships: Friendship[] = []
   bookmarks = new CharacterCollection(this.root.characterStore)
   admins = new CharacterCollection(this.root.characterStore)

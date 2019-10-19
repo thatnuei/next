@@ -5,6 +5,7 @@ import { fillArea } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { getThemeColor, spacing } from "../../ui/theme"
 import useRootStore from "../../useRootStore"
+import { createUpdateStatusModal } from "../overlays"
 import ChatRoomList from "./ChatRoomList"
 import NavigationAction from "./NavigationAction"
 
@@ -19,7 +20,11 @@ function Navigation() {
           icon="channels"
           onClick={root.channelBrowserStore.showChannelBrowser}
         />
-        <NavigationAction title="Update Status" icon="updateStatus" />
+        <NavigationAction
+          title="Update Status"
+          icon="updateStatus"
+          onClick={() => root.overlayStore.open(createUpdateStatusModal())}
+        />
         <NavigationAction title="Who's Online" icon="users" />
         <NavigationAction title="About" icon="about" />
         <Spacer />

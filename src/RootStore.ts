@@ -15,7 +15,7 @@ export default class RootStore {
   appStore = new AppStore()
   chatStore = new ChatStore(this)
   chatNavigationStore = new ChatNavigationStore(this)
-  characterStore = new CharacterStore()
+  characterStore = new CharacterStore(this)
   channelStore = new ChannelStore(this)
   channelBrowserStore = new ChannelBrowserStore(this)
   privateChatStore = new PrivateChatStore(this)
