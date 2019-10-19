@@ -15,5 +15,8 @@ export function ThemeProvider(props: {
 }
 
 export function useTheme() {
-  return useRequiredContext(ThemeContext as any, "ThemeProvider not found")
+  return useRequiredContext(
+    ThemeContext as React.Context<AppTheme | undefined | null>,
+    "ThemeProvider not found",
+  )
 }
