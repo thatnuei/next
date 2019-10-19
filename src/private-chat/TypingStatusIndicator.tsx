@@ -49,7 +49,7 @@ const fall = keyframes`
   }
 `
 
-const AnimatedIcon = styled(Icon)<{ shouldAnimate?: boolean }>`
+const AnimatedIcon = styled(Icon)<{ shouldAnimate: boolean }>`
   transition: 0.2s transform;
   animation: 0.35s ${easing.easeInSine} infinite alternate-reverse;
   animation-name: ${(props) => (props.shouldAnimate ? fall : "none")};
