@@ -50,6 +50,8 @@ export default class PrivateChatStore {
   @action
   handleSocketCommand = createCommandHandler({
     PRI: (params) => {
+      this.chatPartnerNames.add(params.character)
+
       const privateChat = this.privateChats.get(params.character)
 
       const message = new MessageModel(params.character, params.message, "chat")
