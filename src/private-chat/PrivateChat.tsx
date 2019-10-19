@@ -62,15 +62,13 @@ function PrivateChat({ privateChat }: Props) {
         />
       </TypingStatusContainer>
 
-      <ChatboxContainer>
-        <Chatbox
-          value={privateChat.chatboxInput}
-          onValueChange={privateChat.setChatboxInput}
-          onSubmit={handleChatboxSubmit}
-          onSubmitCommand={handleCommand}
-          onTypingStatus={handleTypingStatus}
-        />
-      </ChatboxContainer>
+      <Chatbox
+        value={privateChat.chatboxInput}
+        onValueChange={privateChat.setChatboxInput}
+        onSubmit={handleChatboxSubmit}
+        onSubmitCommand={handleCommand}
+        onTypingStatus={handleTypingStatus}
+      />
     </Container>
   )
 }
@@ -80,11 +78,6 @@ export default observer(PrivateChat)
 const Container = styled.div`
   ${flexColumn};
   ${fillArea};
-`
-
-const ChatboxContainer = styled.div`
-  background-color: ${(props) => props.theme.colors.theme0};
-  padding: ${spacing.xsmall};
 `
 
 const HeaderContainer = styled.header`
