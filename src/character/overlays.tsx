@@ -11,11 +11,9 @@ export function createCharacterMenu(
   return {
     key: "characterMenu",
     render: (props) => (
-      <ContextMenu
-        position={position}
-        children={<CharacterMenu characterName={characterName} />}
-        {...props}
-      />
+      <ContextMenu position={position} {...props}>
+        <CharacterMenu characterName={characterName} />
+      </ContextMenu>
     ),
   }
 }
