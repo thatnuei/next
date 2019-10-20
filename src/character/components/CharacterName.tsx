@@ -3,7 +3,6 @@ import React from "react"
 import { styled } from "../../ui/styled"
 import useRootStore from "../../useRootStore"
 import { useCharacter } from "../hooks"
-import { createCharacterMenu } from "../overlays"
 import { genderColors, statusColors } from "./colors"
 
 const CharacterName = (props: { name: string; hideStatusDot?: boolean }) => {
@@ -16,12 +15,10 @@ const CharacterName = (props: { name: string; hideStatusDot?: boolean }) => {
   const openCharacterMenu = (event: React.MouseEvent) => {
     event.preventDefault()
 
-    root.overlayStore.open(
-      createCharacterMenu(char.name, {
-        x: event.clientX,
-        y: event.clientY,
-      }),
-    )
+    root.characterStore.showCharacterMenu(props.name, {
+      x: event.clientX,
+      y: event.clientY,
+    })
   }
 
   return (

@@ -1,9 +1,9 @@
 import { action, observable, runInAction } from "mobx"
 import { createCommandHandler } from "../chat/helpers"
-import { createUpdateStatusModal, updateStatusModalKey } from "../chat/overlays"
 import sleep from "../common/helpers/sleep"
 import RootStore from "../RootStore"
 import FactoryMap from "../state/classes/FactoryMap"
+import { Position } from "../ui/types"
 import CharacterModel from "./CharacterModel"
 import { CharacterStatus } from "./types"
 
@@ -16,7 +16,16 @@ export default class CharacterStore {
   constructor(private root: RootStore) {}
 
   showUpdateStatusScreen = () => {
-    this.root.overlayStore.open(createUpdateStatusModal())
+    this.root.overlayStore.open({
+      type: "updateStatus",
+    })
+  }
+
+  showCharacterMenu = (name: string, position: Position) => {
+    this.root.overlayStore.open({
+      type: "characterMenu",
+      params: { name, position },
+    })
   }
 
   @action
@@ -58,7 +67,7 @@ export default class CharacterStore {
 
       if (identity === this.root.chatStore.identity) {
         this.updatingStatus = false
-        this.root.overlayStore.close(updateStatusModalKey)
+        this.root.overlayStore.close("updateStatus")
       }
     },
   })

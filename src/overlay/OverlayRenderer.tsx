@@ -1,19 +1,94 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { Transition, TransitionGroup } from "react-transition-group"
+import ChannelBrowser from "../channel/ChannelBrowser"
+import ChannelDescription from "../channel/ChannelDescription"
+import ChannelMenu from "../channel/ChannelMenu"
+import CharacterMenu from "../character/components/CharacterMenu"
+import Navigation from "../chat/components/Navigation"
+import UpdateStatusForm from "../chat/UpdateStatus"
+import ContextMenu from "../ui/components/ContextMenu"
+import Drawer from "../ui/components/Drawer"
+import Modal from "../ui/components/Modal"
 import useRootStore from "../useRootStore"
+import { Overlay } from "./OverlayStore"
 
 function OverlayRenderer() {
   const { overlayStore } = useRootStore()
 
+  type RenderOverlayProps = {
+    visible: boolean
+    onClose: () => void
+  }
+
+  function renderOverlay(overlay: Overlay, props: RenderOverlayProps) {
+    switch (overlay.type) {
+      case "channelBrowser":
+        return (
+          <Modal
+            title="Channels"
+            panelWidth={400}
+            panelHeight={600}
+            children={<ChannelBrowser />}
+            {...props}
+          />
+        )
+
+      case "channelMenu":
+        return (
+          <Drawer
+            side="right"
+            children={<ChannelMenu channel={overlay.params.channel} />}
+            {...props}
+          />
+        )
+
+      case "channelDescription":
+        return (
+          <Modal
+            title={overlay.params.channel.name}
+            fillMode="contained"
+            children={<ChannelDescription channel={overlay.params.channel} />}
+            panelWidth={1200}
+            panelHeight={600}
+            {...props}
+          />
+        )
+
+      case "primaryNavigation":
+        return <Drawer side="left" children={<Navigation />} {...props} />
+
+      case "updateStatus":
+        return (
+          <Modal
+            title="Update Status"
+            panelWidth={500}
+            panelHeight={350}
+            children={<UpdateStatusForm />}
+            {...props}
+          />
+        )
+
+      case "characterMenu":
+        return (
+          <ContextMenu position={overlay.params.position} {...props}>
+            <CharacterMenu characterName={overlay.params.name} />
+          </ContextMenu>
+        )
+
+      default:
+        return null
+    }
+  }
+
   return (
     <TransitionGroup component={null}>
       {overlayStore.overlays.map((overlay) => (
-        <Transition key={overlay.key} timeout={200}>
+        <Transition key={overlay.type} timeout={200}>
           {(state) =>
-            overlay.render({
+            renderOverlay(overlay, {
               visible: state === "entering" || state === "entered",
-              onClose: () => overlayStore.close(overlay.key),
+              onClose: () => overlayStore.close(overlay.type),
             })
           }
         </Transition>

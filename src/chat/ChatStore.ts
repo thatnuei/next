@@ -4,7 +4,6 @@ import { LoginResponse } from "../flist/FListApi"
 import RootStore from "../RootStore"
 import StoredValue from "../storage/StoredValue"
 import { createCommandHandler } from "./helpers"
-import { createPrimaryNavigationDrawer } from "./overlays"
 import { Friendship, ServerCommand } from "./types"
 
 type ConnectionState = "offline" | "connecting" | "online"
@@ -36,7 +35,9 @@ export default class ChatStore {
   }
 
   showPrimaryNavigation = () => {
-    this.root.overlayStore.open(createPrimaryNavigationDrawer())
+    this.root.overlayStore.open({
+      type: "primaryNavigation",
+    })
   }
 
   @action

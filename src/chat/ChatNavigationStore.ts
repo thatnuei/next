@@ -3,7 +3,6 @@ import { action, computed, observable } from "mobx"
 import ChannelModel from "../channel/ChannelModel"
 import { PrivateChatModel } from "../private-chat/PrivateChatModel"
 import RootStore from "../RootStore"
-import { primaryNavigationKey } from "./overlays"
 
 type ChatRoomBase<T extends string> = { type: T; key: string }
 type ChannelRoom = ChatRoomBase<"channel"> & { channel: ChannelModel }
@@ -61,7 +60,7 @@ export default class ChatNavigationStore {
   @action
   setCurrentRoom = (key: string) => {
     this.currentRoomKey = key
-    this.root.overlayStore.close(primaryNavigationKey)
+    this.root.overlayStore.close('primaryNavigation')
     
     if (this.currentRoom?.type === 'channel') {
       this.currentRoom.channel.markRead()

@@ -15,10 +15,6 @@ import { getThemeColor, spacing } from "../ui/theme"
 import useRootStore from "../useRootStore"
 import ChannelModel from "./ChannelModel"
 import { userListBreakpoint } from "./constants"
-import {
-  createChannelDescriptionModal,
-  createChannelMenuDrawer,
-} from "./overlays"
 
 type Props = { channel: ChannelModel }
 
@@ -33,9 +29,7 @@ function ChannelHeader({ channel }: Props) {
       <MiddleSection>
         <TitleText>{channel.name}</TitleText>
         <FadedButton
-          onClick={() =>
-            root.overlayStore.open(createChannelDescriptionModal(channel))
-          }
+          onClick={() => root.channelStore.showChannelDescription(channel.id)}
         >
           <span>Description</span>
           <Icon icon="about" size={0.8} />
@@ -44,9 +38,7 @@ function ChannelHeader({ channel }: Props) {
 
       {isChannelMenuHidden && (
         <FadedButton
-          onClick={() =>
-            root.overlayStore.open(createChannelMenuDrawer(channel))
-          }
+          onClick={() => root.channelStore.showChannelMenu(channel.id)}
         >
           <Icon icon="more" />
         </FadedButton>
