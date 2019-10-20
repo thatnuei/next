@@ -1,7 +1,7 @@
 import { sortBy } from "lodash"
 import { action, computed, observable } from "mobx"
 import ChannelModel from "../channel/ChannelModel"
-import { PrivateChatModel } from "../private-chat/PrivateChatModel"
+import PrivateChatModel from "../private-chat/PrivateChatModel"
 import RootStore from "../RootStore"
 
 type ChatRoomBase<T extends string> = { type: T; key: string }

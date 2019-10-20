@@ -11,7 +11,7 @@ import { fillArea, flexColumn, spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
 import useRootStore from "../useRootStore"
-import { PrivateChatModel } from "./PrivateChatModel"
+import PrivateChatModel from "./PrivateChatModel"
 import TypingStatusIndicator from "./TypingStatusIndicator"
 
 type Props = { privateChat: PrivateChatModel }

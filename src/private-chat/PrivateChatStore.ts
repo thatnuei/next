@@ -5,7 +5,7 @@ import { TypingStatus } from "../chat/types"
 import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
 import FactoryMap from "../state/classes/FactoryMap"
-import { PrivateChatModel } from "./PrivateChatModel"
+import PrivateChatModel from "./PrivateChatModel"
 
 export default class PrivateChatStore {
   privateChats = new FactoryMap((name) => new PrivateChatModel(name))
