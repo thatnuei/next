@@ -17,9 +17,9 @@ function ChatRoomList() {
             key={key}
             title={channel.name}
             icon={<Icon icon={icon} />}
-            active={chatNavigationStore.isCurrentChannel(channel.id)}
-            unread={channel.unread}
-            loading={channel.isLoading}
+            isActive={chatNavigationStore.isCurrentChannel(channel.id)}
+            isUnread={channel.unread}
+            isLoading={channel.isLoading}
             onClick={() => chatNavigationStore.setCurrentRoom(key)}
             onClose={() => channelStore.leave(channel.id)}
           />
@@ -31,8 +31,8 @@ function ChatRoomList() {
           key={key}
           title={chat.partner}
           icon={<Avatar name={chat.partner} size={20} />}
-          active={chatNavigationStore.isCurrentPrivateChat(chat.partner)}
-          unread={chat.unread}
+          isActive={chatNavigationStore.isCurrentPrivateChat(chat.partner)}
+          isUnread={chat.unread}
           onClick={() => chatNavigationStore.setCurrentRoom(key)}
           onClose={() => privateChatStore.closeChat(chat.partner)}
         />

@@ -16,9 +16,9 @@ import { spacing } from "../../ui/theme"
 type Props = {
   icon: React.ReactNode
   title: React.ReactNode
-  active: boolean
-  unread: boolean
-  loading?: boolean
+  isActive: boolean
+  isUnread: boolean
+  isLoading?: boolean
   onClick: () => void
   onClose: () => void
 }
@@ -27,7 +27,7 @@ export default function RoomTab(props: Props) {
   const rightAction = (() => {
     if (!props.onClose) return null
 
-    if (props.loading) {
+    if (props.isLoading) {
       return (
         <LoadingIconContainer>
           <LoadingIcon />
@@ -43,8 +43,8 @@ export default function RoomTab(props: Props) {
   })()
 
   return (
-    <Container {...pick(props, "active", "unread", "loading")}>
-      <TitleButton {...pick(props, "active", "onClick")}>
+    <Container {...pick(props, "isActive", "isUnread", "isLoading")}>
+      <TitleButton {...pick(props, "isActive", "onClick")}>
         <TitleAndIconContainer>
           <IconContainer>{props.icon}</IconContainer>
           <TitleText>{props.title}</TitleText>
@@ -56,26 +56,26 @@ export default function RoomTab(props: Props) {
 }
 
 type ContainerProps = {
-  active: boolean
-  unread: boolean
-  loading?: boolean
+  isActive: boolean
+  isUnread: boolean
+  isLoading?: boolean
 }
 
 const Container = styled.div<ContainerProps>`
   ${flexRow};
   align-items: center;
 
-  ${({ loading }) => loading && { opacity: 0.5, pointerEvents: "none" }}
+  ${({ isLoading }) => isLoading && { opacity: 0.5, pointerEvents: "none" }}
 
-  background-color: ${({ active, unread, theme }) => {
-    if (active) return theme.colors.theme0
-    if (unread) return transparentize(0.9, theme.colors.success)
+  background-color: ${({ isActive, isUnread, theme }) => {
+    if (isActive) return theme.colors.theme0
+    if (isUnread) return transparentize(0.9, theme.colors.success)
     return "transparent"
   }};
 `
 
-const TitleButton = styled.button<{ active: boolean }>`
-  ${(props) => (props.active ? "" : fadedRevealStyle)};
+const TitleButton = styled.button<{ isActive: boolean }>`
+  ${(props) => (props.isActive ? "" : fadedRevealStyle)};
   flex: 1;
 `
 
