@@ -1,6 +1,6 @@
 import { action, observable, runInAction } from "mobx"
 import { createCommandHandler } from "../chat/helpers"
-import { updateStatusModalKey } from "../chat/overlays"
+import { createUpdateStatusModal, updateStatusModalKey } from "../chat/overlays"
 import sleep from "../common/helpers/sleep"
 import RootStore from "../RootStore"
 import FactoryMap from "../state/classes/FactoryMap"
@@ -14,6 +14,10 @@ export default class CharacterStore {
   updatingStatus = false
 
   constructor(private root: RootStore) {}
+
+  showUpdateStatusScreen = () => {
+    this.root.overlayStore.open(createUpdateStatusModal())
+  }
 
   @action
   updateStatus = async (status: CharacterStatus, statusmsg: string) => {

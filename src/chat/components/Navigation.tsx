@@ -5,7 +5,6 @@ import { fillArea } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { getThemeColor, spacing } from "../../ui/theme"
 import useRootStore from "../../useRootStore"
-import { createUpdateStatusModal } from "../overlays"
 import ChatRoomList from "./ChatRoomList"
 import NavigationAction from "./NavigationAction"
 
@@ -23,7 +22,7 @@ function Navigation() {
         <NavigationAction
           title="Update Status"
           icon="updateStatus"
-          onClick={() => root.overlayStore.open(createUpdateStatusModal())}
+          onClick={root.characterStore.showUpdateStatusScreen}
         />
         <NavigationAction title="Who's Online" icon="users" />
         <NavigationAction title="About" icon="about" />

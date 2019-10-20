@@ -6,16 +6,13 @@ import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import useRootStore from "../../useRootStore"
 import { sidebarMenuBreakpoint } from "../constants"
-import { createPrimaryNavigationDrawer } from "../overlays"
 
 function SidebarMenuButton() {
   const root = useRootStore()
   const isLargeScreen = useMedia(`(min-width: ${sidebarMenuBreakpoint}px)`)
 
   return isLargeScreen ? null : (
-    <StyledFadedButton
-      onClick={() => root.overlayStore.open(createPrimaryNavigationDrawer())}
-    >
+    <StyledFadedButton onClick={root.chatStore.showPrimaryNavigation}>
       <Icon icon="menu" />
     </StyledFadedButton>
   )
