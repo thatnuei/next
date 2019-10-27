@@ -1,3 +1,4 @@
+import "focus-visible"
 import { lighten } from "polished"
 import { createGlobalStyle, css } from "../styled"
 

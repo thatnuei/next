@@ -2,7 +2,6 @@ import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
 import Root from "./app/components/Root"
-import "./polyfills"
 import useRootStore from "./useRootStore"
 
 configure({
