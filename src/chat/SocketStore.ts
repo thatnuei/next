@@ -1,8 +1,7 @@
-import TypedEmitter from '../state/classes/TypedEmitter';
-import { chatServerUrl } from './constants';
-import { parseCommand } from './helpers';
-import { ClientCommandMap, ServerCommand } from './types';
-
+import TypedEmitter from "../state/classes/TypedEmitter"
+import { chatServerUrl } from "./constants"
+import { parseCommand } from "./helpers"
+import { ClientCommandMap, ServerCommand } from "./types"
 
 type SocketEventMap = {
   close: void
@@ -19,8 +18,10 @@ export default class SocketStore {
     command: K,
     params: ClientCommandMap[K],
   ) {
+    if (!this.socket) return
+
     const message = params ? `${command} ${JSON.stringify(params)}` : command
-    this.socket?.send(message)
+    this.socket.send(message)
   }
 
   connect(account: string, ticket: string, character: string) {

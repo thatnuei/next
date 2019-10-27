@@ -34,13 +34,12 @@ export default class ChatNavigationStore {
 
   @computed
   get privateChatRooms(): PrivateChatRoom[] {
-    const sortedChats = sortBy(
-      this.root.privateChatStore.openChats,
-      (chat) => chat.partner.toLowerCase(),
+    const sortedChats = sortBy(this.root.privateChatStore.openChats, (chat) =>
+      chat.partner.toLowerCase(),
     )
 
-    return sortedChats.map(chat => ({
-      type: 'privateChat',
+    return sortedChats.map((chat) => ({
+      type: "privateChat",
       key: getPrivateChatKey(chat.partner),
       chat,
     }))
@@ -60,24 +59,28 @@ export default class ChatNavigationStore {
   @action
   setCurrentRoom = (key: string) => {
     this.currentRoomKey = key
-    this.root.overlayStore.close('primaryNavigation')
-    
-    if (this.currentRoom?.type === 'channel') {
+    this.root.overlayStore.close("primaryNavigation")
+
+    if (!this.currentRoom) return
+
+    if (this.currentRoom.type === "channel") {
       this.currentRoom.channel.markRead()
-    } else if (this.currentRoom?.type === 'privateChat') {
+    } else if (this.currentRoom.type === "privateChat") {
       this.currentRoom.chat.markRead()
     }
   }
 
   isCurrentChannel = (channelId: string) =>
-    getChannelKey(channelId) === this.currentRoom?.key
+    this.currentRoom != null &&
+    getChannelKey(channelId) === this.currentRoom.key
 
   isCurrentPrivateChat = (partnerName: string) =>
-    getPrivateChatKey(partnerName) === this.currentRoom?.key
+    this.currentRoom != null &&
+    getPrivateChatKey(partnerName) === this.currentRoom.key
 
   @computed
   get currentChannel() {
-    return this.currentRoom?.type === "channel"
+    return this.currentRoom && this.currentRoom.type === "channel"
       ? this.currentRoom.channel
       : undefined
   }

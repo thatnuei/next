@@ -16,8 +16,8 @@ export default function SideOverlay({
   onShadeClick,
 }: SidebarOverlayProps) {
   const handleClick = (event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) {
-      onShadeClick?.()
+    if (event.target === event.currentTarget && onShadeClick) {
+      onShadeClick()
     }
   }
 

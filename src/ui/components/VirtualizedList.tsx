@@ -18,7 +18,7 @@ function VirtualizedList<T>({
   getItemKey,
 }: Props<T>) {
   const listContainerRef = useRef<HTMLDivElement>(null)
-  const { width = 0, height = 0 } = useRect(listContainerRef) ?? {}
+  const { width = 0, height = 0 } = useRect(listContainerRef) || {}
 
   return (
     <ListContainer ref={listContainerRef}>

@@ -22,7 +22,7 @@ export default class StateMachine<State extends string, Event extends string> {
   @action
   dispatch = (event: Event) => {
     const events = this.options.states[this.current].on
-    const newState = events?.[event]
+    const newState = events && events[event]
     if (newState) {
       this.current = newState! // TS bug?
     }
