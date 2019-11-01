@@ -30,7 +30,7 @@ function Navigation() {
         <NavigationAction title="Logout" icon="logout" />
       </ActionsContainer>
       <CharacterInfoContainer>
-        <CharacterInfo name={root.chatStore.identity} />
+        <CharacterInfo name={root.identity.current} />
       </CharacterInfoContainer>
       <RoomsContainer>
         <ChatRoomList />

@@ -1,5 +1,6 @@
 import { action, computed, observable } from "mobx"
 import { newMessageSound } from "../audio/sounds"
+import ChatIdentity from "../chat/ChatIdentity"
 import { createCommandHandler } from "../chat/helpers"
 import { TypingStatus } from "../chat/types"
 import MessageModel from "../message/MessageModel"
@@ -13,7 +14,7 @@ export default class PrivateChatStore {
   @observable.shallow
   chatPartnerNames = new Set<string>()
 
-  constructor(private root: RootStore) {}
+  constructor(private root: RootStore, private identity: ChatIdentity) {}
 
   @computed
   get openChats(): PrivateChatModel[] {
@@ -34,9 +35,7 @@ export default class PrivateChatStore {
     this.root.socketStore.sendCommand("PRI", { recipient, message })
 
     const chat = this.privateChats.get(recipient)
-    chat.messages.push(
-      new MessageModel(this.root.chatStore.identity, message, "chat"),
-    )
+    chat.messages.push(new MessageModel(this.identity.current, message, "chat"))
   }
 
   updateTypingStatus = (partnerName: string, status: TypingStatus) => {

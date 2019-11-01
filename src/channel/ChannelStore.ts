@@ -1,4 +1,5 @@
 import { action, computed } from "mobx"
+import ChatIdentity from "../chat/ChatIdentity"
 import { createCommandHandler } from "../chat/helpers"
 import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
@@ -8,7 +9,7 @@ import ChannelModel from "./ChannelModel"
 export default class ChannelStore {
   channels = new FactoryMap((id) => new ChannelModel(this.root, id))
 
-  constructor(private root: RootStore) {
+  constructor(private root: RootStore, private identity: ChatIdentity) {
     // root.socketHandler.listen("command", this.handleSocketCommand)
   }
 
@@ -49,9 +50,7 @@ export default class ChannelStore {
     this.root.socketStore.sendCommand("MSG", { channel: channelId, message })
     this.channels
       .get(channelId)
-      .addMessage(
-        new MessageModel(this.root.chatStore.identity, message, "chat"),
-      )
+      .addMessage(new MessageModel(this.identity.current, message, "chat"))
   }
 
   sendRoll(channelId: string, dice: string) {
@@ -87,7 +86,7 @@ export default class ChannelStore {
       const channel = this.channels.get(id)
       channel.setName(title)
 
-      if (character.identity === this.root.chatStore.identity) {
+      if (character.identity === this.identity.current) {
         channel.joinState = "joined"
       } else {
         channel.users.add(character.identity)
@@ -96,7 +95,7 @@ export default class ChannelStore {
 
     LCH: ({ channel: id, character }) => {
       const channel = this.channels.get(id)
-      if (character === this.root.chatStore.identity) {
+      if (character === this.identity.current) {
         channel.joinState = "left"
       } else {
         channel.users.remove(character)

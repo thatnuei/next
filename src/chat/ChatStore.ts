@@ -2,16 +2,13 @@ import { action, observable } from "mobx"
 import CharacterCollection from "../character/CharacterCollection"
 import { LoginResponse } from "../flist/FListApi"
 import RootStore from "../RootStore"
-import StoredValue from "../storage/StoredValue"
+import ChatIdentity from "./ChatIdentity"
 import { createCommandHandler } from "./helpers"
 import { Friendship, ServerCommand } from "./types"
 
 type ConnectionState = "offline" | "connecting" | "online"
 
 export default class ChatStore {
-  @observable
-  identity = ""
-
   @observable
   connectionState: ConnectionState = "offline"
 
@@ -20,15 +17,7 @@ export default class ChatStore {
   admins = new CharacterCollection(this.root.characterStore)
   ignored = new CharacterCollection(this.root.characterStore)
 
-  constructor(private root: RootStore) {}
-
-  get storedIdentity() {
-    return new StoredValue<string>(`identity:${this.root.userStore.account}`)
-  }
-
-  get identityCharacter() {
-    return this.root.characterStore.characters.get(this.identity)
-  }
+  constructor(private root: RootStore, private identity: ChatIdentity) {}
 
   get isConnecting() {
     return this.connectionState === "connecting"
@@ -38,17 +27,6 @@ export default class ChatStore {
     this.root.overlayStore.open({
       type: "primaryNavigation",
     })
-  }
-
-  @action
-  setIdentity = (identity: string) => {
-    this.identity = identity
-    this.storedIdentity.set(identity)
-  }
-
-  restoreIdentity = async () => {
-    const identity = await this.storedIdentity.get()
-    if (identity) this.setIdentity(identity)
   }
 
   @action
@@ -68,9 +46,9 @@ export default class ChatStore {
 
   @action
   connectToChat = () => {
-    const { account, ticket } = this.root.userStore
+    const { account, ticket } = this.root.userCredentials.value
 
-    this.root.socketStore.connect(account, ticket, this.identity)
+    this.root.socketStore.connect(account, ticket, this.identity.current)
     this.connectionState = "connecting"
   }
 

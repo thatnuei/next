@@ -1,4 +1,5 @@
 import { action, observable, runInAction } from "mobx"
+import ChatIdentity from "../chat/ChatIdentity"
 import { createCommandHandler } from "../chat/helpers"
 import sleep from "../common/helpers/sleep"
 import RootStore from "../RootStore"
@@ -13,7 +14,11 @@ export default class CharacterStore {
   @observable
   updatingStatus = false
 
-  constructor(private root: RootStore) {}
+  constructor(private root: RootStore, private identity: ChatIdentity) {}
+
+  get identityCharacter() {
+    return this.characters.get(this.identity.current)
+  }
 
   showUpdateStatusScreen = () => {
     this.root.overlayStore.open({
@@ -65,7 +70,7 @@ export default class CharacterStore {
       const char = this.characters.get(identity)
       char.setStatus(status, statusmsg)
 
-      if (identity === this.root.chatStore.identity) {
+      if (identity === this.identity.current) {
         this.updatingStatus = false
         this.root.overlayStore.close("updateStatus")
       }

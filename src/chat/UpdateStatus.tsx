@@ -31,7 +31,7 @@ const statuses: Record<SelectableStatus, string> = {
 
 function UpdateStatusForm() {
   const root = useRootStore()
-  const { identityCharacter } = root.chatStore
+  const { identityCharacter } = root.characterStore
   const isLoading = root.characterStore.updatingStatus
 
   const status = useInput(identityCharacter.status)

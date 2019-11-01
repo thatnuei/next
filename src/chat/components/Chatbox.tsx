@@ -18,7 +18,7 @@ type Props = {
 }
 
 const Chatbox = (props: Props) => {
-  const { chatStore } = useRootStore()
+  const { identity } = useRootStore()
 
   const trimmedInput = props.value.trim()
 
@@ -55,7 +55,7 @@ const Chatbox = (props: Props) => {
       <StyledTextArea
         value={props.value}
         onChange={(event) => props.onValueChange(event.target.value)}
-        placeholder={`Chatting as ${chatStore.identity}...`}
+        placeholder={`Chatting as ${identity.current}...`}
         onKeyDown={handleKeyDown}
         style={textAreaStyle}
       />

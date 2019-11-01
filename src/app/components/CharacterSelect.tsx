@@ -13,13 +13,14 @@ import useRootStore from "../../useRootStore"
 
 function CharacterSelect() {
   const {
+    identity,
+    userCredentials,
     appStore: { showLogin },
-    chatStore: { identity, setIdentity, connectToChat, isConnecting },
-    userStore: { characters },
+    chatStore: { connectToChat, isConnecting },
   } = useRootStore()
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    setIdentity(event.target.value)
+    identity.set(event.target.value)
   }
 
   async function handleSubmit(event: React.FormEvent) {
@@ -33,10 +34,14 @@ function CharacterSelect() {
       <form onSubmit={handleSubmit}>
         <FieldSet disabled={isConnecting}>
           <FieldsContainer>
-            <Avatar key={identity} name={identity} />
+            <Avatar key={identity.current} name={identity.current} />
 
-            <Select name="character" value={identity} onChange={handleChange}>
-              {characters.map((name) => (
+            <Select
+              name="character"
+              value={identity.current}
+              onChange={handleChange}
+            >
+              {userCredentials.value.characters.map((name) => (
                 <option value={name} key={name}>
                   {name}
                 </option>
