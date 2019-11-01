@@ -1,20 +1,13 @@
 import ChatIdentity from "../chat/ChatIdentity"
 import RootStore from "../RootStore"
-import Reference from "../state/classes/Reference"
-import { UserCredentials } from "../user/types"
+import { createEmptyUserCredentialsReference } from "../user/helpers"
 import CharacterCollection from "./CharacterCollection"
 import CharacterStore from "./CharacterStore"
 
 test("CharacterCollection - generic", async () => {
   const store = new CharacterStore(
     new RootStore(),
-    new ChatIdentity(
-      Reference.of<UserCredentials>({
-        account: "",
-        ticket: "",
-        characters: [],
-      }),
-    ),
+    new ChatIdentity(createEmptyUserCredentialsReference()),
   )
   const collection = new CharacterCollection(store)
 

@@ -9,20 +9,13 @@ import SocketStore from "./chat/SocketStore"
 import FListApi from "./flist/FListApi"
 import OverlayStore from "./overlay/OverlayStore"
 import PrivateChatStore from "./private-chat/PrivateChatStore"
-import Reference from "./state/classes/Reference"
-import { UserCredentials } from "./user/types"
+import { createEmptyUserCredentialsReference } from "./user/helpers"
 import UserStore from "./user/UserStore"
 
 export default class RootStore {
-  userCredentials = Reference.of<UserCredentials>({
-    account: "",
-    ticket: "",
-    characters: [],
-  })
-
-  identity = new ChatIdentity(this.userCredentials)
-
   api = new FListApi()
+  userCredentials = createEmptyUserCredentialsReference()
+  identity = new ChatIdentity(this.userCredentials)
   appStore = new AppStore()
   chatStore = new ChatStore(this, this.identity)
   chatNavigationStore = new ChatNavigationStore(this)
