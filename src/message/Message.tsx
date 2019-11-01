@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import styled from "styled-components"
 import BBC from "../bbc/BBC"
@@ -45,7 +44,7 @@ const Message = ({ model }: Props) => {
   )
 }
 
-export default observer(Message)
+export default Message
 
 const highlightStyles: { [K in MessageType]?: React.CSSProperties } = {
   lfrp: { backgroundColor: "rgba(39, 174, 96, 0.2)" },
