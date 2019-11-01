@@ -21,5 +21,6 @@ export default class ChatIdentity {
   @action
   set = (newIdentity: string) => {
     this.current = newIdentity
+    this.storage.set(newIdentity)
   }
 }
