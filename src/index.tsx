@@ -1,3 +1,4 @@
+/// <reference types="react-dom/experimental" />
 import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
@@ -12,11 +13,10 @@ configure({
 })
 
 function renderRoot() {
-  ReactDOM.render(
+  ReactDOM.createRoot(document.getElementById("root")!).render(
     <useRootStore.Provider>
       <Root />
     </useRootStore.Provider>,
-    document.getElementById("root"),
   )
 }
 
