@@ -1,7 +1,7 @@
 import React, {
   ComponentPropsWithoutRef,
-  useCallback,
-  useMemo,
+  useEffect,
+  useRef,
   useState,
 } from "react"
 import { getAvatarUrl } from "../../flist/helpers"
@@ -12,32 +12,30 @@ type Props = ComponentPropsWithoutRef<"img"> & {
   size?: number
 }
 
-const Avatar = (
-  { name, size = 100, ...props }: Props,
-  ref: React.Ref<HTMLImageElement>,
-) => {
+const Avatar = ({ name, size = 100, ...props }: Props) => {
+  const imageRef = useRef<HTMLImageElement>(null)
   const [loaded, setLoaded] = useState(false)
 
-  const handleLoad = useCallback(() => setLoaded(true), [])
-
-  const style = useMemo(() => ({ opacity: loaded ? 1 : 0 }), [loaded])
+  useEffect(() => {
+    if (imageRef.current && imageRef.current.complete) {
+      setLoaded(true)
+    }
+  }, [])
 
   return (
     <Image
       src={getAvatarUrl(name)}
-      width={size}
-      height={size}
-      style={style}
+      style={{ width: size, height: size, opacity: loaded ? 1 : 0 }}
       title={name}
-      onLoad={handleLoad}
+      onLoad={() => setLoaded(true)}
       alt=""
       role="presentation"
-      ref={ref}
+      ref={imageRef}
       {...props}
     />
   )
 }
-export default React.forwardRef(Avatar)
+export default Avatar
 
 const Image = styled.img`
   transition: 0.2s opacity;
