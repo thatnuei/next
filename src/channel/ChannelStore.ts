@@ -20,13 +20,6 @@ export default class ChannelStore {
     })
   }
 
-  showChannelDescription = (channelId: string) => {
-    this.root.overlayStore.open({
-      type: "channelDescription",
-      params: { channel: this.channels.get(channelId) },
-    })
-  }
-
   @computed
   get joinedChannels() {
     return this.channels.values.filter((channel) => {

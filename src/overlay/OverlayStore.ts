@@ -6,7 +6,6 @@ import { Position } from "../ui/types"
 type OverlayMap = {
   channelBrowser: void
   channelMenu: { channel: ChannelModel }
-  channelDescription: { channel: ChannelModel }
   primaryNavigation: void
   updateStatus: void
   characterMenu: { name: string; position: Position }

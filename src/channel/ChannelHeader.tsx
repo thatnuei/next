@@ -16,9 +16,12 @@ import useRootStore from "../useRootStore"
 import ChannelModel from "./ChannelModel"
 import { userListBreakpoint } from "./constants"
 
-type Props = { channel: ChannelModel }
+type Props = {
+  channel: ChannelModel
+  onShowDescription: () => void
+}
 
-function ChannelHeader({ channel }: Props) {
+function ChannelHeader({ channel, onShowDescription }: Props) {
   const root = useRootStore()
   const isChannelMenuHidden = useMedia(`(max-width: ${userListBreakpoint}px)`)
 
@@ -28,9 +31,7 @@ function ChannelHeader({ channel }: Props) {
 
       <MiddleSection>
         <TitleText>{channel.name}</TitleText>
-        <FadedButton
-          onClick={() => root.channelStore.showChannelDescription(channel.id)}
-        >
+        <FadedButton onClick={onShowDescription}>
           <span>Description</span>
           <Icon icon="about" size={0.8} />
         </FadedButton>
