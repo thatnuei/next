@@ -39,21 +39,21 @@ function ChannelView({ channel }: Props) {
 
         <MessageListContainer>
           <MessageList messages={channel.messages} />
+
+          <Modal
+            title={channel.name}
+            fillMode="contained"
+            children={<ChannelDescription channel={channel} />}
+            panelWidth={1200}
+            panelHeight={600}
+            {...descriptionModal}
+          />
         </MessageListContainer>
 
         <Chatbox
           value={channel.chatboxInput}
           onValueChange={channel.setChatboxInput}
           onSubmit={(text) => root.channelStore.sendMessage(channel.id, text)}
-        />
-
-        <Modal
-          title={channel.name}
-          fillMode="contained"
-          children={<ChannelDescription channel={channel} />}
-          panelWidth={1200}
-          panelHeight={600}
-          {...descriptionModal}
         />
       </ContentArea>
 
@@ -78,7 +78,6 @@ const ContentArea = styled.div`
   ${flexGrow};
   ${flexColumn};
   ${spacedChildrenVertical(spacing.xsmall)};
-  position: relative;
 `
 
 const MessageListContainer = styled.div`
