@@ -6,24 +6,41 @@ import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 
 function App() {
-  const { appStore, userStore } = useRootStore()
+  const {
+    appStore,
+    userStore,
+    chatStore,
+    identity,
+    userCredentials,
+  } = useRootStore()
 
   switch (appStore.view) {
-    case "login":
+    case "login": {
+      const error =
+        userStore.loginState.type === "error"
+          ? userStore.loginState.error
+          : undefined
+
       return (
         <Login
           isLoading={userStore.loginState.type === "loading"}
-          error={
-            userStore.loginState.type === "error"
-              ? userStore.loginState.error
-              : undefined
-          }
+          error={error}
           onSubmit={userStore.submitLogin}
         />
       )
+    }
 
     case "characterSelect":
-      return <CharacterSelect />
+      return (
+        <CharacterSelect
+          identity={identity.current}
+          characters={userCredentials.value.characters}
+          disabled={chatStore.isConnecting}
+          onIdentityChange={identity.set}
+          onReturnToLogin={appStore.showLogin}
+          onSubmit={chatStore.connectToChat}
+        />
+      )
 
     case "chat":
       return <Chat />

@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import Avatar from "../../character/components/Avatar"
 import Anchor from "../../ui/components/Anchor"
@@ -9,39 +8,40 @@ import Select from "../../ui/components/Select"
 import { spacedChildrenVertical } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
-import useRootStore from "../../useRootStore"
 
-function CharacterSelect() {
-  const {
-    identity,
-    userCredentials,
-    appStore: { showLogin },
-    chatStore: { connectToChat, isConnecting },
-  } = useRootStore()
+type Props = {
+  identity: string
+  characters: string[]
+  disabled: boolean
+  onIdentityChange: (identity: string) => void
+  onSubmit: () => void
+  onReturnToLogin: () => void
+}
 
+export default function CharacterSelect(props: Props) {
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    identity.set(event.target.value)
+    props.onIdentityChange(event.target.value)
   }
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    connectToChat()
+    props.onSubmit()
   }
 
   return (
     <FullscreenRaisedPanel>
       <RaisedPanelHeader center={<h1>Select a Character</h1>} />
       <form onSubmit={handleSubmit}>
-        <FieldSet disabled={isConnecting}>
+        <FieldSet disabled={props.disabled}>
           <FieldsContainer>
-            <Avatar key={identity.current} name={identity.current} />
+            <Avatar key={props.identity} name={props.identity} />
 
             <Select
               name="character"
-              value={identity.current}
+              value={props.identity}
               onChange={handleChange}
             >
-              {userCredentials.value.characters.map((name) => (
+              {props.characters.map((name) => (
                 <option value={name} key={name}>
                   {name}
                 </option>
@@ -50,7 +50,7 @@ function CharacterSelect() {
 
             <Button type="submit">Enter Chat</Button>
 
-            <Anchor as="button" type="button" onClick={showLogin}>
+            <Anchor as="button" type="button" onClick={props.onReturnToLogin}>
               Return to Login
             </Anchor>
           </FieldsContainer>
@@ -59,7 +59,6 @@ function CharacterSelect() {
     </FullscreenRaisedPanel>
   )
 }
-export default observer(CharacterSelect)
 
 const FieldSet = styled.fieldset`
   transition: 0.2s opacity;
