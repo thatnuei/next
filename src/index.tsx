@@ -12,8 +12,10 @@ configure({
   // observableRequiresReaction: true,
 })
 
+const root = ReactDOM.createRoot(document.getElementById("root")!)
+
 function renderRoot() {
-  ReactDOM.createRoot(document.getElementById("root")!).render(
+  root.render(
     <useRootStore.Provider>
       <Root />
     </useRootStore.Provider>,
