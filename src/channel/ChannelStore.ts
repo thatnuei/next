@@ -13,13 +13,6 @@ export default class ChannelStore {
     // root.socketHandler.listen("command", this.handleSocketCommand)
   }
 
-  showChannelMenu = (channelId: string) => {
-    this.root.overlayStore.open({
-      type: "channelMenu",
-      params: { channel: this.channels.get(channelId) },
-    })
-  }
-
   @computed
   get joinedChannels() {
     return this.channels.values.filter((channel) => {

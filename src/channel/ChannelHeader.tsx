@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import SidebarMenuButton from "../chat/components/SidebarMenuButton"
 import useMedia from "../dom/hooks/useMedia"
@@ -12,17 +11,15 @@ import {
 } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
-import useRootStore from "../useRootStore"
-import ChannelModel from "./ChannelModel"
 import { userListBreakpoint } from "./constants"
 
 type Props = {
-  channel: ChannelModel
+  title: string
+  onShowChannelMenu: () => void
   onShowDescription: () => void
 }
 
-function ChannelHeader({ channel, onShowDescription }: Props) {
-  const root = useRootStore()
+function ChannelHeader(props: Props) {
   const isChannelMenuHidden = useMedia(`(max-width: ${userListBreakpoint}px)`)
 
   return (
@@ -30,17 +27,15 @@ function ChannelHeader({ channel, onShowDescription }: Props) {
       <SidebarMenuButton />
 
       <MiddleSection>
-        <TitleText>{channel.name}</TitleText>
-        <FadedButton onClick={onShowDescription}>
+        <TitleText>{props.title}</TitleText>
+        <FadedButton onClick={props.onShowDescription}>
           <span>Description</span>
           <Icon icon="about" size={0.8} />
         </FadedButton>
       </MiddleSection>
 
       {isChannelMenuHidden && (
-        <FadedButton
-          onClick={() => root.channelStore.showChannelMenu(channel.id)}
-        >
+        <FadedButton onClick={props.onShowChannelMenu}>
           <Icon icon="more" />
         </FadedButton>
       )}
@@ -48,7 +43,7 @@ function ChannelHeader({ channel, onShowDescription }: Props) {
   )
 }
 
-export default observer(ChannelHeader)
+export default ChannelHeader
 
 const Container = styled.header`
   background-color: ${getThemeColor("theme0")};

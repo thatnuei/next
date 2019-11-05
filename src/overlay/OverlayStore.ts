@@ -1,11 +1,9 @@
 import { action, observable } from "mobx"
-import ChannelModel from "../channel/ChannelModel"
 import { Values } from "../common/types"
 import { Position } from "../ui/types"
 
 type OverlayMap = {
   channelBrowser: void
-  channelMenu: { channel: ChannelModel }
   primaryNavigation: void
   updateStatus: void
   characterMenu: { name: string; position: Position }

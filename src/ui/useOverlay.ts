@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import useToggleState from "../state/hooks/useToggleState"
 
-export default function useModal(initialVisible?: boolean) {
+export default function useOverlay(initialVisible?: boolean) {
   const state = useToggleState(initialVisible)
   return useMemo(
     () => ({

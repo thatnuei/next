@@ -2,7 +2,6 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import { Transition, TransitionGroup } from "react-transition-group"
 import ChannelBrowser from "../channel/ChannelBrowser"
-import ChannelMenu from "../channel/ChannelMenu"
 import CharacterMenu from "../character/components/CharacterMenu"
 import Navigation from "../chat/components/Navigation"
 import UpdateStatusForm from "../chat/UpdateStatus"
@@ -29,15 +28,6 @@ function OverlayRenderer() {
             panelWidth={400}
             panelHeight={600}
             children={<ChannelBrowser />}
-            {...props}
-          />
-        )
-
-      case "channelMenu":
-        return (
-          <Drawer
-            side="right"
-            children={<ChannelMenu channel={overlay.params.channel} />}
             {...props}
           />
         )

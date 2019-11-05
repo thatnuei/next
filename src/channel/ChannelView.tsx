@@ -3,6 +3,7 @@ import React from "react"
 import Chatbox from "../chat/components/Chatbox"
 import useMedia from "../dom/hooks/useMedia"
 import MessageList from "../message/MessageList"
+import Drawer from "../ui/components/Drawer"
 import Modal from "../ui/components/Modal"
 import {
   fillArea,
@@ -14,10 +15,11 @@ import {
 } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
-import useModal from "../ui/useModal"
+import useOverlay from "../ui/useOverlay"
 import useRootStore from "../useRootStore"
 import ChannelDescription from "./ChannelDescription"
 import ChannelHeader from "./ChannelHeader"
+import ChannelMenu from "./ChannelMenu"
 import ChannelModel from "./ChannelModel"
 import ChannelUserList from "./ChannelUserList"
 import { userListBreakpoint } from "./constants"
@@ -27,14 +29,16 @@ type Props = { channel: ChannelModel }
 function ChannelView({ channel }: Props) {
   const root = useRootStore()
   const isUserListVisible = useMedia(`(min-width: ${userListBreakpoint}px)`)
-  const descriptionModal = useModal()
+  const descriptionModal = useOverlay()
+  const channelMenuDrawer = useOverlay()
 
   return (
     <Container>
       <ContentArea>
         <ChannelHeader
-          channel={channel}
+          title={channel.name}
           onShowDescription={descriptionModal.show}
+          onShowChannelMenu={channelMenuDrawer.show}
         />
 
         <MessageListContainer>
@@ -62,6 +66,12 @@ function ChannelView({ channel }: Props) {
           <ChannelUserList channel={channel} />
         </UserListContainer>
       )}
+
+      <Drawer
+        side="right"
+        children={<ChannelMenu channel={channel} />}
+        {...channelMenuDrawer}
+      />
     </Container>
   )
 }
