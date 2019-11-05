@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import { rgba } from "polished"
 import React from "react"
 import CharacterModel from "../character/CharacterModel"
@@ -10,30 +9,30 @@ import { getThemeColor, spacing } from "../ui/theme"
 import useRootStore from "../useRootStore"
 import ChannelModel from "./ChannelModel"
 
-function ChannelUserList({ channel }: { channel: ChannelModel }) {
-  const { chatStore } = useRootStore()
-  const { sortedUsers } = channel
+type Props = {
+  users: ListEntry[]
+}
 
-  const getHighlight = (name: string) => {
-    if (chatStore.isFriend(name)) return rgba(46, 204, 113, 0.15)
-    if (chatStore.isAdmin(name)) return rgba(231, 76, 60, 0.15)
-    if (channel.ops.has(name)) return rgba(241, 196, 15, 0.15)
-  }
+type ListEntry = {
+  name: string
+  highlight: string | undefined
+}
 
-  const renderUser = (character: CharacterModel) => (
-    <ListItem style={{ backgroundColor: getHighlight(character.name) }}>
-      <CharacterName name={character.name} />
+function ChannelUserList(props: Props) {
+  const renderUser = ({ name, highlight }: ListEntry) => (
+    <ListItem style={{ backgroundColor: highlight }}>
+      <CharacterName name={name} />
     </ListItem>
   )
 
   return (
     <Container>
-      <UserCount>Characters: {sortedUsers.length}</UserCount>
+      <UserCount>Characters: {props.users.length}</UserCount>
       <ListContainer>
         <VirtualizedList
-          items={channel.sortedUsers}
+          items={props.users}
           itemHeight={30}
-          getItemKey={(user) => user.name}
+          getItemKey={(entry) => entry.name}
           renderItem={renderUser}
         />
       </ListContainer>
@@ -41,7 +40,22 @@ function ChannelUserList({ channel }: { channel: ChannelModel }) {
   )
 }
 
-export default observer(ChannelUserList)
+export default ChannelUserList
+
+export function useChannelUserListEntries(channel: ChannelModel): ListEntry[] {
+  const { chatStore } = useRootStore()
+
+  function getHighlight(character: CharacterModel): string | undefined {
+    if (chatStore.isFriend(character.name)) return rgba(46, 204, 113, 0.15)
+    if (chatStore.isAdmin(character.name)) return rgba(231, 76, 60, 0.15)
+    if (channel.ops.has(character.name)) return rgba(241, 196, 15, 0.15)
+  }
+
+  return channel.sortedUsers.map((user) => ({
+    name: user.name,
+    highlight: getHighlight(user),
+  }))
+}
 
 const Container = styled.div`
   ${fillArea};

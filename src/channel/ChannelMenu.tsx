@@ -1,14 +1,15 @@
 import React from "react"
 import { styled } from "../ui/styled"
 import ChannelModel from "./ChannelModel"
-import ChannelUserList from "./ChannelUserList"
+import ChannelUserList, { useChannelUserListEntries } from "./ChannelUserList"
 
 type Props = { channel: ChannelModel }
 
-function ChannelMenu(props: Props) {
+function ChannelMenu({ channel }: Props) {
+  const userListEntries = useChannelUserListEntries(channel)
   return (
     <Container>
-      <ChannelUserList channel={props.channel} />
+      <ChannelUserList users={userListEntries} />
     </Container>
   )
 }

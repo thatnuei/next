@@ -21,7 +21,7 @@ import ChannelDescription from "./ChannelDescription"
 import ChannelHeader from "./ChannelHeader"
 import ChannelMenu from "./ChannelMenu"
 import ChannelModel from "./ChannelModel"
-import ChannelUserList from "./ChannelUserList"
+import ChannelUserList, { useChannelUserListEntries } from "./ChannelUserList"
 import { userListBreakpoint } from "./constants"
 
 type Props = { channel: ChannelModel }
@@ -31,6 +31,7 @@ function ChannelView({ channel }: Props) {
   const isUserListVisible = useMedia(`(min-width: ${userListBreakpoint}px)`)
   const descriptionModal = useOverlay()
   const channelMenuDrawer = useOverlay()
+  const userListEntries = useChannelUserListEntries(channel)
 
   return (
     <>
@@ -65,7 +66,7 @@ function ChannelView({ channel }: Props) {
 
         {isUserListVisible && (
           <UserListContainer>
-            <ChannelUserList channel={channel} />
+            <ChannelUserList users={userListEntries} />
           </UserListContainer>
         )}
       </Container>
