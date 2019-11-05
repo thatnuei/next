@@ -48,11 +48,12 @@ function ChannelView({ channel }: Props) {
             <Modal
               title={channel.name}
               fillMode="contained"
-              children={<ChannelDescription channel={channel} />}
               panelWidth={1200}
               panelHeight={600}
               {...descriptionModal}
-            />
+            >
+              <ChannelDescription description={channel.description} />
+            </Modal>
           </MessageListContainer>
 
           <Chatbox
