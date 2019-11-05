@@ -10,12 +10,12 @@ import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 
 type Props = {
-  isLoading: boolean
+  disabled: boolean
   error?: string
   onSubmit: (account: string, password: string) => void
 }
 
-function Login({ isLoading, error, onSubmit }: Props) {
+function Login({ disabled, error, onSubmit }: Props) {
   const account = useInput()
   const password = useInput()
 
@@ -28,7 +28,7 @@ function Login({ isLoading, error, onSubmit }: Props) {
     <FullscreenRaisedPanel>
       <RaisedPanelHeader center={<h1>Login</h1>} />
       <Form onSubmit={handleSubmit}>
-        <FieldSet disabled={isLoading}>
+        <FieldSet disabled={disabled}>
           <FormField labelText="Username">
             <TextInput
               name="username"

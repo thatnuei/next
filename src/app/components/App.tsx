@@ -23,7 +23,7 @@ function App() {
 
       return (
         <Login
-          isLoading={userStore.loginState.type === "loading"}
+          disabled={userStore.loginState.type === "loading"}
           error={error}
           onSubmit={userStore.submitLogin}
         />
