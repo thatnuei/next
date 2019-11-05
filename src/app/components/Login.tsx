@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import useInput from "../../dom/hooks/useInput"
 import Button from "../../ui/components/Button"
@@ -9,22 +8,20 @@ import TextInput from "../../ui/components/TextInput"
 import { spacedChildrenVertical } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
-import useRootStore from "../../useRootStore"
 
-function Login() {
-  const {
-    userStore: { loginState, submitLogin },
-  } = useRootStore()
+type Props = {
+  isLoading: boolean
+  error?: string
+  onSubmit: (account: string, password: string) => void
+}
 
-  const isLoading = loginState.type === "loading"
-  const error = loginState.type === "error" ? loginState.error : undefined
-
+function Login({ isLoading, error, onSubmit }: Props) {
   const account = useInput()
   const password = useInput()
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    submitLogin(account.value, password.value)
+    onSubmit(account.value, password.value)
   }
 
   return (
@@ -60,7 +57,7 @@ function Login() {
   )
 }
 
-export default observer(Login)
+export default Login
 
 const Form = styled.form`
   display: flex;
