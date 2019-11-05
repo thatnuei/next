@@ -33,46 +33,48 @@ function ChannelView({ channel }: Props) {
   const channelMenuDrawer = useOverlay()
 
   return (
-    <Container>
-      <ContentArea>
-        <ChannelHeader
-          title={channel.name}
-          onShowDescription={descriptionModal.show}
-          onShowChannelMenu={channelMenuDrawer.show}
-        />
-
-        <MessageListContainer>
-          <MessageList messages={channel.messages} />
-
-          <Modal
+    <>
+      <Container>
+        <ContentArea>
+          <ChannelHeader
             title={channel.name}
-            fillMode="contained"
-            children={<ChannelDescription channel={channel} />}
-            panelWidth={1200}
-            panelHeight={600}
-            {...descriptionModal}
+            onShowDescription={descriptionModal.show}
+            onShowChannelMenu={channelMenuDrawer.show}
           />
-        </MessageListContainer>
 
-        <Chatbox
-          value={channel.chatboxInput}
-          onValueChange={channel.setChatboxInput}
-          onSubmit={(text) => root.channelStore.sendMessage(channel.id, text)}
-        />
-      </ContentArea>
+          <MessageListContainer>
+            <MessageList messages={channel.messages} />
 
-      {isUserListVisible && (
-        <UserListContainer>
-          <ChannelUserList channel={channel} />
-        </UserListContainer>
-      )}
+            <Modal
+              title={channel.name}
+              fillMode="contained"
+              children={<ChannelDescription channel={channel} />}
+              panelWidth={1200}
+              panelHeight={600}
+              {...descriptionModal}
+            />
+          </MessageListContainer>
+
+          <Chatbox
+            value={channel.chatboxInput}
+            onValueChange={channel.setChatboxInput}
+            onSubmit={(text) => root.channelStore.sendMessage(channel.id, text)}
+          />
+        </ContentArea>
+
+        {isUserListVisible && (
+          <UserListContainer>
+            <ChannelUserList channel={channel} />
+          </UserListContainer>
+        )}
+      </Container>
 
       <Drawer
         side="right"
         children={<ChannelMenu channel={channel} />}
         {...channelMenuDrawer}
       />
-    </Container>
+    </>
   )
 }
 
