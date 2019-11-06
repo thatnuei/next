@@ -73,7 +73,7 @@ function ChannelView({ channel }: Props) {
 
       <Drawer
         side="right"
-        children={<ChannelMenu channel={channel} />}
+        children={<ChannelMenu users={userListEntries} />}
         {...channelMenuDrawer}
       />
     </>

@@ -10,16 +10,16 @@ import useRootStore from "../useRootStore"
 import ChannelModel from "./ChannelModel"
 
 type Props = {
-  users: ListEntry[]
+  users: ChannelUserListEntry[]
 }
 
-type ListEntry = {
+export type ChannelUserListEntry = {
   name: string
   highlight: string | undefined
 }
 
 function ChannelUserList(props: Props) {
-  const renderUser = ({ name, highlight }: ListEntry) => (
+  const renderUser = ({ name, highlight }: ChannelUserListEntry) => (
     <ListItem style={{ backgroundColor: highlight }}>
       <CharacterName name={name} />
     </ListItem>
@@ -42,7 +42,9 @@ function ChannelUserList(props: Props) {
 
 export default ChannelUserList
 
-export function useChannelUserListEntries(channel: ChannelModel): ListEntry[] {
+export function useChannelUserListEntries(
+  channel: ChannelModel,
+): ChannelUserListEntry[] {
   const { chatStore } = useRootStore()
 
   function getHighlight(character: CharacterModel): string | undefined {
