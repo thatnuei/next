@@ -23,7 +23,7 @@ export default function CharacterSelect(props: Props) {
     props.onIdentityChange(event.target.value)
   }
 
-  async function handleSubmit(event: React.FormEvent) {
+  function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     props.onSubmit()
   }
