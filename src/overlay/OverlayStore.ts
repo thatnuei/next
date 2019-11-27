@@ -1,23 +1,33 @@
-import RootStore from "../RootStore"
-import OverlayViewModel from "./OverlayViewModel"
+import { action, observable } from "mobx"
+import { Values } from "../common/types"
+import { Position } from "../ui/types"
+
+type OverlayMap = {
+  channelBrowser: void
+  primaryNavigation: void
+  updateStatus: void
+  characterMenu: { name: string; position: Position }
+}
+
+export type Overlay = Values<
+  {
+    [K in keyof OverlayMap]: OverlayMap[K] extends object
+      ? { type: K; params: OverlayMap[K] }
+      : { type: K }
+  }
+>
 
 export default class OverlayStore {
-  chatNav = new OverlayViewModel()
-  userList = new OverlayViewModel()
-  updateStatus = new OverlayViewModel()
-  channelBrowser = new OverlayViewModel()
-  onlineUsers = new OverlayViewModel()
+  @observable.ref
+  overlays: Overlay[] = []
 
-  constructor(private root: RootStore) {}
-
-  showChannelBrowser = () => {
-    this.root.channelStore.requestListings()
-    this.channelBrowser.open()
+  @action
+  open = (overlay: Overlay) => {
+    this.overlays = [...this.overlays, overlay]
   }
 
-  showOnlineUsers = () => {
-    this.onlineUsers.open()
-    // this.root.chatStore.fetchFriends()
-    // this.root.chatStore.fetchBookmarks()
+  @action
+  close = (type: keyof OverlayMap) => {
+    this.overlays = this.overlays.filter((overlay) => overlay.type !== type)
   }
 }

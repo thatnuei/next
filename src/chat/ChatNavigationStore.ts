@@ -1,84 +1,85 @@
-import * as idb from "idb-keyval"
-import { isEqual } from "lodash"
-import { action, observable, toJS } from "mobx"
-import clamp from "../common/clamp"
+import { sortBy } from "lodash"
+import { action, computed, observable } from "mobx"
+import ChannelModel from "../channel/ChannelModel"
+import PrivateChatModel from "../private-chat/PrivateChatModel"
 import RootStore from "../RootStore"
 
-export type ConsoleTab = { type: "console" }
-export type ChannelTab = { type: "channel"; channelId: string }
-export type PrivateChatTab = { type: "privateChat"; partnerName: string }
+type ChatRoomBase<T extends string> = { type: T; key: string }
+type ChannelRoom = ChatRoomBase<"channel"> & { channel: ChannelModel }
+type PrivateChatRoom = ChatRoomBase<"privateChat"> & { chat: PrivateChatModel }
+type ChatRoom = ChannelRoom | PrivateChatRoom
 
-export type ChatTab = ConsoleTab | ChannelTab | PrivateChatTab
+const getChannelKey = (channelId: string) => `channel-${channelId}`
+const getPrivateChatKey = (partnerName: string) => `private-chat-${partnerName}`
 
 export default class ChatNavigationStore {
-  @observable.shallow
-  tabs: ChatTab[] = []
-
-  @observable.ref
-  activeTab?: ChatTab
+  @observable
+  private currentRoomKey?: string
 
   constructor(private root: RootStore) {}
 
-  @action
-  addTab = (tab: ChatTab) => {
-    if (this.tabs.some((other) => isEqual(tab, other))) return
+  @computed
+  get channelRooms(): ChannelRoom[] {
+    const sortedChannels = sortBy(
+      this.root.channelStore.joinedChannels,
+      (channel) => channel.name.toLowerCase(),
+    )
 
-    this.tabs.push(tab)
-    this.saveTabs()
+    return sortedChannels.map((channel) => ({
+      type: "channel",
+      key: getChannelKey(channel.id),
+      channel,
+    }))
+  }
 
-    if (!this.activeTab) this.showTab(tab)
+  @computed
+  get privateChatRooms(): PrivateChatRoom[] {
+    const sortedChats = sortBy(this.root.privateChatStore.openChats, (chat) =>
+      chat.partner.toLowerCase(),
+    )
+
+    return sortedChats.map((chat) => ({
+      type: "privateChat",
+      key: getPrivateChatKey(chat.partner),
+      chat,
+    }))
+  }
+
+  @computed
+  get rooms(): ChatRoom[] {
+    return [...this.channelRooms, ...this.privateChatRooms]
+  }
+
+  @computed
+  get currentRoom(): ChatRoom | undefined {
+    const room = this.rooms.find((room) => room.key === this.currentRoomKey)
+    return room || this.rooms[0]
   }
 
   @action
-  removeTab = (tab: ChatTab) => {
-    const index = this.tabs.findIndex((other) => isEqual(tab, other))
-    if (index < 0) return
+  setCurrentRoom = (key: string) => {
+    this.currentRoomKey = key
+    this.root.overlayStore.close("primaryNavigation")
 
-    // need to select a new tab if we're closing the active tab
-    if (this.isActive(tab)) {
-      const newIndex = clamp(index + 1, 0, this.tabs.length - 2) // -2 to account for the removed tab
-      this.showTab(this.tabs[newIndex])
-    }
+    if (!this.currentRoom) return
 
-    this.tabs.splice(index, 1)
-
-    this.saveTabs()
-  }
-
-  @action
-  showTab = (tab: ChatTab) => {
-    const existing = this.tabs.find((other) => isEqual(other, tab))
-    if (!existing) {
-      this.addTab(tab)
-      this.activeTab = tab
-    } else {
-      this.activeTab = existing
+    if (this.currentRoom.type === "channel") {
+      this.currentRoom.channel.markRead()
+    } else if (this.currentRoom.type === "privateChat") {
+      this.currentRoom.chat.markRead()
     }
   }
 
-  isActive = (tab: ChatTab) => isEqual(this.activeTab, tab)
+  isCurrentChannel = (channelId: string) =>
+    getChannelKey(channelId) === this.currentRoomKey
 
-  hasTab = (tab: ChatTab) => this.tabs.some((other) => isEqual(tab, other))
+  isCurrentPrivateChat = (partnerName: string) =>
+    getPrivateChatKey(partnerName) === this.currentRoomKey
 
-  restoreTabs = async () => {
-    const tabs = await idb.get<ChatTab[] | undefined>(this.storageKey)
-    if (tabs) {
-      for (const tab of tabs) {
-        if (tab.type === "channel") {
-          this.root.channelStore.join(tab.channelId)
-        }
-        if (tab.type === "privateChat") {
-          this.addTab(tab)
-        }
-      }
-    }
-  }
-
-  private saveTabs = () => {
-    idb.set(this.storageKey, toJS(this.tabs))
-  }
-
-  private get storageKey() {
-    return `${this.root.chatStore.identity}:tabs`
+  @computed
+  get currentChannel() {
+    return this.currentRoom?.type === "channel"
+      ? this.currentRoom.channel
+      : undefined
   }
 }

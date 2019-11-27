@@ -1,4 +1,4 @@
-import { CommandHandlerMap, ServerCommand } from "./types"
+import { ServerCommand, ServerCommandMap } from "./types"
 
 export function parseCommand(data: string) {
   const type = data.slice(0, 3)
@@ -13,4 +13,12 @@ export function createCommandHandler(handlers: CommandHandlerMap) {
     ;(handler as any)(command.params)
     return true
   }
+}
+
+type CommandHandler<K extends keyof ServerCommandMap> = (
+  params: ServerCommandMap[K],
+) => void
+
+type CommandHandlerMap = {
+  [K in keyof ServerCommandMap]?: CommandHandler<K>
 }

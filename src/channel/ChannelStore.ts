@@ -1,82 +1,56 @@
-import { action, observable } from "mobx"
-import { createCommandHandler } from "../fchat/helpers"
+import { action, computed } from "mobx"
+import ChatIdentity from "../chat/ChatIdentity"
+import { createCommandHandler } from "../chat/helpers"
 import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
-import FactoryMap from "../state/FactoryMap"
+import FactoryMap from "../state/classes/FactoryMap"
 import ChannelModel from "./ChannelModel"
-import { ChannelMode } from "./types"
-
-export type ChannelListing = {
-  id: string
-  name: string
-  userCount: number
-  mode?: ChannelMode
-}
-
-type ChannelStoreListings = {
-  public: ChannelListing[]
-  private: ChannelListing[]
-}
-
-export type ChannelListingType = keyof ChannelStoreListings
 
 export default class ChannelStore {
   channels = new FactoryMap((id) => new ChannelModel(this.root, id))
 
-  @observable.shallow
-  listings: ChannelStoreListings = {
-    public: [],
-    private: [],
+  constructor(private root: RootStore, private identity: ChatIdentity) {
+    // root.socketHandler.listen("command", this.handleSocketCommand)
   }
 
-  constructor(private root: RootStore) {
-    root.socketHandler.listen("command", this.handleSocketCommand)
+  @computed
+  get joinedChannels() {
+    return this.channels.values.filter((channel) => {
+      return channel.joinState !== "left"
+    })
   }
 
   @action
-  private setListings(
-    kind: keyof ChannelStoreListings,
-    listings: ChannelListing[],
-  ) {
-    this.listings[kind] = listings
+  join = (channelId: string) => {
+    this.channels.get(channelId).joinState = "joining"
+    this.root.socketStore.sendCommand("JCH", { channel: channelId })
   }
 
-  requestListings = () => {
-    this.root.socketHandler.send("CHA", undefined)
-    this.root.socketHandler.send("ORS", undefined)
-  }
-
-  async join(channelId: string) {
-    await this.root.socketHandler.joinChannel(
-      channelId,
-      this.root.chatStore.identity,
-    )
-  }
-
-  async leave(channelId: string) {
-    await this.root.socketHandler.leaveChannel(
-      channelId,
-      this.root.chatStore.identity,
-    )
+  @action
+  leave = (channelId: string) => {
+    this.channels.get(channelId).joinState = "leaving"
+    this.root.socketStore.sendCommand("LCH", { channel: channelId })
   }
 
   sendMessage(channelId: string, message: string) {
-    this.root.socketHandler.send("MSG", { channel: channelId, message })
+    this.root.socketStore.sendCommand("MSG", { channel: channelId, message })
     this.channels
       .get(channelId)
-      .addMessage(
-        new MessageModel(this.root.chatStore.identity, message, "chat"),
-      )
+      .addMessage(new MessageModel(this.identity.current, message, "chat"))
   }
 
   sendRoll(channelId: string, dice: string) {
-    this.root.socketHandler.send("RLL", { channel: channelId, dice })
+    this.root.socketStore.sendCommand("RLL", { channel: channelId, dice })
   }
 
   sendBottle(channelId: string) {
-    this.root.socketHandler.send("RLL", { channel: channelId, dice: "bottle" })
+    this.root.socketStore.sendCommand("RLL", {
+      channel: channelId,
+      dice: "bottle",
+    })
   }
 
+  @action
   handleSocketCommand = createCommandHandler({
     ICH: ({ channel: id, mode, users }) => {
       const channel = this.channels.get(id)
@@ -97,25 +71,20 @@ export default class ChannelStore {
     JCH: ({ channel: id, character, title }) => {
       const channel = this.channels.get(id)
       channel.setName(title)
-      channel.users.add(character.identity)
 
-      if (character.identity === this.root.chatStore.identity) {
-        this.root.chatNavigationStore.addTab({
-          type: "channel",
-          channelId: id,
-        })
+      if (character.identity === this.identity.current) {
+        channel.joinState = "joined"
+      } else {
+        channel.users.add(character.identity)
       }
     },
 
     LCH: ({ channel: id, character }) => {
       const channel = this.channels.get(id)
-      channel.users.remove(character)
-
-      if (character === this.root.chatStore.identity) {
-        this.root.chatNavigationStore.removeTab({
-          type: "channel",
-          channelId: id,
-        })
+      if (character === this.identity.current) {
+        channel.joinState = "left"
+      } else {
+        channel.users.remove(character)
       }
     },
 
@@ -129,11 +98,8 @@ export default class ChannelStore {
       const channel = this.channels.get(id)
       channel.addMessage(new MessageModel(character, message, "chat"))
 
-      const isChannelActive = this.root.chatNavigationStore.isActive({
-        type: "channel",
-        channelId: id,
-      })
-      if (!isChannelActive) {
+      const isChannelActive = this.root.chatNavigationStore.isCurrentChannel(id)
+      if (!isChannelActive && channel.selectedMode !== "ads") {
         channel.markUnread()
       }
     },
@@ -149,29 +115,6 @@ export default class ChannelStore {
         const message = new MessageModel(undefined, params.message, "system")
         channel.addMessage(message)
       }
-    },
-
-    CHA: ({ channels }) => {
-      const listings = channels.map<ChannelListing>(
-        ({ name, mode, characters }) => ({
-          id: name,
-          name,
-          mode,
-          userCount: characters,
-        }),
-      )
-      this.setListings("public", listings)
-    },
-
-    ORS: ({ channels }) => {
-      const listings = channels.map<ChannelListing>(
-        ({ name, title, characters }) => ({
-          id: name,
-          name: title,
-          userCount: characters,
-        }),
-      )
-      this.setListings("private", listings)
     },
   })
 }

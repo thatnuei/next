@@ -1,97 +1,106 @@
-import { action, computed, observable } from "mobx"
+import { action, observable } from "mobx"
 import CharacterCollection from "../character/CharacterCollection"
-import { CharacterStatus } from "../character/types"
-import { createCommandHandler } from "../fchat/helpers"
-import { LoginResponse } from "../flist/FListApiService"
+import { LoginResponse } from "../flist/FListApi"
 import RootStore from "../RootStore"
-import { Friendship } from "./types"
+import ChatIdentity from "./ChatIdentity"
+import { createCommandHandler } from "./helpers"
+import { Friendship, ServerCommand } from "./types"
 
-const lastCharacterKey = (account: string) => `${account}:lastCharacter`
+type ConnectionState = "offline" | "connecting" | "online"
 
 export default class ChatStore {
-  @observable identity = ""
-  @observable.ref characters: string[] = []
+  @observable
+  connectionState: ConnectionState = "offline"
+
   @observable.ref friendships: Friendship[] = []
   bookmarks = new CharacterCollection(this.root.characterStore)
   admins = new CharacterCollection(this.root.characterStore)
   ignored = new CharacterCollection(this.root.characterStore)
 
-  constructor(private root: RootStore) {
-    root.socketHandler.listen("command", this.handleSocketCommand)
+  constructor(private root: RootStore, private identity: ChatIdentity) {}
+
+  get isConnecting() {
+    return this.connectionState === "connecting"
   }
 
-  async submitLogin(account: string, password: string) {
-    const response = await this.root.api.authenticate(account, password)
-    this.handleLoginResponse(response)
+  showPrimaryNavigation = () => {
+    this.root.overlayStore.open({
+      type: "primaryNavigation",
+    })
   }
 
   @action
-  private handleLoginResponse(response: LoginResponse) {
-    this.characters = response.characters
+  setRelationsFromLoginResponse = (response: LoginResponse) => {
     this.bookmarks.set(response.bookmarks.map(({ name }) => name))
+
     this.friendships = response.friends.map((entry) => ({
       us: entry.dest_name,
       them: entry.source_name,
     }))
   }
 
-  async connectToServer() {
-    const { api, socketHandler, chatNavigationStore } = this.root
-
-    await socketHandler.connect({
-      account: api.account,
-      ticket: api.ticket,
-      character: this.identity,
-    })
-
-    chatNavigationStore.restoreTabs()
-  }
-
-  @action
-  setIdentity = (identity: string) => {
-    this.identity = identity
-    this.root.storage.set(lastCharacterKey(this.root.api.account), identity)
-  }
-
-  restoreIdentity = async () => {
-    const key = lastCharacterKey(this.root.api.account)
-    const storedIdentity = await this.root.storage.get<string>(key)
-    this.setIdentity(storedIdentity || this.characters[0])
-  }
-
-  isFriend = (name: string) =>
-    this.friendships.some((entry) => entry.them === name)
-
+  isFriend = (name: string) => this.friendships.find((f) => f.them === name)
+  isBookmark = (name: string) => this.bookmarks.has(name)
   isAdmin = (name: string) => this.admins.has(name)
-
   isIgnored = (name: string) => this.ignored.has(name)
 
-  updateStatus = (status: CharacterStatus, statusmsg: string) => {
-    this.root.socketHandler.send("STA", { status, statusmsg })
+  @action
+  connectToChat = () => {
+    const { account, ticket } = this.root.userCredentials.value
+
+    this.root.socketStore.connect(account, ticket, this.identity.current)
+    this.connectionState = "connecting"
   }
 
-  @computed
-  get identityCharacter() {
-    return this.root.characterStore.characters.get(this.identity)
-  }
+  addSocketListeners = () => {
+    const { events } = this.root.socketStore
 
-  @computed
-  get friends() {
-    const collection = new CharacterCollection(this.root.characterStore)
-    collection.set(this.friendships.map((f) => f.them))
-    return collection
+    events.listen("close", this.handleSocketClose)
+    events.listen("error", this.handleSocketError)
+    events.listen("command", this.handleSocketCommand)
   }
 
   @action
-  handleSocketCommand = createCommandHandler({
+  handleSocketClose = () => {
+    this.connectionState = "offline"
+    this.root.appStore.showLogin()
+  }
+
+  @action
+  handleSocketError = () => {
+    this.connectionState = "offline"
+    this.root.appStore.showLogin()
+  }
+
+  @action
+  handleSocketCommand = (command: ServerCommand) => {
+    const handlers = [
+      this.handleChatCommand,
+      this.root.characterStore.handleSocketCommand,
+      this.root.channelStore.handleSocketCommand,
+      this.root.channelBrowserStore.handleSocketCommand,
+      this.root.privateChatStore.handleSocketCommand,
+    ]
+    handlers.forEach((handle) => handle(command))
+  }
+
+  @action
+  handleChatCommand = createCommandHandler({
+    IDN: () => {
+      this.connectionState = "online"
+      this.root.appStore.showChat()
+
+      this.root.channelStore.join("Frontpage")
+      this.root.channelStore.join("Fantasy")
+      this.root.channelStore.join("Development")
+      this.root.channelStore.join("Story Driven LFRP")
+    },
+
     HLO: ({ message }) => {
       console.info(message)
     },
     CON: ({ count }) => {
       console.info(`There are ${count} characters in chat`)
-    },
-    PIN: () => {
-      this.root.socketHandler.send("PIN", undefined)
     },
 
     ADL: ({ ops }) => {

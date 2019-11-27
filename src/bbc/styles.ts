@@ -1,5 +1,5 @@
-import Avatar from "../character/Avatar"
-import Icon from "../ui/Icon"
+import Avatar from "../character/components/Avatar"
+import Icon from "../ui/components/Icon"
 import { styled } from "../ui/styled"
 
 const colors: { [color in string]?: string } = {
@@ -51,10 +51,8 @@ export const IconImage = styled.img`
   width: 50px;
   height: 50px;
   vertical-align: middle;
-  margin-bottom: 4px;
 `
 
 export const IconAvatar = styled(Avatar)`
   vertical-align: middle;
-  margin-bottom: 4px;
 `

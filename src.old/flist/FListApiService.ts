@@ -5,7 +5,7 @@ export const getTicketUrl = "https://www.f-list.net/json/getApiTicket.php"
 export const characterListUrl =
   "https://www.f-list.net/json/api/character-list.php"
 
-type ApiResponse<D> = { error: string } | { error: "" } & D
+export type ApiResponse<D> = { error: string } | { error: "" } & D
 
 export type LoginResponse = {
   ticket: string

@@ -1,119 +1,104 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import BBC from "../bbc/BBC"
-import Chatbox from "../chat/Chatbox"
+import Chatbox from "../chat/components/Chatbox"
+import useMedia from "../dom/hooks/useMedia"
 import MessageList from "../message/MessageList"
-import { OverlayProvider } from "../overlay/OverlayContext"
-import OverlayShade from "../overlay/OverlayShade"
-import OverlaySidePanel from "../overlay/OverlaySidePanel"
-import { useRootStore } from "../RootStore"
-import Box from "../ui/Box"
-import FadedButton from "../ui/FadedButton"
-import { fillArea, flexColumn } from "../ui/helpers"
-import Icon from "../ui/Icon"
+import Drawer from "../ui/components/Drawer"
+import Modal from "../ui/components/Modal"
+import {
+  fillArea,
+  flexColumn,
+  flexGrow,
+  flexRow,
+  spacedChildrenHorizontal,
+  spacedChildrenVertical,
+} from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
-import useMedia from "../ui/useMedia"
-import useToggleState from "../ui/useToggleState"
-import ChannelDescriptionOverlay from "./ChannelDescriptionOverlay"
+import useOverlay from "../ui/useOverlay"
+import useRootStore from "../useRootStore"
+import ChannelDescription from "./ChannelDescription"
 import ChannelHeader from "./ChannelHeader"
+import ChannelMenu from "./ChannelMenu"
 import ChannelModel from "./ChannelModel"
-import ChannelUserList from "./ChannelUserList"
-
-const userListBreakpoint = 1200
+import ChannelUserList, { useChannelUserListEntries } from "./ChannelUserList"
+import { userListBreakpoint } from "./constants"
 
 type Props = { channel: ChannelModel }
 
 function ChannelView({ channel }: Props) {
-  const { overlayStore, channelStore } = useRootStore()
-  const descriptionUi = useToggleState()
-
-  const shouldShowDesktopUserList = useMedia(
-    `(min-width: ${userListBreakpoint}px)`,
-  )
-
-  const showUsersOverlay = () => {
-    overlayStore.userList.open()
-  }
-
-  const sendMessage = (message: string) => {
-    channelStore.sendMessage(channel.id, message)
-  }
-
-  const handleCommand = (command: string, ...args: string[]) => {
-    switch (command) {
-      case "roll": {
-        const dice = args.length > 0 ? args.join(" ") : "1d20"
-        channelStore.sendRoll(channel.id, dice)
-        break
-      }
-
-      case "bottle":
-        channelStore.sendBottle(channel.id)
-        break
-
-      default:
-        console.error(`Unknown command /${command} ${args.join(" ")}`)
-    }
-  }
-
-  const userListButton = shouldShowDesktopUserList ? null : (
-    <FadedButton onClick={showUsersOverlay}>
-      <Icon icon="users" />
-    </FadedButton>
-  )
+  const root = useRootStore()
+  const isUserListVisible = useMedia(`(min-width: ${userListBreakpoint}px)`)
+  const descriptionModal = useOverlay()
+  const channelMenuDrawer = useOverlay()
+  const userListEntries = useChannelUserListEntries(channel)
 
   return (
     <>
       <Container>
-        {/* room content */}
-        <Box direction="row" flex gap={spacing.xsmall}>
-          <Box flex>
-            <ChannelHeader
-              channel={channel}
-              userListButton={userListButton}
-              onToggleDescription={descriptionUi.toggle}
-            />
+        <ContentArea>
+          <ChannelHeader
+            title={channel.name}
+            onShowDescription={descriptionModal.show}
+            onShowChannelMenu={channelMenuDrawer.show}
+          />
 
-            <Box flex background="theme1" style={{ position: "relative" }}>
-              <ChannelDescriptionOverlay
-                isVisible={descriptionUi.on}
-                onClose={descriptionUi.disable}
-              >
-                <BBC text={channel.description} />
-              </ChannelDescriptionOverlay>
+          <MessageListContainer>
+            <MessageList messages={channel.messages} />
 
-              <MessageList messages={channel.filteredMessages} />
-            </Box>
-          </Box>
+            <Modal
+              title={channel.name}
+              fillMode="contained"
+              panelWidth={1200}
+              panelHeight={600}
+              {...descriptionModal}
+            >
+              <ChannelDescription description={channel.description} />
+            </Modal>
+          </MessageListContainer>
 
-          {shouldShowDesktopUserList && <ChannelUserList channel={channel} />}
-        </Box>
-
-        {/* chatbox */}
-        <Box background="theme0" pad={spacing.xsmall}>
           <Chatbox
             value={channel.chatboxInput}
             onValueChange={channel.setChatboxInput}
-            onSubmit={sendMessage}
-            onSubmitCommand={handleCommand}
+            onSubmit={(text) => root.channelStore.sendMessage(channel.id, text)}
           />
-        </Box>
+        </ContentArea>
+
+        {isUserListVisible && (
+          <UserListContainer>
+            <ChannelUserList users={userListEntries} />
+          </UserListContainer>
+        )}
       </Container>
 
-      <OverlayProvider value={overlayStore.userList}>
-        <OverlayShade>
-          <OverlaySidePanel side="right">
-            <ChannelUserList channel={channel} />
-          </OverlaySidePanel>
-        </OverlayShade>
-      </OverlayProvider>
+      <Drawer
+        side="right"
+        children={<ChannelMenu users={userListEntries} />}
+        {...channelMenuDrawer}
+      />
     </>
   )
 }
+
 export default observer(ChannelView)
 
 const Container = styled.div`
-  ${flexColumn};
   ${fillArea};
+  ${flexRow};
+  ${spacedChildrenHorizontal(spacing.xsmall)};
+`
+
+const ContentArea = styled.div`
+  ${flexGrow};
+  ${flexColumn};
+  ${spacedChildrenVertical(spacing.xsmall)};
+`
+
+const MessageListContainer = styled.div`
+  ${flexGrow};
+  position: relative;
+`
+
+const UserListContainer = styled.div`
+  flex-basis: 220px;
 `

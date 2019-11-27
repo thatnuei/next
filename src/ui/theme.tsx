@@ -1,6 +1,4 @@
 import { rgb, shade } from "polished"
-import React, { useContext } from "react"
-import { StyledThemeProvider, ThemeContext } from "./styled"
 
 const midnight = rgb(38, 65, 94)
 const clouds = rgb(236, 240, 241)
@@ -42,12 +40,6 @@ export const shadows = {
   normal: "0px 4px 8px rgba(0, 0, 0, 0.3)",
 }
 
-/**
- * Returns an actual icon size for styling based on a given scale value
- */
-export const getIconSize = (value: number | string) =>
-  typeof value === "number" ? `${value * 1.5}em` : value
-
 // from https://github.com/jacobbuck/easings-css/blob/master/easings.json
 export const easing = {
   easeInSine: "cubic-bezier(0.47, 0, 0.745, 0.715)",
@@ -79,15 +71,16 @@ export const easing = {
 export type AppTheme = typeof baseTheme
 export type AppThemeColor = keyof AppTheme["colors"]
 
-export function ThemeProvider(props: {
-  theme: AppTheme
-  children: React.ReactNode
-}) {
-  return (
-    <StyledThemeProvider theme={props.theme}>
-      <>{props.children}</>
-    </StyledThemeProvider>
-  )
-}
+/**
+ * Returns an actual icon size for styling based on a given scale value
+ */
+export const getIconSize = (value: number | string) =>
+  typeof value === "number" ? `${value * 1.5}em` : value
 
-export const useTheme = () => useContext(ThemeContext)
+/**
+ * Returns a function which gets a named color from the theme,
+ * for use in styled components strings
+ */
+export const getThemeColor = (color: AppThemeColor) => {
+  return ({ theme }: { theme: AppTheme }) => theme.colors[color]
+}

@@ -1,61 +1,84 @@
-import { useRect } from "@reach/rect"
-import { observer } from "mobx-react-lite"
 import { rgba } from "polished"
-import React, { CSSProperties, useRef } from "react"
-import { FixedSizeList, ListChildComponentProps } from "react-window"
-import CharacterName from "../character/CharacterName"
-import { useRootStore } from "../RootStore"
-import Box from "../ui/Box"
-import { spacing } from "../ui/theme"
+import React from "react"
+import CharacterModel from "../character/CharacterModel"
+import CharacterName from "../character/components/CharacterName"
+import VirtualizedList from "../ui/components/VirtualizedList"
+import { fillArea, flexColumn, flexGrow, scrollVertical } from "../ui/helpers"
+import { styled } from "../ui/styled"
+import { getThemeColor, spacing } from "../ui/theme"
+import useRootStore from "../useRootStore"
 import ChannelModel from "./ChannelModel"
 
-function ChannelUserList({ channel }: { channel: ChannelModel }) {
-  const { chatStore } = useRootStore()
-  const { sortedUsers } = channel
+type Props = {
+  users: ChannelUserListEntry[]
+}
 
-  const listRef = useRef<HTMLDivElement>(null)
-  const rect: ClientRect | null = useRect(listRef)
+export type ChannelUserListEntry = {
+  name: string
+  highlight: string | undefined
+}
 
-  const getHighlight = (name: string) => {
-    if (chatStore.isFriend(name)) return rgba(46, 204, 113, 0.15)
-    if (chatStore.isAdmin(name)) return rgba(231, 76, 60, 0.15)
-    if (channel.ops.has(name)) return rgba(241, 196, 15, 0.15)
-  }
+function ChannelUserList(props: Props) {
+  const renderUser = ({ name, highlight }: ChannelUserListEntry) => (
+    <ListItem style={{ backgroundColor: highlight }}>
+      <CharacterName name={name} />
+    </ListItem>
+  )
 
-  const renderUser = ({ index, style }: ListChildComponentProps) => {
-    const character = sortedUsers[index]
-
-    const fullStyle: CSSProperties = {
-      ...style,
-      backgroundColor: getHighlight(character.name),
-    }
-
-    return (
-      <Box pad={spacing.xsmall} justify="center" style={fullStyle}>
-        <CharacterName name={character.name} />
-      </Box>
-    )
-  }
-
-  const countPadding = { vertical: spacing.xsmall, horizontal: spacing.small }
   return (
-    <Box width={220} height="100%">
-      <Box background="theme0" pad={countPadding}>
-        Characters: {sortedUsers.length}
-      </Box>
-
-      <Box gap={spacing.xxsmall} flex background="theme1" ref={listRef}>
-        <FixedSizeList
-          width={rect ? rect.width : 0}
-          height={rect ? rect.height : 0}
-          itemCount={sortedUsers.length}
-          itemSize={30}
-          overscanCount={10}
-        >
-          {renderUser}
-        </FixedSizeList>
-      </Box>
-    </Box>
+    <Container>
+      <UserCount>Characters: {props.users.length}</UserCount>
+      <ListContainer>
+        <VirtualizedList
+          items={props.users}
+          itemHeight={30}
+          getItemKey={(entry) => entry.name}
+          renderItem={renderUser}
+        />
+      </ListContainer>
+    </Container>
   )
 }
-export default observer(ChannelUserList)
+
+export default ChannelUserList
+
+export function useChannelUserListEntries(
+  channel: ChannelModel,
+): ChannelUserListEntry[] {
+  const { chatStore } = useRootStore()
+
+  function getHighlight(character: CharacterModel): string | undefined {
+    if (chatStore.isFriend(character.name)) return rgba(46, 204, 113, 0.15)
+    if (chatStore.isAdmin(character.name)) return rgba(231, 76, 60, 0.15)
+    if (channel.ops.has(character.name)) return rgba(241, 196, 15, 0.15)
+  }
+
+  return channel.sortedUsers.map((user) => ({
+    name: user.name,
+    highlight: getHighlight(user),
+  }))
+}
+
+const Container = styled.div`
+  ${fillArea};
+  ${flexColumn};
+  background-color: ${getThemeColor("theme1")};
+`
+
+const ListItem = styled.div`
+  ${fillArea};
+  ${flexColumn};
+  justify-content: center;
+  padding-left: ${spacing.xsmall};
+  white-space: nowrap;
+`
+
+const UserCount = styled.div`
+  background-color: ${getThemeColor("theme0")};
+  padding: ${spacing.xsmall};
+`
+
+const ListContainer = styled.div`
+  ${flexGrow};
+  ${scrollVertical};
+`

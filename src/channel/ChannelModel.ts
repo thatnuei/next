@@ -2,11 +2,13 @@ import { sortBy } from "lodash"
 import { action, computed, observable } from "mobx"
 import CharacterCollection from "../character/CharacterCollection"
 import CharacterModel from "../character/CharacterModel"
-import ChatRoomModel from "../chat/ChatRoomModel"
+import RoomModel from "../chat/RoomModel"
 import RootStore from "../RootStore"
 import { ChannelMode } from "./types"
 
-export default class ChannelModel extends ChatRoomModel {
+export type ChannelJoinState = "left" | "joining" | "joined" | "leaving"
+
+export default class ChannelModel extends RoomModel {
   @observable
   name = this.id
 
@@ -19,10 +21,8 @@ export default class ChannelModel extends ChatRoomModel {
   @observable
   selectedMode: ChannelMode = "chat"
 
-  // it seems like the socket API doesn't tell us whether or not a room is open
-  // so I guess this is just a placeholder for now
   @observable
-  isOpen = true
+  joinState: ChannelJoinState = "left"
 
   users = new CharacterCollection(this.root.characterStore)
   ops = new CharacterCollection(this.root.characterStore)
@@ -49,6 +49,16 @@ export default class ChannelModel extends ChatRoomModel {
   @action
   setSelectedMode(selectedMode: ChannelMode) {
     this.selectedMode = selectedMode
+  }
+
+  @computed
+  get isJoined() {
+    return this.joinState === "joined"
+  }
+
+  @computed
+  get isLoading() {
+    return this.joinState === "joining" || this.joinState === "leaving"
   }
 
   @computed

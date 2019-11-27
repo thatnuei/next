@@ -1,8 +1,8 @@
 import { observable } from "mobx"
-import ChatRoomModel from "../chat/ChatRoomModel"
+import RoomModel from "../chat/RoomModel"
 import { TypingStatus } from "../chat/types"
 
-export class PrivateChatModel extends ChatRoomModel {
+export default class PrivateChatModel extends RoomModel {
   @observable
   partner: string
 

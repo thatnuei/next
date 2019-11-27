@@ -1,4 +1,4 @@
-import createUniqueId from "../common/createUniqueId"
+import createUniqueId from "../common/helpers/createUniqueId"
 import { MessageType } from "./types"
 
 export default class MessageModel {

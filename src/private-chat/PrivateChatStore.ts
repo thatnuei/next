@@ -1,12 +1,12 @@
-import { action, observable } from "mobx"
+import { action, computed, observable } from "mobx"
 import { newMessageSound } from "../audio/sounds"
-import { PrivateChatTab } from "../chat/ChatNavigationStore"
+import ChatIdentity from "../chat/ChatIdentity"
+import { createCommandHandler } from "../chat/helpers"
 import { TypingStatus } from "../chat/types"
-import { createCommandHandler } from "../fchat/helpers"
 import MessageModel from "../message/MessageModel"
 import RootStore from "../RootStore"
-import FactoryMap from "../state/FactoryMap"
-import { PrivateChatModel } from "./PrivateChatModel"
+import FactoryMap from "../state/classes/FactoryMap"
+import PrivateChatModel from "./PrivateChatModel"
 
 export default class PrivateChatStore {
   privateChats = new FactoryMap((name) => new PrivateChatModel(name))
@@ -14,44 +14,52 @@ export default class PrivateChatStore {
   @observable.shallow
   chatPartnerNames = new Set<string>()
 
-  constructor(private root: RootStore) {
-    root.socketHandler.listen("command", this.handleSocketCommand)
+  constructor(private root: RootStore, private identity: ChatIdentity) {}
+
+  @computed
+  get openChats(): PrivateChatModel[] {
+    return [...this.chatPartnerNames.values()].map(this.privateChats.get)
+  }
+
+  @action
+  openChat = (partnerName: string) => {
+    this.chatPartnerNames.add(partnerName)
+  }
+
+  @action
+  closeChat = (partnerName: string) => {
+    this.chatPartnerNames.delete(partnerName)
   }
 
   sendMessage = (recipient: string, message: string) => {
-    this.root.socketHandler.send("PRI", { recipient, message })
+    this.root.socketStore.sendCommand("PRI", { recipient, message })
 
-    this.privateChats
-      .get(recipient)
-      .messages.push(
-        new MessageModel(this.root.chatStore.identity, message, "chat"),
-      )
+    const chat = this.privateChats.get(recipient)
+    chat.messages.push(new MessageModel(this.identity.current, message, "chat"))
   }
 
   updateTypingStatus = (partnerName: string, status: TypingStatus) => {
-    this.root.socketHandler.send("TPN", { character: partnerName, status })
+    this.root.socketStore.sendCommand("TPN", { character: partnerName, status })
   }
 
   sendRoll = (partnerName: string, dice: string) => {
-    this.root.socketHandler.send("RLL", { recipient: partnerName, dice })
+    this.root.socketStore.sendCommand("RLL", { recipient: partnerName, dice })
   }
 
   @action
   handleSocketCommand = createCommandHandler({
     PRI: (params) => {
+      this.chatPartnerNames.add(params.character)
+
       const privateChat = this.privateChats.get(params.character)
 
       const message = new MessageModel(params.character, params.message, "chat")
       privateChat.addMessage(message)
 
-      const tab: PrivateChatTab = {
-        type: "privateChat",
-        partnerName: params.character,
-      }
-      this.root.chatNavigationStore.addTab(tab)
-
-      const isPrivateChatActive = this.root.chatNavigationStore.isActive(tab)
-      if (!isPrivateChatActive || document.hidden) {
+      const isCurrent = this.root.chatNavigationStore.isCurrentPrivateChat(
+        params.character,
+      )
+      if (!isCurrent || document.hidden) {
         newMessageSound.play()
         privateChat.markUnread()
       }

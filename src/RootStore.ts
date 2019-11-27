@@ -1,33 +1,33 @@
-import * as idb from "idb-keyval"
-import React, { useContext } from "react"
+import AppStore from "./app/AppStore"
+import ChannelBrowserStore from "./channel/ChannelBrowserStore"
 import ChannelStore from "./channel/ChannelStore"
 import CharacterStore from "./character/CharacterStore"
+import ChatIdentity from "./chat/ChatIdentity"
 import ChatNavigationStore from "./chat/ChatNavigationStore"
 import ChatStore from "./chat/ChatStore"
-import SocketHandler from "./fchat/SocketHandler"
-import FListApiService from "./flist/FListApiService"
+import SocketStore from "./chat/SocketStore"
+import FListApi from "./flist/FListApi"
 import OverlayStore from "./overlay/OverlayStore"
 import PrivateChatStore from "./private-chat/PrivateChatStore"
+import { createEmptyUserCredentialsReference } from "./user/helpers"
+import UserStore from "./user/UserStore"
 
 export default class RootStore {
-  socketHandler = new SocketHandler()
-  characterStore = new CharacterStore(this)
-  channelStore = new ChannelStore(this)
-  privateChatStore = new PrivateChatStore(this)
-  chatStore = new ChatStore(this)
+  api = new FListApi()
+  userCredentials = createEmptyUserCredentialsReference()
+  identity = new ChatIdentity(this.userCredentials)
+  appStore = new AppStore()
+  chatStore = new ChatStore(this, this.identity)
   chatNavigationStore = new ChatNavigationStore(this)
-  overlayStore = new OverlayStore(this)
+  characterStore = new CharacterStore(this, this.identity)
+  channelStore = new ChannelStore(this, this.identity)
+  channelBrowserStore = new ChannelBrowserStore(this)
+  privateChatStore = new PrivateChatStore(this, this.identity)
+  socketStore = new SocketStore()
+  userStore = new UserStore(this, this.userCredentials)
+  overlayStore = new OverlayStore()
 
-  constructor(public api = new FListApiService(), public storage = idb) {}
-
-  init() {}
-
-  cleanup() {
-    this.socketHandler.disconnect()
-    this.socketHandler.removeListeners()
+  initialize() {
+    this.chatStore.addSocketListeners()
   }
 }
-
-export const RootStoreContext = React.createContext(new RootStore())
-
-export const useRootStore = () => useContext(RootStoreContext)

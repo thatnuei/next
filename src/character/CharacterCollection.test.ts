@@ -1,9 +1,14 @@
+import ChatIdentity from "../chat/ChatIdentity"
 import RootStore from "../RootStore"
+import { createEmptyUserCredentialsReference } from "../user/helpers"
 import CharacterCollection from "./CharacterCollection"
 import CharacterStore from "./CharacterStore"
 
 test("CharacterCollection - generic", async () => {
-  const store = new CharacterStore(new RootStore())
+  const store = new CharacterStore(
+    new RootStore(),
+    new ChatIdentity(createEmptyUserCredentialsReference()),
+  )
   const collection = new CharacterCollection(store)
 
   expect(collection.names).toEqual([])

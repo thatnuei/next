@@ -1,23 +1,20 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
-import styled, { CSSObject } from "styled-components"
-import CharacterName from "../character/CharacterName"
-import { useRootStore } from "../RootStore"
+import styled from "styled-components"
 import BBC from "../bbc/BBC"
+import CharacterName from "../character/components/CharacterName"
 import { semiBlack } from "../ui/colors"
-import { css } from "../ui/styled"
+import useRootStore from "../useRootStore"
+import MessageModel from "./MessageModel"
 import { MessageType } from "./types"
 
 type Props = {
-  senderName?: string
-  text: string
-  type: MessageType
-  time: number
+  model: MessageModel
 }
 
 const actionRegex = /^\s*\/me\s*/
 
-const Message = ({ senderName, text, type, time }: Props) => {
+const Message = ({ model }: Props) => {
+  const { senderName, text, type, time } = model
   const { characterStore } = useRootStore()
 
   const sender = senderName
@@ -27,8 +24,13 @@ const Message = ({ senderName, text, type, time }: Props) => {
   const isAction = actionRegex.test(text)
   const parsedText = text.replace(actionRegex, "")
 
+  const style: React.CSSProperties = {
+    ...highlightStyles[type],
+    ...(isAction ? { fontStyle: "italic" } : {}),
+  }
+
   return (
-    <Container css={[highlightStyles[type], isAction && actionStyle]}>
+    <Container style={style}>
       <DateText>{new Date(time).toLocaleTimeString()}</DateText>
 
       {sender && (
@@ -42,9 +44,9 @@ const Message = ({ senderName, text, type, time }: Props) => {
   )
 }
 
-export default observer(Message)
+export default Message
 
-const highlightStyles: { [K in MessageType]?: CSSObject } = {
+const highlightStyles: { [K in MessageType]?: React.CSSProperties } = {
   lfrp: { backgroundColor: "rgba(39, 174, 96, 0.2)" },
   system: { backgroundColor: semiBlack(0.3) },
   admin: { backgroundColor: "rgb(192, 57, 43, 0.2)" },
@@ -63,9 +65,5 @@ const DateText = styled.span`
   margin-left: 1rem;
   opacity: 0.75;
   font-size: 80%;
-  font-style: italic;
-`
-
-const actionStyle = css`
   font-style: italic;
 `

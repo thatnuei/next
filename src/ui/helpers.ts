@@ -52,7 +52,7 @@ export const boxShadow = css`
 `
 
 export const fadedRevealStyle = css`
-  transition: 0.2s opacity;
+  transition: 0.2s;
   opacity: 0.4;
 
   :hover {
@@ -76,5 +76,19 @@ export const spacedChildrenVertical = (distance = spacing.small) => css`
 export const spacedChildrenHorizontal = (distance = spacing.small) => css`
   > * + * {
     margin-left: ${distance};
+  }
+`
+
+export const resolveStyleUnit = (value: number | string) =>
+  typeof value === "number" ? `${value}px` : value
+
+// content-size the FocusOn div, which can't be styled directly
+export const focusOnFillFix = css`
+  > div {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
   }
 `

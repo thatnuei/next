@@ -1,54 +1,30 @@
-import "focus-visible"
-import React, { useEffect, useState } from "react"
+/// <reference types="react-dom/experimental" />
+import { configure } from "mobx"
+import React from "react"
 import ReactDOM from "react-dom"
-import useAppNavigation from "./app/useAppNavigation"
-import Root from "./Root"
-import RootStore, { RootStoreContext } from "./RootStore"
+import Root from "./app/components/Root"
+import useRootStore from "./useRootStore"
 
-declare global {
-  interface Window {
-    store?: RootStore
-  }
-}
+configure({
+  enforceActions: "observed",
+  reactionRequiresObservable: true,
+  // this gives too many false positives
+  // observableRequiresReaction: true,
+})
 
-function HotReloader() {
-  const [store, setStore] = useState(() => new RootStore())
-  const [, update] = useState(false)
+const domRoot = document.getElementById("root")!
 
-  useEffect(() => {
-    store.init()
-    window.store = store
-
-    return () => store.cleanup()
-  }, [store])
-
-  useEffect(() => {
-    if (module.hot) {
-      module.hot.accept("./Root", () => update((v) => !v))
-      module.hot.accept("./RootStore", () => setStore(new RootStore()))
-    }
-  }, [])
-
-  return renderRoot(store)
-}
-
-function renderRoot(store = new RootStore()) {
-  return (
-    <RootStoreContext.Provider value={store}>
-      <useAppNavigation.Provider>
-        <Root />
-      </useAppNavigation.Provider>
-    </RootStoreContext.Provider>
+function renderRoot() {
+  ReactDOM.render(
+    <useRootStore.Provider>
+      <Root />
+    </useRootStore.Provider>,
+    domRoot,
   )
 }
 
-function main() {
-  if (process.env.NODE_ENV === "development") {
-    ReactDOM.render(<HotReloader />, document.querySelector("#root"))
-    return
-  }
+renderRoot()
 
-  ReactDOM.render(renderRoot(), document.querySelector("#root"))
+if (module.hot) {
+  module.hot.accept("./app/components/Root", renderRoot)
 }
-
-main()

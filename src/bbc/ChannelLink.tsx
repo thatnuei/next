@@ -1,15 +1,19 @@
 import React from "react"
-import { useRootStore } from "../RootStore"
-import Anchor from "../ui/Anchor"
-import { IconName } from "../ui/Icon"
+import Anchor from "../ui/components/Anchor"
+import { IconName } from "../ui/components/Icon"
 import { LinkIcon } from "./styles"
 
 function ChannelLink(props: { id: string; title: string; icon: IconName }) {
-  const { channelStore } = useRootStore()
+  // const { channelStore } = useRootStore()
+
+  const handleClick = () => {
+    // channelStore.join(props.id)
+  }
+
   return (
     <>
       <LinkIcon icon={props.icon} />
-      <Anchor onClick={() => channelStore.join(props.id)}>{props.title}</Anchor>
+      <Anchor onClick={handleClick}>{props.title}</Anchor>
     </>
   )
 }

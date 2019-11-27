@@ -1,18 +1,18 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import Avatar from "../character/Avatar"
-import CharacterName from "../character/CharacterName"
-import CharacterStatus from "../character/CharacterStatus"
-import Chatbox from "../chat/Chatbox"
-import ChatMenuButton from "../chat/ChatMenuButton"
+import Avatar from "../character/components/Avatar"
+import CharacterName from "../character/components/CharacterName"
+import CharacterStatus from "../character/components/CharacterStatus"
+import Chatbox from "../chat/components/Chatbox"
+import SidebarMenuButton from "../chat/components/SidebarMenuButton"
 import { TypingStatus } from "../chat/types"
-import TypingStatusIndicator from "../chat/TypingStatusIndicator"
 import MessageList from "../message/MessageList"
-import { useRootStore } from "../RootStore"
 import { fillArea, flexColumn, spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
-import { PrivateChatModel } from "./PrivateChatModel"
+import useRootStore from "../useRootStore"
+import PrivateChatModel from "./PrivateChatModel"
+import TypingStatusIndicator from "./TypingStatusIndicator"
 
 type Props = { privateChat: PrivateChatModel }
 
@@ -43,7 +43,7 @@ function PrivateChat({ privateChat }: Props) {
   return (
     <Container>
       <HeaderContainer>
-        <ChatMenuButton />
+        <SidebarMenuButton />
         <Avatar name={privateChat.partner} size={50} />
         <NameAndStatusContainer>
           <CharacterName name={privateChat.partner} hideStatusDot />
@@ -62,15 +62,13 @@ function PrivateChat({ privateChat }: Props) {
         />
       </TypingStatusContainer>
 
-      <ChatboxContainer>
-        <Chatbox
-          value={privateChat.chatboxInput}
-          onValueChange={privateChat.setChatboxInput}
-          onSubmit={handleChatboxSubmit}
-          onSubmitCommand={handleCommand}
-          onTypingStatus={handleTypingStatus}
-        />
-      </ChatboxContainer>
+      <Chatbox
+        value={privateChat.chatboxInput}
+        onValueChange={privateChat.setChatboxInput}
+        onSubmit={handleChatboxSubmit}
+        onSubmitCommand={handleCommand}
+        onTypingStatus={handleTypingStatus}
+      />
     </Container>
   )
 }
@@ -80,11 +78,6 @@ export default observer(PrivateChat)
 const Container = styled.div`
   ${flexColumn};
   ${fillArea};
-`
-
-const ChatboxContainer = styled.div`
-  background-color: ${(props) => props.theme.colors.theme0};
-  padding: ${spacing.xsmall};
 `
 
 const HeaderContainer = styled.header`

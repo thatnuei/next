@@ -1,9 +1,9 @@
 import * as bbc from "bbc.js"
 import React from "react"
-import CharacterName from "../character/CharacterName"
+import CharacterName from "../character/components/CharacterName"
+import ExternalLink from "../dom/components/ExternalLink"
 import { getIconUrl, getProfileUrl } from "../flist/helpers"
-import Anchor from "../ui/Anchor"
-import ExternalLink from "../ui/ExternalLink"
+import Anchor from "../ui/components/Anchor"
 import BBCTree from "./BBCTree"
 import ChannelLink from "./ChannelLink"
 import {
