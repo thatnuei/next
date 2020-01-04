@@ -35,7 +35,7 @@ function Chat({
   useListener(socketStore.commandListeners, chatStore.handleSocketCommand)
   useListener(socketStore.commandListeners, characterStore.handleSocketCommand)
   useListener(socketStore.closeListeners, onClose)
-  useListener(socketStore.closeListeners, onConnectionError)
+  useListener(socketStore.errorListeners, onConnectionError)
 
   const identityCharacter = characterStore.get(identity)
 
