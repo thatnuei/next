@@ -2,30 +2,18 @@ import { observable } from "mobx"
 import { createCommandHandler } from "../chat/helpers"
 import { SocketStore } from "../chat/SocketStore.new"
 import { createMessage } from "../message/helpers"
+import { FactoryMap } from "../state/classes/FactoryMap.new"
 import { createChannel } from "./helpers"
 import { Channel } from "./types"
 
 export class ChannelStore {
   @observable
-  private readonly channelsMap = new Map<string, Channel>()
+  private readonly channels = new FactoryMap(createChannel)
 
   constructor(
     private readonly socket: SocketStore,
     private readonly identity: string,
   ) {}
-
-  add = (char: Channel) => {
-    this.channelsMap.set(char.name, char)
-  }
-
-  get = (name: string): Channel =>
-    this.channelsMap.get(name) ?? createChannel(name)
-
-  update = (name: string, update: (char: Channel) => void) => {
-    const channel = this.get(name)
-    update(channel)
-    this.add(channel)
-  }
 
   join = (id: string) => {
     this.socket.sendCommand("JCH", { channel: id })
@@ -36,9 +24,7 @@ export class ChannelStore {
   }
 
   get joinedChannels(): Channel[] {
-    return [...this.channelsMap.values()].filter((it) =>
-      it.users.has(this.identity),
-    )
+    return this.channels.values.filter((it) => it.users.has(this.identity))
   }
 
   handleSocketCommand = createCommandHandler({
@@ -52,51 +38,51 @@ export class ChannelStore {
     },
 
     ICH: ({ channel: id, mode, users }) => {
-      this.update(id, (channel) => {
+      this.channels.update(id, (channel) => {
         channel.mode = mode
         channel.users = new Set(users.map((it) => it.identity))
       })
     },
 
     CDS: ({ channel: id, description }) => {
-      this.update(id, (channel) => {
+      this.channels.update(id, (channel) => {
         channel.description = description
       })
     },
 
     COL: ({ channel: id, oplist }) => {
-      this.update(id, (channel) => {
+      this.channels.update(id, (channel) => {
         channel.ops = new Set(oplist)
       })
     },
 
     JCH: ({ channel: id, character: { identity }, title }) => {
-      this.update(id, (channel) => {
+      this.channels.update(id, (channel) => {
         channel.name = title
         channel.users.add(identity)
       })
     },
 
     LCH: ({ channel: id, character }) => {
-      this.update(id, (channel) => {
+      this.channels.update(id, (channel) => {
         channel.users.delete(character)
       })
     },
 
     FLN: ({ character }) => {
-      for (const [, channel] of this.channelsMap) {
+      for (const channel of this.channels.values) {
         channel.users.delete(character)
       }
     },
 
     MSG: ({ channel: id, character, message }) => {
-      this.update(id, (channel) => {
+      this.channels.update(id, (channel) => {
         channel.messages.push(createMessage(character, message, "chat"))
       })
     },
 
     LRP: ({ channel: id, character, message }) => {
-      this.update(id, (channel) => {
+      this.channels.update(id, (channel) => {
         channel.messages.push(createMessage(character, message, "lfrp"))
       })
     },
@@ -104,7 +90,7 @@ export class ChannelStore {
     RLL: (params) => {
       if ("channel" in params) {
         const { channel: id, message } = params
-        this.update(id, (channel) => {
+        this.channels.update(id, (channel) => {
           channel.messages.push(createMessage(undefined, message, "system"))
         })
       }

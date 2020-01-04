@@ -1,54 +1,32 @@
-import { observable } from "mobx"
 import { createCommandHandler } from "../chat/helpers"
-import { Character } from "./types"
+import { FactoryMap } from "../state/classes/FactoryMap.new"
+import { createCharacter } from "./helpers"
 
 export class CharacterStore {
-  @observable
-  private readonly characters = new Map<string, Character>()
+  private readonly characters = new FactoryMap(createCharacter)
 
-  add = (char: Character) => {
-    this.characters.set(char.name, char)
-  }
-
-  get = (name: string): Character =>
-    this.characters.get(name) ?? {
-      name,
-      gender: "None",
-      status: "offline",
-      statusMessage: "",
-    }
-
-  update = (name: string, update: (char: Character) => void) => {
-    const char = this.get(name)
-    update(char)
-    this.add(char)
-  }
+  get = (name: string) => this.characters.get(name)
 
   handleSocketCommand = createCommandHandler({
     LIS: ({ characters }) => {
-      for (const [name, gender, status, statusMessage] of characters) {
-        this.add({ name, gender, status, statusMessage })
+      for (const [name, ...args] of characters) {
+        this.characters.set(name, createCharacter(name, ...args))
       }
     },
 
     NLN: ({ identity, gender, status }) => {
-      this.add({
-        name: identity,
-        gender,
-        status,
-        statusMessage: "",
-      })
+      this.characters.set(identity, createCharacter(identity, gender, status))
     },
 
     FLN: ({ character: identity }) => {
-      this.update(identity, (char) => {
+      this.characters.update(identity, (char) => {
         char.status = "offline"
         char.statusMessage = ""
       })
     },
 
     STA: ({ character: identity, status, statusmsg }) => {
-      this.update(identity, (char) => {
+      this.characters.update(identity, (char) => {
         char.status = status
         char.statusMessage = statusmsg
       })
