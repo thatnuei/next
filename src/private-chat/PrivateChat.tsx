@@ -2,7 +2,6 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import Avatar from "../character/components/Avatar"
 import CharacterName from "../character/components/CharacterName"
-import CharacterStatus from "../character/components/CharacterStatus"
 import Chatbox from "../chat/components/Chatbox"
 import SidebarMenuButton from "../chat/components/SidebarMenuButton"
 import { TypingStatus } from "../chat/types"
@@ -47,7 +46,7 @@ function PrivateChat({ privateChat }: Props) {
         <Avatar name={privateChat.partner} size={50} />
         <NameAndStatusContainer>
           <CharacterName name={privateChat.partner} hideStatusDot />
-          <CharacterStatus name={privateChat.partner} />
+          {/* <CharacterStatus /> */}
         </NameAndStatusContainer>
       </HeaderContainer>
 

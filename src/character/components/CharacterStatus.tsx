@@ -1,14 +1,15 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import BBC from "../../bbc/BBC"
 import { styled } from "../../ui/styled"
-import { useCharacter } from "../hooks"
+import { CharacterStatus as CharacterStatusType } from "../types"
 import { statusColors } from "./colors"
 
-type Props = { name: string }
+type Props = {
+  status: CharacterStatusType
+  statusMessage: string
+}
 
-function CharacterStatus({ name }: Props) {
-  const { status, statusMessage } = useCharacter(name)
+function CharacterStatus({ status, statusMessage }: Props) {
   const statusStyle = { color: statusColors[status] }
 
   return (
@@ -24,7 +25,7 @@ function CharacterStatus({ name }: Props) {
   )
 }
 
-export default observer(CharacterStatus)
+export default CharacterStatus
 
 const StatusText = styled.span`
   font-style: italic;

@@ -1,21 +1,27 @@
-import { observer } from "mobx-react-lite"
 import React, { ComponentPropsWithoutRef } from "react"
 import ExternalLink from "../../dom/components/ExternalLink"
 import { getProfileUrl } from "../../flist/helpers"
 import Box from "../../ui/components/Box"
 import { spacing } from "../../ui/theme"
-import { useCharacter } from "../hooks"
+import { CharacterStatus as CharacterStatusType, Gender } from "../types"
 import Avatar from "./Avatar"
 import CharacterStatus from "./CharacterStatus"
 import { genderColors } from "./colors"
 
 type CharacterInfoProps = ComponentPropsWithoutRef<"div"> & {
   name: string
+  gender: Gender
+  status: CharacterStatusType
+  statusMessage: string
 }
 
-function CharacterInfo({ name, ...containerProps }: CharacterInfoProps) {
-  const { gender } = useCharacter(name)
-
+function CharacterInfo({
+  name,
+  gender,
+  status,
+  statusMessage,
+  ...containerProps
+}: CharacterInfoProps) {
   const nameStyle = { color: genderColors[gender] }
 
   return (
@@ -29,10 +35,10 @@ function CharacterInfo({ name, ...containerProps }: CharacterInfoProps) {
       </ExternalLink>
 
       <Box background="theme2" pad={spacing.xsmall} alignSelf="stretch">
-        <CharacterStatus name={name} />
+        <CharacterStatus status={status} statusMessage={statusMessage} />
       </Box>
     </Box>
   )
 }
 
-export default observer(CharacterInfo)
+export default CharacterInfo

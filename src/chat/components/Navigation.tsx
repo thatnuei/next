@@ -1,15 +1,18 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import CharacterInfo from "../../character/components/CharacterInfo"
+import { Character } from "../../character/types"
 import { fillArea } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { getThemeColor, spacing } from "../../ui/theme"
-import useRootStore from "../../useRootStore"
-import ChatRoomList from "./ChatRoomList"
 import NavigationAction from "./NavigationAction"
 
-function Navigation() {
-  const root = useRootStore()
+type Props = {
+  identityCharacter: Character
+}
+
+function Navigation(props: Props) {
+  // const root = useRootStore()
 
   return (
     <Container>
@@ -17,12 +20,12 @@ function Navigation() {
         <NavigationAction
           title="Channels"
           icon="channels"
-          onClick={root.channelBrowserStore.showChannelBrowser}
+          // onClick={root.channelBrowserStore.showChannelBrowser}
         />
         <NavigationAction
           title="Update Status"
           icon="updateStatus"
-          onClick={root.characterStore.showUpdateStatusScreen}
+          // onClick={root.characterStore.showUpdateStatusScreen}
         />
         <NavigationAction title="Who's Online" icon="users" />
         <NavigationAction title="About" icon="about" />
@@ -30,11 +33,9 @@ function Navigation() {
         <NavigationAction title="Logout" icon="logout" />
       </ActionsContainer>
       <CharacterInfoContainer>
-        <CharacterInfo name={root.identity.current} />
+        <CharacterInfo {...props.identityCharacter} />
       </CharacterInfoContainer>
-      <RoomsContainer>
-        <ChatRoomList />
-      </RoomsContainer>
+      <RoomsContainer>{/* <ChatRoomList /> */}</RoomsContainer>
     </Container>
   )
 }

@@ -3,10 +3,8 @@ import React from "react"
 import { Transition, TransitionGroup } from "react-transition-group"
 import ChannelBrowser from "../channel/ChannelBrowser"
 import CharacterMenu from "../character/components/CharacterMenu"
-import Navigation from "../chat/components/Navigation"
 import UpdateStatusForm from "../chat/UpdateStatus"
 import ContextMenu from "../ui/components/ContextMenu"
-import Drawer from "../ui/components/Drawer"
 import Modal from "../ui/components/Modal"
 import useRootStore from "../useRootStore"
 import { Overlay } from "./OverlayStore"
@@ -33,7 +31,8 @@ function OverlayRenderer() {
         )
 
       case "primaryNavigation":
-        return <Drawer side="left" children={<Navigation />} {...props} />
+        // return <Drawer side="left" children={<Navigation />} {...props} />
+        return null
 
       case "updateStatus":
         return (

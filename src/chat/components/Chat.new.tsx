@@ -4,6 +4,7 @@ import { spacing } from "../../ui/theme"
 import { ChatStore } from "../ChatStore.new"
 import { sidebarMenuBreakpoint } from "../constants"
 import { SocketStore } from "../SocketStore.new"
+import Navigation from "./Navigation"
 
 type Props = {
   account: string
@@ -13,7 +14,7 @@ type Props = {
 
 function Chat({ account, ticket, identity }: Props) {
   const socketStore = useMemo(() => new SocketStore(), [])
-  const chatStore = useMemo(() => new ChatStore(), [])
+  const chatStore = useMemo(() => new ChatStore(identity), [identity])
 
   useEffect(() => {
     return socketStore.connect({ account, ticket, identity })
@@ -25,7 +26,9 @@ function Chat({ account, ticket, identity }: Props) {
 
   return (
     <Container>
-      <NavigationContainer>nav</NavigationContainer>
+      <NavigationContainer>
+        <Navigation identityCharacter={chatStore.identityCharacter} />
+      </NavigationContainer>
       <RoomContainer>room</RoomContainer>
     </Container>
   )

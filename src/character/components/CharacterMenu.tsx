@@ -8,7 +8,6 @@ import Icon from "../../ui/components/Icon"
 import { css, styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import useRootStore from "../../useRootStore"
-import CharacterInfo from "./CharacterInfo"
 
 type CharacterMenuProps = {
   characterName: string
@@ -27,7 +26,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
   return (
     <Container onClick={menu.close}>
       <Box pad={spacing.small}>
-        <CharacterInfo name={props.characterName} />
+        {/* <CharacterInfo name={props.characterName} /> */}
       </Box>
 
       <OptionsContainer>

@@ -2,18 +2,12 @@ import React from "react"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import { sidebarMenuBreakpoint } from "../constants"
-import ChatRoomView from "./ChatRoomView"
-import Navigation from "./Navigation"
 
 function Chat() {
   return (
     <Container>
-      <NavigationContainer>
-        <Navigation />
-      </NavigationContainer>
-      <RoomContainer>
-        <ChatRoomView />
-      </RoomContainer>
+      <NavigationContainer>{/* <Navigation /> */}</NavigationContainer>
+      <RoomContainer>{/* <ChatRoomView /> */}</RoomContainer>
     </Container>
   )
 }
