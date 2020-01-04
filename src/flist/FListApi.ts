@@ -1,15 +1,17 @@
+import compareBy from "../common/helpers/compareBy"
+import toLower from "../common/helpers/toLower"
 import { fetchJson } from "../http/helpers/fetchJson"
 
 const getTicketUrl = "https://www.f-list.net/json/getApiTicket.php"
 
-type ApiResponse<D> = { error: string } | { error: "" } & D
+type ApiResponse<D> = { error: string } | ({ error: "" } & D)
 
 export type LoginResponse = {
   ticket: string
   characters: string[]
   bookmarks: { name: string }[]
 
-  // should consider clientsidedly converting this to a more intuitive structure later
+  // should consider client-sided-ly converting this to a more intuitive structure later
   // e.g. { us: string, them: string }
   friends: {
     /** Our character */
@@ -30,6 +32,9 @@ export default class FListApi {
       throw new Error(response.error)
     }
 
-    return response
+    return {
+      ...response,
+      characters: response.characters.sort(compareBy(toLower)),
+    }
   }
 }
