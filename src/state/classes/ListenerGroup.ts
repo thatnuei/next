@@ -1,6 +1,6 @@
 type Listener<A extends unknown[]> = (...args: A) => void
 
-export class ListenerGroup<A extends unknown[]> {
+export class ListenerGroup<A extends unknown[] = []> {
   private listeners = new Set<Listener<A>>()
 
   add = (listener: Listener<A>) => {
