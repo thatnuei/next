@@ -6,10 +6,6 @@ export class ChatStore {
   @observable ignored = new Set<string>()
 
   handleSocketCommand = createCommandHandler({
-    IDN() {
-      // join last rooms and such
-    },
-
     ADL: ({ ops }) => {
       this.admins = new Set(ops)
     },

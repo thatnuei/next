@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
+import { ChannelStore } from "../../channel/ChannelStore.new"
 import { CharacterStore } from "../../character/CharacterStore.new"
 import { useListener } from "../../state/hooks/useListener"
 import Icon from "../../ui/components/Icon"
@@ -30,12 +31,17 @@ function Chat({
   const chatStore = useMemo(() => new ChatStore(), [])
   const characterStore = useMemo(() => new CharacterStore(), [])
 
+  const channelStore = useMemo(() => new ChannelStore(socketStore), [
+    socketStore,
+  ])
+
   useEffect(() => {
     return socketStore.connect({ account, ticket, identity })
   }, [socketStore, account, identity, ticket])
 
   useListener(socketStore.commandListeners, chatStore.handleSocketCommand)
   useListener(socketStore.commandListeners, characterStore.handleSocketCommand)
+  useListener(socketStore.commandListeners, channelStore.handleSocketCommand)
   useListener(socketStore.closeListeners, onClose)
   useListener(socketStore.errorListeners, onConnectionError)
 
@@ -45,15 +51,18 @@ function Chat({
     <Container>
       <NavigationContainer>
         <Navigation identityCharacter={identityCharacter}>
-          <RoomTab
-            title="Frontpage"
-            icon={<Icon icon="public" />}
-            isActive={false}
-            isUnread={false}
-            isLoading={false}
-            onClick={() => {}}
-            onClose={() => {}}
-          />
+          {channelStore.channels.map((channel) => (
+            <RoomTab
+              key={channel.id}
+              title={channel.name}
+              icon={<Icon icon="public" />}
+              isActive={false}
+              isUnread={channel.unread}
+              isLoading={false}
+              onClick={() => {}}
+              onClose={() => {}}
+            />
+          ))}
         </Navigation>
       </NavigationContainer>
       <RoomContainer>room</RoomContainer>

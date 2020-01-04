@@ -1,5 +1,6 @@
 import * as fchat from "fchat"
 import { Values } from "../common/types"
+import { Message } from "../message/types"
 
 export type ClientCommandMap = fchat.Connection.ClientCommands
 export type ServerCommandMap = fchat.Connection.ServerCommands
@@ -14,3 +15,9 @@ export type Friendship = {
 }
 
 export type TypingStatus = fchat.Character.TypingStatus
+
+export type RoomBase = {
+  messages: Message[]
+  unread: boolean
+  input: string
+}
