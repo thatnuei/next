@@ -2,12 +2,14 @@ import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
 import { CharacterStore } from "../../character/CharacterStore.new"
 import { useListener } from "../../state/hooks/useListener"
+import Icon from "../../ui/components/Icon"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import { ChatStore } from "../ChatStore.new"
 import { sidebarMenuBreakpoint } from "../constants"
 import { SocketStore } from "../SocketStore.new"
 import Navigation from "./Navigation"
+import RoomTab from "./RoomTab"
 
 type Props = {
   account: string
@@ -42,7 +44,17 @@ function Chat({
   return (
     <Container>
       <NavigationContainer>
-        <Navigation identityCharacter={identityCharacter} />
+        <Navigation identityCharacter={identityCharacter}>
+          <RoomTab
+            title="Frontpage"
+            icon={<Icon icon="public" />}
+            isActive={false}
+            isUnread={false}
+            isLoading={false}
+            onClick={() => {}}
+            onClose={() => {}}
+          />
+        </Navigation>
       </NavigationContainer>
       <RoomContainer>room</RoomContainer>
     </Container>

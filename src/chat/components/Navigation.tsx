@@ -9,6 +9,7 @@ import NavigationAction from "./NavigationAction"
 
 type Props = {
   identityCharacter: Character
+  children?: React.ReactNode
 }
 
 function Navigation(props: Props) {
@@ -35,7 +36,7 @@ function Navigation(props: Props) {
       <CharacterInfoContainer>
         <CharacterInfo {...props.identityCharacter} />
       </CharacterInfoContainer>
-      <RoomsContainer>{/* <ChatRoomList /> */}</RoomsContainer>
+      <RoomsContainer>{props.children}</RoomsContainer>
     </Container>
   )
 }
