@@ -4,14 +4,12 @@ import { ChannelStore } from "../../channel/ChannelStore.new"
 import { CharacterStore } from "../../character/CharacterStore.new"
 import { PrivateChatStore } from "../../private-chat/PrivateChatStore.new"
 import { useListener } from "../../state/hooks/useListener"
-import Icon from "../../ui/components/Icon"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import { ChatStore } from "../ChatStore.new"
 import { sidebarMenuBreakpoint } from "../constants"
 import { SocketStore } from "../SocketStore.new"
 import Navigation from "./Navigation"
-import RoomTab from "./RoomTab"
 
 type Props = {
   account: string
@@ -47,8 +45,8 @@ function Chat({
 
   // channel
   const channelStore = useMemo(() => new ChannelStore(socketStore, identity), [
-    socketStore,
     identity,
+    socketStore,
   ])
   useListener(socketStore.commandListeners, channelStore.handleSocketCommand)
 
@@ -63,7 +61,7 @@ function Chat({
     <Container>
       <NavigationContainer>
         <Navigation identityCharacter={identityCharacter}>
-          {channelStore.joinedChannels.map((channel) => (
+          {/* {channelStore.joinedChannels.map((channel) => (
             <RoomTab
               key={channel.id}
               title={channel.name}
@@ -74,7 +72,7 @@ function Chat({
               onClick={() => {}}
               onClose={() => channelStore.leave(channel.id)}
             />
-          ))}
+          ))} */}
         </Navigation>
       </NavigationContainer>
       <RoomContainer>room</RoomContainer>
