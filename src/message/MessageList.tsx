@@ -2,7 +2,7 @@ import React, { useCallback, useLayoutEffect, useState } from "react"
 import { fillArea, scrollVertical } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor } from "../ui/theme"
-import Message from "./Message"
+import MessageListItem from "./MessageListItem"
 import MessageModel from "./MessageModel"
 
 type Props = { messages: MessageModel[] }
@@ -15,7 +15,7 @@ function MessageList({ messages }: Props) {
   return (
     <Container ref={setContainer}>
       {messages.map((message) => (
-        <Message key={message.id} model={message} />
+        <MessageListItem key={message.id} model={message} />
       ))}
     </Container>
   )

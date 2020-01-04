@@ -13,7 +13,7 @@ type Props = {
 
 const actionRegex = /^\s*\/me\s*/
 
-const Message = ({ model }: Props) => {
+const MessageListItem = ({ model }: Props) => {
   const { senderName, text, type, time } = model
   const { characterStore } = useRootStore()
 
@@ -44,7 +44,7 @@ const Message = ({ model }: Props) => {
   )
 }
 
-export default Message
+export default MessageListItem
 
 const highlightStyles: { [K in MessageType]?: React.CSSProperties } = {
   lfrp: { backgroundColor: "rgba(39, 174, 96, 0.2)" },
