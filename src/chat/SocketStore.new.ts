@@ -1,6 +1,6 @@
 import { chatServerUrl } from "./constants"
 import { parseCommand } from "./helpers"
-import { ClientCommandMap } from "./types"
+import { ClientCommandMap, ServerCommand } from "./types"
 
 type ConnectOptions = {
   account: string
@@ -8,8 +8,11 @@ type ConnectOptions = {
   identity: string
 }
 
+type CommandListener = (command: ServerCommand) => void
+
 export class SocketStore {
   private socket?: WebSocket
+  private listeners = new Set<CommandListener>()
 
   connect = (options: ConnectOptions) => {
     const socket = (this.socket = new WebSocket(chatServerUrl))
@@ -36,9 +39,7 @@ export class SocketStore {
         this.sendCommand("PIN", undefined)
       }
 
-      console.log(command)
-
-      // TODO: call listeners
+      this.listeners.forEach((handle) => handle(command))
     })
 
     return () => {
@@ -59,5 +60,12 @@ export class SocketStore {
 
     const message = params ? `${command} ${JSON.stringify(params)}` : command
     this.socket.send(message)
+  }
+
+  listen = (listener: CommandListener) => {
+    this.listeners.add(listener)
+    return () => {
+      this.listeners.delete(listener)
+    }
   }
 }

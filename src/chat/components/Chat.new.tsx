@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from "react"
+import { ChatStore } from "../ChatStore.new"
 import { SocketStore } from "../SocketStore.new"
 
 type Props = {
@@ -9,12 +10,15 @@ type Props = {
 
 function Chat({ account, ticket, identity }: Props) {
   const socketStore = useMemo(() => new SocketStore(), [])
+  const chatStore = useMemo(() => new ChatStore(), [])
 
-  // prettier-ignore
-  useEffect(
-    () => socketStore.connect({ account, ticket, identity }),
-    [socketStore, account, identity, ticket],
-  )
+  useEffect(() => {
+    return socketStore.connect({ account, ticket, identity })
+  }, [socketStore, account, identity, ticket])
+
+  useEffect(() => {
+    return socketStore.listen(chatStore.handleSocketCommand)
+  }, [chatStore.handleSocketCommand, socketStore])
 
   return <p>hi, i'm Chat</p>
 }
