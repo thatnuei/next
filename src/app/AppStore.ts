@@ -1,6 +1,7 @@
 import { observable } from "mobx"
 import extractErrorMessage from "../common/helpers/extractErrorMessage"
 import FListApi from "../flist/FListApi"
+import StoredValue from "../storage/StoredValue"
 
 type AppView = "login" | "characterSelect" | "chat"
 
@@ -19,6 +20,10 @@ export class AppStore {
 
   constructor(private api: FListApi) {}
 
+  get storedIdentity() {
+    return new StoredValue<string>(`identity:${this.userData?.account ?? ""}`)
+  }
+
   submitLogin = async (account: string, password: string) => {
     if (this.loginLoading) return
     this.loginState = { type: "loading" }
@@ -28,7 +33,9 @@ export class AppStore {
       const { ticket, characters } = response
 
       this.userData = { account, ticket, characters }
+      this.identity = (await this.storedIdentity.get()) ?? characters[0]
       this.loginState = { type: "idle" }
+      this.view = "characterSelect"
     } catch (error) {
       this.loginState = { type: "error", error: extractErrorMessage(error) }
     }
