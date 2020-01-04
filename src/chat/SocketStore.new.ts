@@ -55,9 +55,7 @@ export class SocketStore {
     command: K,
     params: ClientCommandMap[K],
   ) {
-    if (!this.socket) return
-
     const message = params ? `${command} ${JSON.stringify(params)}` : command
-    this.socket.send(message)
+    this.socket?.send(message)
   }
 }
