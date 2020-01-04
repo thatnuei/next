@@ -15,6 +15,8 @@ export class ChannelStore {
     private readonly identity: string,
   ) {}
 
+  get = (id: string) => this.channels.get(id)
+
   join = (id: string) => {
     this.socket.sendCommand("JCH", { channel: id })
   }

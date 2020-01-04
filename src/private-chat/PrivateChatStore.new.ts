@@ -1,4 +1,3 @@
-import { computed, observable } from "mobx"
 import { createCommandHandler } from "../chat/helpers"
 import { createMessage } from "../message/helpers"
 import { FactoryMap } from "../state/classes/FactoryMap.new"
@@ -7,23 +6,7 @@ import { createPrivateChat } from "./helpers"
 export class PrivateChatStore {
   private readonly chats = new FactoryMap(createPrivateChat)
 
-  @observable
-  private readonly currentPartnerNames = new Set<string>()
-
-  @computed
-  get currentChats() {
-    return this.chats.values.filter((it) =>
-      this.currentPartnerNames.has(it.partnerName),
-    )
-  }
-
-  open = (partnerName: string) => {
-    this.currentPartnerNames.add(partnerName)
-  }
-
-  close = (partnerName: string) => {
-    this.currentPartnerNames.delete(partnerName)
-  }
+  get = (partnerName: string) => this.chats.get(partnerName)
 
   handleSocketCommand = createCommandHandler({
     PRI: ({ character, message }) => {
