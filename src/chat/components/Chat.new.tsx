@@ -17,8 +17,8 @@ function Chat({ account, ticket, identity }: Props) {
   }, [socketStore, account, identity, ticket])
 
   useEffect(() => {
-    return socketStore.listen(chatStore.handleSocketCommand)
-  }, [chatStore.handleSocketCommand, socketStore])
+    return socketStore.commandListeners.add(chatStore.handleSocketCommand)
+  }, [chatStore.handleSocketCommand, socketStore.commandListeners])
 
   return <p>hi, i'm Chat</p>
 }
