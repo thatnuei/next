@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { useMemo } from "react"
+import React, { useEffect, useMemo } from "react"
 import Chat from "../../chat/components/Chat.new"
 import FListApi from "../../flist/FListApi"
 import { AppStore } from "../AppStore"
@@ -11,7 +11,14 @@ const api = new FListApi()
 function App() {
   const appStore = useMemo(() => new AppStore(api), [])
 
+  useEffect(() => {
+    appStore.restoreSession()
+  }, [appStore])
+
   switch (appStore.view) {
+    case "loading":
+      return <p>Setting things up...</p>
+
     case "login":
       return (
         <Login
@@ -33,7 +40,7 @@ function App() {
       )
 
     case "chat":
-      return <Chat {...appStore.chatData} />
+      return <Chat {...appStore.session} />
   }
 }
 

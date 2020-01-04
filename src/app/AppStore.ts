@@ -3,7 +3,7 @@ import extractErrorMessage from "../common/helpers/extractErrorMessage"
 import FListApi from "../flist/FListApi"
 import StoredValue from "../storage/StoredValue"
 
-type AppView = "login" | "characterSelect" | "chat"
+type AppView = "loading" | "login" | "characterSelect" | "chat"
 
 type UserData = { account: string; ticket: string; characters: string[] }
 
@@ -12,13 +12,43 @@ type LoginState =
   | { type: "loading" }
   | { type: "error"; error: string }
 
+type SessionData = {
+  account: string
+  ticket: string
+  identity: string
+}
+
 export class AppStore {
-  @observable view: AppView = "login"
+  @observable view: AppView = "loading"
   @observable.ref loginState: LoginState = { type: "idle" }
   @observable.ref userData?: UserData
   @observable identity = ""
 
+  storedSession = new StoredValue<SessionData>("session")
+
   constructor(private api: FListApi) {}
+
+  restoreSession = async () => {
+    try {
+      const session = await this.storedSession.get()
+      if (!session) {
+        this.view = "login"
+        return
+      }
+
+      this.userData = {
+        account: session.account,
+        ticket: session.ticket,
+        characters: [],
+      }
+
+      this.identity = session.identity
+      this.view = "chat"
+    } catch (error) {
+      console.warn(error)
+      this.view = "login"
+    }
+  }
 
   get storedIdentity() {
     return new StoredValue<string>(`identity:${this.userData?.account ?? ""}`)
@@ -58,10 +88,11 @@ export class AppStore {
   }
 
   showChat = () => {
+    this.storedSession.set(this.session)
     this.view = "chat"
   }
 
-  get chatData() {
+  get session(): SessionData {
     return {
       account: this.userData?.account ?? "",
       ticket: this.userData?.ticket ?? "",
