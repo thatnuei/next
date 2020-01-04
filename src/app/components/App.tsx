@@ -1,49 +1,38 @@
 import { observer } from "mobx-react-lite"
-import React from "react"
-import Chat from "../../chat/components/Chat"
-import useRootStore from "../../useRootStore"
+import React, { useMemo } from "react"
+import FListApi from "../../flist/FListApi"
+import { AppStore } from "../AppStore"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 
+const api = new FListApi()
+
 function App() {
-  const {
-    appStore,
-    userStore,
-    chatStore,
-    identity,
-    userCredentials,
-  } = useRootStore()
+  const appStore = useMemo(() => new AppStore(api), [])
 
   switch (appStore.view) {
-    case "login": {
-      const error =
-        userStore.loginState.type === "error"
-          ? userStore.loginState.error
-          : undefined
-
+    case "login":
       return (
         <Login
-          disabled={userStore.loginState.type === "loading"}
-          error={error}
-          onSubmit={userStore.submitLogin}
+          disabled={appStore.loginLoading}
+          error={appStore.loginError}
+          onSubmit={appStore.submitLogin}
         />
       )
-    }
 
     case "characterSelect":
       return (
         <CharacterSelect
-          identity={identity.current}
-          characters={userCredentials.value.characters}
-          disabled={chatStore.isConnecting}
-          onIdentityChange={identity.set}
+          characters={appStore.characters}
+          identity={appStore.identity}
+          onIdentityChange={appStore.setIdentity}
           onReturnToLogin={appStore.showLogin}
-          onSubmit={chatStore.connectToChat}
+          onSubmit={appStore.showChat}
         />
       )
 
     case "chat":
-      return <Chat />
+      return <p>chat</p>
   }
 }
 

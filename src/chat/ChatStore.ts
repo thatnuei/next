@@ -63,13 +63,13 @@ export default class ChatStore {
   @action
   handleSocketClose = () => {
     this.connectionState = "offline"
-    this.root.appStore.showLogin()
+    // this.root.appStore.showLogin()
   }
 
   @action
   handleSocketError = () => {
     this.connectionState = "offline"
-    this.root.appStore.showLogin()
+    // this.root.appStore.showLogin()
   }
 
   @action
@@ -88,7 +88,7 @@ export default class ChatStore {
   handleChatCommand = createCommandHandler({
     IDN: () => {
       this.connectionState = "online"
-      this.root.appStore.showChat()
+      // this.root.appStore.showChat()
 
       this.root.channelStore.join("Frontpage")
       this.root.channelStore.join("Fantasy")

@@ -11,7 +11,7 @@ import { spacing } from "../../ui/theme"
 
 type Props = {
   disabled: boolean
-  error?: string
+  error: string | undefined
   onSubmit: (account: string, password: string) => void
 }
 
@@ -32,7 +32,7 @@ function Login({ disabled, error, onSubmit }: Props) {
           <FormField labelText="Username">
             <TextInput
               name="username"
-              placeholder="awesomeuser"
+              placeholder="awesome username"
               required
               {...account.bind}
             />

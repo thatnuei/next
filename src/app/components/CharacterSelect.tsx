@@ -12,7 +12,6 @@ import { spacing } from "../../ui/theme"
 type Props = {
   identity: string
   characters: string[]
-  disabled: boolean
   onIdentityChange: (identity: string) => void
   onSubmit: () => void
   onReturnToLogin: () => void
@@ -32,7 +31,7 @@ export default function CharacterSelect(props: Props) {
     <FullscreenRaisedPanel>
       <RaisedPanelHeader center={<h1>Select a Character</h1>} />
       <form onSubmit={handleSubmit}>
-        <FieldSet disabled={props.disabled}>
+        <FieldSet>
           <FieldsContainer>
             <Avatar key={props.identity} name={props.identity} />
 
