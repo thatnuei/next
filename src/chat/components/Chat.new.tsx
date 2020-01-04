@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
@@ -10,9 +11,17 @@ type Props = {
   account: string
   ticket: string
   identity: string
+  onClose: () => void
+  onConnectionError: () => void
 }
 
-function Chat({ account, ticket, identity }: Props) {
+function Chat({
+  account,
+  ticket,
+  identity,
+  onClose,
+  onConnectionError,
+}: Props) {
   const socketStore = useMemo(() => new SocketStore(), [])
   const chatStore = useMemo(() => new ChatStore(identity), [identity])
 
@@ -24,6 +33,14 @@ function Chat({ account, ticket, identity }: Props) {
     return socketStore.commandListeners.add(chatStore.handleSocketCommand)
   }, [chatStore.handleSocketCommand, socketStore.commandListeners])
 
+  useEffect(() => {
+    return socketStore.closeListeners.add(onClose)
+  }, [onClose, socketStore.closeListeners])
+
+  useEffect(() => {
+    return socketStore.closeListeners.add(onConnectionError)
+  }, [onConnectionError, socketStore.closeListeners])
+
   return (
     <Container>
       <NavigationContainer>
@@ -34,7 +51,7 @@ function Chat({ account, ticket, identity }: Props) {
   )
 }
 
-export default Chat
+export default observer(Chat)
 
 const Container = styled.div`
   display: flex;

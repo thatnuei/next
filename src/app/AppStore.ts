@@ -24,9 +24,32 @@ export class AppStore {
   @observable.ref userData?: UserData
   @observable identity = ""
 
-  storedSession = new StoredValue<SessionData>("session", StoredValue.session())
+  private readonly storedSession = new StoredValue<SessionData>(
+    "session",
+    StoredValue.session(),
+  )
 
-  constructor(private api: FListApi) {}
+  constructor(private readonly api: FListApi) {}
+
+  get session(): SessionData {
+    return {
+      account: this.userData?.account ?? "",
+      ticket: this.userData?.ticket ?? "",
+      identity: this.identity,
+    }
+  }
+
+  get storedIdentity() {
+    return new StoredValue<string>(`identity:${this.userData?.account ?? ""}`)
+  }
+
+  get loginLoading() {
+    return this.loginState.type === "loading"
+  }
+
+  get loginError() {
+    return this.loginState.type === "error" ? this.loginState.error : undefined
+  }
 
   restoreSession = async () => {
     try {
@@ -50,10 +73,6 @@ export class AppStore {
     }
   }
 
-  get storedIdentity() {
-    return new StoredValue<string>(`identity:${this.userData?.account ?? ""}`)
-  }
-
   submitLogin = async (account: string, password: string) => {
     if (this.loginLoading) return
     this.loginState = { type: "loading" }
@@ -71,14 +90,6 @@ export class AppStore {
     }
   }
 
-  get loginLoading() {
-    return this.loginState.type === "loading"
-  }
-
-  get loginError() {
-    return this.loginState.type === "error" ? this.loginState.error : undefined
-  }
-
   setIdentity = (identity: string) => {
     this.identity = identity
   }
@@ -92,11 +103,13 @@ export class AppStore {
     this.view = "chat"
   }
 
-  get session(): SessionData {
-    return {
-      account: this.userData?.account ?? "",
-      ticket: this.userData?.ticket ?? "",
-      identity: this.identity,
-    }
+  handleSocketClosed = () => {
+    this.loginState = { type: "error", error: "Disconnected from server" }
+    this.view = "login"
+  }
+
+  handleConnectionError = () => {
+    this.loginState = { type: "error", error: "Could not connect" }
+    this.view = "login"
   }
 }

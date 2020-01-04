@@ -40,7 +40,13 @@ function App() {
       )
 
     case "chat":
-      return <Chat {...appStore.session} />
+      return (
+        <Chat
+          {...appStore.session}
+          onClose={appStore.handleSocketClosed}
+          onConnectionError={appStore.handleConnectionError}
+        />
+      )
   }
 }
 

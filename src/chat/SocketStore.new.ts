@@ -12,6 +12,8 @@ type ConnectOptions = {
 export class SocketStore {
   private socket?: WebSocket
   readonly commandListeners = new ListenerGroup<[ServerCommand]>()
+  readonly closeListeners = new ListenerGroup()
+  readonly errorListeners = new ListenerGroup()
 
   connect = (options: ConnectOptions) => {
     const socket = (this.socket = new WebSocket(chatServerUrl))
@@ -28,8 +30,15 @@ export class SocketStore {
       })
     })
 
-    socket.addEventListener("close", () => {})
-    socket.addEventListener("error", () => {})
+    socket.addEventListener("close", () => {
+      this.closeListeners.call()
+      removeListeners()
+    })
+
+    socket.addEventListener("error", () => {
+      this.errorListeners.call()
+      removeListeners()
+    })
 
     socket.addEventListener("message", ({ data }) => {
       const command = parseCommand(data)
@@ -41,11 +50,15 @@ export class SocketStore {
       this.commandListeners.call(command)
     })
 
-    return () => {
+    const removeListeners = () => {
       socket.onopen = null
       socket.onclose = null
       socket.onerror = null
       socket.onmessage = null
+    }
+
+    return () => {
+      removeListeners()
       socket.close()
     }
   }
