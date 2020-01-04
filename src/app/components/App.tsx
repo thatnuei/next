@@ -23,7 +23,7 @@ function App() {
     case "characterSelect":
       return (
         <CharacterSelect
-          characters={appStore.characters}
+          characters={appStore.userData?.characters ?? []}
           identity={appStore.identity}
           onIdentityChange={appStore.setIdentity}
           onReturnToLogin={appStore.showLogin}
