@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
+import { useListener } from "../../state/hooks/useListener"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import { ChatStore } from "../ChatStore.new"
@@ -29,17 +30,9 @@ function Chat({
     return socketStore.connect({ account, ticket, identity })
   }, [socketStore, account, identity, ticket])
 
-  useEffect(() => {
-    return socketStore.commandListeners.add(chatStore.handleSocketCommand)
-  }, [chatStore.handleSocketCommand, socketStore.commandListeners])
-
-  useEffect(() => {
-    return socketStore.closeListeners.add(onClose)
-  }, [onClose, socketStore.closeListeners])
-
-  useEffect(() => {
-    return socketStore.closeListeners.add(onConnectionError)
-  }, [onConnectionError, socketStore.closeListeners])
+  useListener(socketStore.commandListeners, chatStore.handleSocketCommand)
+  useListener(socketStore.closeListeners, onClose)
+  useListener(socketStore.closeListeners, onConnectionError)
 
   return (
     <Container>
