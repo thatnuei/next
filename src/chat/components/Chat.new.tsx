@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
 import { ChannelStore } from "../../channel/ChannelStore.new"
 import { CharacterStore } from "../../character/CharacterStore.new"
+import { PrivateChatStore } from "../../private-chat/PrivateChatStore.new"
 import { useListener } from "../../state/hooks/useListener"
 import Icon from "../../ui/components/Icon"
 import { styled } from "../../ui/styled"
@@ -36,6 +37,8 @@ function Chat({
     identity,
   ])
 
+  const privateChatStore = useMemo(() => new PrivateChatStore(), [])
+
   useEffect(() => {
     return socketStore.connect({ account, ticket, identity })
   }, [socketStore, account, identity, ticket])
@@ -43,6 +46,10 @@ function Chat({
   useListener(socketStore.commandListeners, chatStore.handleSocketCommand)
   useListener(socketStore.commandListeners, characterStore.handleSocketCommand)
   useListener(socketStore.commandListeners, channelStore.handleSocketCommand)
+  useListener(
+    socketStore.commandListeners,
+    privateChatStore.handleSocketCommand,
+  )
   useListener(socketStore.closeListeners, onClose)
   useListener(socketStore.errorListeners, onConnectionError)
 
