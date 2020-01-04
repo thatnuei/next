@@ -28,32 +28,36 @@ function Chat({
   onClose,
   onConnectionError,
 }: Props) {
+  // socket
   const socketStore = useMemo(() => new SocketStore(), [])
-  const chatStore = useMemo(() => new ChatStore(), [])
-  const characterStore = useMemo(() => new CharacterStore(), [])
+  useEffect(() => {
+    return socketStore.connect({ account, ticket, identity })
+  }, [socketStore, account, identity, ticket])
+  useListener(socketStore.closeListeners, onClose)
+  useListener(socketStore.errorListeners, onConnectionError)
 
+  // chat
+  const chatStore = useMemo(() => new ChatStore(), [])
+  useListener(socketStore.commandListeners, chatStore.handleSocketCommand)
+
+  // character
+  const characterStore = useMemo(() => new CharacterStore(), [])
+  const identityCharacter = characterStore.get(identity)
+  useListener(socketStore.commandListeners, characterStore.handleSocketCommand)
+
+  // channel
   const channelStore = useMemo(() => new ChannelStore(socketStore, identity), [
     socketStore,
     identity,
   ])
-
-  const privateChatStore = useMemo(() => new PrivateChatStore(), [])
-
-  useEffect(() => {
-    return socketStore.connect({ account, ticket, identity })
-  }, [socketStore, account, identity, ticket])
-
-  useListener(socketStore.commandListeners, chatStore.handleSocketCommand)
-  useListener(socketStore.commandListeners, characterStore.handleSocketCommand)
   useListener(socketStore.commandListeners, channelStore.handleSocketCommand)
+
+  // private chat
+  const privateChatStore = useMemo(() => new PrivateChatStore(), [])
   useListener(
     socketStore.commandListeners,
     privateChatStore.handleSocketCommand,
   )
-  useListener(socketStore.closeListeners, onClose)
-  useListener(socketStore.errorListeners, onConnectionError)
-
-  const identityCharacter = characterStore.get(identity)
 
   return (
     <Container>
