@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
+import { CharacterStore } from "../../character/CharacterStore.new"
 import { useListener } from "../../state/hooks/useListener"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
@@ -24,20 +25,24 @@ function Chat({
   onConnectionError,
 }: Props) {
   const socketStore = useMemo(() => new SocketStore(), [])
-  const chatStore = useMemo(() => new ChatStore(identity), [identity])
+  const chatStore = useMemo(() => new ChatStore(), [])
+  const characterStore = useMemo(() => new CharacterStore(), [])
 
   useEffect(() => {
     return socketStore.connect({ account, ticket, identity })
   }, [socketStore, account, identity, ticket])
 
   useListener(socketStore.commandListeners, chatStore.handleSocketCommand)
+  useListener(socketStore.commandListeners, characterStore.handleSocketCommand)
   useListener(socketStore.closeListeners, onClose)
   useListener(socketStore.closeListeners, onConnectionError)
+
+  const identityCharacter = characterStore.get(identity)
 
   return (
     <Container>
       <NavigationContainer>
-        <Navigation identityCharacter={chatStore.identityCharacter} />
+        <Navigation identityCharacter={identityCharacter} />
       </NavigationContainer>
       <RoomContainer>room</RoomContainer>
     </Container>
