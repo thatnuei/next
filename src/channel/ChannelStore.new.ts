@@ -9,7 +9,10 @@ export class ChannelStore {
   @observable
   private readonly channelsMap = new Map<string, Channel>()
 
-  constructor(private socket: SocketStore) {}
+  constructor(
+    private readonly socket: SocketStore,
+    private readonly identity: string,
+  ) {}
 
   add = (char: Channel) => {
     this.channelsMap.set(char.name, char)
@@ -32,8 +35,10 @@ export class ChannelStore {
     this.socket.sendCommand("LCH", { channel: id })
   }
 
-  get channels(): Channel[] {
-    return [...this.channelsMap.values()]
+  get joinedChannels(): Channel[] {
+    return [...this.channelsMap.values()].filter((it) =>
+      it.users.has(this.identity),
+    )
   }
 
   handleSocketCommand = createCommandHandler({

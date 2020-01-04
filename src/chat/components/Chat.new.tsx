@@ -31,8 +31,9 @@ function Chat({
   const chatStore = useMemo(() => new ChatStore(), [])
   const characterStore = useMemo(() => new CharacterStore(), [])
 
-  const channelStore = useMemo(() => new ChannelStore(socketStore), [
+  const channelStore = useMemo(() => new ChannelStore(socketStore, identity), [
     socketStore,
+    identity,
   ])
 
   useEffect(() => {
@@ -51,7 +52,7 @@ function Chat({
     <Container>
       <NavigationContainer>
         <Navigation identityCharacter={identityCharacter}>
-          {channelStore.channels.map((channel) => (
+          {channelStore.joinedChannels.map((channel) => (
             <RoomTab
               key={channel.id}
               title={channel.name}
@@ -60,7 +61,7 @@ function Chat({
               isUnread={channel.unread}
               isLoading={false}
               onClick={() => {}}
-              onClose={() => {}}
+              onClose={() => channelStore.leave(channel.id)}
             />
           ))}
         </Navigation>
