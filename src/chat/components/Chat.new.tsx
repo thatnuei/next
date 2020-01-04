@@ -2,14 +2,18 @@ import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
 import { ChannelStore } from "../../channel/ChannelStore.new"
 import { CharacterStore } from "../../character/CharacterStore.new"
+import Avatar from "../../character/components/Avatar"
 import { PrivateChatStore } from "../../private-chat/PrivateChatStore.new"
 import { useListener } from "../../state/hooks/useListener"
+import Icon from "../../ui/components/Icon"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
+import { ChatNavigationStore } from "../ChatNavigationStore.new"
 import { ChatStore } from "../ChatStore.new"
 import { sidebarMenuBreakpoint } from "../constants"
 import { SocketStore } from "../SocketStore.new"
 import Navigation from "./Navigation"
+import RoomTab from "./RoomTab"
 
 type Props = {
   account: string
@@ -57,22 +61,57 @@ function Chat({
     privateChatStore.handleSocketCommand,
   )
 
+  // navigation
+  const navigationStore = useMemo(
+    () => new ChatNavigationStore(identity, channelStore, privateChatStore),
+    [channelStore, identity, privateChatStore],
+  )
+  useListener(socketStore.commandListeners, navigationStore.handleSocketCommand)
+
   return (
     <Container>
       <NavigationContainer>
         <Navigation identityCharacter={identityCharacter}>
-          {/* {channelStore.joinedChannels.map((channel) => (
-            <RoomTab
-              key={channel.id}
-              title={channel.name}
-              icon={<Icon icon="public" />}
-              isActive={false}
-              isUnread={channel.unread}
-              isLoading={false}
-              onClick={() => {}}
-              onClose={() => channelStore.leave(channel.id)}
-            />
-          ))} */}
+          {navigationStore.rooms.map((room) => {
+            switch (room.type) {
+              case "channel": {
+                const channel = channelStore.get(room.channelId)
+                return (
+                  <RoomTab
+                    key={room.roomId}
+                    title={channel.name}
+                    icon={<Icon icon="public" />}
+                    isActive={navigationStore.currentRoom === room}
+                    isUnread={channel.unread}
+                    onClick={() => navigationStore.showChannel(channel.id)}
+                    onClose={() => channelStore.leave(channel.id)}
+                  />
+                )
+              }
+
+              case "privateChat": {
+                const chat = privateChatStore.get(room.partnerName)
+                return (
+                  <RoomTab
+                    key={room.roomId}
+                    title={chat.partnerName}
+                    icon={<Avatar name={chat.partnerName} size={20} />}
+                    isActive={navigationStore.currentRoom === room}
+                    isUnread={chat.unread}
+                    onClick={() =>
+                      navigationStore.showPrivateChat(chat.partnerName)
+                    }
+                    onClose={() =>
+                      navigationStore.closePrivateChat(chat.partnerName)
+                    }
+                  />
+                )
+              }
+
+              default:
+                return null
+            }
+          })}
         </Navigation>
       </NavigationContainer>
       <RoomContainer>room</RoomContainer>
