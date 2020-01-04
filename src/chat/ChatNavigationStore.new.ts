@@ -27,7 +27,7 @@ export class ChatNavigationStore {
   private currentRoomId?: string
 
   @observable
-  private rooms: ChatRoom[] = []
+  rooms: ChatRoom[] = []
 
   @computed
   get currentRoom(): ChatRoom | undefined {
@@ -36,12 +36,17 @@ export class ChatNavigationStore {
     )
   }
 
-  addRoom = (room: ChatRoom) => {
+  private addRoom = (room: ChatRoom) => {
     this.rooms = uniqBy([...this.rooms, room], (it) => it.roomId)
   }
 
-  removeRoom = (id: string) => {
+  private removeRoom = (id: string) => {
     this.rooms = reject(this.rooms, (it) => it.roomId === id)
+  }
+
+  private setCurrentRoom = (predicate: (room: ChatRoom) => boolean) => {
+    const room = this.rooms.find(predicate)
+    if (room) this.currentRoomId = room.roomId
   }
 
   @computed
@@ -68,6 +73,14 @@ export class ChatNavigationStore {
 
   closePrivateChat = (partnerName: string) => {
     this.removeRoom(getPrivateChatRoomId(partnerName))
+  }
+
+  showChannel = (id: string) => {
+    this.setCurrentRoom((it) => it.roomId === getChannelRoomId(id))
+  }
+
+  showPrivateChat = (partnerName: string) => {
+    this.setCurrentRoom((it) => it.roomId === getPrivateChatRoomId(partnerName))
   }
 
   handleSocketCommand = createCommandHandler({
