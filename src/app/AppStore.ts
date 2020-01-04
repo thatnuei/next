@@ -53,4 +53,12 @@ export class AppStore {
   showChat = () => {
     this.view = "chat"
   }
+
+  get chatData() {
+    return {
+      account: this.userData?.account ?? "",
+      ticket: this.userData?.ticket ?? "",
+      identity: this.identity,
+    }
+  }
 }

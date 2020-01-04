@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, { useMemo } from "react"
+import Chat from "../../chat/components/Chat.new"
 import FListApi from "../../flist/FListApi"
 import { AppStore } from "../AppStore"
 import CharacterSelect from "./CharacterSelect"
@@ -32,7 +33,7 @@ function App() {
       )
 
     case "chat":
-      return <p>chat</p>
+      return <Chat {...appStore.chatData} />
   }
 }
 
