@@ -24,7 +24,7 @@ export class AppStore {
   @observable.ref userData?: UserData
   @observable identity = ""
 
-  storedSession = new StoredValue<SessionData>("session")
+  storedSession = new StoredValue<SessionData>("session", StoredValue.session())
 
   constructor(private api: FListApi) {}
 
