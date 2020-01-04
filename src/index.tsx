@@ -6,10 +6,7 @@ import Root from "./app/components/Root"
 import useRootStore from "./useRootStore"
 
 configure({
-  enforceActions: "observed",
   reactionRequiresObservable: true,
-  // this gives too many false positives
-  // observableRequiresReaction: true,
 })
 
 const domRoot = document.getElementById("root")!
