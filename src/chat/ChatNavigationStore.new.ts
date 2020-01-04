@@ -84,6 +84,15 @@ export class ChatNavigationStore {
   }
 
   handleSocketCommand = createCommandHandler({
+    IDN: () => {
+      this.channelStore.join("Frontpage")
+      this.channelStore.join("Story Driven LFRP")
+      this.channelStore.join("Fantasy")
+      this.channelStore.join("RP Bar")
+      this.channelStore.join("RP Dark City")
+      this.channelStore.join("Development")
+    },
+
     JCH: ({ character: { identity }, channel: channelId }) => {
       if (identity === this.identity) {
         this.addRoom({

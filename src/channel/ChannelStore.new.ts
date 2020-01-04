@@ -30,15 +30,6 @@ export class ChannelStore {
   }
 
   handleSocketCommand = createCommandHandler({
-    IDN: () => {
-      this.join("Frontpage")
-      this.join("Story Driven LFRP")
-      this.join("Fantasy")
-      this.join("RP Bar")
-      this.join("RP Dark City")
-      this.join("Development")
-    },
-
     ICH: ({ channel: id, mode, users }) => {
       this.channels.update(id, (channel) => {
         channel.mode = mode
