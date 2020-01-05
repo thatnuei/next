@@ -73,44 +73,24 @@ function Chat({
       <NavigationContainer>
         <Navigation identityCharacter={identityCharacter}>
           {navigationStore.rooms.map((room) => {
-            switch (room.type) {
-              case "channel": {
-                const channel = channelStore.get(room.channelId)
-                return (
-                  <RoomTab
-                    key={room.roomId}
-                    title={channel.name}
-                    icon={<Icon icon="public" />}
-                    isActive={navigationStore.currentRoom === room}
-                    isUnread={channel.unread}
-                    onClick={() => navigationStore.showChannel(channel.id)}
-                    onClose={() => channelStore.leave(channel.id)}
-                  />
-                )
-              }
+            const icon =
+              room.icon.type === "public" ? (
+                <Icon icon="public" />
+              ) : (
+                <Avatar name={room.icon.name} size={20} />
+              )
 
-              case "privateChat": {
-                const chat = privateChatStore.get(room.partnerName)
-                return (
-                  <RoomTab
-                    key={room.roomId}
-                    title={chat.partnerName}
-                    icon={<Avatar name={chat.partnerName} size={20} />}
-                    isActive={navigationStore.currentRoom === room}
-                    isUnread={chat.unread}
-                    onClick={() =>
-                      navigationStore.showPrivateChat(chat.partnerName)
-                    }
-                    onClose={() =>
-                      navigationStore.closePrivateChat(chat.partnerName)
-                    }
-                  />
-                )
-              }
-
-              default:
-                return null
-            }
+            return (
+              <RoomTab
+                key={room.roomId}
+                title={room.title}
+                icon={icon}
+                isActive={navigationStore.currentRoom === room}
+                isUnread={room.isUnread}
+                onClick={room.show}
+                onClose={room.close}
+              />
+            )
           })}
         </Navigation>
       </NavigationContainer>
