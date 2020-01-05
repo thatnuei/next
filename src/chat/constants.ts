@@ -11,3 +11,4 @@ export const errorCodes = {
 }
 
 export const sidebarMenuBreakpoint = 950
+export const roomSidebarBreakpoint = 1200

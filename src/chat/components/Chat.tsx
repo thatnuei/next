@@ -1,7 +1,9 @@
-import { observer, Observer } from "mobx-react-lite"
+import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
+import ChannelRoom from "../../channel/ChannelRoom"
 import { ChannelStore } from "../../channel/ChannelStore.new"
 import { CharacterStore } from "../../character/CharacterStore.new"
+import PrivateChatRoom from "../../private-chat/PrivateChatRoom"
 import { PrivateChatStore } from "../../private-chat/PrivateChatStore.new"
 import { useListener } from "../../state/hooks/useListener"
 import { styled } from "../../ui/styled"
@@ -12,7 +14,7 @@ import { sidebarMenuBreakpoint } from "../constants"
 import { SocketStore } from "../SocketStore.new"
 import Navigation from "./Navigation"
 import NavigationRooms from "./NavigationRooms"
-import RoomDisplay from "./RoomDisplay"
+import NoRoomHeader from "./NoRoomHeader"
 
 type Props = {
   account: string
@@ -62,29 +64,48 @@ function Chat({
 
   // navigation
   const navigationStore = useMemo(
-    () => new ChatNavigationStore(identity, channelStore, privateChatStore),
-    [identity, channelStore, privateChatStore],
+    () => new ChatNavigationStore(identity, channelStore),
+    [identity, channelStore],
   )
   useListener(socketStore.commandListeners, navigationStore.handleSocketCommand)
+
+  const renderRoom = () => {
+    const room = navigationStore.currentRoom
+    if (!room) return <NoRoomHeader />
+
+    const commonProps = { identity, characterStore }
+
+    switch (room.type) {
+      case "channel":
+        return (
+          <ChannelRoom
+            channel={channelStore.get(room.channelId)}
+            {...commonProps}
+          />
+        )
+
+      case "privateChat":
+        return (
+          <PrivateChatRoom
+            chat={privateChatStore.get(room.partnerName)}
+            {...commonProps}
+          />
+        )
+    }
+  }
 
   return (
     <Container>
       <NavigationContainer>
         <Navigation identityCharacter={identityCharacter}>
-          <NavigationRooms navigation={navigationStore} />
+          <NavigationRooms
+            navigation={navigationStore}
+            channelStore={channelStore}
+            privateChatStore={privateChatStore}
+          />
         </Navigation>
       </NavigationContainer>
-      <RoomContainer>
-        <Observer>
-          {() => (
-            <RoomDisplay
-              room={navigationStore.currentRoom}
-              characterStore={characterStore}
-              identity={identity}
-            />
-          )}
-        </Observer>
-      </RoomContainer>
+      <RoomContainer>{renderRoom()}</RoomContainer>
     </Container>
   )
 }

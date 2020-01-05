@@ -1,49 +1,60 @@
 import { uniqBy } from "lodash"
 import { computed, observable } from "mobx"
-import { ChannelRoomModel } from "../channel/ChannelRoomModel"
 import { ChannelStore } from "../channel/ChannelStore.new"
 import { reject } from "../common/helpers/reject"
-import { PrivateChatRoomModel } from "../private-chat/PrivateChatRoomModel"
-import { PrivateChatStore } from "../private-chat/PrivateChatStore.new"
 import { createCommandHandler } from "./helpers"
-import { RoomModel } from "./RoomModel.new"
+
+type Room =
+  | { type: "channel"; key: string; channelId: string }
+  | { type: "privateChat"; key: string; partnerName: string }
+
+const getChannelKey = (channelId: string) => `channel:${channelId}`
+
+const getPrivateChatKey = (privateChat: string) => `privateChat:${privateChat}`
 
 export class ChatNavigationStore {
   constructor(
     private readonly identity: string,
     private readonly channelStore: ChannelStore,
-    private readonly privateChatStore: PrivateChatStore,
   ) {}
 
   @observable
-  private currentRoomId?: string
+  private currentRoomKey?: string
 
   @observable
-  rooms: RoomModel[] = []
+  rooms: Room[] = []
 
   @computed
-  get currentRoom(): RoomModel | undefined {
+  get currentRoom(): Room | undefined {
     return (
-      this.rooms.find((it) => it.roomId === this.currentRoomId) ?? this.rooms[0]
+      this.rooms.find((it) => it.key === this.currentRoomKey) ?? this.rooms[0]
     )
   }
 
-  private addRoom = (room: RoomModel) => {
-    this.rooms = uniqBy([...this.rooms, room], (it) => it.roomId)
+  private addRoom = (room: Room) => {
+    this.rooms = uniqBy([...this.rooms, room], (it) => it.key)
   }
 
-  removeRoom = (id: string) => {
-    this.rooms = reject(this.rooms, (it) => it.roomId === id)
+  private removeRoom = (key: string) => {
+    this.rooms = reject(this.rooms, (it) => it.key === key)
   }
 
-  setCurrentRoomId = (id: string) => {
-    this.currentRoomId = id
+  setCurrentRoomKey = (key: string) => {
+    this.currentRoomKey = key
   }
+
+  isActive = (roomKey: string) => this.currentRoomKey === roomKey
 
   openPrivateChat = (partnerName: string) => {
-    this.addRoom(
-      new PrivateChatRoomModel(this, this.privateChatStore.get(partnerName)),
-    )
+    this.addRoom({
+      type: "privateChat",
+      key: getPrivateChatKey(partnerName),
+      partnerName,
+    })
+  }
+
+  closePrivateChat = (partnerName: string) => {
+    this.removeRoom(getPrivateChatKey(partnerName))
   }
 
   handleSocketCommand = createCommandHandler({
@@ -58,19 +69,17 @@ export class ChatNavigationStore {
 
     JCH: ({ character: { identity }, channel: channelId }) => {
       if (identity === this.identity) {
-        this.addRoom(
-          new ChannelRoomModel(
-            this,
-            this.channelStore.get(channelId),
-            this.channelStore,
-          ),
-        )
+        this.addRoom({
+          type: "channel",
+          key: getChannelKey(channelId),
+          channelId,
+        })
       }
     },
 
     LCH: ({ character: identity, channel }) => {
       if (identity === this.identity) {
-        this.removeRoom(ChannelRoomModel.createId(channel))
+        this.removeRoom(getChannelKey(channel))
       }
     },
 
