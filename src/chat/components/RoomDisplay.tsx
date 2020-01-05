@@ -1,11 +1,14 @@
 import { observer, Observer } from "mobx-react-lite"
-import React, { useState } from "react"
+import React from "react"
+import ChannelDescription from "../../channel/ChannelDescription"
 import ChannelHeader from "../../channel/ChannelHeader"
 import ChannelMenu from "../../channel/ChannelMenu"
 import { userListBreakpoint } from "../../channel/constants"
 import { CharacterStore } from "../../character/CharacterStore.new"
 import MessageList from "../../message/MessageList"
+import { useToggle } from "../../state/hooks/useToggle"
 import Drawer from "../../ui/components/Drawer"
+import Modal from "../../ui/components/Modal"
 import {
   fillArea,
   flexColumn,
@@ -28,7 +31,8 @@ type Props = {
 }
 
 function RoomDisplay({ room, identity, characterStore }: Props) {
-  const [channelMenuVisible, setChannelMenuVisible] = useState(false)
+  const [menuVisible, menuActions] = useToggle()
+  const [descriptionVisible, descriptionActions] = useToggle()
 
   if (!room) {
     return <NoRoomHeader />
@@ -40,8 +44,8 @@ function RoomDisplay({ room, identity, characterStore }: Props) {
         {room.header.type === "channel" ? (
           <ChannelHeader
             title={room.title}
-            onShowChannelMenu={() => setChannelMenuVisible((v) => !v)}
-            onShowDescription={() => {}}
+            onShowChannelMenu={menuActions.toggle}
+            onShowDescription={descriptionActions.toggle}
           />
         ) : (
           <p>todo character header</p>
@@ -51,6 +55,15 @@ function RoomDisplay({ room, identity, characterStore }: Props) {
           <MessageList
             messages={room.messages}
             characterStore={characterStore}
+          />
+
+          <Modal
+            title={room.title}
+            visible={descriptionVisible}
+            panelWidth={800}
+            children={<ChannelDescription description="" />}
+            fillMode="contained"
+            onClose={descriptionActions.disable}
           />
         </MessageListContainer>
 
@@ -72,11 +85,7 @@ function RoomDisplay({ room, identity, characterStore }: Props) {
         </UserListContainer>
       )}
 
-      <Drawer
-        side="right"
-        visible={channelMenuVisible}
-        onClose={() => setChannelMenuVisible(false)}
-      >
+      <Drawer side="right" visible={menuVisible} onClose={menuActions.disable}>
         <ChannelMenuContainer>
           <ChannelMenu users={(room.users ?? []).map(characterStore.get)} />
         </ChannelMenuContainer>
