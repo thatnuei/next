@@ -1,3 +1,4 @@
+import { observable } from "mobx"
 import { Character, CharacterStatus, Gender } from "./types"
 
 export function createCharacter(
@@ -6,10 +7,10 @@ export function createCharacter(
   status: CharacterStatus = "offline",
   statusMessage = "",
 ): Character {
-  return {
+  return observable({
     name,
     gender,
     status,
     statusMessage,
-  }
+  })
 }
