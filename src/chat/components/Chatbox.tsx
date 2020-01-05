@@ -1,25 +1,22 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import Button from "../../ui/components/Button"
 import TextArea from "../../ui/components/TextArea"
 import { flexRow, spacedChildrenHorizontal } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { getThemeColor, spacing } from "../../ui/theme"
-import useRootStore from "../../useRootStore"
 import { TypingStatus } from "../types"
 import useTypingStatus from "../useTypingStatus"
 
 type Props = {
   value: string
+  placeholder?: string
   onValueChange: (value: string) => void
   onSubmit: (message: string) => void
   onSubmitCommand?: (command: string, ...args: string[]) => void
   onTypingStatus?: (status: TypingStatus) => void
 }
 
-const Chatbox = (props: Props) => {
-  const { identity } = useRootStore()
-
+function Chatbox(props: Props) {
   const trimmedInput = props.value.trim()
 
   const { onTypingStatus } = props
@@ -55,7 +52,7 @@ const Chatbox = (props: Props) => {
       <StyledTextArea
         value={props.value}
         onChange={(event) => props.onValueChange(event.target.value)}
-        placeholder={`Chatting as ${identity.current}...`}
+        placeholder={props.placeholder}
         onKeyDown={handleKeyDown}
         style={textAreaStyle}
       />
@@ -64,7 +61,7 @@ const Chatbox = (props: Props) => {
   )
 }
 
-export default observer(Chatbox)
+export default Chatbox
 
 const Container = styled.div`
   background-color: ${getThemeColor("theme0")};
