@@ -2,10 +2,8 @@ import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
 import { ChannelStore } from "../../channel/ChannelStore.new"
 import { CharacterStore } from "../../character/CharacterStore.new"
-import Avatar from "../../character/components/Avatar"
 import { PrivateChatStore } from "../../private-chat/PrivateChatStore.new"
 import { useListener } from "../../state/hooks/useListener"
-import Icon from "../../ui/components/Icon"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import { ChatNavigationStore } from "../ChatNavigationStore.new"
@@ -13,7 +11,7 @@ import { ChatStore } from "../ChatStore.new"
 import { sidebarMenuBreakpoint } from "../constants"
 import { SocketStore } from "../SocketStore.new"
 import Navigation from "./Navigation"
-import RoomTab from "./RoomTab"
+import NavigationRooms from "./NavigationRooms"
 
 type Props = {
   account: string
@@ -72,26 +70,7 @@ function Chat({
     <Container>
       <NavigationContainer>
         <Navigation identityCharacter={identityCharacter}>
-          {navigationStore.rooms.map((room) => {
-            const icon =
-              room.icon.type === "public" ? (
-                <Icon icon="public" />
-              ) : (
-                <Avatar name={room.icon.name} size={20} />
-              )
-
-            return (
-              <RoomTab
-                key={room.roomId}
-                title={room.title}
-                icon={icon}
-                isActive={navigationStore.currentRoom === room}
-                isUnread={room.isUnread}
-                onClick={room.show}
-                onClose={room.close}
-              />
-            )
-          })}
+          <NavigationRooms navigation={navigationStore} />
         </Navigation>
       </NavigationContainer>
       <RoomContainer>room</RoomContainer>
