@@ -31,6 +31,10 @@ export class PrivateChatRoomModel extends RoomModel {
     return this.chat.input
   }
 
+  get messages() {
+    return this.chat.messages
+  }
+
   setInput = (input: string) => {
     this.chat.input = input
   }

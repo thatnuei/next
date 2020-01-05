@@ -34,6 +34,10 @@ export class ChannelRoomModel extends RoomModel {
     return { type: "channel", channel: this.channel }
   }
 
+  get messages() {
+    return this.channel.messages
+  }
+
   get input() {
     return this.channel.input
   }

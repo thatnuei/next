@@ -1,5 +1,6 @@
 import { Channel } from "../channel/types"
 import { Character } from "../character/types"
+import { Message } from "../message/types"
 import { ChatNavigationStore } from "./ChatNavigationStore.new"
 
 export type RoomIcon = { type: "public" } | { type: "avatar"; name: string }
@@ -16,6 +17,7 @@ export abstract class RoomModel {
   abstract get icon(): RoomIcon
   abstract get isUnread(): boolean
   abstract get header(): RoomHeader
+  abstract get messages(): Message[]
 
   abstract get input(): string
   abstract setInput(input: string): void
