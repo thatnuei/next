@@ -1,13 +1,14 @@
 import React from "react"
+import { Character } from "../character/types"
+import RoomUserList from "../chat/components/RoomUserList"
 import { styled } from "../ui/styled"
-import ChannelUserList, { ChannelUserListEntry } from "./ChannelUserList"
 
-type Props = { users: ChannelUserListEntry[] }
+type Props = { users: Character[] }
 
 function ChannelMenu({ users }: Props) {
   return (
     <Container>
-      <ChannelUserList users={users} />
+      <RoomUserList users={users} />
     </Container>
   )
 }
@@ -15,6 +16,5 @@ function ChannelMenu({ users }: Props) {
 export default ChannelMenu
 
 const Container = styled.div`
-  width: 200px;
   height: 100%;
 `
