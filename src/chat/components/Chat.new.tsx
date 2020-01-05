@@ -62,7 +62,7 @@ function Chat({
   // navigation
   const navigationStore = useMemo(
     () => new ChatNavigationStore(identity, channelStore, privateChatStore),
-    [channelStore, identity, privateChatStore],
+    [identity, channelStore, privateChatStore],
   )
   useListener(socketStore.commandListeners, navigationStore.handleSocketCommand)
 
