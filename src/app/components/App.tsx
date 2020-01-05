@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
-import Chat from "../../chat/components/Chat.new"
+import Chat from "../../chat/components/Chat"
 import FListApi from "../../flist/FListApi"
 import { AppStore } from "../AppStore"
 import CharacterSelect from "./CharacterSelect"
