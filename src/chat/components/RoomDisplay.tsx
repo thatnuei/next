@@ -1,8 +1,11 @@
 import { observer, Observer } from "mobx-react-lite"
-import React from "react"
+import React, { useState } from "react"
+import ChannelHeader from "../../channel/ChannelHeader"
+import ChannelMenu from "../../channel/ChannelMenu"
 import { userListBreakpoint } from "../../channel/constants"
 import { CharacterStore } from "../../character/CharacterStore.new"
 import MessageList from "../../message/MessageList"
+import Drawer from "../../ui/components/Drawer"
 import {
   fillArea,
   flexColumn,
@@ -25,6 +28,8 @@ type Props = {
 }
 
 function RoomDisplay({ room, identity, characterStore }: Props) {
+  const [channelMenuVisible, setChannelMenuVisible] = useState(false)
+
   if (!room) {
     return <NoRoomHeader />
   }
@@ -32,7 +37,15 @@ function RoomDisplay({ room, identity, characterStore }: Props) {
   return (
     <Container>
       <ContentArea>
-        <header>header</header>
+        {room.header.type === "channel" ? (
+          <ChannelHeader
+            title={room.title}
+            onShowChannelMenu={() => setChannelMenuVisible((v) => !v)}
+            onShowDescription={() => {}}
+          />
+        ) : (
+          <p>todo character header</p>
+        )}
 
         <MessageListContainer>
           <MessageList
@@ -58,6 +71,16 @@ function RoomDisplay({ room, identity, characterStore }: Props) {
           <RoomUserList users={room.users.map(characterStore.get)} />
         </UserListContainer>
       )}
+
+      <Drawer
+        side="right"
+        visible={channelMenuVisible}
+        onClose={() => setChannelMenuVisible(false)}
+      >
+        <ChannelMenuContainer>
+          <ChannelMenu users={(room.users ?? []).map(characterStore.get)} />
+        </ChannelMenuContainer>
+      </Drawer>
     </Container>
   )
 }
@@ -87,4 +110,9 @@ const UserListContainer = styled.div`
   @media (max-width: ${userListBreakpoint}px) {
     display: none;
   }
+`
+
+const ChannelMenuContainer = styled.div`
+  width: 200px;
+  height: 100%;
 `
