@@ -6,6 +6,7 @@ import ChannelMenu from "../../channel/ChannelMenu"
 import { userListBreakpoint } from "../../channel/constants"
 import { CharacterStore } from "../../character/CharacterStore.new"
 import MessageList from "../../message/MessageList"
+import PrivateChatHeader from "../../private-chat/PrivateChatHeader"
 import { useToggle } from "../../state/hooks/useToggle"
 import Drawer from "../../ui/components/Drawer"
 import Modal from "../../ui/components/Modal"
@@ -48,7 +49,7 @@ function RoomDisplay({ room, identity, characterStore }: Props) {
             onShowDescription={descriptionActions.toggle}
           />
         ) : (
-          <p>todo character header</p>
+          <PrivateChatHeader character={characterStore.get(room.header.name)} />
         )}
 
         <MessageListContainer>

@@ -45,7 +45,7 @@ function ChannelHeader(props: Props) {
 
 export default ChannelHeader
 
-const Container = styled.header`
+const Container = styled.div`
   background-color: ${getThemeColor("theme0")};
 
   ${flexRow};
