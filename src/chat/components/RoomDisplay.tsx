@@ -1,4 +1,4 @@
-import { observer } from "mobx-react-lite"
+import { observer, Observer } from "mobx-react-lite"
 import React from "react"
 import { userListBreakpoint } from "../../channel/constants"
 import { CharacterStore } from "../../character/CharacterStore.new"
@@ -33,19 +33,26 @@ function RoomDisplay({ room, identity, characterStore }: Props) {
     <Container>
       <ContentArea>
         <header>header</header>
+
         <MessageListContainer>
           <MessageList
             messages={room.messages}
             characterStore={characterStore}
           />
         </MessageListContainer>
-        <Chatbox
-          value={room.input}
-          placeholder={`Chatting as ${identity}...`}
-          onValueChange={room.setInput}
-          onSubmit={(text) => console.log(`submitted: ${text}`)}
-        />
+
+        <Observer>
+          {() => (
+            <Chatbox
+              value={room.input}
+              placeholder={`Chatting as ${identity}...`}
+              onValueChange={room.setInput}
+              onSubmit={(text) => console.log(`submitted: ${text}`)}
+            />
+          )}
+        </Observer>
       </ContentArea>
+
       {room.users && (
         <UserListContainer>
           <RoomUserList users={room.users.map(characterStore.get)} />

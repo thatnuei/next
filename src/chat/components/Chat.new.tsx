@@ -1,4 +1,4 @@
-import { observer } from "mobx-react-lite"
+import { observer, Observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
 import { ChannelStore } from "../../channel/ChannelStore.new"
 import { CharacterStore } from "../../character/CharacterStore.new"
@@ -75,11 +75,15 @@ function Chat({
         </Navigation>
       </NavigationContainer>
       <RoomContainer>
-        <RoomDisplay
-          room={navigationStore.currentRoom}
-          characterStore={characterStore}
-          identity={identity}
-        />
+        <Observer>
+          {() => (
+            <RoomDisplay
+              room={navigationStore.currentRoom}
+              characterStore={characterStore}
+              identity={identity}
+            />
+          )}
+        </Observer>
       </RoomContainer>
     </Container>
   )
