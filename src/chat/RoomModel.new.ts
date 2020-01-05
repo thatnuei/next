@@ -1,5 +1,4 @@
 import { Channel } from "../channel/types"
-import { Character } from "../character/types"
 import { Message } from "../message/types"
 import { ChatNavigationStore } from "./ChatNavigationStore.new"
 
@@ -24,7 +23,7 @@ export abstract class RoomModel {
 
   abstract close(): void
 
-  get users(): Character[] | undefined {
+  get users(): string[] | undefined {
     return undefined
   }
 

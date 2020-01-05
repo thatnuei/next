@@ -1,13 +1,18 @@
+import { observer } from "mobx-react-lite"
 import React, { useCallback, useLayoutEffect, useState } from "react"
+import { CharacterStore } from "../character/CharacterStore.new"
 import { fillArea, scrollVertical } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor } from "../ui/theme"
 import MessageListItem from "./MessageListItem"
 import MessageModel from "./MessageModel"
 
-type Props = { messages: MessageModel[] }
+type Props = {
+  messages: MessageModel[]
+  characterStore: CharacterStore
+}
 
-function MessageList({ messages }: Props) {
+function MessageList({ messages, characterStore }: Props) {
   const [container, setContainer] = useState<HTMLElement | null>()
 
   useBottomScroll(container, messages[messages.length - 1])
@@ -15,13 +20,21 @@ function MessageList({ messages }: Props) {
   return (
     <Container ref={setContainer}>
       {messages.map((message) => (
-        <MessageListItem key={message.id} model={message} />
+        <MessageListItem
+          key={message.id}
+          message={message}
+          sender={
+            message.senderName
+              ? characterStore.get(message.senderName)
+              : undefined
+          }
+        />
       ))}
     </Container>
   )
 }
 
-export default MessageList
+export default observer(MessageList)
 
 const Container = styled.div`
   ${fillArea};

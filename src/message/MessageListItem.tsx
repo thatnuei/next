@@ -1,25 +1,20 @@
 import React from "react"
 import styled from "styled-components"
 import BBC from "../bbc/BBC"
-import CharacterName from "../character/components/CharacterName"
+import CharacterName from "../character/components/CharacterName.new"
+import { Character } from "../character/types"
 import { semiBlack } from "../ui/colors"
-import useRootStore from "../useRootStore"
-import MessageModel from "./MessageModel"
-import { MessageType } from "./types"
+import { Message, MessageType } from "./types"
 
 type Props = {
-  model: MessageModel
+  message: Message
+  sender?: Character
 }
 
 const actionRegex = /^\s*\/me\s*/
 
-const MessageListItem = ({ model }: Props) => {
-  const { senderName, text, type, time } = model
-  const { characterStore } = useRootStore()
-
-  const sender = senderName
-    ? characterStore.characters.get(senderName)
-    : undefined
+const MessageListItem = ({ message, sender }: Props) => {
+  const { text, type, time } = message
 
   const isAction = actionRegex.test(text)
   const parsedText = text.replace(actionRegex, "")
@@ -32,13 +27,11 @@ const MessageListItem = ({ model }: Props) => {
   return (
     <Container style={style}>
       <DateText>{new Date(time).toLocaleTimeString()}</DateText>
-
       {sender && (
         <SenderText>
-          <CharacterName name={sender.name} />
+          <CharacterName character={sender} />
         </SenderText>
       )}
-
       <BBC text={parsedText} />
     </Container>
   )

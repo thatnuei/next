@@ -12,6 +12,7 @@ import { sidebarMenuBreakpoint } from "../constants"
 import { SocketStore } from "../SocketStore.new"
 import Navigation from "./Navigation"
 import NavigationRooms from "./NavigationRooms"
+import RoomDisplay from "./RoomDisplay"
 
 type Props = {
   account: string
@@ -73,7 +74,13 @@ function Chat({
           <NavigationRooms navigation={navigationStore} />
         </Navigation>
       </NavigationContainer>
-      <RoomContainer>room</RoomContainer>
+      <RoomContainer>
+        <RoomDisplay
+          room={navigationStore.currentRoom}
+          characterStore={characterStore}
+          identity={identity}
+        />
+      </RoomContainer>
     </Container>
   )
 }
@@ -87,7 +94,7 @@ const Container = styled.div`
   height: 100vh;
 `
 
-const NavigationContainer = styled.div`
+const NavigationContainer = styled.nav`
   flex-basis: 240px;
   margin-right: ${spacing.xsmall};
 
@@ -96,6 +103,6 @@ const NavigationContainer = styled.div`
   }
 `
 
-const RoomContainer = styled.section`
+const RoomContainer = styled.main`
   flex: 1;
 `

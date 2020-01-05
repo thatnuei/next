@@ -4,15 +4,13 @@ import FadedButton from "../../ui/components/FadedButton"
 import Icon from "../../ui/components/Icon"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
-import useRootStore from "../../useRootStore"
 import { sidebarMenuBreakpoint } from "../constants"
 
 function SidebarMenuButton() {
-  const root = useRootStore()
   const isLargeScreen = useMedia(`(min-width: ${sidebarMenuBreakpoint}px)`)
 
   return isLargeScreen ? null : (
-    <StyledFadedButton onClick={root.chatStore.showPrimaryNavigation}>
+    <StyledFadedButton onClick={() => {}}>
       <Icon icon="menu" />
     </StyledFadedButton>
   )
