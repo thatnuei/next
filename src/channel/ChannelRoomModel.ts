@@ -46,6 +46,10 @@ export class ChannelRoomModel extends RoomModel {
     return [...this.channel.users]
   }
 
+  get description() {
+    return this.channel.description
+  }
+
   setInput = (input: string) => {
     this.channel.input = input
   }

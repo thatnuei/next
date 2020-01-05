@@ -61,7 +61,7 @@ function RoomDisplay({ room, identity, characterStore }: Props) {
             title={room.title}
             visible={descriptionVisible}
             panelWidth={800}
-            children={<ChannelDescription description="" />}
+            children={<ChannelDescription description={room.description} />}
             fillMode="contained"
             onClose={descriptionActions.disable}
           />

@@ -27,6 +27,10 @@ export abstract class RoomModel {
     return undefined
   }
 
+  get description(): string {
+    return ""
+  }
+
   show = () => {
     this.navigation.setCurrentRoomId(this.roomId)
   }
