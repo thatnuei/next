@@ -3,7 +3,6 @@ import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
 import Root from "./app/components/Root"
-import useRootStore from "./useRootStore"
 
 configure({
   reactionRequiresObservable: true,
@@ -12,12 +11,7 @@ configure({
 const domRoot = document.getElementById("root")!
 
 function renderRoot() {
-  ReactDOM.render(
-    <useRootStore.Provider>
-      <Root />
-    </useRootStore.Provider>,
-    domRoot,
-  )
+  ReactDOM.render(<Root />, domRoot)
 }
 
 renderRoot()
