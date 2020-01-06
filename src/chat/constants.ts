@@ -10,5 +10,5 @@ export const errorCodes = {
   bannedFromChannel: 48,
 }
 
-export const sidebarMenuBreakpoint = 950
+export const chatNavigationBreakpoint = 950
 export const roomSidebarBreakpoint = 1200

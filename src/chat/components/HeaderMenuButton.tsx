@@ -1,22 +1,23 @@
-import React from "react"
+import React, { ComponentPropsWithoutRef } from "react"
 import useMedia from "../../dom/hooks/useMedia"
 import FadedButton from "../../ui/components/FadedButton"
 import Icon from "../../ui/components/Icon"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
-import { sidebarMenuBreakpoint } from "../constants"
+import { chatNavigationBreakpoint } from "../constants"
 
-function SidebarMenuButton() {
-  const isLargeScreen = useMedia(`(min-width: ${sidebarMenuBreakpoint}px)`)
+type Props = ComponentPropsWithoutRef<typeof FadedButton>
 
+function HeaderMenuButton(props: Props) {
+  const isLargeScreen = useMedia(`(min-width: ${chatNavigationBreakpoint}px)`)
   return isLargeScreen ? null : (
-    <StyledFadedButton onClick={() => {}}>
+    <StyledFadedButton {...props}>
       <Icon icon="menu" />
     </StyledFadedButton>
   )
 }
 
-export default SidebarMenuButton
+export default HeaderMenuButton
 
 const StyledFadedButton = styled(FadedButton)`
   padding: ${spacing.small};

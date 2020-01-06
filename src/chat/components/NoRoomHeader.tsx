@@ -2,12 +2,12 @@ import React from "react"
 import { spacedChildrenHorizontal } from "../../ui/helpers"
 import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
-import SidebarMenuButton from "./SidebarMenuButton"
+import HeaderMenuButton from "./HeaderMenuButton"
 
 function NoRoomHeader() {
   return (
     <Container>
-      <SidebarMenuButton />
+      <HeaderMenuButton />
       <Title>next</Title>
     </Container>
   )

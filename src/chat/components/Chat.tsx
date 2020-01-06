@@ -10,7 +10,7 @@ import { styled } from "../../ui/styled"
 import { spacing } from "../../ui/theme"
 import { ChatNavigationStore } from "../ChatNavigationStore.new"
 import { ChatStore } from "../ChatStore.new"
-import { sidebarMenuBreakpoint } from "../constants"
+import { chatNavigationBreakpoint } from "../constants"
 import { SocketStore } from "../SocketStore.new"
 import Navigation from "./Navigation"
 import NavigationRooms from "./NavigationRooms"
@@ -123,7 +123,7 @@ const NavigationContainer = styled.nav`
   flex-basis: 240px;
   margin-right: ${spacing.xsmall};
 
-  @media (max-width: ${sidebarMenuBreakpoint}px) {
+  @media (max-width: ${chatNavigationBreakpoint}px) {
     display: none;
   }
 `

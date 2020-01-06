@@ -4,7 +4,7 @@ import Avatar from "../character/components/Avatar"
 import CharacterNameNew from "../character/components/CharacterName.new"
 import CharacterStatus from "../character/components/CharacterStatus"
 import { Character } from "../character/types"
-import SidebarMenuButton from "../chat/components/SidebarMenuButton"
+import HeaderMenuButton from "../chat/components/HeaderMenuButton"
 import { flexColumn, spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
@@ -14,7 +14,7 @@ type Props = { character: Character }
 function PrivateChatHeader({ character }: Props) {
   return (
     <Container>
-      <SidebarMenuButton />
+      <HeaderMenuButton />
       <Avatar name={character.name} size={50} />
       <div css={flexColumn}>
         <CharacterNameNew character={character} />

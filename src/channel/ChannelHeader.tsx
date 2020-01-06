@@ -1,5 +1,5 @@
 import React from "react"
-import SidebarMenuButton from "../chat/components/SidebarMenuButton"
+import HeaderMenuButton from "../chat/components/HeaderMenuButton"
 import useMedia from "../dom/hooks/useMedia"
 import FadedButton from "../ui/components/FadedButton"
 import Icon from "../ui/components/Icon"
@@ -24,7 +24,7 @@ function ChannelHeader(props: Props) {
 
   return (
     <Container>
-      <SidebarMenuButton />
+      <HeaderMenuButton />
 
       <MiddleSection>
         <TitleText>{props.title}</TitleText>
