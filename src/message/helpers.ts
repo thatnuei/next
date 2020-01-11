@@ -14,3 +14,11 @@ export function createMessage(
     type,
   }
 }
+
+export function addMessage(
+  roomLike: { messages: Message[] },
+  message: Message,
+) {
+  const length = roomLike.messages.push(message)
+  roomLike.messages.splice(0, 300 - length)
+}

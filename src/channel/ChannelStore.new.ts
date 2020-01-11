@@ -1,7 +1,7 @@
 import { observable } from "mobx"
 import { createCommandHandler } from "../chat/helpers"
 import { SocketStore } from "../chat/SocketStore.new"
-import { createMessage } from "../message/helpers"
+import { addMessage, createMessage } from "../message/helpers"
 import { FactoryMap } from "../state/classes/FactoryMap.new"
 import { createChannel } from "./helpers"
 import { Channel } from "./types"
@@ -70,13 +70,13 @@ export class ChannelStore {
 
     MSG: ({ channel: id, character, message }) => {
       this.channels.update(id, (channel) => {
-        channel.messages.push(createMessage(character, message, "chat"))
+        addMessage(channel, createMessage(character, message, "chat"))
       })
     },
 
     LRP: ({ channel: id, character, message }) => {
       this.channels.update(id, (channel) => {
-        channel.messages.push(createMessage(character, message, "lfrp"))
+        addMessage(channel, createMessage(character, message, "lfrp"))
       })
     },
 
@@ -84,7 +84,7 @@ export class ChannelStore {
       if ("channel" in params) {
         const { channel: id, message } = params
         this.channels.update(id, (channel) => {
-          channel.messages.push(createMessage(undefined, message, "system"))
+          addMessage(channel, createMessage(undefined, message, "system"))
         })
       }
     },
