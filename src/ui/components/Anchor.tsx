@@ -4,7 +4,7 @@ const Anchor = styled.a`
   display: inline-block;
   cursor: pointer;
 
-  /* hover reveal reansition */
+  /* hover reveal transition */
   opacity: 0.8;
   transition: 0.2s opacity;
   :hover {
