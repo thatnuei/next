@@ -8,7 +8,7 @@ import MessageListItem from "./MessageListItem"
 import { Message } from "./types"
 
 type Props = {
-  messages: Message[]
+  messages: readonly Message[]
   characterStore: CharacterStore
 }
 

@@ -1,19 +1,21 @@
 import { observable } from "mobx"
 import { createCommandHandler } from "../chat/helpers"
 import { SocketStore } from "../chat/SocketStore.new"
-import { addMessage, createMessage } from "../message/helpers"
 import { FactoryMap } from "../state/classes/FactoryMap.new"
-import { createChannel } from "./helpers"
-import { Channel } from "./types"
+import { ChannelModel } from "./ChannelModel"
 
 export class ChannelStore {
-  @observable
-  private readonly channels = new FactoryMap(createChannel)
-
   constructor(
     private readonly socket: SocketStore,
     private readonly identity: string,
   ) {}
+
+  @observable
+  private readonly channels = new FactoryMap((id) => new ChannelModel(id))
+
+  get joinedChannels(): ChannelModel[] {
+    return this.channels.values.filter((it) => it.users.has(this.identity))
+  }
 
   get = (id: string) => this.channels.get(id)
 
@@ -23,10 +25,6 @@ export class ChannelStore {
 
   leave = (id: string) => {
     this.socket.sendCommand("LCH", { channel: id })
-  }
-
-  get joinedChannels(): Channel[] {
-    return this.channels.values.filter((it) => it.users.has(this.identity))
   }
 
   handleSocketCommand = createCommandHandler({
@@ -70,13 +68,13 @@ export class ChannelStore {
 
     MSG: ({ channel: id, character, message }) => {
       this.channels.update(id, (channel) => {
-        addMessage(channel, createMessage(character, message, "chat"))
+        channel.room.addMessage(character, message, "chat")
       })
     },
 
     LRP: ({ channel: id, character, message }) => {
       this.channels.update(id, (channel) => {
-        addMessage(channel, createMessage(character, message, "lfrp"))
+        channel.room.addMessage(character, message, "lfrp")
       })
     },
 
@@ -84,7 +82,7 @@ export class ChannelStore {
       if ("channel" in params) {
         const { channel: id, message } = params
         this.channels.update(id, (channel) => {
-          addMessage(channel, createMessage(undefined, message, "system"))
+          channel.room.addMessage(undefined, message, "system")
         })
       }
     },

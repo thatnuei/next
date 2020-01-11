@@ -13,10 +13,10 @@ import { styled } from "../ui/styled"
 import ChannelDescription from "./ChannelDescription"
 import ChannelHeader from "./ChannelHeader"
 import ChannelMenu from "./ChannelMenu"
-import { Channel } from "./types"
+import { ChannelModel } from "./ChannelModel"
 
 type Props = {
-  channel: Channel
+  channel: ChannelModel
   identity: string
   characterStore: CharacterStore
 }
@@ -38,7 +38,7 @@ function ChannelRoom({ channel, identity, characterStore }: Props) {
   const body = (
     <BodyContainer>
       <MessageList
-        messages={channel.messages}
+        messages={channel.room.messages}
         characterStore={characterStore}
       />
       <Modal
@@ -56,9 +56,9 @@ function ChannelRoom({ channel, identity, characterStore }: Props) {
     <Observer>
       {() => (
         <Chatbox
-          value={channel.input}
+          value={channel.room.input}
           placeholder={`Chatting as ${identity}...`}
-          onValueChange={(value) => (channel.input = value)}
+          onValueChange={channel.room.setInput}
           onSubmit={(text) => console.log(`submitted: ${text}`)}
         />
       )}
