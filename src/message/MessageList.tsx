@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, { useCallback, useLayoutEffect, useState } from "react"
-import { CharacterStore } from "../character/CharacterStore.new"
+import { CharacterStore } from "../character/CharacterStore"
 import { fillArea, scrollVertical } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor } from "../ui/theme"

@@ -1,6 +1,6 @@
 import { uniqBy } from "lodash"
 import { computed, observable } from "mobx"
-import { ChannelStore } from "../channel/ChannelStore.new"
+import { ChannelStore } from "../channel/ChannelStore"
 import { reject } from "../common/helpers/reject"
 import { createCommandHandler } from "./helpers"
 

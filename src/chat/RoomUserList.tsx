@@ -1,5 +1,5 @@
 import React from "react"
-import CharacterName from "../character/CharacterName.new"
+import CharacterName from "../character/CharacterName"
 import { Character } from "../character/types"
 import VirtualizedList from "../ui/components/VirtualizedList"
 import { fillArea, flexColumn, flexGrow, scrollVertical } from "../ui/helpers"

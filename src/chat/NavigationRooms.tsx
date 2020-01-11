@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { ChannelStore } from "../channel/ChannelStore.new"
+import { ChannelStore } from "../channel/ChannelStore"
 import Avatar from "../character/Avatar"
-import { PrivateChatStore } from "../private-chat/PrivateChatStore.new"
+import { PrivateChatStore } from "../private-chat/PrivateChatStore"
 import Icon from "../ui/components/Icon"
-import { ChatNavigationStore } from "./ChatNavigationStore.new"
+import { ChatNavigationStore } from "./ChatNavigationStore"
 import RoomTab from "./RoomTab"
 
 type Props = {

@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import Avatar from "../character/Avatar"
-import CharacterNameNew from "../character/CharacterName.new"
+import CharacterNameNew from "../character/CharacterName"
 import CharacterStatus from "../character/CharacterStatus"
 import { Character } from "../character/types"
 import HeaderMenuButton from "../chat/HeaderMenuButton"

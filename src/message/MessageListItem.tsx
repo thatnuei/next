@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import BBC from "../bbc/BBC"
-import CharacterName from "../character/CharacterName.new"
+import CharacterName from "../character/CharacterName"
 import { Character } from "../character/types"
 import { semiBlack } from "../ui/colors"
 import { Message, MessageType } from "./types"

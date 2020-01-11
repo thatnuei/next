@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { CharacterStore } from "../character/CharacterStore.new"
+import { CharacterStore } from "../character/CharacterStore"
 import Chatbox from "../chat/Chatbox"
 import RoomLayout from "../chat/RoomLayout"
 import MessageList from "../message/MessageList"
