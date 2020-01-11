@@ -1,4 +1,4 @@
-import { ListenerGroup } from "../state/classes/ListenerGroup"
+import { Channel } from "../state/classes/Channel"
 import { chatServerUrl } from "./constants"
 import { parseCommand } from "./helpers"
 import { ClientCommandMap, ServerCommand } from "./types"
@@ -11,9 +11,9 @@ type ConnectOptions = {
 
 export class SocketStore {
   private socket?: WebSocket
-  readonly commandListeners = new ListenerGroup<[ServerCommand]>()
-  readonly closeListeners = new ListenerGroup()
-  readonly errorListeners = new ListenerGroup()
+  readonly commandListeners = new Channel<(command: ServerCommand) => void>()
+  readonly closeListeners = new Channel()
+  readonly errorListeners = new Channel()
 
   connect = (options: ConnectOptions) => {
     const socket = (this.socket = new WebSocket(chatServerUrl))
@@ -31,12 +31,12 @@ export class SocketStore {
     })
 
     socket.addEventListener("close", () => {
-      this.closeListeners.call()
+      this.closeListeners.send()
       removeListeners()
     })
 
     socket.addEventListener("error", () => {
-      this.errorListeners.call()
+      this.errorListeners.send()
       removeListeners()
     })
 
@@ -47,7 +47,7 @@ export class SocketStore {
         this.sendCommand("PIN", undefined)
       }
 
-      this.commandListeners.call(command)
+      this.commandListeners.send(command)
     })
 
     const removeListeners = () => {

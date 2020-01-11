@@ -5,7 +5,7 @@ import { ChannelStore } from "../channel/ChannelStore.new"
 import { CharacterStore } from "../character/CharacterStore.new"
 import PrivateChatRoom from "../private-chat/PrivateChatRoom"
 import { PrivateChatStore } from "../private-chat/PrivateChatStore.new"
-import { useListener } from "../state/hooks/useListener"
+import { useChannel } from "../state/hooks/useChannel"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
 import { ChatNavigationStore } from "./ChatNavigationStore.new"
@@ -36,38 +36,35 @@ function Chat({
   useEffect(() => {
     return socketStore.connect({ account, ticket, identity })
   }, [socketStore, account, identity, ticket])
-  useListener(socketStore.closeListeners, onClose)
-  useListener(socketStore.errorListeners, onConnectionError)
+  useChannel(socketStore.closeListeners, onClose)
+  useChannel(socketStore.errorListeners, onConnectionError)
 
   // chat
   const chatStore = useMemo(() => new ChatStore(), [])
-  useListener(socketStore.commandListeners, chatStore.handleSocketCommand)
+  useChannel(socketStore.commandListeners, chatStore.handleSocketCommand)
 
   // character
   const characterStore = useMemo(() => new CharacterStore(), [])
   const identityCharacter = characterStore.get(identity)
-  useListener(socketStore.commandListeners, characterStore.handleSocketCommand)
+  useChannel(socketStore.commandListeners, characterStore.handleSocketCommand)
 
   // channel
   const channelStore = useMemo(() => new ChannelStore(socketStore, identity), [
     identity,
     socketStore,
   ])
-  useListener(socketStore.commandListeners, channelStore.handleSocketCommand)
+  useChannel(socketStore.commandListeners, channelStore.handleSocketCommand)
 
   // private chat
   const privateChatStore = useMemo(() => new PrivateChatStore(), [])
-  useListener(
-    socketStore.commandListeners,
-    privateChatStore.handleSocketCommand,
-  )
+  useChannel(socketStore.commandListeners, privateChatStore.handleSocketCommand)
 
   // navigation
   const navigationStore = useMemo(
     () => new ChatNavigationStore(identity, channelStore),
     [identity, channelStore],
   )
-  useListener(socketStore.commandListeners, navigationStore.handleSocketCommand)
+  useChannel(socketStore.commandListeners, navigationStore.handleSocketCommand)
 
   const renderRoom = () => {
     const room = navigationStore.currentRoom
