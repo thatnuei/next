@@ -1,4 +1,4 @@
-import Avatar from "../character/components/Avatar"
+import Avatar from "../character/Avatar"
 import Icon from "../ui/components/Icon"
 import { styled } from "../ui/styled"
 

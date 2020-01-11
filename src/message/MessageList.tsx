@@ -5,10 +5,10 @@ import { fillArea, scrollVertical } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor } from "../ui/theme"
 import MessageListItem from "./MessageListItem"
-import MessageModel from "./MessageModel"
+import { Message } from "./types"
 
 type Props = {
-  messages: MessageModel[]
+  messages: Message[]
   characterStore: CharacterStore
 }
 

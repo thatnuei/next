@@ -1,5 +1,6 @@
 import React from "react"
-import HeaderMenuButton from "../chat/components/HeaderMenuButton"
+import { roomSidebarBreakpoint } from "../chat/constants"
+import HeaderMenuButton from "../chat/HeaderMenuButton"
 import useMedia from "../dom/hooks/useMedia"
 import FadedButton from "../ui/components/FadedButton"
 import Icon from "../ui/components/Icon"
@@ -11,7 +12,6 @@ import {
 } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
-import { userListBreakpoint } from "./constants"
 
 type Props = {
   title: string
@@ -20,7 +20,13 @@ type Props = {
 }
 
 function ChannelHeader(props: Props) {
-  const isChannelMenuHidden = useMedia(`(max-width: ${userListBreakpoint}px)`)
+  // TODO: the parent component should be the one to determine this,
+  // not this component
+  // we should make onShowChannelMenu nullable,
+  // then show the menu button if we receive it
+  const isChannelMenuHidden = useMedia(
+    `(max-width: ${roomSidebarBreakpoint}px)`,
+  )
 
   return (
     <Container>

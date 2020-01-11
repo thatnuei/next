@@ -1,6 +1,5 @@
 import * as bbc from "bbc.js"
 import React from "react"
-import CharacterName from "../character/components/CharacterName"
 import ExternalLink from "../dom/components/ExternalLink"
 import { getIconUrl, getProfileUrl } from "../flist/helpers"
 import Anchor from "../ui/components/Anchor"
@@ -66,7 +65,9 @@ export default function BBCTagNode({ node }: { node: bbc.TagNode }) {
     }
 
     case "user": {
-      return <CharacterName name={getNodeText(node)} />
+      const name = getNodeText(node)
+      return name
+      // return <CharacterName name={name} />
     }
 
     case "eicon": {
