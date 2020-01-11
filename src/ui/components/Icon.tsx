@@ -1,6 +1,6 @@
+import * as mdi from "@mdi/js"
 import { Icon as MdiIcon } from "@mdi/react"
 import React from "react"
-import * as icons from "../icons"
 import { styled } from "../styled"
 import { getIconSize } from "../theme"
 
@@ -13,7 +13,7 @@ export type IconProps = React.ComponentPropsWithoutRef<"div"> & {
   faded?: boolean
 }
 
-const Icon = ({ icon, color, size = 1, faded, ...divProps }: IconProps) => {
+function Icon({ icon, color, size = 1, faded, ...divProps }: IconProps) {
   const path = icons[icon]
   const realSize = getIconSize(size)
   return (
@@ -32,3 +32,36 @@ export const IconContainer = styled.div`
     fill: currentColor;
   }
 `
+
+const icons = {
+  user: mdi.mdiAccount,
+  users: mdi.mdiAccountMultiple,
+  updateStatus: mdi.mdiAccountSettings,
+  warning: mdi.mdiAlert,
+  report: mdi.mdiAlertCircle,
+  bookmark: mdi.mdiBookmark,
+  checkOutline: mdi.mdiCheckboxBlankOutline,
+  checkFilled: mdi.mdiCheckboxMarkedOutline,
+  close: mdi.mdiClose,
+  console: mdi.mdiCodeTags,
+  message: mdi.mdiComment,
+  more: mdi.mdiDotsVertical,
+  public: mdi.mdiEarth,
+  envelope: mdi.mdiEmail,
+  channels: mdi.mdiForum,
+  heart: mdi.mdiHeart,
+  about: mdi.mdiInformation,
+  private: mdi.mdiKey,
+  link: mdi.mdiLinkVariant,
+  lock: mdi.mdiLock,
+  lockOpen: mdi.mdiLockOpen,
+  logout: mdi.mdiLogout,
+  menu: mdi.mdiMenu,
+  ignore: mdi.mdiMinusCircle,
+  pencil: mdi.mdiPencil,
+  refresh: mdi.mdiRefresh,
+  settings: mdi.mdiSettings,
+  sortAlphabetical: mdi.mdiSortAlphabetical,
+  sortNumeric: mdi.mdiSortNumeric,
+  pencilSquare: mdi.mdiSquareEditOutline,
+}
