@@ -17,7 +17,7 @@ function TypingStatusIndicator(props: Props) {
     <Container visible={props.status !== "clear"}>
       <span>{statusText}</span>
       <AnimatedIcon
-        icon="pencil"
+        name="pencil"
         size={0.8}
         shouldAnimate={props.status === "typing"}
       />

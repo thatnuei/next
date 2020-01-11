@@ -12,7 +12,7 @@ function HeaderMenuButton(props: Props) {
   const isLargeScreen = useMedia(`(min-width: ${chatNavigationBreakpoint}px)`)
   return isLargeScreen ? null : (
     <StyledFadedButton {...props}>
-      <Icon icon="menu" />
+      <Icon name="menu" />
     </StyledFadedButton>
   )
 }

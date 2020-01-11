@@ -39,7 +39,7 @@ export default function BBCTagNode({ node }: { node: bbc.TagNode }) {
     case "url":
       return (
         <Anchor href={node.value} target="_blank" title={getDomain(node.value)}>
-          <LinkIcon icon="link" />
+          <LinkIcon name="link" />
           {childrenTree}
         </Anchor>
       )

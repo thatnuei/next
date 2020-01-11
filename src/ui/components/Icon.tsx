@@ -7,14 +7,14 @@ import { getIconSize } from "../theme"
 export type IconName = keyof typeof icons
 
 export type IconProps = React.ComponentPropsWithoutRef<"div"> & {
-  icon: IconName // TODO: rename to "name"
+  name: IconName // TODO: rename to "name"
   color?: string
   size?: number
   faded?: boolean
 }
 
-function Icon({ icon, color, size = 1, faded, ...divProps }: IconProps) {
-  const path = icons[icon]
+function Icon({ name, color, size = 1, faded, ...divProps }: IconProps) {
+  const path = icons[name]
   const realSize = getIconSize(size)
   return (
     <IconContainer {...divProps} style={{ opacity: faded ? 0.5 : 1 }}>

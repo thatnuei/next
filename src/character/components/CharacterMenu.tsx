@@ -31,27 +31,27 @@ const CharacterMenu = (props: CharacterMenuProps) => {
 
       <OptionsContainer>
         <OptionLink href={profileUrl}>
-          <Icon icon="user" />
+          <Icon name="user" />
           <span>Profile</span>
         </OptionLink>
 
         <OptionButton onClick={handleMessage}>
-          <Icon icon="message" />
+          <Icon name="message" />
           <span>Message</span>
         </OptionButton>
 
         <OptionButton>
-          <Icon icon="bookmark" />
+          <Icon name="bookmark" />
           <span>Bookmark</span>
         </OptionButton>
 
         <OptionButton>
-          <Icon icon="ignore" />
+          <Icon name="ignore" />
           <span>Ignore</span>
         </OptionButton>
 
         <OptionButton>
-          <Icon icon="report" />
+          <Icon name="report" />
           <span>Report</span>
         </OptionButton>
       </OptionsContainer>

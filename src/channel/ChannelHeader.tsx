@@ -30,13 +30,13 @@ function ChannelHeader(props: Props) {
         <TitleText>{props.title}</TitleText>
         <FadedButton onClick={props.onShowDescription}>
           <span>Description</span>
-          <Icon icon="about" size={0.8} />
+          <Icon name="about" size={0.8} />
         </FadedButton>
       </MiddleSection>
 
       {isChannelMenuHidden && (
         <FadedButton onClick={props.onShowChannelMenu}>
-          <Icon icon="more" />
+          <Icon name="more" />
         </FadedButton>
       )}
     </Container>

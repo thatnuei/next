@@ -38,7 +38,7 @@ function Modal({
 }: Props) {
   const closeButton = (
     <FadedButton onClick={props.onClose}>
-      <Icon icon="close" />
+      <Icon name="close" />
     </FadedButton>
   )
 

@@ -28,7 +28,7 @@ function ChannelBrowserListItem({ entry }: Props) {
   const icon = isLoading ? (
     <LoadingIcon />
   ) : (
-    <Icon icon={entry.type === "public" ? "public" : "lock"} />
+    <Icon name={entry.type === "public" ? "public" : "lock"} />
   )
 
   return (

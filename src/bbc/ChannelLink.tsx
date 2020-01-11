@@ -12,7 +12,7 @@ function ChannelLink(props: { id: string; title: string; icon: IconName }) {
 
   return (
     <>
-      <LinkIcon icon={props.icon} />
+      <LinkIcon name={props.icon} />
       <Anchor onClick={handleClick}>{props.title}</Anchor>
     </>
   )

@@ -28,7 +28,7 @@ function ChannelBrowser() {
   const refreshIcon = channelBrowserStore.isRefreshing ? (
     <LoadingIcon />
   ) : (
-    <Icon icon="refresh" />
+    <Icon name="refresh" />
   )
 
   return (
@@ -51,7 +51,7 @@ function ChannelBrowser() {
           }
         />
         <Button onClick={channelBrowserStore.cycleSortMode}>
-          <Icon icon={sortButtonIcon} />
+          <Icon name={sortButtonIcon} />
         </Button>
         <Button
           onClick={channelBrowserStore.refresh}

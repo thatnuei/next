@@ -37,7 +37,7 @@ export default function RoomTab(props: Props) {
 
     return (
       <CloseButton onClick={props.onClose}>
-        <Icon icon="close" size={0.7} />
+        <Icon name="close" size={0.7} />
       </CloseButton>
     )
   })()

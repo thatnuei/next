@@ -27,7 +27,7 @@ function NavigationRooms(props: Props) {
         return (
           <RoomTab
             title={channel.name}
-            icon={<Icon icon="public" />}
+            icon={<Icon name="public" />}
             isUnread={channel.unread}
             onClose={() => props.channelStore.leave(room.channelId)}
             {...commonProps}

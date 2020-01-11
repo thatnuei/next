@@ -13,7 +13,7 @@ function NavigationAction({ title, icon, onClick }: Props) {
   const style = { padding: spacing.small }
   return (
     <FadedButton title={title} onClick={onClick} css={style}>
-      <Icon icon={icon} />
+      <Icon name={icon} />
     </FadedButton>
   )
 }
