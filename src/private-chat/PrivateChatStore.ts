@@ -1,17 +1,16 @@
 import { createCommandHandler } from "../chat/helpers"
-import { createMessage } from "../message/helpers"
 import { FactoryMap } from "../state/classes/FactoryMap.new"
-import { createPrivateChat } from "./helpers"
+import { PrivateChatModel } from "./PrivateChatModel"
 
 export class PrivateChatStore {
-  private readonly chats = new FactoryMap(createPrivateChat)
+  private readonly chats = new FactoryMap((name) => new PrivateChatModel(name))
 
   get = (partnerName: string) => this.chats.get(partnerName)
 
   handleSocketCommand = createCommandHandler({
     PRI: ({ character, message }) => {
       this.chats.update(character, (chat) => {
-        chat.messages.push(createMessage(character, message, "chat"))
+        chat.room.addMessage(character, message, "chat")
       })
     },
 
@@ -19,7 +18,7 @@ export class PrivateChatStore {
       if ("recipient" in params) {
         const { character, message } = params
         this.chats.update(character, (chat) => {
-          chat.messages.push(createMessage(character, message, "chat"))
+          chat.room.addMessage(character, message, "chat")
         })
       }
     },

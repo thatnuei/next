@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import { TypingStatus } from "./types"
+import { TypingStatus } from "../private-chat/types"
 
 export default function useTypingStatus(
   input: string,

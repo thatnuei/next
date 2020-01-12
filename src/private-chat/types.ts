@@ -1,6 +1,3 @@
-import { RoomBase, TypingStatus } from "../chat/types"
+import * as fchat from "fchat"
 
-export type PrivateChat = RoomBase & {
-  partnerName: string
-  partnerTypingStatus: TypingStatus
-}
+export type TypingStatus = fchat.Character.TypingStatus

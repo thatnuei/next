@@ -1,9 +1,9 @@
 import React from "react"
-import { TypingStatus } from "../chat/types"
 import Icon from "../ui/components/Icon"
 import { flexRow, spacedChildrenHorizontal } from "../ui/helpers"
 import { keyframes, styled } from "../ui/styled"
 import { easing, spacing } from "../ui/theme"
+import { TypingStatus } from "./types"
 
 type Props = { name: string; status: TypingStatus }
 

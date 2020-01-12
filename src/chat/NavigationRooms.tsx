@@ -41,7 +41,7 @@ function NavigationRooms(props: Props) {
           <RoomTab
             title={chat.partnerName}
             icon={<Avatar name={chat.partnerName} size={20} />}
-            isUnread={chat.unread}
+            isUnread={chat.room.unread}
             onClose={() => props.navigation.closePrivateChat(room.partnerName)}
             {...commonProps}
           />

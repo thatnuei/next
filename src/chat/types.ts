@@ -14,8 +14,6 @@ export type Friendship = {
   them: string
 }
 
-export type TypingStatus = fchat.Character.TypingStatus
-
 export type RoomBase = {
   messages: Message[]
   unread: boolean

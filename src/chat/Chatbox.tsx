@@ -1,10 +1,11 @@
 import React from "react"
+import { TypingStatus } from "../private-chat/types"
 import Button from "../ui/components/Button"
 import TextArea from "../ui/components/TextArea"
 import { flexRow, spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
-import { TypingStatus } from "./types"
+// import { TypingStatus } from "./types"
 import useTypingStatus from "./useTypingStatus"
 
 type Props = {
