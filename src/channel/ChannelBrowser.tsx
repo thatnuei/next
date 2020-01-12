@@ -14,6 +14,7 @@ import {
 } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
+// @ts-ignore
 import useRootStore from "../useRootStore"
 import ChannelBrowserListItem from "./ChannelBrowserListItem"
 
@@ -37,6 +38,7 @@ function ChannelBrowser() {
         <VirtualizedList
           items={channelBrowserStore.displayedEntries}
           itemHeight={40}
+          // @ts-ignore
           getItemKey={(item) => item.id}
           renderItem={(entry) => <ChannelBrowserListItem entry={entry} />}
         />

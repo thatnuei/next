@@ -5,7 +5,9 @@ import LoadingIcon from "../ui/components/LoadingIcon"
 import { fillArea, spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
+// @ts-ignore
 import useRootStore from "../useRootStore"
+// @ts-ignore
 import { ChannelBrowserEntry } from "./ChannelBrowserStore"
 
 type Props = {

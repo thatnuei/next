@@ -1,4 +1,5 @@
 import React from "react"
+// @ts-ignore
 import useRootStore from "../../useRootStore"
 import ExternalLink from "../dom/components/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"

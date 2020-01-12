@@ -17,6 +17,7 @@ import {
 } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
+// @ts-ignore
 import useRootStore from "../useRootStore"
 
 type SelectableStatus = Exclude<CharacterStatus, "idle" | "crown" | "offline">
