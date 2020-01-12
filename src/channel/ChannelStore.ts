@@ -1,7 +1,7 @@
 import { observable } from "mobx"
 import { createCommandHandler } from "../chat/helpers"
-import { SocketStore } from "../chat/SocketStore.new"
-import { FactoryMap } from "../state/classes/FactoryMap.new"
+import { SocketStore } from "../chat/SocketStore"
+import { FactoryMap } from "../state/classes/FactoryMap"
 import { ChannelModel } from "./ChannelModel"
 
 export class ChannelStore {

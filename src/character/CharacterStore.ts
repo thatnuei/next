@@ -1,5 +1,5 @@
 import { createCommandHandler } from "../chat/helpers"
-import { FactoryMap } from "../state/classes/FactoryMap.new"
+import { FactoryMap } from "../state/classes/FactoryMap"
 import { createCharacter } from "./helpers"
 
 export class CharacterStore {

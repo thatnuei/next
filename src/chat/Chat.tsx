@@ -14,7 +14,7 @@ import { chatNavigationBreakpoint } from "./constants"
 import Navigation from "./Navigation"
 import NavigationRooms from "./NavigationRooms"
 import NoRoomHeader from "./NoRoomHeader"
-import { SocketStore } from "./SocketStore.new"
+import { SocketStore } from "./SocketStore"
 
 type Props = {
   account: string
