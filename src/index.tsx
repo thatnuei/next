@@ -17,5 +17,5 @@ function renderRoot() {
 renderRoot()
 
 if (module.hot) {
-  module.hot.accept("./app/components/Root", renderRoot)
+  module.hot.accept("./app/Root", renderRoot)
 }
