@@ -6,10 +6,5 @@ export class PrivateChatModel {
   constructor(public readonly partnerName: string) {}
 
   room = new RoomModel()
-
   @observable partnerTypingStatus: TypingStatus = "clear"
-
-  setTypingStatus = (status: TypingStatus) => {
-    this.partnerTypingStatus = status
-  }
 }
