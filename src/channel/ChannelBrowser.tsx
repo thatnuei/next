@@ -14,12 +14,16 @@ import {
 } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
-import useRootStore from "../useRootStore"
 import ChannelBrowserListItem from "./ChannelBrowserListItem"
+import { ChannelBrowserStore } from "./ChannelBrowserStore"
+import { ChannelStore } from "./ChannelStore"
 
-function ChannelBrowser() {
-  const { channelBrowserStore } = useRootStore()
+type Props = {
+  channelBrowserStore: ChannelBrowserStore
+  channelStore: ChannelStore
+}
 
+function ChannelBrowser({ channelBrowserStore, channelStore }: Props) {
   const sortButtonIcon =
     channelBrowserStore.sortMode === "title"
       ? "sortAlphabetical"
@@ -38,7 +42,9 @@ function ChannelBrowser() {
           items={channelBrowserStore.displayedEntries}
           itemHeight={40}
           getItemKey={(item) => item.id}
-          renderItem={(entry) => <ChannelBrowserListItem entry={entry} />}
+          renderItem={(entry) => (
+            <ChannelBrowserListItem entry={entry} channelStore={channelStore} />
+          )}
         />
       </ChannelListContainer>
 

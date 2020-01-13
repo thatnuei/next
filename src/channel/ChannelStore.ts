@@ -13,10 +13,6 @@ export class ChannelStore {
   @observable
   private readonly channels = new FactoryMap((id) => new ChannelModel(id))
 
-  get joinedChannels(): ChannelModel[] {
-    return this.channels.values.filter((it) => it.users.has(this.identity))
-  }
-
   get = (id: string) => this.channels.get(id)
 
   join = (id: string) => {
@@ -26,6 +22,12 @@ export class ChannelStore {
   leave = (id: string) => {
     this.socket.sendCommand("LCH", { channel: id })
   }
+
+  get joinedChannels(): ChannelModel[] {
+    return this.channels.values.filter((it) => it.users.has(this.identity))
+  }
+
+  isJoined = (channelId: string) => this.get(channelId).users.has(this.identity)
 
   handleSocketCommand = createCommandHandler({
     ICH: ({ channel: id, mode, users }) => {
