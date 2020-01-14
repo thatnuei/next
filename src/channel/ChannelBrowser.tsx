@@ -52,9 +52,7 @@ function ChannelBrowser({ channelBrowserStore, channelStore }: Props) {
         <TextInput
           placeholder="Search..."
           value={channelBrowserStore.searchQuery}
-          onChange={(event) =>
-            channelBrowserStore.setSearchQuery(event.target.value)
-          }
+          onTextChange={channelBrowserStore.setSearchQuery}
         />
         <Button onClick={channelBrowserStore.cycleSortMode}>
           <Icon name={sortButtonIcon} />
