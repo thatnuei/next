@@ -28,7 +28,7 @@
     "fuzzysearch": "^1.0.3",
     "idb-keyval": "^3.2.0",
     "lodash": "^4.17.15",
-    "mobx": "^5.15.1",
+    "mobx": "^5.15.2",
     "mobx-react-lite": "^1.5.2",
     "npm-run-all": "^4.1.5",
     "polished": "^3.4.2",
@@ -40,7 +40,7 @@
     "react-window": "^1.8.5",
     "reakit": "^1.0.0-beta.4",
     "resize-observer-polyfill": "^1.5.1",
-    "styled-components": "^5.0.0-rc.2",
+    "styled-components": "^5.0.0",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
@@ -61,7 +61,7 @@
     "@types/webpack-env": "^1.15.0",
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-styled-components": "^1.10.6",
-    "electron": "^7.1.8",
+    "electron": "^7.1.9",
     "prettier": "~1.19.1",
     "typescript": "~3.7.4",
     "typescript-styled-plugin": "^0.15.0",
