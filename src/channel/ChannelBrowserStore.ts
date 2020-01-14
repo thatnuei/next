@@ -18,10 +18,10 @@ export class ChannelBrowserStore {
   constructor(private readonly socket: SocketStore) {}
 
   @observable.ref
-  publicEntries?: readonly ChannelBrowserEntry[]
+  publicEntries: readonly ChannelBrowserEntry[] = []
 
   @observable.ref
-  privateEntries?: readonly ChannelBrowserEntry[]
+  privateEntries: readonly ChannelBrowserEntry[] = []
 
   @observable
   sortMode: SortMode = "title"
@@ -29,10 +29,8 @@ export class ChannelBrowserStore {
   @observable
   searchQuery = ""
 
-  @computed
-  get isRefreshing() {
-    return this.publicEntries == null || this.privateEntries == null
-  }
+  @observable
+  isRefreshing = false
 
   @computed
   get displayedEntries() {
@@ -56,9 +54,15 @@ export class ChannelBrowserStore {
   }
 
   refresh = () => {
+    if (this.isRefreshing) return
+
+    this.isRefreshing = true
+    setTimeout(() => {
+      this.isRefreshing = false
+    }, 7000)
+
     this.socket.sendCommand("CHA", undefined)
     this.socket.sendCommand("ORS", undefined)
-    this.publicEntries = this.privateEntries = undefined
   }
 
   cycleSortMode = () => {
