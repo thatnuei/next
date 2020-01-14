@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { useEffect, useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import ChannelBrowser from "../channel/ChannelBrowser"
 import { ChannelBrowserStore } from "../channel/ChannelBrowserStore"
 import ChannelRoom from "../channel/ChannelRoom"
@@ -8,7 +8,6 @@ import { CharacterStore } from "../character/CharacterStore"
 import PrivateChatRoom from "../private-chat/PrivateChatRoom"
 import { PrivateChatStore } from "../private-chat/PrivateChatStore"
 import { useChannel } from "../state/hooks/useChannel"
-import { useToggle } from "../state/hooks/useToggle"
 import Modal from "../ui/components/Modal"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
@@ -28,6 +27,8 @@ type Props = {
   onClose: () => void
   onConnectionError: () => void
 }
+
+type ChatOverlay = { name: "channelBrowser" }
 
 function Chat({
   account,
@@ -80,12 +81,16 @@ function Chat({
     socketStore.commandListeners,
     channelBrowserStore.handleSocketCommand,
   )
-  const [channelBrowserVisible, channelBrowserActions] = useToggle()
+
+  // overlay state
+  const [overlay, setOverlay] = useState<ChatOverlay>()
 
   const showChannelBrowser = () => {
-    channelBrowserActions.enable()
+    setOverlay({ name: "channelBrowser" })
     channelBrowserStore.refresh()
   }
+
+  const clearOverlay = () => setOverlay(undefined)
 
   const navigationActions = (
     <>
@@ -94,11 +99,7 @@ function Chat({
         icon="channels"
         onClick={showChannelBrowser}
       />
-      <NavigationAction
-        title="Update Status"
-        icon="updateStatus"
-        // onClick={root.characterStore.showUpdateStatusScreen}
-      />
+      <NavigationAction title="Update Status" icon="updateStatus" />
       <NavigationAction title="Who's Online" icon="users" />
       <NavigationAction title="About" icon="about" />
       <Spacer />
@@ -149,8 +150,8 @@ function Chat({
 
       <Modal
         title="Channel Browser"
-        visible={channelBrowserVisible}
-        onClose={channelBrowserActions.disable}
+        visible={overlay?.name === "channelBrowser"}
+        onClose={clearOverlay}
         panelWidth={500}
         panelHeight={700}
       >
