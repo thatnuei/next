@@ -1,9 +1,9 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
+import TextInput from "../dom/components/TextInput"
 import Button from "../ui/components/Button"
 import Icon from "../ui/components/Icon"
 import LoadingIcon from "../ui/components/LoadingIcon"
-import TextInput from "../ui/components/TextInput"
 import VirtualizedList from "../ui/components/VirtualizedList"
 import {
   fillArea,

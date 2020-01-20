@@ -1,6 +1,4 @@
 import React, { ComponentPropsWithoutRef } from "react"
-import inputBase, { inputFocus } from "../inputBase"
-import { styled } from "../styled"
 
 type Props = ComponentPropsWithoutRef<"input"> & {
   onTextChange?: (text: string) => void
@@ -8,7 +6,7 @@ type Props = ComponentPropsWithoutRef<"input"> & {
 
 export default function TextInput({ onChange, onTextChange, ...props }: Props) {
   return (
-    <StyledInput
+    <input
       {...props}
       onChange={(event) => {
         onChange?.(event)
@@ -17,8 +15,3 @@ export default function TextInput({ onChange, onTextChange, ...props }: Props) {
     />
   )
 }
-
-const StyledInput = styled.input`
-  ${inputBase};
-  ${inputFocus};
-`
