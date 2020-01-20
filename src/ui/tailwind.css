@@ -3,10 +3,32 @@
 
 :root {
   font-family: Roboto, sans-serif;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .transition-normal {
   transition: 0.2s;
+}
+
+.button-solid {
+  @apply px-4 py-2 bg-semiblack-25;
+}
+
+.button-solid:hover {
+  @apply bg-semiblack-50;
+}
+
+.input {
+  @apply px-4 py-2 bg-semiblack-25 transition-normal block w-full;
+}
+
+.input:hover {
+  @apply bg-semiblack-50;
+}
+
+.input:focus {
+  @apply bg-semiblack-50 outline-none;
 }
 
 .anchor {
@@ -15,6 +37,10 @@
 
 .anchor:hover {
   @apply opacity-100;
+}
+
+.raised-panel {
+  @apply bg-midnight-700 shadow;
 }
 
 @tailwind utilities;
