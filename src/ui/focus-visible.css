@@ -1,0 +1,5 @@
+/* purgecss ignore */
+.js-focus-visible :focus:not(.focus-visible),
+.js-focus-visible :focus:not([data-focus-visible-added]) {
+  outline: none;
+}
