@@ -16,7 +16,6 @@ module.exports = ({ env }) => {
   }
 
   if (env === "production") {
-    console.info("✨ Using production config")
     config.style.postcss.plugins.push(
       autoprefixer(),
       purgecss({
