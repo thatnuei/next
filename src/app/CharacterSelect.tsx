@@ -1,6 +1,5 @@
 import React from "react"
 import Avatar from "../character/Avatar"
-import Anchor from "../ui/components/Anchor"
 import Button from "../ui/components/Button"
 import FullscreenRaisedPanel from "../ui/components/FullscreenRaisedPanel"
 import RaisedPanelHeader from "../ui/components/RaisedPanelHeader"
@@ -49,9 +48,13 @@ export default function CharacterSelect(props: Props) {
 
             <Button type="submit">Enter Chat</Button>
 
-            <Anchor as="button" type="button" onClick={props.onReturnToLogin}>
+            <button
+              className="anchor"
+              type="button"
+              onClick={props.onReturnToLogin}
+            >
               Return to Login
-            </Anchor>
+            </button>
           </FieldsContainer>
         </FieldSet>
       </form>

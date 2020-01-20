@@ -2,7 +2,6 @@ import * as bbc from "bbc.js"
 import React from "react"
 import ExternalLink from "../dom/components/ExternalLink"
 import { getIconUrl, getProfileUrl } from "../flist/helpers"
-import Anchor from "../ui/components/Anchor"
 import BBCTree from "./BBCTree"
 import ChannelLink from "./ChannelLink"
 import {
@@ -37,10 +36,14 @@ export default function BBCTagNode({ node }: { node: bbc.TagNode }) {
 
     case "url":
       return (
-        <Anchor href={node.value} target="_blank" title={getDomain(node.value)}>
+        <ExternalLink
+          className="anchor"
+          href={node.value}
+          title={getDomain(node.value)}
+        >
           <LinkIcon name="link" />
           {childrenTree}
-        </Anchor>
+        </ExternalLink>
       )
 
     case "channel": {

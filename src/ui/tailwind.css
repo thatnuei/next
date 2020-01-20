@@ -1,2 +1,16 @@
 @tailwind base;
+@tailwind components;
+
+.transition-normal {
+  transition: 0.2s;
+}
+
+.anchor {
+  @apply cursor-pointer, opacity-75, transition-normal, underline;
+}
+
+.anchor:hover {
+  @apply opacity-100;
+}
+
 @tailwind utilities;
