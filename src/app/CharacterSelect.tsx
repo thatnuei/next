@@ -1,12 +1,6 @@
 import React from "react"
 import Avatar from "../character/Avatar"
-import Button from "../ui/components/Button"
-import FullscreenRaisedPanel from "../ui/components/FullscreenRaisedPanel"
-import RaisedPanelHeader from "../ui/components/RaisedPanelHeader"
 import Select from "../ui/components/Select"
-import { spacedChildrenVertical } from "../ui/helpers"
-import { styled } from "../ui/styled"
-import { spacing } from "../ui/theme"
 
 type Props = {
   identity: string
@@ -27,54 +21,47 @@ export default function CharacterSelect(props: Props) {
   }
 
   return (
-    <FullscreenRaisedPanel>
-      <RaisedPanelHeader center={<h1>Select a Character</h1>} />
-      <form onSubmit={handleSubmit}>
-        <FieldSet>
-          <FieldsContainer>
-            <Avatar key={props.identity} name={props.identity} />
+    <div className="h-full flex p-4">
+      <div className="raised-panel m-auto">
+        <div className="bg-midnight-800 p-3 text-center">
+          <h1 className="font-condensed text-3xl">Select a Character</h1>
+        </div>
+        <form onSubmit={handleSubmit}>
+          <fieldset className="transition-normal">
+            <div className="flex flex-col items-center p-4">
+              <Avatar
+                key={props.identity}
+                name={props.identity}
+                className="mb-4"
+              />
 
-            <Select
-              name="character"
-              value={props.identity}
-              onChange={handleChange}
-            >
-              {props.characters.map((name) => (
-                <option value={name} key={name}>
-                  {name}
-                </option>
-              ))}
-            </Select>
+              <Select
+                name="character"
+                value={props.identity}
+                onChange={handleChange}
+              >
+                {props.characters.map((name) => (
+                  <option value={name} key={name}>
+                    {name}
+                  </option>
+                ))}
+              </Select>
 
-            <Button type="submit">Enter Chat</Button>
+              <button className="button-solid" type="submit">
+                Enter Chat
+              </button>
 
-            <button
-              className="anchor"
-              type="button"
-              onClick={props.onReturnToLogin}
-            >
-              Return to Login
-            </button>
-          </FieldsContainer>
-        </FieldSet>
-      </form>
-    </FullscreenRaisedPanel>
+              <button
+                className="anchor"
+                type="button"
+                onClick={props.onReturnToLogin}
+              >
+                Return to Login
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
   )
 }
-
-const FieldSet = styled.fieldset`
-  transition: 0.2s opacity;
-  :disabled {
-    opacity: 0.5;
-  }
-`
-
-// fieldsets can't be flex containers https://stackoverflow.com/a/28078942/1332403
-const FieldsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  padding: ${spacing.medium};
-  ${spacedChildrenVertical(spacing.medium)};
-`
