@@ -6,7 +6,7 @@
 }
 
 .anchor {
-  @apply cursor-pointer, opacity-75, transition-normal, underline;
+  @apply cursor-pointer opacity-75 transition-normal underline;
 }
 
 .anchor:hover {
