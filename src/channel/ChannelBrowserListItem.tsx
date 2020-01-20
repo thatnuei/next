@@ -5,22 +5,20 @@ import LoadingIcon from "../ui/components/LoadingIcon"
 import { fillArea, spacedChildrenHorizontal } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
-// @ts-ignore
-import useRootStore from "../useRootStore"
-// @ts-ignore
 import { ChannelBrowserEntry } from "./ChannelBrowserStore"
+import { ChannelStore } from "./ChannelStore"
 
 type Props = {
   entry: ChannelBrowserEntry
+  channelStore: ChannelStore
 }
 
-function ChannelBrowserListItem({ entry }: Props) {
-  const { channelStore } = useRootStore()
-  const channel = channelStore.channels.get(entry.id)
-  const isLoading = channel.isLoading
+function ChannelBrowserListItem({ entry, channelStore }: Props) {
+  const isJoined = channelStore.isJoined(entry.id)
+  const isLoading = false //channel.isLoading
 
   const handleClick = () => {
-    if (channel.isJoined) {
+    if (isJoined) {
       channelStore.leave(entry.id)
     } else {
       channelStore.join(entry.id)
@@ -35,11 +33,11 @@ function ChannelBrowserListItem({ entry }: Props) {
 
   return (
     <Container
-      active={channel.isJoined}
+      active={isJoined}
       disabled={isLoading}
       onClick={handleClick}
       role="checkbox"
-      aria-checked={channel.isJoined}
+      aria-checked={isJoined}
     >
       {icon}
       <Title dangerouslySetInnerHTML={{ __html: entry.title }} />

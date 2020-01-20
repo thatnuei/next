@@ -5,14 +5,13 @@ import React, {
   useState,
 } from "react"
 import { getAvatarUrl } from "../flist/helpers"
-import { styled } from "../ui/styled"
 
 type Props = ComponentPropsWithoutRef<"img"> & {
   name: string
   size?: number
 }
 
-const Avatar = ({ name, size = 100, ...props }: Props) => {
+function Avatar({ name, size = 100, ...props }: Props) {
   const imageRef = useRef<HTMLImageElement>(null)
   const [loaded, setLoaded] = useState(false)
 
@@ -22,10 +21,17 @@ const Avatar = ({ name, size = 100, ...props }: Props) => {
     }
   }, [])
 
+  const style = {
+    transition: "0.2s opacity",
+    width: size,
+    height: size,
+    opacity: loaded ? 1 : 0,
+  }
+
   return (
-    <Image
+    <img
       src={getAvatarUrl(name)}
-      style={{ width: size, height: size, opacity: loaded ? 1 : 0 }}
+      style={style}
       title={name}
       onLoad={() => setLoaded(true)}
       alt=""
@@ -35,8 +41,5 @@ const Avatar = ({ name, size = 100, ...props }: Props) => {
     />
   )
 }
-export default Avatar
 
-const Image = styled.img`
-  transition: 0.2s opacity;
-`
+export default Avatar
