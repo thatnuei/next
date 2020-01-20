@@ -11,14 +11,4 @@ configure({
   reactionRequiresObservable: true,
 })
 
-const domRoot = document.getElementById("root")!
-
-function renderRoot() {
-  ReactDOM.render(<Root />, domRoot)
-}
-
-renderRoot()
-
-if (module.hot) {
-  module.hot.accept("./app/Root", renderRoot)
-}
+ReactDOM.render(<Root />, document.getElementById("root"))
