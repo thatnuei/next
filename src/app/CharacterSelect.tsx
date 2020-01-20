@@ -1,6 +1,5 @@
 import React from "react"
 import Avatar from "../character/Avatar"
-import Select from "../ui/components/Select"
 
 type Props = {
   identity: string
@@ -35,7 +34,8 @@ export default function CharacterSelect(props: Props) {
                 className="mb-4"
               />
 
-              <Select
+              <select
+                className="select"
                 name="character"
                 value={props.identity}
                 onChange={handleChange}
@@ -45,7 +45,7 @@ export default function CharacterSelect(props: Props) {
                     {name}
                   </option>
                 ))}
-              </Select>
+              </select>
 
               <button className="button-solid" type="submit">
                 Enter Chat

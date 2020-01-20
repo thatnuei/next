@@ -12,15 +12,19 @@
 }
 
 .button-solid {
-  @apply px-4 py-2 bg-semiblack-25;
+  @apply px-4 py-2 bg-semiblack-25 transition-normal;
 }
 
 .button-solid:hover {
   @apply bg-semiblack-50;
 }
 
-.input {
+.input-base {
   @apply px-4 py-2 bg-semiblack-25 transition-normal block w-full;
+}
+
+.input {
+  @apply input-base;
 }
 
 .input:hover {
@@ -28,6 +32,18 @@
 }
 
 .input:focus {
+  @apply bg-semiblack-50 outline-none;
+}
+
+.select {
+  @apply input-base;
+}
+
+.select:hover {
+  @apply bg-semiblack-50;
+}
+
+.select:focus {
   @apply bg-semiblack-50 outline-none;
 }
 
