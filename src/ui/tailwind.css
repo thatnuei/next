@@ -1,6 +1,10 @@
 @tailwind base;
 @tailwind components;
 
+:root {
+  font-family: Roboto, sans-serif;
+}
+
 .transition-normal {
   transition: 0.2s;
 }
