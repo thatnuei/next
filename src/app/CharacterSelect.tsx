@@ -11,7 +11,7 @@ type Props = {
 }
 
 export default function CharacterSelect(props: Props) {
-  function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
+  function handleChange(event: React.ChangeEvent<{ value: string }>) {
     props.onIdentityChange(event.target.value)
   }
 
