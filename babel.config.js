@@ -4,8 +4,12 @@ module.exports = {
     ["@babel/proposal-decorators", { legacy: true }],
     ["@babel/proposal-class-properties", { loose: true }],
     "@babel/transform-runtime",
-    "react-refresh/babel",
     "styled-components",
     "lodash",
   ],
+  env: {
+    development: {
+      plugins: ["react-refresh/babel"],
+    },
+  },
 }
