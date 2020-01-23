@@ -58,7 +58,8 @@ const config = {
     }),
     new webpack.ProgressPlugin(),
     isProduction && new OptimizeCSSAssetsPlugin(),
-    isDevelopment && new ReactRefreshWebpackPlugin(),
+    isDevelopment &&
+      new ReactRefreshWebpackPlugin({ disableRefreshCheck: true }),
   ].filter(Boolean),
   devtool: isProduction ? "source-map" : "eval-source-map",
   stats: {
