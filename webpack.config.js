@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
+const path = require("path")
 
 const isProduction = process.env.NODE_ENV === "production"
 const isDevelopment = !isProduction
@@ -24,6 +25,7 @@ const config = {
       {
         test: /\.(js|ts)x?$/,
         use: "babel-loader",
+        include: [path.join(__dirname, "src")],
       },
       {
         test: /\.css$/,
