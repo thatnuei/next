@@ -28,6 +28,13 @@ const config = {
         test: /\.css$/,
         use: [cssExtractLoader, "css-loader", "postcss-loader"],
       },
+      {
+        test: /\.(mp3|ogg)$/,
+        use: {
+          loader: "url-loader",
+          options: { filename: "[name].[hash].[ext]", limit: 8192 },
+        },
+      },
     ],
   },
   output: {
