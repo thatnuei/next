@@ -60,6 +60,16 @@ const config = {
     isProduction && new OptimizeCSSAssetsPlugin(),
     isDevelopment && new ReactRefreshWebpackPlugin(),
   ].filter(Boolean),
+  devtool: isProduction ? "source-map" : "eval-source-map",
+  stats: {
+    children: false,
+    entrypoints: false,
+    modules: false,
+    excludeAssets: /\.map$/,
+  },
+  performance: {
+    hints: false,
+  },
   optimization: {
     runtimeChunk: true,
   },
