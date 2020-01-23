@@ -20,6 +20,11 @@ const cssExtractLoader = {
 const config = {
   mode: isProduction ? "production" : "development",
   entry: "./src/index.tsx",
+  output: {
+    path: `${__dirname}/build`,
+    filename: "[name].[hash].js",
+    publicPath: "/",
+  },
   module: {
     rules: [
       {
@@ -39,11 +44,6 @@ const config = {
         },
       },
     ],
-  },
-  output: {
-    path: `${__dirname}/build`,
-    filename: "[name].[hash].js",
-    publicPath: "/",
   },
   resolve: {
     extensions: [".js", ".ts", ".tsx"],
