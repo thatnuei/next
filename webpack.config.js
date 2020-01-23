@@ -45,7 +45,6 @@ const config = {
     }),
     new MiniCssExtractPlugin({
       filename: "[name].[hash].css",
-      chunkFilename: "[id].[hash].css",
     }),
     isProduction && new OptimizeCSSAssetsPlugin(),
     isDevelopment && new ReactRefreshWebpackPlugin(),
