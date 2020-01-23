@@ -35,7 +35,7 @@ export default function CharacterSelect(props: Props) {
               />
 
               <select
-                className="select"
+                className="select mb-4"
                 name="character"
                 value={props.identity}
                 onChange={handleChange}
@@ -47,7 +47,7 @@ export default function CharacterSelect(props: Props) {
                 ))}
               </select>
 
-              <button className="button-solid" type="submit">
+              <button className="button-solid mb-4" type="submit">
                 Enter Chat
               </button>
 
