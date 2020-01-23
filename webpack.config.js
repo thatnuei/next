@@ -2,13 +2,15 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
 
 const isProduction = process.env.NODE_ENV === "production"
+const isDevelopment = !isProduction
 
 const cssExtractLoader = {
   loader: MiniCssExtractPlugin.loader,
   options: {
-    hmr: !isProduction,
+    hmr: isDevelopment,
   },
 }
 
@@ -45,8 +47,9 @@ const config = {
       filename: "[name].[hash].css",
       chunkFilename: "[id].[hash].css",
     }),
-    new ReactRefreshWebpackPlugin(),
-  ],
+    isProduction && new OptimizeCSSAssetsPlugin(),
+    isDevelopment && new ReactRefreshWebpackPlugin(),
+  ].filter(Boolean),
   optimization: {
     runtimeChunk: true,
   },
