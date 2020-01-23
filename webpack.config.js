@@ -1,4 +1,5 @@
 // @ts-check
+const webpack = require("webpack")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
@@ -53,6 +54,7 @@ const config = {
     new MiniCssExtractPlugin({
       filename: "[name].[hash].css",
     }),
+    new webpack.ProgressPlugin(),
     isProduction && new OptimizeCSSAssetsPlugin(),
     isDevelopment && new ReactRefreshWebpackPlugin(),
   ].filter(Boolean),
