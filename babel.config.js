@@ -5,11 +5,13 @@ module.exports = {
     ["@babel/proposal-class-properties", { loose: true }],
     "@babel/transform-runtime",
     "styled-components",
-    "lodash",
   ],
   env: {
     development: {
       plugins: ["react-refresh/babel"],
+    },
+    production: {
+      plugins: ["lodash"],
     },
   },
 }
