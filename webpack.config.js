@@ -1,3 +1,4 @@
+// @ts-check
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
@@ -38,6 +39,7 @@ const config = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "public/index.html",
+      chunksSortMode: "dependency",
     }),
     new MiniCssExtractPlugin({
       filename: "[name].[hash].css",
@@ -45,6 +47,9 @@ const config = {
     }),
     new ReactRefreshWebpackPlugin(),
   ],
+  optimization: {
+    runtimeChunk: true,
+  },
   devServer: {
     publicPath: "/",
     contentBase: `${__dirname}/public`,
