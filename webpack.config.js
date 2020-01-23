@@ -4,6 +4,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
+const CopyWebpackPlugin = require("copy-webpack-plugin")
 const path = require("path")
 
 const isProduction = process.env.NODE_ENV === "production"
@@ -57,6 +59,8 @@ const config = {
       filename: "[name].[hash].css",
     }),
     new webpack.ProgressPlugin(),
+    new CleanWebpackPlugin(),
+    new CopyWebpackPlugin([{ from: "public" }]),
     isProduction && new OptimizeCSSAssetsPlugin(),
     isDevelopment &&
       new ReactRefreshWebpackPlugin({ disableRefreshCheck: true }),
