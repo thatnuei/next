@@ -92,7 +92,8 @@
     "webpack-dev-server": "^3.10.1"
   },
   "sideEffects": [
-    "focus-visible"
+    "focus-visible",
+    "*.css"
   ],
   "browserslist": {
     "production": [
