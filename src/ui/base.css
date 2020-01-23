@@ -1,0 +1,19 @@
+:root {
+  font-family: Roboto, sans-serif;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+button {
+  text-align: left;
+}
+
+li {
+  list-style: none;
+}
+
+/* purgecss ignore */
+.js-focus-visible :focus:not(.focus-visible),
+.js-focus-visible :focus:not([data-focus-visible-added]) {
+  outline: none;
+}

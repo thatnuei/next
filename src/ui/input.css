@@ -1,0 +1,11 @@
+.input {
+  @apply input-base;
+}
+
+.input:hover {
+  @apply bg-semiblack-50;
+}
+
+.input:focus {
+  @apply bg-semiblack-50 outline-none;
+}

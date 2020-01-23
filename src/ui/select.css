@@ -1,0 +1,11 @@
+.select {
+  @apply input-base;
+}
+
+.select:hover {
+  @apply bg-semiblack-50;
+}
+
+.select:focus {
+  @apply bg-semiblack-50 outline-none;
+}

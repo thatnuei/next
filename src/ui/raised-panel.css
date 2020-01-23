@@ -1,0 +1,3 @@
+.raised-panel {
+  @apply bg-midnight-700 shadow;
+}

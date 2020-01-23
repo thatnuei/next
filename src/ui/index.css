@@ -1,0 +1,16 @@
+/* global styles */
+@import "tailwindcss/base";
+@import "./base.css";
+
+/* components */
+@import "tailwindcss/components";
+@import "./anchor.css";
+@import "./button-solid.css";
+@import "./input.css";
+@import "./input-base.css";
+@import "./raised-panel.css";
+@import "./select.css";
+@import "./transition.css";
+
+/* overrides */
+@import "tailwindcss/utilities";
