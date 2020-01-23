@@ -2,19 +2,16 @@
 const tailwind = require("tailwindcss")
 const autoprefixer = require("autoprefixer")
 const purgecss = require("@fullhuman/postcss-purgecss")
+const postcssImport = require("postcss-import")
 
-const config = {
-  plugins: [tailwind()],
-}
+const isProduction = process.env.NODE_ENV === "production"
 
-if (process.env.NODE_ENV === "production") {
-  config.plugins.push(
-    autoprefixer(),
+module.exports = {
+  plugins: [
+    postcssImport,
+    tailwind,
+    isProduction && autoprefixer(),
     // @ts-ignore
-    purgecss({
-      content: ["@(src|public)/**/*.@(ts|tsx)"],
-    }),
-  )
+    isProduction && purgecss({ content: ["@(src|public)/**/*.@(ts|tsx)"] }),
+  ].filter(Boolean),
 }
-
-module.exports = config
