@@ -67,5 +67,3 @@ const Panel = styled.div<{ anchor: "left" | "right"; visible?: boolean }>`
     height: 100%;
   }
 `
-
-const noop = () => {}
