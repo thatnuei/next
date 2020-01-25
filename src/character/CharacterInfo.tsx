@@ -31,7 +31,7 @@ function CharacterInfo({
       </ExternalLink>
 
       <ExternalLink href={getProfileUrl(name)}>
-        <Avatar key={name} name={name} size={80} />
+        <Avatar name={name} size={80} />
       </ExternalLink>
 
       <Box background="theme2" pad={spacing.xsmall} alignSelf="stretch">

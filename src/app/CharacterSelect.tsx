@@ -28,11 +28,8 @@ export default function CharacterSelect(props: Props) {
         <form onSubmit={handleSubmit}>
           <fieldset className="transition-normal">
             <div className="flex flex-col items-center p-4">
-              <Avatar
-                key={props.identity}
-                name={props.identity}
-                className="mb-4"
-              />
+              <Avatar name={props.identity} size={100} />
+              <div className="h-4" />
 
               <select
                 className="input mb-4"
