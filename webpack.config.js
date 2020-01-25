@@ -11,13 +11,6 @@ const path = require("path")
 const isProduction = process.env.NODE_ENV === "production"
 const isDevelopment = !isProduction
 
-const cssExtractLoader = {
-  loader: MiniCssExtractPlugin.loader,
-  options: {
-    hmr: isDevelopment,
-  },
-}
-
 /** @type {import('webpack').Configuration} */
 const config = {
   mode: isProduction ? "production" : "development",
@@ -36,7 +29,11 @@ const config = {
       },
       {
         test: /\.css$/,
-        use: [cssExtractLoader, "css-loader", "postcss-loader"],
+        use: [
+          isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+          "css-loader",
+          "postcss-loader",
+        ],
       },
       {
         test: /\.(mp3|ogg)$/,
