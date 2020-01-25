@@ -35,7 +35,7 @@ export default function CharacterSelect(props: Props) {
               />
 
               <select
-                className="select mb-4"
+                className="input mb-4"
                 name="character"
                 value={props.identity}
                 onChange={handleChange}
