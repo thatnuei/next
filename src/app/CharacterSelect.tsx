@@ -36,9 +36,9 @@ export default function CharacterSelect(props: Props) {
   return (
     <div css={[absoluteCover, flex("column"), p(4)]}>
       <div css={[raisedPanel, m("auto")]}>
-        <div css={[bgMidnight(800), p(3), textCenter]}>
+        <header css={[bgMidnight(800), p(3), textCenter]}>
           <h1 css={[fontCondensed, textSize("xl3")]}>Select a Character</h1>
-        </div>
+        </header>
         <form onSubmit={handleSubmit}>
           <fieldset>
             <div css={[flex("column"), alignItems("center"), p(4)]}>

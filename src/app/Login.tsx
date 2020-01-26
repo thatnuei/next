@@ -6,7 +6,6 @@ import {
   absoluteCover,
   bgMidnight,
   flex,
-  flexCol,
   fontCondensed,
   m,
   maxW,
@@ -35,7 +34,7 @@ function Login({ disabled, error, onSubmit }: Props) {
   }
 
   return (
-    <main css={[absoluteCover, flex(), p(4)]}>
+    <div css={[absoluteCover, flex(), p(4)]}>
       <div css={[raisedPanel, m("auto")]}>
         <header css={[bgMidnight(800), p(3), textCenter]}>
           <h1 css={[fontCondensed, textSize("xl3")]}>Login</h1>
@@ -75,7 +74,7 @@ function Login({ disabled, error, onSubmit }: Props) {
           {error ? <p css={[mt(4), maxW("xs"), textCenter]}>{error}</p> : null}
         </form>
       </div>
-    </main>
+    </div>
   )
 }
 
