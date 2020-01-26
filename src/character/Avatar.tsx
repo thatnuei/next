@@ -8,35 +8,37 @@ type Props = {
 }
 
 function Avatar({ name, size }: Props) {
+  type State =
+    | { type: "idle" }
+    | { type: "loading" }
+    | { type: "success" }
+    | { type: "error" }
+
+  const [state, setState] = useState<State>({ type: "idle" })
   const image = useMemo(() => document.createElement("img"), [])
-  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    setLoaded(false)
+    setState({ type: "loading" })
 
     image.src = getAvatarUrl(name)
 
     if (image.complete) {
-      setLoaded(true)
+      setState({ type: "success" })
     } else {
-      image.onload = () => setLoaded(true)
-      image.onerror = () => {
-        /* show some other "failed to load" placeholder? */
-      }
+      image.onload = () => setState({ type: "success" })
+      image.onerror = () => setState({ type: "error" })
     }
 
     return () => {
       image.onload = null
       image.onerror = null
+      setState({ type: "idle" })
     }
   }, [image, name])
 
   return (
-    <TransitionGroup
-      className="relative flex items-center justify-center"
-      style={{ width: size, height: size }}
-    >
-      {loaded && (
+    <TransitionGroup className="relative" style={{ width: size, height: size }}>
+      {state.type === "success" && (
         <Transition key={name} timeout={{ appear: 1, enter: 200, exit: 200 }}>
           {(status) => (
             <img
