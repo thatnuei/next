@@ -164,6 +164,8 @@ export const shadowInner = css({
   boxShadow: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
 })
 
+export const scaleDown = css({ transform: "scale(0.95)" })
+
 export const transition = (properties = "all") =>
   css({ transition: "0.2s", transitionProperty: properties })
 
