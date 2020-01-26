@@ -1,4 +1,5 @@
 import { Interpolation } from "@emotion/core"
+import { Properties as CssProperties } from "csstype"
 import { css } from "./styled"
 
 type SizeUnit =
@@ -166,8 +167,12 @@ export const shadowInner = css({
 
 export const scaleDown = css({ transform: "scale(0.95)" })
 
-export const transition = (properties = "all") =>
-  css({ transition: "0.2s", transitionProperty: properties })
+export const transition = (...properties: (keyof CssProperties)[]) =>
+  css({
+    transition: "0.2s",
+    transitionProperty:
+      properties.length > 0 ? properties.join(", ") : undefined,
+  })
 
 export const outlineNone = css({ outline: 0 })
 
