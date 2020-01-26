@@ -7,7 +7,7 @@
     "build": "cross-env NODE_ENV=production node scripts/build.js",
     "test": "jest",
     "lint": "eslint \"src/**/*.ts?(x)\"",
-    "format": "prettier --write \"@(src|desktop|public|scripts)/**/*.@(js|ts|tsx|html|json|md)\"",
+    "format": "prettier --write \"./**/*.@(js|ts|tsx|html|json|md)\"",
     "typecheck": "tsc --noEmit",
     "desktop:dev:app": "electron desktop/main.js",
     "desktop:dev": "npm-run-all --parallel --race desktop:dev:app dev",
@@ -114,6 +114,21 @@
     "focus-visible",
     "*.css"
   ],
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ],
+    "rules": {
+      "no-undef": "off",
+      "no-unused-vars": "off"
+    }
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "semi": false,
+    "trailingComma": "all",
+    "quoteProps": "consistent"
+  },
   "browserslist": {
     "production": [
       ">1%",
