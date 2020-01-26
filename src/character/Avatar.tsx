@@ -1,6 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { Transition, TransitionGroup } from "react-transition-group"
 import { getAvatarUrl } from "../flist/helpers"
+import {
+  absolute,
+  h,
+  opacity,
+  relative,
+  scaleDown,
+  transition,
+  w,
+} from "../ui/helpers.new"
 
 type Props = {
   name: string
@@ -37,7 +46,7 @@ function Avatar({ name, size }: Props) {
   }, [image, name])
 
   return (
-    <TransitionGroup className="relative" style={{ width: size, height: size }}>
+    <TransitionGroup css={[relative]} style={{ width: size, height: size }}>
       {state.type === "success" && (
         <Transition key={name} timeout={{ appear: 1, enter: 200, exit: 200 }}>
           {(status) => (
@@ -46,9 +55,13 @@ function Avatar({ name, size }: Props) {
               title={name}
               alt=""
               role="presentation"
-              className={`w-full h-full absolute transition-normal ${
-                status === "entered" ? "opacity-100" : "opacity-0 scale-down"
-              }`}
+              css={[
+                w("full"),
+                h("full"),
+                absolute,
+                transition("opacity", "transform"),
+                status === "entered" ? opacity(100) : [opacity(0), scaleDown],
+              ]}
             />
           )}
         </Transition>
