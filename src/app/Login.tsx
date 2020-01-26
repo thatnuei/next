@@ -6,6 +6,7 @@ import {
   absoluteCover,
   bgMidnight,
   flex,
+  flexCol,
   fontCondensed,
   m,
   maxW,
