@@ -34,7 +34,7 @@ const mockFetch = async (input: string, init: RequestInit = {}) => {
   return createMockResponse(null)
 }
 
-let realFetch: GlobalFetch["fetch"]
+let realFetch: typeof fetch
 
 beforeEach(() => {
   realFetch = window.fetch
