@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import TextInput from "../dom/components/TextInput"
+import { input } from "../ui/components"
 import Button from "../ui/components/Button"
 import Icon from "../ui/components/Icon"
 import LoadingIcon from "../ui/components/LoadingIcon"
@@ -51,6 +52,7 @@ function ChannelBrowser({ channelBrowserStore, channelStore }: Props) {
 
       <Footer>
         <TextInput
+          css={input}
           placeholder="Search..."
           value={channelBrowserStore.searchQuery}
           onTextChange={channelBrowserStore.setSearchQuery}
