@@ -42,8 +42,8 @@ const globalStyle = (theme: AppTheme) => css`
     background: transparent;
     font: inherit;
     color: inherit;
-    border: none;
     text-align: left;
+    border: 0;
     border-radius: 0;
   }
 
