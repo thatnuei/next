@@ -1,4 +1,5 @@
 import React, { ComponentPropsWithoutRef } from "react"
+import { block, mb } from "../helpers.new"
 
 type Props = ComponentPropsWithoutRef<"label"> & {
   labelText: string
@@ -6,8 +7,8 @@ type Props = ComponentPropsWithoutRef<"label"> & {
 
 export default function FormField({ labelText, children, ...props }: Props) {
   return (
-    <label {...props} className={`block ${props.className}`}>
-      <div className={`block mb-1`}>{labelText}</div>
+    <label css={block} {...props}>
+      <div css={[block, mb(1)]}>{labelText}</div>
       {children}
     </label>
   )

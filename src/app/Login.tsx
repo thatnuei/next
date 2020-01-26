@@ -1,6 +1,22 @@
 import React from "react"
 import useInput from "../dom/hooks/useInput"
 import FormField from "../ui/components/FormField"
+import {
+  bgMidnight,
+  flex,
+  flexCol,
+  h,
+  hover,
+  m,
+  maxW,
+  mb,
+  mt,
+  opacity,
+  p,
+  textCenter,
+  textMidnight,
+  transition,
+} from "../ui/helpers.new"
 
 type Props = {
   disabled: boolean
@@ -18,17 +34,18 @@ function Login({ disabled, error, onSubmit }: Props) {
   }
 
   return (
-    <div className="h-full flex p-4">
-      <div className="raised-panel m-auto">
-        <div className="bg-midnight-800 p-3 text-center">
+    <div css={[h("full"), flex, p(4)]}>
+      <div className="raised-panel" css={[m("auto"), hover(textMidnight(800))]}>
+        <div css={[bgMidnight(800), p(3), textCenter]}>
           <h1 className="font-condensed text-3xl">Login</h1>
         </div>
-        <form className="flex flex-col p-4" onSubmit={handleSubmit}>
+
+        <form css={[flex, flexCol, p(4)]} onSubmit={handleSubmit}>
           <fieldset
             disabled={disabled}
-            className={`transition-normal ${disabled ? "opacity-50" : ""}`}
+            css={[transition("opacity"), disabled && opacity(50)]}
           >
-            <FormField labelText="Username" className="mb-3">
+            <FormField labelText="Username" css={mb(3)}>
               <input
                 className="input"
                 name="username"
@@ -38,7 +55,7 @@ function Login({ disabled, error, onSubmit }: Props) {
               />
             </FormField>
 
-            <FormField labelText="Password" className="mb-3">
+            <FormField labelText="Password" css={mb(3)}>
               <input
                 className="input"
                 name="password"
@@ -54,7 +71,7 @@ function Login({ disabled, error, onSubmit }: Props) {
             </button>
           </fieldset>
 
-          {error ? <p className="mt-4 max-w-xs text-center">{error}</p> : null}
+          {error ? <p css={[mt(4), maxW("xs"), textCenter]}>{error}</p> : null}
         </form>
       </div>
     </div>
