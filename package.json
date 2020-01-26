@@ -23,6 +23,7 @@
     "@reach/rect": "^0.7.4",
     "bbc.js": "kingdaro/bbc.js",
     "cross-env": "^7.0.0",
+    "csstype": "^2.6.8",
     "fchat": "^1.4.0",
     "focus-visible": "^5.0.2",
     "fuzzysearch": "^1.0.3",

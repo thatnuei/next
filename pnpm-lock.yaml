@@ -5,6 +5,7 @@ dependencies:
   '@reach/rect': 0.7.4_react-dom@16.12.0+react@16.12.0
   bbc.js: github.com/kingdaro/bbc.js/e5981c1b732a9c3987e7b1b93537ccb77cd973cc
   cross-env: 7.0.0
+  csstype: 2.6.8
   fchat: 1.4.0
   focus-visible: 5.0.2
   fuzzysearch: 1.0.3
@@ -9613,6 +9614,7 @@ packages:
     dev: false
     name: bbc.js
     resolution:
+      registry: 'https://registry.npmjs.org/'
       tarball: 'https://codeload.github.com/kingdaro/bbc.js/tar.gz/e5981c1b732a9c3987e7b1b93537ccb77cd973cc'
     version: 1.0.4
 specifiers:
@@ -9669,6 +9671,7 @@ specifiers:
   copy-webpack-plugin: ^5.1.1
   cross-env: ^7.0.0
   css-loader: ^3.4.2
+  csstype: ^2.6.8
   electron: ^7.1.10
   eslint: ^6.8.0
   eslint-config-react-app: ^5.1.0
