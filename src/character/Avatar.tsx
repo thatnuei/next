@@ -2,13 +2,11 @@ import React, { useEffect, useMemo, useState } from "react"
 import { Transition, TransitionGroup } from "react-transition-group"
 import { getAvatarUrl } from "../flist/helpers"
 import {
-  absolute,
-  h,
+  absoluteCover,
   opacity,
   relative,
   scaleDown,
   transition,
-  w,
 } from "../ui/helpers.new"
 
 type Props = {
@@ -58,9 +56,7 @@ function Avatar({ name, size }: Props) {
               alt=""
               role="presentation"
               css={[
-                w("full"),
-                h("full"),
-                absolute,
+                absoluteCover,
                 transition("opacity", "transform"),
                 status === "entered" ? opacity(100) : [opacity(0), scaleDown],
               ]}
