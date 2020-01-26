@@ -8,7 +8,6 @@ dependencies:
   '@reach/rect': 0.7.4_react-dom@16.12.0+react@16.12.0
   bbc.js: github.com/kingdaro/bbc.js/e5981c1b732a9c3987e7b1b93537ccb77cd973cc
   cross-env: 7.0.0
-  csstype: 2.6.8
   emotion-theming: 10.0.27_2c5d77e899508087ed51e7755add9fe3
   fchat: 1.4.0
   focus-visible: 5.0.2
@@ -73,6 +72,7 @@ devDependencies:
   clean-webpack-plugin: 3.0.0_webpack@4.41.5
   copy-webpack-plugin: 5.1.1_webpack@4.41.5
   css-loader: 3.4.2_webpack@4.41.5
+  csstype: 2.6.8
   electron: 7.1.10
   eslint: 6.8.0
   eslint-config-react-app: 5.1.0_b190899d50491ecd4ad51f4c91c1f27c
