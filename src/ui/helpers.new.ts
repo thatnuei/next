@@ -66,6 +66,10 @@ export const alignItems = (
   alignment: "flex-start" | "flex-end" | "center" | "stretch",
 ) => css({ alignItems: alignment })
 
+export const alignSelf = (
+  alignment: "flex-start" | "flex-end" | "center" | "stretch",
+) => css({ alignSelf: alignment })
+
 export const justifyContent = (
   alignment:
     | "flex-start"
