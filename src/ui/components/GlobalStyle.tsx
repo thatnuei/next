@@ -35,12 +35,19 @@ const globalStyle = (theme: AppTheme) => css`
     line-height: 1.2;
   }
 
-  button {
+  button,
+  input,
+  textarea,
+  select {
     background: transparent;
     font: inherit;
     color: inherit;
     border: none;
     text-align: left;
+    border-radius: 0;
+  }
+
+  button {
     cursor: pointer;
   }
 
