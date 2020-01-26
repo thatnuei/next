@@ -136,13 +136,10 @@ export const transition = (properties = "all") =>
 
 // states
 export const hover = (...styles: Interpolation[]) =>
-  // @ts-ignore fix later
-  css({ ":hover": css(...styles) })
+  css({ ":hover": css(...styles) as any })
 
 export const focus = (...styles: Interpolation[]) =>
-  // @ts-ignore fix later
-  css({ ":focus": css(...styles) })
+  css({ ":focus": css(...styles) as any })
 
 export const active = (...styles: Interpolation[]) =>
-  // @ts-ignore fix later
-  css({ ":active": css(...styles) })
+  css({ ":active": css(...styles) as any })
