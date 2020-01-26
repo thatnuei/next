@@ -48,6 +48,8 @@ function Avatar({ name, size }: Props) {
   return (
     <TransitionGroup css={[relative]} style={{ width: size, height: size }}>
       {state.type === "success" && (
+        // specifying the timeout this way lets the transition work properly,
+        // not sure why
         <Transition key={name} timeout={{ appear: 1, enter: 200, exit: 200 }}>
           {(status) => (
             <img
