@@ -1,5 +1,19 @@
 import React from "react"
 import Avatar from "../character/Avatar"
+import { anchor, buttonSolid, input, raisedPanel } from "../ui/components"
+import {
+  absoluteCover,
+  alignItems,
+  bgMidnight,
+  flex,
+  fontCondensed,
+  h,
+  m,
+  mb,
+  p,
+  textCenter,
+  textSize,
+} from "../ui/helpers.new"
 
 type Props = {
   identity: string
@@ -20,19 +34,19 @@ export default function CharacterSelect(props: Props) {
   }
 
   return (
-    <div className="h-full flex p-4">
-      <div className="raised-panel m-auto">
-        <div className="bg-midnight-800 p-3 text-center">
-          <h1 className="font-condensed text-3xl">Select a Character</h1>
+    <div css={[absoluteCover, flex("column"), p(4)]}>
+      <div css={[raisedPanel, m("auto")]}>
+        <div css={[bgMidnight(800), p(3), textCenter]}>
+          <h1 css={[fontCondensed, textSize("xl3")]}>Select a Character</h1>
         </div>
         <form onSubmit={handleSubmit}>
-          <fieldset className="transition-normal">
-            <div className="flex flex-col items-center p-4">
+          <fieldset>
+            <div css={[flex("column"), alignItems("center"), p(4)]}>
               <Avatar name={props.identity} size={100} />
-              <div className="h-4" />
+              <div css={h(4)} />
 
               <select
-                className="input mb-4"
+                css={[input, mb(4)]}
                 name="character"
                 value={props.identity}
                 onChange={handleChange}
@@ -44,12 +58,12 @@ export default function CharacterSelect(props: Props) {
                 ))}
               </select>
 
-              <button className="button-solid mb-4" type="submit">
+              <button css={[buttonSolid, mb(4)]} type="submit">
                 Enter Chat
               </button>
 
               <button
-                className="anchor"
+                css={anchor}
                 type="button"
                 onClick={props.onReturnToLogin}
               >
