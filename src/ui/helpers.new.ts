@@ -53,6 +53,7 @@ export const inline = css({ display: "inline" })
 
 export const absolute = css({ position: "absolute" })
 export const fixed = css({ position: "fixed" })
+export const relative = css({ position: "relative" })
 export const left = (unit: SizeUnit) => css({ left: space(unit) })
 export const right = (unit: SizeUnit) => css({ right: space(unit) })
 export const top = (unit: SizeUnit) => css({ top: space(unit) })
