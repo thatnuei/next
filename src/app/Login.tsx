@@ -6,7 +6,6 @@ import {
   flex,
   flexCol,
   h,
-  hover,
   m,
   maxW,
   mb,
@@ -14,7 +13,6 @@ import {
   opacity,
   p,
   textCenter,
-  textMidnight,
   transition,
 } from "../ui/helpers.new"
 
@@ -35,7 +33,7 @@ function Login({ disabled, error, onSubmit }: Props) {
 
   return (
     <div css={[h("full"), flex, p(4)]}>
-      <div className="raised-panel" css={[m("auto"), hover(textMidnight(800))]}>
+      <div className="raised-panel" css={m("auto")}>
         <div css={[bgMidnight(800), p(3), textCenter]}>
           <h1 className="font-condensed text-3xl">Login</h1>
         </div>
