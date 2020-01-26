@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "desktop:dev:app": "electron desktop/main.js",
     "desktop:dev": "npm-run-all --parallel --race desktop:dev:app dev",
-    "desktop:build": "cross-env PUBLIC_URL=. yarn build",
+    "desktop:build": "cross-env PUBLIC_URL=. pnpm run build",
     "desktop:start": "cross-env NODE_ENV=production electron desktop/main.js",
     "postinstall": "typesync",
     "postuninstall": "typesync"
