@@ -1,8 +1,15 @@
 import React, { ComponentPropsWithoutRef } from "react"
 import ExternalLink from "../dom/components/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
-import Box from "../ui/components/Box"
-import { spacing } from "../ui/theme"
+import {
+  alignItems,
+  alignSelf,
+  bgMidnight,
+  flex,
+  mb,
+  px,
+  py,
+} from "../ui/helpers.new"
 import Avatar from "./Avatar"
 import CharacterStatus from "./CharacterStatus"
 import { genderColors } from "./colors"
@@ -25,19 +32,19 @@ function CharacterInfo({
   const nameStyle = { color: genderColors[gender] }
 
   return (
-    <Box gap={spacing.small} align="flex-start" {...containerProps}>
-      <ExternalLink href={getProfileUrl(name)}>
+    <div css={[flex("column"), alignItems("flex-start")]} {...containerProps}>
+      <ExternalLink href={getProfileUrl(name)} css={mb(2)}>
         <h2 style={nameStyle}>{name}</h2>
       </ExternalLink>
 
-      <ExternalLink href={getProfileUrl(name)}>
+      <ExternalLink href={getProfileUrl(name)} css={mb(3)}>
         <Avatar name={name} size={80} />
       </ExternalLink>
 
-      <Box background="theme2" pad={spacing.xsmall} alignSelf="stretch">
+      <div css={[bgMidnight(800), py(2), px(4), alignSelf("stretch")]}>
         <CharacterStatus status={status} statusMessage={statusMessage} />
-      </Box>
-    </Box>
+      </div>
+    </div>
   )
 }
 

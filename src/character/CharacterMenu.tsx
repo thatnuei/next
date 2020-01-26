@@ -4,9 +4,9 @@ import useRootStore from "../../useRootStore"
 import ExternalLink from "../dom/components/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
 import { semiBlack } from "../ui/colors"
-import Box from "../ui/components/Box"
 import { useContextMenuContext } from "../ui/components/ContextMenu"
 import Icon from "../ui/components/Icon"
+import { p } from "../ui/helpers.new"
 import { css, styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
 
@@ -26,9 +26,7 @@ const CharacterMenu = (props: CharacterMenuProps) => {
 
   return (
     <Container onClick={menu.close}>
-      <Box pad={spacing.small}>
-        {/* <CharacterInfo name={props.characterName} /> */}
-      </Box>
+      <div css={p(3)}>{/* <CharacterInfo name={props.characterName} /> */}</div>
 
       <OptionsContainer>
         <OptionLink href={profileUrl}>
