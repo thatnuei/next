@@ -48,7 +48,7 @@ function ChannelBrowserListItem({ entry, channelStore }: Props) {
 
 export default observer(ChannelBrowserListItem)
 
-const Container = styled.button<{ active: boolean }>`
+const Container = styled.button<{ active: boolean; disabled?: boolean }>`
   display: flex;
   align-items: center;
   padding: ${spacing.xsmall};

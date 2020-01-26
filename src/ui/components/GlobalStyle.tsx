@@ -1,8 +1,10 @@
-import "focus-visible"
+import { Global } from "@emotion/core"
 import { lighten } from "polished"
-import { createGlobalStyle, css } from "../styled"
+import React from "react"
+import { css } from "../styled"
+import { AppTheme } from "../theme"
 
-const globalStyle = css`
+const globalStyle = (theme: AppTheme) => css`
   * {
     margin: 0;
     padding: 0;
@@ -11,8 +13,8 @@ const globalStyle = css`
 
   :root {
     font: 15px Roboto, sans-serif;
-    background-color: ${(props) => props.theme.colors.theme2};
-    color: ${(props) => props.theme.colors.text};
+    background-color: ${theme.colors.theme2};
+    color: ${theme.colors.text};
     line-height: 1.5;
     letter-spacing: 0.3px;
 
@@ -73,24 +75,22 @@ const globalStyle = css`
 
   ::-webkit-scrollbar-track,
   ::-webkit-scrollbar-corner {
-    background-color: ${({ theme }) => theme.colors.theme2};
+    background-color: ${theme.colors.theme2};
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => lighten(0.2, theme.colors.theme0)};
+    background-color: ${lighten(0.2, theme.colors.theme0)};
   }
-`
-
-const GlobalStyle = createGlobalStyle`
-  ${globalStyle};
 
   /* see https://github.com/WICG/focus-visible */
-  /* this has to be here and not in the "css" block */
-  /* otherwise a bug in SC will remove the space between the class and the :focus */
   .js-focus-visible :focus:not(.focus-visible),
   .js-focus-visible :focus:not([data-focus-visible-added]) {
     outline: none;
   }
 `
+
+function GlobalStyle() {
+  return <Global<AppTheme> styles={globalStyle} />
+}
 
 export default GlobalStyle

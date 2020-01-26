@@ -1,12 +1,6 @@
-/// <reference types="styled-components/cssprop" />
-import * as sc from "styled-components"
+import { css, keyframes } from "@emotion/core"
+import baseStyled, { CreateStyled } from "@emotion/styled"
 import { AppTheme } from "./theme"
 
-export const {
-  default: styled,
-  css,
-  keyframes,
-  ThemeContext,
-  ThemeProvider: StyledThemeProvider,
-  createGlobalStyle,
-} = sc as sc.ThemedStyledComponentsModule<AppTheme>
+export const styled = baseStyled as CreateStyled<AppTheme>
+export { css, keyframes }

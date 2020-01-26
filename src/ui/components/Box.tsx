@@ -1,7 +1,7 @@
 import {} from "polished"
 import React, { ComponentPropsWithoutRef } from "react"
 import { css, styled } from "../styled"
-import { AppThemeColor, spacing } from "../theme"
+import { AppTheme, AppThemeColor, spacing } from "../theme"
 
 export type BoxProps = ComponentPropsWithoutRef<"div"> & {
   as?: React.ElementType
@@ -119,14 +119,13 @@ const resolvePad = (value: BoxProps["pad"]) => {
   `
 }
 
-export const boxStyle = (props: BoxProps) => css`
+export const boxStyle = (props: BoxProps) => (theme: AppTheme) => css`
   display: flex;
   flex-direction: ${props.direction || "column"};
   width: ${resolveUnit(props.width)};
   height: ${resolveUnit(props.height)};
   ${resolvePad(props.pad)};
-  background-color: ${({ theme }) =>
-    props.background && theme.colors[props.background]};
+  background-color: ${props.background && theme.colors[props.background]};
   box-shadow: ${props.elevated && `0px 4px 8px rgba(0, 0, 0, 0.3)`};
   justify-content: ${props.justify};
   align-items: ${props.align};

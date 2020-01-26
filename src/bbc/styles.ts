@@ -33,8 +33,8 @@ export const Sub = styled.span`
   font-size: 75%;
 `
 
-export const Color = styled.span`
-  color: ${({ color }: { color: string }) => colors[color] || "inherit"};
+export const Color = styled.span<{ color: string }>`
+  color: ${({ color }) => colors[color] || "inherit"};
 `
 
 export const LinkIcon = styled(Icon)`

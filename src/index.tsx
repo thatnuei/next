@@ -4,7 +4,6 @@ import { configure } from "mobx"
 import React from "react"
 import ReactDOM from "react-dom"
 import Root from "./app/Root"
-import "./ui/index.css"
 
 configure({
   reactionRequiresObservable: true,

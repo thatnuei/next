@@ -1,3 +1,4 @@
+import { Interpolation } from "@emotion/core"
 import { css } from "./styled"
 
 type SizeUnit =
@@ -30,16 +31,16 @@ export const mb = (unit: SizeUnit) => css({ marginBottom: space(unit) })
 export const mt = (unit: SizeUnit) => css({ marginTop: space(unit) })
 export const ml = (unit: SizeUnit) => css({ marginLeft: space(unit) })
 export const mr = (unit: SizeUnit) => css({ marginRight: space(unit) })
-export const mx = (unit: SizeUnit) => css({}, ml(unit), mr(unit))
-export const my = (unit: SizeUnit) => css({}, mt(unit), mb(unit))
+export const mx = (unit: SizeUnit) => css(ml(unit), mr(unit))
+export const my = (unit: SizeUnit) => css(mt(unit), mb(unit))
 
 export const p = (unit: SizeUnit) => css({ padding: space(unit) })
 export const pb = (unit: SizeUnit) => css({ paddingBottom: space(unit) })
 export const pt = (unit: SizeUnit) => css({ paddingTop: space(unit) })
 export const pl = (unit: SizeUnit) => css({ paddingLeft: space(unit) })
 export const pr = (unit: SizeUnit) => css({ paddingRight: space(unit) })
-export const px = (unit: SizeUnit) => css({}, pl(unit), pr(unit))
-export const py = (unit: SizeUnit) => css({}, pt(unit), pb(unit))
+export const px = (unit: SizeUnit) => css(pl(unit), pr(unit))
+export const py = (unit: SizeUnit) => css(pt(unit), pb(unit))
 
 export const w = (unit: SizeUnit) => css({ width: space(unit) })
 export const h = (unit: SizeUnit) => css({ height: space(unit) })
@@ -134,14 +135,14 @@ export const transition = (properties = "all") =>
   css({ transition: "0.2s", transitionProperty: properties })
 
 // states
-export const hover = (...styles: any[]) =>
+export const hover = (...styles: Interpolation[]) =>
   // @ts-ignore fix later
-  css({ ":hover": css({}, ...styles) })
+  css({ ":hover": css(...styles) })
 
-export const focus = (...styles: any[]) =>
+export const focus = (...styles: Interpolation[]) =>
   // @ts-ignore fix later
-  css({ ":focus": css({}, ...styles) })
+  css({ ":focus": css(...styles) })
 
-export const active = (...styles: any[]) =>
+export const active = (...styles: Interpolation[]) =>
   // @ts-ignore fix later
-  css({ ":active": css({}, ...styles) })
+  css({ ":active": css(...styles) })

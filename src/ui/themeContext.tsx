@@ -1,22 +1,21 @@
+import {
+  ThemeProvider as BaseThemeProvider,
+  useTheme as useBaseTheme,
+} from "emotion-theming"
 import React from "react"
-import { useRequiredContext } from "../react/hooks/useRequiredContext"
-import { StyledThemeProvider, ThemeContext } from "./styled"
-import { AppTheme } from "./theme"
+import { AppTheme, baseTheme } from "./theme"
 
 export function ThemeProvider(props: {
   theme: AppTheme
   children: React.ReactNode
 }) {
   return (
-    <StyledThemeProvider theme={props.theme}>
+    <BaseThemeProvider theme={props.theme}>
       <>{props.children}</>
-    </StyledThemeProvider>
+    </BaseThemeProvider>
   )
 }
 
 export function useTheme() {
-  return useRequiredContext(
-    ThemeContext as React.Context<AppTheme | undefined | null>,
-    "ThemeProvider not found",
-  )
+  return useBaseTheme<AppTheme>() ?? baseTheme
 }

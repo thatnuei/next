@@ -1,9 +1,9 @@
 import React from "react"
-import styled from "styled-components"
 import BBC from "../bbc/BBC"
 import CharacterName from "../character/CharacterName"
 import { Character } from "../character/types"
 import { semiBlack } from "../ui/colors"
+import { styled } from "../ui/styled"
 import { Message, MessageType } from "./types"
 
 type Props = {
