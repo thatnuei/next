@@ -1,11 +1,13 @@
 import React from "react"
 import useInput from "../dom/hooks/useInput"
+import { buttonSolid, input, raisedPanel } from "../ui/components"
 import FormField from "../ui/components/FormField"
 import {
+  absoluteCover,
   bgMidnight,
   flex,
   flexCol,
-  h,
+  fontCondensed,
   m,
   maxW,
   mb,
@@ -13,6 +15,7 @@ import {
   opacity,
   p,
   textCenter,
+  textSize,
   transition,
 } from "../ui/helpers.new"
 
@@ -32,20 +35,20 @@ function Login({ disabled, error, onSubmit }: Props) {
   }
 
   return (
-    <div css={[h("full"), flex, p(4)]}>
-      <div className="raised-panel" css={m("auto")}>
-        <div css={[bgMidnight(800), p(3), textCenter]}>
-          <h1 className="font-condensed text-3xl">Login</h1>
-        </div>
+    <main css={[absoluteCover, flex(), p(4)]}>
+      <div css={[raisedPanel, m("auto")]}>
+        <header css={[bgMidnight(800), p(3), textCenter]}>
+          <h1 css={[fontCondensed, textSize("xl3")]}>Login</h1>
+        </header>
 
-        <form css={[flex, flexCol, p(4)]} onSubmit={handleSubmit}>
+        <form css={[flex(), flexCol, p(4)]} onSubmit={handleSubmit}>
           <fieldset
             disabled={disabled}
             css={[transition("opacity"), disabled && opacity(50)]}
           >
             <FormField labelText="Username" css={mb(3)}>
               <input
-                className="input"
+                css={input}
                 name="username"
                 placeholder="awesome username"
                 required
@@ -55,7 +58,7 @@ function Login({ disabled, error, onSubmit }: Props) {
 
             <FormField labelText="Password" css={mb(3)}>
               <input
-                className="input"
+                css={input}
                 name="password"
                 type="password"
                 placeholder="••••••••"
@@ -64,7 +67,7 @@ function Login({ disabled, error, onSubmit }: Props) {
               />
             </FormField>
 
-            <button className="button-solid" type="submit">
+            <button css={buttonSolid} type="submit">
               Submit
             </button>
           </fieldset>
@@ -72,7 +75,7 @@ function Login({ disabled, error, onSubmit }: Props) {
           {error ? <p css={[mt(4), maxW("xs"), textCenter]}>{error}</p> : null}
         </form>
       </div>
-    </div>
+    </main>
   )
 }
 
