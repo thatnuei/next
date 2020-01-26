@@ -13,7 +13,7 @@
     "desktop:dev": "npm-run-all --parallel --race desktop:dev:app dev",
     "desktop:build": "cross-env PUBLIC_URL=. pnpm run build",
     "desktop:start": "cross-env NODE_ENV=production electron desktop/main.js",
-    "postinstall": "typesync",
+    "postinstall": "typesync && pnpm audit",
     "postuninstall": "typesync"
   },
   "dependencies": {
