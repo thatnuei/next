@@ -22,6 +22,8 @@ type SizeUnit =
   | 64
   | string
 
+type FlexDirection = "row" | "column" | "row-reverse" | "column-reverse"
+
 export const space = (unit: SizeUnit) =>
   typeof unit === "number" ? `${unit / 4}rem` : unit === "full" ? "100%" : unit
 
@@ -56,9 +58,21 @@ export const right = (unit: SizeUnit) => css({ right: space(unit) })
 export const top = (unit: SizeUnit) => css({ top: space(unit) })
 export const bottom = (unit: SizeUnit) => css({ bottom: space(unit) })
 
-export const flex = css({ display: "flex" })
-export const flexRow = css({ flexDirection: "row" })
-export const flexCol = css({ flexDirection: "column" })
+export const flex = (flexDirection: FlexDirection = "row") =>
+  css({ display: "flex", flexDirection })
+
+export const alignItems = (
+  alignment: "flex-start" | "flex-end" | "center" | "stretch",
+) => css({ alignItems: alignment })
+
+export const justifyContent = (
+  alignment:
+    | "flex-start"
+    | "flex-end"
+    | "center"
+    | "space-between"
+    | "space-around",
+) => css({ justifyContent: alignment })
 
 export const maxSizes = {
   xs: "20rem",
@@ -80,6 +94,14 @@ export const maxW = (key: keyof typeof maxSizes) =>
 export const maxH = (key: keyof typeof maxSizes) =>
   css({ maxWidth: maxSizes[key] })
 
+export const absoluteCover = css({
+  position: "absolute",
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+})
+
 // typeography
 export const textCenter = css({ textAlign: "center" })
 export const textLeft = css({ textAlign: "left" })
@@ -89,6 +111,8 @@ export const fontNormal = css({ fontFamily: "Roboto, sans-serif" })
 export const fontCondensed = css({
   fontFamily: '"Roboto Condensed", sans-serif',
 })
+
+export const underline = css({ textDecoration: "underline" })
 
 const textSizes = {
   xs: "0.75rem",
@@ -131,8 +155,21 @@ export const bgSemiBlack = (opacity: 25 | 50 | 75) =>
 export const opacity = (amount: 0 | 25 | 50 | 75 | 100) =>
   css({ opacity: `${amount}%` })
 
+export const shadow = css({
+  boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.5)",
+})
+
+export const shadowInner = css({
+  boxShadow: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+})
+
 export const transition = (properties = "all") =>
   css({ transition: "0.2s", transitionProperty: properties })
+
+export const outlineNone = css({ outline: 0 })
+
+// interaction
+export const cursorPointer = css({ cursor: "pointer" })
 
 // states
 export const hover = (...styles: Interpolation[]) =>
