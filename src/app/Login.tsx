@@ -6,7 +6,6 @@ import {
   absoluteCover,
   bgMidnight,
   flex,
-  flexCol,
   fontCondensed,
   m,
   maxW,
@@ -41,7 +40,7 @@ function Login({ disabled, error, onSubmit }: Props) {
           <h1 css={[fontCondensed, textSize("xl3")]}>Login</h1>
         </header>
 
-        <form css={[flex(), flexCol, p(4)]} onSubmit={handleSubmit}>
+        <form css={p(4)} onSubmit={handleSubmit}>
           <fieldset
             disabled={disabled}
             css={[transition("opacity"), disabled && opacity(50)]}
