@@ -42,4 +42,5 @@ export const anchor = css(
   opacity(75),
   transition("opacity"),
   underline,
+  hover(opacity(100)),
 )
