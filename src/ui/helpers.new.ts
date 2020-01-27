@@ -182,10 +182,10 @@ export const transition = (...properties: string[]) =>
       properties.length > 0 ? properties.join(", ") : undefined,
   })
 
-export const outlineNone = css({ outline: 0 })
-
 // interaction
 export const cursorPointer = css({ cursor: "pointer" })
+
+export const outlineNone = css({ outline: 0 })
 
 // states
 export const hover = (...styles: Interpolation[]) =>
