@@ -1,6 +1,7 @@
 import React from "react"
-import { IconName } from "../ui/components/Icon"
-import { LinkIcon } from "./styles"
+import { anchor } from "../ui/components"
+import Icon, { IconName } from "../ui/components/Icon"
+import { linkIcon } from "./styles"
 
 function ChannelLink(props: { id: string; title: string; icon: IconName }) {
   // const { channelStore } = useRootStore()
@@ -11,8 +12,8 @@ function ChannelLink(props: { id: string; title: string; icon: IconName }) {
 
   return (
     <>
-      <LinkIcon name={props.icon} />
-      <button className="anchor" onClick={handleClick}>
+      <Icon name="lock" css={linkIcon} size={0.8} />
+      <button css={anchor} onClick={handleClick}>
         {props.title}
       </button>
     </>

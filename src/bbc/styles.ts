@@ -1,6 +1,4 @@
-import Avatar from "../character/Avatar"
-import Icon from "../ui/components/Icon"
-import { styled } from "../ui/styled"
+import { css } from "../ui/styled"
 
 const colors: { [color in string]?: string } = {
   white: "rgb(236, 240, 241)",
@@ -17,42 +15,13 @@ const colors: { [color in string]?: string } = {
   cyan: "rgb(85, 175, 236)",
 }
 
-export const Strike = styled.span`
-  text-decoration: strike-through;
-`
+export const bbcColor = (name: string) =>
+  css({ color: colors[name] ?? "inherit" })
 
-export const Strong = styled.span`
-  font-weight: 500;
-`
-
-export const Sup = styled.span`
-  vertical-align: top;
-`
-
-export const Sub = styled.span`
-  font-size: 75%;
-`
-
-export const Color = styled.span<{ color: string }>`
-  color: ${({ color }) => colors[color] || "inherit"};
-`
-
-export const LinkIcon = styled(Icon)`
-  display: inline;
-  margin-right: 2px;
-
-  svg {
-    vertical-align: text-top;
-    width: 1.2em !important;
-  }
-`
-
-export const IconImage = styled.img`
-  width: 50px;
-  height: 50px;
-  vertical-align: middle;
-`
-
-export const IconAvatar = styled(Avatar)`
-  vertical-align: middle;
-`
+export const linkIcon = css({
+  "display": "inline",
+  "marginRight": 2,
+  "> svg": {
+    verticalAlign: "text-bottom",
+  },
+})

@@ -1,6 +1,6 @@
 import * as bbc from "bbc.js"
 import React from "react"
-import { styled } from "../ui/styled"
+import { inline } from "../ui/helpers.new"
 import BBCTree from "./BBCTree"
 
 type Props = {
@@ -9,14 +9,10 @@ type Props = {
 
 function BBC(props: Props) {
   return (
-    <Container>
+    <div css={[inline, { whiteSpace: "pre-line" }]}>
       <BBCTree key={props.text} nodes={bbc.toTree(props.text)} />
-    </Container>
+    </div>
   )
 }
 
 export default React.memo(BBC)
-
-const Container = styled.span`
-  white-space: pre-line;
-`

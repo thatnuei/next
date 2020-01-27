@@ -1,38 +1,43 @@
 import * as bbc from "bbc.js"
 import React from "react"
+import Avatar from "../character/Avatar"
 import ExternalLink from "../dom/components/ExternalLink"
 import { getIconUrl, getProfileUrl } from "../flist/helpers"
+import Icon from "../ui/components/Icon"
+import { h, lineThrough, textSize, w, weightBold } from "../ui/helpers.new"
 import BBCTree from "./BBCTree"
 import ChannelLink from "./ChannelLink"
-import {
-  Color,
-  IconAvatar,
-  IconImage,
-  LinkIcon,
-  Strike,
-  Strong,
-  Sub,
-  Sup,
-} from "./styles"
+import { bbcColor, linkIcon } from "./styles"
 
 export default function BBCTagNode({ node }: { node: bbc.TagNode }) {
   const childrenTree = <BBCTree key="children" nodes={node.children} />
 
   switch (node.tag) {
     case "b":
-      return <Strong>{childrenTree}</Strong>
+      return <strong css={weightBold}>{childrenTree}</strong>
     case "i":
       return <em>{childrenTree}</em>
     case "u":
       return <u>{childrenTree}</u>
     case "s":
-      return <Strike>{childrenTree}</Strike>
+      return <del css={lineThrough}>{childrenTree}</del>
+
     case "sub":
-      return <Sub>{childrenTree}</Sub>
+      return (
+        <sub css={[{ verticalAlign: "unset" }, textSize("xs")]}>
+          {childrenTree}
+        </sub>
+      )
+
     case "sup":
-      return <Sup>{childrenTree}</Sup>
+      return (
+        <sup css={[{ verticalAlign: "top" }, textSize("xs")]}>
+          {childrenTree}
+        </sup>
+      )
+
     case "color":
-      return <Color color={node.value}>{childrenTree}</Color>
+      return <span css={bbcColor(node.value)}>{childrenTree}</span>
 
     case "url":
       return (
@@ -41,7 +46,7 @@ export default function BBCTagNode({ node }: { node: bbc.TagNode }) {
           href={node.value}
           title={getDomain(node.value)}
         >
-          <LinkIcon name="link" />
+          <Icon name="link" css={linkIcon} size={0.8} />
           {childrenTree}
         </ExternalLink>
       )
@@ -62,7 +67,7 @@ export default function BBCTagNode({ node }: { node: bbc.TagNode }) {
       const userName = getNodeText(node)
       return (
         <ExternalLink href={getProfileUrl(userName)}>
-          <IconAvatar name={userName} size={50} />
+          <Avatar css={{ verticalAlign: "middle" }} name={userName} size={50} />
         </ExternalLink>
       )
     }
@@ -76,9 +81,10 @@ export default function BBCTagNode({ node }: { node: bbc.TagNode }) {
     case "eicon": {
       const iconName = getNodeText(node)
       return (
-        <IconImage
+        <img
+          css={[{ verticalAlign: "middle" }, w(12), h(12)]}
           src={getIconUrl(iconName)}
-          alt={`Image for icon "${iconName}"`}
+          alt={iconName}
           title={iconName}
         />
       )
@@ -100,11 +106,7 @@ function getDomain(urlString: string): string {
 
 function getNodeText(node: bbc.TagNode): string {
   const first = node.children[0]
-  if (!first) {
-    return ""
-  }
-  if (first.type !== "text") {
-    return getNodeText(first)
-  }
-  return first.text
+  if (!first) return ""
+  if (first.type === "text") return first.text
+  return getNodeText(first)
 }
