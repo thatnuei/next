@@ -58,6 +58,7 @@ function ContextMenu(props: Props) {
     props.visible ? [visible, translateDown] : [hidden],
   ]
 
+  // put this here so we don't generate a bunch of new css classes for positioning
   const containerStyle = {
     left: boundedPosition.x,
     top: boundedPosition.y,
