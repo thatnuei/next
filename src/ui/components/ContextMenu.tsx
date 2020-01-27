@@ -3,9 +3,16 @@ import { FocusOn } from "react-focus-on"
 import clamp from "../../common/helpers/clamp"
 import useElementSize from "../../dom/hooks/useElementSize"
 import useWindowDimensions from "../../dom/hooks/useWindowDimensions"
-import { resolveStyleUnit } from "../helpers"
-import { styled } from "../styled"
-import { getThemeColor, shadows } from "../theme"
+import {
+  bgMidnight,
+  fixed,
+  hidden,
+  shadow,
+  transition,
+  translateDown,
+  visible,
+  w,
+} from "../helpers.new"
 import { Position } from "../types"
 
 type Props = {
@@ -42,12 +49,22 @@ function ContextMenu(props: Props) {
     [props.onClose],
   )
 
+  const containerCss = [
+    fixed,
+    bgMidnight(700),
+    w(12),
+    shadow,
+    transition("opacity, visibility, transform"),
+    props.visible ? [visible, translateDown] : [hidden],
+  ]
+
+  const containerStyle = {
+    left: boundedPosition.x,
+    top: boundedPosition.y,
+  }
+
   return (
-    <Container
-      position={boundedPosition}
-      visible={props.visible}
-      ref={setContainer}
-    >
+    <div css={containerCss} style={containerStyle} ref={setContainer}>
       <FocusOn
         enabled={props.visible}
         onClickOutside={props.onClose}
@@ -57,7 +74,7 @@ function ContextMenu(props: Props) {
           {props.children}
         </Context.Provider>
       </FocusOn>
-    </Container>
+    </div>
   )
 }
 
@@ -70,26 +87,3 @@ const Context = React.createContext({
 export function useContextMenuContext() {
   return useContext(Context)
 }
-
-const Container = styled.div<{ position: Position; visible: boolean }>`
-  position: fixed;
-  left: ${({ position }) => resolveStyleUnit(position.x)};
-  top: ${({ position }) => resolveStyleUnit(position.y)};
-
-  background-color: ${getThemeColor("theme0")};
-  width: 200px;
-  box-shadow: ${shadows.normal};
-
-  transition: 0.2s;
-  transition-property: opacity, visibility, transform;
-
-  ${({ visible }) =>
-    visible
-      ? { opacity: 1, visibility: "visible" }
-      : { opacity: 0, visibility: "hidden" }}
-
-  ${({ visible }) =>
-    visible
-      ? { transform: `translateY(0)` }
-      : { transform: `translateY(20px)` }}
-`
