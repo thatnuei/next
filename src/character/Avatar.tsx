@@ -11,12 +11,12 @@ import {
   w,
 } from "../ui/helpers.new"
 
-type Props = {
+type Props = React.ComponentPropsWithoutRef<"div"> & {
   name: string
   size: number
 }
 
-function Avatar({ name, size }: Props) {
+function Avatar({ name, size, ...props }: Props) {
   type State =
     | { type: "idle" }
     | { type: "loading" }
@@ -46,7 +46,11 @@ function Avatar({ name, size }: Props) {
   }, [image, name])
 
   return (
-    <TransitionGroup css={[relative]} style={{ width: size, height: size }}>
+    <TransitionGroup
+      {...props}
+      css={[relative]}
+      style={{ width: size, height: size, ...props.style }}
+    >
       {state.type === "success" && (
         // specifying the timeout this way lets the transition work properly,
         // not sure why
