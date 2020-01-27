@@ -108,16 +108,17 @@ export const absoluteCover = css({
 })
 
 // typeography
-export const textCenter = css({ textAlign: "center" })
-export const textLeft = css({ textAlign: "left" })
-export const textRight = css({ textAlign: "right" })
-
 export const fontNormal = css({ fontFamily: "Roboto, sans-serif" })
 export const fontCondensed = css({
   fontFamily: '"Roboto Condensed", sans-serif',
 })
 
+export const weightNormal = css({ fontWeight: 400 })
+export const weightLight = css({ fontWeight: 300 })
+export const weightBold = css({ fontWeight: 500 })
+
 export const underline = css({ textDecoration: "underline" })
+export const lineThrough = css({ textDecoration: "line-through" })
 
 const textSizes = {
   xs: "0.75rem",
@@ -133,6 +134,10 @@ const textSizes = {
 
 export const textSize = (key: keyof typeof textSizes) =>
   css({ fontSize: textSizes[key] })
+
+export const textCenter = css({ textAlign: "center" })
+export const textLeft = css({ textAlign: "left" })
+export const textRight = css({ textAlign: "right" })
 
 // colors
 const midnightColors = {
