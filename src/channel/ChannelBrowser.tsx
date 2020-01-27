@@ -1,8 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import TextInput from "../dom/components/TextInput"
-import { input } from "../ui/components"
-import Button from "../ui/components/Button"
+import { buttonSolid, input } from "../ui/components"
 import Icon from "../ui/components/Icon"
 import LoadingIcon from "../ui/components/LoadingIcon"
 import VirtualizedList from "../ui/components/VirtualizedList"
@@ -57,15 +56,16 @@ function ChannelBrowser({ channelBrowserStore, channelStore }: Props) {
           value={channelBrowserStore.searchQuery}
           onTextChange={channelBrowserStore.setSearchQuery}
         />
-        <Button onClick={channelBrowserStore.cycleSortMode}>
+        <button css={buttonSolid} onClick={channelBrowserStore.cycleSortMode}>
           <Icon name={sortButtonIcon} />
-        </Button>
-        <Button
+        </button>
+        <button
+          css={buttonSolid}
           onClick={channelBrowserStore.refresh}
           disabled={channelBrowserStore.isRefreshing}
         >
           {refreshIcon}
-        </Button>
+        </button>
       </Footer>
     </Container>
   )
