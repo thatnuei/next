@@ -165,6 +165,9 @@ export const bgSemiBlack = (opacity: 25 | 50 | 75) =>
 export const opacity = (amount: 0 | 25 | 50 | 75 | 100) =>
   css({ opacity: `${amount}%` })
 
+export const visible = css({ visibility: "visible" })
+export const hidden = css({ visibility: "hidden" })
+
 export const shadow = css({
   boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.5)",
 })
@@ -174,6 +177,8 @@ export const shadowInner = css({
 })
 
 export const scaleDown = css({ transform: "scale(0.95)" })
+
+export const translateDown = css({ transform: `translateY(${space(5)})` })
 
 export const transition = (...properties: string[]) =>
   css({
