@@ -81,14 +81,3 @@ export const spacedChildrenHorizontal = (distance = spacing.small) => css`
 
 export const resolveStyleUnit = (value: number | string) =>
   typeof value === "number" ? `${value}px` : value
-
-// content-size the FocusOn div, which can't be styled directly
-export const focusOnFillFix = css`
-  > div {
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-  }
-`
