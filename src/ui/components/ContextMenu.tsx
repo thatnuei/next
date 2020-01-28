@@ -81,6 +81,7 @@ function ContextMenu(props: Props) {
 
 export default ContextMenu
 
+// TODO: don't use context?
 const Context = React.createContext({
   close: () => {},
 })
