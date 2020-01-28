@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import { CharacterStatus } from "../character/types"
 import useInput from "../dom/hooks/useInput"
-import { buttonSolid, input } from "../ui/components"
+import { input, solidButton } from "../ui/components"
 import FormField from "../ui/components/FormField"
 import LoadingIcon from "../ui/components/LoadingIcon"
 import {
@@ -64,7 +64,7 @@ function UpdateStatusForm() {
           </StatusMessageField>
 
           <Footer>
-            <button css={buttonSolid} type="submit">
+            <button css={solidButton} type="submit">
               {isLoading ? <LoadingIcon /> : "Set status"}
             </button>
           </Footer>

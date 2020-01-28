@@ -1,6 +1,6 @@
 import React from "react"
 import { TypingStatus } from "../private-chat/types"
-import { buttonSolid, input } from "../ui/components"
+import { input, solidButton } from "../ui/components"
 import { bgMidnight, flex, flex1, mr, p } from "../ui/helpers.new"
 import useTypingStatus from "./useTypingStatus"
 
@@ -54,7 +54,7 @@ function Chatbox(props: Props) {
         onKeyDown={handleKeyDown}
         style={textAreaStyle}
       />
-      <button type="submit" css={buttonSolid}>
+      <button type="submit" css={solidButton}>
         Send
       </button>
     </form>

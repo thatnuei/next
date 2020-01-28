@@ -1,6 +1,6 @@
 import React from "react"
 import Avatar from "../character/Avatar"
-import { anchor, buttonSolid, input, raisedPanel } from "../ui/components"
+import { anchor, input, raisedPanel, solidButton } from "../ui/components"
 import {
   absoluteCover,
   alignItems,
@@ -58,7 +58,7 @@ export default function CharacterSelect(props: Props) {
                 ))}
               </select>
 
-              <button css={[buttonSolid, mb(4)]} type="submit">
+              <button css={[solidButton, mb(4)]} type="submit">
                 Enter Chat
               </button>
 

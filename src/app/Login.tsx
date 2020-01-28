@@ -1,6 +1,6 @@
 import React from "react"
 import useInput from "../dom/hooks/useInput"
-import { buttonSolid, input, raisedPanel } from "../ui/components"
+import { input, raisedPanel, solidButton } from "../ui/components"
 import FormField from "../ui/components/FormField"
 import {
   absoluteCover,
@@ -66,7 +66,7 @@ function Login({ disabled, error, onSubmit }: Props) {
               />
             </FormField>
 
-            <button css={buttonSolid} type="submit">
+            <button css={solidButton} type="submit">
               Submit
             </button>
           </fieldset>

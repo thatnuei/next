@@ -21,7 +21,7 @@ import { css } from "./styled"
 
 export const raisedPanel = css(bgMidnight(700), shadow)
 
-export const buttonSolid = css(
+export const solidButton = css(
   px(4),
   py(2),
   bgSemiBlack(25),
