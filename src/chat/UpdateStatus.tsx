@@ -5,7 +5,6 @@ import useInput from "../dom/hooks/useInput"
 import { buttonSolid, input } from "../ui/components"
 import FormField from "../ui/components/FormField"
 import LoadingIcon from "../ui/components/LoadingIcon"
-import Select from "../ui/components/Select"
 import {
   fillArea,
   flexColumn,
@@ -51,13 +50,13 @@ function UpdateStatusForm() {
       <FieldSet disabled={isLoading}>
         <InnerContainer>
           <FormField labelText="Status">
-            <Select {...status.bind}>
+            <select css={input} {...status.bind}>
               {Object.entries(statuses).map(([status, text]) => (
                 <option key={status} value={status}>
                   {text}
                 </option>
               ))}
-            </Select>
+            </select>
           </FormField>
 
           <StatusMessageField labelText="Status message (optional)">
