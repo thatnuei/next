@@ -1,8 +1,7 @@
 import { useRect } from "@reach/rect"
 import React, { useRef } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
-import { fillArea } from "../helpers"
-import { styled } from "../styled"
+import { wh } from "../helpers.new"
 
 type Props<T> = {
   items: T[]
@@ -21,7 +20,7 @@ function VirtualizedList<T>({
   const { width = 0, height = 0 } = useRect(listContainerRef) || {}
 
   return (
-    <ListContainer ref={listContainerRef}>
+    <div css={wh("full")} ref={listContainerRef}>
       <FixedSizeList
         width={width}
         height={height}
@@ -32,7 +31,7 @@ function VirtualizedList<T>({
         itemData={{ items, renderItem }}
         children={Row}
       />
-    </ListContainer>
+    </div>
   )
 }
 
@@ -45,7 +44,3 @@ function Row(props: ListChildComponentProps) {
     </div>
   )
 }
-
-const ListContainer = styled.div`
-  ${fillArea};
-`
