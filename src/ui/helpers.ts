@@ -9,10 +9,6 @@ export const fullscreen = css`
   bottom: 0;
 `
 
-export const fullHeight = css`
-  height: 100%;
-`
-
 export const flexCenter = css`
   display: flex;
   align-items: center;
@@ -33,10 +29,6 @@ export const flexGrow = css`
   min-height: 0;
 `
 
-export const flexWrap = css`
-  flex-wrap: wrap;
-`
-
 export const fillArea = css`
   width: 100%;
   height: 100%;
@@ -47,23 +39,12 @@ export const scrollVertical = css`
   transform: translateZ(0);
 `
 
-export const boxShadow = css`
-  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.5);
-`
-
 export const fadedRevealStyle = css`
   transition: 0.2s;
   opacity: 0.4;
 
   :hover {
     opacity: 0.9;
-  }
-`
-
-export const pressEffect = css`
-  :active {
-    transform: translateY(2px);
-    transition: none;
   }
 `
 
@@ -78,6 +59,3 @@ export const spacedChildrenHorizontal = (distance = spacing.small) => css`
     margin-left: ${distance};
   }
 `
-
-export const resolveStyleUnit = (value: number | string) =>
-  typeof value === "number" ? `${value}px` : value
