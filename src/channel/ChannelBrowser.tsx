@@ -41,7 +41,6 @@ function ChannelBrowser({ channelBrowserStore, channelStore }: Props) {
         <VirtualizedList
           items={channelBrowserStore.displayedEntries}
           itemHeight={40}
-          // @ts-ignore
           getItemKey={(item) => item.id}
           renderItem={(entry) => (
             <ChannelBrowserListItem entry={entry} channelStore={channelStore} />
