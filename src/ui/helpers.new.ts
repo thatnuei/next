@@ -62,6 +62,8 @@ export const bottom = (unit: SizeUnit) => css({ bottom: space(unit) })
 export const flex = (flexDirection: FlexDirection = "row") =>
   css({ display: "flex", flexDirection })
 
+export const flex1 = css({ flex: 1 })
+
 export const alignItems = (
   alignment: "flex-start" | "flex-end" | "center" | "stretch",
 ) => css({ alignItems: alignment })
