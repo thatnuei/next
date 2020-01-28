@@ -24,6 +24,8 @@ type SizeUnit =
 
 type FlexDirection = "row" | "column" | "row-reverse" | "column-reverse"
 
+type FlexAlign = "flex-start" | "flex-end" | "center" | "stretch"
+
 export const space = (unit: SizeUnit) =>
   typeof unit === "number" ? `${unit / 4}rem` : unit === "full" ? "100%" : unit
 
@@ -64,13 +66,10 @@ export const flex = (flexDirection: FlexDirection = "row") =>
 
 export const flex1 = css({ flex: 1 })
 
-export const alignItems = (
-  alignment: "flex-start" | "flex-end" | "center" | "stretch",
-) => css({ alignItems: alignment })
+export const alignItems = (alignment: FlexAlign) =>
+  css({ alignItems: alignment })
 
-export const alignSelf = (
-  alignment: "flex-start" | "flex-end" | "center" | "stretch",
-) => css({ alignSelf: alignment })
+export const alignSelf = (alignment: FlexAlign) => css({ alignSelf: alignment })
 
 export const justifyContent = (
   alignment:
