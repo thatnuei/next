@@ -30,6 +30,13 @@ export const solidButton = css(
   activePress,
 )
 
+export const fadedButton = css(
+  opacity(50),
+  transition("opacity, transform"),
+  hover(opacity(100)),
+  activePress,
+)
+
 export const input = css(
   px(4),
   py(2),
