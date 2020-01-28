@@ -1,6 +1,7 @@
 import React from "react"
 import { FocusOn } from "react-focus-on"
-import { focusOnFillFix, fullscreen } from "../helpers"
+import { focusOnFillFix } from "../components"
+import { fullscreen } from "../helpers"
 import { styled } from "../styled"
 import { getThemeColor, shadows } from "../theme"
 

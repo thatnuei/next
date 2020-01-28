@@ -3,7 +3,9 @@ import {
   bgSemiBlack,
   block,
   cursorPointer,
+  flex,
   focus,
+  h,
   hover,
   opacity,
   outlineNone,
@@ -44,3 +46,8 @@ export const anchor = css(
   underline,
   hover(opacity(100)),
 )
+
+// content-size the FocusOn div, which can't be styled directly
+export const focusOnFillFix = css({
+  "> div": [w("full"), h("full"), flex("column")],
+})
