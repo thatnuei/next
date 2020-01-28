@@ -2,16 +2,20 @@ import React from "react"
 import { roomSidebarBreakpoint } from "../chat/constants"
 import HeaderMenuButton from "../chat/HeaderMenuButton"
 import useMedia from "../dom/hooks/useMedia"
-import FadedButton from "../ui/components/FadedButton"
+import { fadedButton } from "../ui/components"
 import Icon from "../ui/components/Icon"
 import {
-  flexColumn,
-  flexRow,
-  spacedChildrenHorizontal,
-  spacedChildrenVertical,
-} from "../ui/helpers"
-import { styled } from "../ui/styled"
-import { getThemeColor, spacing } from "../ui/theme"
+  alignItems,
+  bgMidnight,
+  flex,
+  flex1,
+  fontCondensed,
+  mr,
+  p,
+  textSize,
+  w,
+  weightLight,
+} from "../ui/helpers.new"
 
 type Props = {
   title: string
@@ -29,44 +33,31 @@ function ChannelHeader(props: Props) {
   )
 
   return (
-    <Container>
+    <div css={[bgMidnight(700), flex("row"), alignItems("center"), p(3)]}>
       <HeaderMenuButton />
 
-      <MiddleSection>
-        <TitleText>{props.title}</TitleText>
-        <FadedButton onClick={props.onShowDescription}>
-          <span>Description</span>
+      <div css={w(3)} />
+
+      <div css={[flex1, flex("column")]}>
+        <h1 css={[fontCondensed, weightLight, textSize("xl")]}>
+          {props.title}
+        </h1>
+        <button
+          css={[fadedButton, flex("row"), alignItems("center")]}
+          onClick={props.onShowDescription}
+        >
+          <span css={mr(1)}>Description</span>
           <Icon name="about" size={0.8} />
-        </FadedButton>
-      </MiddleSection>
+        </button>
+      </div>
 
       {isChannelMenuHidden && (
-        <FadedButton onClick={props.onShowChannelMenu}>
+        <button css={fadedButton} onClick={props.onShowChannelMenu}>
           <Icon name="more" />
-        </FadedButton>
+        </button>
       )}
-    </Container>
+    </div>
   )
 }
 
 export default ChannelHeader
-
-const Container = styled.div`
-  background-color: ${getThemeColor("theme0")};
-
-  ${flexRow};
-  align-items: center;
-
-  padding: ${spacing.small};
-  ${spacedChildrenHorizontal(spacing.small)};
-`
-
-const MiddleSection = styled.div`
-  flex: 1;
-  ${flexColumn};
-  ${spacedChildrenVertical(spacing.xxsmall)};
-`
-
-const TitleText = styled.h3`
-  flex: 1;
-`
