@@ -48,6 +48,7 @@ export const py = (unit: SizeUnit) => css(pt(unit), pb(unit))
 
 export const w = (unit: SizeUnit) => css({ width: space(unit) })
 export const h = (unit: SizeUnit) => css({ height: space(unit) })
+export const wh = (unit: SizeUnit) => [w(unit), h(unit)]
 
 export const block = css({ display: "block" })
 export const inlineBlock = css({ display: "inline-block" })
