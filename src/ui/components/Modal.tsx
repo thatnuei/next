@@ -1,6 +1,7 @@
 import React from "react"
 import { FocusOn } from "react-focus-on"
-import { focusOnFillFix, raisedPanel } from "../components"
+import Button from "../../dom/components/Button"
+import { fadedButton, focusOnFillFix, raisedPanel } from "../components"
 import {
   absolute,
   absoluteCover,
@@ -18,7 +19,6 @@ import {
   visible,
   w,
 } from "../helpers.new"
-import FadedButton from "./FadedButton"
 import Icon from "./Icon"
 import RaisedPanelHeader from "./RaisedPanelHeader"
 
@@ -46,9 +46,9 @@ function Modal({
   ...props
 }: Props) {
   const closeButton = (
-    <FadedButton onClick={props.onClose}>
+    <Button css={[fadedButton, p(3)]} onClick={props.onClose}>
       <Icon name="close" />
-    </FadedButton>
+    </Button>
   )
 
   const modalPanelStyle = {

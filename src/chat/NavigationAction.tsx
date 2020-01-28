@@ -1,7 +1,8 @@
 import React from "react"
-import FadedButton from "../ui/components/FadedButton"
+import Button from "../dom/components/Button"
+import { fadedButton } from "../ui/components"
 import Icon, { IconName } from "../ui/components/Icon"
-import { spacing } from "../ui/theme"
+import { p } from "../ui/helpers.new"
 
 type Props = {
   title: string
@@ -10,11 +11,10 @@ type Props = {
 }
 
 function NavigationAction({ title, icon, onClick }: Props) {
-  const style = { padding: spacing.small }
   return (
-    <FadedButton title={title} onClick={onClick} css={style}>
+    <Button css={[fadedButton, p(3)]} title={title} onClick={onClick}>
       <Icon name={icon} />
-    </FadedButton>
+    </Button>
   )
 }
 

@@ -1,6 +1,7 @@
 import React from "react"
 import { roomSidebarBreakpoint } from "../chat/constants"
 import HeaderMenuButton from "../chat/HeaderMenuButton"
+import Button from "../dom/components/Button"
 import useMedia from "../dom/hooks/useMedia"
 import { fadedButton } from "../ui/components"
 import Icon from "../ui/components/Icon"
@@ -12,8 +13,8 @@ import {
   fontCondensed,
   mr,
   p,
+  py,
   textSize,
-  w,
   weightLight,
 } from "../ui/helpers.new"
 
@@ -33,10 +34,8 @@ function ChannelHeader(props: Props) {
   )
 
   return (
-    <div css={[bgMidnight(700), flex("row"), alignItems("center"), p(3)]}>
+    <div css={[bgMidnight(700), flex("row"), alignItems("center"), py(3)]}>
       <HeaderMenuButton />
-
-      <div css={w(3)} />
 
       <div css={[flex1, flex("column")]}>
         <h1 css={[fontCondensed, weightLight, textSize("xl")]}>
@@ -52,9 +51,9 @@ function ChannelHeader(props: Props) {
       </div>
 
       {isChannelMenuHidden && (
-        <button css={fadedButton} onClick={props.onShowChannelMenu}>
+        <Button css={[fadedButton, p(3)]} onClick={props.onShowChannelMenu}>
           <Icon name="more" />
-        </button>
+        </Button>
       )}
     </div>
   )

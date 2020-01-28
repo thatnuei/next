@@ -1,7 +1,7 @@
 import { transparentize } from "polished"
 import React from "react"
 import pick from "../common/helpers/pick"
-import FadedButton from "../ui/components/FadedButton"
+import { fadedButton } from "../ui/components"
 import Icon from "../ui/components/Icon"
 import LoadingIcon from "../ui/components/LoadingIcon"
 import {
@@ -10,6 +10,7 @@ import {
   flexRow,
   spacedChildrenHorizontal,
 } from "../ui/helpers"
+import { p } from "../ui/helpers.new"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
 
@@ -36,9 +37,9 @@ export default function RoomTab(props: Props) {
     }
 
     return (
-      <CloseButton onClick={props.onClose}>
+      <button css={[fadedButton, p(2)]} onClick={props.onClose}>
         <Icon name="close" size={0.7} />
-      </CloseButton>
+      </button>
     )
   })()
 
@@ -88,11 +89,6 @@ const TitleAndIconContainer = styled.div`
 
 const TitleText = styled.div`
   flex: 1;
-`
-
-const CloseButton = styled(FadedButton)`
-  ${flexCenter};
-  padding: ${spacing.xsmall};
 `
 
 const LoadingIconContainer = styled.div`

@@ -1,28 +1,20 @@
 import React, { ComponentPropsWithoutRef } from "react"
+import Button from "../dom/components/Button"
 import useMedia from "../dom/hooks/useMedia"
-import FadedButton from "../ui/components/FadedButton"
+import { fadedButton } from "../ui/components"
 import Icon from "../ui/components/Icon"
-import { styled } from "../ui/styled"
-import { spacing } from "../ui/theme"
+import { p } from "../ui/helpers.new"
 import { chatNavigationBreakpoint } from "./constants"
 
-type Props = ComponentPropsWithoutRef<typeof FadedButton>
+type Props = ComponentPropsWithoutRef<"button">
 
 function HeaderMenuButton(props: Props) {
   const isLargeScreen = useMedia(`(min-width: ${chatNavigationBreakpoint}px)`)
   return isLargeScreen ? null : (
-    <StyledFadedButton {...props}>
+    <Button css={[fadedButton, p(3)]} {...props}>
       <Icon name="menu" />
-    </StyledFadedButton>
+    </Button>
   )
 }
 
 export default HeaderMenuButton
-
-const StyledFadedButton = styled(FadedButton)`
-  padding: ${spacing.small};
-
-  /* this negative margin allows having a larger tap area */
-  /* without taking up any additional space, for easier layouts */
-  margin: -${spacing.small};
-`
