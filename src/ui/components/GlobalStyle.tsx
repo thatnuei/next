@@ -30,9 +30,8 @@ const globalStyle = (theme: AppTheme) => css`
   h4,
   h5,
   h6 {
-    font-family: "Roboto Condensed", sans-serif;
-    font-weight: 300;
-    line-height: 1.2;
+    font-size: 1rem;
+    font-weight: normal;
   }
 
   button,
