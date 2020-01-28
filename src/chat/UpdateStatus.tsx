@@ -2,19 +2,18 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import { CharacterStatus } from "../character/types"
 import useInput from "../dom/hooks/useInput"
-import { buttonSolid } from "../ui/components"
+import { buttonSolid, input } from "../ui/components"
 import FormField from "../ui/components/FormField"
 import LoadingIcon from "../ui/components/LoadingIcon"
 import Select from "../ui/components/Select"
-import TextArea from "../ui/components/TextArea"
 import {
   fillArea,
   flexColumn,
-  flexGrow,
   flexRow,
   spacedChildrenHorizontal,
   spacedChildrenVertical,
 } from "../ui/helpers"
+import { flex1 } from "../ui/helpers.new"
 import { styled } from "../ui/styled"
 import { spacing } from "../ui/theme"
 // @ts-ignore
@@ -62,7 +61,7 @@ function UpdateStatusForm() {
           </FormField>
 
           <StatusMessageField labelText="Status message (optional)">
-            <StatusMessageTextArea {...statusMessage.bind} />
+            <textarea css={[input, flex1]} {...statusMessage.bind} />
           </StatusMessageField>
 
           <Footer>
@@ -99,12 +98,8 @@ const InnerContainer = styled.div`
 `
 
 const StatusMessageField = styled(FormField)`
-  ${flexGrow};
+  ${flex1};
   ${flexColumn};
-`
-
-const StatusMessageTextArea = styled(TextArea)`
-  ${flexGrow};
 `
 
 const Footer = styled.div`

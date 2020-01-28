@@ -1,11 +1,7 @@
 import React from "react"
 import { TypingStatus } from "../private-chat/types"
-import { buttonSolid } from "../ui/components"
-import TextArea from "../ui/components/TextArea"
-import { flexRow, spacedChildrenHorizontal } from "../ui/helpers"
-import { styled } from "../ui/styled"
-import { getThemeColor, spacing } from "../ui/theme"
-// import { TypingStatus } from "./types"
+import { buttonSolid, input } from "../ui/components"
+import { bgMidnight, flex, flex1, mr, p } from "../ui/helpers.new"
 import useTypingStatus from "./useTypingStatus"
 
 type Props = {
@@ -23,7 +19,7 @@ function Chatbox(props: Props) {
   const { onTypingStatus } = props
   useTypingStatus(trimmedInput, onTypingStatus)
 
-  const submit = () => {
+  const handleSubmit = () => {
     if (props.value.match(/^\/[a-z]+/i)) {
       if (props.onSubmitCommand) {
         const [command, ...args] = props.value.slice(1).split(/\s+/)
@@ -39,7 +35,7 @@ function Chatbox(props: Props) {
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter" && !event.shiftKey && !event.ctrlKey) {
       event.preventDefault()
-      submit()
+      handleSubmit()
     }
   }
 
@@ -49,31 +45,20 @@ function Chatbox(props: Props) {
   }
 
   return (
-    <Container>
-      <StyledTextArea
+    <form onSubmit={handleSubmit} css={[bgMidnight(700), flex("row"), p(2)]}>
+      <textarea
+        css={[input, flex1, { resize: "none" }, mr(2)]}
         value={props.value}
         onChange={(event) => props.onValueChange(event.target.value)}
         placeholder={props.placeholder}
         onKeyDown={handleKeyDown}
         style={textAreaStyle}
       />
-      <button css={buttonSolid} onClick={submit}>
+      <button type="submit" css={buttonSolid}>
         Send
       </button>
-    </Container>
+    </form>
   )
 }
 
 export default Chatbox
-
-const Container = styled.div`
-  background-color: ${getThemeColor("theme0")};
-  ${flexRow};
-  padding: ${spacing.xsmall};
-  ${spacedChildrenHorizontal(spacing.xsmall)};
-`
-
-const StyledTextArea = styled(TextArea)`
-  flex: 1;
-  resize: none;
-`
