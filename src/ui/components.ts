@@ -1,4 +1,5 @@
 import {
+  activePress,
   bgMidnight,
   bgSemiBlack,
   block,
@@ -24,8 +25,9 @@ export const buttonSolid = css(
   px(4),
   py(2),
   bgSemiBlack(25),
-  transition("background-color"),
+  transition("background-color, transform"),
   hover(bgSemiBlack(50)),
+  activePress,
 )
 
 export const input = css(

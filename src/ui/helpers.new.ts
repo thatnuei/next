@@ -170,6 +170,16 @@ export const textWhite = () => css({ color: "rgba(236, 240, 241,1.0)" })
 export const bgSemiBlack = (opacity: 25 | 50 | 75) =>
   css({ backgroundColor: `rgba(0, 0, 0, 0.${opacity})` })
 
+// states
+export const hover = (...styles: Interpolation[]) =>
+  css({ ":hover": css(...styles) as any })
+
+export const focus = (...styles: Interpolation[]) =>
+  css({ ":focus": css(...styles) as any })
+
+export const active = (...styles: Interpolation[]) =>
+  css({ ":active": css(...styles) as any })
+
 // effects
 export const opacity = (amount: 0 | 25 | 50 | 75 | 100) =>
   css({ opacity: `${amount}%` })
@@ -185,10 +195,6 @@ export const shadowInner = css({
   boxShadow: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
 })
 
-export const scaleDown = css({ transform: "scale(0.95)" })
-
-export const translateDown = css({ transform: `translateY(${space(5)})` })
-
 export const transition = (...properties: string[]) =>
   css({
     transition: "0.2s",
@@ -196,17 +202,16 @@ export const transition = (...properties: string[]) =>
       properties.length > 0 ? properties.join(", ") : undefined,
   })
 
+export const scaleDown = css({ transform: "scale(0.95)" })
+
+export const translateDown = css({ transform: `translateY(${space(5)})` })
+
+export const activePress = active({
+  transform: `translateY(2px)`,
+  transition: "none",
+})
+
 // interaction
 export const cursorPointer = css({ cursor: "pointer" })
 
 export const outlineNone = css({ outline: 0 })
-
-// states
-export const hover = (...styles: Interpolation[]) =>
-  css({ ":hover": css(...styles) as any })
-
-export const focus = (...styles: Interpolation[]) =>
-  css({ ":focus": css(...styles) as any })
-
-export const active = (...styles: Interpolation[]) =>
-  css({ ":active": css(...styles) as any })
