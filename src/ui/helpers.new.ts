@@ -142,23 +142,30 @@ export const textLeft = css({ textAlign: "left" })
 export const textRight = css({ textAlign: "right" })
 
 // colors
-const midnightColors = {
-  100: "hsl(212, 42%, 85%)",
-  200: "hsl(211, 42%, 75%)",
-  300: "hsl(212, 43%, 65%)",
-  400: "hsl(211, 42%, 55%)",
-  500: "hsl(211, 42%, 45%)",
-  600: "hsl(211, 43%, 35%)",
-  700: "hsl(211, 42%, 25%)",
-  800: "hsl(210, 42%, 18%)",
-  900: "hsl(207, 44%, 13%)",
+const colors = {
+  midnight: {
+    100: "hsl(212, 42%, 85%)",
+    200: "hsl(211, 42%, 75%)",
+    300: "hsl(212, 43%, 65%)",
+    400: "hsl(211, 42%, 55%)",
+    500: "hsl(211, 42%, 45%)",
+    600: "hsl(211, 43%, 35%)",
+    700: "hsl(211, 42%, 25%)",
+    800: "hsl(210, 42%, 18%)",
+    900: "hsl(207, 44%, 13%)",
+  },
+  // not sure if we need more? lol
 }
 
-export const bgMidnight = (key: keyof typeof midnightColors) =>
-  css({ backgroundColor: midnightColors[key] })
+export const bgMidnight = (key: keyof typeof colors.midnight) =>
+  css({ backgroundColor: colors.midnight[key] })
 
-export const textMidnight = (key: keyof typeof midnightColors) =>
-  css({ color: midnightColors[key] })
+export const textMidnight = (key: keyof typeof colors.midnight) =>
+  css({ color: colors.midnight[key] })
+
+export const bgWhite = () => css({ backgroundColor: "rgba(236, 240, 241,1.0)" })
+
+export const textWhite = () => css({ color: "rgba(236, 240, 241,1.0)" })
 
 export const bgSemiBlack = (opacity: 25 | 50 | 75) =>
   css({ backgroundColor: `rgba(0, 0, 0, 0.${opacity})` })
