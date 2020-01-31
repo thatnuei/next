@@ -7,9 +7,7 @@ import {
   spacedChildrenHorizontal,
   spacedChildrenVertical,
 } from "../ui/helpers"
-import { css } from "../ui/styled"
 import { spacing } from "../ui/theme"
-import { roomSidebarBreakpoint } from "./constants"
 
 type Props = {
   header: React.ReactNode
@@ -26,19 +24,9 @@ function RoomLayout(props: Props) {
         <div css={[flexGrow]}>{props.body}</div>
         {props.footer}
       </div>
-      <div css={[sidebarBasis, sidebarMedia]}>{props.sidebar}</div>
+      {props.sidebar}
     </div>
   )
 }
 
 export default RoomLayout
-
-const sidebarBasis = css`
-  flex-basis: 220px;
-`
-
-const sidebarMedia = css`
-  @media (max-width: ${roomSidebarBreakpoint}px) {
-    display: none;
-  }
-`

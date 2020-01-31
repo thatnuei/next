@@ -6,17 +6,17 @@ import { fillArea, flexColumn, flexGrow, scrollVertical } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
 
-type Props = {
+type Props = React.ComponentPropsWithoutRef<"div"> & {
   users: Character[]
 }
 
-function RoomUserList(props: Props) {
+function RoomUserList({ users, ...props }: Props) {
   return (
-    <Container>
-      <UserCount>Characters: {props.users.length}</UserCount>
+    <Container {...props}>
+      <UserCount>Characters: {users.length}</UserCount>
       <ListContainer>
         <VirtualizedList
-          items={props.users}
+          items={users}
           itemHeight={30}
           getItemKey={(user) => user.name}
           renderItem={(character) => (
@@ -33,7 +33,6 @@ function RoomUserList(props: Props) {
 export default RoomUserList
 
 const Container = styled.div`
-  ${fillArea};
   ${flexColumn};
   background-color: ${getThemeColor("theme1")};
 `

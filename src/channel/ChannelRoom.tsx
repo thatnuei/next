@@ -1,18 +1,28 @@
-import { observer, Observer } from "mobx-react-lite"
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { CharacterStore } from "../character/CharacterStore"
 import Chatbox from "../chat/Chatbox"
 import RoomLayout from "../chat/RoomLayout"
 import RoomUserList from "../chat/RoomUserList"
+import Button from "../dom/components/Button"
 import MessageList from "../message/MessageList"
 import { useToggle } from "../state/hooks/useToggle"
+import { fadedButton } from "../ui/components"
 import Drawer from "../ui/components/Drawer"
+import Icon from "../ui/components/Icon"
 import Modal from "../ui/components/Modal"
-import { fillArea } from "../ui/helpers"
-import { styled } from "../ui/styled"
+import {
+  block,
+  displayNone,
+  h,
+  media,
+  p,
+  relative,
+  w,
+  wh,
+} from "../ui/helpers.new"
 import ChannelDescription from "./ChannelDescription"
 import ChannelHeader from "./ChannelHeader"
-import ChannelMenu from "./ChannelMenu"
 import { ChannelModel } from "./ChannelModel"
 
 type Props = {
@@ -27,16 +37,25 @@ function ChannelRoom({ channel, identity, characterStore }: Props) {
 
   const users = [...channel.users].map(characterStore.get)
 
+  const channelMenuButton = (
+    <Button
+      css={[fadedButton, p(3), media.xl(displayNone)]}
+      onClick={menuActions.toggle}
+    >
+      <Icon name="more" />
+    </Button>
+  )
+
   const header = (
     <ChannelHeader
       title={channel.name}
-      onShowChannelMenu={menuActions.toggle}
+      right={channelMenuButton}
       onShowDescription={descriptionActions.toggle}
     />
   )
 
   const body = (
-    <BodyContainer>
+    <div css={[wh("full"), relative]}>
       <MessageList
         messages={channel.room.messages}
         characterStore={characterStore}
@@ -49,23 +68,23 @@ function ChannelRoom({ channel, identity, characterStore }: Props) {
         fillMode="contained"
         onClose={descriptionActions.disable}
       />
-    </BodyContainer>
+    </div>
   )
 
   const footer = (
-    <Observer>
-      {() => (
-        <Chatbox
-          value={channel.room.input}
-          placeholder={`Chatting as ${identity}...`}
-          onValueChange={channel.room.setInput}
-          onSubmit={(text) => console.log(`submitted: ${text}`)}
-        />
-      )}
-    </Observer>
+    <Chatbox
+      value={channel.room.input}
+      placeholder={`Chatting as ${identity}...`}
+      onValueChange={channel.room.setInput}
+      onSubmit={(text) => console.log(`submitted: ${text}`)}
+    />
   )
 
-  const sidebar = <RoomUserList users={users} />
+  const sidebar = (
+    <div css={[h("full"), displayNone, media.xl(block)]}>
+      <RoomUserList users={users} css={[w(64), h("full")]} />
+    </div>
+  )
 
   return (
     <>
@@ -76,22 +95,10 @@ function ChannelRoom({ channel, identity, characterStore }: Props) {
         sidebar={sidebar}
       />
       <Drawer side="right" visible={menuVisible} onClose={menuActions.disable}>
-        <ChannelMenuContainer>
-          <ChannelMenu users={users} />
-        </ChannelMenuContainer>
+        <RoomUserList users={users} css={[w(64), h("full")]} />
       </Drawer>
     </>
   )
 }
 
 export default observer(ChannelRoom)
-
-const BodyContainer = styled.div`
-  ${fillArea};
-  position: relative;
-`
-
-const ChannelMenuContainer = styled.div`
-  width: 200px;
-  height: 100%;
-`
