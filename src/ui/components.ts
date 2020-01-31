@@ -13,6 +13,7 @@ import {
   px,
   py,
   shadow,
+  shadowInner,
   transition,
   underline,
   w,
@@ -46,6 +47,7 @@ export const input = css(
   w("full"),
   hover(bgSemiBlack(50)),
   focus(bgSemiBlack(50), outlineNone),
+  shadowInner,
 )
 
 export const anchor = css(

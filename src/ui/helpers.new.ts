@@ -192,7 +192,7 @@ export const shadow = css({
 })
 
 export const shadowInner = css({
-  boxShadow: "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+  boxShadow: "inset 0 0 4px 0 rgba(0, 0, 0, 0.2)",
 })
 
 export const transition = (...properties: string[]) =>
