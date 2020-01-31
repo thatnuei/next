@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import Avatar from "../character/Avatar"
 import CharacterNameNew from "../character/CharacterName"
-import CharacterStatus from "../character/CharacterStatus"
+import CharacterStatusDisplay from "../character/CharacterStatusDisplay"
 import { Character } from "../character/types"
 import HeaderMenuButton from "../chat/HeaderMenuButton"
 import {
@@ -24,7 +24,7 @@ function PrivateChatHeader({ character }: Props) {
       <Avatar name={character.name} size={50} />
       <div css={[flex("column"), ml(3)]}>
         <CharacterNameNew character={character} />
-        <CharacterStatus {...character} />
+        <CharacterStatusDisplay {...character} />
       </div>
     </div>
   )

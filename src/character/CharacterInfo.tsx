@@ -11,7 +11,7 @@ import {
   py,
 } from "../ui/helpers.new"
 import Avatar from "./Avatar"
-import CharacterStatus from "./CharacterStatus"
+import CharacterStatusDisplay from "./CharacterStatusDisplay"
 import { genderColors } from "./colors"
 import { CharacterStatus as CharacterStatusType, Gender } from "./types"
 
@@ -33,8 +33,8 @@ function CharacterInfo({
 
   return (
     <div css={[flex("column"), alignItems("flex-start")]} {...containerProps}>
-      <ExternalLink href={getProfileUrl(name)} css={mb(2)}>
-        <h2 style={nameStyle}>{name}</h2>
+      <ExternalLink href={getProfileUrl(name)} css={[mb(2), nameStyle]}>
+        {name}
       </ExternalLink>
 
       <ExternalLink href={getProfileUrl(name)} css={mb(3)}>
@@ -42,7 +42,7 @@ function CharacterInfo({
       </ExternalLink>
 
       <div css={[bgMidnight(800), py(2), px(4), alignSelf("stretch")]}>
-        <CharacterStatus status={status} statusMessage={statusMessage} />
+        <CharacterStatusDisplay status={status} statusMessage={statusMessage} />
       </div>
     </div>
   )
