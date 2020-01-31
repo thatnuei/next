@@ -8,9 +8,12 @@ import Icon from "../ui/components/Icon"
 import {
   alignItems,
   bgMidnight,
+  displayNone,
   flex,
   flex1,
   fontCondensed,
+  media,
+  ml,
   mr,
   p,
   py,
@@ -35,9 +38,9 @@ function ChannelHeader(props: Props) {
 
   return (
     <div css={[bgMidnight(700), flex("row"), alignItems("center"), py(3)]}>
-      <HeaderMenuButton />
+      <HeaderMenuButton css={media.lg(displayNone)} />
 
-      <div css={[flex1, flex("column")]}>
+      <div css={[flex1, flex("column"), media.lg(ml(3))]}>
         <h1 css={[fontCondensed, weightLight, textSize("xl")]}>
           {props.title}
         </h1>
