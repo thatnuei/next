@@ -12,6 +12,7 @@ import Modal from "../ui/components/Modal"
 import {
   absoluteCover,
   bgMidnight,
+  block,
   displayNone,
   flex,
   flex1,
@@ -141,7 +142,7 @@ function Chat({
 
   return (
     <div css={[absoluteCover, flex(), bgMidnight(900)]}>
-      <nav css={[w(64), mr(2), displayNone, media.lg({ display: "initial" })]}>
+      <nav css={[w(64), mr(1), displayNone, media.lg(block)]}>
         <Navigation
           actions={navigationActions}
           identityCharacter={identityCharacter}
