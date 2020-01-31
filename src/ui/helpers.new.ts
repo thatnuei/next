@@ -134,6 +134,8 @@ export const fontCondensed = css({
   fontFamily: '"Roboto Condensed", sans-serif',
 })
 
+export const fontItalic = css({ fontStyle: "italic" })
+
 export const weightNormal = css({ fontWeight: 400 })
 export const weightLight = css({ fontWeight: 300 })
 export const weightBold = css({ fontWeight: 500 })
