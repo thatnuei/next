@@ -1,27 +1,23 @@
 import React from "react"
-import { spacedChildrenHorizontal } from "../ui/helpers"
-import { styled } from "../ui/styled"
-import { spacing } from "../ui/theme"
+import {
+  alignItems,
+  displayNone,
+  flex,
+  h,
+  media,
+  ml,
+  opacity,
+  px,
+} from "../ui/helpers.new"
 import HeaderMenuButton from "./HeaderMenuButton"
 
 function NoRoomHeader() {
   return (
-    <Container>
-      <HeaderMenuButton />
-      <Title>next</Title>
-    </Container>
+    <div css={[flex(), alignItems("center"), h(12), px(3)]}>
+      <HeaderMenuButton css={[media.lg(displayNone), ml(-3)]} />
+      <h1 css={[opacity(75)]}>next</h1>
+    </div>
   )
 }
 
 export default NoRoomHeader
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  padding: ${spacing.small};
-  ${spacedChildrenHorizontal(spacing.small)};
-`
-
-const Title = styled.h3`
-  opacity: 0.5;
-`
