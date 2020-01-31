@@ -53,6 +53,7 @@ export const wh = (unit: SizeUnit) => [w(unit), h(unit)]
 export const block = css({ display: "block" })
 export const inlineBlock = css({ display: "inline-block" })
 export const inline = css({ display: "inline" })
+export const displayNone = css({ display: "none" })
 
 export const absolute = css({ position: "absolute" })
 export const fixed = css({ position: "fixed" })
@@ -215,3 +216,15 @@ export const activePress = active({
 export const cursorPointer = css({ cursor: "pointer" })
 
 export const outlineNone = css({ outline: 0 })
+
+// responsiveness
+export const media = {
+  sm: (...styles: Interpolation[]) =>
+    css({ "@media (min-width: 640px)": css(...styles) }),
+  md: (...styles: Interpolation[]) =>
+    css({ "@media (min-width: 768px)": css(...styles) }),
+  lg: (...styles: Interpolation[]) =>
+    css({ "@media (min-width: 1024px)": css(...styles) }),
+  xl: (...styles: Interpolation[]) =>
+    css({ "@media (min-width: 1280px)": css(...styles) }),
+}
