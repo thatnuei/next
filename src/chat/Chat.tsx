@@ -9,11 +9,18 @@ import PrivateChatRoom from "../private-chat/PrivateChatRoom"
 import { PrivateChatStore } from "../private-chat/PrivateChatStore"
 import { useChannel } from "../state/hooks/useChannel"
 import Modal from "../ui/components/Modal"
-import { styled } from "../ui/styled"
-import { spacing } from "../ui/theme"
+import {
+  absoluteCover,
+  bgMidnight,
+  displayNone,
+  flex,
+  flex1,
+  media,
+  mr,
+  w,
+} from "../ui/helpers.new"
 import { ChatNavigationStore } from "./ChatNavigationStore"
 import { ChatStore } from "./ChatStore"
-import { chatNavigationBreakpoint } from "./constants"
 import Navigation from "./Navigation"
 import NavigationAction from "./NavigationAction"
 import NavigationRooms from "./NavigationRooms"
@@ -102,7 +109,7 @@ function Chat({
       <NavigationAction title="Update Status" icon="updateStatus" />
       <NavigationAction title="Who's Online" icon="users" />
       <NavigationAction title="About" icon="about" />
-      <Spacer />
+      <div css={flex1} />
       <NavigationAction title="Logout" icon="logout" />
     </>
   )
@@ -133,8 +140,8 @@ function Chat({
   }
 
   return (
-    <Container>
-      <NavigationContainer>
+    <div css={[absoluteCover, flex(), bgMidnight(900)]}>
+      <nav css={[w(64), mr(2), displayNone, media.lg({ display: "initial" })]}>
         <Navigation
           actions={navigationActions}
           identityCharacter={identityCharacter}
@@ -145,8 +152,9 @@ function Chat({
             privateChatStore={privateChatStore}
           />
         </Navigation>
-      </NavigationContainer>
-      <RoomContainer>{renderRoom()}</RoomContainer>
+      </nav>
+
+      <main css={flex1}>{renderRoom()}</main>
 
       <Modal
         title="Channel Browser"
@@ -160,32 +168,8 @@ function Chat({
           channelBrowserStore={channelBrowserStore}
         />
       </Modal>
-    </Container>
+    </div>
   )
 }
 
 export default observer(Chat)
-
-const Container = styled.div`
-  display: flex;
-  background-color: ${({ theme }) => theme.colors.theme2};
-  width: 100vw;
-  height: 100vh;
-`
-
-const NavigationContainer = styled.nav`
-  flex-basis: 240px;
-  margin-right: ${spacing.xsmall};
-
-  @media (max-width: ${chatNavigationBreakpoint}px) {
-    display: none;
-  }
-`
-
-const RoomContainer = styled.main`
-  flex: 1;
-`
-
-const Spacer = styled.div`
-  flex: 1;
-`
