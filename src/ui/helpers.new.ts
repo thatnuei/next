@@ -226,5 +226,5 @@ export const media = {
   lg: (...styles: Interpolation[]) =>
     css({ "@media (min-width: 1024px)": css(...styles) }),
   xl: (...styles: Interpolation[]) =>
-    css({ "@media (min-width: 1280px)": css(...styles) }),
+    css({ "@media (min-width: 1200px)": css(...styles) }),
 }
