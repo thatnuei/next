@@ -1,23 +1,24 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import CharacterInfo from "../character/CharacterInfo"
-import { Character } from "../character/types"
 import { fillArea } from "../ui/helpers"
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
+import { useCharacter, useIdentity } from "./ChatContext"
 
 type Props = {
-  identityCharacter: Character
   actions: React.ReactNode
   children: React.ReactNode
 }
 
 function Navigation(props: Props) {
+  const identity = useIdentity()
+  const identityCharacter = useCharacter(identity)
   return (
     <Container>
       <ActionsContainer>{props.actions}</ActionsContainer>
       <CharacterInfoContainer>
-        <CharacterInfo {...props.identityCharacter} />
+        <CharacterInfo {...identityCharacter} />
       </CharacterInfoContainer>
       <RoomsContainer>{props.children}</RoomsContainer>
     </Container>

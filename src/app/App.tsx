@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo } from "react"
 import Chat from "../chat/Chat"
+import { ChatProvider } from "../chat/ChatContext"
 import FListApi from "../flist/FListApi"
 import { AppStore } from "./AppStore"
 import CharacterSelect from "./CharacterSelect"
@@ -41,10 +42,11 @@ function App() {
 
     case "chat":
       return (
-        <Chat
+        <ChatProvider
           {...appStore.session}
           onClose={appStore.handleSocketClosed}
           onConnectionError={appStore.handleConnectionError}
+          children={<Chat />}
         />
       )
   }

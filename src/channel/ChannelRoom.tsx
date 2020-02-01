@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { CharacterStore } from "../character/CharacterStore"
 import Chatbox from "../chat/Chatbox"
+import { useCharacterStore, useIdentity } from "../chat/ChatContext"
 import RoomLayout from "../chat/RoomLayout"
 import RoomUserList from "../chat/RoomUserList"
 import Button from "../dom/components/Button"
@@ -27,11 +27,12 @@ import { ChannelModel } from "./ChannelModel"
 
 type Props = {
   channel: ChannelModel
-  identity: string
-  characterStore: CharacterStore
 }
 
-function ChannelRoom({ channel, identity, characterStore }: Props) {
+function ChannelRoom({ channel }: Props) {
+  const identity = useIdentity()
+  const characterStore = useCharacterStore()
+
   const [menuVisible, menuActions] = useToggle()
   const [descriptionVisible, descriptionActions] = useToggle()
 

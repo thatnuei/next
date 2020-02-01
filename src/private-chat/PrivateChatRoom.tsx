@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { CharacterStore } from "../character/CharacterStore"
 import Chatbox from "../chat/Chatbox"
+import { useCharacterStore, useIdentity } from "../chat/ChatContext"
 import RoomLayout from "../chat/RoomLayout"
 import MessageList from "../message/MessageList"
 import PrivateChatHeader from "./PrivateChatHeader"
@@ -9,11 +9,12 @@ import { PrivateChatModel } from "./PrivateChatModel"
 
 type Props = {
   chat: PrivateChatModel
-  identity: string
-  characterStore: CharacterStore
 }
 
-function PrivateChatRoom({ chat, identity, characterStore }: Props) {
+function PrivateChatRoom({ chat }: Props) {
+  const identity = useIdentity()
+  const characterStore = useCharacterStore()
+
   const header = (
     <PrivateChatHeader character={characterStore.get(chat.partnerName)} />
   )

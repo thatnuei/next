@@ -1,5 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
+import { useChannelBrowserStore, useChannelStore } from "../chat/ChatContext"
 import TextInput from "../dom/components/TextInput"
 import { input, solidButton } from "../ui/components"
 import Icon from "../ui/components/Icon"
@@ -15,15 +16,11 @@ import {
 import { styled } from "../ui/styled"
 import { getThemeColor, spacing } from "../ui/theme"
 import ChannelBrowserListItem from "./ChannelBrowserListItem"
-import { ChannelBrowserStore } from "./ChannelBrowserStore"
-import { ChannelStore } from "./ChannelStore"
 
-type Props = {
-  channelBrowserStore: ChannelBrowserStore
-  channelStore: ChannelStore
-}
+function ChannelBrowser() {
+  const channelBrowserStore = useChannelBrowserStore()
+  const channelStore = useChannelStore()
 
-function ChannelBrowser({ channelBrowserStore, channelStore }: Props) {
   const sortButtonIcon =
     channelBrowserStore.sortMode === "title"
       ? "sortAlphabetical"
