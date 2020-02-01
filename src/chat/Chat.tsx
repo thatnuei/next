@@ -2,10 +2,8 @@ import { observer } from "mobx-react-lite"
 import React, { useEffect, useMemo, useState } from "react"
 import ChannelBrowser from "../channel/ChannelBrowser"
 import { ChannelBrowserStore } from "../channel/ChannelBrowserStore"
-import ChannelRoom from "../channel/ChannelRoom"
 import { ChannelStore } from "../channel/ChannelStore"
 import { CharacterStore } from "../character/CharacterStore"
-import PrivateChatRoom from "../private-chat/PrivateChatRoom"
 import { PrivateChatStore } from "../private-chat/PrivateChatStore"
 import { useChannel } from "../state/hooks/useChannel"
 import Modal from "../ui/components/Modal"
@@ -21,6 +19,7 @@ import {
   w,
 } from "../ui/helpers.new"
 import { ChatNavigationStore } from "./ChatNavigationStore"
+import ChatRoomDisplay from "./ChatRoomDisplay"
 import { ChatStore } from "./ChatStore"
 import Navigation from "./Navigation"
 import NavigationAction from "./NavigationAction"
@@ -115,31 +114,6 @@ function Chat({
     </>
   )
 
-  const renderRoom = () => {
-    const room = navigationStore.currentRoom
-    if (!room) return <NoRoomHeader />
-
-    const commonProps = { identity, characterStore }
-
-    switch (room.type) {
-      case "channel":
-        return (
-          <ChannelRoom
-            channel={channelStore.get(room.channelId)}
-            {...commonProps}
-          />
-        )
-
-      case "privateChat":
-        return (
-          <PrivateChatRoom
-            chat={privateChatStore.get(room.partnerName)}
-            {...commonProps}
-          />
-        )
-    }
-  }
-
   return (
     <div css={[absoluteCover, flex(), bgMidnight(900)]}>
       <nav css={[w(64), mr(1), displayNone, media.lg(block)]}>
@@ -155,7 +129,19 @@ function Chat({
         </Navigation>
       </nav>
 
-      <main css={flex1}>{renderRoom()}</main>
+      <main css={flex1}>
+        {navigationStore.currentRoom ? (
+          <ChatRoomDisplay
+            room={navigationStore.currentRoom}
+            identity={identity}
+            channelStore={channelStore}
+            privateChatStore={privateChatStore}
+            characterStore={characterStore}
+          />
+        ) : (
+          <NoRoomHeader />
+        )}
+      </main>
 
       <Modal
         title="Channel Browser"
