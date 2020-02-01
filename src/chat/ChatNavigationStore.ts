@@ -4,7 +4,7 @@ import { ChannelStore } from "../channel/ChannelStore"
 import { reject } from "../common/helpers/reject"
 import { createCommandHandler } from "./helpers"
 
-type Room =
+export type ChatNavigationRoom =
   | { type: "channel"; key: string; channelId: string }
   | { type: "privateChat"; key: string; partnerName: string }
 
@@ -22,16 +22,16 @@ export class ChatNavigationStore {
   private currentRoomKey?: string
 
   @observable
-  rooms: Room[] = []
+  rooms: ChatNavigationRoom[] = []
 
   @computed
-  get currentRoom(): Room | undefined {
+  get currentRoom(): ChatNavigationRoom | undefined {
     return (
       this.rooms.find((it) => it.key === this.currentRoomKey) ?? this.rooms[0]
     )
   }
 
-  private addRoom = (room: Room) => {
+  private addRoom = (room: ChatNavigationRoom) => {
     this.rooms = uniqBy([...this.rooms, room], (it) => it.key)
   }
 
