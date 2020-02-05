@@ -5,4 +5,4 @@ import { AppTheme } from "./theme"
 export { css, keyframes }
 
 /** @deprecated we wanna try to go all-on on the css prop */
-export const styled = baseStyled as CreateStyled<AppTheme>
+export const styled: CreateStyled<AppTheme> = baseStyled
