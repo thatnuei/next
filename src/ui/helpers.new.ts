@@ -100,7 +100,7 @@ export const justifyContent = (
     | "space-around",
 ) => css({ justifyContent: alignment })
 
-const sizes = {
+const maxSizes = {
   xs: "20rem",
   sm: "24rem",
   md: "28rem",
@@ -114,11 +114,17 @@ const sizes = {
   full: "100%",
 }
 
-export const minW = (key: keyof typeof sizes) => css({ minWidth: sizes[key] })
-export const minH = (key: keyof typeof sizes) => css({ minWidth: sizes[key] })
+export const minW = (key: keyof typeof maxSizes) =>
+  css({ minWidth: maxSizes[key] })
 
-export const maxW = (key: keyof typeof sizes) => css({ maxWidth: sizes[key] })
-export const maxH = (key: keyof typeof sizes) => css({ maxWidth: sizes[key] })
+export const minH = (key: keyof typeof maxSizes) =>
+  css({ minWidth: maxSizes[key] })
+
+export const maxW = (key: keyof typeof maxSizes) =>
+  css({ maxWidth: maxSizes[key] })
+
+export const maxH = (key: keyof typeof maxSizes) =>
+  css({ maxWidth: maxSizes[key] })
 
 export const absoluteCover = css({
   position: "absolute",
