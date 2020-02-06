@@ -1,4 +1,5 @@
 import { Interpolation } from "@emotion/core"
+import { StringWithAutocompleteHack } from "../common/types"
 import { css } from "./styled"
 
 type SizeUnit =
@@ -37,11 +38,19 @@ type SizeUnit =
   | -48
   | -56
   | -64
-  | string
+  | "full"
+  | StringWithAutocompleteHack
 
 type FlexDirection = "row" | "column" | "row-reverse" | "column-reverse"
 
 type FlexAlign = "flex-start" | "flex-end" | "center" | "stretch"
+
+type FlexJustify =
+  | "flex-start"
+  | "flex-end"
+  | "center"
+  | "space-between"
+  | "space-around"
 
 export const space = (unit: SizeUnit) =>
   typeof unit === "number" ? `${unit / 4}rem` : unit === "full" ? "100%" : unit
@@ -90,14 +99,8 @@ export const alignItems = (alignment: FlexAlign) =>
 
 export const alignSelf = (alignment: FlexAlign) => css({ alignSelf: alignment })
 
-export const justifyContent = (
-  alignment:
-    | "flex-start"
-    | "flex-end"
-    | "center"
-    | "space-between"
-    | "space-around",
-) => css({ justifyContent: alignment })
+export const justifyContent = (alignment: FlexJustify) =>
+  css({ justifyContent: alignment })
 
 const maxSizes = {
   xs: "20rem",
@@ -186,12 +189,12 @@ const colors = {
 export const bgMidnight = (key: keyof typeof colors.midnight) =>
   css({ backgroundColor: colors.midnight[key] })
 
-export const textMidnight = (key: keyof typeof colors.midnight) =>
+export const textColorMidnight = (key: keyof typeof colors.midnight) =>
   css({ color: colors.midnight[key] })
 
 export const bgWhite = () => css({ backgroundColor: "rgba(236, 240, 241,1.0)" })
 
-export const textWhite = () => css({ color: "rgba(236, 240, 241,1.0)" })
+export const textColorWhite = () => css({ color: "rgba(236, 240, 241,1.0)" })
 
 export const bgSemiBlack = (opacity: 25 | 50 | 75) =>
   css({ backgroundColor: `rgba(0, 0, 0, 0.${opacity})` })
