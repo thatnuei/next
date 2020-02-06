@@ -8,10 +8,6 @@ export class Channel<L extends (value?: any) => any> {
     }
   }
 
-  removeListeners = () => {
-    this.listeners.clear()
-  }
-
   send = (...args: Parameters<L>) => {
     this.listeners.forEach((it) => it(...args))
   }
