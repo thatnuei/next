@@ -1,49 +1,18 @@
 import React, { useState } from "react"
-import { authenticate } from "./authenticate"
+import { authenticate, LoginCredentials } from "./authenticate"
 import { extractErrorMessage } from "./extractErrorMessage"
+import Login from "./Login"
 
 function App() {
-  const [account, setAccount] = useState("")
-  const [password, setPassword] = useState("")
   const [error, setError] = useState("")
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault()
-
-    authenticate(account, password)
+  const handleLoginSubmit = (creds: LoginCredentials) => {
+    authenticate(creds)
       .then(console.log)
       .catch((error) => setError(extractErrorMessage(error)))
   }
 
-  const submitDisabled = account === "" && password === ""
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Username
-        <input
-          type="text"
-          value={account}
-          onChange={(e) => setAccount(e.target.value)}
-        />
-      </label>
-
-      <label>
-        Password
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </label>
-
-      <button type="submit" disabled={submitDisabled}>
-        Log in
-      </button>
-
-      <p>{error}</p>
-    </form>
-  )
+  return <Login error={error} onSubmit={handleLoginSubmit} />
 }
 
 export default App

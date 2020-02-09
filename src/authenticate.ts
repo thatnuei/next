@@ -1,12 +1,17 @@
+export type LoginCredentials = {
+  account: string
+  password: string
+}
+
 export type AuthenticateResponse = {
   ticket: string[]
   characters: string[]
 }
 
-export async function authenticate(
-  account: string,
-  password: string,
-): Promise<AuthenticateResponse> {
+export async function authenticate({
+  account,
+  password,
+}: LoginCredentials): Promise<AuthenticateResponse> {
   const body = new FormData()
   body.set("account", account)
   body.set("password", password)
