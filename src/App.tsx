@@ -15,6 +15,8 @@ function App() {
       .catch((error) => setError(extractErrorMessage(error)))
   }
 
+  const submitDisabled = account === "" && password === ""
+
   return (
     <form onSubmit={handleSubmit}>
       <label>
@@ -35,7 +37,9 @@ function App() {
         />
       </label>
 
-      <button type="submit">Log in</button>
+      <button type="submit" disabled={submitDisabled}>
+        Log in
+      </button>
 
       <p>{error}</p>
     </form>
