@@ -4,7 +4,7 @@ export type LoginCredentials = {
 }
 
 export type AuthenticateResponse = {
-  ticket: string[]
+  ticket: string
   characters: string[]
 }
 
