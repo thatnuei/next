@@ -3,7 +3,13 @@ import { authenticate } from "./authenticate"
 import { extractErrorMessage } from "./extractErrorMessage"
 
 type Props = {
-  onSuccess: () => void
+  onSuccess: (data: LoginSuccessData) => void
+}
+
+export type LoginSuccessData = {
+  account: string
+  ticket: string
+  characters: string[]
 }
 
 export default function Login(props: Props) {
@@ -17,7 +23,7 @@ export default function Login(props: Props) {
     event.preventDefault()
 
     authenticate({ account, password })
-      .then(props.onSuccess)
+      .then((data) => props.onSuccess({ ...data, account }))
       .catch((error) => setError(extractErrorMessage(error)))
   }
 
