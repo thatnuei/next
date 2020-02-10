@@ -4,22 +4,21 @@ import Login, { LoginSuccessData } from "./Login"
 
 type AppScreen =
   | { name: "login" }
-  | { name: "character-select"; userData: UserData }
+  | { name: "character-select"; userData: UserData; initialCharacter: string }
   | { name: "chat"; userData: UserData; identity: string }
 
-type UserData = LoginSuccessData & {
-  initialCharacter: string
-}
+type UserData = LoginSuccessData
 
 function App() {
   const [screen, setScreen] = useState<AppScreen>({ name: "login" })
 
   switch (screen.name) {
     case "login": {
-      const handleLoginSuccess = (data: LoginSuccessData) => {
+      const handleLoginSuccess = (userData: LoginSuccessData) => {
         setScreen({
           name: "character-select",
-          userData: { ...data, initialCharacter: data.characters[0] },
+          userData,
+          initialCharacter: userData.characters[0],
         })
       }
 
@@ -34,7 +33,7 @@ function App() {
       return (
         <CharacterSelect
           characters={screen.userData.characters}
-          initialCharacter={screen.userData.initialCharacter}
+          initialCharacter={screen.initialCharacter}
           onSubmit={handleCharacterSubmit}
         />
       )
