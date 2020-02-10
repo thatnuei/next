@@ -1,18 +1,21 @@
 import React, { useState } from "react"
-import { authenticate, LoginCredentials } from "./authenticate"
-import { extractErrorMessage } from "./extractErrorMessage"
 import Login from "./Login"
 
-function App() {
-  const [error, setError] = useState("")
+type AppScreen = "login" | "character-select"
 
-  const handleLoginSubmit = (creds: LoginCredentials) => {
-    authenticate(creds)
-      .then(console.log)
-      .catch((error) => setError(extractErrorMessage(error)))
+function App() {
+  const [screen, setScreen] = useState<AppScreen>("login")
+
+  const handleLoginSuccess = () => {
+    setScreen("character-select")
   }
 
-  return <Login error={error} onSubmit={handleLoginSubmit} />
+  switch (screen) {
+    case "login":
+      return <Login onSuccess={handleLoginSuccess} />
+    case "character-select":
+      return <p>select a character</p>
+  }
 }
 
 export default App

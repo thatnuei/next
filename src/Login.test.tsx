@@ -1,14 +1,16 @@
 import { fireEvent, render, wait } from "@testing-library/react"
 import React from "react"
-import App from "./App"
+import Login from "./Login"
 
-describe("App", () => {
+describe("Login", () => {
   it("disallows login when empty", () => {
-    const helpers = render(<App />)
+    const handleSuccess = jest.fn()
+    const helpers = render(<Login onSuccess={handleSuccess} />)
 
     expect(helpers.getByLabelText(/username/i)).toBeEmpty()
     expect(helpers.getByLabelText(/password/i)).toBeEmpty()
     expect(helpers.getByText(/log in/i)).toBeDisabled()
+    expect(handleSuccess).not.toHaveBeenCalled()
   })
 
   it("shows an error if login failed", () => {
@@ -20,7 +22,8 @@ describe("App", () => {
       },
     }))
 
-    const helpers = render(<App />)
+    const handleSuccess = jest.fn()
+    const helpers = render(<Login onSuccess={handleSuccess} />)
 
     fireEvent.input(helpers.getByLabelText(/username/i), {
       target: { value: "test" },
@@ -31,5 +34,6 @@ describe("App", () => {
     fireEvent.click(helpers.getByText(/log in/i))
 
     wait(() => expect(helpers.queryByText(mockErrorMessage)).toBeDefined())
+    expect(handleSuccess).not.toHaveBeenCalled()
   })
 })

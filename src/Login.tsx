@@ -1,20 +1,24 @@
 import React, { useState } from "react"
-import { LoginCredentials } from "./authenticate"
+import { authenticate } from "./authenticate"
+import { extractErrorMessage } from "./extractErrorMessage"
 
 type Props = {
-  error: string
-  onSubmit: (creds: LoginCredentials) => void
+  onSuccess: () => void
 }
 
 export default function Login(props: Props) {
   const [account, setAccount] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
 
   const submitDisabled = account === "" && password === ""
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
-    props.onSubmit({ account, password })
+
+    authenticate({ account, password })
+      .then(props.onSuccess)
+      .catch((error) => setError(extractErrorMessage(error)))
   }
 
   return (
@@ -41,7 +45,7 @@ export default function Login(props: Props) {
         Log in
       </button>
 
-      <p>{props.error}</p>
+      <p>{error}</p>
     </form>
   )
 }
