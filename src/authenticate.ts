@@ -1,3 +1,5 @@
+import { compareLower } from "./compareLower"
+
 export type LoginCredentials = {
   account: string
   password: string
@@ -28,5 +30,6 @@ export async function authenticate({
     throw new Error(data.error)
   }
 
+  data.characters.sort(compareLower)
   return data
 }
