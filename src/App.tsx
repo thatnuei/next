@@ -1,20 +1,47 @@
 import React, { useState } from "react"
-import Login from "./Login"
+import CharacterSelect from "./CharacterSelect"
+import Login, { LoginSuccessData } from "./Login"
 
-type AppScreen = "login" | "character-select"
+type AppScreen =
+  | { name: "login" }
+  | { name: "character-select"; userData: UserData }
+  | { name: "chat"; userData: UserData; identity: string }
+
+type UserData = LoginSuccessData & {
+  initialCharacter: string
+}
 
 function App() {
-  const [screen, setScreen] = useState<AppScreen>("login")
+  const [screen, setScreen] = useState<AppScreen>({ name: "login" })
 
-  const handleLoginSuccess = () => {
-    setScreen("character-select")
-  }
+  switch (screen.name) {
+    case "login": {
+      const handleLoginSuccess = (data: LoginSuccessData) => {
+        setScreen({
+          name: "character-select",
+          userData: { ...data, initialCharacter: data.characters[0] },
+        })
+      }
 
-  switch (screen) {
-    case "login":
       return <Login onSuccess={handleLoginSuccess} />
-    case "character-select":
-      return <p>select a character</p>
+    }
+
+    case "character-select": {
+      const handleCharacterSubmit = (identity: string) => {
+        setScreen({ name: "chat", userData: screen.userData, identity })
+      }
+
+      return (
+        <CharacterSelect
+          characters={screen.userData.characters}
+          initialCharacter={screen.userData.initialCharacter}
+          onSubmit={handleCharacterSubmit}
+        />
+      )
+    }
+
+    case "chat":
+      return <p>{screen.identity}</p>
   }
 }
 
