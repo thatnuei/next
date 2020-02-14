@@ -1,4 +1,5 @@
-import { css, Interpolation } from "@emotion/react"
+import { css } from "@emotion/react"
+import { CSSInterpolation } from "@emotion/serialize/types"
 import { AppTheme, BackgroundColorKey } from "./theme"
 
 type FlexAlign = "flex-start" | "flex-end" | "center" | "stretch"
@@ -15,7 +16,7 @@ type LengthUnit = number | "full" | StringAutocompleteHack
 type StringAutocompleteHack = string & { __autocompleteHack?: never }
 
 export const len = (units: LengthUnit) => {
-  if (typeof units === "number") return `${units * 4}px`
+  if (typeof units === "number") return `${units * 0.25}rem`
   if (units === "full") return "100%"
   return units
 }
@@ -51,7 +52,11 @@ export const alignItems = (alignItems: FlexAlign) => css({ alignItems })
 export const alignContent = (alignContent: FlexAlign) => css({ alignContent })
 export const justifyContent = (justifyContent: FlexJustify) =>
   css({ justifyContent })
-export const flexCenter = [alignItems("center"), justifyContent("center")]
+export const flexCenter = [
+  flexColumn,
+  alignItems("center"),
+  justifyContent("center"),
+]
 
 export const absolute = css({ position: "absolute" })
 export const relative = css({ position: "relative" })
@@ -82,10 +87,28 @@ export const themeTextColor = (theme: AppTheme) =>
 export const semiBlackBg = (opacity: number) =>
   css({ background: `rgba(0, 0, 0, ${opacity})` })
 
+// typeography
+const fontSizeMap = {
+  small: "0.85rem",
+  normal: "1rem",
+  large: "1.5rem",
+  xlarge: "2rem",
+}
+
+export const fontSize = (key: keyof typeof fontSizeMap) =>
+  css({ fontSize: fontSizeMap[key] })
+
+export const fontLightCondensed = css({
+  fontFamily: '"Roboto Condensed", sans-serif',
+  fontWeight: 300,
+})
+
+export const textCenter = css({ textAlign: "center" })
+
 // effects
 export const opacity = (opacity: number) => css({ opacity })
 
-export const transition = (properties: string) =>
+export const transition = (properties?: string) =>
   css({ transitionDuration: "0.2s", transitionProperty: properties })
 
 export const rounded = css({ borderRadius: len(1) })
@@ -93,24 +116,14 @@ export const rounded = css({ borderRadius: len(1) })
 export const themeShadow = (theme: AppTheme) =>
   css({ boxShadow: theme.shadow.normal })
 
+export const outlineNone = css({ outline: "none" })
+
 // states
-export const hover = (style: Interpolation<AppTheme>) => {
-  if (typeof style === "function") {
-    return (theme: AppTheme) => css({ ":hover": style(theme) as any })
-  }
-  return css({ ":hover": style as any })
-}
+export const hover = (...styles: CSSInterpolation[]) =>
+  css({ ":hover": styles as any })
 
-export const focus = (style: Interpolation<AppTheme>) => {
-  if (typeof style === "function") {
-    return (theme: AppTheme) => css({ ":hover": style(theme) as any })
-  }
-  return css({ ":hover": style as any })
-}
+export const focus = (...styles: CSSInterpolation[]) =>
+  css({ ":focus": styles as any })
 
-export const active = (style: Interpolation<AppTheme>) => {
-  if (typeof style === "function") {
-    return (theme: AppTheme) => css({ ":hover": style(theme) as any })
-  }
-  return css({ ":hover": style as any })
-}
+export const active = (...styles: CSSInterpolation[]) =>
+  css({ ":active": styles as any })

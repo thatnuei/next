@@ -13,6 +13,7 @@ export const reset = (theme: AppTheme) => css`
     ${themeBgColor(3)(theme)};
     ${themeTextColor(theme)};
     font: 15px Roboto, sans-serif;
+    line-height: 1.5;
     word-break: break-word;
     overflow-wrap: break-word;
     overflow: hidden;

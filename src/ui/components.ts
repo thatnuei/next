@@ -1,8 +1,27 @@
-import { hover, px, py, semiBlackBg } from "./style"
+import {
+  focus,
+  fontLightCondensed,
+  fontSize,
+  hover,
+  outlineNone,
+  px,
+  py,
+  themeBgColor,
+  transition,
+} from "./style"
+import { AppTheme } from "./theme"
 
-export const solidButton = [
-  py(3),
-  px(4),
-  semiBlackBg(0.5),
-  hover(semiBlackBg(0.75)),
+const baseControlStyle = (theme: AppTheme) => [
+  py(2),
+  px(3),
+  themeBgColor(1)(theme),
+  hover(themeBgColor(2)(theme)),
+  focus(themeBgColor(2)(theme), outlineNone),
+  transition("background-color"),
 ]
+
+export const solidButton = (theme: AppTheme) => [...baseControlStyle(theme)]
+
+export const input = (theme: AppTheme) => [...baseControlStyle(theme)]
+
+export const headerText = [fontSize("xlarge"), fontLightCondensed]
