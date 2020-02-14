@@ -1,5 +1,14 @@
+import { Global } from "@emotion/react"
 import React from "react"
 import ReactDOM from "react-dom"
 import App from "./app/App"
+import { reset } from "./ui/reset"
+import { darkTheme, ThemeProvider } from "./ui/theme"
 
-ReactDOM.render(<App />, document.getElementById("root"))
+ReactDOM.render(
+  <ThemeProvider theme={darkTheme}>
+    <App />
+    <Global styles={reset} />
+  </ThemeProvider>,
+  document.getElementById("root"),
+)
