@@ -3,10 +3,10 @@ import React from "react"
 import ReactDOM from "react-dom"
 import App from "./app/App"
 import { reset } from "./ui/reset"
-import { darkTheme, ThemeProvider } from "./ui/theme"
+import { midnightTheme, ThemeProvider } from "./ui/theme"
 
 ReactDOM.render(
-  <ThemeProvider theme={darkTheme}>
+  <ThemeProvider theme={midnightTheme}>
     <App />
     <Global styles={reset} />
   </ThemeProvider>,
