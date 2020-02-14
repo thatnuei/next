@@ -1,4 +1,5 @@
-import { compareLower } from "./compareLower"
+import { compareLower } from "../common/compareLower"
+import { raise } from "../common/raise"
 
 export type LoginCredentials = {
   account: string
@@ -27,7 +28,7 @@ export async function authenticate({
   const data = await res.json()
 
   if (data.error) {
-    throw new Error(data.error)
+    raise(data.error)
   }
 
   data.characters.sort(compareLower)

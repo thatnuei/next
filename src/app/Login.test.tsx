@@ -1,6 +1,6 @@
 import { fireEvent, render, wait } from "@testing-library/react"
 import React from "react"
-import { AuthenticateResponse, LoginCredentials } from "./authenticate"
+import { AuthenticateResponse, LoginCredentials } from "../flist/authenticate"
 import Login, { LoginSuccessData } from "./Login"
 
 const mockCreds: LoginCredentials = { account: "test", password: "test" }
@@ -12,7 +12,7 @@ const mockAuthResponse: AuthenticateResponse = {
   ticket: "asdf",
 }
 
-jest.mock("./authenticate", () => ({
+jest.mock("../flist/authenticate", () => ({
   async authenticate(creds: LoginCredentials) {
     if (
       creds.account === mockCreds.account &&

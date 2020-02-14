@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import { authenticate } from "./authenticate"
-import { extractErrorMessage } from "./extractErrorMessage"
+import { extractErrorMessage } from "../common/extractErrorMessage"
+import { authenticate } from "../flist/authenticate"
 
 type Props = {
   onSuccess: (data: LoginSuccessData) => void
