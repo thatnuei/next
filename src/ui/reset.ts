@@ -28,6 +28,7 @@ export const reset = (theme: AppTheme) => css`
     font: inherit;
     border: none;
     text-align: left;
+    border-radius: 0;
   }
 
   button {
