@@ -25,19 +25,34 @@ export type LoginSuccessData = {
   characters: string[]
 }
 
+type State =
+  | { current: "idle" }
+  | { current: "loading" }
+  | { current: "error"; error: string }
+
 export default function Login(props: Props) {
+  const [state, setState] = useState<State>({ current: "idle" })
   const [account, setAccount] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
 
-  const submitDisabled = account === "" && password === ""
+  const submitDisabled =
+    (account === "" && password === "") || state.current === "loading"
+
+  const formDisabled = state.current === "loading"
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
 
+    setState({ current: "loading" })
+
     authenticate({ account, password })
-      .then((data) => props.onSuccess({ ...data, account }))
-      .catch((error) => setError(extractErrorMessage(error)))
+      .then((data) => {
+        setState({ current: "idle" })
+        props.onSuccess({ ...data, account })
+      })
+      .catch((error) =>
+        setState({ current: "error", error: extractErrorMessage(error) }),
+      )
   }
 
   return (
@@ -55,6 +70,7 @@ export default function Login(props: Props) {
               placeholder="awesome username"
               value={account}
               onChange={(e) => setAccount(e.target.value)}
+              disabled={formDisabled}
             />
           </FormField>
 
@@ -65,6 +81,7 @@ export default function Login(props: Props) {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={formDisabled}
             />
           </FormField>
 
@@ -72,7 +89,7 @@ export default function Login(props: Props) {
             Log in
           </button>
 
-          <p>{error}</p>
+          {state.current === "error" && <p>{state.error}</p>}
         </form>
       </div>
     </main>
