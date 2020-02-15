@@ -35,6 +35,7 @@ function App() {
           characters={screen.userData.characters}
           initialCharacter={screen.initialCharacter}
           onSubmit={handleCharacterSubmit}
+          onReturnToLogin={() => setScreen({ name: "login" })}
         />
       )
     }

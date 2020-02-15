@@ -22,6 +22,7 @@ type Props = {
   characters: string[]
   initialCharacter: string
   onSubmit: (character: string) => void
+  onReturnToLogin: () => void
 }
 
 function CharacterSelect(props: Props) {
@@ -57,7 +58,9 @@ function CharacterSelect(props: Props) {
           </button>
         </form>
       </div>
-      <button css={[anchor, mt(4)]}>Return to Login</button>
+      <button css={[anchor, mt(4)]} onClick={props.onReturnToLogin}>
+        Return to Login
+      </button>
     </div>
   )
 }
