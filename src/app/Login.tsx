@@ -35,10 +35,11 @@ export default function Login(props: Props) {
   const [account, setAccount] = useState("")
   const [password, setPassword] = useState("")
 
-  const submitDisabled =
-    (account === "" && password === "") || state.current === "loading"
+  const isEmpty = account === "" && password === ""
+  const isLoading = state.current === "loading"
 
-  const formDisabled = state.current === "loading"
+  const submitDisabled = isEmpty || isLoading
+  const formDisabled = isLoading
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
