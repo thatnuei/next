@@ -116,6 +116,9 @@ export const rounded = css({ borderRadius: len(1) })
 export const themeShadow = (theme: AppTheme) =>
   css({ boxShadow: theme.shadow.normal })
 
+export const themeShadowInner = (theme: AppTheme) =>
+  css({ boxShadow: theme.shadow.inner })
+
 export const outlineNone = css({ outline: "none" })
 
 // states

@@ -10,6 +10,7 @@ export type AppTheme = {
   }
   shadow: {
     normal: string
+    inner: string
   }
 }
 
@@ -31,6 +32,7 @@ export const midnightTheme: AppTheme = {
   },
   shadow: {
     normal: "0px 2px 12px rgba(0, 0, 0, 0.3)",
+    inner: "0px 1px 4px rgba(0, 0, 0, 0.2) inset",
   },
 }
 
