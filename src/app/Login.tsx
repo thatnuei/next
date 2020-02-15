@@ -44,6 +44,7 @@ export default function Login(props: Props) {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
 
+    if (state.current === "loading") return
     setState({ current: "loading" })
 
     authenticate({ account, password })
