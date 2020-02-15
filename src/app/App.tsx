@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { createStoredValue } from "../storage/createStoredValue"
 import CharacterSelect from "./CharacterSelect"
 import Login, { LoginSuccessData } from "./Login"
 
@@ -9,17 +10,31 @@ type AppScreen =
 
 type UserData = LoginSuccessData
 
+const storedIdentity = (account: string) =>
+  createStoredValue<string>(`${account}:identity`)
+
 function App() {
   const [screen, setScreen] = useState<AppScreen>({ name: "login" })
 
   switch (screen.name) {
     case "login": {
       const handleLoginSuccess = (userData: LoginSuccessData) => {
-        setScreen({
-          name: "character-select",
-          userData,
-          initialCharacter: userData.characters[0],
-        })
+        const defaultIdentity = userData.characters[0]
+
+        storedIdentity(userData.account)
+          .get()
+          .then((identity) => identity || defaultIdentity)
+          .catch((error) => {
+            console.warn("error loading stored identity", error)
+            return defaultIdentity
+          })
+          .then((initialCharacter) => {
+            setScreen({
+              name: "character-select",
+              userData,
+              initialCharacter,
+            })
+          })
       }
 
       return <Login onSuccess={handleLoginSuccess} />
@@ -27,6 +42,7 @@ function App() {
 
     case "character-select": {
       const handleCharacterSubmit = (identity: string) => {
+        storedIdentity(screen.userData.account).set(identity)
         setScreen({ name: "chat", userData: screen.userData, identity })
       }
 
