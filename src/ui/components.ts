@@ -6,6 +6,7 @@ import {
   fontSize,
   hover,
   opacity,
+  outlineNone,
   px,
   py,
   themeBgColor,
@@ -32,6 +33,7 @@ export const input = (theme: AppTheme) => [
   baseControlStyle(theme),
   themeShadowInner,
   w("full"),
+  focus(outlineNone),
 ]
 
 export const headerText = [fontSize("xlarge"), fontLightCondensed]
