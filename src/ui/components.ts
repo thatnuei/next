@@ -7,6 +7,7 @@ import {
   px,
   py,
   themeBgColor,
+  themeShadowInner,
   transition,
 } from "./style"
 import { AppTheme } from "./theme"
@@ -20,8 +21,11 @@ const baseControlStyle = (theme: AppTheme) => [
   transition("background-color"),
 ]
 
-export const solidButton = (theme: AppTheme) => [...baseControlStyle(theme)]
+export const solidButton = (theme: AppTheme) => baseControlStyle(theme)
 
-export const input = (theme: AppTheme) => [...baseControlStyle(theme)]
+export const input = (theme: AppTheme) => [
+  baseControlStyle(theme),
+  themeShadowInner,
+]
 
 export const headerText = [fontSize("xlarge"), fontLightCondensed]
