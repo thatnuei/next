@@ -1,6 +1,7 @@
-import { fireEvent, render, wait } from "@testing-library/react"
+import { fireEvent, wait } from "@testing-library/react"
 import React from "react"
 import { AuthenticateResponse, LoginCredentials } from "../flist/authenticate"
+import { renderWithProviders } from "../test/renderWithProviders"
 import Login, { LoginSuccessData } from "./Login"
 
 const mockCreds: LoginCredentials = { account: "test", password: "test" }
@@ -27,7 +28,7 @@ jest.mock("../flist/authenticate", () => ({
 describe("Login", () => {
   it("disallows login when empty", () => {
     const handleSuccess = jest.fn()
-    const helpers = render(<Login onSuccess={handleSuccess} />)
+    const helpers = renderWithProviders(<Login onSuccess={handleSuccess} />)
 
     expect(helpers.getByLabelText(/username/i)).toBeEmpty()
     expect(helpers.getByLabelText(/password/i)).toBeEmpty()
@@ -37,7 +38,7 @@ describe("Login", () => {
 
   it("shows an error if login failed", async () => {
     const handleSuccess = jest.fn()
-    const helpers = render(<Login onSuccess={handleSuccess} />)
+    const helpers = renderWithProviders(<Login onSuccess={handleSuccess} />)
 
     fireEvent.input(helpers.getByLabelText(/username/i), {
       target: { value: "test" },
@@ -55,7 +56,7 @@ describe("Login", () => {
 
   it("calls success when successful", async () => {
     const handleSuccess = jest.fn()
-    const helpers = render(<Login onSuccess={handleSuccess} />)
+    const helpers = renderWithProviders(<Login onSuccess={handleSuccess} />)
 
     fireEvent.input(helpers.getByLabelText(/username/i), {
       target: { value: "test" },

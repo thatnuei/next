@@ -1,5 +1,6 @@
-import { fireEvent, render } from "@testing-library/react"
+import { fireEvent } from "@testing-library/react"
 import React from "react"
+import { renderWithProviders } from "../test/renderWithProviders"
 import CharacterSelect from "./CharacterSelect"
 
 describe("CharacterSelect", () => {
@@ -8,7 +9,7 @@ describe("CharacterSelect", () => {
     const initialCharacter = characters[2]
     const handleSubmit = jest.fn()
 
-    const helpers = render(
+    const helpers = renderWithProviders(
       <CharacterSelect
         characters={characters}
         initialCharacter={initialCharacter}
