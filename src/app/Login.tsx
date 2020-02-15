@@ -50,9 +50,9 @@ export default function Login(props: Props) {
         setState({ current: "idle" })
         props.onSuccess({ ...data, account })
       })
-      .catch((error) =>
-        setState({ current: "error", error: extractErrorMessage(error) }),
-      )
+      .catch((error) => {
+        setState({ current: "error", error: extractErrorMessage(error) })
+      })
   }
 
   return (
