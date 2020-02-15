@@ -6,7 +6,6 @@ import {
   fontSize,
   hover,
   opacity,
-  outlineNone,
   px,
   py,
   themeBgColor,
@@ -23,7 +22,7 @@ const baseControlStyle = (theme: AppTheme) => [
   px(3),
   themeBgColor(1)(theme),
   hover(themeBgColor(2)(theme)),
-  focus(themeBgColor(2)(theme), outlineNone),
+  focus(themeBgColor(2)(theme)),
   transition("background-color"),
 ]
 
