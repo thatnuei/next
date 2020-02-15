@@ -61,10 +61,10 @@ export default function Login(props: Props) {
 
   return (
     <main css={[fixedCover, flexCenter]}>
-      <div css={[themeShadow]}>
+      <div css={[themeShadow, themeBgColor(0)]}>
         <h1 css={[themeBgColor(1), p(2), headerText, textCenter]}>Login</h1>
         <form
-          css={[flexColumn, alignItems("flex-start"), themeBgColor(0), p(4)]}
+          css={[flexColumn, alignItems("flex-start"), p(4)]}
           onSubmit={handleSubmit}
         >
           <FormField css={mb(4)} labelText="Username">
