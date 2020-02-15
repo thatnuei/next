@@ -8,7 +8,9 @@ import {
   fixedCover,
   flexCenter,
   flexColumn,
+  maxW,
   mb,
+  mt,
   p,
   textCenter,
   themeBgColor,
@@ -91,7 +93,9 @@ export default function Login(props: Props) {
             Log in
           </button>
 
-          {state.current === "error" && <p>{state.error}</p>}
+          {state.current === "error" && (
+            <p css={[mt(4), maxW(60), textCenter]}>{state.error}</p>
+          )}
         </form>
       </div>
     </main>

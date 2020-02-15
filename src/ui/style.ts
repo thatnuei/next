@@ -45,6 +45,10 @@ export const mr = (units: LengthUnit) => css({ marginRight: len(units) })
 export const mx = (units: LengthUnit) => [ml(units), mr(units)]
 export const my = (units: LengthUnit) => [mt(units), mb(units)]
 
+export const block = css({ display: "block" })
+export const inline = css({ display: "inline" })
+export const inlineBlock = css({ display: "inline-block" })
+
 export const flexRow = css({ display: "flex" })
 export const flexColumn = css({ display: "flex", flexDirection: "column" })
 export const flex1 = css({ flex: 1 })

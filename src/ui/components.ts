@@ -9,6 +9,7 @@ import {
   themeBgColor,
   themeShadowInner,
   transition,
+  w,
 } from "./style"
 import { AppTheme } from "./theme"
 
@@ -26,6 +27,7 @@ export const solidButton = (theme: AppTheme) => baseControlStyle(theme)
 export const input = (theme: AppTheme) => [
   baseControlStyle(theme),
   themeShadowInner,
+  w("full"),
 ]
 
 export const headerText = [fontSize("xlarge"), fontLightCondensed]
