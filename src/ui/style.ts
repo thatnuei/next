@@ -56,11 +56,7 @@ export const alignItems = (alignItems: FlexAlign) => css({ alignItems })
 export const alignContent = (alignContent: FlexAlign) => css({ alignContent })
 export const justifyContent = (justifyContent: FlexJustify) =>
   css({ justifyContent })
-export const flexCenter = [
-  flexColumn,
-  alignItems("center"),
-  justifyContent("center"),
-]
+export const flexCenter = [alignItems("center"), justifyContent("center")]
 
 export const absolute = css({ position: "absolute" })
 export const relative = css({ position: "relative" })
@@ -108,6 +104,9 @@ export const fontLightCondensed = css({
 })
 
 export const textCenter = css({ textAlign: "center" })
+
+export const underline = css({ textDecoration: "underline" })
+export const strikethrough = css({ textDecoration: "line-through" })
 
 // effects
 export const opacity = (opacity: number) => css({ opacity })

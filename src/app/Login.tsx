@@ -1,7 +1,13 @@
 import React, { useState } from "react"
 import { extractErrorMessage } from "../common/extractErrorMessage"
 import { authenticate } from "../flist/authenticate"
-import { headerText, input, solidButton } from "../ui/components"
+import {
+  headerText,
+  input,
+  raisedPanel,
+  raisedPanelHeader,
+  solidButton,
+} from "../ui/components"
 import FormField from "../ui/FormField"
 import {
   alignItems,
@@ -13,8 +19,6 @@ import {
   mt,
   p,
   textCenter,
-  themeBgColor,
-  themeShadow,
 } from "../ui/style"
 
 type Props = {
@@ -60,9 +64,11 @@ export default function Login(props: Props) {
   }
 
   return (
-    <main css={[fixedCover, flexCenter]}>
-      <div css={[themeShadow, themeBgColor(0)]}>
-        <h1 css={[themeBgColor(1), p(2), headerText, textCenter]}>Login</h1>
+    <div css={[fixedCover, flexColumn, flexCenter]}>
+      <div css={raisedPanel}>
+        <header css={raisedPanelHeader}>
+          <h1 css={headerText}>Login</h1>
+        </header>
         <form
           css={[flexColumn, alignItems("flex-start"), p(4)]}
           onSubmit={handleSubmit}
@@ -98,6 +104,6 @@ export default function Login(props: Props) {
           )}
         </form>
       </div>
-    </main>
+    </div>
   )
 }

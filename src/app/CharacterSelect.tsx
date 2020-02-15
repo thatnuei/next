@@ -1,18 +1,21 @@
 import React, { useState } from "react"
 import Avatar from "../character/Avatar"
-import { headerText, input, solidButton } from "../ui/components"
+import {
+  anchor,
+  headerText,
+  input,
+  raisedPanel,
+  raisedPanelHeader,
+  solidButton,
+} from "../ui/components"
 import {
   alignItems,
   fixedCover,
   flexCenter,
   flexColumn,
+  mt,
   my,
   p,
-  px,
-  py,
-  textCenter,
-  themeBgColor,
-  themeShadow,
 } from "../ui/style"
 
 type Props = {
@@ -30,11 +33,11 @@ function CharacterSelect(props: Props) {
   }
 
   return (
-    <main css={[fixedCover, flexCenter]}>
-      <div css={[themeShadow, themeBgColor(0)]}>
-        <h1 css={[themeBgColor(1), py(2), px(4), headerText, textCenter]}>
-          Select a Character
-        </h1>
+    <div css={[fixedCover, flexColumn, flexCenter]}>
+      <div css={raisedPanel}>
+        <header css={raisedPanelHeader}>
+          <h1 css={headerText}>Select a Character</h1>
+        </header>
         <form
           css={[flexColumn, alignItems("center"), p(4)]}
           onSubmit={handleSubmit}
@@ -54,7 +57,8 @@ function CharacterSelect(props: Props) {
           </button>
         </form>
       </div>
-    </main>
+      <button css={[anchor, mt(4)]}>Return to Login</button>
+    </div>
   )
 }
 
