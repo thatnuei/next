@@ -39,6 +39,7 @@ export const input = (theme: AppTheme) => [
 export const select = (theme: AppTheme) => [baseControlStyle(theme), w("full")]
 
 export const headerText = [fontSize("xlarge"), fontLightCondensed]
+export const headerText2 = [fontSize("large"), fontLightCondensed]
 
 export const raisedPanel = [themeShadow, themeBgColor(0)]
 
