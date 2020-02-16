@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import Avatar from "../character/Avatar"
+import Button from "../dom/Button"
 import {
   anchor,
   headerText,
@@ -53,14 +54,14 @@ function CharacterSelect(props: Props) {
               <option key={name}>{name}</option>
             ))}
           </select>
-          <button css={solidButton} type="submit">
+          <Button css={solidButton} type="submit">
             Enter chat
-          </button>
+          </Button>
+          <Button css={[anchor, mt(4)]} onClick={props.onReturnToLogin}>
+            Return to Login
+          </Button>
         </form>
       </div>
-      <button css={[anchor, mt(4)]} onClick={props.onReturnToLogin}>
-        Return to Login
-      </button>
     </div>
   )
 }

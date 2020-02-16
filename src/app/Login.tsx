@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { extractErrorMessage } from "../common/extractErrorMessage"
+import Button from "../dom/Button"
 import { authenticate } from "../flist/authenticate"
 import {
   headerText,
@@ -95,9 +96,9 @@ export default function Login(props: Props) {
             />
           </FormField>
 
-          <button css={solidButton} type="submit" disabled={submitDisabled}>
+          <Button css={solidButton} type="submit" disabled={submitDisabled}>
             Log in
-          </button>
+          </Button>
 
           {state.current === "error" && (
             <p css={[mt(4), maxW(60), textCenter]}>{state.error}</p>
