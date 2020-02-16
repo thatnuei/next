@@ -166,15 +166,7 @@ function Chat(props: Props) {
             </Button>
             <h1 css={[headerText2, leadingNone]}>Frontpage</h1>
             <div css={flex1} />
-            <Button
-              css={[
-                fadedButton,
-                ml(3),
-                hidden,
-                screen.small(block),
-                screen.medium(block),
-              ]}
-            >
+            <Button css={[fadedButton, ml(3), block, screen.large(hidden)]}>
               <Icon name="users" />
             </Button>
           </div>
@@ -207,8 +199,8 @@ function Chat(props: Props) {
                 ml(gapSize),
                 w(60),
                 flexColumn,
-                screen.small(hidden),
-                screen.medium(hidden),
+                hidden,
+                screen.large(flexColumn),
               ]}
             >
               <div css={[themeBgColor(0), px(3), py(2)]}>Characters: 420</div>
