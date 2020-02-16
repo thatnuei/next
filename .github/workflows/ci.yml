@@ -1,3 +1,4 @@
+name: run the things and make sure they aren't broken
 on: [push]
 jobs:
   ci:
