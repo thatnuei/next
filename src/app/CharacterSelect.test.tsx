@@ -14,6 +14,7 @@ describe("CharacterSelect", () => {
         characters={characters}
         initialCharacter={initialCharacter}
         onSubmit={handleSubmit}
+        onReturnToLogin={() => {}}
       />,
     )
 
