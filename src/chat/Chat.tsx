@@ -40,6 +40,22 @@ type RoomTabInfo =
 function Chat(props: Props) {
   const { tabs, activeTab, setActiveTab } = useChatRoomTabs()
 
+  function getTabProps(tab: RoomTabInfo) {
+    if (tab.type === "channel") {
+      return {
+        key: `channel:${tab.title}`,
+        title: tab.title,
+        icon: <Icon name="public" />,
+      }
+    }
+
+    return {
+      key: `private-chat:${tab.partner.name}`,
+      title: tab.partner.name,
+      icon: <Avatar name={tab.partner.name} css={size(iconSize(3))} />,
+    }
+  }
+
   return (
     <div css={[fixedCover, flexRow]}>
       <nav css={[flexColumn, py(2)]}>
@@ -56,31 +72,13 @@ function Chat(props: Props) {
           <CharacterDetails character={testCharacter} />
         </div>
         <nav css={[themeBgColor(2), flex1]}>
-          {tabs.map((tab) => {
-            function getTabProps(tab: RoomTabInfo) {
-              if (tab.type === "channel") {
-                return {
-                  title: tab.title,
-                  icon: <Icon name="public" />,
-                }
-              }
-
-              return {
-                title: tab.partner.name,
-                icon: (
-                  <Avatar name={tab.partner.name} css={size(iconSize(3))} />
-                ),
-              }
-            }
-
-            return (
-              <RoomTab
-                {...getTabProps(tab)}
-                state={activeTab === tab ? "active" : "inactive"}
-                onClick={() => setActiveTab(tab)}
-              />
-            )
-          })}
+          {tabs.map((tab) => (
+            <RoomTab
+              {...getTabProps(tab)}
+              state={activeTab === tab ? "active" : "inactive"}
+              onClick={() => setActiveTab(tab)}
+            />
+          ))}
         </nav>
       </div>
 
