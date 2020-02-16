@@ -1,10 +1,10 @@
 import React from "react"
 import CharacterDetails from "../character/CharacterDetails"
 import { Character } from "../character/types"
+import Icon from "../ui/Icon"
 import {
   fixedCover,
   flex1,
-  flexBasis,
   flexColumn,
   flexRow,
   mb,
@@ -12,8 +12,10 @@ import {
   p,
   py,
   themeBgColor,
+  w,
 } from "../ui/style"
 import NavAction from "./NavAction"
+import RoomTab from "./RoomTab"
 
 type Props = {
   identity: string
@@ -40,11 +42,32 @@ function Chat(props: Props) {
         <NavAction icon="logout" title="Log out" />
       </nav>
 
-      <div css={[flexColumn, flexBasis(54)]}>
+      <div css={[flexColumn, w(54)]}>
         <div css={[themeBgColor(0), mb(dividerSize), p(3)]}>
           <CharacterDetails character={testCharacter} />
         </div>
-        <nav css={[themeBgColor(1), flex1]}>room tabs</nav>
+        <nav css={[themeBgColor(2), flex1]}>
+          <RoomTab
+            title="Frontpage"
+            icon={<Icon name="public" />}
+            state="active"
+          />
+          <RoomTab
+            title="Fantasy"
+            icon={<Icon name="public" />}
+            state="inactive"
+          />
+          <RoomTab
+            title="Story Driven LFRP"
+            icon={<Icon name="public" />}
+            state="inactive"
+          />
+          <RoomTab
+            title="Kissaten Treehouse (Slice of Life)"
+            icon={<Icon name="private" />}
+            state="unread"
+          />
+        </nav>
       </div>
 
       <div css={[ml(dividerSize), flex1]}>room view</div>
