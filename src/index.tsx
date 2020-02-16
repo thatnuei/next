@@ -7,10 +7,12 @@ import { reset } from "./ui/reset"
 import { midnightTheme, ThemeProvider } from "./ui/theme"
 
 ReactDOM.render(
-  <ThemeProvider theme={midnightTheme}>
-    <App />
-    <Global styles={reset} />
-    <FocusVisible />
-  </ThemeProvider>,
+  <React.StrictMode>
+    <ThemeProvider theme={midnightTheme}>
+      <App />
+      <Global styles={reset} />
+      <FocusVisible />
+    </ThemeProvider>
+  </React.StrictMode>,
   document.getElementById("root"),
 )
