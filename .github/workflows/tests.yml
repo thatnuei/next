@@ -3,4 +3,4 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     steps:
-      run: yarn && yarn ci
+      - run: yarn && yarn ci
