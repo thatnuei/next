@@ -13,7 +13,7 @@ function Avatar({ name, ...props }: Props) {
       title={name}
       alt=""
       role="presentation"
-      css={[size(25)]}
+      css={size(25)}
       {...props}
     />
   )
