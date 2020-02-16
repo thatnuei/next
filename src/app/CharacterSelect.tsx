@@ -3,9 +3,9 @@ import Avatar from "../character/Avatar"
 import {
   anchor,
   headerText,
-  input,
   raisedPanel,
   raisedPanelHeader,
+  select,
   solidButton,
 } from "../ui/components"
 import {
@@ -45,7 +45,7 @@ function CharacterSelect(props: Props) {
         >
           <Avatar name={character} />
           <select
-            css={[input, { boxShadow: "none" }, my(4)]}
+            css={[select, my(4)]}
             value={character}
             onChange={(e) => setCharacter(e.target.value)}
           >
