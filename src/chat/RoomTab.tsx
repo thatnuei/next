@@ -43,7 +43,7 @@ function RoomTab(props: Props) {
         />
       </Button>
       <Button css={[fadedButton, p(2)]}>
-        <Icon name="close" />
+        <Icon name="close" size={2.5} />
       </Button>
     </div>
   )
