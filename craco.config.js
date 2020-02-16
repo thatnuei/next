@@ -8,13 +8,16 @@ module.exports = {
     configure(config, { env }) {
       if (env === "development") addReactRefresh(config)
 
-      config.resolve = {
-        ...config.resolve,
-        alias: {
-          ...config.resolve.alias,
-          "react": "preact/compat",
-          "react-dom": "preact/compat",
-        },
+      if (env === "production") {
+        // react-refresh doesn't work with preact
+        config.resolve = {
+          ...config.resolve,
+          alias: {
+            ...config.resolve.alias,
+            "react": "preact/compat",
+            "react-dom": "preact/compat",
+          },
+        }
       }
 
       return config
