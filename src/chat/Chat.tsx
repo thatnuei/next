@@ -1,4 +1,5 @@
 import React from "react"
+import Avatar from "../character/Avatar"
 import CharacterDetails from "../character/CharacterDetails"
 import { Character } from "../character/types"
 import Icon from "../ui/Icon"
@@ -11,6 +12,7 @@ import {
   ml,
   p,
   py,
+  size,
   themeBgColor,
   w,
 } from "../ui/style"
@@ -66,6 +68,11 @@ function Chat(props: Props) {
             title="Kissaten Treehouse (Slice of Life)"
             icon={<Icon name="private" />}
             state="unread"
+          />
+          <RoomTab
+            title="Subaru-chan"
+            icon={<Avatar name="Subaru-chan" css={[size(6)]} />}
+            state="inactive"
           />
         </nav>
       </div>
