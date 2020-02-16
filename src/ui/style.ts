@@ -109,6 +109,10 @@ export const textCenter = css({ textAlign: "center" })
 
 export const underline = css({ textDecoration: "underline" })
 export const strikethrough = css({ textDecoration: "line-through" })
+export const bold = css({ fontWeight: 500 })
+export const italic = css({ fontStyle: "italic" })
+
+export const leadingNone = css({ lineHeight: 1 })
 
 // effects
 export const opacity = (opacity: number) => css({ opacity })
