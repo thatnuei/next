@@ -21,6 +21,7 @@
     "@types/node": "^13.7.1",
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
+    "fchat": "^1.4.0",
     "focus-visible": "^5.0.2",
     "idb-keyval": "^3.2.0",
     "polished": "^3.4.4",
