@@ -51,7 +51,9 @@ function CharacterSelect(props: Props) {
             onChange={(e) => setCharacter(e.target.value)}
           >
             {props.characters.map((name) => (
-              <option key={name}>{name}</option>
+              <option key={name} value={name}>
+                {name}
+              </option>
             ))}
           </select>
           <Button css={solidButton} type="submit">
