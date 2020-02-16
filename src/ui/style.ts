@@ -52,6 +52,8 @@ export const inlineBlock = css({ display: "inline-block" })
 export const flexRow = css({ display: "flex" })
 export const flexColumn = css({ display: "flex", flexDirection: "column" })
 export const flex1 = css({ flex: 1 })
+export const flexBasis = (units: LengthUnit) => css({ flexBasis: len(units) })
+
 export const alignItems = (alignItems: FlexAlign) => css({ alignItems })
 export const alignContent = (alignContent: FlexAlign) => css({ alignContent })
 export const justifyContent = (justifyContent: FlexJustify) =>
