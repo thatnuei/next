@@ -28,6 +28,9 @@ export const size = (units: LengthUnit) => [w(units), h(units)]
 export const maxW = (units: LengthUnit) => css({ maxWidth: len(units) })
 export const maxH = (units: LengthUnit) => css({ maxHeight: len(units) })
 export const maxSize = (units: LengthUnit) => [maxW(units), maxH(units)]
+export const minW = (units: LengthUnit) => css({ minWidth: len(units) })
+export const minH = (units: LengthUnit) => css({ minHeight: len(units) })
+export const minSize = (units: LengthUnit) => [minW(units), minH(units)]
 
 export const p = (units: LengthUnit) => css({ padding: len(units) })
 export const pt = (units: LengthUnit) => css({ paddingTop: len(units) })
