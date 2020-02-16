@@ -83,6 +83,8 @@ export const fixedCover = css({
   bottom: 0,
 })
 
+export const scrollVertical = css({ overflowY: "auto" })
+
 // colors
 export const themeBgColor = (key: BackgroundColorKey) => (theme: AppTheme) =>
   css({ backgroundColor: theme.colors.background[key] })
