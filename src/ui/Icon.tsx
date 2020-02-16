@@ -10,14 +10,22 @@ type Props = React.ComponentPropsWithoutRef<"svg"> & {
 export type IconName = keyof typeof iconPathMap
 
 function Icon({ name, size = 3, ...props }: Props) {
+  const realSize = iconSize(size)
   return (
-    <svg width={size * 8} height={size * 8} viewBox="0 0 24 24" {...props}>
+    <svg width={realSize} height={realSize} viewBox="0 0 24 24" {...props}>
       <path d={iconPathMap[name]} css={{ fill: "currentColor" }} />
     </svg>
   )
 }
 
 export default Icon
+
+/**
+ * Get the actual pixel size of an icon from units
+ *
+ * Useful if we need to make other icon-sized things without guessing
+ */
+export const iconSize = (units: number) => `${units * 8}px`
 
 const iconPathMap = {
   about: mdi.mdiInformation,

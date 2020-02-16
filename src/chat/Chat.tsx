@@ -2,7 +2,7 @@ import React from "react"
 import Avatar from "../character/Avatar"
 import CharacterDetails from "../character/CharacterDetails"
 import { Character } from "../character/types"
-import Icon from "../ui/Icon"
+import Icon, { iconSize } from "../ui/Icon"
 import {
   fixedCover,
   flex1,
@@ -71,7 +71,7 @@ function Chat(props: Props) {
           />
           <RoomTab
             title="Subaru-chan"
-            icon={<Avatar name="Subaru-chan" css={[size(6)]} />}
+            icon={<Avatar name="Subaru-chan" css={size(iconSize(3))} />}
             state="inactive"
           />
         </nav>
