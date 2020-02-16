@@ -7,6 +7,16 @@ module.exports = {
   webpack: {
     configure(config, { env }) {
       if (env === "development") addReactRefresh(config)
+
+      config.resolve = {
+        ...config.resolve,
+        alias: {
+          ...config.resolve.alias,
+          "react": "preact/compat",
+          "react-dom": "preact/compat",
+        },
+      }
+
       return config
     },
   },

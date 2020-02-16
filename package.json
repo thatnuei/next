@@ -11,10 +11,11 @@
   "dependencies": {
     "@emotion/react": "^11.0.0-next.10",
     "@mdi/js": "^4.9.95",
-    "focus-visible": "^5.0.2",
     "fchat": "^1.4.0",
+    "focus-visible": "^5.0.2",
     "idb-keyval": "^3.2.0",
     "polished": "^3.4.4",
+    "preact": "^10.3.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
   },
