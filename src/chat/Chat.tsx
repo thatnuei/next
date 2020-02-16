@@ -21,6 +21,7 @@ import {
   themeBgColor,
   w,
 } from "../ui/style"
+import ChatInput from "./ChatInput"
 import NavAction from "./NavAction"
 import RoomTab from "./RoomTab"
 
@@ -148,7 +149,11 @@ function Chat(props: Props) {
       </nav>
 
       <div css={[flex1]}>
-        <ChannelView users={users} messages={messages} />
+        <ChannelView
+          users={users}
+          messages={messages}
+          chatInput={<ChatInput identity={props.identity} />}
+        />
       </div>
     </div>
   )

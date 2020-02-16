@@ -2,7 +2,6 @@ import React from "react"
 import CharacterList from "../character/CharacterList"
 import { Character } from "../character/types"
 import { gapSize } from "../chat/Chat"
-import ChatInput from "../chat/ChatInput"
 import Button from "../dom/Button"
 import MessageList from "../message/MessageList"
 import { Message } from "../message/types"
@@ -29,6 +28,7 @@ import {
 type Props = {
   messages: Message[]
   users: Character[]
+  chatInput: React.ReactNode
 }
 
 function ChannelView(props: Props) {
@@ -54,7 +54,7 @@ function ChannelView(props: Props) {
         </div>
       </div>
 
-      <ChatInput identity="Testificate" />
+      {props.chatInput}
     </div>
   )
 }
