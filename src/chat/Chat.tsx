@@ -1,7 +1,8 @@
-import React from "react"
+import React, { useState } from "react"
 import Avatar from "../character/Avatar"
 import CharacterDetails from "../character/CharacterDetails"
 import { Character } from "../character/types"
+import { safeIndex } from "../common/safeIndex"
 import Icon, { iconSize } from "../ui/Icon"
 import {
   fixedCover,
@@ -32,7 +33,29 @@ const testCharacter: Character = {
   statusMessage: "look at this photograph every time i do it makes me laugh",
 }
 
+type RoomTabInfo =
+  | { type: "channel"; title: string }
+  | { type: "private-chat"; partner: Character }
+
 function Chat(props: Props) {
+  const [tabs] = useState<RoomTabInfo[]>([
+    { type: "channel", title: "Frontpage" },
+    { type: "channel", title: "Fantasy" },
+    { type: "channel", title: "Story Driven LFRP" },
+    { type: "channel", title: "Kissaten Treehouse (Slice of Life)" },
+    {
+      type: "private-chat",
+      partner: {
+        name: "Subaru-chan",
+        gender: "Female",
+        status: "online",
+        statusMessage: "bleh",
+      },
+    },
+  ])
+
+  const [activeTab = safeIndex(tabs, 0), setActiveTab] = useState<RoomTabInfo>()
+
   return (
     <div css={[fixedCover, flexRow]}>
       <nav css={[flexColumn, py(2)]}>
@@ -49,31 +72,20 @@ function Chat(props: Props) {
           <CharacterDetails character={testCharacter} />
         </div>
         <nav css={[themeBgColor(2), flex1]}>
-          <RoomTab
-            title="Frontpage"
-            icon={<Icon name="public" />}
-            state="active"
-          />
-          <RoomTab
-            title="Fantasy"
-            icon={<Icon name="public" />}
-            state="inactive"
-          />
-          <RoomTab
-            title="Story Driven LFRP"
-            icon={<Icon name="public" />}
-            state="inactive"
-          />
-          <RoomTab
-            title="Kissaten Treehouse (Slice of Life)"
-            icon={<Icon name="private" />}
-            state="unread"
-          />
-          <RoomTab
-            title="Subaru-chan"
-            icon={<Avatar name="Subaru-chan" css={size(iconSize(3))} />}
-            state="inactive"
-          />
+          {tabs.map((tab) => (
+            <RoomTab
+              title={tab.type === "channel" ? tab.title : tab.partner.name}
+              icon={
+                tab.type === "channel" ? (
+                  <Icon name="public" />
+                ) : (
+                  <Avatar name={tab.partner.name} css={size(iconSize(3))} />
+                )
+              }
+              state={activeTab === tab ? "active" : "inactive"}
+              onClick={() => setActiveTab(tab)}
+            />
+          ))}
         </nav>
       </div>
 
