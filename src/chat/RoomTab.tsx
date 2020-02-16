@@ -26,7 +26,7 @@ type Props = {
   onClick: () => void
 }
 
-const inactiveHoverReveal = [opacity(0.4), hover(opacity(0.7))]
+const inactiveHoverReveal = [opacity(0.5), hover(opacity(0.75))]
 
 const unreadHighlight = css({
   backgroundColor: transparentize(0.8, emerald),
