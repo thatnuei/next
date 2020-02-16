@@ -114,6 +114,12 @@ export const italic = css({ fontStyle: "italic" })
 
 export const leadingNone = css({ lineHeight: 1 })
 
+export const ellipsize = css({
+  textOverflow: "ellipsis",
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+})
+
 // effects
 export const opacity = (opacity: number) => css({ opacity })
 
