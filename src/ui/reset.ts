@@ -48,4 +48,9 @@ export const reset = (theme: AppTheme) => css`
   strong {
     font-weight: 500;
   }
+
+  img,
+  svg {
+    display: block;
+  }
 `
