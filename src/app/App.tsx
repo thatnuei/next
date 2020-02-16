@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import Chat from "../chat/Chat"
 import { createStoredValue } from "../storage/createStoredValue"
 import CharacterSelect from "./CharacterSelect"
 import Login, { LoginSuccessData } from "./Login"
@@ -57,7 +58,7 @@ function App() {
     }
 
     case "chat":
-      return <p>{screen.identity}</p>
+      return <Chat identity={screen.identity} />
   }
 }
 
