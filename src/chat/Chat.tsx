@@ -34,7 +34,7 @@ function Chat(props: Props) {
       <nav css={[flexColumn, py(2)]}>
         <NavAction icon="channels" title="Browse channels" />
         <NavAction icon="updateStatus" title="Update your status" />
-        <NavAction icon="users" title="See online users" />
+        <NavAction icon="users" title="See online friends and bookmarks" />
         <NavAction icon="about" title="About next" />
         <div css={flex1} />
         <NavAction icon="logout" title="Log out" />
