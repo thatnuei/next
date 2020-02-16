@@ -52,6 +52,7 @@ function RoomTab(props: Props) {
       <Button
         css={[flex1, flexRow, alignItems("center"), p(2), ellipsize]}
         onClick={props.onClick}
+        role="link"
       >
         <div css={[w(6)]}>{props.icon}</div>
         <div
