@@ -10,8 +10,10 @@ import {
   mb,
   ml,
   p,
+  py,
   themeBgColor,
 } from "../ui/style"
+import NavAction from "./NavAction"
 
 type Props = {
   identity: string
@@ -21,22 +23,31 @@ const dividerSize = "6px"
 
 const testCharacter: Character = {
   name: "Testificate",
-  gender: "None",
-  status: "online",
+  gender: "Male",
+  status: "busy",
   statusMessage: "look at this photograph every time i do it makes me laugh",
 }
 
 function Chat(props: Props) {
   return (
     <div css={[fixedCover, flexRow]}>
-      <nav>actions</nav>
-      <aside css={[flexColumn, flexBasis(50)]}>
-        <header css={[themeBgColor(0), mb(dividerSize), p(3)]}>
-          <CharacterDetails character={testCharacter}></CharacterDetails>
-        </header>
+      <nav css={[flexColumn, py(2)]}>
+        <NavAction icon="channels" title="Browse channels" />
+        <NavAction icon="updateStatus" title="Update your status" />
+        <NavAction icon="users" title="See online users" />
+        <NavAction icon="about" title="About next" />
+        <div css={flex1} />
+        <NavAction icon="logout" title="Log out" />
+      </nav>
+
+      <div css={[flexColumn, flexBasis(54)]}>
+        <div css={[themeBgColor(0), mb(dividerSize), p(3)]}>
+          <CharacterDetails character={testCharacter} />
+        </div>
         <nav css={[themeBgColor(1), flex1]}>room tabs</nav>
-      </aside>
-      <div css={[ml(dividerSize)]}>room view</div>
+      </div>
+
+      <div css={[ml(dividerSize), flex1]}>room view</div>
     </div>
   )
 }
