@@ -36,7 +36,7 @@ export const lightTheme: AppTheme = {
   ...midnightTheme,
   colors: {
     ...midnightTheme.colors,
-    background: [clouds, shade(0.15, clouds), shade(0.3, clouds)],
+    background: [clouds, shade(0.1, clouds), shade(0.3, clouds)],
     text: shade(0.1, midnight),
   },
   shadow: {
