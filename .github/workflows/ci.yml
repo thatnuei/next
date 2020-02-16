@@ -1,5 +1,7 @@
 name: run the things and make sure they aren't broken
 on: [push]
+env:
+  CI: true
 jobs:
   ci:
     runs-on: ubuntu-latest
