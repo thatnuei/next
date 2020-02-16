@@ -2,7 +2,7 @@ import { Global } from "@emotion/react"
 import "focus-visible"
 import React from "react"
 
-export function FocusVisible() {
+export default function FocusVisible() {
   return (
     <Global
       styles={{
