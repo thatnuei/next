@@ -1,4 +1,5 @@
 import {
+  active,
   flexCenter,
   flexRow,
   focus,
@@ -18,6 +19,11 @@ import {
 } from "./style"
 import { AppTheme } from "./theme"
 
+const activePress = active({
+  transform: `translateY(2px)`,
+  transition: "none",
+})
+
 const baseControlStyle = (theme: AppTheme) => [
   py(2),
   px(3),
@@ -27,7 +33,18 @@ const baseControlStyle = (theme: AppTheme) => [
   transition("background-color"),
 ]
 
-export const solidButton = (theme: AppTheme) => baseControlStyle(theme)
+export const solidButton = (theme: AppTheme) => [
+  baseControlStyle(theme),
+  activePress,
+  transition("transform"),
+]
+
+export const fadedButton = [
+  opacity(0.5),
+  hover(opacity(1)),
+  activePress,
+  transition("opacity, transform"),
+]
 
 export const input = (theme: AppTheme) => [
   baseControlStyle(theme),
@@ -36,7 +53,12 @@ export const input = (theme: AppTheme) => [
   focus(outlineNone),
 ]
 
-export const select = (theme: AppTheme) => [baseControlStyle(theme), w("full")]
+export const select = (theme: AppTheme) => [
+  baseControlStyle(theme),
+  w("full"),
+  activePress,
+  transition("transform"),
+]
 
 export const headerText = [fontSize("xlarge"), fontLightCondensed]
 export const headerText2 = [fontSize("large"), fontLightCondensed]
