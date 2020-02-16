@@ -1,7 +1,7 @@
 import { ThemeProvider, useTheme } from "@emotion/react"
 import { rgb, shade } from "polished"
 
-type ColorPalette = Record<0 | 1 | 2 | 3, string>
+type ColorPalette = Record<0 | 1 | 2, string>
 
 export type AppTheme = {
   colors: {
@@ -23,12 +23,7 @@ export const emerald = rgb(46, 204, 113)
 
 export const midnightTheme: AppTheme = {
   colors: {
-    background: [
-      midnight,
-      shade(0.2, midnight),
-      shade(0.35, midnight),
-      shade(0.5, midnight),
-    ],
+    background: [midnight, shade(0.3, midnight), shade(0.5, midnight)],
     text: clouds,
   },
   shadow: {
@@ -41,12 +36,7 @@ export const lightTheme: AppTheme = {
   ...midnightTheme,
   colors: {
     ...midnightTheme.colors,
-    background: [
-      clouds,
-      shade(0.15, clouds),
-      shade(0.25, clouds),
-      shade(0.3, clouds),
-    ],
+    background: [clouds, shade(0.15, clouds), shade(0.3, clouds)],
     text: shade(0.1, midnight),
   },
   shadow: {
