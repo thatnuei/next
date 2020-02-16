@@ -1,30 +1,19 @@
 import React, { useState } from "react"
+import ChannelView from "../channel/ChannelView"
 import Avatar from "../character/Avatar"
 import CharacterDetails from "../character/CharacterDetails"
-import CharacterName from "../character/CharacterName"
 import { Character } from "../character/types"
 import { safeIndex } from "../common/safeIndex"
-import Button from "../dom/Button"
-import { fadedButton, headerText2, input, solidButton } from "../ui/components"
 import Icon, { iconSize } from "../ui/Icon"
 import {
-  block,
   fixedCover,
   flex1,
   flexColumn,
   flexRow,
-  fontSize,
   hidden,
-  inlineBlock,
-  leadingNone,
   mb,
-  minH,
-  ml,
   mr,
-  my,
-  opacity,
   p,
-  px,
   py,
   screen,
   scrollVertical,
@@ -39,7 +28,7 @@ type Props = {
   identity: string
 }
 
-const gapSize = "4px"
+export const gapSize = "6px"
 
 const testCharacter: Character = {
   name: "Testificate",
@@ -159,68 +148,7 @@ function Chat(props: Props) {
       </nav>
 
       <div css={[flex1]}>
-        <div css={[size("full"), flexColumn]}>
-          <div css={[themeBgColor(0), p(3), flexRow]}>
-            <Button css={[fadedButton, mr(3), hidden, screen.small(block)]}>
-              <Icon name="menu" />
-            </Button>
-            <h1 css={[headerText2, leadingNone]}>Frontpage</h1>
-            <div css={flex1} />
-            <Button css={[fadedButton, ml(3), block, screen.large(hidden)]}>
-              <Icon name="users" />
-            </Button>
-          </div>
-
-          <div css={[flex1, flexRow, my(gapSize), minH(0)]}>
-            <ol css={[flex1, themeBgColor(1), p(2), scrollVertical]}>
-              {messages.map((message, i) => (
-                <li key={i} css={mb(2)}>
-                  <span
-                    css={[
-                      inlineBlock,
-                      opacity(0.5),
-                      fontSize("small"),
-                      ml(3),
-                      { float: "right" },
-                    ]}
-                  >
-                    {new Date(message.timestamp).toLocaleTimeString()}
-                  </span>
-                  <span css={[inlineBlock, mr(2)]}>
-                    <CharacterName {...message.sender} />
-                  </span>
-                  <span>{message.text}</span>
-                </li>
-              ))}
-            </ol>
-
-            <div
-              css={[
-                ml(gapSize),
-                w(60),
-                flexColumn,
-                hidden,
-                screen.large(flexColumn),
-              ]}
-            >
-              <div css={[themeBgColor(0), px(3), py(2)]}>Characters: 420</div>
-              <ul css={[themeBgColor(1), px(3), py(2), flex1, scrollVertical]}>
-                {users.map((char, i) => (
-                  <li key={i} css={[mb(2)]}>
-                    <CharacterName {...char} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div css={[themeBgColor(0), flexRow, p(2)]}>
-            <textarea
-              css={[input, block, flex1, mr(2)]}
-              placeholder={`Chatting as ${testCharacter.name}...`}
-            />
-            <Button css={solidButton}>Send</Button>
-          </div>
-        </div>
+        <ChannelView users={users} messages={messages} />
       </div>
     </div>
   )
