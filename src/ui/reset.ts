@@ -45,8 +45,10 @@ export const reset = (theme: AppTheme) => css`
     border: none;
   }
 
-  strong {
-    font-weight: 500;
+  ol,
+  ul,
+  li {
+    list-style: none;
   }
 
   img,
