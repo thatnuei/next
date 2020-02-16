@@ -19,6 +19,7 @@ export type BackgroundColorKey = keyof AppTheme["colors"]["background"]
 // http://flatuicolors.com/
 const midnight = rgb(38, 65, 94)
 const clouds = rgb(236, 240, 241)
+export const emerald = rgb(46, 204, 113)
 
 export const midnightTheme: AppTheme = {
   colors: {
