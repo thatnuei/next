@@ -45,6 +45,7 @@ export const mr = (units: LengthUnit) => css({ marginRight: len(units) })
 export const mx = (units: LengthUnit) => [ml(units), mr(units)]
 export const my = (units: LengthUnit) => [mt(units), mb(units)]
 
+export const hidden = css({ display: "none" })
 export const block = css({ display: "block" })
 export const inline = css({ display: "inline" })
 export const inlineBlock = css({ display: "inline-block" })
@@ -145,3 +146,13 @@ export const focus = (...styles: CSSInterpolation[]) =>
 
 export const active = (...styles: CSSInterpolation[]) =>
   css({ ":active": styles as any })
+
+// responsive
+export const screen = {
+  small: (...styles: CSSInterpolation[]) =>
+    css({ "@media (min-width: 0) and (max-width: 767px)": styles }),
+  medium: (...styles: CSSInterpolation[]) =>
+    css({ "@media (min-width: 768px) and (max-width: 1023px)": styles }),
+  large: (...styles: CSSInterpolation[]) =>
+    css({ "@media (min-width: 1024px)": styles }),
+}
