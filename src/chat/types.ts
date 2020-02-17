@@ -22,13 +22,19 @@ export function getPrivateChat(state: ChatState, name: string) {
   return state.privateChats[name] ?? createPrivateChat(name)
 }
 
-export function getFullMessages(state: ChatState, messages: Message[]) {
+export function getFullMessages(
+  state: ChatState,
+  messages: Message[],
+): Message[] {
   return messages.map((it) => ({
     ...it,
     sender: getCharacter(state, it.senderName),
   }))
 }
 
-export function getCharactersFromNames(state: ChatState, names: string[]) {
+export function getCharactersFromNames(
+  state: ChatState,
+  names: string[],
+): Character[] {
   return names.map(getCharacter.bind(null, state))
 }
