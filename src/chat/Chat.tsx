@@ -1,9 +1,13 @@
 import React, { useState } from "react"
+import ChannelView from "../channel/ChannelView"
+import { Channel, createChannel } from "../channel/types"
 import Avatar from "../character/Avatar"
 import CharacterDetails from "../character/CharacterDetails"
 import { Character } from "../character/types"
+import { isPresent } from "../common/isPresent"
 import { safeIndex } from "../common/safeIndex"
 import Button from "../dom/Button"
+import { Message } from "../message/types"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { fadedButton } from "../ui/components"
 import Icon, { iconSize } from "../ui/Icon"
@@ -27,6 +31,7 @@ import {
 import ChatInput from "./ChatInput"
 import NavAction from "./NavAction"
 import RoomTab from "./RoomTab"
+import { ChatState, getChannel, getCharacter, getPrivateChat } from "./types"
 
 type Props = {
   identity: string
@@ -34,7 +39,7 @@ type Props = {
 
 export const gapSize = "6px"
 
-const testCharacter: Character = {
+const testificate: Character = {
   name: "Testificate",
   gender: "Male",
   status: "busy",
@@ -49,8 +54,8 @@ const subaru: Character = {
 }
 
 type RoomTabInfo =
-  | { type: "channel"; title: string }
-  | { type: "private-chat"; partner: Character }
+  | { type: "channel"; channelId: string }
+  | { type: "private-chat"; partnerName: string }
 
 const users: Character[] = [
   {
@@ -97,36 +102,63 @@ const users: Character[] = [
   },
 ]
 
-const messages = users.map((sender) => ({
+const messages = users.map<Message>((sender) => ({
   sender,
   text:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris non vehicula metus. Suspendisse sollicitudin lacus tortor, sed ornare ante pretium ut. In accumsan, purus sit amet hendrerit convallis, libero ex porta dolor, ac varius lacus nulla id lacus. In et gravida dui. Nulla nec quam erat. Aliquam nec arcu est. Sed at elit vulputate, convallis libero sit amet, ornare sem. Maecenas condimentum risus ipsum, a malesuada sem auctor sit amet. Pellentesque a vehicula lectus, sed posuere lacus. Quisque id nulla nec magna aliquam mollis. Quisque quis dolor erat.",
   timestamp: Date.now(),
 }))
 
-function getTabProps(tab: RoomTabInfo) {
+function createMockChannel(id: string, title = id): Channel {
+  return {
+    ...createChannel(id),
+    title,
+    messages,
+    users: ["Subaru-chan", "Testificate"],
+  }
+}
+
+const chatState: ChatState = {
+  characters: {
+    "Subaru-chan": subaru,
+    "Testificate": testificate,
+  },
+  channels: {
+    "Frontpage": createMockChannel("Frontpage"),
+    "Fantasy": createMockChannel("Fantasy"),
+    "Story Driven LFRP": createMockChannel("Story Driven LFRP"),
+    "aiolofasjdf;asdmfoidfa;miosd;afanio;": createMockChannel(
+      "aiolofasjdf;asdmfoidfa;miosd;afanio;",
+      "Kissaten Treehouse (Slice of Life)",
+    ),
+  },
+  privateChats: {},
+}
+
+function getTabProps(tab: RoomTabInfo, chatState: ChatState) {
   if (tab.type === "channel") {
+    const channel = chatState.channels[tab.channelId]
     return {
-      key: `channel:${tab.title}`,
-      title: tab.title,
+      key: `channel:${tab.channelId}`,
+      title: channel?.title ?? tab.channelId,
       icon: <Icon name="public" />,
     }
   }
 
   return {
-    key: `private-chat:${tab.partner.name}`,
-    title: tab.partner.name,
-    icon: <Avatar name={tab.partner.name} css={size(iconSize(3))} />,
+    key: `private-chat:${tab.partnerName}`,
+    title: tab.partnerName,
+    icon: <Avatar name={tab.partnerName} css={size(iconSize(3))} />,
   }
 }
 
 function Chat(props: Props) {
   const [tabs] = useState<RoomTabInfo[]>([
-    { type: "channel", title: "Frontpage" },
-    { type: "channel", title: "Fantasy" },
-    { type: "channel", title: "Story Driven LFRP" },
-    { type: "channel", title: "Kissaten Treehouse (Slice of Life)" },
-    { type: "private-chat", partner: subaru },
+    { type: "channel", channelId: "Frontpage" },
+    { type: "channel", channelId: "Fantasy" },
+    { type: "channel", channelId: "Story Driven LFRP" },
+    { type: "channel", channelId: "aiolofasjdf;asdmfoidfa;miosd;afanio;" },
+    { type: "private-chat", partnerName: subaru.name },
   ])
 
   const [activeTab = safeIndex(tabs, 0), setActiveTab] = useState<RoomTabInfo>()
@@ -136,6 +168,33 @@ function Chat(props: Props) {
       <Icon name="menu" />
     </Button>
   )
+
+  function renderChannel(id: string) {
+    const channel = getChannel(chatState, id)
+    return (
+      <ChannelView
+        title={channel.title}
+        messages={channel.messages}
+        users={channel.users
+          .map((name) => getCharacter(chatState, name))
+          .filter(isPresent)}
+        chatInput={<ChatInput identity={props.identity} />}
+        menuButton={menuButton}
+      />
+    )
+  }
+
+  function renderPrivateChat(partnerName: string) {
+    const chat = getPrivateChat(chatState, partnerName)
+    return (
+      <PrivateChatView
+        partner={getCharacter(chatState, partnerName)}
+        messages={chat.messages}
+        menuButton={menuButton}
+        chatInput={<ChatInput identity={props.identity} />}
+      />
+    )
+  }
 
   return (
     <div css={[fixedCover, flexRow]}>
@@ -151,12 +210,12 @@ function Chat(props: Props) {
 
         <div css={[flexColumn, w(54), scrollVertical]}>
           <div css={[themeBgColor(0), mb(gapSize), p(3)]}>
-            <CharacterDetails character={testCharacter} />
+            <CharacterDetails character={testificate} />
           </div>
           <div css={[themeBgColor(1), flex1]}>
             {tabs.map((tab) => (
               <RoomTab
-                {...getTabProps(tab)}
+                {...getTabProps(tab, chatState)}
                 state={activeTab === tab ? "active" : "inactive"}
                 onClick={() => setActiveTab(tab)}
               />
@@ -166,12 +225,9 @@ function Chat(props: Props) {
       </nav>
 
       <div css={[flex1]}>
-        <PrivateChatView
-          partner={subaru}
-          messages={messages}
-          menuButton={menuButton}
-          chatInput={<ChatInput identity={props.identity} />}
-        />
+        {activeTab?.type === "channel" && renderChannel(activeTab.channelId)}
+        {activeTab?.type === "private-chat" &&
+          renderPrivateChat(activeTab.partnerName)}
       </div>
     </div>
   )
