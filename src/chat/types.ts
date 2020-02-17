@@ -1,6 +1,7 @@
 import { Channel, createChannel } from "../channel/types"
 import { Character, createCharacter } from "../character/types"
 import { Dict } from "../common/types"
+import { Message } from "../message/types"
 import { createPrivateChat, PrivateChat } from "../privateChat/types"
 
 export type ChatState = {
@@ -19,4 +20,15 @@ export function getChannel(state: ChatState, id: string) {
 
 export function getPrivateChat(state: ChatState, name: string) {
   return state.privateChats[name] ?? createPrivateChat(name)
+}
+
+export function getFullMessages(state: ChatState, messages: Message[]) {
+  return messages.map((it) => ({
+    ...it,
+    sender: getCharacter(state, it.senderName),
+  }))
+}
+
+export function getCharactersFromNames(state: ChatState, names: string[]) {
+  return names.map(getCharacter.bind(null, state))
 }

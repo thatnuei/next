@@ -31,7 +31,13 @@ import {
 import ChatInput from "./ChatInput"
 import NavAction from "./NavAction"
 import RoomTab from "./RoomTab"
-import { ChatState, getChannel, getCharacter, getPrivateChat } from "./types"
+import {
+  ChatState,
+  getChannel,
+  getCharacter,
+  getFullMessages,
+  getPrivateChat,
+} from "./types"
 
 type Props = {
   identity: string
@@ -183,10 +189,7 @@ function Chat(props: Props) {
     return (
       <ChannelView
         title={channel.title}
-        messages={channel.messages.map((msg) => ({
-          ...msg,
-          sender: getCharacter(chatState, msg.senderName),
-        }))}
+        messages={getFullMessages(chatState, channel.messages)}
         users={channel.users
           .map((name) => getCharacter(chatState, name))
           .filter(isPresent)}
@@ -201,10 +204,7 @@ function Chat(props: Props) {
     return (
       <PrivateChatView
         partner={getCharacter(chatState, partnerName)}
-        messages={chat.messages.map((it) => ({
-          ...it,
-          sender: getCharacter(chatState, it.senderName),
-        }))}
+        messages={getFullMessages(chatState, chat.messages)}
         menuButton={menuButton}
         chatInput={<ChatInput identity={props.identity} />}
       />
