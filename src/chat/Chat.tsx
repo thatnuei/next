@@ -103,11 +103,17 @@ const users: Character[] = [
 ]
 
 const messages = users.map<Message>((sender) => ({
+  key: String(Math.random()),
   senderName: sender.name,
   text:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris non vehicula metus. Suspendisse sollicitudin lacus tortor, sed ornare ante pretium ut. In accumsan, purus sit amet hendrerit convallis, libero ex porta dolor, ac varius lacus nulla id lacus. In et gravida dui. Nulla nec quam erat. Aliquam nec arcu est. Sed at elit vulputate, convallis libero sit amet, ornare sem. Maecenas condimentum risus ipsum, a malesuada sem auctor sit amet. Pellentesque a vehicula lectus, sed posuere lacus. Quisque id nulla nec magna aliquam mollis. Quisque quis dolor erat.",
   timestamp: Date.now(),
+  type: "normal",
 }))
+
+messages[0].type = "lfrp"
+messages[1].type = "admin"
+messages[2].type = "system"
 
 function createMockChannel(id: string, title = id): Channel {
   return {
