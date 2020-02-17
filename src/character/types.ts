@@ -9,3 +9,12 @@ export type Character = {
 
 export type CharacterStatus = fchat.Character.Status
 export type CharacterGender = fchat.Character.Gender
+
+export function createCharacter(
+  name: string,
+  gender: CharacterGender = "None",
+  status: CharacterStatus = "offline",
+  statusMessage = "",
+): Character {
+  return { name, gender, status, statusMessage }
+}
