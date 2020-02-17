@@ -26,6 +26,7 @@ import {
 } from "../ui/style"
 
 type Props = {
+  title: string
   messages: Message[]
   users: Character[]
   chatInput: React.ReactNode
@@ -37,7 +38,7 @@ function ChannelView(props: Props) {
     <div css={[size("full"), flexColumn]}>
       <div css={[themeBgColor(0), p(3), flexRow, alignItems("center")]}>
         {props.menuButton}
-        <h1 css={[headerText2, leadingNone]}>Frontpage</h1>
+        <h1 css={[headerText2, leadingNone]}>{props.title}</h1>
         <div css={flex1} />
         <Button css={[fadedButton, ml(3), block, screen.large(hidden)]}>
           <Icon name="users" />
