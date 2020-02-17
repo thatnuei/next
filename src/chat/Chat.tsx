@@ -4,7 +4,6 @@ import { Channel, createChannel } from "../channel/types"
 import Avatar from "../character/Avatar"
 import CharacterDetails from "../character/CharacterDetails"
 import { Character } from "../character/types"
-import { isPresent } from "../common/isPresent"
 import { safeIndex } from "../common/safeIndex"
 import Button from "../dom/Button"
 import { Message } from "../message/types"
@@ -35,6 +34,7 @@ import {
   ChatState,
   getChannel,
   getCharacter,
+  getCharactersFromNames,
   getFullMessages,
   getPrivateChat,
 } from "./types"
@@ -190,9 +190,7 @@ function Chat(props: Props) {
       <ChannelView
         title={channel.title}
         messages={getFullMessages(chatState, channel.messages)}
-        users={channel.users
-          .map((name) => getCharacter(chatState, name))
-          .filter(isPresent)}
+        users={getCharactersFromNames(chatState, channel.users)}
         chatInput={<ChatInput identity={props.identity} />}
         menuButton={menuButton}
       />
