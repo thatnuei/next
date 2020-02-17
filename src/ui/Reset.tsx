@@ -1,8 +1,9 @@
-import { css } from "@emotion/react"
+import { css, Global } from "@emotion/react"
+import React from "react"
 import { themeBgColor, themeTextColor } from "./style"
 import { AppTheme } from "./theme"
 
-export const reset = (theme: AppTheme) => css`
+const reset = (theme: AppTheme) => css`
   * {
     padding: 0;
     margin: 0;
@@ -56,3 +57,7 @@ export const reset = (theme: AppTheme) => css`
     display: block;
   }
 `
+
+export default function Reset() {
+  return <Global styles={reset} />
+}

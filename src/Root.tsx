@@ -1,8 +1,7 @@
-import { Global } from "@emotion/react"
 import React from "react"
 import App from "./app/App"
 import FocusVisible from "./ui/FocusVisible"
-import { reset } from "./ui/reset"
+import Reset from "./ui/Reset"
 import { midnightTheme, ThemeProvider } from "./ui/theme"
 
 export default function Root() {
@@ -10,7 +9,7 @@ export default function Root() {
     <React.StrictMode>
       <ThemeProvider theme={midnightTheme}>
         <App />
-        <Global styles={reset} />
+        <Reset />
         <FocusVisible />
       </ThemeProvider>
     </React.StrictMode>
