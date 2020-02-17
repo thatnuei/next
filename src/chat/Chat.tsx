@@ -164,7 +164,10 @@ function Chat(props: Props) {
   const [activeTab = safeIndex(tabs, 0), setActiveTab] = useState<RoomTabInfo>()
 
   const menuButton = (
-    <Button css={[fadedButton, mr(3), hidden, screen.small(block)]}>
+    <Button
+      title="Show side menu"
+      css={[fadedButton, mr(3), hidden, screen.small(block)]}
+    >
       <Icon name="menu" />
     </Button>
   )

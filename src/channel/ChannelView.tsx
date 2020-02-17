@@ -40,7 +40,10 @@ function ChannelView(props: Props) {
         {props.menuButton}
         <h1 css={[headerText2, leadingNone]}>{props.title}</h1>
         <div css={flex1} />
-        <Button css={[fadedButton, ml(3), block, screen.large(hidden)]}>
+        <Button
+          title="Show users"
+          css={[fadedButton, ml(3), block, screen.large(hidden)]}
+        >
           <Icon name="users" />
         </Button>
       </div>
