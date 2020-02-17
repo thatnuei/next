@@ -121,7 +121,15 @@ function getTabProps(tab: RoomTabInfo) {
 }
 
 function Chat(props: Props) {
-  const { tabs, activeTab, setActiveTab } = useChatRoomTabs()
+  const [tabs] = useState<RoomTabInfo[]>([
+    { type: "channel", title: "Frontpage" },
+    { type: "channel", title: "Fantasy" },
+    { type: "channel", title: "Story Driven LFRP" },
+    { type: "channel", title: "Kissaten Treehouse (Slice of Life)" },
+    { type: "private-chat", partner: subaru },
+  ])
+
+  const [activeTab = safeIndex(tabs, 0), setActiveTab] = useState<RoomTabInfo>()
 
   const menuButton = (
     <Button css={[fadedButton, mr(3), hidden, screen.small(block)]}>
@@ -170,17 +178,3 @@ function Chat(props: Props) {
 }
 
 export default Chat
-
-function useChatRoomTabs() {
-  const [tabs] = useState<RoomTabInfo[]>([
-    { type: "channel", title: "Frontpage" },
-    { type: "channel", title: "Fantasy" },
-    { type: "channel", title: "Story Driven LFRP" },
-    { type: "channel", title: "Kissaten Treehouse (Slice of Life)" },
-    { type: "private-chat", partner: subaru },
-  ])
-
-  const [activeTab = safeIndex(tabs, 0), setActiveTab] = useState<RoomTabInfo>()
-
-  return { tabs, activeTab, setActiveTab }
-}
