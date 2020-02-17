@@ -8,6 +8,7 @@ import { Message } from "../message/types"
 import { fadedButton, headerText2 } from "../ui/components"
 import Icon from "../ui/Icon"
 import {
+  alignItems,
   block,
   flex1,
   flexColumn,
@@ -16,7 +17,6 @@ import {
   leadingNone,
   minH,
   ml,
-  mr,
   my,
   p,
   screen,
@@ -29,15 +29,14 @@ type Props = {
   messages: Message[]
   users: Character[]
   chatInput: React.ReactNode
+  menuButton: React.ReactNode
 }
 
 function ChannelView(props: Props) {
   return (
     <div css={[size("full"), flexColumn]}>
-      <div css={[themeBgColor(0), p(3), flexRow]}>
-        <Button css={[fadedButton, mr(3), hidden, screen.small(block)]}>
-          <Icon name="menu" />
-        </Button>
+      <div css={[themeBgColor(0), p(3), flexRow, alignItems("center")]}>
+        {props.menuButton}
         <h1 css={[headerText2, leadingNone]}>Frontpage</h1>
         <div css={flex1} />
         <Button css={[fadedButton, ml(3), block, screen.large(hidden)]}>
