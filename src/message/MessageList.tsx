@@ -25,9 +25,13 @@ function MessageList({ messages }: Props) {
           <span css={messageStyle}>
             {new Date(message.timestamp).toLocaleTimeString()}
           </span>
-          <span css={[inlineBlock, mr(2)]}>
-            <CharacterName {...message.sender} />
-          </span>
+
+          {message.sender && (
+            <span css={[inlineBlock, mr(2)]}>
+              <CharacterName {...message.sender} />
+            </span>
+          )}
+
           <span>{message.text}</span>
         </li>
       ))}

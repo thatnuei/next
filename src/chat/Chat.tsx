@@ -103,7 +103,7 @@ const users: Character[] = [
 ]
 
 const messages = users.map<Message>((sender) => ({
-  sender,
+  senderName: sender.name,
   text:
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris non vehicula metus. Suspendisse sollicitudin lacus tortor, sed ornare ante pretium ut. In accumsan, purus sit amet hendrerit convallis, libero ex porta dolor, ac varius lacus nulla id lacus. In et gravida dui. Nulla nec quam erat. Aliquam nec arcu est. Sed at elit vulputate, convallis libero sit amet, ornare sem. Maecenas condimentum risus ipsum, a malesuada sem auctor sit amet. Pellentesque a vehicula lectus, sed posuere lacus. Quisque id nulla nec magna aliquam mollis. Quisque quis dolor erat.",
   timestamp: Date.now(),
@@ -177,7 +177,10 @@ function Chat(props: Props) {
     return (
       <ChannelView
         title={channel.title}
-        messages={channel.messages}
+        messages={channel.messages.map((msg) => ({
+          ...msg,
+          sender: getCharacter(chatState, msg.senderName),
+        }))}
         users={channel.users
           .map((name) => getCharacter(chatState, name))
           .filter(isPresent)}
@@ -192,7 +195,10 @@ function Chat(props: Props) {
     return (
       <PrivateChatView
         partner={getCharacter(chatState, partnerName)}
-        messages={chat.messages}
+        messages={chat.messages.map((it) => ({
+          ...it,
+          sender: getCharacter(chatState, it.senderName),
+        }))}
         menuButton={menuButton}
         chatInput={<ChatInput identity={props.identity} />}
       />

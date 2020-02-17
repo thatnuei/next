@@ -1,7 +1,8 @@
 import { Character } from "../character/types"
 
 export type Message = {
-  sender: Character
+  senderName: string
+  sender?: Character
   text: string
   timestamp: number
 }
