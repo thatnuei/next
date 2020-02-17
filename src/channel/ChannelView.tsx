@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import CharacterList from "../character/CharacterList"
 import { Character } from "../character/types"
 import { gapSize } from "../chat/Chat"
@@ -14,7 +14,6 @@ import {
   flexColumn,
   flexRow,
   hidden,
-  leadingNone,
   minH,
   ml,
   my,
@@ -24,6 +23,8 @@ import {
   themeBgColor,
   w,
 } from "../ui/style"
+import ChannelFilters from "./ChannelFilters"
+import { ChannelMode } from "./types"
 
 type Props = {
   title: string
@@ -34,12 +35,35 @@ type Props = {
 }
 
 function ChannelView(props: Props) {
+  const [selectedMode, setSelectedMode] = useState<ChannelMode>("both")
+
+  function getFilteredMessages() {
+    if (selectedMode === "chat") {
+      return props.messages.filter(
+        (it) =>
+          it.type === "normal" || it.type === "system" || it.type === "admin",
+      )
+    }
+    if (selectedMode === "ads") {
+      return props.messages.filter(
+        (it) =>
+          it.type === "lfrp" || it.type === "system" || it.type === "admin",
+      )
+    }
+    return props.messages
+  }
+
   return (
     <div css={[size("full"), flexColumn]}>
       <div css={[themeBgColor(0), p(3), flexRow, alignItems("center")]}>
         {props.menuButton}
-        <h1 css={[headerText2, leadingNone]}>{props.title}</h1>
-        <div css={flex1} />
+
+        <h1 css={[headerText2, flex1]}>{props.title}</h1>
+        <ChannelFilters
+          selectedMode={selectedMode}
+          onModeChange={setSelectedMode}
+        />
+
         <Button
           title="Show users"
           css={[fadedButton, ml(3), block, screen.large(hidden)]}
@@ -50,7 +74,7 @@ function ChannelView(props: Props) {
 
       <div css={[flex1, flexRow, my(gapSize), minH(0)]}>
         <div css={[flex1, themeBgColor(1)]}>
-          <MessageList messages={props.messages} />
+          <MessageList messages={getFilteredMessages()} />
         </div>
         <div css={[ml(gapSize), w(60), hidden, screen.large(block)]}>
           <CharacterList characters={props.users} />

@@ -6,7 +6,10 @@ export type Channel = {
   description: string
   messages: Message[]
   users: string[]
+  mode: ChannelMode
 }
+
+export type ChannelMode = "both" | "chat" | "ads"
 
 export function createChannel(id: string): Channel {
   return {
@@ -15,5 +18,6 @@ export function createChannel(id: string): Channel {
     description: "",
     messages: [],
     users: [],
+    mode: "both",
   }
 }
