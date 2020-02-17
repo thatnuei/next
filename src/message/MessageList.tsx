@@ -8,7 +8,8 @@ import {
   ml,
   mr,
   opacity,
-  p,
+  px,
+  py,
   scrollVertical,
   size,
 } from "../ui/style"
@@ -18,7 +19,7 @@ type Props = { messages: Message[] }
 
 function MessageList({ messages }: Props) {
   return (
-    <ol css={[size("full"), p(2), scrollVertical]}>
+    <ol css={[size("full"), py(2), px(3), scrollVertical]}>
       {messages.map((message, i) => (
         <li key={i} css={mb(2)}>
           <span css={messageStyle}>
