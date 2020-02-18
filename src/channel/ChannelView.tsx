@@ -4,7 +4,7 @@ import { Character } from "../character/types"
 import { gapSize } from "../chat/Chat"
 import Button from "../dom/Button"
 import MessageList from "../message/MessageList"
-import { Message } from "../message/types"
+import { Message, MessageType } from "../message/types"
 import { fadedButton, headerText2 } from "../ui/components"
 import Icon from "../ui/Icon"
 import {
@@ -38,17 +38,14 @@ function ChannelView(props: Props) {
   const [selectedMode, setSelectedMode] = useState<ChannelMode>("both")
 
   function getFilteredMessages() {
+    const isType = (...types: MessageType[]) => (message: Message) =>
+      types.includes(message.type)
+
     if (selectedMode === "chat") {
-      return props.messages.filter(
-        (it) =>
-          it.type === "normal" || it.type === "system" || it.type === "admin",
-      )
+      return props.messages.filter(isType("normal", "system", "admin"))
     }
     if (selectedMode === "ads") {
-      return props.messages.filter(
-        (it) =>
-          it.type === "lfrp" || it.type === "system" || it.type === "admin",
-      )
+      return props.messages.filter(isType("lfrp", "system", "admin"))
     }
     return props.messages
   }
