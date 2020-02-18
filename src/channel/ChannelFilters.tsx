@@ -26,6 +26,8 @@ export default function ChannelFilters(props: Props) {
           { whiteSpace: "nowrap" },
         ]}
         onClick={() => props.onModeChange(mode)}
+        role="radio"
+        aria-checked={isSelected}
       >
         {label}
       </Button>
@@ -33,7 +35,7 @@ export default function ChannelFilters(props: Props) {
   }
 
   return (
-    <div css={[flexRow]}>
+    <div css={[flexRow]} role="radiogroup">
       {renderFilterButton("both", "Both")}
       {renderFilterButton("chat", "Chat")}
       {renderFilterButton("ads", "Ads")}
