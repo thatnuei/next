@@ -1,3 +1,4 @@
+import { css } from "@emotion/react"
 import React from "react"
 import Button from "../dom/Button"
 import { block, flexRow, hover, ml, opacity, transition } from "../ui/style"
@@ -18,13 +19,7 @@ export default function ChannelFilters(props: Props) {
 
     return (
       <Button
-        css={[
-          block,
-          ml(4),
-          selectedStyle,
-          transition("opacity"),
-          { whiteSpace: "nowrap" },
-        ]}
+        css={[selectedStyle, filterButtonStyle]}
         onClick={() => props.onModeChange(mode)}
         role="radio"
         aria-checked={isSelected}
@@ -42,3 +37,10 @@ export default function ChannelFilters(props: Props) {
     </div>
   )
 }
+
+const filterButtonStyle = [
+  block,
+  ml(4),
+  transition("opacity"),
+  css({ whiteSpace: "nowrap" }),
+]
