@@ -21,9 +21,9 @@ import {
   mr,
   p,
   py,
-  screen,
   scrollVertical,
   size,
+  smallScreen,
   themeBgColor,
   w,
 } from "../ui/style"
@@ -178,7 +178,7 @@ function Chat(props: Props) {
   const menuButton = (
     <Button
       title="Show side menu"
-      css={[fadedButton, mr(3), hidden, screen.small(block)]}
+      css={[fadedButton, mr(3), hidden, smallScreen(block)]}
     >
       <Icon name="menu" />
     </Button>
@@ -211,7 +211,7 @@ function Chat(props: Props) {
 
   return (
     <div css={[fixedCover, flexRow]}>
-      <nav css={[flexRow, mr(gapSize), screen.small(hidden)]}>
+      <nav css={[flexRow, mr(gapSize), smallScreen(hidden)]}>
         <div css={[flexColumn, py(2)]}>
           <NavAction icon="channels" title="Browse channels" />
           <NavAction icon="updateStatus" title="Update your status" />

@@ -153,11 +153,18 @@ export const active = (...styles: CSSInterpolation[]) =>
   css({ ":active": styles as any })
 
 // responsive
-export const screen = {
-  small: (...styles: CSSInterpolation[]) =>
-    css({ "@media (min-width: 0) and (max-width: 767px)": styles }),
-  medium: (...styles: CSSInterpolation[]) =>
-    css({ "@media (min-width: 768px) and (max-width: 1023px)": styles }),
-  large: (...styles: CSSInterpolation[]) =>
-    css({ "@media (min-width: 1024px)": styles }),
+export const media = (query: string) => (...styles: CSSInterpolation[]) => css`
+  @media ${query} {
+    ${styles}
+  }
+`
+
+export const screenQueries = {
+  small: "(min-width: 0) and (max-width: 767px)",
+  medium: "(min-width: 768px) and (max-width: 1023px)",
+  large: "(min-width: 1024px)",
 }
+
+export const smallScreen = media(screenQueries.small)
+export const mediumScreen = media(screenQueries.medium)
+export const largeScreen = media(screenQueries.large)

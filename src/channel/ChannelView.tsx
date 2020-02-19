@@ -14,11 +14,11 @@ import {
   flexColumn,
   flexRow,
   hidden,
+  largeScreen,
   minH,
   ml,
   my,
   p,
-  screen,
   size,
   themeBgColor,
   w,
@@ -63,7 +63,7 @@ function ChannelView(props: Props) {
 
         <Button
           title="Show users"
-          css={[fadedButton, ml(3), block, screen.large(hidden)]}
+          css={[fadedButton, ml(3), block, largeScreen(hidden)]}
         >
           <Icon name="users" />
         </Button>
@@ -73,7 +73,7 @@ function ChannelView(props: Props) {
         <div css={[flex1, themeBgColor(1)]}>
           <MessageList messages={getFilteredMessages()} />
         </div>
-        <div css={[ml(gapSize), w(60), hidden, screen.large(block)]}>
+        <div css={[ml(gapSize), w(60), hidden, largeScreen(block)]}>
           <CharacterList characters={props.users} />
         </div>
       </div>
