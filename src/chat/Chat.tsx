@@ -8,12 +8,18 @@ import { safeIndex } from "../common/safeIndex"
 import Button from "../dom/Button"
 import { Message } from "../message/types"
 import PrivateChatView from "../privateChat/PrivateChatView"
-import { fadedButton } from "../ui/components"
+import {
+  fadedButton,
+  headerText,
+  raisedPanel,
+  raisedPanelHeader,
+} from "../ui/components"
 import Icon, { iconSize } from "../ui/Icon"
 import {
   block,
   fixedCover,
   flex1,
+  flexCenter,
   flexColumn,
   flexRow,
   hidden,
@@ -22,6 +28,7 @@ import {
   p,
   py,
   scrollVertical,
+  semiBlackBg,
   size,
   smallScreen,
   themeBgColor,
@@ -210,39 +217,50 @@ function Chat(props: Props) {
   }
 
   return (
-    <div css={[fixedCover, flexRow]}>
-      <nav css={[flexRow, mr(gapSize), smallScreen(hidden)]}>
-        <div css={[flexColumn, py(2)]}>
-          <NavAction icon="channels" title="Browse channels" />
-          <NavAction icon="updateStatus" title="Update your status" />
-          <NavAction icon="users" title="See online friends and bookmarks" />
-          <NavAction icon="about" title="About next" />
-          <div css={flex1} />
-          <NavAction icon="logout" title="Log out" />
-        </div>
-
-        <div css={[flexColumn, w(54), scrollVertical]}>
-          <div css={[themeBgColor(0), mb(gapSize), p(3)]}>
-            <CharacterDetails character={testificate} />
+    <>
+      <div css={[fixedCover, flexRow]}>
+        <nav css={[flexRow, mr(gapSize), smallScreen(hidden)]}>
+          <div css={[flexColumn, py(2)]}>
+            <NavAction icon="channels" title="Browse channels" />
+            <NavAction icon="updateStatus" title="Update your status" />
+            <NavAction icon="users" title="See online friends and bookmarks" />
+            <NavAction icon="about" title="About next" />
+            <div css={flex1} />
+            <NavAction icon="logout" title="Log out" />
           </div>
-          <div css={[themeBgColor(1), flex1]}>
-            {tabs.map((tab) => (
-              <RoomTab
-                {...getTabProps(tab, chatState)}
-                state={activeTab === tab ? "active" : "inactive"}
-                onClick={() => setActiveTab(tab)}
-              />
-            ))}
-          </div>
-        </div>
-      </nav>
 
-      <div css={[flex1]}>
-        {activeTab?.type === "channel" && renderChannel(activeTab.channelId)}
-        {activeTab?.type === "private-chat" &&
-          renderPrivateChat(activeTab.partnerName)}
+          <div css={[flexColumn, w(54), scrollVertical]}>
+            <div css={[themeBgColor(0), mb(gapSize), p(3)]}>
+              <CharacterDetails character={testificate} />
+            </div>
+            <div css={[themeBgColor(1), flex1]}>
+              {tabs.map((tab) => (
+                <RoomTab
+                  {...getTabProps(tab, chatState)}
+                  state={activeTab === tab ? "active" : "inactive"}
+                  onClick={() => setActiveTab(tab)}
+                />
+              ))}
+            </div>
+          </div>
+        </nav>
+
+        <div css={[flex1]}>
+          {activeTab?.type === "channel" && renderChannel(activeTab.channelId)}
+          {activeTab?.type === "private-chat" &&
+            renderPrivateChat(activeTab.partnerName)}
+        </div>
       </div>
-    </div>
+
+      <div css={[fixedCover, semiBlackBg(0.75), flexColumn, flexCenter]}>
+        <div css={[raisedPanel]}>
+          <div css={[raisedPanelHeader]}>
+            <h1 css={[headerText]}>hi</h1>
+          </div>
+          <p>yo</p>
+        </div>
+      </div>
+    </>
   )
 }
 
