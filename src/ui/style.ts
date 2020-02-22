@@ -21,6 +21,9 @@ export const len = (units: LengthUnit) => {
   return units
 }
 
+// wanna use this instead of importing directly from emotion to keep our code decoupled-ish
+export { css }
+
 // layout
 export const w = (units: LengthUnit) => css({ width: len(units) })
 export const h = (units: LengthUnit) => css({ height: len(units) })
