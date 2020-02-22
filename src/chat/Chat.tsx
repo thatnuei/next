@@ -22,7 +22,10 @@ import {
   flexCenter,
   flexColumn,
   flexRow,
+  h,
   hidden,
+  maxH,
+  maxW,
   mb,
   mr,
   p,
@@ -51,6 +54,101 @@ type Props = {
 }
 
 export const gapSize = "6px"
+
+function Chat(props: Props) {
+  const [tabs] = useState<RoomTabInfo[]>([
+    { type: "channel", channelId: "Frontpage" },
+    { type: "channel", channelId: "Fantasy" },
+    { type: "channel", channelId: "Story Driven LFRP" },
+    { type: "channel", channelId: "aiolofasjdf;asdmfoidfa;miosd;afanio;" },
+    { type: "private-chat", partnerName: subaru.name },
+  ])
+
+  const [activeTab = safeIndex(tabs, 0), setActiveTab] = useState<RoomTabInfo>()
+
+  const menuButton = (
+    <Button
+      title="Show side menu"
+      css={[fadedButton, mr(3), hidden, smallScreen(block)]}
+    >
+      <Icon name="menu" />
+    </Button>
+  )
+
+  function renderChannel(id: string) {
+    const channel = getChannel(chatState, id)
+    return (
+      <ChannelView
+        title={channel.title}
+        messages={getFullMessages(chatState, channel.messages)}
+        users={getCharactersFromNames(chatState, channel.users)}
+        chatInput={<ChatInput identity={props.identity} />}
+        menuButton={menuButton}
+      />
+    )
+  }
+
+  function renderPrivateChat(partnerName: string) {
+    const chat = getPrivateChat(chatState, partnerName)
+    return (
+      <PrivateChatView
+        partner={getCharacter(chatState, partnerName)}
+        messages={getFullMessages(chatState, chat.messages)}
+        menuButton={menuButton}
+        chatInput={<ChatInput identity={props.identity} />}
+      />
+    )
+  }
+
+  return (
+    <>
+      <div css={[fixedCover, flexRow]}>
+        <nav css={[flexRow, mr(gapSize), smallScreen(hidden)]}>
+          <div css={[flexColumn, py(2)]}>
+            <NavAction icon="channels" title="Browse channels" />
+            <NavAction icon="updateStatus" title="Update your status" />
+            <NavAction icon="users" title="See online friends and bookmarks" />
+            <NavAction icon="about" title="About next" />
+            <div css={flex1} />
+            <NavAction icon="logout" title="Log out" />
+          </div>
+
+          <div css={[flexColumn, w(54), scrollVertical]}>
+            <div css={[themeBgColor(0), mb(gapSize), p(3)]}>
+              <CharacterDetails character={testificate} />
+            </div>
+            <div css={[themeBgColor(1), flex1]}>
+              {tabs.map((tab) => (
+                <RoomTab
+                  {...getTabProps(tab, chatState)}
+                  state={activeTab === tab ? "active" : "inactive"}
+                  onClick={() => setActiveTab(tab)}
+                />
+              ))}
+            </div>
+          </div>
+        </nav>
+
+        <div css={[flex1]}>
+          {activeTab?.type === "channel" && renderChannel(activeTab.channelId)}
+          {activeTab?.type === "private-chat" &&
+            renderPrivateChat(activeTab.partnerName)}
+        </div>
+      </div>
+
+      <div css={[fixedCover, semiBlackBg(0.75), flexColumn, flexCenter]}>
+        <div css={[raisedPanel, w("full"), maxW(120), h("full"), maxH(200)]}>
+          <div css={[raisedPanelHeader]}>
+            <h1 css={[headerText]}>hi</h1>
+          </div>
+          <p>yo</p>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default Chat
 
 const testificate: Character = {
   name: "Testificate",
@@ -170,98 +268,3 @@ function getTabProps(tab: RoomTabInfo, chatState: ChatState) {
     icon: <Avatar name={tab.partnerName} css={size(iconSize(3))} />,
   }
 }
-
-function Chat(props: Props) {
-  const [tabs] = useState<RoomTabInfo[]>([
-    { type: "channel", channelId: "Frontpage" },
-    { type: "channel", channelId: "Fantasy" },
-    { type: "channel", channelId: "Story Driven LFRP" },
-    { type: "channel", channelId: "aiolofasjdf;asdmfoidfa;miosd;afanio;" },
-    { type: "private-chat", partnerName: subaru.name },
-  ])
-
-  const [activeTab = safeIndex(tabs, 0), setActiveTab] = useState<RoomTabInfo>()
-
-  const menuButton = (
-    <Button
-      title="Show side menu"
-      css={[fadedButton, mr(3), hidden, smallScreen(block)]}
-    >
-      <Icon name="menu" />
-    </Button>
-  )
-
-  function renderChannel(id: string) {
-    const channel = getChannel(chatState, id)
-    return (
-      <ChannelView
-        title={channel.title}
-        messages={getFullMessages(chatState, channel.messages)}
-        users={getCharactersFromNames(chatState, channel.users)}
-        chatInput={<ChatInput identity={props.identity} />}
-        menuButton={menuButton}
-      />
-    )
-  }
-
-  function renderPrivateChat(partnerName: string) {
-    const chat = getPrivateChat(chatState, partnerName)
-    return (
-      <PrivateChatView
-        partner={getCharacter(chatState, partnerName)}
-        messages={getFullMessages(chatState, chat.messages)}
-        menuButton={menuButton}
-        chatInput={<ChatInput identity={props.identity} />}
-      />
-    )
-  }
-
-  return (
-    <>
-      <div css={[fixedCover, flexRow]}>
-        <nav css={[flexRow, mr(gapSize), smallScreen(hidden)]}>
-          <div css={[flexColumn, py(2)]}>
-            <NavAction icon="channels" title="Browse channels" />
-            <NavAction icon="updateStatus" title="Update your status" />
-            <NavAction icon="users" title="See online friends and bookmarks" />
-            <NavAction icon="about" title="About next" />
-            <div css={flex1} />
-            <NavAction icon="logout" title="Log out" />
-          </div>
-
-          <div css={[flexColumn, w(54), scrollVertical]}>
-            <div css={[themeBgColor(0), mb(gapSize), p(3)]}>
-              <CharacterDetails character={testificate} />
-            </div>
-            <div css={[themeBgColor(1), flex1]}>
-              {tabs.map((tab) => (
-                <RoomTab
-                  {...getTabProps(tab, chatState)}
-                  state={activeTab === tab ? "active" : "inactive"}
-                  onClick={() => setActiveTab(tab)}
-                />
-              ))}
-            </div>
-          </div>
-        </nav>
-
-        <div css={[flex1]}>
-          {activeTab?.type === "channel" && renderChannel(activeTab.channelId)}
-          {activeTab?.type === "private-chat" &&
-            renderPrivateChat(activeTab.partnerName)}
-        </div>
-      </div>
-
-      <div css={[fixedCover, semiBlackBg(0.75), flexColumn, flexCenter]}>
-        <div css={[raisedPanel]}>
-          <div css={[raisedPanelHeader]}>
-            <h1 css={[headerText]}>hi</h1>
-          </div>
-          <p>yo</p>
-        </div>
-      </div>
-    </>
-  )
-}
-
-export default Chat
