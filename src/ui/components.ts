@@ -21,7 +21,7 @@ import {
 import { AppTheme } from "./theme"
 
 const activePress = active({
-  transform: `translateY(2px)`,
+  transform: `translateY(3px)`,
   transition: "none",
 })
 
