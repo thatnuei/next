@@ -112,6 +112,8 @@ export const fontLightCondensed = css({
 })
 
 export const textCenter = css({ textAlign: "center" })
+export const textLeft = css({ textAlign: "left" })
+export const textRight = css({ textAlign: "right" })
 
 export const underline = css({ textDecoration: "underline" })
 export const strikethrough = css({ textDecoration: "line-through" })
