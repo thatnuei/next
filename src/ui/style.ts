@@ -152,6 +152,9 @@ export const focus = (...styles: CSSInterpolation[]) =>
 export const active = (...styles: CSSInterpolation[]) =>
   css({ ":active": styles as any })
 
+export const disabled = (...styles: CSSInterpolation[]) =>
+  css({ ":disabled": styles as any })
+
 // responsive
 export const media = (query: string) => (...styles: CSSInterpolation[]) => css`
   @media ${query} {

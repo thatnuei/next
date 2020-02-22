@@ -1,5 +1,6 @@
 import {
   active,
+  disabled,
   flexCenter,
   flexRow,
   focus,
@@ -24,6 +25,8 @@ const activePress = active({
   transition: "none",
 })
 
+const fadedWhenDisabled = disabled(opacity(0.5))
+
 const baseControlStyle = (theme: AppTheme) => [
   py(2),
   px(3),
@@ -31,6 +34,7 @@ const baseControlStyle = (theme: AppTheme) => [
   hover(themeBgColor(2)(theme)),
   focus(themeBgColor(2)(theme)),
   transition("background-color"),
+  fadedWhenDisabled,
 ]
 
 export const solidButton = (theme: AppTheme) => [
@@ -43,6 +47,7 @@ export const fadedButton = [
   opacity(0.5),
   hover(opacity(1)),
   activePress,
+  disabled(opacity(0.3)),
   transition("opacity, transform"),
 ]
 
