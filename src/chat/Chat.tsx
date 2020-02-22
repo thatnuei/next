@@ -9,28 +9,18 @@ import { safeIndex } from "../common/safeIndex"
 import Button from "../dom/Button"
 import { Message } from "../message/types"
 import PrivateChatView from "../privateChat/PrivateChatView"
-import {
-  fadedButton,
-  headerText,
-  input,
-  raisedPanel,
-  raisedPanelHeader,
-  solidButton,
-} from "../ui/components"
+import { fadedButton, input, solidButton } from "../ui/components"
 import Icon, { iconSize } from "../ui/Icon"
+import Modal from "../ui/Modal"
 import {
   alignItems,
   block,
   fixedCover,
   flex1,
-  flexCenter,
   flexColumn,
   flexRow,
-  h,
   hidden,
   hover,
-  maxH,
-  maxW,
   mb,
   ml,
   mr,
@@ -39,7 +29,6 @@ import {
   px,
   py,
   scrollVertical,
-  semiBlackBg,
   size,
   smallScreen,
   textRight,
@@ -146,20 +135,8 @@ function Chat(props: Props) {
         </div>
       </div>
 
-      <div css={[fixedCover, semiBlackBg(0.75), flexColumn, flexCenter, p(6)]}>
-        <div
-          css={[
-            raisedPanel,
-            w("full"),
-            maxW(120),
-            h("full"),
-            maxH(180),
-            flexColumn,
-          ]}
-        >
-          <div css={[raisedPanelHeader]}>
-            <h1 css={[headerText]}>hi</h1>
-          </div>
+      <Modal title="Channels" width={120} height={180}>
+        <div css={[size("full"), flexColumn]}>
           <div css={[flex1, flexColumn, scrollVertical, themeBgColor(2)]}>
             {range(100).map((i) => (
               <button
@@ -197,7 +174,7 @@ function Chat(props: Props) {
             </Button>
           </div>
         </div>
-      </div>
+      </Modal>
     </>
   )
 }
