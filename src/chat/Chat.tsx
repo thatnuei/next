@@ -4,6 +4,7 @@ import { Channel, createChannel } from "../channel/types"
 import Avatar from "../character/Avatar"
 import CharacterDetails from "../character/CharacterDetails"
 import { Character } from "../character/types"
+import { range } from "../common/range"
 import { safeIndex } from "../common/safeIndex"
 import Button from "../dom/Button"
 import { Message } from "../message/types"
@@ -11,11 +12,14 @@ import PrivateChatView from "../privateChat/PrivateChatView"
 import {
   fadedButton,
   headerText,
+  input,
   raisedPanel,
   raisedPanelHeader,
+  solidButton,
 } from "../ui/components"
 import Icon, { iconSize } from "../ui/Icon"
 import {
+  alignItems,
   block,
   fixedCover,
   flex1,
@@ -24,17 +28,23 @@ import {
   flexRow,
   h,
   hidden,
+  hover,
   maxH,
   maxW,
   mb,
+  ml,
   mr,
+  opacity,
   p,
+  px,
   py,
   scrollVertical,
   semiBlackBg,
   size,
   smallScreen,
+  textRight,
   themeBgColor,
+  transition,
   w,
 } from "../ui/style"
 import ChatInput from "./ChatInput"
@@ -136,12 +146,56 @@ function Chat(props: Props) {
         </div>
       </div>
 
-      <div css={[fixedCover, semiBlackBg(0.75), flexColumn, flexCenter]}>
-        <div css={[raisedPanel, w("full"), maxW(120), h("full"), maxH(200)]}>
+      <div css={[fixedCover, semiBlackBg(0.75), flexColumn, flexCenter, p(6)]}>
+        <div
+          css={[
+            raisedPanel,
+            w("full"),
+            maxW(120),
+            h("full"),
+            maxH(180),
+            flexColumn,
+          ]}
+        >
           <div css={[raisedPanelHeader]}>
             <h1 css={[headerText]}>hi</h1>
           </div>
-          <p>yo</p>
+          <div css={[flex1, flexColumn, scrollVertical, themeBgColor(2)]}>
+            {range(100).map((i) => (
+              <button
+                css={[
+                  py(2),
+                  px(2),
+                  flexRow,
+                  alignItems("center"),
+                  i % 10 === 0
+                    ? [opacity(1), themeBgColor(0)]
+                    : [opacity(0.4), hover(opacity(0.7))],
+                  transition("opacity"),
+                ]}
+              >
+                <Icon name="public" css={[mr(2), { flexShrink: 0 }]} />
+                <div>
+                  really really really really really really really really really
+                  really really really long room name {i}
+                </div>
+                <div css={[flex1]} />
+                <div css={[w(18), textRight]}>
+                  {Math.floor(Math.random() * 1000)}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <div css={[flexRow, p(2)]}>
+            <input type="text" placeholder="Search..." css={[input, flex1]} />
+            <Button css={[solidButton, ml(2)]}>
+              <Icon name="sortAlphabetical" />
+            </Button>
+            <Button css={[solidButton, ml(2)]}>
+              <Icon name="refresh" />
+            </Button>
+          </div>
         </div>
       </div>
     </>
