@@ -1,39 +1,32 @@
 import React, { useState } from "react"
+import ChannelBrowser from "../channel/ChannelBrowser"
 import ChannelView from "../channel/ChannelView"
 import { Channel, createChannel } from "../channel/types"
 import Avatar from "../character/Avatar"
 import CharacterDetails from "../character/CharacterDetails"
 import { Character } from "../character/types"
-import { range } from "../common/range"
 import { safeIndex } from "../common/safeIndex"
 import Button from "../dom/Button"
 import { Message } from "../message/types"
 import PrivateChatView from "../privateChat/PrivateChatView"
-import { fadedButton, input, solidButton } from "../ui/components"
+import { fadedButton } from "../ui/components"
 import Icon, { iconSize } from "../ui/Icon"
 import Modal from "../ui/Modal"
 import {
-  alignItems,
   block,
   fixedCover,
   flex1,
   flexColumn,
   flexRow,
   hidden,
-  hover,
   mb,
-  ml,
   mr,
-  opacity,
   p,
-  px,
   py,
   scrollVertical,
   size,
   smallScreen,
-  textRight,
   themeBgColor,
-  transition,
   w,
 } from "../ui/style"
 import ChatInput from "./ChatInput"
@@ -136,44 +129,7 @@ function Chat(props: Props) {
       </div>
 
       <Modal title="Channels" width={120} height={180}>
-        <div css={[size("full"), flexColumn]}>
-          <div css={[flex1, flexColumn, scrollVertical, themeBgColor(2)]}>
-            {range(100).map((i) => (
-              <button
-                css={[
-                  py(2),
-                  px(2),
-                  flexRow,
-                  alignItems("center"),
-                  i % 10 === 0
-                    ? [opacity(1), themeBgColor(0)]
-                    : [opacity(0.4), hover(opacity(0.7))],
-                  transition("opacity"),
-                ]}
-              >
-                <Icon name="public" css={[mr(2), { flexShrink: 0 }]} />
-                <div>
-                  really really really really really really really really really
-                  really really really long room name {i}
-                </div>
-                <div css={[flex1]} />
-                <div css={[w(18), textRight]}>
-                  {Math.floor(Math.random() * 1000)}
-                </div>
-              </button>
-            ))}
-          </div>
-
-          <div css={[flexRow, p(2)]}>
-            <input type="text" placeholder="Search..." css={[input, flex1]} />
-            <Button css={[solidButton, ml(2)]}>
-              <Icon name="sortAlphabetical" />
-            </Button>
-            <Button css={[solidButton, ml(2)]}>
-              <Icon name="refresh" />
-            </Button>
-          </div>
-        </div>
+        <ChannelBrowser />
       </Modal>
     </>
   )
