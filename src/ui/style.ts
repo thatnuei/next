@@ -11,7 +11,7 @@ type FlexJustify =
   | "space-between"
   | "space-around"
 
-type LengthUnit = number | "full" | StringAutocompleteHack
+export type LengthUnit = number | "full" | StringAutocompleteHack
 
 type StringAutocompleteHack = string & { __autocompleteHack?: never }
 
