@@ -134,6 +134,9 @@ export const ellipsize = css({
 // effects
 export const opacity = (opacity: number) => css({ opacity })
 
+export const visible = css({ visibility: "visible" })
+export const invisible = css({ visibility: "hidden" })
+
 export const transition = (properties?: string) =>
   css({ transitionDuration: "0.2s", transitionProperty: properties })
 
