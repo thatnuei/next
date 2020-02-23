@@ -37,7 +37,7 @@ function ChannelBrowserItem(props: Props) {
       <Icon which={earth} css={[mr(2), { flexShrink: 0 }]} />
       <div>{props.name}</div>
       <div css={[flex1]} />
-      <div css={[w(18), textRight]}>{props.userCount}</div>
+      <div css={[w(12), textRight, { flexShrink: 0 }]}>{props.userCount}</div>
     </button>
   )
 }
