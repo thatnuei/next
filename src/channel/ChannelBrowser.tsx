@@ -21,7 +21,7 @@ function ChannelBrowser(props: Props) {
   return (
     <div css={[size("full"), flexColumn]}>
       <div css={[flex1, flexColumn, scrollVertical, themeBgColor(2)]}>
-        {range(100).map((i) => (
+        {range(20).map((i) => (
           <ChannelBrowserItem
             name={`room ${i}`}
             userCount={Math.floor(Math.random() * 2000)}
