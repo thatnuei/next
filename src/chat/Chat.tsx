@@ -11,6 +11,7 @@ import { Message } from "../message/types"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { fadedButton } from "../ui/components"
 import Icon, { iconSize } from "../ui/Icon"
+import { earth, menu } from "../ui/icons"
 import Modal from "../ui/Modal"
 import {
   block,
@@ -65,7 +66,7 @@ function Chat(props: Props) {
       title="Show side menu"
       css={[fadedButton, mr(3), hidden, smallScreen(block)]}
     >
-      <Icon name="menu" />
+      <Icon which={menu} />
     </Button>
   )
 
@@ -263,7 +264,7 @@ function getTabProps(tab: RoomTabInfo, chatState: ChatState) {
     return {
       key: `channel:${tab.channelId}`,
       title: channel?.title ?? tab.channelId,
-      icon: <Icon name="public" />,
+      icon: <Icon which={earth} />,
     }
   }
 

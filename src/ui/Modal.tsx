@@ -7,6 +7,7 @@ import {
   raisedPanelHeader,
 } from "./components"
 import Icon from "./Icon"
+import { close } from "./icons"
 import {
   absolute,
   bottom,
@@ -101,7 +102,7 @@ function Modal(props: Props) {
             onClick={props.onClose}
             ref={closeButtonRef}
           >
-            <Icon name="close" />
+            <Icon which={close} />
           </Button>
         </header>
         <main css={[flex1, minH(0)]}>{props.children}</main>

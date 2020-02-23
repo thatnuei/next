@@ -7,6 +7,7 @@ import MessageList from "../message/MessageList"
 import { Message, MessageType } from "../message/types"
 import { fadedButton, headerText2 } from "../ui/components"
 import Icon from "../ui/Icon"
+import { users } from "../ui/icons"
 import {
   alignItems,
   block,
@@ -65,7 +66,7 @@ function ChannelView(props: Props) {
           title="Show users"
           css={[fadedButton, ml(3), block, largeScreen(hidden)]}
         >
-          <Icon name="users" />
+          <Icon which={users} />
         </Button>
       </div>
 

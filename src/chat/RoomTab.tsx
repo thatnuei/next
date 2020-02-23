@@ -4,6 +4,7 @@ import React from "react"
 import Button from "../dom/Button"
 import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
+import { close } from "../ui/icons"
 import {
   alignItems,
   ellipsize,
@@ -61,7 +62,7 @@ function RoomTab(props: Props) {
         />
       </Button>
       <Button css={[fadedButton, p(2)]}>
-        <Icon name="close" size={2.5} />
+        <Icon which={close} size={2.5} />
       </Button>
     </div>
   )

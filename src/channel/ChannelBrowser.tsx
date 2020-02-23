@@ -3,6 +3,7 @@ import { range } from "../common/range"
 import Button from "../dom/Button"
 import { input, solidButton } from "../ui/components"
 import Icon from "../ui/Icon"
+import { refresh, sortAlphabetical } from "../ui/icons"
 import {
   flex1,
   flexColumn,
@@ -33,10 +34,10 @@ function ChannelBrowser(props: Props) {
       <div css={[flexRow, p(2)]}>
         <input type="text" placeholder="Search..." css={[input, flex1]} />
         <Button css={[solidButton, ml(2)]}>
-          <Icon name="sortAlphabetical" />
+          <Icon which={sortAlphabetical} />
         </Button>
         <Button css={[solidButton, ml(2)]}>
-          <Icon name="refresh" />
+          <Icon which={refresh} />
         </Button>
       </div>
     </div>
