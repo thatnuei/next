@@ -8,6 +8,7 @@ export const close = mdi.mdiClose
 export const console = mdi.mdiCodeTags
 export const envelope = mdi.mdiEmail
 export const heart = mdi.mdiHeart
+export const home = mdi.mdiHome
 export const ignore = mdi.mdiMinusCircle
 export const link = mdi.mdiLinkVariant
 export const lock = mdi.mdiLock
