@@ -2,8 +2,8 @@ import React from "react"
 import { TagProps } from "../jsx/types"
 
 /** Regular DOM button with a better default type */
-function Button(props: TagProps<"button">) {
-  return <button type="button" {...props} />
+function Button(props: TagProps<"button">, ref: React.Ref<HTMLButtonElement>) {
+  return <button type="button" ref={ref} {...props} />
 }
 
-export default Button
+export default React.forwardRef(Button)
