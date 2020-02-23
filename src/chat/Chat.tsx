@@ -58,6 +58,8 @@ function Chat(props: Props) {
 
   const [activeTab = safeIndex(tabs, 0), setActiveTab] = useState<RoomTabInfo>()
 
+  const [channelBrowserVisible, setChannelBrowserVisible] = useState(false)
+
   const menuButton = (
     <Button
       title="Show side menu"
@@ -97,7 +99,17 @@ function Chat(props: Props) {
       <div css={[fixedCover, flexRow]}>
         <nav css={[flexRow, mr(gapSize), smallScreen(hidden)]}>
           <div css={[flexColumn, py(2)]}>
-            <NavAction icon="channels" title="Browse channels" />
+            <NavAction
+              icon="channels"
+              title="Browse channels"
+              onPointerDown={() => setChannelBrowserVisible(true)}
+              onKeyDown={(event) => {
+                console.log(event.key)
+                if (event.key === " " || event.key === "Enter") {
+                  setChannelBrowserVisible(true)
+                }
+              }}
+            />
             <NavAction icon="updateStatus" title="Update your status" />
             <NavAction icon="users" title="See online friends and bookmarks" />
             <NavAction icon="about" title="About next" />
@@ -128,7 +140,13 @@ function Chat(props: Props) {
         </div>
       </div>
 
-      <Modal title="Channels" width={120} height={180}>
+      <Modal
+        title="Channels"
+        width={120}
+        height={180}
+        isVisible={channelBrowserVisible}
+        onClose={() => setChannelBrowserVisible(false)}
+      >
         <ChannelBrowser />
       </Modal>
     </>
