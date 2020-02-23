@@ -11,7 +11,7 @@ import { Message } from "../message/types"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { fadedButton } from "../ui/components"
 import Icon, { iconSize } from "../ui/Icon"
-import { earth, menu } from "../ui/icons"
+import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
 import {
   block,
@@ -66,7 +66,7 @@ function Chat(props: Props) {
       title="Show side menu"
       css={[fadedButton, mr(3), hidden, smallScreen(block)]}
     >
-      <Icon which={menu} />
+      <Icon which={icons.menu} />
     </Button>
   )
 
@@ -101,7 +101,7 @@ function Chat(props: Props) {
         <nav css={[flexRow, mr(gapSize), smallScreen(hidden)]}>
           <div css={[flexColumn, py(2)]}>
             <NavAction
-              icon="channels"
+              icon={icons.channels}
               title="Browse channels"
               onPointerDown={() => setChannelBrowserVisible(true)}
               onKeyDown={(event) => {
@@ -111,11 +111,14 @@ function Chat(props: Props) {
                 }
               }}
             />
-            <NavAction icon="updateStatus" title="Update your status" />
-            <NavAction icon="users" title="See online friends and bookmarks" />
-            <NavAction icon="about" title="About next" />
+            <NavAction icon={icons.updateStatus} title="Update your status" />
+            <NavAction
+              icon={icons.users}
+              title="See online friends and bookmarks"
+            />
+            <NavAction icon={icons.about} title="About next" />
             <div css={flex1} />
-            <NavAction icon="logout" title="Log out" />
+            <NavAction icon={icons.logout} title="Log out" />
           </div>
 
           <div css={[flexColumn, w(54), scrollVertical]}>
@@ -264,7 +267,7 @@ function getTabProps(tab: RoomTabInfo, chatState: ChatState) {
     return {
       key: `channel:${tab.channelId}`,
       title: channel?.title ?? tab.channelId,
-      icon: <Icon which={earth} />,
+      icon: <Icon which={icons.earth} />,
     }
   }
 
