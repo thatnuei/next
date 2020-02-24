@@ -7,6 +7,7 @@
     "build": "craco build",
     "test": "craco test",
     "serve": "serve -s build",
+    "lint": "eslint . --ext js,ts,tsx",
     "typecheck": "tsc --noEmit",
     "analyze": "yarn build && source-map-explorer build/static/js/**/*.js",
     "ci": "npm-run-all --parallel --print-label build test typecheck"
@@ -41,7 +42,11 @@
     "typescript": "~3.8.2"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "ignorePatterns": [
+      "node_modules",
+      "build"
+    ]
   },
   "browserslist": {
     "production": [
