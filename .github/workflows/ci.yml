@@ -7,7 +7,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-      - run: npm add -g pnpm
-      - run: pnpm i
-      - run: pnpm run ci
+      - run: yarn
+      - run: yarn run ci
