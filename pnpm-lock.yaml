@@ -19,6 +19,7 @@ devDependencies:
   '@types/node': 13.7.7
   '@types/react': 16.9.23
   '@types/react-dom': 16.9.5
+  babel-preset-react-app: 9.1.1
   npm-run-all: 4.1.5
   react-refresh: 0.8.0
   react-scripts: 3.4.0_typescript@3.8.3
@@ -12163,6 +12164,7 @@ specifiers:
   '@types/node': ^13.7.7
   '@types/react': ^16.9.23
   '@types/react-dom': ^16.9.5
+  babel-preset-react-app: ^9.1.1
   fchat: ^1.4.0
   focus-visible: ^5.0.2
   idb-keyval: ^3.2.0
