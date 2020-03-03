@@ -1,5 +1,6 @@
 dependencies:
   '@emotion/react': 11.0.0-next.11_react@16.13.0
+  '@emotion/serialize': 0.11.16
   '@mdi/js': 4.9.95
   fchat: 1.4.0
   focus-visible: 5.0.2
@@ -19,6 +20,8 @@ devDependencies:
   '@types/node': 13.7.7
   '@types/react': 16.9.23
   '@types/react-dom': 16.9.5
+  '@types/testing-library__jest-dom': 5.0.1
+  '@types/testing-library__react': 9.1.2
   babel-preset-react-app: 9.1.1
   npm-run-all: 4.1.5
   react-refresh: 0.8.0
@@ -12155,6 +12158,7 @@ specifiers:
   '@craco/craco': ^5.6.3
   '@emotion/babel-preset-css-prop': ^11.0.0-next.10
   '@emotion/react': ^11.0.0-next.10
+  '@emotion/serialize': ^0.11.16
   '@mdi/js': ^4.9.95
   '@pmmmwh/react-refresh-webpack-plugin': ^0.2.0
   '@testing-library/jest-dom': ^5.1.1
@@ -12164,6 +12168,8 @@ specifiers:
   '@types/node': ^13.7.7
   '@types/react': ^16.9.23
   '@types/react-dom': ^16.9.5
+  '@types/testing-library__jest-dom': ^5.0.1
+  '@types/testing-library__react': ^9.1.2
   babel-preset-react-app: ^9.1.1
   fchat: ^1.4.0
   focus-visible: ^5.0.2
