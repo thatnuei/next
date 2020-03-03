@@ -16,7 +16,7 @@ export type LengthUnit = number | "full" | StringAutocompleteHack
 type StringAutocompleteHack = string & { __autocompleteHack?: never }
 
 export const len = (units: LengthUnit) => {
-  if (typeof units === "number") return `${units * 0.25}rem`
+  if (typeof units === "number") return `${units * 4}px`
   if (units === "full") return "100%"
   return units
 }
