@@ -4,7 +4,7 @@ import ChannelView from "../channel/ChannelView"
 import { safeIndex } from "../common/safeIndex"
 import Button from "../dom/Button"
 import PrivateChatView from "../privateChat/PrivateChatView"
-import { fadedButton } from "../ui/components"
+import { fadedButton, headerText2 } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import {
@@ -14,8 +14,13 @@ import {
   flexColumn,
   flexRow,
   hidden,
+  mb,
+  minH,
   mr,
+  px,
+  py,
   smallScreen,
+  themeBgColor,
   w,
 } from "../ui/style"
 import ChatHome from "./ChatHome"
@@ -47,17 +52,16 @@ export type RoomView =
 
 export const gapSize = "6px"
 
+const rooms: RoomView[] = [
+  { name: "channel", channelId: "Frontpage" },
+  { name: "channel", channelId: "Fantasy" },
+  { name: "channel", channelId: "Story Driven LFRP" },
+  { name: "channel", channelId: "aiolofasjdf;asdmfoidfa;miosd;afanio;" },
+  { name: "private-chat", partnerName: subaru.name },
+]
+
 function Chat(props: Props) {
   const [chatView, setChatView] = useState<ChatView>({ name: "home" })
-
-  const rooms: RoomView[] = [
-    { name: "channel", channelId: "Frontpage" },
-    { name: "channel", channelId: "Fantasy" },
-    { name: "channel", channelId: "Story Driven LFRP" },
-    { name: "channel", channelId: "aiolofasjdf;asdmfoidfa;miosd;afanio;" },
-    { name: "private-chat", partnerName: subaru.name },
-  ]
-
   const [activeRoom = safeIndex(rooms, 0), setActiveRoom] = useState<RoomView>()
 
   const menuButton = (
@@ -131,8 +135,11 @@ function Chat(props: Props) {
         )}
 
         {chatView.name === "channel-browser" && (
-          <div css={w(80)}>
-            <ChannelBrowser />
+          <div css={[w(80), flexColumn]}>
+            <header css={[py(2), px(3), themeBgColor(0), mb(gapSize)]}>
+              <h1 css={headerText2}>Channels</h1>
+            </header>
+            <ChannelBrowser css={[flex1, minH(0)]} />
           </div>
         )}
       </nav>

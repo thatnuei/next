@@ -3,21 +3,17 @@ import { gapSize } from "../chat/Chat"
 import { range } from "../common/range"
 import Button from "../dom/Button"
 import { TagProps } from "../jsx/types"
-import { headerText2, input, solidButton } from "../ui/components"
+import { input, solidButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import { refresh, sortAlphabetical } from "../ui/icons"
 import {
   flex1,
   flexColumn,
   flexRow,
-  mb,
   ml,
   mt,
   p,
-  px,
-  py,
   scrollVertical,
-  size,
   themeBgColor,
 } from "../ui/style"
 import ChannelBrowserItem from "./ChannelBrowserItem"
@@ -26,11 +22,7 @@ type Props = TagProps<"div">
 
 function ChannelBrowser(props: Props) {
   return (
-    <div css={[size("full"), flexColumn]} {...props}>
-      <header css={[py(2), px(3), themeBgColor(0), mb(gapSize)]}>
-        <h1 css={headerText2}>Channels</h1>
-      </header>
-
+    <div css={flexColumn} {...props}>
       <main css={[flex1, flexColumn, scrollVertical, themeBgColor(1)]}>
         {range(20).map((i) => (
           <ChannelBrowserItem
