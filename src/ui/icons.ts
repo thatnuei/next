@@ -30,3 +30,4 @@ export const updateStatus = mdi.mdiAccountEdit
 export const user = mdi.mdiAccount
 export const users = mdi.mdiAccountMultiple
 export const warning = mdi.mdiAlert
+export const list = mdi.mdiViewList

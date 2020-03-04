@@ -109,7 +109,7 @@ function Chat(props: Props) {
             onClick={() => setChatView({ name: "home" })}
           />
           <NavAction
-            icon={icons.channels}
+            icon={icons.list}
             title="Browse channels"
             isActive={chatView.name === "channel-browser"}
             onClick={() => setChatView({ name: "channel-browser" })}
