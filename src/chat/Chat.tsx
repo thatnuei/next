@@ -4,9 +4,10 @@ import ChannelView from "../channel/ChannelView"
 import { safeIndex } from "../common/safeIndex"
 import Button from "../dom/Button"
 import PrivateChatView from "../privateChat/PrivateChatView"
-import { fadedButton, headerText2 } from "../ui/components"
+import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
+import Modal from "../ui/Modal"
 import {
   block,
   fixedCover,
@@ -14,13 +15,8 @@ import {
   flexColumn,
   flexRow,
   hidden,
-  mb,
-  minH,
   mr,
-  px,
-  py,
   smallScreen,
-  themeBgColor,
   w,
 } from "../ui/style"
 import ChatHome from "./ChatHome"
@@ -39,13 +35,6 @@ type Props = {
   identity: string
 }
 
-type ChatView =
-  | { name: "home" }
-  | { name: "channel-browser" }
-  | { name: "update-status" }
-  | { name: "online-users" }
-  | { name: "about" }
-
 export type RoomView =
   | { name: "channel"; channelId: string }
   | { name: "private-chat"; partnerName: string }
@@ -61,8 +50,8 @@ const rooms: RoomView[] = [
 ]
 
 function Chat(props: Props) {
-  const [chatView, setChatView] = useState<ChatView>({ name: "home" })
   const [activeRoom = safeIndex(rooms, 0), setActiveRoom] = useState<RoomView>()
+  const [channelBrowserVisible, setChannelBrowserVisible] = useState(false)
 
   const menuButton = (
     <Button
@@ -103,16 +92,9 @@ function Chat(props: Props) {
       <nav css={[flexRow, mr(gapSize), smallScreen(hidden)]}>
         <div css={[flexColumn, mr(gapSize)]}>
           <NavAction
-            icon={icons.home}
-            title="Home"
-            isActive={chatView.name === "home"}
-            onClick={() => setChatView({ name: "home" })}
-          />
-          <NavAction
             icon={icons.list}
             title="Browse channels"
-            isActive={chatView.name === "channel-browser"}
-            onClick={() => setChatView({ name: "channel-browser" })}
+            onClick={() => setChannelBrowserVisible(true)}
           />
           <NavAction icon={icons.updateStatus} title="Update your status" />
           <NavAction
@@ -124,24 +106,13 @@ function Chat(props: Props) {
           <NavAction icon={icons.logout} title="Log out" />
         </div>
 
-        {chatView.name === "home" && (
-          <div css={w(56)}>
-            <ChatHome
-              rooms={rooms}
-              activeRoom={activeRoom}
-              onRoomChange={setActiveRoom}
-            />
-          </div>
-        )}
-
-        {chatView.name === "channel-browser" && (
-          <div css={[w(80), flexColumn]}>
-            <header css={[py(2), px(3), themeBgColor(0), mb(gapSize)]}>
-              <h1 css={headerText2}>Channels</h1>
-            </header>
-            <ChannelBrowser css={[flex1, minH(0)]} />
-          </div>
-        )}
+        <div css={w(56)}>
+          <ChatHome
+            rooms={rooms}
+            activeRoom={activeRoom}
+            onRoomChange={setActiveRoom}
+          />
+        </div>
       </nav>
 
       <div css={[flex1]}>
@@ -149,6 +120,15 @@ function Chat(props: Props) {
         {activeRoom?.name === "private-chat" &&
           renderPrivateChat(activeRoom.partnerName)}
       </div>
+
+      <Modal
+        title="Channels"
+        width={120}
+        height={180}
+        isVisible={channelBrowserVisible}
+        onClose={() => setChannelBrowserVisible(false)}
+        children={<ChannelBrowser />}
+      />
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import React from "react"
-import { gapSize } from "../chat/Chat"
 import { range } from "../common/range"
 import Button from "../dom/Button"
 import { TagProps } from "../jsx/types"
@@ -11,9 +10,9 @@ import {
   flexColumn,
   flexRow,
   ml,
-  mt,
   p,
   scrollVertical,
+  size,
   themeBgColor,
 } from "../ui/style"
 import ChannelBrowserItem from "./ChannelBrowserItem"
@@ -22,7 +21,7 @@ type Props = TagProps<"div">
 
 function ChannelBrowser(props: Props) {
   return (
-    <div css={flexColumn} {...props}>
+    <div css={[flexColumn, size("full")]} {...props}>
       <main css={[flex1, flexColumn, scrollVertical, themeBgColor(1)]}>
         {range(20).map((i) => (
           <ChannelBrowserItem
@@ -33,7 +32,7 @@ function ChannelBrowser(props: Props) {
         ))}
       </main>
 
-      <footer css={[flexRow, p(2), themeBgColor(0), mt(gapSize)]}>
+      <footer css={[flexRow, p(2), themeBgColor(0)]}>
         <input type="text" placeholder="Search..." css={[input, flex1]} />
         <Button css={[solidButton, ml(2)]}>
           <Icon which={sortAlphabetical} />
