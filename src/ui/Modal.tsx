@@ -66,7 +66,7 @@ function Modal(props: Props) {
     semiBlackBg(0.75),
     flexColumn,
     flexCenter,
-    p(6),
+    p(4),
     props.isVisible ? [opacity(1), visible] : [opacity(0), invisible],
     transition("opacity, visibility"),
   ]
