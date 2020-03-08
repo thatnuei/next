@@ -32,7 +32,6 @@ const baseControlStyle = (theme: AppTheme) => [
   px(3),
   themeBgColor(1)(theme),
   hover(themeBgColor(2)(theme)),
-  focus(themeBgColor(2)(theme)),
   transition("background-color"),
   fadedWhenDisabled,
 ]
@@ -55,6 +54,7 @@ export const input = (theme: AppTheme) => [
   baseControlStyle(theme),
   themeShadowInner,
   w("full"),
+  focus(themeBgColor(2)(theme)),
   focus(outlineNone),
 ]
 
