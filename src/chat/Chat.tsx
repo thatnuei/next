@@ -142,7 +142,15 @@ function Chat(props: Props) {
         height={90}
         isVisible={updateStatusVisible}
         onClose={() => setUpdateStatusVisible(false)}
-        children={<UpdateStatus />}
+        children={
+          <UpdateStatus
+            initialValues={{ status: "online", statusMessage: "" }}
+            onSubmit={(values) => {
+              console.log(values)
+              setUpdateStatusVisible(false)
+            }}
+          />
+        }
       />
     </div>
   )
