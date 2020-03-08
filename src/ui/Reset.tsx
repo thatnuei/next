@@ -27,9 +27,11 @@ const reset = (theme: AppTheme) => css`
     background: none;
     color: inherit;
     font: inherit;
-    border: none;
     text-align: left;
-    border-radius: 0;
+    border: none;
+
+    /* weird edge(?) bug: if we set this to 0, the border still shows up on select */
+    border-radius: 0.0000001px;
   }
 
   button {
