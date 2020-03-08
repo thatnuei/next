@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import tw from "twin.macro"
 import { extractErrorMessage } from "../common/extractErrorMessage"
 import Button from "../dom/Button"
 import { authenticate } from "../flist/authenticate"
@@ -12,8 +13,6 @@ import {
 import FormField from "../ui/FormField"
 import {
   alignItems,
-  fixedCover,
-  flexCenter,
   flexColumn,
   maxW,
   mb,
@@ -65,7 +64,9 @@ export default function Login(props: Props) {
   }
 
   return (
-    <div css={[fixedCover, flexColumn, flexCenter]}>
+    <div
+      css={tw`fixed left-0 right-0 top-0 bottom-0 flex flex-col items-center justify-center`}
+    >
       <div css={raisedPanel}>
         <header css={raisedPanelHeader}>
           <h1 css={headerText}>Login</h1>

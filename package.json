@@ -23,7 +23,8 @@
     "polished": "^3.4.4",
     "preact": "^10.3.3",
     "react": "^16.13.0",
-    "react-dom": "^16.13.0"
+    "react-dom": "^16.13.0",
+    "twin.macro": "^1.0.0-alpha.7"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",
