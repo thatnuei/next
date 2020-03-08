@@ -13,7 +13,16 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules",
+        "options": {
+          "classnameTransform": "camelCaseOnly",
+          "postCssOptions": { "useConfig": false }
+        }
+      }
+    ]
   },
   "include": ["src"]
 }

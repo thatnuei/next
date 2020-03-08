@@ -1,6 +1,9 @@
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 
 module.exports = {
+  style: {
+    postcss: require("./postcss.config"),
+  },
   babel: {
     presets: ["@emotion/css-prop"],
   },
