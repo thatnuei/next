@@ -14,7 +14,7 @@ function MessageList({ messages }: Props) {
         </li>
       ))}
     </ol>
-  );
+  )
 }
 
 export default MessageList

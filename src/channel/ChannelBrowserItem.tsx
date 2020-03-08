@@ -39,7 +39,7 @@ function ChannelBrowserItem(props: Props) {
       <div />
       <div>{props.userCount}</div>
     </button>
-  );
+  )
 }
 
 export default ChannelBrowserItem

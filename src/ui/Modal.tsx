@@ -104,7 +104,7 @@ function Modal(props: Props) {
         <main>{props.children}</main>
       </div>
     </div>
-  );
+  )
 }
 
 export default Modal

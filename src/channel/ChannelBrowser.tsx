@@ -42,7 +42,7 @@ function ChannelBrowser(props: Props) {
         </Button>
       </footer>
     </div>
-  );
+  )
 }
 
 export default ChannelBrowser

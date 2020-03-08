@@ -12,7 +12,7 @@ function FormField({ labelText, children, ...props }: Props) {
       <div>{labelText}</div>
       {children}
     </label>
-  );
+  )
 }
 
 export default FormField

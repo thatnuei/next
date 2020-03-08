@@ -21,10 +21,11 @@ export default function ChannelFilters(props: Props) {
       <Button
         onClick={() => props.onModeChange(mode)}
         role="radio"
-        aria-checked={isSelected}>
+        aria-checked={isSelected}
+      >
         {label}
       </Button>
-    );
+    )
   }
 
   return (
@@ -33,7 +34,7 @@ export default function ChannelFilters(props: Props) {
       {renderFilterButton("chat", "Chat")}
       {renderFilterButton("ads", "Ads")}
     </div>
-  );
+  )
 }
 
 const filterButtonStyle = [

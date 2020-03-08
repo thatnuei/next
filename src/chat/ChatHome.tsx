@@ -40,7 +40,7 @@ function ChatHome({ rooms, activeRoom, onRoomChange, ...props }: Props) {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 export default ChatHome
@@ -59,5 +59,5 @@ function getRoomProps(room: RoomView, chatState: ChatState) {
     key: `private-chat:${room.partnerName}`,
     title: room.partnerName,
     icon: <Avatar name={room.partnerName} />,
-  };
+  }
 }

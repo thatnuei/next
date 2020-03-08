@@ -11,7 +11,7 @@ function ChatInput({ identity }: Props) {
       <textarea placeholder={`Chatting as ${identity}...`} />
       <Button>Send</Button>
     </div>
-  );
+  )
 }
 
 export default ChatInput

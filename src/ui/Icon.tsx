@@ -13,7 +13,7 @@ function Icon({ which, size = 3, ...props }: IconProps) {
     <svg width={realSize} height={realSize} viewBox="0 0 24 24" {...props}>
       <path d={which} />
     </svg>
-  );
+  )
 }
 
 export default Icon

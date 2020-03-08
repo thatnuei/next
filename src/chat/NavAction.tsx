@@ -14,5 +14,5 @@ export default function NavAction({ icon, ...props }: Props) {
     <Button {...props}>
       <Icon which={icon} size={3} />
     </Button>
-  );
+  )
 }

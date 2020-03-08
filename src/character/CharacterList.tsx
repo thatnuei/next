@@ -26,7 +26,7 @@ function CharacterList({ characters }: Props) {
         ))}
       </ul>
     </div>
-  );
+  )
 }
 
 export default CharacterList

@@ -50,7 +50,7 @@ function RoomTab(props: Props) {
         <Icon which={close} size={2.5} />
       </Button>
     </div>
-  );
+  )
 }
 
 export default RoomTab

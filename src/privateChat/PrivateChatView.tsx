@@ -46,7 +46,7 @@ function PrivateChatView({ partner, messages, menuButton, chatInput }: Props) {
 
       {chatInput}
     </div>
-  );
+  )
 }
 
 export default PrivateChatView

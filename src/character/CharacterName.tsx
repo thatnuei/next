@@ -14,12 +14,10 @@ type Props = TagProps<"span"> & {
 function CharacterName({ name, gender, status }: Props) {
   return (
     <span>
-      {status && (
-        <span>•</span>
-      )}
+      {status && <span>•</span>}
       <span>{name}</span>
     </span>
-  );
+  )
 }
 
 export default CharacterName

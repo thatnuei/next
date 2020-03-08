@@ -33,9 +33,7 @@ export default function MessageListItem(props: Props) {
 
   return (
     <div>
-      <span>
-        {new Date(props.timestamp).toLocaleTimeString()}
-      </span>
+      <span>{new Date(props.timestamp).toLocaleTimeString()}</span>
 
       {props.sender && (
         <span>
@@ -45,7 +43,7 @@ export default function MessageListItem(props: Props) {
 
       <span>{props.text}</span>
     </div>
-  );
+  )
 }
 
 const messageStyle = [

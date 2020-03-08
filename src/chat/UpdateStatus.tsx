@@ -36,7 +36,8 @@ function UpdateStatus(props: Props) {
           onChange={(e) => {
             const status = e.target.value as CharacterStatus
             setValues((values) => ({ ...values, status }))
-          }}>
+          }}
+        >
           <option value="online">Online</option>
           <option value="looking">Looking</option>
           <option value="busy">Busy</option>
@@ -50,13 +51,12 @@ function UpdateStatus(props: Props) {
           onChange={(e) => {
             const statusMessage = e.target.value
             setValues((values) => ({ ...values, statusMessage }))
-          }} />
+          }}
+        />
       </FormField>
-      <Button type="submit">
-        Submit
-      </Button>
+      <Button type="submit">Submit</Button>
     </form>
-  );
+  )
 }
 
 export default UpdateStatus

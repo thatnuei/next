@@ -11,7 +11,7 @@ function CharacterStatusText(props: Props) {
       <span>{props.status}</span>
       {props.statusMessage ? ` - ${props.statusMessage}` : undefined}
     </p>
-  );
+  )
 }
 
 export default CharacterStatusText

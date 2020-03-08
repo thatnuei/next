@@ -13,8 +13,9 @@ function Avatar({ name, ...props }: Props) {
       title={name}
       alt=""
       role="presentation"
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
 export default Avatar

@@ -78,7 +78,7 @@ function ChannelView(props: Props) {
 
       {props.chatInput}
     </div>
-  );
+  )
 }
 
 export default ChannelView

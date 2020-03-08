@@ -42,23 +42,22 @@ function CharacterSelect(props: Props) {
         </header>
         <form onSubmit={handleSubmit}>
           <Avatar name={character} />
-          <select value={character} onChange={(e) => setCharacter(e.target.value)}>
+          <select
+            value={character}
+            onChange={(e) => setCharacter(e.target.value)}
+          >
             {props.characters.map((name) => (
               <option key={name} value={name}>
                 {name}
               </option>
             ))}
           </select>
-          <Button type="submit">
-            Enter chat
-          </Button>
-          <Button onClick={props.onReturnToLogin}>
-            Return to Login
-          </Button>
+          <Button type="submit">Enter chat</Button>
+          <Button onClick={props.onReturnToLogin}>Return to Login</Button>
         </form>
       </div>
     </div>
-  );
+  )
 }
 
 export default CharacterSelect

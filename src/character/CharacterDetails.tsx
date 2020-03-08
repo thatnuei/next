@@ -10,13 +10,15 @@ type Props = { character: Character }
 
 function CharacterDetails({ character }: Props) {
   const genderColor = { color: genderColors[character.gender] }
-  return <>
-    <p>{character.name}</p>
-    <Avatar name={character.name} />
-    <div>
-      <CharacterStatusText {...character} />
-    </div>
-  </>;
+  return (
+    <>
+      <p>{character.name}</p>
+      <Avatar name={character.name} />
+      <div>
+        <CharacterStatusText {...character} />
+      </div>
+    </>
+  )
 }
 
 export default CharacterDetails
