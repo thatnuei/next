@@ -30,6 +30,7 @@ import {
   getFullMessages,
   getPrivateChat,
 } from "./types"
+import UpdateStatus from "./UpdateStatus"
 
 type Props = {
   identity: string
@@ -52,6 +53,7 @@ const rooms: RoomView[] = [
 function Chat(props: Props) {
   const [activeRoom = safeIndex(rooms, 0), setActiveRoom] = useState<RoomView>()
   const [channelBrowserVisible, setChannelBrowserVisible] = useState(false)
+  const [updateStatusVisible, setUpdateStatusVisible] = useState(false)
 
   const menuButton = (
     <Button
@@ -96,7 +98,11 @@ function Chat(props: Props) {
             title="Browse channels"
             onClick={() => setChannelBrowserVisible(true)}
           />
-          <NavAction icon={icons.updateStatus} title="Update your status" />
+          <NavAction
+            icon={icons.updateStatus}
+            title="Update your status"
+            onClick={() => setUpdateStatusVisible(true)}
+          />
           <NavAction
             icon={icons.users}
             title="See online friends and bookmarks"
@@ -128,6 +134,15 @@ function Chat(props: Props) {
         isVisible={channelBrowserVisible}
         onClose={() => setChannelBrowserVisible(false)}
         children={<ChannelBrowser />}
+      />
+
+      <Modal
+        title="Update Your Status"
+        width={120}
+        height={90}
+        isVisible={updateStatusVisible}
+        onClose={() => setUpdateStatusVisible(false)}
+        children={<UpdateStatus />}
       />
     </div>
   )
