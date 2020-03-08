@@ -62,7 +62,7 @@ export const select = (theme: AppTheme) => [
   baseControlStyle(theme),
   w("full"),
   activePress,
-  transition("transform"),
+  transition("transform, background-color"),
 ]
 
 export const headerText = [fontSize("xlarge"), fontLightCondensed]
