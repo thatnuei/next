@@ -11,8 +11,8 @@ type Props = ComponentProps<typeof Button> & {
 
 export default function NavAction({ icon, ...props }: Props) {
   return (
-    <Button css={[fadedButton, p(3)]} {...props}>
+    <Button {...props}>
       <Icon which={icon} size={3} />
     </Button>
-  )
+  );
 }

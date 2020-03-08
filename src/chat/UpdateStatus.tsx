@@ -29,19 +29,14 @@ function UpdateStatus(props: Props) {
   }
 
   return (
-    <form
-      css={[p(3), flexColumn, alignItems("flex-start"), h("full")]}
-      onSubmit={handleSubmit}
-    >
-      <FormField labelText="Status" css={[block, mb(3)]}>
+    <form onSubmit={handleSubmit}>
+      <FormField labelText="Status">
         <select
-          css={select}
           value={values.status}
           onChange={(e) => {
             const status = e.target.value as CharacterStatus
             setValues((values) => ({ ...values, status }))
-          }}
-        >
+          }}>
           <option value="online">Online</option>
           <option value="looking">Looking</option>
           <option value="busy">Busy</option>
@@ -49,24 +44,19 @@ function UpdateStatus(props: Props) {
           <option value="dnd">Do Not Disturb</option>
         </select>
       </FormField>
-      <FormField
-        labelText="Status message (optional)"
-        css={[mb(3), flex1, flexColumn]}
-      >
+      <FormField labelText="Status message (optional)">
         <textarea
-          css={[input, flex1]}
           value={values.statusMessage}
           onChange={(e) => {
             const statusMessage = e.target.value
             setValues((values) => ({ ...values, statusMessage }))
-          }}
-        />
+          }} />
       </FormField>
-      <Button type="submit" css={solidButton}>
+      <Button type="submit">
         Submit
       </Button>
     </form>
-  )
+  );
 }
 
 export default UpdateStatus

@@ -21,8 +21,8 @@ type Props = TagProps<"div">
 
 function ChannelBrowser(props: Props) {
   return (
-    <div css={[flexColumn, size("full")]} {...props}>
-      <main css={[flex1, flexColumn, scrollVertical, themeBgColor(1)]}>
+    <div {...props}>
+      <main>
         {range(20).map((i) => (
           <ChannelBrowserItem
             name={`insert channel name here`}
@@ -32,17 +32,17 @@ function ChannelBrowser(props: Props) {
         ))}
       </main>
 
-      <footer css={[flexRow, p(2), themeBgColor(0)]}>
-        <input type="text" placeholder="Search..." css={[input, flex1]} />
-        <Button css={[solidButton, ml(2)]}>
+      <footer>
+        <input type="text" placeholder="Search..." />
+        <Button>
           <Icon which={sortAlphabetical} />
         </Button>
-        <Button css={[solidButton, ml(2)]}>
+        <Button>
           <Icon which={refresh} />
         </Button>
       </footer>
     </div>
-  )
+  );
 }
 
 export default ChannelBrowser

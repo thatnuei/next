@@ -8,11 +8,11 @@ type Props = React.ComponentPropsWithoutRef<"label"> & {
 
 function FormField({ labelText, children, ...props }: Props) {
   return (
-    <label css={w("full")} {...props}>
-      <div css={[mb(1)]}>{labelText}</div>
+    <label {...props}>
+      <div>{labelText}</div>
       {children}
     </label>
-  )
+  );
 }
 
 export default FormField

@@ -26,11 +26,11 @@ type Props = TagProps<"div"> & {
 
 function ChatHome({ rooms, activeRoom, onRoomChange, ...props }: Props) {
   return (
-    <div css={[size("full"), flexColumn, scrollVertical]} {...props}>
-      <div css={[themeBgColor(0), mb(gapSize), p(3)]}>
+    <div {...props}>
+      <div>
         <CharacterDetails character={testificate} />
       </div>
-      <div css={[themeBgColor(1), flex1]}>
+      <div>
         {rooms.map((room) => (
           <RoomTab
             {...getRoomProps(room, chatState)}
@@ -40,7 +40,7 @@ function ChatHome({ rooms, activeRoom, onRoomChange, ...props }: Props) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 export default ChatHome
@@ -58,6 +58,6 @@ function getRoomProps(room: RoomView, chatState: ChatState) {
   return {
     key: `private-chat:${room.partnerName}`,
     title: room.partnerName,
-    icon: <Avatar name={room.partnerName} css={size(iconSize(3))} />,
-  }
+    icon: <Avatar name={room.partnerName} />,
+  };
 }

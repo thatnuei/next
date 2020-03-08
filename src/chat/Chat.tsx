@@ -56,10 +56,7 @@ function Chat(props: Props) {
   const [updateStatusVisible, setUpdateStatusVisible] = useState(false)
 
   const menuButton = (
-    <Button
-      title="Show side menu"
-      css={[fadedButton, mr(3), hidden, smallScreen(block)]}
-    >
+    <Button title="Show side menu">
       <Icon which={icons.menu} />
     </Button>
   )
@@ -90,9 +87,9 @@ function Chat(props: Props) {
   }
 
   return (
-    <div css={[fixedCover, flexRow]}>
-      <nav css={[flexRow, mr(gapSize), smallScreen(hidden)]}>
-        <div css={[flexColumn, mr(gapSize)]}>
+    <div>
+      <nav>
+        <div>
           <NavAction
             icon={icons.list}
             title="Browse channels"
@@ -108,11 +105,11 @@ function Chat(props: Props) {
             title="See online friends and bookmarks"
           />
           <NavAction icon={icons.about} title="About next" />
-          <div css={flex1} />
+          <div />
           <NavAction icon={icons.logout} title="Log out" />
         </div>
 
-        <div css={w(56)}>
+        <div>
           <ChatHome
             rooms={rooms}
             activeRoom={activeRoom}
@@ -121,7 +118,7 @@ function Chat(props: Props) {
         </div>
       </nav>
 
-      <div css={[flex1]}>
+      <div>
         {activeRoom?.name === "channel" && renderChannel(activeRoom.channelId)}
         {activeRoom?.name === "private-chat" &&
           renderPrivateChat(activeRoom.partnerName)}
@@ -153,7 +150,7 @@ function Chat(props: Props) {
         }
       />
     </div>
-  )
+  );
 }
 
 export default Chat

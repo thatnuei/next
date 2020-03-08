@@ -41,31 +41,16 @@ function RoomTab(props: Props) {
   }[props.state]
 
   return (
-    <div
-      css={[
-        flexRow,
-        alignItems("center"),
-        activeStateStyle,
-        ellipsize,
-        transition("opacity, background-color"),
-      ]}
-    >
-      <Button
-        css={[flex1, flexRow, alignItems("center"), p(2), ellipsize]}
-        onClick={props.onClick}
-        role="link"
-      >
-        <div css={[w(6)]}>{props.icon}</div>
-        <div
-          css={[ml(2), flex1, ellipsize]}
-          dangerouslySetInnerHTML={{ __html: props.title }}
-        />
+    <div>
+      <Button onClick={props.onClick} role="link">
+        <div>{props.icon}</div>
+        <div dangerouslySetInnerHTML={{ __html: props.title }} />
       </Button>
-      <Button css={[fadedButton, p(2)]}>
+      <Button>
         <Icon which={close} size={2.5} />
       </Button>
     </div>
-  )
+  );
 }
 
 export default RoomTab

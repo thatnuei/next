@@ -65,46 +65,39 @@ export default function Login(props: Props) {
   }
 
   return (
-    <div css={[fixedCover, flexColumn, flexCenter]}>
-      <div css={raisedPanel}>
-        <header css={raisedPanelHeader}>
-          <h1 css={headerText}>Login</h1>
+    <div>
+      <div>
+        <header>
+          <h1>Login</h1>
         </header>
-        <form
-          css={[flexColumn, alignItems("flex-start"), p(4)]}
-          onSubmit={handleSubmit}
-        >
-          <FormField css={mb(4)} labelText="Username">
+        <form onSubmit={handleSubmit}>
+          <FormField labelText="Username">
             <input
-              css={input}
               type="text"
               placeholder="awesome username"
               value={account}
               onChange={(e) => setAccount(e.target.value)}
-              disabled={formDisabled}
-            />
+              disabled={formDisabled} />
           </FormField>
 
-          <FormField css={mb(4)} labelText="Password">
+          <FormField labelText="Password">
             <input
-              css={input}
               type="password"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={formDisabled}
-            />
+              disabled={formDisabled} />
           </FormField>
 
-          <Button css={solidButton} type="submit" disabled={submitDisabled}>
+          <Button type="submit" disabled={submitDisabled}>
             Log in
           </Button>
 
           {state.current === "error" && (
-            <p css={[mt(4), maxW(60), textCenter]}>{state.error}</p>
+            <p>{state.error}</p>
           )}
         </form>
       </div>
     </div>
-  )
+  );
 }

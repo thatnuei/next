@@ -30,23 +30,23 @@ type Props = {
 
 function PrivateChatView({ partner, messages, menuButton, chatInput }: Props) {
   return (
-    <div css={[size("full"), flexColumn]}>
-      <div css={[themeBgColor(0), p(3), flexRow, alignItems("center")]}>
+    <div>
+      <div>
         {menuButton}
-        <Avatar name={partner.name} css={size(14)} />
-        <div css={[flexColumn, ml(5), maxH(18), scrollVertical]}>
+        <Avatar name={partner.name} />
+        <div>
           <CharacterName name={partner.name} gender={partner.gender} />
           <CharacterStatusText {...partner} />
         </div>
       </div>
 
-      <div css={[flex1, flexRow, my(gapSize), minH(0), themeBgColor(1)]}>
+      <div>
         <MessageList messages={messages} />
       </div>
 
       {chatInput}
     </div>
-  )
+  );
 }
 
 export default PrivateChatView

@@ -35,37 +35,30 @@ function CharacterSelect(props: Props) {
   }
 
   return (
-    <div css={[fixedCover, flexColumn, flexCenter]}>
-      <div css={raisedPanel}>
-        <header css={raisedPanelHeader}>
-          <h1 css={headerText}>Select a Character</h1>
+    <div>
+      <div>
+        <header>
+          <h1>Select a Character</h1>
         </header>
-        <form
-          css={[flexColumn, alignItems("center"), p(4)]}
-          onSubmit={handleSubmit}
-        >
+        <form onSubmit={handleSubmit}>
           <Avatar name={character} />
-          <select
-            css={[select, my(4)]}
-            value={character}
-            onChange={(e) => setCharacter(e.target.value)}
-          >
+          <select value={character} onChange={(e) => setCharacter(e.target.value)}>
             {props.characters.map((name) => (
               <option key={name} value={name}>
                 {name}
               </option>
             ))}
           </select>
-          <Button css={solidButton} type="submit">
+          <Button type="submit">
             Enter chat
           </Button>
-          <Button css={[anchor, mt(4)]} onClick={props.onReturnToLogin}>
+          <Button onClick={props.onReturnToLogin}>
             Return to Login
           </Button>
         </form>
       </div>
     </div>
-  )
+  );
 }
 
 export default CharacterSelect

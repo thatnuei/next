@@ -33,13 +33,13 @@ function ChannelBrowserItem(props: Props) {
   ]
 
   return (
-    <button css={containerStyle}>
-      <Icon which={earth} css={[mr(2), { flexShrink: 0 }]} />
+    <button>
+      <Icon which={earth} />
       <div>{props.name}</div>
-      <div css={[flex1]} />
-      <div css={[w(12), textRight, { flexShrink: 0 }]}>{props.userCount}</div>
+      <div />
+      <div>{props.userCount}</div>
     </button>
-  )
+  );
 }
 
 export default ChannelBrowserItem

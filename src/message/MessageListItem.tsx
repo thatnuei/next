@@ -32,20 +32,20 @@ export default function MessageListItem(props: Props) {
   }[props.type]
 
   return (
-    <div css={[px(3), py(2), typeStyle]}>
-      <span css={messageStyle}>
+    <div>
+      <span>
         {new Date(props.timestamp).toLocaleTimeString()}
       </span>
 
       {props.sender && (
-        <span css={[inlineBlock, mr(2)]}>
+        <span>
           <CharacterName {...props.sender} />
         </span>
       )}
 
       <span>{props.text}</span>
     </div>
-  )
+  );
 }
 
 const messageStyle = [

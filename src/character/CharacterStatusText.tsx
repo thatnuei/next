@@ -7,11 +7,11 @@ type Props = { status: CharacterStatus; statusMessage: string }
 
 function CharacterStatusText(props: Props) {
   return (
-    <p css={[italic, fontSize("small")]}>
-      <span css={{ color: statusColors[props.status] }}>{props.status}</span>
+    <p>
+      <span>{props.status}</span>
       {props.statusMessage ? ` - ${props.statusMessage}` : undefined}
     </p>
-  )
+  );
 }
 
 export default CharacterStatusText

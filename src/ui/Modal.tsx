@@ -93,22 +93,18 @@ function Modal(props: Props) {
   ]
 
   return (
-    <div css={shadeStyle} onPointerDown={handleShadeClick}>
-      <div css={panelStyle}>
-        <header css={[raisedPanelHeader, textCenter, relative, px(16)]}>
-          <h1 css={[headerText]}>{props.title}</h1>
-          <Button
-            css={closeButtonStyle}
-            onClick={props.onClose}
-            ref={closeButtonRef}
-          >
+    <div onPointerDown={handleShadeClick}>
+      <div>
+        <header>
+          <h1>{props.title}</h1>
+          <Button onClick={props.onClose} ref={closeButtonRef}>
             <Icon which={close} />
           </Button>
         </header>
-        <main css={[flex1, minH(0)]}>{props.children}</main>
+        <main>{props.children}</main>
       </div>
     </div>
-  )
+  );
 }
 
 export default Modal

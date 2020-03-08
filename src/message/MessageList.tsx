@@ -7,14 +7,14 @@ type Props = { messages: Message[] }
 
 function MessageList({ messages }: Props) {
   return (
-    <ol css={[size("full"), scrollVertical]}>
+    <ol>
       {messages.map(({ key, ...message }) => (
         <li key={key}>
           <MessageListItem {...message} />
         </li>
       ))}
     </ol>
-  )
+  );
 }
 
 export default MessageList

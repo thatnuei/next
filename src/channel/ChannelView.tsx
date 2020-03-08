@@ -52,36 +52,33 @@ function ChannelView(props: Props) {
   }
 
   return (
-    <div css={[size("full"), flexColumn]}>
-      <div css={[themeBgColor(0), p(3), flexRow, alignItems("center")]}>
+    <div>
+      <div>
         {props.menuButton}
 
-        <h1 css={[headerText2, flex1]}>{props.title}</h1>
+        <h1>{props.title}</h1>
         <ChannelFilters
           selectedMode={selectedMode}
           onModeChange={setSelectedMode}
         />
 
-        <Button
-          title="Show users"
-          css={[fadedButton, ml(3), block, largeScreen(hidden)]}
-        >
+        <Button title="Show users">
           <Icon which={users} />
         </Button>
       </div>
 
-      <div css={[flex1, flexRow, my(gapSize), minH(0)]}>
-        <div css={[flex1, themeBgColor(1)]}>
+      <div>
+        <div>
           <MessageList messages={getFilteredMessages()} />
         </div>
-        <div css={[ml(gapSize), w(60), hidden, largeScreen(block)]}>
+        <div>
           <CharacterList characters={props.users} />
         </div>
       </div>
 
       {props.chatInput}
     </div>
-  )
+  );
 }
 
 export default ChannelView
