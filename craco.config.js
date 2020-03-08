@@ -1,24 +1,12 @@
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 
 module.exports = {
-  babel: {
-    presets: ["@emotion/css-prop"],
-  },
   webpack: {
     configure(config, { env }) {
       if (env === "development") addReactRefresh(config)
 
-      if (env === "production") {
-        // react-refresh doesn't work with preact
-        config.resolve = {
-          ...config.resolve,
-          alias: {
-            ...config.resolve.alias,
-            "react": "preact/compat",
-            "react-dom": "preact/compat",
-          },
-        }
-      }
+      // react-refresh doesn't work with preact, only use it in production
+      if (env === "production") addPreactCompat(config)
 
       return config
     },
@@ -48,4 +36,15 @@ function addReactRefresh(config) {
       },
     },
   })
+}
+
+function addPreactCompat(config) {
+  config.resolve = {
+    ...config.resolve,
+    alias: {
+      ...config.resolve.alias,
+      "react": "preact/compat",
+      "react-dom": "preact/compat",
+    },
+  }
 }
