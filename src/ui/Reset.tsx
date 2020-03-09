@@ -1,6 +1,5 @@
-import { css, Global } from "@emotion/react"
+import { css, Global } from "@emotion/core"
 import React from "react"
-import { themeBgColor, themeTextColor } from "./style"
 import { AppTheme } from "./theme"
 
 const reset = (theme: AppTheme) => css`
@@ -11,8 +10,8 @@ const reset = (theme: AppTheme) => css`
   }
 
   :root {
-    ${themeBgColor(2)(theme)};
-    ${themeTextColor(theme)};
+    background-color: ${theme.colors.background2};
+    color: ${theme.colors.text};
     font: 15px Roboto, sans-serif;
     line-height: 1.5;
     word-break: break-word;

@@ -1,4 +1,4 @@
-import { Global } from "@emotion/react"
+import { Global } from "@emotion/core"
 import "focus-visible"
 import React from "react"
 
