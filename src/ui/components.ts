@@ -1,5 +1,5 @@
+import { SxStyleProp } from "theme-ui"
 import {
-  active,
   disabled,
   flexCenter,
   flexRow,
@@ -20,12 +20,16 @@ import {
 } from "./style"
 import { AppTheme } from "./theme"
 
-const activePress = active({
-  transform: `translateY(2px)`,
-  transition: "none",
-})
+const activePress: SxStyleProp = {
+  ":active": {
+    transform: `translateY(2px)`,
+    transition: "none",
+  },
+}
 
-const fadedWhenDisabled = disabled(opacity(0.5))
+const fadedWhenDisabled: SxStyleProp = {
+  ":disabled": { opacity: 0.5 },
+}
 
 const baseControlStyle = (theme: AppTheme) => [
   py(2),
