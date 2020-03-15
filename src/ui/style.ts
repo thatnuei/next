@@ -1,5 +1,6 @@
 import { css } from "@emotion/react"
 import { CSSInterpolation } from "@emotion/serialize/types"
+import { StringAutocompleteHack } from "../common/types"
 import { AppTheme, BackgroundColorKey } from "./theme"
 
 type FlexAlign = "flex-start" | "flex-end" | "center" | "stretch"
@@ -12,8 +13,6 @@ type FlexJustify =
   | "space-around"
 
 export type LengthUnit = number | "full" | StringAutocompleteHack
-
-type StringAutocompleteHack = string & { __autocompleteHack?: never }
 
 export const len = (units: LengthUnit) => {
   if (typeof units === "number") return `${units * 4}px`
