@@ -24,7 +24,16 @@ export const input = [
   tw`w-full shadow-inner focus:bg-background-2 focus:outline-none`,
 ]
 
-export const select = [baseControlStyle, activePress, tw`w-full`, transition]
+export const select = [
+  baseControlStyle,
+  activePress,
+  transition,
+  tw`w-full`,
+
+  // for some reason, borderRadius: 0 still makes the default border show up,
+  // but a really small border radius removes it
+  { borderRadius: "0.00000001px" },
+]
 
 export const headerText = tw`font-header font-light text-3xl`
 export const headerText2 = tw`font-header font-light text-2xl`
