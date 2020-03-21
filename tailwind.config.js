@@ -17,6 +17,10 @@ module.exports = {
       "background-1": `var(--color-background-1)`,
       "background-2": `var(--color-background-2)`,
       "text": `var(--color-text)`,
+
+      "shade": "rgba(0, 0, 0, 0.5)",
+      "white": clouds,
+      "black": midnight,
     },
     boxShadow: {
       normal: "0px 2px 12px rgba(0, 0, 0, 0.3)",
