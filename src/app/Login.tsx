@@ -33,11 +33,10 @@ export default function Login(props: Props) {
   const [account, setAccount] = useState("")
   const [password, setPassword] = useState("")
 
-  const isEmpty = account === "" && password === ""
-  const isLoading = state.current === "loading"
+  const canSubmit =
+    account !== "" && password !== "" && state.current !== "loading"
 
-  const submitDisabled = isEmpty || isLoading
-  const formDisabled = isLoading
+  const isFormDisabled = state.current === "loading"
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
@@ -69,7 +68,7 @@ export default function Login(props: Props) {
               placeholder="awesome username"
               value={account}
               onChange={(e) => setAccount(e.target.value)}
-              disabled={formDisabled}
+              disabled={isFormDisabled}
             />
           </FormField>
 
@@ -80,16 +79,16 @@ export default function Login(props: Props) {
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={formDisabled}
+              disabled={isFormDisabled}
             />
           </FormField>
 
-          <Button css={solidButton} type="submit" disabled={submitDisabled}>
+          <Button css={solidButton} type="submit" disabled={!canSubmit}>
             Log in
           </Button>
 
           {state.current === "error" && (
-            <p css={tw`mt-4, max-w-xs`}>{state.error}</p>
+            <p css={tw`mt-4 max-w-xs`}>{state.error}</p>
           )}
         </form>
       </div>
