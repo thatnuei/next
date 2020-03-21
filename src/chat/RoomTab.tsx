@@ -18,7 +18,7 @@ import {
   transition,
   w,
 } from "../ui/style"
-import { emerald } from "../ui/theme"
+import { emerald } from "../ui/theme.old"
 
 type Props = {
   title: string

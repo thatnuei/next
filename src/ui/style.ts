@@ -1,6 +1,6 @@
 import { css } from "@emotion/react"
 import { CSSInterpolation } from "@emotion/serialize/types"
-import { AppTheme, BackgroundColorKey } from "./theme"
+import { AppTheme, BackgroundColorKey } from "./theme.old"
 
 type FlexAlign = "flex-start" | "flex-end" | "center" | "stretch"
 

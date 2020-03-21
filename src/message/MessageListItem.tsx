@@ -13,7 +13,7 @@ import {
   py,
   semiBlackBg,
 } from "../ui/style"
-import { emerald, tomato } from "../ui/theme"
+import { emerald, tomato } from "../ui/theme.old"
 import { MessageType } from "./types"
 
 type Props = {
