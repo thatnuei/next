@@ -13,10 +13,10 @@ module.exports = {
       header: `'Roboto Condensed', sans-serif`,
     },
     colors: {
-      "background-0": midnight,
-      "background-1": shade(0.3, midnight),
-      "background-2": shade(0.5, midnight),
-      "text": clouds,
+      "background-0": `var(--color-background-0)`,
+      "background-1": `var(--color-background-1)`,
+      "background-2": `var(--color-background-2)`,
+      "text": `var(--color-text)`,
     },
     boxShadow: {
       normal: "0px 2px 12px rgba(0, 0, 0, 0.3)",
