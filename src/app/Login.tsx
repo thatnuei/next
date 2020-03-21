@@ -11,15 +11,7 @@ import {
   solidButton,
 } from "../ui/components"
 import FormField from "../ui/FormField"
-import {
-  alignItems,
-  flexColumn,
-  maxW,
-  mb,
-  mt,
-  p,
-  textCenter,
-} from "../ui/style"
+import { centerItems, fixedCover, flexColumn } from "../ui/helpers"
 
 type Props = {
   onSuccess: (data: LoginSuccessData) => void
@@ -64,18 +56,13 @@ export default function Login(props: Props) {
   }
 
   return (
-    <div
-      css={tw`fixed left-0 right-0 top-0 bottom-0 flex flex-col items-center justify-center`}
-    >
+    <div css={[fixedCover, flexColumn, centerItems]}>
       <div css={raisedPanel}>
         <header css={raisedPanelHeader}>
           <h1 css={headerText}>Login</h1>
         </header>
-        <form
-          css={[flexColumn, alignItems("flex-start"), p(4)]}
-          onSubmit={handleSubmit}
-        >
-          <FormField css={mb(4)} labelText="Username">
+        <form css={[flexColumn, tw`p-4 items-start`]} onSubmit={handleSubmit}>
+          <FormField css={tw`mb-4`} labelText="Username">
             <input
               css={input}
               type="text"
@@ -86,7 +73,7 @@ export default function Login(props: Props) {
             />
           </FormField>
 
-          <FormField css={mb(4)} labelText="Password">
+          <FormField css={tw`mb-4`} labelText="Password">
             <input
               css={input}
               type="password"
@@ -102,7 +89,7 @@ export default function Login(props: Props) {
           </Button>
 
           {state.current === "error" && (
-            <p css={[mt(4), maxW(60), textCenter]}>{state.error}</p>
+            <p css={tw`mt-4, max-w-xs`}>{state.error}</p>
           )}
         </form>
       </div>
