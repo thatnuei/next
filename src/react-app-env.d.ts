@@ -1,6 +1,7 @@
 /// <reference types="react-scripts" />
 
 declare module "twin.macro" {
-  const tw: (strings: TemplateStringsArray, ...values: never[]) => any
+  import { CSSObject } from "@emotion/react"
+  const tw: (strings: TemplateStringsArray, ...values: never[]) => CSSObject
   export default tw
 }
