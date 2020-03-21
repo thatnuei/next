@@ -34,13 +34,15 @@ const themes = {
   },
 }
 
-type ThemeName = keyof typeof themes
+export type ThemeName = keyof typeof themes
 
 type ThemeContextType = {
+  currentTheme: ThemeName
   setTheme: (name: ThemeName) => void
 }
 
 const ThemeContext = createContext<ThemeContextType>({
+  currentTheme: "midnight",
   setTheme: () => {},
 })
 
@@ -48,7 +50,10 @@ export function ThemeProvider({ children }: PropsWithChildren<{}>) {
   const [themeName, setThemeName] = useState<ThemeName>("midnight")
   const theme = themes[themeName]
 
-  const contextValue = useMemo(() => ({ setTheme: setThemeName }), [])
+  const contextValue = useMemo(
+    () => ({ setTheme: setThemeName, currentTheme: themeName }),
+    [themeName],
+  )
 
   return (
     <ThemeContext.Provider value={contextValue}>
