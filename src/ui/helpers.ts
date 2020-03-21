@@ -6,3 +6,5 @@ export const flexRow = tw`flex`
 export const flexColumn = tw`flex flex-col`
 
 export const centerItems = tw`items-center justify-center`
+
+export const transition = tw`transition duration-200`
