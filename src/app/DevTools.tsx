@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import tw from "twin.macro"
+import { useWindowEvent } from "../dom/useWindowEvent"
 import { select } from "../ui/components"
 import FormField from "../ui/FormField"
 import { ThemeName, useTheme } from "../ui/theme"
@@ -10,17 +11,12 @@ function DevTools() {
 
   const { themes, currentTheme, setTheme } = useTheme()
 
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      console.log(event.key)
-      if (event.key === "~" && event.shiftKey) {
-        toggleVisible()
-      }
+  useWindowEvent("keypress", (event: KeyboardEvent) => {
+    console.log(event.key)
+    if (event.key === "~" && event.shiftKey) {
+      toggleVisible()
     }
-
-    window.addEventListener("keypress", handleKeyPress)
-    return () => window.removeEventListener("keypress", handleKeyPress)
-  }, [])
+  })
 
   return visible ? (
     <div css={tw`fixed top-0 left-0 right-0 bg-shade p-4 text-white`}>
