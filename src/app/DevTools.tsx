@@ -12,7 +12,6 @@ function DevTools() {
   const { themes, currentTheme, setTheme } = useTheme()
 
   useWindowEvent("keypress", (event) => {
-    console.log(event.key)
     if (event.key === "~" && event.shiftKey) {
       toggleVisible()
     }
