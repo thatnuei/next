@@ -12,7 +12,9 @@ function CharacterDetails({ character }: Props) {
   const genderColor = { color: genderColors[character.gender] }
   return (
     <>
-      <p css={[headerText2, genderColor, tw`leading-none`]}>{character.name}</p>
+      <h1 css={[headerText2, genderColor, tw`leading-none`]}>
+        {character.name}
+      </h1>
       <Avatar name={character.name} css={tw`my-3`} />
       <CharacterStatusText {...character} css={tw`px-3 py-2 bg-background-1`} />
     </>
