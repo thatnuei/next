@@ -1,29 +1,13 @@
 import React, { useState } from "react"
+import tw from "twin.macro"
 import CharacterList from "../character/CharacterList"
 import { Character } from "../character/types"
-import { gapSize } from "../chat/Chat"
 import Button from "../dom/Button"
 import MessageList from "../message/MessageList"
 import { Message, MessageType } from "../message/types"
 import { fadedButton, headerText2 } from "../ui/components"
 import Icon from "../ui/Icon"
 import { users } from "../ui/icons"
-import {
-  alignItems,
-  block,
-  flex1,
-  flexColumn,
-  flexRow,
-  hidden,
-  largeScreen,
-  minH,
-  ml,
-  my,
-  p,
-  size,
-  themeBgColor,
-  w,
-} from "../ui/style"
 import ChannelFilters from "./ChannelFilters"
 import { ChannelMode } from "./types"
 
@@ -52,11 +36,11 @@ function ChannelView(props: Props) {
   }
 
   return (
-    <div css={[size("full"), flexColumn]}>
-      <div css={[themeBgColor(0), p(3), flexRow, alignItems("center")]}>
+    <div css={tw`w-full h-full flex flex-col`}>
+      <div css={tw`bg-background-0 p-3 flex flex-row items-center`}>
         {props.menuButton}
 
-        <h1 css={[headerText2, flex1]}>{props.title}</h1>
+        <h1 css={[headerText2, tw`flex-1`]}>{props.title}</h1>
         <ChannelFilters
           selectedMode={selectedMode}
           onModeChange={setSelectedMode}
@@ -64,17 +48,17 @@ function ChannelView(props: Props) {
 
         <Button
           title="Show users"
-          css={[fadedButton, ml(3), block, largeScreen(hidden)]}
+          css={[fadedButton, tw`ml-3 block lg:hidden`]}
         >
           <Icon which={users} />
         </Button>
       </div>
 
-      <div css={[flex1, flexRow, my(gapSize), minH(0)]}>
-        <div css={[flex1, themeBgColor(1)]}>
+      <div css={tw`flex-1 flex flex-row my-gap min-h-0`}>
+        <div css={tw`flex-1 bg-background-1`}>
           <MessageList messages={getFilteredMessages()} />
         </div>
-        <div css={[ml(gapSize), w(60), hidden, largeScreen(block)]}>
+        <div css={tw`ml-gap w-64 hidden lg:block`}>
           <CharacterList characters={props.users} />
         </div>
       </div>

@@ -1,7 +1,6 @@
-import { css } from "@emotion/react"
 import React from "react"
+import tw from "twin.macro"
 import Button from "../dom/Button"
-import { block, flexRow, hover, ml, opacity, transition } from "../ui/style"
 import { ChannelMode } from "./types"
 
 type Props = {
@@ -13,13 +12,14 @@ export default function ChannelFilters(props: Props) {
   function renderFilterButton(mode: ChannelMode, label: string) {
     const isSelected = props.selectedMode === mode
 
-    const selectedStyle = isSelected
-      ? opacity(1)
-      : [opacity(0.4), hover(opacity(0.7))]
+    const style = [
+      tw`block ml-4 transition-opacity whitespace-no-wrap`,
+      isSelected ? tw`opacity-100` : tw`opacity-50 hover:opacity-75`,
+    ]
 
     return (
       <Button
-        css={[selectedStyle, filterButtonStyle]}
+        css={style}
         onClick={() => props.onModeChange(mode)}
         role="radio"
         aria-checked={isSelected}
@@ -30,17 +30,10 @@ export default function ChannelFilters(props: Props) {
   }
 
   return (
-    <div css={[flexRow]} role="radiogroup">
+    <div css={tw`flex flex-row`} role="radiogroup">
       {renderFilterButton("both", "Both")}
       {renderFilterButton("chat", "Chat")}
       {renderFilterButton("ads", "Ads")}
     </div>
   )
 }
-
-const filterButtonStyle = [
-  block,
-  ml(4),
-  transition("opacity"),
-  css({ whiteSpace: "nowrap" }),
-]

@@ -1,20 +1,7 @@
 import React from "react"
+import tw from "twin.macro"
 import Icon from "../ui/Icon"
 import { earth } from "../ui/icons"
-import {
-  alignItems,
-  flex1,
-  flexRow,
-  hover,
-  mr,
-  opacity,
-  px,
-  py,
-  textRight,
-  themeBgColor,
-  transition,
-  w,
-} from "../ui/style"
 
 type Props = {
   name: string
@@ -24,25 +11,21 @@ type Props = {
 
 function ChannelBrowserItem(props: Props) {
   const containerStyle = [
-    py(2),
-    px(2),
-    flexRow,
-    alignItems("center"),
-    props.isActive ? activeStyle : inactiveStyle,
-    transition("opacity, background-color"),
+    tw`px-2 py-2 flex flex-row items-center transition-all`,
+    props.isActive
+      ? tw`opacity-100 bg-background-0`
+      : tw`opacity-50 hover:opacity-75`,
   ]
 
   return (
     <button css={containerStyle}>
-      <Icon which={earth} css={[mr(2), { flexShrink: 0 }]} />
+      <Icon which={earth} css={tw`mr-2 flex-shrink-0`} />
       <div>{props.name}</div>
-      <div css={[flex1]} />
-      <div css={[w(12), textRight, { flexShrink: 0 }]}>{props.userCount}</div>
+      <div css={tw`flex-1 w-12 text-right flex-shrink-0`}>
+        {props.userCount}
+      </div>
     </button>
   )
 }
 
 export default ChannelBrowserItem
-
-const activeStyle = [opacity(1), themeBgColor(0)]
-const inactiveStyle = [opacity(0.4), hover(opacity(0.7))]

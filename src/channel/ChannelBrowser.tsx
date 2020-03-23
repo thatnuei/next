@@ -1,28 +1,20 @@
 import React from "react"
+import tw from "twin.macro"
 import { range } from "../common/range"
 import Button from "../dom/Button"
 import { TagProps } from "../jsx/types"
 import { input, solidButton } from "../ui/components"
+import { scrollVertical } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { refresh, sortAlphabetical } from "../ui/icons"
-import {
-  flex1,
-  flexColumn,
-  flexRow,
-  ml,
-  p,
-  scrollVertical,
-  size,
-  themeBgColor,
-} from "../ui/style"
 import ChannelBrowserItem from "./ChannelBrowserItem"
 
 type Props = TagProps<"div">
 
 function ChannelBrowser(props: Props) {
   return (
-    <div css={[flexColumn, size("full")]} {...props}>
-      <main css={[flex1, flexColumn, scrollVertical, themeBgColor(1)]}>
+    <div css={tw`flex flex-col w-full h-full`} {...props}>
+      <main css={[tw`flex-1 flex flex-col bg-background-1`, scrollVertical]}>
         {range(20).map((i) => (
           <ChannelBrowserItem
             name={`insert channel name here`}
@@ -32,12 +24,12 @@ function ChannelBrowser(props: Props) {
         ))}
       </main>
 
-      <footer css={[flexRow, p(2), themeBgColor(0)]}>
-        <input type="text" placeholder="Search..." css={[input, flex1]} />
-        <Button css={[solidButton, ml(2)]}>
+      <footer css={tw`flex flex-row p-2 bg-background-0`}>
+        <input type="text" placeholder="Search..." css={[input, tw`flex-1`]} />
+        <Button css={[solidButton, tw`ml-1`]}>
           <Icon which={sortAlphabetical} />
         </Button>
-        <Button css={[solidButton, ml(2)]}>
+        <Button css={[solidButton, tw`ml-1`]}>
           <Icon which={refresh} />
         </Button>
       </footer>
