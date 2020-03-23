@@ -6,6 +6,8 @@ const clouds = rgb(236, 240, 241)
 const emerald = rgb(46, 204, 113)
 const tomato = rgb(231, 76, 60)
 
+// TODO: customize responsive queries and give them better names: phone, tablet, desktop
+
 module.exports = {
   theme: {
     fontFamily: {
@@ -27,8 +29,6 @@ module.exports = {
       inner: "0px 1px 4px rgba(0, 0, 0, 0.2) inset",
     },
     spacing: {
-      "px": "1px",
-      "px2": "2px",
       "0": "0",
       "1": "4px",
       "2": "8px",
@@ -47,6 +47,9 @@ module.exports = {
       "48": "192px",
       "56": "224px",
       "64": "256px",
+      "px": "1px",
+      "px2": "2px",
+      "gap": "4px", // represents the separating gap between sections of some layouts
     },
   },
   variants: {},
