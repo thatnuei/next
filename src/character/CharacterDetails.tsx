@@ -16,7 +16,11 @@ function CharacterDetails({ character }: Props) {
         {character.name}
       </h1>
       <Avatar name={character.name} css={tw`my-3`} />
-      <CharacterStatusText {...character} css={tw`px-3 py-2 bg-background-1`} />
+      <CharacterStatusText
+        status={character.status}
+        statusMessage={character.statusMessage}
+        css={tw`px-3 py-2 bg-background-1`}
+      />
     </>
   )
 }
