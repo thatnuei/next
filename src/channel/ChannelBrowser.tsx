@@ -25,11 +25,16 @@ function ChannelBrowser(props: Props) {
       </main>
 
       <footer css={tw`flex flex-row p-2 bg-background-0`}>
-        <input type="text" placeholder="Search..." css={[input, tw`flex-1`]} />
-        <Button css={[solidButton, tw`ml-1`]}>
+        <input
+          type="text"
+          aria-label="Search"
+          placeholder="Search..."
+          css={[input, tw`flex-1`]}
+        />
+        <Button title="Sort" css={[solidButton, tw`ml-2`]}>
           <Icon which={sortAlphabetical} />
         </Button>
-        <Button css={[solidButton, tw`ml-1`]}>
+        <Button title="Refresh" css={[solidButton, tw`ml-2`]}>
           <Icon which={refresh} />
         </Button>
       </footer>
