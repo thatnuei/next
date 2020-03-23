@@ -2,7 +2,7 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 
 module.exports = {
   babel: {
-    presets: ["@emotion/css-prop"],
+    presets: [["@emotion/css-prop", { autoLabel: "never" }]],
   },
   webpack: {
     configure(config, { env }) {
