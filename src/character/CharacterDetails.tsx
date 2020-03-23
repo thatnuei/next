@@ -14,9 +14,7 @@ function CharacterDetails({ character }: Props) {
     <>
       <p css={[headerText2, genderColor, tw`leading-none`]}>{character.name}</p>
       <Avatar name={character.name} css={tw`my-3`} />
-      <div css={tw`px-3 py-2 bg-background-1`}>
-        <CharacterStatusText {...character} />
-      </div>
+      <CharacterStatusText {...character} css={tw`px-3 py-2 bg-background-1`} />
     </>
   )
 }
