@@ -3,11 +3,13 @@ import tw from "twin.macro"
 import CharacterList from "../character/CharacterList"
 import { Character } from "../character/types"
 import Button from "../dom/Button"
+import { useMediaQuery } from "../dom/useMediaQuery"
 import MessageList from "../message/MessageList"
 import { Message, MessageType } from "../message/types"
 import { fadedButton, headerText2 } from "../ui/components"
 import Icon from "../ui/Icon"
 import { users } from "../ui/icons"
+import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
 import { ChannelMode } from "./types"
 
@@ -21,6 +23,7 @@ type Props = {
 
 function ChannelView(props: Props) {
   const [selectedMode, setSelectedMode] = useState<ChannelMode>("both")
+  const isLargeScreen = useMediaQuery(screenQueries.large)
 
   function getFilteredMessages() {
     const isType = (...types: MessageType[]) => (message: Message) =>
@@ -46,12 +49,11 @@ function ChannelView(props: Props) {
           onModeChange={setSelectedMode}
         />
 
-        <Button
-          title="Show users"
-          css={[fadedButton, tw`ml-3 block lg:hidden`]}
-        >
-          <Icon which={users} />
-        </Button>
+        {!isLargeScreen && (
+          <Button title="Show users" css={[fadedButton, tw`ml-3`]}>
+            <Icon which={users} />
+          </Button>
+        )}
       </div>
 
       <div css={tw`flex-1 flex flex-row my-gap min-h-0`}>
@@ -59,10 +61,9 @@ function ChannelView(props: Props) {
           <MessageList messages={getFilteredMessages()} />
         </div>
 
-        {/* need to have this separate wrapper so we don't overwrite the CharacterList display property */}
-        <div css={tw`ml-gap hidden lg:block`}>
-          <CharacterList characters={props.users} css={tw`w-64 h-full`} />
-        </div>
+        {isLargeScreen && (
+          <CharacterList characters={props.users} css={tw`ml-gap w-64`} />
+        )}
       </div>
 
       {props.chatInput}
