@@ -58,8 +58,10 @@ function ChannelView(props: Props) {
         <div css={tw`flex-1 bg-background-1`}>
           <MessageList messages={getFilteredMessages()} />
         </div>
-        <div css={tw`ml-gap w-64 hidden lg:block`}>
-          <CharacterList characters={props.users} />
+
+        {/* need to have this separate wrapper so we don't overwrite the CharacterList display property */}
+        <div css={tw`ml-gap hidden lg:block`}>
+          <CharacterList characters={props.users} css={tw`w-64 h-full`} />
         </div>
       </div>
 
