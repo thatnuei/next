@@ -1,18 +1,23 @@
 // @ts-check
-const { rgb, shade } = require("polished")
+const { rgb } = require("polished")
 
 const midnight = rgb(38, 65, 94)
 const clouds = rgb(236, 240, 241)
-const emerald = rgb(46, 204, 113)
-const tomato = rgb(231, 76, 60)
+// const emerald = rgb(46, 204, 113)
+// const tomato = rgb(231, 76, 60)
 
-// TODO: customize responsive queries and give them better names: phone, tablet, desktop
+// TODO: customize responsive queries and give them better names: small, medium, large
 
 module.exports = {
   theme: {
     fontFamily: {
       body: `Roboto, sans-serif`,
       header: `'Roboto Condensed', sans-serif`,
+    },
+    fontWeight: {
+      "weight-light": "300",
+      "weight-normal": "400",
+      "weight-bold": "500",
     },
     colors: {
       "background-0": `var(--color-background-0)`,
