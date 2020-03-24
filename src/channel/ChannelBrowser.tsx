@@ -17,6 +17,7 @@ function ChannelBrowser(props: Props) {
       <main css={[tw`flex-1 flex flex-col bg-background-1`, scrollVertical]}>
         {range(20).map((i) => (
           <ChannelBrowserItem
+            key={i}
             name={`insert channel name here`}
             userCount={Math.floor(Math.random() * 2000)}
             isActive={i % 10 === 0}
