@@ -10,8 +10,8 @@ import React, {
 
 const midnight = rgb(38, 65, 94)
 const clouds = rgb(236, 240, 241)
-const emerald = rgb(46, 204, 113)
-const tomato = rgb(231, 76, 60)
+// const emerald = rgb(46, 204, 113)
+// const tomato = rgb(231, 76, 60)
 
 const themes = {
   midnight: {
