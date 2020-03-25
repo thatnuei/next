@@ -1,19 +1,12 @@
 import React from "react"
+import tw from "twin.macro"
 import Avatar from "../character/Avatar"
 import CharacterDetails from "../character/CharacterDetails"
 import { TagProps } from "../jsx/types"
-import Icon, { iconSize } from "../ui/Icon"
+import { scrollVertical } from "../ui/helpers"
+import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import {
-  flex1,
-  flexColumn,
-  mb,
-  p,
-  scrollVertical,
-  size,
-  themeBgColor,
-} from "../ui/style"
-import { gapSize, RoomView } from "./Chat"
+import { RoomView } from "./Chat"
 import { chatState, testificate } from "./mockData"
 import RoomTab from "./RoomTab"
 import { ChatState } from "./types"
@@ -26,11 +19,11 @@ type Props = TagProps<"div"> & {
 
 function ChatHome({ rooms, activeRoom, onRoomChange, ...props }: Props) {
   return (
-    <div css={[size("full"), flexColumn, scrollVertical]} {...props}>
-      <div css={[themeBgColor(0), mb(gapSize), p(3)]}>
+    <div css={[tw`w-full h-full flex flex-col`, scrollVertical]} {...props}>
+      <div css={tw`bg-background-0 mb-gap p-3`}>
         <CharacterDetails character={testificate} />
       </div>
-      <div css={[themeBgColor(1), flex1]}>
+      <div css={tw`bg-background-1 flex-1`}>
         {rooms.map((room) => (
           <RoomTab
             {...getRoomProps(room, chatState)}
@@ -46,18 +39,20 @@ function ChatHome({ rooms, activeRoom, onRoomChange, ...props }: Props) {
 export default ChatHome
 
 function getRoomProps(room: RoomView, chatState: ChatState) {
+  const iconSizeStyle = tw`w-5 h-5`
+
   if (room.name === "channel") {
     const channel = chatState.channels[room.channelId]
     return {
       key: `channel:${room.channelId}`,
       title: channel?.title ?? room.channelId,
-      icon: <Icon which={icons.earth} />,
+      icon: <Icon which={icons.earth} css={iconSizeStyle} />,
     }
   }
 
   return {
     key: `private-chat:${room.partnerName}`,
     title: room.partnerName,
-    icon: <Avatar name={room.partnerName} css={size(iconSize(3))} />,
+    icon: <Avatar name={room.partnerName} css={iconSizeStyle} />,
   }
 }

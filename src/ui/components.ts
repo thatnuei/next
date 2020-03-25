@@ -35,8 +35,8 @@ export const select = [
   { borderRadius: "0.00000001px" },
 ]
 
-export const headerText = tw`font-header font-light text-3xl`
-export const headerText2 = tw`font-header font-light text-2xl`
+export const headerText = tw`font-header font-weight-light text-3xl`
+export const headerText2 = tw`font-header font-weight-light text-2xl`
 
 export const raisedPanel = tw`shadow-normal bg-background-0`
 

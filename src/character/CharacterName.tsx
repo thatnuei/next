@@ -1,7 +1,6 @@
-import { css } from "@emotion/react"
 import React from "react"
+import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
-import { bold, inlineBlock, mr } from "../ui/style"
 import { genderColors, statusColors } from "./colors"
 import { CharacterGender, CharacterStatus } from "./types"
 
@@ -13,7 +12,7 @@ type Props = TagProps<"span"> & {
 
 function CharacterName({ name, gender, status }: Props) {
   return (
-    <span css={bold}>
+    <span css={tw`font-weight-bold`}>
       {status && (
         <span css={[{ color: statusColors[status] }, statusDotStyle]}>•</span>
       )}
@@ -24,6 +23,4 @@ function CharacterName({ name, gender, status }: Props) {
 
 export default CharacterName
 
-const upscale = css({ transform: `scale(1.5)` })
-
-const statusDotStyle = css(inlineBlock, mr(1), upscale)
+const statusDotStyle = tw`inline-block mr-1 transform scale-150`

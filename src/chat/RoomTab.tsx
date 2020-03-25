@@ -1,23 +1,12 @@
 import { css } from "@emotion/react"
 import { transparentize } from "polished"
 import React from "react"
+import tw from "twin.macro"
 import Button from "../dom/Button"
 import { fadedButton } from "../ui/components"
+import { transition } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { close } from "../ui/icons"
-import {
-  alignItems,
-  ellipsize,
-  flex1,
-  flexRow,
-  hover,
-  ml,
-  opacity,
-  p,
-  themeBgColor,
-  transition,
-  w,
-} from "../ui/style"
 import { emerald } from "../ui/theme.old"
 
 type Props = {
@@ -27,42 +16,40 @@ type Props = {
   onClick: () => void
 }
 
-const inactiveHoverReveal = [opacity(0.5), hover(opacity(0.75))]
+const inactiveHoverReveal = tw`opacity-50 hover:opacity-75`
 
 const unreadHighlight = css({
   backgroundColor: transparentize(0.8, emerald),
 })
 
+const ellipsize = css({
+  overflowX: "hidden",
+  whiteSpace: "nowrap",
+  textOverflow: "ellipsis",
+})
+
 function RoomTab(props: Props) {
   const activeStateStyle = {
     inactive: inactiveHoverReveal,
-    active: themeBgColor(0),
+    active: tw`bg-background-0`,
     unread: [inactiveHoverReveal, unreadHighlight],
   }[props.state]
 
   return (
-    <div
-      css={[
-        flexRow,
-        alignItems("center"),
-        activeStateStyle,
-        ellipsize,
-        transition("opacity, background-color"),
-      ]}
-    >
+    <div css={[tw`flex flex-row items-center`, activeStateStyle, transition]}>
       <Button
-        css={[flex1, flexRow, alignItems("center"), p(2), ellipsize]}
+        css={[tw`flex-1 flex-row items-center p-2`, ellipsize]}
         onClick={props.onClick}
         role="link"
       >
-        <div css={[w(6)]}>{props.icon}</div>
+        <div css={tw`w-6`}>{props.icon}</div>
         <div
-          css={[ml(2), flex1, ellipsize]}
+          css={[tw`ml-2 flex-1`, ellipsize]}
           dangerouslySetInnerHTML={{ __html: props.title }}
         />
       </Button>
-      <Button css={[fadedButton, p(2)]}>
-        <Icon which={close} size={2.5} />
+      <Button css={[fadedButton, tw`p-2`]}>
+        <Icon which={close} css={tw`w-5 h-5`} />
       </Button>
     </div>
   )
