@@ -38,7 +38,7 @@ function RoomTab(props: Props) {
   return (
     <div css={[tw`flex flex-row items-center`, activeStateStyle, transition]}>
       <Button
-        css={[tw`flex-1 flex-row items-center p-2`, ellipsize]}
+        css={[tw`flex-1 flex flex-row items-center p-2`, ellipsize]}
         onClick={props.onClick}
         role="link"
       >
