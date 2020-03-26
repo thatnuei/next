@@ -1,4 +1,6 @@
+import { css } from "@emotion/react"
 import React, { MouseEvent, useEffect, useRef } from "react"
+import tw from "twin.macro"
 import Button from "../dom/Button"
 import {
   fadedButton,
@@ -6,41 +8,14 @@ import {
   raisedPanel,
   raisedPanelHeader,
 } from "./components"
+import { fixedCover } from "./helpers"
 import Icon from "./Icon"
 import { close } from "./icons"
-import {
-  absolute,
-  bottom,
-  css,
-  fixedCover,
-  flex1,
-  flexCenter,
-  flexColumn,
-  flexRow,
-  invisible,
-  justifyContent,
-  LengthUnit,
-  maxH,
-  maxW,
-  minH,
-  opacity,
-  p,
-  px,
-  relative,
-  right,
-  semiBlackBg,
-  size,
-  textCenter,
-  top,
-  transition,
-  visible,
-  w,
-} from "./style"
 
 type Props = {
   title: string
-  width: LengthUnit
-  height: LengthUnit
+  width: number
+  height: number
   isVisible: boolean
   onClose: () => void
   children?: React.ReactNode
@@ -62,41 +37,29 @@ function Modal(props: Props) {
   }
 
   const shadeStyle = [
+    tw`flex flex-col items-center justify-center p-4 transition-opacity bg-shade`,
+    props.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
     fixedCover,
-    semiBlackBg(0.75),
-    flexColumn,
-    flexCenter,
-    p(4),
-    props.isVisible ? [opacity(1), visible] : [opacity(0), invisible],
-    transition("opacity, visibility"),
   ]
 
   const panelStyle = [
     raisedPanel,
-    size("full"),
-    maxW(props.width),
-    maxH(props.height),
-    flexColumn,
-    props.isVisible ? undefined : transformSlideDown,
-    transition("transform"),
+    tw`flex flex-col w-full h-full transition-transform`,
+    props.isVisible ? undefined : tw`transform translate-y-1`,
+    css({ maxWidth: props.width }),
+    css({ maxHeight: props.height }),
   ]
 
   const closeButtonStyle = [
     fadedButton,
-    absolute,
-    top(0),
-    bottom(0),
-    right(0),
-    w(16),
-    flexRow,
-    justifyContent("center"),
+    tw`absolute top-0 bottom-0 right-0 flex flex-row justify-center w-16`,
   ]
 
   return (
     <div css={shadeStyle} onPointerDown={handleShadeClick}>
       <div css={panelStyle}>
-        <header css={[raisedPanelHeader, textCenter, relative, px(16)]}>
-          <h1 css={[headerText]}>{props.title}</h1>
+        <header css={[raisedPanelHeader, tw`relative px-16 text-center`]}>
+          <h1 css={headerText}>{props.title}</h1>
           <Button
             css={closeButtonStyle}
             onClick={props.onClose}
@@ -105,14 +68,10 @@ function Modal(props: Props) {
             <Icon which={close} />
           </Button>
         </header>
-        <main css={[flex1, minH(0)]}>{props.children}</main>
+        <main css={tw`flex-1 min-h-0`}>{props.children}</main>
       </div>
     </div>
   )
 }
 
 export default Modal
-
-const transformSlideDown = css({
-  transform: `translateY(20px)`,
-})

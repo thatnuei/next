@@ -1,18 +1,9 @@
 import { css } from "@emotion/react"
 import { rgba } from "polished"
 import React from "react"
+import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
 import { Character } from "../character/types"
-import {
-  fontSize,
-  inlineBlock,
-  ml,
-  mr,
-  opacity,
-  px,
-  py,
-  semiBlackBg,
-} from "../ui/style"
 import { emerald, tomato } from "../ui/theme.old"
 import { MessageType } from "./types"
 
@@ -32,13 +23,13 @@ export default function MessageListItem(props: Props) {
   }[props.type]
 
   return (
-    <div css={[px(3), py(2), typeStyle]}>
+    <div css={[tw`px-3 py-2`, typeStyle]}>
       <span css={messageStyle}>
         {new Date(props.timestamp).toLocaleTimeString()}
       </span>
 
       {props.sender && (
-        <span css={[inlineBlock, mr(2)]}>
+        <span css={tw`inline-block mr-2`}>
           <CharacterName {...props.sender} />
         </span>
       )}
@@ -48,14 +39,7 @@ export default function MessageListItem(props: Props) {
   )
 }
 
-const messageStyle = [
-  inlineBlock,
-  opacity(0.5),
-  fontSize("small"),
-  ml(3),
-  css({ float: "right" }),
-]
-
+const messageStyle = tw`inline-block float-right ml-3 text-sm opacity-50`
 const lfrpStyle = css({ backgroundColor: rgba(emerald, 0.2) })
 const adminStyle = css({ backgroundColor: rgba(tomato, 0.2) })
-const systemStyle = semiBlackBg(0.2)
+const systemStyle = tw`bg-shade`
