@@ -39,8 +39,8 @@ function ChannelView(props: Props) {
   }
 
   return (
-    <div css={tw`w-full h-full flex flex-col`}>
-      <div css={tw`bg-background-0 p-3 flex flex-row items-center`}>
+    <div css={tw`flex flex-col w-full h-full`}>
+      <div css={tw`flex flex-row items-center p-3 bg-background-0`}>
         {props.menuButton}
 
         <h1 css={[headerText2, tw`flex-1`]}>{props.title}</h1>
@@ -56,13 +56,13 @@ function ChannelView(props: Props) {
         )}
       </div>
 
-      <div css={tw`flex-1 flex flex-row my-gap min-h-0`}>
+      <div css={tw`flex flex-row flex-1 min-h-0 my-gap`}>
         <div css={tw`flex-1 bg-background-1`}>
           <MessageList messages={getFilteredMessages()} />
         </div>
 
         {isLargeScreen && (
-          <CharacterList characters={props.users} css={tw`ml-gap w-64`} />
+          <CharacterList characters={props.users} css={tw`w-64 ml-gap`} />
         )}
       </div>
 
