@@ -1,29 +1,15 @@
 import React, { useState } from "react"
+import tw from "twin.macro"
 import CharacterList from "../character/CharacterList"
 import { Character } from "../character/types"
-import { gapSize } from "../chat/Chat"
 import Button from "../dom/Button"
+import { useMediaQuery } from "../dom/useMediaQuery"
 import MessageList from "../message/MessageList"
 import { Message, MessageType } from "../message/types"
 import { fadedButton, headerText2 } from "../ui/components"
 import Icon from "../ui/Icon"
 import { users } from "../ui/icons"
-import {
-  alignItems,
-  block,
-  flex1,
-  flexColumn,
-  flexRow,
-  hidden,
-  largeScreen,
-  minH,
-  ml,
-  my,
-  p,
-  size,
-  themeBgColor,
-  w,
-} from "../ui/style"
+import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
 import { ChannelMode } from "./types"
 
@@ -37,6 +23,7 @@ type Props = {
 
 function ChannelView(props: Props) {
   const [selectedMode, setSelectedMode] = useState<ChannelMode>("both")
+  const isLargeScreen = useMediaQuery(screenQueries.large)
 
   function getFilteredMessages() {
     const isType = (...types: MessageType[]) => (message: Message) =>
@@ -52,31 +39,31 @@ function ChannelView(props: Props) {
   }
 
   return (
-    <div css={[size("full"), flexColumn]}>
-      <div css={[themeBgColor(0), p(3), flexRow, alignItems("center")]}>
+    <div css={tw`flex flex-col w-full h-full`}>
+      <div css={tw`flex flex-row items-center p-3 bg-background-0`}>
         {props.menuButton}
 
-        <h1 css={[headerText2, flex1]}>{props.title}</h1>
+        <h1 css={[headerText2, tw`flex-1`]}>{props.title}</h1>
         <ChannelFilters
           selectedMode={selectedMode}
           onModeChange={setSelectedMode}
         />
 
-        <Button
-          title="Show users"
-          css={[fadedButton, ml(3), block, largeScreen(hidden)]}
-        >
-          <Icon which={users} />
-        </Button>
+        {!isLargeScreen && (
+          <Button title="Show users" css={[fadedButton, tw`ml-3`]}>
+            <Icon which={users} />
+          </Button>
+        )}
       </div>
 
-      <div css={[flex1, flexRow, my(gapSize), minH(0)]}>
-        <div css={[flex1, themeBgColor(1)]}>
+      <div css={tw`flex flex-row flex-1 min-h-0 my-gap`}>
+        <div css={tw`flex-1 bg-background-1`}>
           <MessageList messages={getFilteredMessages()} />
         </div>
-        <div css={[ml(gapSize), w(60), hidden, largeScreen(block)]}>
-          <CharacterList characters={props.users} />
-        </div>
+
+        {isLargeScreen && (
+          <CharacterList characters={props.users} css={tw`w-64 ml-gap`} />
+        )}
       </div>
 
       {props.chatInput}

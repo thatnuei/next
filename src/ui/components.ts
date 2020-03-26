@@ -1,86 +1,49 @@
-import {
-  active,
-  disabled,
-  flexCenter,
-  flexRow,
-  focus,
-  fontLightCondensed,
-  fontSize,
-  hover,
-  opacity,
-  outlineNone,
-  px,
-  py,
-  themeBgColor,
-  themeShadow,
-  themeShadowInner,
+import tw from "twin.macro"
+import { centerItems, flexRow, transition } from "./helpers"
+
+const activePress = tw`active:transform active:translate-y-px2 active:transition-none`
+
+const fadedWhenDisabled = tw`disabled:opacity-50 disabled:pointer-events-none`
+
+const baseControlStyle = [
+  tw`px-3 py-2 bg-background-1 hover:bg-background-2`,
   transition,
-  underline,
-  w,
-} from "./style"
-import { AppTheme } from "./theme"
-
-const activePress = active({
-  transform: `translateY(2px)`,
-  transition: "none",
-})
-
-const fadedWhenDisabled = disabled(opacity(0.5))
-
-const baseControlStyle = (theme: AppTheme) => [
-  py(2),
-  px(3),
-  themeBgColor(1)(theme),
-  hover(themeBgColor(2)(theme)),
-  transition("background-color"),
   fadedWhenDisabled,
 ]
 
-export const solidButton = (theme: AppTheme) => [
-  baseControlStyle(theme),
-  activePress,
-  transition("transform"),
-]
+export const solidButton = [baseControlStyle, activePress]
 
 export const fadedButton = [
-  opacity(0.5),
-  hover(opacity(1)),
+  tw`opacity-50 hover:opacity-100 disabled:opacity-25`,
+  transition,
   activePress,
-  disabled(opacity(0.3)),
-  transition("opacity, transform"),
 ]
 
-export const input = (theme: AppTheme) => [
-  baseControlStyle(theme),
-  themeShadowInner,
-  w("full"),
-  focus(themeBgColor(2)(theme)),
-  focus(outlineNone),
+export const input = [
+  baseControlStyle,
+  tw`w-full shadow-inner focus:bg-background-2 focus:outline-none`,
 ]
 
-export const select = (theme: AppTheme) => [
-  baseControlStyle(theme),
-  w("full"),
+export const select = [
+  baseControlStyle,
   activePress,
-  transition("transform, background-color"),
+  transition,
+  tw`w-full`,
+
+  // for some reason, borderRadius: 0 still makes the default border show up,
+  // but a really small border radius removes it
+  { borderRadius: "0.00000001px" },
 ]
 
-export const headerText = [fontSize("xlarge"), fontLightCondensed]
-export const headerText2 = [fontSize("large"), fontLightCondensed]
+export const headerText = tw`font-header font-weight-light text-3xl`
+export const headerText2 = tw`font-header font-weight-light text-2xl`
 
-export const raisedPanel = [themeShadow, themeBgColor(0)]
+export const raisedPanel = tw`shadow-normal bg-background-0`
 
 export const raisedPanelHeader = [
-  themeBgColor(1),
-  py(2),
-  px(4),
+  tw`bg-background-1 px-4 py-2`,
   flexRow,
-  flexCenter,
+  centerItems,
 ]
 
-export const anchor = [
-  underline,
-  opacity(0.5),
-  hover(opacity(1)),
-  transition("opacity"),
-]
+export const anchor = [tw`opacity-50 hover:opacity-100 underline`, transition]

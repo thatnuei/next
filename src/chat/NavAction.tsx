@@ -1,9 +1,9 @@
 import React from "react"
+import tw from "twin.macro"
 import Button from "../dom/Button"
 import { ComponentProps } from "../jsx/types"
 import { fadedButton } from "../ui/components"
 import Icon, { IconProps } from "../ui/Icon"
-import { p } from "../ui/style"
 
 type Props = ComponentProps<typeof Button> & {
   icon: IconProps["which"]
@@ -11,8 +11,8 @@ type Props = ComponentProps<typeof Button> & {
 
 export default function NavAction({ icon, ...props }: Props) {
   return (
-    <Button css={[fadedButton, p(3)]} {...props}>
-      <Icon which={icon} size={3} />
+    <Button css={[fadedButton, tw`p-3`]} {...props}>
+      <Icon which={icon} css={tw`w-4 h-4`} />
     </Button>
   )
 }

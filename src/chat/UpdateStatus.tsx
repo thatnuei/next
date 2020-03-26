@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
+import tw from "twin.macro"
 import { CharacterStatus } from "../character/types"
 import Button from "../dom/Button"
 import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
-import { alignItems, block, flex1, flexColumn, h, mb, p } from "../ui/style"
 
 type Props = {
   initialValues: FormValues
@@ -30,10 +30,10 @@ function UpdateStatus(props: Props) {
 
   return (
     <form
-      css={[p(3), flexColumn, alignItems("flex-start"), h("full")]}
+      css={tw`p-3 flex flex-col items-start h-full`}
       onSubmit={handleSubmit}
     >
-      <FormField labelText="Status" css={[block, mb(3)]}>
+      <FormField labelText="Status" css={tw`block mb-3`}>
         <select
           css={select}
           value={values.status}
@@ -51,10 +51,10 @@ function UpdateStatus(props: Props) {
       </FormField>
       <FormField
         labelText="Status message (optional)"
-        css={[mb(3), flex1, flexColumn]}
+        css={tw`mb-3 flex-1 flex flex-col`}
       >
         <textarea
-          css={[input, flex1]}
+          css={[input, tw`flex-1`]}
           value={values.statusMessage}
           onChange={(e) => {
             const statusMessage = e.target.value

@@ -1,15 +1,19 @@
 import React from "react"
-import { fontSize, italic } from "../ui/style"
+import tw from "twin.macro"
+import { TagProps } from "../jsx/types"
 import { statusColors } from "./colors"
 import { CharacterStatus } from "./types"
 
-type Props = { status: CharacterStatus; statusMessage: string }
+type Props = TagProps<"p"> & {
+  status: CharacterStatus
+  statusMessage: string
+}
 
-function CharacterStatusText(props: Props) {
+function CharacterStatusText({ status, statusMessage, ...props }: Props) {
   return (
-    <p css={[italic, fontSize("small")]}>
-      <span css={{ color: statusColors[props.status] }}>{props.status}</span>
-      {props.statusMessage ? ` - ${props.statusMessage}` : undefined}
+    <p css={tw`italic text-sm`} {...props}>
+      <span css={{ color: statusColors[status] }}>{status}</span>
+      {statusMessage ? ` - ${statusMessage}` : undefined}
     </p>
   )
 }

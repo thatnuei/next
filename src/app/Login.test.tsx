@@ -1,4 +1,4 @@
-import { fireEvent, wait } from "@testing-library/react"
+import { fireEvent, waitFor } from "@testing-library/react"
 import React from "react"
 import { AuthenticateResponse, LoginCredentials } from "../flist/authenticate"
 import { renderWithProviders } from "../test/renderWithProviders"
@@ -48,7 +48,7 @@ describe("Login", () => {
     })
     fireEvent.click(helpers.getByText(/log in/i))
 
-    await wait(() =>
+    await waitFor(() =>
       expect(helpers.queryByText(mockErrorMessage)).toBeDefined(),
     )
     expect(handleSuccess).not.toHaveBeenCalled()
@@ -66,7 +66,7 @@ describe("Login", () => {
     })
     fireEvent.click(helpers.getByText(/log in/i))
 
-    await wait(() => {
+    await waitFor(() => {
       expect(handleSuccess).toBeCalledWith<[LoginSuccessData]>({
         ...mockAuthResponse,
         account: mockCreds.account,

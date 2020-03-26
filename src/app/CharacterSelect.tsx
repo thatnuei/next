@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import tw from "twin.macro"
 import Avatar from "../character/Avatar"
 import Button from "../dom/Button"
 import {
@@ -9,15 +10,7 @@ import {
   select,
   solidButton,
 } from "../ui/components"
-import {
-  alignItems,
-  fixedCover,
-  flexCenter,
-  flexColumn,
-  mt,
-  my,
-  p,
-} from "../ui/style"
+import { centerItems, fixedCover, flexColumn } from "../ui/helpers"
 
 type Props = {
   characters: string[]
@@ -35,18 +28,15 @@ function CharacterSelect(props: Props) {
   }
 
   return (
-    <div css={[fixedCover, flexColumn, flexCenter]}>
+    <div css={[fixedCover, flexColumn, centerItems]}>
       <div css={raisedPanel}>
         <header css={raisedPanelHeader}>
           <h1 css={headerText}>Select a Character</h1>
         </header>
-        <form
-          css={[flexColumn, alignItems("center"), p(4)]}
-          onSubmit={handleSubmit}
-        >
+        <form css={[flexColumn, tw`items-center p-4`]} onSubmit={handleSubmit}>
           <Avatar name={character} />
           <select
-            css={[select, my(4)]}
+            css={[select, tw`my-4`]}
             value={character}
             onChange={(e) => setCharacter(e.target.value)}
           >
@@ -59,7 +49,7 @@ function CharacterSelect(props: Props) {
           <Button css={solidButton} type="submit">
             Enter chat
           </Button>
-          <Button css={[anchor, mt(4)]} onClick={props.onReturnToLogin}>
+          <Button css={[anchor, tw`mt-4`]} onClick={props.onReturnToLogin}>
             Return to Login
           </Button>
         </form>

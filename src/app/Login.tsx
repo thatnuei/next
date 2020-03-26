@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import tw from "twin.macro"
 import { extractErrorMessage } from "../common/extractErrorMessage"
 import Button from "../dom/Button"
 import { authenticate } from "../flist/authenticate"
@@ -10,17 +11,7 @@ import {
   solidButton,
 } from "../ui/components"
 import FormField from "../ui/FormField"
-import {
-  alignItems,
-  fixedCover,
-  flexCenter,
-  flexColumn,
-  maxW,
-  mb,
-  mt,
-  p,
-  textCenter,
-} from "../ui/style"
+import { centerItems, fixedCover, flexColumn } from "../ui/helpers"
 
 type Props = {
   onSuccess: (data: LoginSuccessData) => void
@@ -42,11 +33,10 @@ export default function Login(props: Props) {
   const [account, setAccount] = useState("")
   const [password, setPassword] = useState("")
 
-  const isEmpty = account === "" && password === ""
-  const isLoading = state.current === "loading"
+  const canSubmit =
+    account !== "" && password !== "" && state.current !== "loading"
 
-  const submitDisabled = isEmpty || isLoading
-  const formDisabled = isLoading
+  const isFormDisabled = state.current === "loading"
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
@@ -65,43 +55,40 @@ export default function Login(props: Props) {
   }
 
   return (
-    <div css={[fixedCover, flexColumn, flexCenter]}>
+    <div css={[fixedCover, flexColumn, centerItems]}>
       <div css={raisedPanel}>
         <header css={raisedPanelHeader}>
           <h1 css={headerText}>Login</h1>
         </header>
-        <form
-          css={[flexColumn, alignItems("flex-start"), p(4)]}
-          onSubmit={handleSubmit}
-        >
-          <FormField css={mb(4)} labelText="Username">
+        <form css={[flexColumn, tw`p-4 items-start`]} onSubmit={handleSubmit}>
+          <FormField css={tw`mb-4`} labelText="Username">
             <input
               css={input}
               type="text"
               placeholder="awesome username"
               value={account}
               onChange={(e) => setAccount(e.target.value)}
-              disabled={formDisabled}
+              disabled={isFormDisabled}
             />
           </FormField>
 
-          <FormField css={mb(4)} labelText="Password">
+          <FormField css={tw`mb-4`} labelText="Password">
             <input
               css={input}
               type="password"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              disabled={formDisabled}
+              disabled={isFormDisabled}
             />
           </FormField>
 
-          <Button css={solidButton} type="submit" disabled={submitDisabled}>
+          <Button css={solidButton} type="submit" disabled={!canSubmit}>
             Log in
           </Button>
 
           {state.current === "error" && (
-            <p css={[mt(4), maxW(60), textCenter]}>{state.error}</p>
+            <p css={tw`mt-4 max-w-xs`}>{state.error}</p>
           )}
         </form>
       </div>

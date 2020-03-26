@@ -1,26 +1,21 @@
 import React from "react"
-import {
-  flex1,
-  flexColumn,
-  mb,
-  px,
-  py,
-  scrollVertical,
-  size,
-  themeBgColor,
-} from "../ui/style"
+import tw from "twin.macro"
+import { TagProps } from "../jsx/types"
+import { scrollVertical } from "../ui/helpers"
 import CharacterName from "./CharacterName"
 import { Character } from "./types"
 
-type Props = { characters: Character[] }
+type Props = TagProps<"div"> & {
+  characters: Character[]
+}
 
-function CharacterList({ characters }: Props) {
+function CharacterList({ characters, ...props }: Props) {
   return (
-    <div css={[flexColumn, size("full")]}>
-      <div css={[themeBgColor(0), px(3), py(2)]}>Characters: 420</div>
-      <ul css={[themeBgColor(1), px(3), py(2), flex1, scrollVertical]}>
+    <div css={tw`flex flex-col`} {...props}>
+      <div css={tw`px-3 py-2 bg-background-0`}>Characters: 420</div>
+      <ul css={[tw`flex-1 px-3 py-2 bg-background-1`, scrollVertical]}>
         {characters.map((char, i) => (
-          <li key={i} css={[mb(2)]}>
+          <li key={i} css={tw`mb-2`}>
             <CharacterName {...char} />
           </li>
         ))}

@@ -11,13 +11,19 @@
 # production
 /build
 
-# misc
-.DS_Store
+# env files
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
+# garbage
+.DS_Store
 *.log*
 
+# editor folders
 .vscode
+
+# yalc (local testing)
+.yalc/
+yalc.lock

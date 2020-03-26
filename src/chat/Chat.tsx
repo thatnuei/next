@@ -1,24 +1,17 @@
 import React, { useState } from "react"
+import tw from "twin.macro"
 import ChannelBrowser from "../channel/ChannelBrowser"
 import ChannelView from "../channel/ChannelView"
 import { safeIndex } from "../common/safeIndex"
 import Button from "../dom/Button"
+import { useMediaQuery } from "../dom/useMediaQuery"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { fadedButton } from "../ui/components"
+import { fixedCover } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
-import {
-  block,
-  fixedCover,
-  flex1,
-  flexColumn,
-  flexRow,
-  hidden,
-  mr,
-  smallScreen,
-  w,
-} from "../ui/style"
+import { screenQueries } from "../ui/screens"
 import ChatHome from "./ChatHome"
 import ChatInput from "./ChatInput"
 import { chatState, subaru } from "./mockData"
@@ -55,11 +48,10 @@ function Chat(props: Props) {
   const [channelBrowserVisible, setChannelBrowserVisible] = useState(false)
   const [updateStatusVisible, setUpdateStatusVisible] = useState(false)
 
-  const menuButton = (
-    <Button
-      title="Show side menu"
-      css={[fadedButton, mr(3), hidden, smallScreen(block)]}
-    >
+  const isSmallScreen = useMediaQuery(screenQueries.small)
+
+  const menuButton = isSmallScreen && (
+    <Button title="Show side menu" css={[fadedButton, tw`mr-3`]}>
       <Icon which={icons.menu} />
     </Button>
   )
@@ -90,38 +82,40 @@ function Chat(props: Props) {
   }
 
   return (
-    <div css={[fixedCover, flexRow]}>
-      <nav css={[flexRow, mr(gapSize), smallScreen(hidden)]}>
-        <div css={[flexColumn, mr(gapSize)]}>
-          <NavAction
-            icon={icons.list}
-            title="Browse channels"
-            onClick={() => setChannelBrowserVisible(true)}
-          />
-          <NavAction
-            icon={icons.updateStatus}
-            title="Update your status"
-            onClick={() => setUpdateStatusVisible(true)}
-          />
-          <NavAction
-            icon={icons.users}
-            title="See online friends and bookmarks"
-          />
-          <NavAction icon={icons.about} title="About next" />
-          <div css={flex1} />
-          <NavAction icon={icons.logout} title="Log out" />
-        </div>
+    <div css={[fixedCover, tw`flex`]}>
+      {!isSmallScreen && (
+        <nav css={tw`flex mr-gap`}>
+          <div css={tw`flex flex-col mr-gap`}>
+            <NavAction
+              icon={icons.list}
+              title="Browse channels"
+              onClick={() => setChannelBrowserVisible(true)}
+            />
+            <NavAction
+              icon={icons.updateStatus}
+              title="Update your status"
+              onClick={() => setUpdateStatusVisible(true)}
+            />
+            <NavAction
+              icon={icons.users}
+              title="See online friends and bookmarks"
+            />
+            <NavAction icon={icons.about} title="About next" />
+            <div css={tw`flex-1`} />
+            <NavAction icon={icons.logout} title="Log out" />
+          </div>
 
-        <div css={w(56)}>
-          <ChatHome
-            rooms={rooms}
-            activeRoom={activeRoom}
-            onRoomChange={setActiveRoom}
-          />
-        </div>
-      </nav>
+          <div css={tw`w-56`}>
+            <ChatHome
+              rooms={rooms}
+              activeRoom={activeRoom}
+              onRoomChange={setActiveRoom}
+            />
+          </div>
+        </nav>
+      )}
 
-      <div css={[flex1]}>
+      <div css={tw`flex-1`}>
         {activeRoom?.name === "channel" && renderChannel(activeRoom.channelId)}
         {activeRoom?.name === "private-chat" &&
           renderPrivateChat(activeRoom.partnerName)}
