@@ -12,7 +12,7 @@ type Props = ComponentProps<typeof Button> & {
 export default function NavAction({ icon, ...props }: Props) {
   return (
     <Button css={[fadedButton, tw`p-3`]} {...props}>
-      <Icon which={icon} css={tw`w-4 h-4`} />
+      <Icon which={icon} css={tw`w-5 h-5`} />
     </Button>
   )
 }
