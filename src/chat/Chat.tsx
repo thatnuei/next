@@ -36,8 +36,6 @@ export type RoomView =
   | { name: "channel"; channelId: string }
   | { name: "private-chat"; partnerName: string }
 
-export const gapSize = "6px"
-
 const rooms: RoomView[] = [
   { name: "channel", channelId: "Frontpage" },
   { name: "channel", channelId: "Fantasy" },
