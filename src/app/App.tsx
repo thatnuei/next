@@ -58,7 +58,13 @@ function App() {
     }
 
     case "chat":
-      return <Chat identity={screen.identity} />
+      return (
+        <Chat
+          account={screen.userData.account}
+          ticket={screen.userData.ticket}
+          identity={screen.identity}
+        />
+      )
   }
 }
 

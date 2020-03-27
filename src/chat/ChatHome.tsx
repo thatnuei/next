@@ -7,9 +7,9 @@ import { scrollVertical } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import { RoomView } from "./Chat"
+import { ChatState } from "./state"
 import { chatState, testificate } from "./mockData"
 import RoomTab from "./RoomTab"
-import { ChatState } from "./types"
 
 type Props = TagProps<"div"> & {
   rooms: RoomView[]

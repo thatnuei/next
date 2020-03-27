@@ -1,7 +1,7 @@
 import { Channel, createChannel } from "../channel/types"
 import { Character } from "../character/types"
 import { Message } from "../message/types"
-import { ChatState } from "./types"
+import { ChatState } from "./state"
 
 export const testificate: Character = {
   name: "Testificate",

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import tw from "twin.macro"
 import ChannelBrowser from "../channel/ChannelBrowser"
 import ChannelView from "../channel/ChannelView"
@@ -14,18 +14,21 @@ import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import ChatHome from "./ChatHome"
 import ChatInput from "./ChatInput"
-import { chatState, subaru } from "./mockData"
-import NavAction from "./NavAction"
 import {
   getChannel,
   getCharacter,
   getCharactersFromNames,
   getFullMessages,
   getPrivateChat,
-} from "./types"
+} from "./state"
+import { chatState, subaru } from "./mockData"
+import NavAction from "./NavAction"
+import { useSocket } from "./socket"
 import UpdateStatus from "./UpdateStatus"
 
 type Props = {
+  account: string
+  ticket: string
   identity: string
 }
 
@@ -43,7 +46,16 @@ const rooms: RoomView[] = [
   { name: "private-chat", partnerName: subaru.name },
 ]
 
-function Chat(props: Props) {
+function Chat({ account, ticket, identity }: Props) {
+  const [, socketActions] = useSocket((command) => {
+    console.log(command)
+  })
+
+  useEffect(() => {
+    socketActions.connect({ account, ticket, identity })
+    return () => socketActions.disconnect()
+  }, [socketActions, account, ticket, identity])
+
   const [activeRoom = safeIndex(rooms, 0), setActiveRoom] = useState<RoomView>()
   const [channelBrowserVisible, setChannelBrowserVisible] = useState(false)
   const [updateStatusVisible, setUpdateStatusVisible] = useState(false)
@@ -63,7 +75,7 @@ function Chat(props: Props) {
         title={channel.title}
         messages={getFullMessages(chatState, channel.messages)}
         users={getCharactersFromNames(chatState, channel.users)}
-        chatInput={<ChatInput identity={props.identity} />}
+        chatInput={<ChatInput identity={identity} />}
         menuButton={menuButton}
       />
     )
@@ -76,7 +88,7 @@ function Chat(props: Props) {
         partner={getCharacter(chatState, partnerName)}
         messages={getFullMessages(chatState, chat.messages)}
         menuButton={menuButton}
-        chatInput={<ChatInput identity={props.identity} />}
+        chatInput={<ChatInput identity={identity} />}
       />
     )
   }
