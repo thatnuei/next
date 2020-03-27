@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react"
 import tw from "twin.macro"
 import ChannelBrowser from "../channel/ChannelBrowser"
 import ChannelView from "../channel/ChannelView"
+import Avatar from "../character/Avatar"
+import CharacterDetails from "../character/CharacterDetails"
 import { safeIndex } from "../common/safeIndex"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
@@ -12,12 +14,13 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
-import ChatHome from "./ChatHome"
 import ChatInput from "./ChatInput"
-import { chatState, subaru } from "./mockData"
+import { chatState, subaru, testificate } from "./mockData"
 import NavAction from "./NavAction"
+import RoomTab from "./RoomTab"
 import { useSocket } from "./socket"
 import {
+  ChatState,
   getChannel,
   getCharacter,
   getCharactersFromNames,
@@ -115,12 +118,20 @@ function Chat({ account, ticket, identity }: Props) {
             <NavAction icon={icons.logout} title="Log out" />
           </div>
 
-          <div css={tw`w-56`}>
-            <ChatHome
-              rooms={rooms}
-              activeRoom={activeRoom}
-              onRoomChange={setActiveRoom}
+          <div css={tw`flex flex-col w-56`}>
+            <CharacterDetails
+              character={testificate}
+              css={tw`p-3 bg-background-0 mb-gap`}
             />
+            <div css={tw`flex-1 bg-background-1`}>
+              {rooms.map((room) => (
+                <RoomTab
+                  {...getRoomProps(room, chatState)}
+                  state={activeRoom === room ? "active" : "inactive"}
+                  onClick={() => setActiveRoom(room)}
+                />
+              ))}
+            </div>
           </div>
         </nav>
       )}
@@ -161,3 +172,22 @@ function Chat({ account, ticket, identity }: Props) {
 }
 
 export default Chat
+
+function getRoomProps(room: RoomView, chatState: ChatState) {
+  const iconSizeStyle = tw`w-5 h-5`
+
+  if (room.name === "channel") {
+    const channel = chatState.channels[room.channelId]
+    return {
+      key: `channel:${room.channelId}`,
+      title: channel?.title ?? room.channelId,
+      icon: <Icon which={icons.earth} css={iconSizeStyle} />,
+    }
+  }
+
+  return {
+    key: `private-chat:${room.partnerName}`,
+    title: room.partnerName,
+    icon: <Avatar name={room.partnerName} css={iconSizeStyle} />,
+  }
+}
