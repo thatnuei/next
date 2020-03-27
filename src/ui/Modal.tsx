@@ -8,7 +8,7 @@ import {
   raisedPanel,
   raisedPanelHeader,
 } from "./components"
-import { fixedCover } from "./helpers"
+import { fixedCover, transition } from "./helpers"
 import Icon from "./Icon"
 import { close } from "./icons"
 
@@ -37,17 +37,20 @@ function Modal(props: Props) {
   }
 
   const shadeStyle = [
-    tw`flex flex-col items-center justify-center p-4 transition-opacity bg-shade`,
-    props.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
+    tw`flex flex-col items-center justify-center p-4 bg-shade`,
     fixedCover,
+    props.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
+    transition,
+    tw`transition-all`,
   ]
 
   const panelStyle = [
     raisedPanel,
-    tw`flex flex-col w-full h-full transition-transform`,
+    tw`flex flex-col w-full h-full`,
     props.isVisible ? undefined : tw`transform translate-y-1`,
     css({ maxWidth: props.width }),
     css({ maxHeight: props.height }),
+    transition,
   ]
 
   const closeButtonStyle = [

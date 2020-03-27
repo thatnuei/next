@@ -14,6 +14,9 @@ import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import ChatHome from "./ChatHome"
 import ChatInput from "./ChatInput"
+import { chatState, subaru } from "./mockData"
+import NavAction from "./NavAction"
+import { useSocket } from "./socket"
 import {
   getChannel,
   getCharacter,
@@ -21,9 +24,6 @@ import {
   getFullMessages,
   getPrivateChat,
 } from "./state"
-import { chatState, subaru } from "./mockData"
-import NavAction from "./NavAction"
-import { useSocket } from "./socket"
 import UpdateStatus from "./UpdateStatus"
 
 type Props = {
@@ -135,8 +135,8 @@ function Chat({ account, ticket, identity }: Props) {
 
       <Modal
         title="Channels"
-        width={120}
-        height={180}
+        width={480}
+        height={720}
         isVisible={channelBrowserVisible}
         onClose={() => setChannelBrowserVisible(false)}
         children={<ChannelBrowser />}
@@ -144,8 +144,8 @@ function Chat({ account, ticket, identity }: Props) {
 
       <Modal
         title="Update Your Status"
-        width={120}
-        height={90}
+        width={480}
+        height={360}
         isVisible={updateStatusVisible}
         onClose={() => setUpdateStatusVisible(false)}
         children={
