@@ -11,7 +11,7 @@ import Icon from "../ui/Icon"
 import { users } from "../ui/icons"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
-import { ChannelMode } from "./types"
+import { ChannelMode } from "./state"
 
 type Props = {
   title: string

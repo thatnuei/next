@@ -1,4 +1,4 @@
-import { Channel, createChannel } from "../channel/types"
+import { ChannelState, createChannelState } from "../channel/state"
 import { Character } from "../character/types"
 import { Message } from "../message/types"
 import { ChatState } from "./state"
@@ -75,9 +75,9 @@ messages[0].type = "lfrp"
 messages[1].type = "admin"
 messages[2].type = "system"
 
-export function createMockChannel(id: string, title = id): Channel {
+export function createMockChannel(id: string, title = id): ChannelState {
   return {
-    ...createChannel(id),
+    ...createChannelState(id),
     title,
     messages,
     users: ["Subaru-chan", "Testificate"],

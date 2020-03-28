@@ -1,6 +1,6 @@
 import { Message } from "../message/types"
 
-export type Channel = {
+export type ChannelState = {
   id: string
   title: string
   description: string
@@ -11,7 +11,7 @@ export type Channel = {
 
 export type ChannelMode = "both" | "chat" | "ads"
 
-export function createChannel(id: string): Channel {
+export function createChannelState(id: string): ChannelState {
   return {
     id,
     title: id,

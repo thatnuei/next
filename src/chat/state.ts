@@ -1,4 +1,4 @@
-import { Channel, createChannel } from "../channel/types"
+import { ChannelState, createChannelState } from "../channel/state"
 import { Character, createCharacter } from "../character/types"
 import { Dict } from "../common/types"
 import { Message } from "../message/types"
@@ -6,7 +6,7 @@ import { createPrivateChat, PrivateChat } from "../privateChat/types"
 
 export type ChatState = {
   characters: Dict<Character>
-  channels: Dict<Channel>
+  channels: Dict<ChannelState>
   privateChats: Dict<PrivateChat>
 }
 
@@ -15,7 +15,7 @@ export function getCharacter(state: ChatState, name: string) {
 }
 
 export function getChannel(state: ChatState, id: string) {
-  return state.channels[id] ?? createChannel(id)
+  return state.channels[id] ?? createChannelState(id)
 }
 
 export function getPrivateChat(state: ChatState, name: string) {
