@@ -9,8 +9,8 @@ type CommandUnionFromRecord<T> = ValueOf<
   }
 >
 
-type ClientCommandRecord = fchat.Connection.ClientCommands
-type ServerCommandRecord = fchat.Connection.ServerCommands
+export type ClientCommandRecord = fchat.Connection.ClientCommands
+export type ServerCommandRecord = fchat.Connection.ServerCommands
 
 export type ClientCommand = CommandUnionFromRecord<ClientCommandRecord>
 export type ServerCommand = CommandUnionFromRecord<ServerCommandRecord>
