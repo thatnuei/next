@@ -19,6 +19,8 @@
     "fchat": "^1.4.0",
     "focus-visible": "^5.0.2",
     "idb-keyval": "^3.2.0",
+    "mobx": "^5.15.4",
+    "mobx-react-lite": "^1.5.2",
     "polished": "^3.5.1",
     "preact": "^10.3.4",
     "react": "^16.13.1",
