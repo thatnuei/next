@@ -23,7 +23,7 @@ const unreadHighlight = css({
 })
 
 const ellipsize = css({
-  overflowX: "hidden",
+  overflow: "hidden",
   whiteSpace: "nowrap",
   textOverflow: "ellipsis",
 })
@@ -38,13 +38,13 @@ function RoomTab(props: Props) {
   return (
     <div css={[tw`flex flex-row items-center`, activeStateStyle, transition]}>
       <Button
-        css={[tw`flex-1 flex flex-row items-center p-2`, ellipsize]}
+        css={[tw`flex flex-row items-center flex-1 p-2`, ellipsize]}
         onClick={props.onClick}
         role="link"
       >
-        <div css={tw`w-6`}>{props.icon}</div>
+        {props.icon}
         <div
-          css={[tw`ml-2 flex-1`, ellipsize]}
+          css={[tw`flex-1 ml-2`, ellipsize]}
           dangerouslySetInnerHTML={{ __html: props.title }}
         />
       </Button>
