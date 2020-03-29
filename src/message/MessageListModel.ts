@@ -6,7 +6,7 @@ export class MessageListModel {
   private _messages: MessageModel[] = []
 
   @computed
-  get messages(): readonly MessageModel[] {
+  get items(): readonly MessageModel[] {
     return this._messages
   }
 

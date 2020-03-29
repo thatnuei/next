@@ -9,7 +9,7 @@ export class ChannelModel {
   description = ""
 
   @observable.shallow
-  messages = new MessageListModel()
+  messageList = new MessageListModel()
 
   @observable.shallow
   users = new Set<string>()

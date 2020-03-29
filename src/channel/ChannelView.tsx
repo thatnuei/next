@@ -23,20 +23,20 @@ function ChannelView({ channel, chatInput, menuButton }: Props) {
   const [selectedMode, setSelectedMode] = useState<ChannelMode>("both")
   const isLargeScreen = useMediaQuery(screenQueries.large)
 
-  function getFilteredMessages() {
-    const isType = (...types: MessageType[]) => (message: MessageModel) =>
-      types.includes(message.type)
+  const isType = (...types: MessageType[]) => (message: MessageModel) =>
+    types.includes(message.type)
 
+  const filteredMessages = (() => {
     if (selectedMode === "chat") {
-      return channel.messages.messages.filter(
+      return channel.messageList.items.filter(
         isType("normal", "system", "admin"),
       )
     }
     if (selectedMode === "ads") {
-      return channel.messages.messages.filter(isType("lfrp", "system", "admin"))
+      return channel.messageList.items.filter(isType("lfrp", "system", "admin"))
     }
-    return channel.messages.messages
-  }
+    return channel.messageList.items
+  })()
 
   return (
     <div css={tw`flex flex-col w-full h-full`}>
@@ -58,7 +58,7 @@ function ChannelView({ channel, chatInput, menuButton }: Props) {
 
       <div css={tw`flex flex-row flex-1 min-h-0 my-gap`}>
         <div css={tw`flex-1 bg-background-1`}>
-          <MessageList messages={getFilteredMessages()} />
+          <MessageList messages={filteredMessages} />
         </div>
 
         {/* {isLargeScreen && (

@@ -1,17 +1,19 @@
 import { useObserver } from "mobx-react-lite"
 import { useState } from "react"
-import { ChatStore } from "./ChatStore"
+import { useChatContext } from "./context"
 
 type Room =
   | { type: "channel"; id: string }
   | { type: "privateChat"; partnerName: string }
 
-export function useChatNavigation(store: ChatStore) {
+export function useChatNavigation() {
+  const { channelStore } = useChatContext()
+
   const [_room, setRoom] = useState<Room>()
 
   return useObserver(() => {
     const firstChannel =
-      store.channels.length > 0 ? store.channels[0] : undefined
+      channelStore.channels.length > 0 ? channelStore.channels[0] : undefined
 
     const room =
       _room ||
@@ -21,7 +23,8 @@ export function useChatNavigation(store: ChatStore) {
       })
 
     const activeChannel =
-      room?.type === "channel" && store.channels.find((it) => it.id === room.id)
+      room?.type === "channel" &&
+      channelStore.channels.find((it) => it.id === room.id)
 
     return { activeChannel, setRoom }
   })

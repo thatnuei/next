@@ -27,3 +27,23 @@ export function createCommandString(command: ClientCommand): string {
     ? `${command.type} ${JSON.stringify(command.params)}`
     : command.type
 }
+
+type CommandHandlerMap<TThis> = {
+  [K in keyof ServerCommandRecord]?: (
+    this: TThis,
+    params: ServerCommandRecord[K],
+  ) => void
+}
+
+export type CommandHandlerFn = (command: ServerCommand) => void
+
+export function createCommandHandler<TThis>(
+  thisArg: TThis,
+  handlers: CommandHandlerMap<TThis>,
+) {
+  return function handleCommand(command: ServerCommand) {
+    const handler = handlers[command.type]
+    handler?.call(thisArg, command.params as never) // lol
+    return !!handler
+  }
+}

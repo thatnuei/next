@@ -12,22 +12,16 @@ import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import ChatInput from "./ChatInput"
+import { useChatContext } from "./context"
 import NavAction from "./NavAction"
 import RoomTab from "./RoomTab"
 import UpdateStatus from "./UpdateStatus"
 import { useChatNavigation } from "./useChatNavigation"
-import { useChatStore } from "./useChatStore"
 
-type Props = {
-  account: string
-  ticket: string
-  identity: string
-}
+function Chat() {
+  const { identity, channelStore } = useChatContext()
 
-function Chat({ account, ticket, identity }: Props) {
-  const store = useChatStore({ account, ticket, identity })
-
-  const { activeChannel, setRoom } = useChatNavigation(store)
+  const { activeChannel, setRoom } = useChatNavigation()
 
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
@@ -70,7 +64,7 @@ function Chat({ account, ticket, identity }: Props) {
               css={tw`p-3 bg-background-0 mb-gap`}
             /> */}
             <div css={tw`flex-1 bg-background-1`}>
-              {store.channels.map((channel) => (
+              {channelStore.channels.map((channel) => (
                 <RoomTab
                   key={channel.id}
                   icon={<Icon which={icons.earth} />}
