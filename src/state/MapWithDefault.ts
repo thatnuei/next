@@ -13,7 +13,11 @@ export class MapWithDefault<V, K = string> {
   }
 
   set(key: K, value: V) {
-    return this.items.set(key, value)
+    this.items.set(key, value)
+  }
+
+  delete(key: K) {
+    this.items.delete(key)
   }
 
   keys() {
