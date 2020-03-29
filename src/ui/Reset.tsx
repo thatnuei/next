@@ -6,10 +6,15 @@ import tw from "twin.macro"
 export default function Reset() {
   return (
     <Global
-      styles={{
-        ":root": tw`text-text bg-background-2 font-body`,
-        "button, input, textarea, select": tw`rounded-none text-left`,
-      }}
+      styles={[
+        {
+          ":root": tw`text-text bg-background-2 font-body`,
+          "button, input, textarea, select": tw`text-left rounded-none`,
+        },
+        {
+          ":root": { wordBreak: "break-word" },
+        },
+      ]}
     />
   )
 }
