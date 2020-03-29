@@ -8,6 +8,6 @@ export const flexColumn = tw`flex flex-col`
 
 export const centerItems = tw`items-center justify-center`
 
-export const transition = tw`transition duration-200`
+export const transition = tw`transition duration-300`
 
 export const scrollVertical = tw`min-h-0 overflow-y-auto`
