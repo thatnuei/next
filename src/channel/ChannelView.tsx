@@ -1,7 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
 import tw from "twin.macro"
-import CharacterList from "../character/CharacterList"
 import ChatInput from "../chat/ChatInput"
 import ChatMenuButton from "../chat/ChatMenuButton"
 import Button from "../dom/Button"
@@ -16,6 +15,7 @@ import { users } from "../ui/icons"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
 import { ChannelMode, ChannelModel } from "./ChannelModel"
+import ChannelUserList from "./ChannelUserList"
 
 type Props = {
   channel: ChannelModel
@@ -65,9 +65,9 @@ function ChannelView({ channel, ...props }: Props) {
         </main>
 
         {isLargeScreen && (
-          <CharacterList
+          <ChannelUserList
             characters={channel.users.characters}
-            css={tw`w-64 min-h-0 ml-gap`}
+            css={tw`w-56 min-h-0 ml-gap`}
           />
         )}
       </div>

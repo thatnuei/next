@@ -9,9 +9,9 @@ type Props = TagProps<"span"> & {
   character: CharacterModel
 }
 
-function CharacterName({ character }: Props) {
+function CharacterName({ character, ...props }: Props) {
   return (
-    <span css={tw`font-weight-bold`}>
+    <span css={tw`font-weight-bold`} {...props}>
       {character.status && (
         <span css={[{ color: statusColors[character.status] }, statusDotStyle]}>
           •
