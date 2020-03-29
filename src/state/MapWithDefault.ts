@@ -4,7 +4,7 @@ export class MapWithDefault<V, K = string> {
   @observable.shallow
   private items = new Map<K, V>()
 
-  constructor(private getDefault: (key: K) => V) {}
+  constructor(private readonly getDefault: (key: K) => V) {}
 
   get(key: K): V {
     return this.items.has(key)
