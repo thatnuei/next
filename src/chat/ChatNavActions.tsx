@@ -1,57 +1,28 @@
-import React, { useState } from "react"
+import React from "react"
 import tw from "twin.macro"
-import ChannelBrowser from "../channel/ChannelBrowser"
 import * as icons from "../ui/icons"
-import Modal from "../ui/Modal"
+import { useChatContext } from "./context"
 import NavAction from "./NavAction"
-import UpdateStatus from "./UpdateStatus"
 
 function ChatNavActions() {
-  const [channelBrowserVisible, setChannelBrowserVisible] = useState(false)
-  const [updateStatusVisible, setUpdateStatusVisible] = useState(false)
+  const { navStore } = useChatContext()
 
   return (
     <>
       <NavAction
         icon={icons.list}
         title="Browse channels"
-        onClick={() => setChannelBrowserVisible(true)}
+        onClick={navStore.channelBrowser.show}
       />
       <NavAction
         icon={icons.updateStatus}
         title="Update your status"
-        onClick={() => setUpdateStatusVisible(true)}
+        onClick={navStore.updateStatus.show}
       />
       <NavAction icon={icons.users} title="See online friends and bookmarks" />
       <NavAction icon={icons.about} title="About next" />
       <div css={tw`flex-1`} />
       <NavAction icon={icons.logout} title="Log out" />
-
-      <Modal
-        title="Channels"
-        width={480}
-        height={720}
-        isVisible={channelBrowserVisible}
-        onClose={() => setChannelBrowserVisible(false)}
-        children={<ChannelBrowser />}
-      />
-
-      <Modal
-        title="Update Your Status"
-        width={480}
-        height={360}
-        isVisible={updateStatusVisible}
-        onClose={() => setUpdateStatusVisible(false)}
-        children={
-          <UpdateStatus
-            initialValues={{ status: "online", statusMessage: "" }}
-            onSubmit={(values) => {
-              console.log(values)
-              setUpdateStatusVisible(false)
-            }}
-          />
-        }
-      />
     </>
   )
 }

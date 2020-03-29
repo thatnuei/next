@@ -1,4 +1,5 @@
 import { css } from "@emotion/react"
+import { observer } from "mobx-react-lite"
 import React, { MouseEvent, useEffect, useRef } from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
@@ -11,13 +12,13 @@ import {
 import { fixedCover, transition } from "./helpers"
 import Icon from "./Icon"
 import { close } from "./icons"
+import { OverlayModel } from "./OverlayModel"
 
 type Props = {
   title: string
   width: number
   height: number
-  isVisible: boolean
-  onClose: () => void
+  model: OverlayModel
   children?: React.ReactNode
 }
 
@@ -25,21 +26,21 @@ function Modal(props: Props) {
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    if (props.isVisible) {
+    if (props.model.isVisible) {
       closeButtonRef.current?.focus()
     }
-  }, [props.isVisible])
+  }, [props.model.isVisible])
 
   const handleShadeClick = (event: MouseEvent) => {
     if (event.target === event.currentTarget) {
-      props.onClose()
+      props.model.hide()
     }
   }
 
   const shadeStyle = [
     tw`flex flex-col items-center justify-center p-4 bg-shade`,
     fixedCover,
-    props.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
+    props.model.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
     transition,
     tw`transition-all`,
   ]
@@ -47,7 +48,7 @@ function Modal(props: Props) {
   const panelStyle = [
     raisedPanel,
     tw`flex flex-col w-full h-full`,
-    props.isVisible ? undefined : tw`transform translate-y-1`,
+    props.model.isVisible ? undefined : tw`transform translate-y-1`,
     css({ maxWidth: props.width }),
     css({ maxHeight: props.height }),
     transition,
@@ -65,7 +66,7 @@ function Modal(props: Props) {
           <h1 css={headerText}>{props.title}</h1>
           <Button
             css={closeButtonStyle}
-            onClick={props.onClose}
+            onClick={props.model.hide}
             ref={closeButtonRef}
           >
             <Icon which={close} />
@@ -77,4 +78,4 @@ function Modal(props: Props) {
   )
 }
 
-export default Modal
+export default observer(Modal)

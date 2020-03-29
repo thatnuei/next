@@ -10,6 +10,8 @@ type Room =
 export class ChatNavStore {
   constructor(private channelStore: ChannelStore) {}
 
+  channelBrowser = new OverlayModel()
+  updateStatus = new OverlayModel()
   sideMenu = new OverlayModel()
 
   @observable
