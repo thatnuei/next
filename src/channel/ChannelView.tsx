@@ -1,8 +1,11 @@
 import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
 import tw from "twin.macro"
+import ChatInput from "../chat/ChatInput"
+import { useChatContext } from "../chat/context"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
+import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
 import { MessageModel } from "../message/MessageModel"
 import { MessageType } from "../message/types"
@@ -15,11 +18,11 @@ import { ChannelMode, ChannelModel } from "./ChannelModel"
 
 type Props = {
   channel: ChannelModel
-  chatInput: React.ReactNode
   menuButton: React.ReactNode
-}
+} & TagProps<"div">
 
-function ChannelView({ channel, chatInput, menuButton }: Props) {
+function ChannelView({ channel, menuButton, ...props }: Props) {
+  const { identity } = useChatContext()
   const [selectedMode, setSelectedMode] = useState<ChannelMode>("both")
   const isLargeScreen = useMediaQuery(screenQueries.large)
 
@@ -39,8 +42,8 @@ function ChannelView({ channel, chatInput, menuButton }: Props) {
   })()
 
   return (
-    <div css={tw`flex flex-col w-full h-full`}>
-      <div css={tw`flex flex-row items-center p-3 bg-background-0`}>
+    <div css={tw`flex flex-col`} {...props}>
+      <header css={tw`flex flex-row items-center p-3 bg-background-0`}>
         {menuButton}
 
         <h1 css={[headerText2, tw`flex-1`]}>{channel.title}</h1>
@@ -54,19 +57,21 @@ function ChannelView({ channel, chatInput, menuButton }: Props) {
             <Icon which={users} />
           </Button>
         )}
-      </div>
+      </header>
 
       <div css={tw`flex flex-row flex-1 min-h-0 my-gap`}>
-        <div css={tw`flex-1 bg-background-1`}>
+        <main css={tw`flex-1 bg-background-1`}>
           <MessageList messages={filteredMessages} />
-        </div>
+        </main>
 
         {/* {isLargeScreen && (
-          <CharacterList characters={channel.users} css={tw`w-64 ml-gap`} />
+          <aside>
+            <CharacterList characters={channel.users} css={tw`w-64 ml-gap`} />
+          </aside>
         )} */}
       </div>
 
-      {chatInput}
+      <ChatInput identity={identity} />
     </div>
   )
 }

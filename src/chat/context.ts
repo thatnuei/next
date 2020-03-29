@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react"
 import { ChannelStore } from "../channel/ChannelStore"
 import { CharacterStore } from "../character/CharacterStore"
+import { ChatNavStore } from "./ChatNavStore"
 import createContextWrapper from "../react/createContextWrapper"
 import { ChatStore } from "./ChatStore"
 import { SocketHandler } from "./SocketHandler"
@@ -18,6 +19,7 @@ export const useChatContext = createContextWrapper(function useChat({
   const chatStore = useMemo(() => new ChatStore(socket), [socket])
   const characterStore = useMemo(() => new CharacterStore(), [])
   const channelStore = useMemo(() => new ChannelStore(identity), [identity])
+  const navStore = useMemo(() => new ChatNavStore(channelStore), [channelStore])
 
   useEffect(() => {
     socket.listener = (command) => {
@@ -44,7 +46,7 @@ export const useChatContext = createContextWrapper(function useChat({
     channelStore,
   ])
 
-  return { identity, chatStore, characterStore, channelStore }
+  return { identity, chatStore, characterStore, channelStore, navStore }
 })
 
 export const ChatProvider = useChatContext.Provider
