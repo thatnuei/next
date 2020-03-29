@@ -48,7 +48,7 @@ function Modal(props: Props) {
   const panelStyle = [
     raisedPanel,
     tw`flex flex-col w-full h-full`,
-    props.model.isVisible ? undefined : tw`transform translate-y-1`,
+    props.model.isVisible ? undefined : tw`transform translate-y-4`,
     css({ maxWidth: props.width }),
     css({ maxHeight: props.height }),
     transition,
