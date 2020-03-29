@@ -1,10 +1,14 @@
 import { observable } from "mobx"
+import { CharacterStore } from "../character/CharacterStore"
 import { createCommandHandler } from "../chat/commands"
 import { MessageModel } from "../message/MessageModel"
 import { ChannelModel } from "./ChannelModel"
 
 export class ChannelStore {
-  constructor(private identity: string) {}
+  constructor(
+    private identity: string,
+    private characterStore: CharacterStore,
+  ) {}
 
   @observable.shallow
   channels: ChannelModel[] = []
@@ -19,7 +23,7 @@ export class ChannelStore {
   handleCommand = createCommandHandler(this, {
     JCH({ channel: id, character: { identity }, title }) {
       if (identity === this.identity) {
-        const channel = new ChannelModel(id)
+        const channel = new ChannelModel(id, this.characterStore)
         this.channels.push(channel)
       }
 
@@ -48,7 +52,7 @@ export class ChannelStore {
 
     ICH({ channel: id, users, mode }) {
       this.updateChannel(id, (channel) => {
-        channel.users = new Set(users.map((it) => it.identity))
+        channel.users.setAll(users.map((it) => it.identity))
         channel.mode = mode
       })
     },
@@ -61,7 +65,7 @@ export class ChannelStore {
 
     COL({ channel: id, oplist }) {
       this.updateChannel(id, (channel) => {
-        channel.ops = new Set(oplist)
+        channel.ops.setAll(oplist)
       })
     },
 

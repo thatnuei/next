@@ -1,8 +1,8 @@
 import { useEffect, useMemo } from "react"
 import { ChannelStore } from "../channel/ChannelStore"
 import { CharacterStore } from "../character/CharacterStore"
-import { ChatNavStore } from "./ChatNavStore"
 import createContextWrapper from "../react/createContextWrapper"
+import { ChatNavStore } from "./ChatNavStore"
 import { ChatStore } from "./ChatStore"
 import { SocketHandler } from "./SocketHandler"
 
@@ -18,7 +18,10 @@ export const useChatContext = createContextWrapper(function useChat({
   const socket = useMemo(() => new SocketHandler(), [])
   const chatStore = useMemo(() => new ChatStore(socket), [socket])
   const characterStore = useMemo(() => new CharacterStore(), [])
-  const channelStore = useMemo(() => new ChannelStore(identity), [identity])
+  const channelStore = useMemo(
+    () => new ChannelStore(identity, characterStore),
+    [identity, characterStore],
+  )
   const navStore = useMemo(() => new ChatNavStore(channelStore), [channelStore])
 
   useEffect(() => {

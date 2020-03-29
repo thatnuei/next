@@ -1,7 +1,10 @@
 import { css } from "@emotion/react"
+import { observer } from "mobx-react-lite"
 import { rgba } from "polished"
 import React from "react"
 import tw from "twin.macro"
+import CharacterName from "../character/CharacterName"
+import { useChatContext } from "../chat/context"
 import { emerald, tomato } from "../ui/theme.old"
 import { MessageModel } from "./MessageModel"
 
@@ -9,7 +12,9 @@ type Props = {
   message: MessageModel
 }
 
-export default function MessageListItem({ message }: Props) {
+function MessageListItem({ message }: Props) {
+  const { characterStore } = useChatContext()
+
   const typeStyle = {
     normal: undefined,
     lfrp: lfrpStyle,
@@ -25,8 +30,9 @@ export default function MessageListItem({ message }: Props) {
 
       {message.senderName && (
         <span css={tw`inline-block mr-2`}>
-          {message.senderName}
-          {/* <CharacterName {...message.sender} /> */}
+          <CharacterName
+            character={characterStore.getCharacter(message.senderName)}
+          />
         </span>
       )}
 
@@ -34,6 +40,8 @@ export default function MessageListItem({ message }: Props) {
     </div>
   )
 }
+
+export default observer(MessageListItem)
 
 const messageStyle = tw`inline-block float-right ml-3 text-sm opacity-50`
 const lfrpStyle = css({ backgroundColor: rgba(emerald, 0.2) })

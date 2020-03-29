@@ -1,20 +1,30 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
 import { input, solidButton } from "../ui/components"
+import { useChatContext } from "./context"
 
-type Props = { identity: string }
+type Props = {}
 
-function ChatInput({ identity }: Props) {
+function ChatInput(props: Props) {
+  const { identity } = useChatContext()
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault()
+  }
+
   return (
-    <div css={tw`bg-background-0 flex flex-row p-2`}>
+    <form onSubmit={handleSubmit} css={tw`flex flex-row p-2 bg-background-0`}>
       <textarea
-        css={[input, tw`block flex-1 mr-2`]}
         placeholder={`Chatting as ${identity}...`}
+        css={[input, tw`flex-1 block mr-2`]}
       />
-      <Button css={solidButton}>Send</Button>
-    </div>
+      <Button type="submit" css={solidButton}>
+        Send
+      </Button>
+    </form>
   )
 }
 
-export default ChatInput
+export default observer(ChatInput)

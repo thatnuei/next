@@ -1,20 +1,24 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
+import CharacterSummary from "../character/CharacterSummary"
 import { TagProps } from "../jsx/types"
 import ChannelTabs from "./ChannelTabs"
 import ChatNavActions from "./ChatNavActions"
+import { useChatContext } from "./context"
 
-export default function ChatNav(props: TagProps<"nav">) {
+function ChatNav(props: TagProps<"nav">) {
+  const { identity, characterStore } = useChatContext()
   return (
     <nav css={tw`flex`} {...props}>
       <div css={tw`flex flex-col mr-gap`}>
         <ChatNavActions />
       </div>
       <div css={tw`flex flex-col w-56`}>
-        {/* <CharacterDetails
-              character={testificate}
-              css={tw`p-3 bg-background-0 mb-gap`}
-            /> */}
+        <CharacterSummary
+          character={characterStore.getCharacter(identity)}
+          css={tw`p-3 bg-background-0 mb-gap`}
+        />
         <div css={tw`flex-1 bg-background-1`}>
           <ChannelTabs />
         </div>
@@ -22,3 +26,5 @@ export default function ChatNav(props: TagProps<"nav">) {
     </nav>
   )
 }
+
+export default observer(ChatNav)

@@ -5,6 +5,8 @@ import { CharacterModel } from "./CharacterModel"
 export class CharacterStore {
   characters = new MapWithDefault((name) => new CharacterModel(name))
 
+  getCharacter = (name: string) => this.characters.get(name)
+
   handleCommand = createCommandHandler(this, {
     LIS({ characters }) {
       for (const [name, gender, status, statusMessage] of characters) {

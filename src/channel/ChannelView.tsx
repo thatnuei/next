@@ -1,9 +1,9 @@
 import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
 import tw from "twin.macro"
+import CharacterList from "../character/CharacterList"
 import ChatInput from "../chat/ChatInput"
 import ChatMenuButton from "../chat/ChatMenuButton"
-import { useChatContext } from "../chat/context"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { TagProps } from "../jsx/types"
@@ -22,7 +22,7 @@ type Props = {
 } & TagProps<"div">
 
 function ChannelView({ channel, ...props }: Props) {
-  const { identity } = useChatContext()
+  // TODO: use selectedMode in channel model
   const [selectedMode, setSelectedMode] = useState<ChannelMode>("both")
   const isLargeScreen = useMediaQuery(screenQueries.large)
 
@@ -64,14 +64,15 @@ function ChannelView({ channel, ...props }: Props) {
           <MessageList messages={filteredMessages} />
         </main>
 
-        {/* {isLargeScreen && (
-          <aside>
-            <CharacterList characters={channel.users} css={tw`w-64 ml-gap`} />
-          </aside>
-        )} */}
+        {isLargeScreen && (
+          <CharacterList
+            characters={channel.users.characters}
+            css={tw`w-64 min-h-0 ml-gap`}
+          />
+        )}
       </div>
 
-      <ChatInput identity={identity} />
+      <ChatInput />
     </div>
   )
 }
