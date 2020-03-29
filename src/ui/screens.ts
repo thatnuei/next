@@ -1,14 +1,12 @@
 import preval from "preval.macro"
-import resolveConfig from "tailwindcss/resolveConfig"
 
 const tailwindConfig = preval`
-  module.exports = require('../../tailwind.config')
+  const resolveConfig = require('tailwindcss/resolveConfig')
+  module.exports = resolveConfig(require('../../tailwind.config'))
 `
 
-const fullConfig = resolveConfig(tailwindConfig)
-
 export const screenQueries = {
-  small: `(max-width: ${fullConfig.theme.screens.md})`,
-  medium: `(min-width: ${fullConfig.theme.screens.md}) and (max-width: ${fullConfig.theme.screens.lg})`,
-  large: `(min-width: ${fullConfig.theme.screens.lg})`,
+  small: `(max-width: ${tailwindConfig.theme.screens.md})`,
+  medium: `(min-width: ${tailwindConfig.theme.screens.md}) and (max-width: ${tailwindConfig.theme.screens.lg})`,
+  large: `(min-width: ${tailwindConfig.theme.screens.lg})`,
 }
