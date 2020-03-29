@@ -1,10 +1,14 @@
 import { observable } from "mobx"
 import { ChannelModel } from "../channel/ChannelModel"
+import { CharacterModel } from "../character/CharacterModel"
 import { MessageModel } from "../message/MessageModel"
+import { MapWithDefault } from "../state/MapWithDefault"
 import { ServerCommand, ServerCommandRecord } from "./commands"
 import { SocketHandler } from "./SocketHandler"
 
 export class ChatStore {
+  characters = new MapWithDefault((name) => new CharacterModel(name))
+
   @observable.shallow
   channels: ChannelModel[] = []
 
@@ -27,13 +31,41 @@ export class ChatStore {
 
     const handlerMap: HandlerMap = {
       VAR() {},
+
       FRL() {},
       IGN() {},
       ADL() {},
-      LIS() {},
-      NLN() {},
-      FLN() {},
-      STA() {},
+
+      LIS({ characters }) {
+        for (const [name, gender, status, statusMessage] of characters) {
+          this.characters.set(
+            name,
+            new CharacterModel(name, gender, status, statusMessage),
+          )
+        }
+      },
+
+      NLN({ identity, gender, status }) {
+        this.characters.set(
+          identity,
+          new CharacterModel(identity, gender, status),
+        )
+      },
+
+      FLN({ character }) {
+        this.characters.delete(character)
+
+        for (const channel of this.channels) {
+          channel.users.delete(character)
+        }
+      },
+
+      STA({ character: name, status, statusmsg }) {
+        this.characters.update(name, (char) => {
+          char.status = status
+          char.statusMessage = statusmsg
+        })
+      },
 
       IDN() {
         this.socket.send({ type: "JCH", params: { channel: "Frontpage" } })
@@ -101,6 +133,18 @@ export class ChatStore {
             new MessageModel(character, message, "lfrp", Date.now()),
           )
         })
+      },
+
+      RLL(params) {
+        if ("channel" in params) {
+          const { channel: id, message } = params
+
+          this.updateChannel(id, (channel) => {
+            channel.messages.add(
+              new MessageModel(undefined, message, "system", Date.now()),
+            )
+          })
+        }
       },
     }
 

@@ -1,15 +1,16 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
 import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
+import { CharacterModel } from "./CharacterModel"
 import CharacterStatusText from "./CharacterStatusText"
 import { genderColors } from "./colors"
-import { Character } from "./types"
 
-type Props = TagProps<"div"> & { character: Character }
+type Props = TagProps<"div"> & { character: CharacterModel }
 
-function CharacterDetails({ character, ...props }: Props) {
+function CharacterSummary({ character, ...props }: Props) {
   const genderColor = { color: genderColors[character.gender] }
   return (
     <div {...props}>
@@ -18,12 +19,11 @@ function CharacterDetails({ character, ...props }: Props) {
       </h1>
       <Avatar name={character.name} css={tw`my-3`} />
       <CharacterStatusText
-        status={character.status}
-        statusMessage={character.statusMessage}
+        character={character}
         css={tw`px-3 py-2 bg-background-1`}
       />
     </div>
   )
 }
 
-export default CharacterDetails
+export default observer(CharacterSummary)

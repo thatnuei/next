@@ -1,8 +1,8 @@
-import { Message } from "../message/types"
+import { MessageModel } from "../message/MessageModel"
 
 export type PrivateChat = {
   partnerName: string
-  messages: Message[]
+  messages: MessageModel[]
 }
 
 export function createPrivateChat(partnerName: string): PrivateChat {

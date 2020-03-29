@@ -1,26 +1,29 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
+import { CharacterModel } from "./CharacterModel"
 import { genderColors, statusColors } from "./colors"
-import { CharacterGender, CharacterStatus } from "./types"
 
 type Props = TagProps<"span"> & {
-  name: string
-  gender: CharacterGender
-  status?: CharacterStatus
+  character: CharacterModel
 }
 
-function CharacterName({ name, gender, status }: Props) {
+function CharacterName({ character }: Props) {
   return (
     <span css={tw`font-weight-bold`}>
-      {status && (
-        <span css={[{ color: statusColors[status] }, statusDotStyle]}>•</span>
+      {character.status && (
+        <span css={[{ color: statusColors[character.status] }, statusDotStyle]}>
+          •
+        </span>
       )}
-      <span css={{ color: genderColors[gender] }}>{name}</span>
+      <span css={{ color: genderColors[character.gender] }}>
+        {character.name}
+      </span>
     </span>
   )
 }
 
-export default CharacterName
+export default observer(CharacterName)
 
 const statusDotStyle = tw`inline-block mr-1 transform scale-150`
