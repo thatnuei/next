@@ -1,9 +1,11 @@
+import { observable } from "mobx"
 import { ChannelModel } from "../channel/ChannelModel"
 import { MessageModel } from "../message/MessageModel"
 import { ServerCommand, ServerCommandRecord } from "./commands"
 import { SocketHandler } from "./SocketHandler"
 
 export class ChatStore {
+  @observable.shallow
   channels: ChannelModel[] = []
 
   constructor(private identity: string, private socket: SocketHandler) {}
