@@ -1,10 +1,14 @@
 // @ts-check
-const { rgb } = require("polished")
+const { rgb, rgba } = require("polished")
 
+// https://flatuicolors.com/palette/defo
 const midnight = rgb(38, 65, 94)
 const clouds = rgb(236, 240, 241)
-// const emerald = rgb(46, 204, 113)
-// const tomato = rgb(231, 76, 60)
+const emerald = rgb(46, 204, 113)
+const tomato = rgb(231, 76, 60)
+const sunflower = rgb(241, 196, 15)
+const carrot = rgb(230, 126, 34)
+const river = rgb(52, 152, 219)
 
 // TODO: customize responsive queries and give them better names: small, medium, large
 
@@ -25,9 +29,20 @@ module.exports = {
       "background-2": `var(--color-background-2)`,
       "text": `var(--color-text)`,
 
-      "shade": "rgba(0, 0, 0, 0.5)",
       "white": clouds,
       "black": midnight,
+      "black-faded": rgba(0, 0, 0, 0.5),
+
+      "red": tomato,
+      "red-faded": rgba(tomato, 0.25),
+      "green": emerald,
+      "green-faded": rgba(emerald, 0.25),
+      "blue": river,
+      "blue-faded": rgba(river, 0.25),
+      "yellow": sunflower,
+      "yellow-faded": rgba(sunflower, 0.25),
+      "orange": carrot,
+      "orange-faded": rgba(carrot, 0.25),
     },
     boxShadow: {
       normal: "0px 2px 12px rgba(0, 0, 0, 0.3)",
