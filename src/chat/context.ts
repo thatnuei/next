@@ -16,12 +16,18 @@ export const useChatContext = createContextWrapper(function useChat({
   identity: string
 }) {
   const socket = useMemo(() => new SocketHandler(), [])
-  const chatStore = useMemo(() => new ChatStore(socket), [socket])
   const characterStore = useMemo(() => new CharacterStore(), [])
+
+  const chatStore = useMemo(() => new ChatStore(socket, characterStore), [
+    socket,
+    characterStore,
+  ])
+
   const channelStore = useMemo(
     () => new ChannelStore(identity, characterStore),
     [identity, characterStore],
   )
+
   const navStore = useMemo(() => new ChatNavStore(channelStore), [channelStore])
 
   useEffect(() => {
