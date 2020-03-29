@@ -3,6 +3,7 @@ import React from "react"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import { useMediaQuery } from "../dom/useMediaQuery"
+import Drawer from "../ui/Drawer"
 import { fixedCover } from "../ui/helpers"
 import { screenQueries } from "../ui/screens"
 import ChatMenuButton from "./ChatMenuButton"
@@ -16,11 +17,21 @@ function Chat() {
   return (
     <div css={[fixedCover, tw`flex`]}>
       {!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
+
       {navStore.currentChannel ? (
         <ChannelView css={tw`flex-1`} channel={navStore.currentChannel} />
       ) : (
         // TODO: proper "no room" default header
         <ChatMenuButton />
+      )}
+
+      {isSmallScreen && (
+        <Drawer
+          isVisible={navStore.sideMenu.isVisible}
+          onClose={navStore.sideMenu.hide}
+        >
+          <ChatNav css={tw`h-full bg-background-2`} />
+        </Drawer>
       )}
     </div>
   )

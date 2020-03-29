@@ -44,7 +44,7 @@ function ChannelView({ channel, ...props }: Props) {
   return (
     <div css={tw`flex flex-col`} {...props}>
       <header css={tw`flex flex-row items-center p-3 bg-background-0`}>
-        <ChatMenuButton />
+        <ChatMenuButton css={tw`mr-3`} />
 
         <h1 css={[headerText2, tw`flex-1`]}>{channel.title}</h1>
         <ChannelFilters
