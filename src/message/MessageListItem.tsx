@@ -46,4 +46,4 @@ export default observer(MessageListItem)
 const messageStyle = tw`inline-block float-right ml-3 text-sm opacity-50`
 const lfrpStyle = css({ backgroundColor: rgba(emerald, 0.2) })
 const adminStyle = css({ backgroundColor: rgba(tomato, 0.2) })
-const systemStyle = tw`bg-shade`
+const systemStyle = tw`bg-black-faded`

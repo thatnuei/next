@@ -38,7 +38,7 @@ function Modal(props: Props) {
   }
 
   const shadeStyle = [
-    tw`flex flex-col items-center justify-center p-4 bg-shade`,
+    tw`flex flex-col items-center justify-center p-4 bg-black-faded`,
     fixedCover,
     props.model.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
     transition,

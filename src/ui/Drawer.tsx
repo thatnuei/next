@@ -30,7 +30,7 @@ function Drawer({ model, children }: Props) {
 
   const shadeStyle = [
     fixedCover,
-    tw`bg-shade`,
+    tw`bg-black-faded`,
     model.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
     transition,
     tw`transition-all`,

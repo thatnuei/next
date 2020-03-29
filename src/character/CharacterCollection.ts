@@ -17,6 +17,10 @@ export class CharacterCollection {
     this._names.delete(name)
   }
 
+  has(name: string) {
+    return this._names.has(name)
+  }
+
   @action
   setAll(names: Iterable<string>) {
     this._names = new Set(names)

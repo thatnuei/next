@@ -65,10 +65,7 @@ function ChannelView({ channel, ...props }: Props) {
         </main>
 
         {isLargeScreen && (
-          <ChannelUserList
-            characters={channel.users.characters}
-            css={tw`w-56 min-h-0 ml-gap`}
-          />
+          <ChannelUserList channel={channel} css={tw`w-56 min-h-0 ml-gap`} />
         )}
       </div>
 

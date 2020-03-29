@@ -22,6 +22,7 @@ export class ChatStore {
         params: { channel: "Story Driven LFRP" },
       })
       this.socket.send({ type: "JCH", params: { channel: "Development" } })
+      this.socket.send({ type: "JCH", params: { channel: "Femboy" } })
     },
 
     FRL({ characters }) {

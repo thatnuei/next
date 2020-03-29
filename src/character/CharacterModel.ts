@@ -2,7 +2,16 @@ import { observable } from "mobx"
 import { CharacterGender, CharacterStatus } from "./types"
 
 export class CharacterModel {
-  readonly name: string
+  constructor(
+    public readonly name: string,
+    gender: CharacterGender = "None",
+    status: CharacterStatus = "offline",
+    statusMessage: string = "",
+  ) {
+    this.gender = gender
+    this.status = status
+    this.statusMessage = statusMessage
+  }
 
   @observable
   gender: CharacterGender
@@ -12,16 +21,4 @@ export class CharacterModel {
 
   @observable
   statusMessage: string
-
-  constructor(
-    name: string,
-    gender: CharacterGender = "None",
-    status: CharacterStatus = "offline",
-    statusMessage: string = "",
-  ) {
-    this.name = name
-    this.gender = gender
-    this.status = status
-    this.statusMessage = statusMessage
-  }
 }

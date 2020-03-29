@@ -18,7 +18,7 @@ function DevTools() {
   })
 
   return visible ? (
-    <div css={tw`fixed top-0 left-0 right-0 bg-shade p-4 text-white`}>
+    <div css={tw`fixed top-0 left-0 right-0 p-4 text-white bg-black-faded`}>
       <FormField labelText="Theme">
         <select
           css={[select, tw`text-text`]}
