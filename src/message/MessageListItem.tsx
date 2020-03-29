@@ -2,39 +2,35 @@ import { css } from "@emotion/react"
 import { rgba } from "polished"
 import React from "react"
 import tw from "twin.macro"
-import CharacterName from "../character/CharacterName"
-import { Character } from "../character/types"
 import { emerald, tomato } from "../ui/theme.old"
-import { MessageType } from "./types"
+import { MessageModel } from "./MessageModel"
 
 type Props = {
-  sender?: Character
-  text: string
-  timestamp: number
-  type: MessageType
+  message: MessageModel
 }
 
-export default function MessageListItem(props: Props) {
+export default function MessageListItem({ message }: Props) {
   const typeStyle = {
     normal: undefined,
     lfrp: lfrpStyle,
     admin: adminStyle,
     system: systemStyle,
-  }[props.type]
+  }[message.type]
 
   return (
     <div css={[tw`px-3 py-2`, typeStyle]}>
       <span css={messageStyle}>
-        {new Date(props.timestamp).toLocaleTimeString()}
+        {new Date(message.timestamp).toLocaleTimeString()}
       </span>
 
-      {props.sender && (
+      {message.senderName && (
         <span css={tw`inline-block mr-2`}>
-          <CharacterName {...props.sender} />
+          {message.senderName}
+          {/* <CharacterName {...message.sender} /> */}
         </span>
       )}
 
-      <span>{props.text}</span>
+      <span>{message.text}</span>
     </div>
   )
 }

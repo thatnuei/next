@@ -1,7 +1,7 @@
 import React from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
-import { ChannelMode } from "./state"
+import { ChannelMode } from "./ChannelModel"
 
 type Props = {
   selectedMode: ChannelMode
@@ -13,7 +13,7 @@ export default function ChannelFilters(props: Props) {
     const isSelected = props.selectedMode === mode
 
     const style = [
-      tw`block ml-4 transition-opacity whitespace-no-wrap`,
+      tw`block ml-4 whitespace-no-wrap transition-opacity`,
       isSelected ? tw`opacity-100` : tw`opacity-50 hover:opacity-75`,
     ]
 

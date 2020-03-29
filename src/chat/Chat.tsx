@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react"
+import { observer } from "mobx-react-lite"
+import React, { useState } from "react"
 import tw from "twin.macro"
 import ChannelBrowser from "../channel/ChannelBrowser"
 import ChannelView from "../channel/ChannelView"
-import Avatar from "../character/Avatar"
-import CharacterDetails from "../character/CharacterDetails"
-import { safeIndex } from "../common/safeIndex"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
-import PrivateChatView from "../privateChat/PrivateChatView"
 import { fadedButton } from "../ui/components"
 import { fixedCover } from "../ui/helpers"
 import Icon from "../ui/Icon"
@@ -15,19 +12,11 @@ import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import ChatInput from "./ChatInput"
-import { chatState, subaru, testificate } from "./mockData"
 import NavAction from "./NavAction"
 import RoomTab from "./RoomTab"
-import { useSocket } from "./socket"
-import {
-  ChatState,
-  getChannel,
-  getCharacter,
-  getCharactersFromNames,
-  getFullMessages,
-  getPrivateChat,
-} from "./state"
 import UpdateStatus from "./UpdateStatus"
+import { useChatNavigation } from "./useChatNavigation"
+import { useChatStore } from "./useChatStore"
 
 type Props = {
   account: string
@@ -35,64 +24,21 @@ type Props = {
   identity: string
 }
 
-export type RoomView =
-  | { name: "channel"; channelId: string }
-  | { name: "private-chat"; partnerName: string }
-
-const rooms: RoomView[] = [
-  { name: "channel", channelId: "Frontpage" },
-  { name: "channel", channelId: "Fantasy" },
-  { name: "channel", channelId: "Story Driven LFRP" },
-  { name: "channel", channelId: "aiolofasjdf;asdmfoidfa;miosd;afanio;" },
-  { name: "private-chat", partnerName: subaru.name },
-]
-
 function Chat({ account, ticket, identity }: Props) {
-  const [, socketActions] = useSocket((command) => {
-    console.log(command)
-  })
+  const store = useChatStore({ account, ticket, identity })
 
-  useEffect(() => {
-    socketActions.connect({ account, ticket, identity })
-    return () => socketActions.disconnect()
-  }, [socketActions, account, ticket, identity])
-
-  const [activeRoom = safeIndex(rooms, 0), setActiveRoom] = useState<RoomView>()
-  const [channelBrowserVisible, setChannelBrowserVisible] = useState(false)
-  const [updateStatusVisible, setUpdateStatusVisible] = useState(false)
+  const { activeChannel, setRoom } = useChatNavigation(store)
 
   const isSmallScreen = useMediaQuery(screenQueries.small)
+
+  const [channelBrowserVisible, setChannelBrowserVisible] = useState(false)
+  const [updateStatusVisible, setUpdateStatusVisible] = useState(false)
 
   const menuButton = isSmallScreen && (
     <Button title="Show side menu" css={[fadedButton, tw`mr-3`]}>
       <Icon which={icons.menu} />
     </Button>
   )
-
-  function renderChannel(id: string) {
-    const channel = getChannel(chatState, id)
-    return (
-      <ChannelView
-        title={channel.title}
-        messages={getFullMessages(chatState, channel.messages)}
-        users={getCharactersFromNames(chatState, channel.users)}
-        chatInput={<ChatInput identity={identity} />}
-        menuButton={menuButton}
-      />
-    )
-  }
-
-  function renderPrivateChat(partnerName: string) {
-    const chat = getPrivateChat(chatState, partnerName)
-    return (
-      <PrivateChatView
-        partner={getCharacter(chatState, partnerName)}
-        messages={getFullMessages(chatState, chat.messages)}
-        menuButton={menuButton}
-        chatInput={<ChatInput identity={identity} />}
-      />
-    )
-  }
 
   return (
     <div css={[fixedCover, tw`flex`]}>
@@ -119,16 +65,18 @@ function Chat({ account, ticket, identity }: Props) {
           </div>
 
           <div css={tw`flex flex-col w-56`}>
-            <CharacterDetails
+            {/* <CharacterDetails
               character={testificate}
               css={tw`p-3 bg-background-0 mb-gap`}
-            />
+            /> */}
             <div css={tw`flex-1 bg-background-1`}>
-              {rooms.map((room) => (
+              {store.channels.map((channel) => (
                 <RoomTab
-                  {...getRoomProps(room, chatState)}
-                  state={activeRoom === room ? "active" : "inactive"}
-                  onClick={() => setActiveRoom(room)}
+                  key={channel.id}
+                  icon={<Icon which={icons.earth} />}
+                  title={channel.title}
+                  state={channel === activeChannel ? "active" : "inactive"}
+                  onClick={() => setRoom({ type: "channel", id: channel.id })}
                 />
               ))}
             </div>
@@ -137,9 +85,13 @@ function Chat({ account, ticket, identity }: Props) {
       )}
 
       <div css={tw`flex-1`}>
-        {activeRoom?.name === "channel" && renderChannel(activeRoom.channelId)}
-        {activeRoom?.name === "private-chat" &&
-          renderPrivateChat(activeRoom.partnerName)}
+        {activeChannel && (
+          <ChannelView
+            channel={activeChannel}
+            menuButton={menuButton}
+            chatInput={<ChatInput identity={identity} />}
+          />
+        )}
       </div>
 
       <Modal
@@ -171,23 +123,4 @@ function Chat({ account, ticket, identity }: Props) {
   )
 }
 
-export default Chat
-
-function getRoomProps(room: RoomView, chatState: ChatState) {
-  const iconSizeStyle = tw`w-5 h-5`
-
-  if (room.name === "channel") {
-    const channel = chatState.channels[room.channelId]
-    return {
-      key: `channel:${room.channelId}`,
-      title: channel?.title ?? room.channelId,
-      icon: <Icon which={icons.earth} css={iconSizeStyle} />,
-    }
-  }
-
-  return {
-    key: `private-chat:${room.partnerName}`,
-    title: room.partnerName,
-    icon: <Avatar name={room.partnerName} css={iconSizeStyle} />,
-  }
-}
+export default observer(Chat)

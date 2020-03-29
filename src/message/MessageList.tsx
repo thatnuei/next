@@ -2,16 +2,18 @@ import React from "react"
 import tw from "twin.macro"
 import { scrollVertical } from "../ui/helpers"
 import MessageListItem from "./MessageListItem"
-import { Message } from "./types"
+import { MessageModel } from "./MessageModel"
 
-type Props = { messages: Message[] }
+type Props = {
+  messages: readonly MessageModel[]
+}
 
 function MessageList({ messages }: Props) {
   return (
     <ol css={[tw`w-full h-full`, scrollVertical]}>
-      {messages.map(({ key, ...message }) => (
-        <li key={key}>
-          <MessageListItem {...message} />
+      {messages.map((message) => (
+        <li key={message.key}>
+          <MessageListItem message={message} />
         </li>
       ))}
     </ol>

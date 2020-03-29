@@ -1,49 +1,49 @@
+import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
 import tw from "twin.macro"
-import CharacterList from "../character/CharacterList"
-import { Character } from "../character/types"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import MessageList from "../message/MessageList"
-import { Message, MessageType } from "../message/types"
+import { MessageModel } from "../message/MessageModel"
+import { MessageType } from "../message/types"
 import { fadedButton, headerText2 } from "../ui/components"
 import Icon from "../ui/Icon"
 import { users } from "../ui/icons"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
-import { ChannelMode } from "./state"
+import { ChannelMode, ChannelModel } from "./ChannelModel"
 
 type Props = {
-  title: string
-  messages: Message[]
-  users: Character[]
+  channel: ChannelModel
   chatInput: React.ReactNode
   menuButton: React.ReactNode
 }
 
-function ChannelView(props: Props) {
+function ChannelView({ channel, chatInput, menuButton }: Props) {
   const [selectedMode, setSelectedMode] = useState<ChannelMode>("both")
   const isLargeScreen = useMediaQuery(screenQueries.large)
 
   function getFilteredMessages() {
-    const isType = (...types: MessageType[]) => (message: Message) =>
+    const isType = (...types: MessageType[]) => (message: MessageModel) =>
       types.includes(message.type)
 
     if (selectedMode === "chat") {
-      return props.messages.filter(isType("normal", "system", "admin"))
+      return channel.messages.messages.filter(
+        isType("normal", "system", "admin"),
+      )
     }
     if (selectedMode === "ads") {
-      return props.messages.filter(isType("lfrp", "system", "admin"))
+      return channel.messages.messages.filter(isType("lfrp", "system", "admin"))
     }
-    return props.messages
+    return channel.messages.messages
   }
 
   return (
     <div css={tw`flex flex-col w-full h-full`}>
       <div css={tw`flex flex-row items-center p-3 bg-background-0`}>
-        {props.menuButton}
+        {menuButton}
 
-        <h1 css={[headerText2, tw`flex-1`]}>{props.title}</h1>
+        <h1 css={[headerText2, tw`flex-1`]}>{channel.title}</h1>
         <ChannelFilters
           selectedMode={selectedMode}
           onModeChange={setSelectedMode}
@@ -61,14 +61,14 @@ function ChannelView(props: Props) {
           <MessageList messages={getFilteredMessages()} />
         </div>
 
-        {isLargeScreen && (
-          <CharacterList characters={props.users} css={tw`w-64 ml-gap`} />
-        )}
+        {/* {isLargeScreen && (
+          <CharacterList characters={channel.users} css={tw`w-64 ml-gap`} />
+        )} */}
       </div>
 
-      {props.chatInput}
+      {chatInput}
     </div>
   )
 }
 
-export default ChannelView
+export default observer(ChannelView)
