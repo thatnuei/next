@@ -48,7 +48,7 @@ function RoomTab(props: Props) {
           dangerouslySetInnerHTML={{ __html: props.title }}
         />
       </Button>
-      <Button css={[fadedButton, tw`p-2`]}>
+      <Button css={[fadedButton, tw`p-2`]} title="Close">
         <Icon which={close} css={tw`w-5 h-5`} />
       </Button>
     </div>
