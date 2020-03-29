@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
 import tw from "twin.macro"
 import ChatInput from "../chat/ChatInput"
+import ChatMenuButton from "../chat/ChatMenuButton"
 import { useChatContext } from "../chat/context"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
@@ -18,10 +19,9 @@ import { ChannelMode, ChannelModel } from "./ChannelModel"
 
 type Props = {
   channel: ChannelModel
-  menuButton: React.ReactNode
 } & TagProps<"div">
 
-function ChannelView({ channel, menuButton, ...props }: Props) {
+function ChannelView({ channel, ...props }: Props) {
   const { identity } = useChatContext()
   const [selectedMode, setSelectedMode] = useState<ChannelMode>("both")
   const isLargeScreen = useMediaQuery(screenQueries.large)
@@ -44,7 +44,7 @@ function ChannelView({ channel, menuButton, ...props }: Props) {
   return (
     <div css={tw`flex flex-col`} {...props}>
       <header css={tw`flex flex-row items-center p-3 bg-background-0`}>
-        {menuButton}
+        <ChatMenuButton />
 
         <h1 css={[headerText2, tw`flex-1`]}>{channel.title}</h1>
         <ChannelFilters
