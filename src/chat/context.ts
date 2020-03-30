@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react"
+import { ChannelBrowserStore } from "../channel/ChannelBrowserStore"
 import { ChannelStore } from "../channel/ChannelStore"
 import { CharacterStore } from "../character/CharacterStore"
 import createContextWrapper from "../react/createContextWrapper"
@@ -16,6 +17,7 @@ export const useChatContext = createContextWrapper(function useChat({
   identity: string
 }) {
   const socket = useMemo(() => new SocketHandler(), [])
+
   const characterStore = useMemo(() => new CharacterStore(), [])
 
   const chatStore = useMemo(() => new ChatStore(socket, characterStore), [
@@ -24,9 +26,13 @@ export const useChatContext = createContextWrapper(function useChat({
   ])
 
   const channelStore = useMemo(
-    () => new ChannelStore(identity, characterStore),
-    [identity, characterStore],
+    () => new ChannelStore(identity, socket, characterStore),
+    [identity, socket, characterStore],
   )
+
+  const channelBrowserStore = useMemo(() => new ChannelBrowserStore(socket), [
+    socket,
+  ])
 
   const navStore = useMemo(() => new ChatNavStore(channelStore), [channelStore])
 
@@ -36,6 +42,7 @@ export const useChatContext = createContextWrapper(function useChat({
         chatStore.handleCommand(command),
         characterStore.handleCommand(command),
         channelStore.handleCommand(command),
+        channelBrowserStore.handleCommand(command),
       ].some((result) => result === true)
 
       if (!wasHandled && process.env.NODE_ENV === "development") {
@@ -53,9 +60,17 @@ export const useChatContext = createContextWrapper(function useChat({
     chatStore,
     characterStore,
     channelStore,
+    channelBrowserStore,
   ])
 
-  return { identity, chatStore, characterStore, channelStore, navStore }
+  return {
+    identity,
+    chatStore,
+    characterStore,
+    channelStore,
+    channelBrowserStore,
+    navStore,
+  }
 })
 
 export const ChatProvider = useChatContext.Provider

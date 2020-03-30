@@ -5,14 +5,17 @@ import { useChatContext } from "./context"
 import NavAction from "./NavAction"
 
 function ChatNavActions() {
-  const { navStore } = useChatContext()
+  const { navStore, channelBrowserStore } = useChatContext()
 
   return (
     <>
       <NavAction
         icon={icons.list}
         title="Browse channels"
-        onClick={navStore.channelBrowser.show}
+        onClick={() => {
+          navStore.channelBrowser.show()
+          channelBrowserStore.refresh()
+        }}
       />
       <NavAction
         icon={icons.updateStatus}

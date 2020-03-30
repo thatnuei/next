@@ -1,17 +1,31 @@
 import { observable } from "mobx"
 import { CharacterStore } from "../character/CharacterStore"
 import { createCommandHandler } from "../chat/commands"
+import { SocketHandler } from "../chat/SocketHandler"
 import { MessageModel } from "../message/MessageModel"
 import { ChannelModel } from "./ChannelModel"
 
 export class ChannelStore {
   constructor(
-    private identity: string,
-    private characterStore: CharacterStore,
+    private readonly identity: string,
+    private readonly socket: SocketHandler,
+    private readonly characterStore: CharacterStore,
   ) {}
 
   @observable.shallow
   channels: ChannelModel[] = []
+
+  isJoined(id: string) {
+    return this.channels.some((channel) => channel.id === id)
+  }
+
+  join(id: string) {
+    this.socket.send({ type: "JCH", params: { channel: id } })
+  }
+
+  leave(id: string) {
+    this.socket.send({ type: "LCH", params: { channel: id } })
+  }
 
   private updateChannel(id: string, doUpdate: (channel: ChannelModel) => void) {
     const channel = this.channels.find((it) => it.id === id)
