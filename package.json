@@ -18,6 +18,7 @@
     "@mdi/js": "^5.0.45",
     "fchat": "^1.4.0",
     "focus-visible": "^5.0.2",
+    "fuzzysearch": "^1.0.3",
     "idb-keyval": "^3.2.0",
     "lodash": "^4.17.15",
     "mobx": "^5.15.4",
