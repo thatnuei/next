@@ -7,13 +7,11 @@ import { ThemeProvider } from "./ui/theme"
 
 export default function Root() {
   return (
-    <React.StrictMode>
-      <ThemeProvider>
-        <App />
-        <Reset />
-        <FocusVisible />
-        {process.env.NODE_ENV === "development" && <DevTools />}
-      </ThemeProvider>
-    </React.StrictMode>
+    <ThemeProvider>
+      <App />
+      <Reset />
+      <FocusVisible />
+      {process.env.NODE_ENV === "development" && <DevTools />}
+    </ThemeProvider>
   )
 }
