@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { useState } from "react"
+import React from "react"
 import tw from "twin.macro"
 import ChatInput from "../chat/ChatInput"
 import ChatMenuButton from "../chat/ChatMenuButton"
@@ -14,7 +14,7 @@ import Icon from "../ui/Icon"
 import { users } from "../ui/icons"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
-import { ChannelMode, ChannelModel } from "./ChannelModel"
+import { ChannelModel } from "./ChannelModel"
 import ChannelUserList from "./ChannelUserList"
 
 type Props = {
@@ -22,22 +22,22 @@ type Props = {
 } & TagProps<"div">
 
 function ChannelView({ channel, ...props }: Props) {
-  // TODO: use selectedMode in channel model
-  const [selectedMode, setSelectedMode] = useState<ChannelMode>("both")
   const isLargeScreen = useMediaQuery(screenQueries.large)
 
   const isType = (...types: MessageType[]) => (message: MessageModel) =>
     types.includes(message.type)
 
   const filteredMessages = (() => {
-    if (selectedMode === "chat") {
+    if (channel.selectedMode === "chat") {
       return channel.messageList.items.filter(
         isType("normal", "system", "admin"),
       )
     }
-    if (selectedMode === "ads") {
+
+    if (channel.selectedMode === "ads") {
       return channel.messageList.items.filter(isType("lfrp", "system", "admin"))
     }
+
     return channel.messageList.items
   })()
 
@@ -48,8 +48,8 @@ function ChannelView({ channel, ...props }: Props) {
 
         <h1 css={[headerText2, tw`flex-1`]}>{channel.title}</h1>
         <ChannelFilters
-          selectedMode={selectedMode}
-          onModeChange={setSelectedMode}
+          selectedMode={channel.selectedMode}
+          onModeChange={channel.setSelectedMode}
         />
 
         {!isLargeScreen && (

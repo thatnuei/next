@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { action, observable } from "mobx"
 import { CharacterCollection } from "../character/CharacterCollection"
 import { CharacterStore } from "../character/CharacterStore"
 import { MessageListModel } from "../message/MessageListModel"
@@ -17,6 +17,11 @@ export class ChannelModel {
 
   users = new CharacterCollection(this.characterStore)
   ops = new CharacterCollection(this.characterStore)
+
+  @action
+  setSelectedMode = (mode: ChannelMode) => {
+    this.selectedMode = mode
+  }
 }
 
 export type ChannelMode = "both" | "chat" | "ads"
