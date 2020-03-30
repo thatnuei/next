@@ -1,10 +1,7 @@
-import { css } from "@emotion/react"
-import { rgba } from "polished"
 import React from "react"
 import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
 import { useChatContext } from "../chat/context"
-import { emerald, tomato } from "../ui/theme.old"
 import { MessageModel } from "./MessageModel"
 
 type Props = {
@@ -43,6 +40,6 @@ function MessageListItem({ message }: Props) {
 export default MessageListItem
 
 const messageStyle = tw`inline-block float-right ml-3 text-sm opacity-50`
-const lfrpStyle = css({ backgroundColor: rgba(emerald, 0.2) })
-const adminStyle = css({ backgroundColor: rgba(tomato, 0.2) })
+const lfrpStyle = tw`bg-green-faded`
+const adminStyle = tw`bg-red-faded`
 const systemStyle = tw`bg-black-faded`

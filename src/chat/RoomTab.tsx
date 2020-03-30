@@ -1,5 +1,4 @@
 import { css } from "@emotion/react"
-import { transparentize } from "polished"
 import React from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
@@ -7,7 +6,6 @@ import { fadedButton } from "../ui/components"
 import { transition } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { close } from "../ui/icons"
-import { emerald } from "../ui/theme.old"
 
 type Props = {
   title: string
@@ -18,9 +16,7 @@ type Props = {
 
 const inactiveHoverReveal = tw`opacity-50 hover:opacity-75`
 
-const unreadHighlight = css({
-  backgroundColor: transparentize(0.8, emerald),
-})
+const unreadHighlight = tw`bg-green-faded`
 
 const ellipsize = css({
   overflow: "hidden",
