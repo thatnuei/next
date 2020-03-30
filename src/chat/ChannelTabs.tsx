@@ -13,7 +13,10 @@ function ChannelTabs() {
       icon={<Icon which={icons.earth} />}
       title={channel.title}
       state={channel === navStore.currentChannel ? "active" : "inactive"}
-      onClick={() => navStore.setRoom({ type: "channel", id: channel.id })}
+      onClick={() => {
+        navStore.setRoom({ type: "channel", id: channel.id })
+        navStore.sideMenu.hide()
+      }}
     />
   )) as any
 }
