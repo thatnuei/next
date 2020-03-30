@@ -1,5 +1,4 @@
 import { css } from "@emotion/react"
-import { observer } from "mobx-react-lite"
 import { rgba } from "polished"
 import React from "react"
 import tw from "twin.macro"
@@ -23,7 +22,7 @@ function MessageListItem({ message }: Props) {
   }[message.type]
 
   return (
-    <div css={[tw`px-3 py-2`, typeStyle]}>
+    <div css={[tw`px-3 py-1`, typeStyle]}>
       <span css={messageStyle}>
         {new Date(message.timestamp).toLocaleTimeString()}
       </span>
@@ -36,12 +35,12 @@ function MessageListItem({ message }: Props) {
         </span>
       )}
 
-      <span>{message.text}</span>
+      <span dangerouslySetInnerHTML={{ __html: message.text }} />
     </div>
   )
 }
 
-export default observer(MessageListItem)
+export default MessageListItem
 
 const messageStyle = tw`inline-block float-right ml-3 text-sm opacity-50`
 const lfrpStyle = css({ backgroundColor: rgba(emerald, 0.2) })
