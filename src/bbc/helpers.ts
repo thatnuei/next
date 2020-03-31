@@ -14,7 +14,7 @@ function captureOpenTag(
   const openTagMatch = matchAt(bbcString, openTagExpression, position)
   if (openTagMatch) {
     const [text, tag, value = ""] = openTagMatch
-    return { type: "open-tag", text, tag, value }
+    return { type: "open-tag", text, tag: tag.toLowerCase(), value }
   }
 }
 
@@ -25,7 +25,7 @@ function captureCloseTag(
   const closeTagMatch = matchAt(bbcString, closeTagExpression, position)
   if (closeTagMatch) {
     const [text, tag] = closeTagMatch
-    return { type: "close-tag", text, tag }
+    return { type: "close-tag", text, tag: tag.toLowerCase() }
   }
 }
 
@@ -117,4 +117,20 @@ export function parse(tokens: Token[]): Node[] {
 
 export function createBbcTree(bbcText: string) {
   return parse(tokenize(bbcText))
+}
+
+/** Returns the entire node as tags, start and end tags included (think outerHTML) */
+export function getNodeAsText(node: Node): string {
+  if (node.type === "text") return node.text
+
+  const startTagText = `[${node.tag}${node.value ? `=${node.value}` : ""}]`
+  const endTagText = `[/${node.tag}]`
+  const innerText = node.children.map(getNodeAsText).join("")
+  return `${startTagText}${innerText}${endTagText}`
+}
+
+/** Returns just the children of the node as text, excluding the start and end tags (think innerHTML) */
+export function getNodeChildrenAsText(node: Node): string {
+  if (node.type === "text") return node.text
+  return node.children.map(getNodeAsText).join("")
 }

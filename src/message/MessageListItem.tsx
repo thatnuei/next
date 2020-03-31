@@ -1,5 +1,6 @@
 import React from "react"
 import tw from "twin.macro"
+import BBC from "../bbc/BBC"
 import CharacterName from "../character/CharacterName"
 import { useChatContext } from "../chat/context"
 import { MessageModel } from "./MessageModel"
@@ -32,7 +33,7 @@ function MessageListItem({ message }: Props) {
         </span>
       )}
 
-      <span dangerouslySetInnerHTML={{ __html: message.text }} />
+      <BBC text={message.text} />
     </div>
   )
 }
