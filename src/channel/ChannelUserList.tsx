@@ -1,10 +1,10 @@
-import sortBy from "lodash/sortBy"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import { CharacterModel } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
 import { useChatContext } from "../chat/context"
+import { compare } from "../common/compare"
 import { ValueOf } from "../common/types"
 import { TagProps } from "../jsx/types"
 import VirtualizedList from "../ui/VirtualizedList"
@@ -46,11 +46,9 @@ function ChannelUserList({ channel, ...props }: Props) {
     }
   })
 
-  const sortedItems = sortBy(
-    listItems,
-    (item) => item.order,
-    (item) => item.character.name.toLowerCase(),
-  )
+  const sortedItems = listItems
+    .sort(compare((it) => it.character.name.toLowerCase()))
+    .sort(compare((it) => it.order))
 
   return (
     <div css={tw`flex flex-col`} {...props}>

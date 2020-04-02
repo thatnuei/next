@@ -1,9 +1,9 @@
 import fuzzysearch from "fuzzysearch"
-import sortBy from "lodash/sortBy"
 import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
 import tw from "twin.macro"
 import { useChatContext } from "../chat/context"
+import { compare, compareReverse } from "../common/compare"
 import Button from "../dom/Button"
 import { TagProps } from "../jsx/types"
 import { input, solidButton } from "../ui/components"
@@ -29,8 +29,8 @@ function ChannelBrowser(props: Props) {
 
     const sorted =
       sortMode === "title"
-        ? sortBy(channels, (it) => it.title.toLowerCase())
-        : sortBy(channels, (it) => it.userCount).reverse()
+        ? [...channels].sort(compare((it) => it.title.toLowerCase()))
+        : [...channels].sort(compareReverse((it) => it.userCount))
 
     return normalizedQuery
       ? sorted.filter((it) =>
