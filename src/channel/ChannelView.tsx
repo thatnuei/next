@@ -14,8 +14,8 @@ import Icon from "../ui/Icon"
 import { users } from "../ui/icons"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
-import { ChannelModel } from "./ChannelModel"
 import ChannelUserList from "./ChannelUserList"
+import { ChannelModel } from "./state"
 
 type Props = {
   channel: ChannelModel

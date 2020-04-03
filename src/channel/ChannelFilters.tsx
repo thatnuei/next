@@ -1,7 +1,7 @@
 import React from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
-import { ChannelMode } from "./ChannelModel"
+import { ChannelMode } from "./state"
 
 type Props = {
   selectedMode: ChannelMode

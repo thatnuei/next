@@ -3,6 +3,7 @@ import React from "react"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
+import { useChatNav } from "../chatNav/state"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import Drawer from "../ui/Drawer"
@@ -12,11 +13,10 @@ import { screenQueries } from "../ui/screens"
 import ChatMenuButton from "./ChatMenuButton"
 import ChatNav from "./ChatNav"
 import { useChatContext } from "./context"
-import { useNavState } from "../chatNav/state"
 
 function Chat() {
   const { state } = useChatContext()
-  const { currentChannel } = useNavState()
+  const { currentChannel } = useChatNav()
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
   return (

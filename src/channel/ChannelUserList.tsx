@@ -8,7 +8,7 @@ import { compare } from "../common/compare"
 import { ValueOf } from "../common/types"
 import { TagProps } from "../jsx/types"
 import VirtualizedList from "../ui/VirtualizedList"
-import { ChannelModel } from "./ChannelModel"
+import { ChannelModel } from "./state"
 
 type Props = TagProps<"div"> & {
   channel: ChannelModel

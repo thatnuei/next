@@ -1,6 +1,6 @@
 import React, { CSSProperties, PropsWithChildren } from "react"
 import tw from "twin.macro"
-import { useChannelActions } from "../channel/actions"
+import { useChannels } from "../channel/state"
 import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
 import { useChatContext } from "../chat/context"
@@ -180,7 +180,7 @@ function BBCChannelLink({
   title: string
   type: "public" | "private"
 }>) {
-  const { join } = useChannelActions()
+  const { join } = useChannels()
 
   return (
     <span css={tw`inline-flex items-baseline leading-none`}>

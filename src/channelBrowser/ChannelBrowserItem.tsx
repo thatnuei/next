@@ -1,6 +1,6 @@
 import React from "react"
 import tw from "twin.macro"
-import { useChannelActions } from "../channel/actions"
+import { useChannels } from "../channel/state"
 import { TagProps } from "../jsx/types"
 import Icon from "../ui/Icon"
 import { earth, lock } from "../ui/icons"
@@ -11,7 +11,7 @@ type Props = TagProps<"button"> & {
 }
 
 function ChannelBrowserItem({ info, ...props }: Props) {
-  const { join, leave, isJoined: isChannelJoined } = useChannelActions()
+  const { join, leave, isJoined: isChannelJoined } = useChannels()
 
   const isJoined = isChannelJoined(info.id)
 
