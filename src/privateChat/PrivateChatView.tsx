@@ -23,7 +23,7 @@ function PrivateChatView({ chat, ...props }: Props) {
   return (
     <div css={tw`flex flex-col`} {...props}>
       <div css={tw`flex flex-row items-center p-3 bg-background-0`}>
-        <ChatMenuButton />
+        <ChatMenuButton css={tw`mr-3`} />
         <Avatar name={chat.partnerName} css={tw`w-12 h-12`} />
         <div css={[tw`flex flex-col ml-3`, scrollVertical, { maxHeight: 60 }]}>
           <CharacterName character={character} />
