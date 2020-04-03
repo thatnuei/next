@@ -5,12 +5,7 @@ import {
   parseServerCommand,
   ServerCommand,
 } from "./commandHelpers"
-
-type SocketCredentials = {
-  account: string
-  ticket: string
-  identity: string
-}
+import { ChatCredentials } from "./types"
 
 type SocketListener = (command: ServerCommand) => void
 
@@ -30,7 +25,7 @@ export class SocketHandler {
 
   private socket?: WebSocket
 
-  connect({ account, ticket, identity }: SocketCredentials) {
+  connect({ account, ticket, identity }: ChatCredentials) {
     this.status = "connecting"
 
     const socket = (this.socket = new WebSocket(`wss://chat.f-list.net/chat2`))
