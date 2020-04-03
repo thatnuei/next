@@ -6,16 +6,9 @@ import createContextWrapper from "../react/createContextWrapper"
 import { ChatNavStore } from "./ChatNavStore"
 import { ChatStore } from "./ChatStore"
 import { SocketHandler } from "./SocketHandler"
+import { ChatCredentials } from "./types"
 
-export const useChatContext = createContextWrapper(function useChat({
-  account,
-  ticket,
-  identity,
-}: {
-  account: string
-  ticket: string
-  identity: string
-}) {
+function useChat({ account, ticket, identity }: ChatCredentials) {
   const socket = useMemo(() => new SocketHandler(), [])
 
   const characterStore = useMemo(() => new CharacterStore(), [])
@@ -71,6 +64,7 @@ export const useChatContext = createContextWrapper(function useChat({
     channelBrowserStore,
     navStore,
   }
-})
+}
 
+export const useChatContext = createContextWrapper(useChat)
 export const ChatProvider = useChatContext.Provider
