@@ -1,18 +1,15 @@
-import { useDebugValue, useEffect, useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { createChannelCommandHandler } from "../channel/commands"
 import { createChannelBrowserCommandHandler } from "../channelBrowser/state"
 import { createCharacterCommandHandler } from "../character/helpers"
 import createContextWrapper from "../react/createContextWrapper"
-import { useInstanceValue } from "../react/useInstanceValue"
 import { ChatState } from "./ChatState"
 import { combineCommandHandlers } from "./commands"
 import { SocketHandler } from "./SocketHandler"
 import { ChatCredentials } from "./types"
 
 function useChat({ account, ticket, identity }: ChatCredentials) {
-  const state = useInstanceValue(() => new ChatState())
-  useDebugValue(state)
-
+  const state = useMemo(() => new ChatState(), [])
   const socket = useMemo(() => new SocketHandler(), [])
 
   const handleCommand = useMemo(
