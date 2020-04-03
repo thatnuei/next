@@ -1,21 +1,20 @@
 import React from "react"
 import tw from "twin.macro"
+import { useChannelBrowserActions } from "../channelBrowser/state"
 import * as icons from "../ui/icons"
 import { useChatContext } from "./context"
 import NavAction from "./NavAction"
 
 function ChatNavActions() {
-  const { navStore, channelBrowserStore } = useChatContext()
+  const { navStore } = useChatContext()
+  const { openChannelBrowser } = useChannelBrowserActions()
 
   return (
     <>
       <NavAction
         icon={icons.list}
         title="Browse channels"
-        onClick={() => {
-          navStore.channelBrowser.show()
-          channelBrowserStore.refresh()
-        }}
+        onClick={openChannelBrowser}
       />
       <NavAction
         icon={icons.updateStatus}

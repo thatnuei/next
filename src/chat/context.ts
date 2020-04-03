@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react"
-import { ChannelBrowserStore } from "../channel/ChannelBrowserStore"
+import { createChannelBrowserCommandHandler } from "../channelBrowser/state"
 import { ChannelStore } from "../channel/ChannelStore"
 import { CharacterStore } from "../character/CharacterStore"
 import { createCharacterCommandHandler } from "../character/helpers"
@@ -17,7 +17,11 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
   const socket = useMemo(() => new SocketHandler(), [])
 
   const handleCommand = useMemo(
-    () => combineCommandHandlers([createCharacterCommandHandler(state)]),
+    () =>
+      combineCommandHandlers([
+        createCharacterCommandHandler(state),
+        createChannelBrowserCommandHandler(state),
+      ]),
     [state],
   )
 
@@ -27,10 +31,6 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
     () => new ChannelStore(identity, socket, characterStore),
     [identity, socket, characterStore],
   )
-
-  const channelBrowserStore = useMemo(() => new ChannelBrowserStore(socket), [
-    socket,
-  ])
 
   const navStore = useMemo(() => new ChatNavStore(channelStore), [channelStore])
 
@@ -50,7 +50,6 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
       const wasHandled = [
         handleCommand(command),
         channelStore.handleCommand(command),
-        channelBrowserStore.handleCommand(command),
       ].some((result) => result === true)
 
       if (!wasHandled && process.env.NODE_ENV === "development") {
@@ -67,16 +66,15 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
     identity,
     characterStore,
     channelStore,
-    channelBrowserStore,
     handleCommand,
   ])
 
   return {
     state,
+    socket,
     identity,
     characterStore,
     channelStore,
-    channelBrowserStore,
     navStore,
   }
 }

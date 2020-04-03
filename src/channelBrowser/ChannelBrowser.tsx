@@ -9,15 +9,16 @@ import { TagProps } from "../jsx/types"
 import { input, solidButton } from "../ui/components"
 import { scrollVertical } from "../ui/helpers"
 import Icon from "../ui/Icon"
-import { refresh, sortAlphabetical } from "../ui/icons"
+import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
-import { ChannelBrowserItemInfo } from "./ChannelBrowserStore"
+import { ChannelBrowserItemInfo, useChannelBrowserActions } from "./state"
 
 type Props = TagProps<"div">
 
 function ChannelBrowser(props: Props) {
-  const { channelBrowserStore } = useChatContext()
+  const { state } = useChatContext()
+  const { refresh } = useChannelBrowserActions()
   const [query, setQuery] = useState("")
   const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
 
@@ -40,8 +41,8 @@ function ChannelBrowser(props: Props) {
   }
 
   const channels = [
-    ...processChannels(channelBrowserStore.publicChannels),
-    ...processChannels(channelBrowserStore.privateChannels),
+    ...processChannels(state.channelBrowser.publicChannels),
+    ...processChannels(state.channelBrowser.privateChannels),
   ]
 
   return (
@@ -71,15 +72,15 @@ function ChannelBrowser(props: Props) {
           css={[solidButton, tw`ml-2`]}
           onClick={cycleSortMode}
         >
-          <Icon which={sortAlphabetical} />
+          <Icon which={icons.sortAlphabetical} />
         </Button>
         <Button
           title="Refresh"
           css={[solidButton, tw`ml-2`]}
-          onClick={channelBrowserStore.refresh}
-          disabled={!channelBrowserStore.canRefresh}
+          onClick={refresh}
+          disabled={!state.channelBrowser.canRefresh}
         >
-          <Icon which={refresh} />
+          <Icon which={icons.refresh} />
         </Button>
       </footer>
     </div>
