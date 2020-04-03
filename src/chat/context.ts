@@ -4,7 +4,7 @@ import { createChannelBrowserCommandHandler } from "../channelBrowser/state"
 import { createCharacterCommandHandler } from "../character/helpers"
 import createContextWrapper from "../react/createContextWrapper"
 import { ChatState } from "./ChatState"
-import { combineCommandHandlers } from "./commands"
+import { combineCommandHandlers } from "./commandHelpers"
 import { SocketHandler } from "./SocketHandler"
 import { ChatCredentials } from "./types"
 

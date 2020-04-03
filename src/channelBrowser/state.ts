@@ -1,6 +1,6 @@
 import { observable } from "mobx"
 import { ChatState } from "../chat/ChatState"
-import { createCommandHandler } from "../chat/commands"
+import { createCommandHandler } from "../chat/commandHelpers"
 import { useChatContext } from "../chat/context"
 
 export type ChannelBrowserItemInfo = {

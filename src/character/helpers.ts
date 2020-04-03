@@ -1,5 +1,5 @@
 import { ChatState } from "../chat/ChatState"
-import { createCommandHandler } from "../chat/commands"
+import { createCommandHandler } from "../chat/commandHelpers"
 
 export function createCharacterCommandHandler(state: ChatState) {
   return createCommandHandler(undefined, {

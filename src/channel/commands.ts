@@ -1,5 +1,5 @@
 import { ChatState } from "../chat/ChatState"
-import { createCommandHandler } from "../chat/commands"
+import { createCommandHandler } from "../chat/commandHelpers"
 import { MessageModel } from "../message/MessageModel"
 import { ChannelModel } from "./ChannelModel"
 

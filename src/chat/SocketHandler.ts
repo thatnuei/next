@@ -4,7 +4,7 @@ import {
   createCommandString,
   parseServerCommand,
   ServerCommand,
-} from "./commands"
+} from "./commandHelpers"
 
 type SocketCredentials = {
   account: string
