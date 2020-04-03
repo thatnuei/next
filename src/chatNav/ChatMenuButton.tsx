@@ -1,4 +1,5 @@
 import React from "react"
+import { useChatContext } from "../chat/context"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { TagProps } from "../jsx/types"
@@ -6,7 +7,6 @@ import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import { screenQueries } from "../ui/screens"
-import { useChatContext } from "./context"
 
 type Props = TagProps<"button">
 

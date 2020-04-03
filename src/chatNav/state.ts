@@ -9,6 +9,8 @@ type Room =
   | { key: string; type: "channel"; id: string }
   | { key: string; type: "privateChat"; partnerName: string }
 
+export const getChannelKey = (id: string) => `channel-${id}`
+
 export class RoomListModel {
   @observable.shallow
   rooms: Room[] = []
@@ -48,6 +50,7 @@ export function useChatNav() {
     currentChannel,
     setRoom(room: Room) {
       state.roomList.currentKey = room.key
+      state.sideMenuOverlay.hide()
     },
   }
 }
@@ -70,13 +73,13 @@ export function createChatNavCommandHandler(
 
     JCH({ character, channel: id }) {
       if (character.identity === identity) {
-        state.roomList.add({ type: "channel", id, key: `channel-${id}` })
+        state.roomList.add({ type: "channel", id, key: getChannelKey(id) })
       }
     },
 
     LCH({ character, channel }) {
       if (character === identity) {
-        state.roomList.remove(`channel-${channel}`)
+        state.roomList.remove(getChannelKey(channel))
       }
     },
   })

@@ -1,35 +1,29 @@
-import { css } from "@emotion/react"
 import React from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
 import { fadedButton } from "../ui/components"
-import { transition } from "../ui/helpers"
+import { ellipsize, transition } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { close } from "../ui/icons"
 
 type Props = {
   title: string
   icon: React.ReactNode
-  state: "inactive" | "active" | "unread"
+  isActive: boolean
+  isUnread: boolean
   onClick: () => void
 }
 
-const inactiveHoverReveal = tw`opacity-50 hover:opacity-75`
-
-const unreadHighlight = tw`bg-green-faded`
-
-const ellipsize = css({
-  overflow: "hidden",
-  whiteSpace: "nowrap",
-  textOverflow: "ellipsis",
-})
-
 function RoomTab(props: Props) {
-  const activeStateStyle = {
-    inactive: inactiveHoverReveal,
-    active: tw`bg-background-0`,
-    unread: [inactiveHoverReveal, unreadHighlight],
-  }[props.state]
+  const inactiveHoverReveal = tw`opacity-50 hover:opacity-75`
+
+  const unreadHighlight = tw`bg-green-faded`
+
+  const activeStateStyle = (() => {
+    if (props.isActive) return tw`bg-background-0`
+    if (props.isUnread) return [inactiveHoverReveal, unreadHighlight]
+    return inactiveHoverReveal
+  })()
 
   return (
     <div css={[tw`flex flex-row items-center`, activeStateStyle, transition]}>

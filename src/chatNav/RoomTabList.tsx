@@ -1,12 +1,12 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { useChatNav } from "../chatNav/state"
+import { useChatContext } from "../chat/context"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import { useChatContext } from "./context"
 import RoomTab from "./RoomTab"
+import { useChatNav } from "./state"
 
-function ChannelTabs() {
+function RoomTabList() {
   const { state } = useChatContext()
   const { currentRoom, setRoom } = useChatNav()
 
@@ -19,14 +19,12 @@ function ChannelTabs() {
         key={room.key}
         icon={<Icon which={icons.earth} />}
         title={title}
-        state={room === currentRoom ? "active" : "inactive"}
-        onClick={() => {
-          setRoom(room)
-          state.sideMenuOverlay.hide()
-        }}
+        isActive={room === currentRoom}
+        isUnread={false}
+        onClick={() => setRoom(room)}
       />
     )
   }) as any
 }
 
-export default observer(ChannelTabs)
+export default observer(RoomTabList)
