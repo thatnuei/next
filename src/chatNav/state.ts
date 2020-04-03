@@ -3,6 +3,7 @@ import { useObserver } from "mobx-react-lite"
 import { ChatState } from "../chat/ChatState"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useChatContext } from "../chat/context"
+import { SocketHandler } from "../chat/SocketHandler"
 
 type Room =
   | { key: string; type: "channel"; id: string }
@@ -54,8 +55,19 @@ export function useChatNav() {
 export function createChatNavCommandHandler(
   state: ChatState,
   identity: string,
+  socket: SocketHandler,
 ) {
   return createCommandHandler({
+    IDN() {
+      socket.send({ type: "JCH", params: { channel: "Frontpage" } })
+      socket.send({ type: "JCH", params: { channel: "Fantasy" } })
+      socket.send({
+        type: "JCH",
+        params: { channel: "Story Driven LFRP" },
+      })
+      socket.send({ type: "JCH", params: { channel: "Development" } })
+    },
+
     JCH({ character, channel: id }) {
       if (character.identity === identity) {
         state.roomList.add({ type: "channel", id, key: `channel-${id}` })

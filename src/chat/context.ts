@@ -21,24 +21,13 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
         createChannelCommandHandler(state),
         createChannelBrowserCommandHandler(state),
         createStatusCommandHandler(state, identity),
-        createChatNavCommandHandler(state, identity),
+        createChatNavCommandHandler(state, identity, socket),
       ]),
-    [identity, state],
+    [identity, socket, state],
   )
 
   useEffect(() => {
     socket.listener = (command) => {
-      if (command.type === "IDN") {
-        socket.send({ type: "JCH", params: { channel: "Frontpage" } })
-        socket.send({ type: "JCH", params: { channel: "Fantasy" } })
-        socket.send({
-          type: "JCH",
-          params: { channel: "Story Driven LFRP" },
-        })
-        socket.send({ type: "JCH", params: { channel: "Development" } })
-        socket.send({ type: "JCH", params: { channel: "Femboy" } })
-      }
-
       const wasHandled = handleCommand(command)
       if (!wasHandled && process.env.NODE_ENV === "development") {
         console.log(command.type, command.params)

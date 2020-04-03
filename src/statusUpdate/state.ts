@@ -54,6 +54,7 @@ export function createStatusCommandHandler(state: ChatState, identity: string) {
         state.statusUpdate.timeout = (Number(value) || 5) * 1000 // value is in seconds
       }
     },
+
     STA({ character }) {
       if (character === identity) {
         state.statusUpdate.overlay.hide()
