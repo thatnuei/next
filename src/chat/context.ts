@@ -33,10 +33,12 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
         console.log(command.type, command.params)
       }
     }
+  }, [socket, handleCommand])
 
+  useEffect(() => {
     socket.connect({ account, ticket, identity })
     return () => socket.disconnect()
-  }, [socket, account, ticket, identity, handleCommand])
+  }, [account, identity, socket, ticket])
 
   return { state, socket, identity }
 }
