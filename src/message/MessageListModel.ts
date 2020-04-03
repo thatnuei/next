@@ -10,7 +10,8 @@ export class MessageListModel {
     return this._messages
   }
 
-  add(message: MessageModel) {
+  add(...args: ConstructorParameters<typeof MessageModel>) {
+    const message = new MessageModel(...args)
     this._messages = [...this._messages.slice(-300), message]
   }
 }

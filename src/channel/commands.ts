@@ -1,6 +1,5 @@
 import { ChatState } from "../chat/ChatState"
 import { createCommandHandler } from "../chat/commandHelpers"
-import { MessageModel } from "../message/MessageModel"
 import { ChannelModel } from "./ChannelModel"
 
 export function createChannelCommandHandler(
@@ -68,17 +67,13 @@ export function createChannelCommandHandler(
 
     MSG({ channel: id, character, message }) {
       updateChannel(id, (channel) => {
-        channel.messageList.add(
-          new MessageModel(character, message, "normal", Date.now()),
-        )
+        channel.messageList.add(character, message, "normal", Date.now())
       })
     },
 
     LRP({ channel: id, character, message }) {
       updateChannel(id, (channel) => {
-        channel.messageList.add(
-          new MessageModel(character, message, "lfrp", Date.now()),
-        )
+        channel.messageList.add(character, message, "lfrp", Date.now())
       })
     },
 
@@ -87,9 +82,7 @@ export function createChannelCommandHandler(
         const { channel: id, message } = params
 
         updateChannel(id, (channel) => {
-          channel.messageList.add(
-            new MessageModel(undefined, message, "system", Date.now()),
-          )
+          channel.messageList.add(undefined, message, "system", Date.now())
         })
       }
     },
