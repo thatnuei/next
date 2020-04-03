@@ -10,8 +10,8 @@ export class ChannelModel {
   @observable mode: ChannelMode = "both"
   @observable selectedMode: ChannelMode = "both"
 
-  users = new Set<string>()
-  ops = new Set<string>()
+  @observable.shallow users = new Set<string>()
+  @observable.shallow ops = new Set<string>()
 
   @action
   setSelectedMode = (mode: ChannelMode) => {
