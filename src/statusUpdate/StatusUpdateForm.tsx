@@ -6,7 +6,7 @@ import { useChatContext } from "../chat/context"
 import Button from "../dom/Button"
 import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
-import { useStatusUpdateActions } from "./actions"
+import { useStatusUpdateActions } from "./state"
 
 function StatusUpdateForm() {
   const { state } = useChatContext()

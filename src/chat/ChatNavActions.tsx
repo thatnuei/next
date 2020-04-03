@@ -1,7 +1,7 @@
 import React from "react"
 import tw from "twin.macro"
 import { useChannelBrowserActions } from "../channelBrowser/state"
-import { useStatusUpdateActions } from "../statusUpdate/actions"
+import { useStatusUpdateActions } from "../statusUpdate/state"
 import * as icons from "../ui/icons"
 import NavAction from "./NavAction"
 

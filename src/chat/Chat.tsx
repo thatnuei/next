@@ -48,7 +48,7 @@ function Chat() {
         title="Update Your Status"
         width={480}
         height={360}
-        model={state.statusUpdateOverlay}
+        model={state.statusUpdate.overlay}
         children={<StatusUpdateForm />}
       />
     </div>
