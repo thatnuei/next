@@ -6,7 +6,7 @@ import { useChatContext } from "./context"
 import NavAction from "./NavAction"
 
 function ChatNavActions() {
-  const { navStore } = useChatContext()
+  const { state } = useChatContext()
   const { openChannelBrowser } = useChannelBrowserActions()
 
   return (
@@ -19,7 +19,7 @@ function ChatNavActions() {
       <NavAction
         icon={icons.updateStatus}
         title="Update your status"
-        onClick={navStore.updateStatus.show}
+        onClick={state.updateStatusOverlay.show}
       />
       <NavAction icon={icons.users} title="See online friends and bookmarks" />
       <NavAction icon={icons.about} title="About next" />

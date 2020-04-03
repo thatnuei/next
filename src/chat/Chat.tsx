@@ -14,7 +14,7 @@ import { useChatContext } from "./context"
 import UpdateStatus from "./UpdateStatus"
 
 function Chat() {
-  const { navStore } = useChatContext()
+  const { state, navStore } = useChatContext()
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
   return (
@@ -29,7 +29,7 @@ function Chat() {
       )}
 
       {isSmallScreen && (
-        <Drawer model={navStore.sideMenu}>
+        <Drawer model={state.sideMenuOverlay}>
           <ChatNav css={tw`h-full bg-background-2`} />
         </Drawer>
       )}
@@ -38,7 +38,7 @@ function Chat() {
         title="Channels"
         width={480}
         height={720}
-        model={navStore.channelBrowser}
+        model={state.channelBrowserOverlay}
         children={<ChannelBrowser />}
       />
 
@@ -46,13 +46,13 @@ function Chat() {
         title="Update Your Status"
         width={480}
         height={360}
-        model={navStore.updateStatus}
+        model={state.updateStatusOverlay}
         children={
           <UpdateStatus
             initialValues={{ status: "online", statusMessage: "" }}
             onSubmit={(values) => {
               console.log(values)
-              navStore.updateStatus.hide()
+              state.updateStatusOverlay.hide()
             }}
           />
         }

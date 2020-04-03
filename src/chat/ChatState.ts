@@ -11,6 +11,6 @@ export class ChatState {
   @observable.shallow admins = new Set<string>()
   channelBrowser = new ChannelBrowserState()
   channelBrowserOverlay = new OverlayModel()
-  updateStatus = new OverlayModel()
-  sideMenu = new OverlayModel()
+  updateStatusOverlay = new OverlayModel()
+  sideMenuOverlay = new OverlayModel()
 }

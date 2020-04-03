@@ -1,7 +1,6 @@
 import { computed, observable } from "mobx"
 import { ChannelModel } from "../channel/ChannelModel"
 import { ChannelStore } from "../channel/ChannelStore"
-import { OverlayModel } from "../ui/OverlayModel"
 
 type Room =
   | { type: "channel"; id: string }
@@ -9,10 +8,6 @@ type Room =
 
 export class ChatNavStore {
   constructor(private channelStore: ChannelStore) {}
-
-  channelBrowser = new OverlayModel()
-  updateStatus = new OverlayModel()
-  sideMenu = new OverlayModel()
 
   @observable
   private currentRoomRaw: Room | undefined

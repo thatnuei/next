@@ -6,7 +6,7 @@ import { useChatContext } from "./context"
 import RoomTab from "./RoomTab"
 
 function ChannelTabs() {
-  const { channelStore, navStore } = useChatContext()
+  const { state, channelStore, navStore } = useChatContext()
   return channelStore.channels.map((channel) => (
     <RoomTab
       key={channel.id}
@@ -15,7 +15,7 @@ function ChannelTabs() {
       state={channel === navStore.currentChannel ? "active" : "inactive"}
       onClick={() => {
         navStore.setRoom({ type: "channel", id: channel.id })
-        navStore.sideMenu.hide()
+        state.sideMenuOverlay.hide()
       }}
     />
   )) as any

@@ -11,11 +11,11 @@ import { useChatContext } from "./context"
 type Props = TagProps<"button">
 
 function ChatMenuButton(props: Props) {
-  const { navStore } = useChatContext()
+  const { state } = useChatContext()
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
   const handleClick = () => {
-    navStore.sideMenu.show()
+    state.sideMenuOverlay.show()
   }
 
   return isSmallScreen ? (
