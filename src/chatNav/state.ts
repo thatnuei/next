@@ -31,10 +31,10 @@ export class RoomListModel {
 
 export function useChatNav() {
   const { state } = useChatContext()
-  const { roomList: rooms } = state
+  const { roomList } = state
 
   const currentRoom = useObserver(() =>
-    rooms.currentKey ? rooms.find(rooms.currentKey) : undefined,
+    roomList.currentKey ? roomList.find(roomList.currentKey) : undefined,
   )
 
   const currentChannel = useObserver(() =>
