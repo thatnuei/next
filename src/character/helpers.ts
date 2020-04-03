@@ -2,7 +2,7 @@ import { ChatState } from "../chat/ChatState"
 import { createCommandHandler } from "../chat/commandHelpers"
 
 export function createCharacterCommandHandler(state: ChatState) {
-  return createCommandHandler(undefined, {
+  return createCommandHandler({
     FRL({ characters }) {
       state.friends = new Set(characters)
     },

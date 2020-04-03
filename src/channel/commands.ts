@@ -16,7 +16,7 @@ export function createChannelCommandHandler(
     }
   }
 
-  return createCommandHandler(undefined, {
+  return createCommandHandler({
     JCH({ channel: id, character: { identity: name }, title }) {
       if (name === identity) {
         const channel = new ChannelModel(id)

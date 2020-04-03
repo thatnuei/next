@@ -17,7 +17,7 @@ export class ChannelBrowserState {
 }
 
 export function createChannelBrowserCommandHandler(state: ChatState) {
-  return createCommandHandler(undefined, {
+  return createCommandHandler({
     CHA({ channels }) {
       state.channelBrowser.publicChannels = channels.map((it) => ({
         id: it.name,

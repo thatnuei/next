@@ -48,7 +48,7 @@ export function useStatusUpdateActions() {
 }
 
 export function createStatusCommandHandler(state: ChatState, identity: string) {
-  return createCommandHandler(undefined, {
+  return createCommandHandler({
     VAR({ variable, value }) {
       if (variable === "sta_flood") {
         state.statusUpdate.timeout = Number(value) || 5000
