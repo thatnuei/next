@@ -10,6 +10,7 @@ type Room =
   | { key: string; type: "privateChat"; partnerName: string }
 
 export const getChannelKey = (id: string) => `channel-${id}`
+export const getPrivateChatKey = (name: string) => `privateChat-${name}`
 
 export class RoomListModel {
   @observable.shallow
@@ -19,12 +20,13 @@ export class RoomListModel {
   currentKey?: string
 
   @action
-  add(room: Room) {
+  add = (room: Room) => {
+    if (this.find(room.key)) return
     this.rooms.push(room)
   }
 
   @action
-  remove(key: string) {
+  remove = (key: string) => {
     this.rooms = this.rooms.filter((it) => it.key !== key)
   }
 
@@ -45,9 +47,16 @@ export function useChatNav() {
       : undefined,
   )
 
+  const currentPrivateChat = useObserver(() =>
+    currentRoom?.type === "privateChat"
+      ? state.privateChats.get(currentRoom.partnerName)
+      : undefined,
+  )
+
   return {
     currentRoom,
     currentChannel,
+    currentPrivateChat,
     setRoom(room: Room) {
       state.roomList.currentKey = room.key
       state.sideMenuOverlay.hide()
@@ -81,6 +90,14 @@ export function createChatNavCommandHandler(
       if (character === identity) {
         state.roomList.remove(getChannelKey(channel))
       }
+    },
+
+    PRI({ character }) {
+      state.roomList.add({
+        type: "privateChat",
+        partnerName: character,
+        key: getPrivateChatKey(character),
+      })
     },
   })
 }

@@ -1,39 +1,43 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import Avatar from "../character/Avatar"
-import { CharacterModel } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
 import CharacterStatusText from "../character/CharacterStatusText"
+import ChatInput from "../chat/ChatInput"
+import { useChatContext } from "../chat/context"
+import ChatMenuButton from "../chatNav/ChatMenuButton"
+import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
-import { MessageModel } from "../message/MessageModel"
 import { scrollVertical } from "../ui/helpers"
+import { PrivateChatModel } from "./state"
 
 type Props = {
-  partner: CharacterModel
-  messages: MessageModel[]
-  chatInput: React.ReactNode
-  menuButton: React.ReactNode
-}
+  chat: PrivateChatModel
+} & TagProps<"div">
 
-function PrivateChatView({ partner, messages, menuButton, chatInput }: Props) {
+function PrivateChatView({ chat, ...props }: Props) {
+  const { state } = useChatContext()
+  const character = state.characters.get(chat.partnerName)
+
   return (
-    <div css={tw`flex flex-col w-full h-full`}>
+    <div css={tw`flex flex-col`} {...props}>
       <div css={tw`flex flex-row items-center p-3 bg-background-0`}>
-        {menuButton}
-        <Avatar name={partner.name} css={tw`w-12 h-12`} />
-        <div css={[tw`flex flex-col ml-5`, scrollVertical, { maxHeight: 60 }]}>
-          <CharacterName character={partner} />
-          <CharacterStatusText character={partner} />
+        <ChatMenuButton />
+        <Avatar name={chat.partnerName} css={tw`w-12 h-12`} />
+        <div css={[tw`flex flex-col ml-3`, scrollVertical, { maxHeight: 60 }]}>
+          <CharacterName character={character} />
+          <CharacterStatusText character={character} />
         </div>
       </div>
 
       <div css={tw`flex flex-row flex-1 min-h-0 my-gap bg-background-1`}>
-        <MessageList messages={messages} />
+        <MessageList messages={chat.messageList.items} />
       </div>
 
-      {chatInput}
+      <ChatInput />
     </div>
   )
 }
 
-export default PrivateChatView
+export default observer(PrivateChatView)

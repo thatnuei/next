@@ -7,6 +7,7 @@ import ChatMenuButton from "../chatNav/ChatMenuButton"
 import ChatNav from "../chatNav/ChatNav"
 import { useChatNav } from "../chatNav/state"
 import { useMediaQuery } from "../dom/useMediaQuery"
+import PrivateChatView from "../privateChat/PrivateChatView"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import Drawer from "../ui/Drawer"
 import { fixedCover } from "../ui/helpers"
@@ -16,7 +17,7 @@ import { useChatContext } from "./context"
 
 function Chat() {
   const { state } = useChatContext()
-  const { currentChannel } = useChatNav()
+  const { currentChannel, currentPrivateChat } = useChatNav()
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
   return (
@@ -25,6 +26,8 @@ function Chat() {
 
       {currentChannel ? (
         <ChannelView css={tw`flex-1`} channel={currentChannel} />
+      ) : currentPrivateChat ? (
+        <PrivateChatView css={tw`flex-1`} chat={currentPrivateChat} />
       ) : (
         // TODO: proper "no room" default header
         <ChatMenuButton />

@@ -1,10 +1,3 @@
-import { MessageModel } from "../message/MessageModel"
+import * as fchat from "fchat"
 
-export type PrivateChat = {
-  partnerName: string
-  messages: MessageModel[]
-}
-
-export function createPrivateChat(partnerName: string): PrivateChat {
-  return { partnerName, messages: [] }
-}
+export type TypingStatus = fchat.Character.TypingStatus

@@ -3,6 +3,7 @@ import { createChannelCommandHandler } from "../channel/state"
 import { createChannelBrowserCommandHandler } from "../channelBrowser/state"
 import { createCharacterCommandHandler } from "../character/helpers"
 import { createChatNavCommandHandler } from "../chatNav/state"
+import { createPrivateChatCommandHandler } from "../privateChat/state"
 import createContextWrapper from "../react/createContextWrapper"
 import { createStatusCommandHandler } from "../statusUpdate/state"
 import { ChatState } from "./ChatState"
@@ -19,6 +20,7 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
       combineCommandHandlers([
         createCharacterCommandHandler(state),
         createChannelCommandHandler(state),
+        createPrivateChatCommandHandler(state),
         createChannelBrowserCommandHandler(state),
         createStatusCommandHandler(state, identity),
         createChatNavCommandHandler(state, identity, socket),
