@@ -35,15 +35,23 @@ type CommandHandlerMap<TThis> = {
   ) => void
 }
 
-export type CommandHandlerFn = (command: ServerCommand) => void
+export type CommandHandlerFn = (command: ServerCommand) => boolean
 
 export function createCommandHandler<TThis>(
   thisArg: TThis,
   handlers: CommandHandlerMap<TThis>,
-) {
+): CommandHandlerFn {
   return function handleCommand(command: ServerCommand) {
     const handler = handlers[command.type]
     handler?.call(thisArg, command.params as never) // lol
     return !!handler
+  }
+}
+
+export function combineCommandHandlers(
+  handlers: CommandHandlerFn[],
+): CommandHandlerFn {
+  return function handleCommand(command: ServerCommand) {
+    return handlers.some((handle) => handle(command))
   }
 }

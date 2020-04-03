@@ -1,55 +1,58 @@
+import { ChatState } from "../chat/ChatState"
 import { createCommandHandler } from "../chat/commands"
-import { ChatState } from "../chat/types"
-import { CharacterGender, CharacterState, CharacterStatus } from "./types"
-
-export function createCharacter(
-  name: string,
-  gender: CharacterGender = "None",
-  status: CharacterStatus = "offline",
-  statusMessage = "",
-): CharacterState {
-  return { name, gender, status, statusMessage }
-}
-
-export function createCharacterActions(state: ChatState) {
-  return {
-    getCharacter(name: string) {
-      return state.characters[name] || createCharacter(name)
-    },
-  }
-}
 
 export function createCharacterCommandHandler(state: ChatState) {
   return createCommandHandler(undefined, {
+    FRL({ characters }) {
+      state.friends = new Set(characters)
+    },
+
+    IGN(params) {
+      if (params.action === "init" || params.action === "list") {
+        state.ignored = new Set(params.characters)
+      }
+      if (params.action === "add") {
+        state.ignored.add(params.character)
+      }
+      if (params.action === "delete") {
+        state.ignored.delete(params.character)
+      }
+    },
+
+    ADL({ ops }) {
+      state.admins = new Set(ops)
+    },
+
     LIS({ characters }) {
       for (const [name, gender, status, statusMessage] of characters) {
-        state.characters[name] = createCharacter(
-          name,
-          gender,
-          status,
-          statusMessage,
-        )
+        state.characters.update(name, (char) => {
+          char.gender = gender
+          char.status = status
+          char.statusMessage = statusMessage
+        })
       }
     },
 
     NLN({ identity: name, gender, status }) {
-      state.characters[name] = createCharacter(name, gender, status)
+      state.characters.update(name, (char) => {
+        char.gender = gender
+        char.status = status
+        char.statusMessage = ""
+      })
     },
 
     FLN({ character: name }) {
-      const char = state.characters[name]
-      if (char) {
+      state.characters.update(name, (char) => {
         char.status = "offline"
         char.statusMessage = ""
-      }
+      })
     },
 
     STA({ character: name, status, statusmsg }) {
-      const char = state.characters[name]
-      if (char) {
+      state.characters.update(name, (char) => {
         char.status = status
         char.statusMessage = statusmsg
-      }
+      })
     },
   })
 }

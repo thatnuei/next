@@ -18,12 +18,12 @@ const itemTypes = ["admin", "op", "friend", "looking", "default"] as const
 type ItemType = ValueOf<typeof itemTypes>
 
 function ChannelUserList({ channel, ...props }: Props) {
-  const { chatStore } = useChatContext()
+  const { state } = useChatContext()
 
   const getItemType = (character: CharacterModel): ItemType => {
-    if (chatStore.admins.has(character.name)) return "admin"
+    if (state.admins.has(character.name)) return "admin"
     if (channel.ops.has(character.name)) return "op"
-    if (chatStore.friends.has(character.name)) return "friend"
+    if (state.friends.has(character.name)) return "friend"
     if (character.status === "looking") return "looking"
     return "default"
   }

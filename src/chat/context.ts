@@ -2,21 +2,26 @@ import { useEffect, useMemo } from "react"
 import { ChannelBrowserStore } from "../channel/ChannelBrowserStore"
 import { ChannelStore } from "../channel/ChannelStore"
 import { CharacterStore } from "../character/CharacterStore"
+import { createCharacterCommandHandler } from "../character/helpers"
 import createContextWrapper from "../react/createContextWrapper"
+import { useInstanceValue } from "../react/useInstanceValue"
 import { ChatNavStore } from "./ChatNavStore"
-import { ChatStore } from "./ChatStore"
+import { ChatState } from "./ChatState"
+import { combineCommandHandlers } from "./commands"
 import { SocketHandler } from "./SocketHandler"
 import { ChatCredentials } from "./types"
 
 function useChat({ account, ticket, identity }: ChatCredentials) {
+  const state = useInstanceValue(() => new ChatState())
+
   const socket = useMemo(() => new SocketHandler(), [])
 
-  const characterStore = useMemo(() => new CharacterStore(), [])
+  const handleCommand = useMemo(
+    () => combineCommandHandlers([createCharacterCommandHandler(state)]),
+    [state],
+  )
 
-  const chatStore = useMemo(() => new ChatStore(socket, characterStore), [
-    socket,
-    characterStore,
-  ])
+  const characterStore = useMemo(() => new CharacterStore(), [])
 
   const channelStore = useMemo(
     () => new ChannelStore(identity, socket, characterStore),
@@ -31,9 +36,19 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
 
   useEffect(() => {
     socket.listener = (command) => {
+      if (command.type === "IDN") {
+        socket.send({ type: "JCH", params: { channel: "Frontpage" } })
+        socket.send({ type: "JCH", params: { channel: "Fantasy" } })
+        socket.send({
+          type: "JCH",
+          params: { channel: "Story Driven LFRP" },
+        })
+        socket.send({ type: "JCH", params: { channel: "Development" } })
+        socket.send({ type: "JCH", params: { channel: "Femboy" } })
+      }
+
       const wasHandled = [
-        chatStore.handleCommand(command),
-        characterStore.handleCommand(command),
+        handleCommand(command),
         channelStore.handleCommand(command),
         channelBrowserStore.handleCommand(command),
       ].some((result) => result === true)
@@ -50,15 +65,15 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
     account,
     ticket,
     identity,
-    chatStore,
     characterStore,
     channelStore,
     channelBrowserStore,
+    handleCommand,
   ])
 
   return {
+    state,
     identity,
-    chatStore,
     characterStore,
     channelStore,
     channelBrowserStore,
