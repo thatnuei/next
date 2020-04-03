@@ -10,7 +10,7 @@ import { useStatusUpdateActions } from "./actions"
 
 function StatusUpdateForm() {
   const { state } = useChatContext()
-  const form = state.statusUpdateForm
+  const form = state.statusUpdate
 
   const { submitStatusUpdate } = useStatusUpdateActions()
 

@@ -3,7 +3,7 @@ import { ChannelModel } from "../channel/ChannelModel"
 import { ChannelBrowserState } from "../channelBrowser/state"
 import { CharacterModel } from "../character/CharacterModel"
 import { MapWithDefault } from "../state/MapWithDefault"
-import { StatusUpdateFormState } from "../statusUpdate/state"
+import { StatusUpdateState } from "../statusUpdate/state"
 import { OverlayModel } from "../ui/OverlayModel"
 import { ChatNavState } from "./nav"
 
@@ -21,6 +21,5 @@ export class ChatState {
   nav = new ChatNavState()
   sideMenuOverlay = new OverlayModel()
 
-  statusUpdateOverlay = new OverlayModel()
-  statusUpdateForm = new StatusUpdateFormState()
+  statusUpdate = new StatusUpdateState()
 }
