@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
+import BBC from "../bbc/BBC"
 import { TagProps } from "../jsx/types"
 import { CharacterModel } from "./CharacterModel"
 import { statusColors } from "./colors"
@@ -11,11 +12,13 @@ type Props = TagProps<"p"> & {
 
 function CharacterStatusText({ character, ...props }: Props) {
   return (
-    <p css={tw`text-sm italic`} {...props}>
+    <p css={tw`text-sm`} {...props}>
       <span css={{ color: statusColors[character.status] }}>
         {character.status}
       </span>
-      {character.statusMessage ? ` - ${character.statusMessage}` : undefined}
+      {character.statusMessage ? (
+        <BBC text={` - ${character.statusMessage}`} />
+      ) : undefined}
     </p>
   )
 }
