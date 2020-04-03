@@ -40,7 +40,7 @@ export function createCommandHandler(
   return function handleCommand(command: ServerCommand) {
     const handler = handlers[command.type]
     handler?.(command.params as never) // lol
-    return !!handler
+    return handler != null
   }
 }
 
