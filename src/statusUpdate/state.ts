@@ -51,7 +51,7 @@ export function createStatusCommandHandler(state: ChatState, identity: string) {
   return createCommandHandler({
     VAR({ variable, value }) {
       if (variable === "sta_flood") {
-        state.statusUpdate.timeout = Number(value) || 5000
+        state.statusUpdate.timeout = (Number(value) || 5) * 1000 // value is in seconds
       }
     },
     STA({ character }) {
