@@ -4,6 +4,7 @@ import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import { useMediaQuery } from "../dom/useMediaQuery"
+import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import Drawer from "../ui/Drawer"
 import { fixedCover } from "../ui/helpers"
 import Modal from "../ui/Modal"
@@ -12,7 +13,6 @@ import ChatMenuButton from "./ChatMenuButton"
 import ChatNav from "./ChatNav"
 import { useChatContext } from "./context"
 import { useNavState } from "./nav"
-import UpdateStatus from "./UpdateStatus"
 
 function Chat() {
   const { state } = useChatContext()
@@ -48,16 +48,8 @@ function Chat() {
         title="Update Your Status"
         width={480}
         height={360}
-        model={state.updateStatusOverlay}
-        children={
-          <UpdateStatus
-            initialValues={{ status: "online", statusMessage: "" }}
-            onSubmit={(values) => {
-              console.log(values)
-              state.updateStatusOverlay.hide()
-            }}
-          />
-        }
+        model={state.statusUpdateOverlay}
+        children={<StatusUpdateForm />}
       />
     </div>
   )

@@ -1,45 +1,35 @@
-import React, { useEffect, useState } from "react"
+import { observer } from "mobx-react-lite"
+import React from "react"
 import tw from "twin.macro"
 import { CharacterStatus } from "../character/types"
+import { useChatContext } from "../chat/context"
 import Button from "../dom/Button"
 import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
+import { useStatusUpdateActions } from "./actions"
 
-type Props = {
-  initialValues: FormValues
-  onSubmit: (values: FormValues) => void
-}
+function StatusUpdateForm() {
+  const { state } = useChatContext()
+  const form = state.statusUpdateForm
 
-type FormValues = {
-  status: CharacterStatus
-  statusMessage: string
-}
-
-function UpdateStatus(props: Props) {
-  const [values, setValues] = useState(props.initialValues)
-
-  const { status, statusMessage } = props.initialValues
-  useEffect(() => {
-    setValues({ status, statusMessage })
-  }, [status, statusMessage])
+  const { submitStatusUpdate } = useStatusUpdateActions()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    props.onSubmit(values)
+    submitStatusUpdate()
   }
 
   return (
     <form
-      css={tw`p-3 flex flex-col items-start h-full`}
+      css={tw`flex flex-col items-start h-full p-3`}
       onSubmit={handleSubmit}
     >
       <FormField labelText="Status" css={tw`block mb-3`}>
         <select
           css={select}
-          value={values.status}
+          value={form.status}
           onChange={(e) => {
-            const status = e.target.value as CharacterStatus
-            setValues((values) => ({ ...values, status }))
+            form.status = e.target.value as CharacterStatus
           }}
         >
           <option value="online">Online</option>
@@ -51,22 +41,26 @@ function UpdateStatus(props: Props) {
       </FormField>
       <FormField
         labelText="Status message (optional)"
-        css={tw`mb-3 flex-1 flex flex-col`}
+        css={tw`flex flex-col flex-1 mb-3`}
       >
         <textarea
           css={[input, tw`flex-1`]}
-          value={values.statusMessage}
+          value={form.statusMessage}
           onChange={(e) => {
-            const statusMessage = e.target.value
-            setValues((values) => ({ ...values, statusMessage }))
+            form.statusMessage = e.target.value
+          }}
+          onKeyPress={(event) => {
+            if (event.key === "\n" && event.ctrlKey) {
+              submitStatusUpdate()
+            }
           }}
         />
       </FormField>
-      <Button type="submit" css={solidButton}>
+      <Button type="submit" css={solidButton} disabled={!form.canSubmit}>
         Submit
       </Button>
     </form>
   )
 }
 
-export default UpdateStatus
+export default observer(StatusUpdateForm)

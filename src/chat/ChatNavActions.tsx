@@ -1,13 +1,13 @@
 import React from "react"
 import tw from "twin.macro"
 import { useChannelBrowserActions } from "../channelBrowser/state"
+import { useStatusUpdateActions } from "../statusUpdate/actions"
 import * as icons from "../ui/icons"
-import { useChatContext } from "./context"
 import NavAction from "./NavAction"
 
 function ChatNavActions() {
-  const { state } = useChatContext()
   const { openChannelBrowser } = useChannelBrowserActions()
+  const { showStatusUpdateScreen } = useStatusUpdateActions()
 
   return (
     <>
@@ -19,7 +19,7 @@ function ChatNavActions() {
       <NavAction
         icon={icons.updateStatus}
         title="Update your status"
-        onClick={state.updateStatusOverlay.show}
+        onClick={showStatusUpdateScreen}
       />
       <NavAction icon={icons.users} title="See online friends and bookmarks" />
       <NavAction icon={icons.about} title="About next" />
