@@ -3,7 +3,7 @@ import React from "react"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import { useChatContext } from "./context"
-import { useNavActions, useNavState } from "./nav"
+import { useNavActions, useNavState } from "../chatNav/state"
 import RoomTab from "./RoomTab"
 
 function ChannelTabs() {

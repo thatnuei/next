@@ -5,7 +5,7 @@ import { CharacterModel } from "../character/CharacterModel"
 import { MapWithDefault } from "../state/MapWithDefault"
 import { StatusUpdateState } from "../statusUpdate/state"
 import { OverlayModel } from "../ui/OverlayModel"
-import { ChatNavState } from "./nav"
+import { ChatNavState } from "../chatNav/state"
 
 export class ChatState {
   characters = new MapWithDefault((name) => new CharacterModel(name))

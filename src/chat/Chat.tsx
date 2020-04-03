@@ -12,7 +12,7 @@ import { screenQueries } from "../ui/screens"
 import ChatMenuButton from "./ChatMenuButton"
 import ChatNav from "./ChatNav"
 import { useChatContext } from "./context"
-import { useNavState } from "./nav"
+import { useNavState } from "../chatNav/state"
 
 function Chat() {
   const { state } = useChatContext()

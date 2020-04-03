@@ -1,5 +1,5 @@
 import { observable } from "mobx"
-import { useChatContext } from "./context"
+import { useChatContext } from "../chat/context"
 
 type Room =
   | { type: "channel"; id: string }
