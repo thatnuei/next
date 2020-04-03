@@ -52,6 +52,7 @@ export function combineCommandHandlers(
   handlers: CommandHandlerFn[],
 ): CommandHandlerFn {
   return function handleCommand(command: ServerCommand) {
-    return handlers.some((handle) => handle(command))
+    const results = handlers.map((handle) => handle(command))
+    return results.some((wasHandled) => wasHandled)
   }
 }
