@@ -1,7 +1,6 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
-import { useChatContext } from "../chat/context"
+import { useChannelActions } from "../channel/actions"
 import { TagProps } from "../jsx/types"
 import Icon from "../ui/Icon"
 import { earth, lock } from "../ui/icons"
@@ -12,15 +11,15 @@ type Props = TagProps<"button"> & {
 }
 
 function ChannelBrowserItem({ info, ...props }: Props) {
-  const { channelStore } = useChatContext()
+  const { join, leave, isJoined: isChannelJoined } = useChannelActions()
 
-  const isJoined = channelStore.isJoined(info.id)
+  const isJoined = isChannelJoined(info.id)
 
   const handleClick = () => {
     if (isJoined) {
-      channelStore.leave(info.id)
+      leave(info.id)
     } else {
-      channelStore.join(info.id)
+      join(info.id)
     }
   }
 
@@ -43,4 +42,4 @@ function ChannelBrowserItem({ info, ...props }: Props) {
   )
 }
 
-export default observer(ChannelBrowserItem)
+export default ChannelBrowserItem

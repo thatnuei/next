@@ -1,11 +1,9 @@
-import { useEffect, useMemo } from "react"
+import { useDebugValue, useEffect, useMemo } from "react"
+import { createChannelCommandHandler } from "../channel/commands"
 import { createChannelBrowserCommandHandler } from "../channelBrowser/state"
-import { ChannelStore } from "../channel/ChannelStore"
-import { CharacterStore } from "../character/CharacterStore"
 import { createCharacterCommandHandler } from "../character/helpers"
 import createContextWrapper from "../react/createContextWrapper"
 import { useInstanceValue } from "../react/useInstanceValue"
-import { ChatNavStore } from "./ChatNavStore"
 import { ChatState } from "./ChatState"
 import { combineCommandHandlers } from "./commands"
 import { SocketHandler } from "./SocketHandler"
@@ -13,6 +11,7 @@ import { ChatCredentials } from "./types"
 
 function useChat({ account, ticket, identity }: ChatCredentials) {
   const state = useInstanceValue(() => new ChatState())
+  useDebugValue(state)
 
   const socket = useMemo(() => new SocketHandler(), [])
 
@@ -20,19 +19,11 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
     () =>
       combineCommandHandlers([
         createCharacterCommandHandler(state),
+        createChannelCommandHandler(state, identity),
         createChannelBrowserCommandHandler(state),
       ]),
-    [state],
+    [identity, state],
   )
-
-  const characterStore = useMemo(() => new CharacterStore(), [])
-
-  const channelStore = useMemo(
-    () => new ChannelStore(identity, socket, characterStore),
-    [identity, socket, characterStore],
-  )
-
-  const navStore = useMemo(() => new ChatNavStore(channelStore), [channelStore])
 
   useEffect(() => {
     socket.listener = (command) => {
@@ -47,11 +38,7 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
         socket.send({ type: "JCH", params: { channel: "Femboy" } })
       }
 
-      const wasHandled = [
-        handleCommand(command),
-        channelStore.handleCommand(command),
-      ].some((result) => result === true)
-
+      const wasHandled = handleCommand(command)
       if (!wasHandled && process.env.NODE_ENV === "development") {
         console.log(command.type, command.params)
       }
@@ -59,24 +46,9 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
 
     socket.connect({ account, ticket, identity })
     return () => socket.disconnect()
-  }, [
-    socket,
-    account,
-    ticket,
-    identity,
-    characterStore,
-    channelStore,
-    handleCommand,
-  ])
+  }, [socket, account, ticket, identity, handleCommand])
 
-  return {
-    state,
-    socket,
-    identity,
-    characterStore,
-    channelStore,
-    navStore,
-  }
+  return { state, socket, identity }
 }
 
 export const useChatContext = createContextWrapper(useChat)

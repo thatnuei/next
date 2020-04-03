@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from "react"
 import tw from "twin.macro"
+import { useChannelActions } from "../channel/actions"
 import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
 import { useChatContext } from "../chat/context"
@@ -20,7 +21,7 @@ function BBC({ text }: Props) {
 export default React.memo(BBC)
 
 function BBCTree({ nodes }: { nodes: Node[] }) {
-  const { characterStore } = useChatContext()
+  const { state } = useChatContext()
 
   const renderNode = (node: Node): JSX.Element => {
     if (node.type === "text") {
@@ -107,7 +108,7 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 
       case "user": {
         const name = getNodeChildrenAsText(node)
-        return <CharacterName character={characterStore.getCharacter(name)} />
+        return <CharacterName character={state.characters.get(name)} />
       }
 
       case "channel": {
@@ -179,11 +180,7 @@ function BBCChannelLink({
   title: string
   type: "public" | "private"
 }>) {
-  const { channelStore } = useChatContext()
-
-  const handleClick = () => {
-    channelStore.join(id)
-  }
+  const { join } = useChannelActions()
 
   return (
     <span css={tw`inline-flex items-baseline leading-none`}>
@@ -191,7 +188,7 @@ function BBCChannelLink({
         which={type === "public" ? icons.earth : icons.lock}
         css={tw`self-center inline w-4 h-4 mr-1 opacity-75`}
       />
-      <button onClick={handleClick} css={tw`underline hover:no-underline`}>
+      <button onClick={() => join(id)} css={tw`underline hover:no-underline`}>
         {title}
       </button>
     </span>

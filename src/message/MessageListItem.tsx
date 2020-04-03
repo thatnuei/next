@@ -10,7 +10,7 @@ type Props = {
 }
 
 function MessageListItem({ message }: Props) {
-  const { characterStore } = useChatContext()
+  const { state } = useChatContext()
 
   const typeStyle = {
     normal: undefined,
@@ -27,9 +27,7 @@ function MessageListItem({ message }: Props) {
 
       {message.senderName && (
         <span css={tw`inline-block mr-2`}>
-          <CharacterName
-            character={characterStore.getCharacter(message.senderName)}
-          />
+          <CharacterName character={state.characters.get(message.senderName)} />
         </span>
       )}
 

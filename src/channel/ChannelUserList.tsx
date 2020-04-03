@@ -34,7 +34,7 @@ function ChannelUserList({ channel, ...props }: Props) {
     if (type === "friend") return tw`bg-blue-faded`
   }
 
-  const { characters } = channel.users
+  const characters = [...channel.users].map(state.characters.get)
 
   const listItems = characters.map((character) => {
     const type = getItemType(character)

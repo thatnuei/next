@@ -6,11 +6,8 @@ export class MapWithDefault<V, K = string> {
 
   constructor(private readonly getDefault: (key: K) => V) {}
 
-  get(key: K): V {
-    return this.items.has(key)
-      ? (this.items.get(key) as V)
-      : this.getDefault(key)
-  }
+  get = (key: K): V =>
+    this.items.has(key) ? (this.items.get(key) as V) : this.getDefault(key)
 
   set(key: K, value: V) {
     this.items.set(key, value)

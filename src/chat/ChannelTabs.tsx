@@ -3,18 +3,22 @@ import React from "react"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import { useChatContext } from "./context"
+import { useNavActions, useNavState } from "./nav"
 import RoomTab from "./RoomTab"
 
 function ChannelTabs() {
-  const { state, channelStore, navStore } = useChatContext()
-  return channelStore.channels.map((channel) => (
+  const { state } = useChatContext()
+  const { currentChannel } = useNavState()
+  const { setRoom } = useNavActions()
+
+  return state.channels.map((channel) => (
     <RoomTab
       key={channel.id}
       icon={<Icon which={icons.earth} />}
       title={channel.title}
-      state={channel === navStore.currentChannel ? "active" : "inactive"}
+      state={channel === currentChannel ? "active" : "inactive"}
       onClick={() => {
-        navStore.setRoom({ type: "channel", id: channel.id })
+        setRoom({ type: "channel", id: channel.id })
         state.sideMenuOverlay.hide()
       }}
     />

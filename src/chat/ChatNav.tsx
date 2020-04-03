@@ -8,7 +8,7 @@ import ChatNavActions from "./ChatNavActions"
 import { useChatContext } from "./context"
 
 function ChatNav(props: TagProps<"nav">) {
-  const { identity, characterStore } = useChatContext()
+  const { state, identity } = useChatContext()
   return (
     <nav css={tw`flex`} {...props}>
       <div css={tw`flex flex-col mr-gap`}>
@@ -16,7 +16,7 @@ function ChatNav(props: TagProps<"nav">) {
       </div>
       <div css={tw`flex flex-col w-56`}>
         <CharacterSummary
-          character={characterStore.getCharacter(identity)}
+          character={state.characters.get(identity)}
           css={tw`p-3 bg-background-0 mb-gap`}
         />
         <div css={tw`flex-1 bg-background-1`}>

@@ -11,18 +11,20 @@ import { screenQueries } from "../ui/screens"
 import ChatMenuButton from "./ChatMenuButton"
 import ChatNav from "./ChatNav"
 import { useChatContext } from "./context"
+import { useNavState } from "./nav"
 import UpdateStatus from "./UpdateStatus"
 
 function Chat() {
-  const { state, navStore } = useChatContext()
+  const { state } = useChatContext()
+  const { currentChannel } = useNavState()
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
   return (
     <div css={[fixedCover, tw`flex`]}>
       {!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
 
-      {navStore.currentChannel ? (
-        <ChannelView css={tw`flex-1`} channel={navStore.currentChannel} />
+      {currentChannel ? (
+        <ChannelView css={tw`flex-1`} channel={currentChannel} />
       ) : (
         // TODO: proper "no room" default header
         <ChatMenuButton />
