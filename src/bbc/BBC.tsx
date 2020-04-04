@@ -1,4 +1,4 @@
-import React, { CSSProperties, PropsWithChildren } from "react"
+import React, { CSSProperties, Fragment, PropsWithChildren } from "react"
 import tw from "twin.macro"
 import { useChannels } from "../channel/state"
 import Avatar from "../character/Avatar"
@@ -143,10 +143,13 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
     }
   }
 
-  return nodes.map((node, index) => {
-    const element = renderNode(node)
-    return React.cloneElement(element, { key: index })
-  }) as any
+  return (
+    <span css={tw`whitespace-pre-wrap`}>
+      {nodes.map((node, index) => (
+        <Fragment key={index}>{renderNode(node)}</Fragment>
+      ))}
+    </span>
+  )
 }
 
 function BBCLink({ url, children }: PropsWithChildren<{ url: string }>) {
