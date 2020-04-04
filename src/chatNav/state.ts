@@ -36,10 +36,9 @@ export class RoomListModel {
   @action
   setCurrent = (key: string) => {
     this.currentKey = key
+
     const room = this.find(key)
-    if (room) {
-      room.isUnread = false
-    }
+    if (room) room.isUnread = false
   }
 
   @action
