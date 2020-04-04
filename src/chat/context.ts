@@ -6,13 +6,13 @@ import { createChatNavCommandHandler } from "../chatNav/state"
 import { createPrivateChatCommandHandler } from "../privateChat/state"
 import createContextWrapper from "../react/createContextWrapper"
 import { createStatusCommandHandler } from "../statusUpdate/state"
-import { ChatState } from "./ChatState"
+import { useChatState } from "./chatStateContext"
 import { combineCommandHandlers } from "./commandHelpers"
 import { SocketHandler } from "./SocketHandler"
 import { ChatCredentials } from "./types"
 
 function useChat({ account, ticket, identity }: ChatCredentials) {
-  const state = useMemo(() => new ChatState(), [])
+  const state = useChatState()
   const socket = useMemo(() => new SocketHandler(), [])
 
   const handleCommand = useMemo(

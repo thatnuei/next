@@ -3,7 +3,7 @@ import tw from "twin.macro"
 import { useChannels } from "../channel/state"
 import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
-import { useChatContext } from "../chat/context"
+import { useChatState } from "../chat/chatStateContext"
 import ExternalLink from "../dom/ExternalLink"
 import { getIconUrl, getProfileUrl } from "../flist/helpers"
 import Icon from "../ui/Icon"
@@ -21,7 +21,7 @@ function BBC({ text }: Props) {
 export default React.memo(BBC)
 
 function BBCTree({ nodes }: { nodes: Node[] }) {
-  const { state } = useChatContext()
+  const state = useChatState()
 
   const renderNode = (node: Node): JSX.Element => {
     if (node.type === "text") {
