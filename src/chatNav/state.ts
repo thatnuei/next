@@ -1,5 +1,6 @@
 import { action, observable } from "mobx"
 import { useObserver } from "mobx-react-lite"
+import { useChannels } from "../channel/state"
 import { ChatState } from "../chat/ChatState"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useChatContext } from "../chat/context"
@@ -35,6 +36,7 @@ export class RoomListModel {
 
 export function useChatNav() {
   const { state } = useChatContext()
+  const { leave } = useChannels()
   const { roomList } = state
 
   const currentRoom = useObserver(() =>
@@ -57,9 +59,18 @@ export function useChatNav() {
     currentRoom,
     currentChannel,
     currentPrivateChat,
+
     setRoom(room: Room) {
       state.roomList.currentKey = room.key
       state.sideMenuOverlay.hide()
+    },
+
+    closeRoom(room: Room) {
+      if (room.type === "channel") {
+        leave(room.id)
+      } else {
+        state.roomList.remove(room.key)
+      }
     },
   }
 }

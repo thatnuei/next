@@ -12,6 +12,7 @@ type Props = {
   isActive: boolean
   isUnread: boolean
   onClick: () => void
+  onClose: () => void
 }
 
 function RoomTab(props: Props) {
@@ -38,7 +39,11 @@ function RoomTab(props: Props) {
           dangerouslySetInnerHTML={{ __html: props.title }}
         />
       </Button>
-      <Button css={[fadedButton, tw`p-2`]} title="Close">
+      <Button
+        css={[fadedButton, tw`p-2`]}
+        title="Close"
+        onClick={props.onClose}
+      >
         <Icon which={close} css={tw`w-5 h-5`} />
       </Button>
     </div>

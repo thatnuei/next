@@ -10,7 +10,7 @@ import { useChatNav } from "./state"
 
 function RoomTabList() {
   const { state } = useChatContext()
-  const { currentRoom, setRoom } = useChatNav()
+  const { currentRoom, setRoom, closeRoom } = useChatNav()
 
   return state.roomList.rooms.map((room) => {
     const title =
@@ -33,6 +33,7 @@ function RoomTabList() {
         isActive={room === currentRoom}
         isUnread={false}
         onClick={() => setRoom(room)}
+        onClose={() => closeRoom(room)}
       />
     )
   }) as any
