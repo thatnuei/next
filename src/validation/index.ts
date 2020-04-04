@@ -1,3 +1,5 @@
+import { raise } from "../common/raise"
+
 type ValidatorResult<T> = { type: "valid" } | { type: "invalid"; error: string }
 
 type ValidateFn<T> = (value: unknown) => ValidatorResult<T>
@@ -9,10 +11,6 @@ type Validator<T = unknown> = {
 }
 
 export type ValidatorType<V> = V extends Validator<infer T> ? T : never
-
-const raise = (error: string): never => {
-  throw new Error(error)
-}
 
 const createValidator = <T>(validate: ValidateFn<T>): Validator<T> => ({
   validate,
