@@ -72,3 +72,18 @@ test("array", () => {
   expect(() => numberArray.parse([1, "2", 3])).toThrow()
   expect(() => stringArray.parse([1, "2", 3])).toThrow()
 })
+
+test("shape", () => {
+  const validator = v.shape({
+    a: v.number,
+    b: v.string,
+  })
+
+  expect(validator.parse({ a: 123, b: "hi" })).toEqual({ a: 123, b: "hi" })
+
+  expect(() => validator.parse({ a: 123 })).toThrow()
+  expect(() => validator.parse({ a: "what", b: 42 })).toThrow()
+  expect(() => validator.parse({ a: 123, c: "oops" })).toThrow()
+  expect(() => validator.parse({ a: 123, b: "hi", c: "extra" })).toThrow()
+  expect(() => validator.parse(null)).toThrow()
+})

@@ -109,3 +109,41 @@ export const array = <T>(itemType: Validator<T>) =>
 
     return { type: "valid" }
   })
+
+export const shape = <S extends Record<string, Validator>>(shape: S) =>
+  createValidator((maybeObject) => {
+    if (typeof maybeObject !== "object" || maybeObject === null) {
+      return {
+        type: "invalid",
+        error: `expected object, got ${stringify(maybeObject)}`,
+      }
+    }
+
+    const errors: string[] = []
+
+    for (const [key, value] of Object.entries(maybeObject)) {
+      if (!(key in shape)) {
+        errors.push(`unexpected key ${key}`)
+        continue
+      }
+
+      const validator = shape[key]
+      const result = validator.validate(value)
+      if (result.type === "invalid") {
+        errors.push(`validation for key "${key}" failed: ${result.error}`)
+      }
+    }
+
+    for (const shapeKey of Object.keys(shape)) {
+      if (!(shapeKey in maybeObject)) {
+        errors.push(`missing key "${shapeKey}" from shape`)
+      }
+    }
+
+    return errors.length > 0
+      ? {
+          type: "invalid",
+          error: `object validation failed:\n${errors.join("\n")}`,
+        }
+      : { type: "valid" }
+  })
