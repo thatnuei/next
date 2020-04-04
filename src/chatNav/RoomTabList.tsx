@@ -31,7 +31,7 @@ function RoomTabList() {
         icon={icon}
         title={title}
         isActive={room === currentRoom}
-        isUnread={false}
+        isUnread={room.isUnread}
         onClick={() => setRoom(room)}
         onClose={() => closeRoom(room)}
       />

@@ -1,8 +1,9 @@
-import { action, observable } from "mobx"
+import { action, computed, observable } from "mobx"
 import { ChatState } from "../chat/ChatState"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useChatContext } from "../chat/context"
 import { MessageListModel } from "../message/MessageListModel"
+import { MessageType } from "../message/MessageModel"
 
 export class ChannelModel {
   constructor(public readonly id: string) {}
@@ -19,6 +20,22 @@ export class ChannelModel {
   @action
   setSelectedMode = (mode: ChannelMode) => {
     this.selectedMode = mode
+  }
+
+  /**
+   * The "final" channel mode, based on the channel base mode and the selected mode.
+   * If the channel's base mode is "both", we'll use the selected mode as the actual mode,
+   * but if the channel has a more specific base mode, always respect the base mode
+   */
+  @computed
+  get actualMode() {
+    return this.mode === "both" ? this.selectedMode : this.mode
+  }
+
+  shouldShowMessage = (messageType: MessageType) => {
+    if (this.actualMode === "ads") return messageType !== "normal"
+    if (this.actualMode === "chat") return messageType !== "lfrp"
+    return true
   }
 }
 
