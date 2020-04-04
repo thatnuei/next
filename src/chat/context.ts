@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react"
 import { createChannelCommandHandler } from "../channel/state"
 import { createChannelBrowserCommandHandler } from "../channelBrowser/state"
-import { createCharacterCommandHandler } from "../character/helpers"
+import { createCharacterCommandHandler } from "../character/state"
 import { createChatNavCommandHandler } from "../chatNav/state"
 import { createPrivateChatCommandHandler } from "../privateChat/state"
 import createContextWrapper from "../react/createContextWrapper"

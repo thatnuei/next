@@ -1,5 +1,29 @@
+import { observable } from "mobx"
 import { ChatState } from "../chat/ChatState"
 import { createCommandHandler } from "../chat/commandHelpers"
+import { CharacterGender, CharacterStatus } from "./types"
+
+export class CharacterModel {
+  constructor(
+    public readonly name: string,
+    gender: CharacterGender = "None",
+    status: CharacterStatus = "offline",
+    statusMessage: string = "",
+  ) {
+    this.gender = gender
+    this.status = status
+    this.statusMessage = statusMessage
+  }
+
+  @observable
+  gender: CharacterGender
+
+  @observable
+  status: CharacterStatus
+
+  @observable
+  statusMessage: string
+}
 
 export function createCharacterCommandHandler(state: ChatState) {
   return createCommandHandler({

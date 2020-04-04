@@ -1,7 +1,7 @@
 import { observable } from "mobx"
 import { ChannelModel } from "../channel/state"
 import { ChannelBrowserState } from "../channelBrowser/state"
-import { CharacterModel } from "../character/CharacterModel"
+import { CharacterModel } from "../character/state"
 import { RoomListModel } from "../chatNav/state"
 import { PrivateChatModel } from "../privateChat/state"
 import { MapWithDefault } from "../state/MapWithDefault"

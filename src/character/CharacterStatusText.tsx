@@ -3,8 +3,8 @@ import React from "react"
 import tw from "twin.macro"
 import BBC from "../bbc/BBC"
 import { TagProps } from "../jsx/types"
-import { CharacterModel } from "./CharacterModel"
 import { statusColors } from "./colors"
+import { CharacterModel } from "./state"
 
 type Props = TagProps<"p"> & {
   character: CharacterModel

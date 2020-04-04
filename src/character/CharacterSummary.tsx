@@ -4,9 +4,9 @@ import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
 import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
-import { CharacterModel } from "./CharacterModel"
 import CharacterStatusText from "./CharacterStatusText"
 import { genderColors } from "./colors"
+import { CharacterModel } from "./state"
 
 type Props = TagProps<"div"> & { character: CharacterModel }
 
