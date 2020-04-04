@@ -94,7 +94,7 @@ test("shape (loose)", () => {
       a: v.number,
       b: v.string,
     },
-    { loose: true },
+    { allowExtraKeys: true },
   )
 
   expect(validator.parse({ a: 123, b: "hi" })).toEqual({ a: 123, b: "hi" })

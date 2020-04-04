@@ -110,7 +110,7 @@ export const array = <T>(itemType: Validator<T>) =>
 
 export const shape = <S extends Record<string, Validator>>(
   shape: S,
-  { loose = false } = {},
+  { allowExtraKeys = false } = {},
 ) =>
   createValidator<{ [K in keyof S]: ValidatorType<S[K]> }>((maybeObject) => {
     if (typeof maybeObject !== "object" || maybeObject === null) {
@@ -130,8 +130,8 @@ export const shape = <S extends Record<string, Validator>>(
       }
     }
 
-    if (!loose) {
-      for (const [key] of Object.entries(maybeObject)) {
+    if (!allowExtraKeys) {
+      for (const key of Object.keys(maybeObject)) {
         if (!(key in shape)) {
           errors.push(`extra key ${key}`)
         }
