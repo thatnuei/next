@@ -9,8 +9,8 @@ type Room =
   | { key: string; type: "channel"; id: string }
   | { key: string; type: "privateChat"; partnerName: string }
 
-export const getChannelKey = (id: string) => `channel-${id}`
-export const getPrivateChatKey = (name: string) => `privateChat-${name}`
+const getChannelKey = (id: string) => `channel-${id}`
+const getPrivateChatKey = (name: string) => `privateChat-${name}`
 
 export class RoomListModel {
   @observable.shallow
