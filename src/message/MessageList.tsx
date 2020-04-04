@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import { scrollVertical } from "../ui/helpers"
@@ -24,4 +25,4 @@ function MessageList({ list, filter: shouldShow = () => true }: Props) {
   )
 }
 
-export default MessageList
+export default observer(MessageList)
