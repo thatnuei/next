@@ -87,3 +87,25 @@ test("shape", () => {
   expect(() => validator.parse({ a: 123, b: "hi", c: "extra" })).toThrow()
   expect(() => validator.parse(null)).toThrow()
 })
+
+test("shape (loose)", () => {
+  const validator = v.shape(
+    {
+      a: v.number,
+      b: v.string,
+    },
+    { loose: true },
+  )
+
+  expect(validator.parse({ a: 123, b: "hi" })).toEqual({ a: 123, b: "hi" })
+  expect(validator.parse({ a: 123, b: "hi", c: "extra" })).toEqual({
+    a: 123,
+    b: "hi",
+    c: "extra",
+  })
+
+  expect(() => validator.parse({ a: 123 })).toThrow()
+  expect(() => validator.parse({ a: "what", b: 42 })).toThrow()
+  expect(() => validator.parse({ a: 123, c: "oops" })).toThrow()
+  expect(() => validator.parse(null)).toThrow()
+})

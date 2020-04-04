@@ -110,7 +110,10 @@ export const array = <T>(itemType: Validator<T>) =>
     return { type: "valid" }
   })
 
-export const shape = <S extends Record<string, Validator>>(shape: S) =>
+export const shape = <S extends Record<string, Validator>>(
+  shape: S,
+  { loose = false } = {},
+) =>
   createValidator((maybeObject) => {
     if (typeof maybeObject !== "object" || maybeObject === null) {
       return {
@@ -121,29 +124,26 @@ export const shape = <S extends Record<string, Validator>>(shape: S) =>
 
     const errors: string[] = []
 
-    for (const [key, value] of Object.entries(maybeObject)) {
-      if (!(key in shape)) {
-        errors.push(`unexpected key ${key}`)
-        continue
-      }
-
-      const validator = shape[key]
+    for (const [shapeKey, validator] of Object.entries(shape)) {
+      const value = (maybeObject as any)[shapeKey]
       const result = validator.validate(value)
       if (result.type === "invalid") {
-        errors.push(`validation for key "${key}" failed: ${result.error}`)
+        errors.push(`validation for key "${shapeKey}" failed: ${result.error}`)
       }
     }
 
-    for (const shapeKey of Object.keys(shape)) {
-      if (!(shapeKey in maybeObject)) {
-        errors.push(`missing key "${shapeKey}" from shape`)
+    if (!loose) {
+      for (const [key] of Object.entries(maybeObject)) {
+        if (!(key in shape)) {
+          errors.push(`extra key ${key}`)
+        }
       }
     }
 
     return errors.length > 0
       ? {
           type: "invalid",
-          error: `object validation failed:\n${errors.join("\n")}`,
+          error: `shape validation failed:\n${errors.join("\n")}`,
         }
       : { type: "valid" }
   })
