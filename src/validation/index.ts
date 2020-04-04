@@ -10,8 +10,6 @@ type Validator<T = unknown> = {
 
 type ValidatorType<V> = V extends Validator<infer T> ? T : never
 
-type ValueOf<T> = T extends readonly (infer V)[] ? V : T[keyof T]
-
 const raise = (error: string): never => {
   throw new Error(error)
 }
@@ -89,7 +87,7 @@ export const union = <T extends Validator[]>(...members: T) =>
   })
 
 export const array = <T>(itemType: Validator<T>) =>
-  createValidator((value) => {
+  createValidator<T[]>((value) => {
     if (!Array.isArray(value)) {
       return {
         type: "invalid",
@@ -114,7 +112,7 @@ export const shape = <S extends Record<string, Validator>>(
   shape: S,
   { loose = false } = {},
 ) =>
-  createValidator((maybeObject) => {
+  createValidator<{ [K in keyof S]: ValidatorType<S[K]> }>((maybeObject) => {
     if (typeof maybeObject !== "object" || maybeObject === null) {
       return {
         type: "invalid",
@@ -140,10 +138,36 @@ export const shape = <S extends Record<string, Validator>>(
       }
     }
 
-    return errors.length > 0
-      ? {
+    if (errors.length > 0) {
+      return {
+        type: "invalid",
+        error: `shape validation failed:\n${errors.join("\n")}`,
+      }
+    }
+
+    return { type: "valid" }
+  })
+
+export const dictionary = <T>(valueType: Validator<T>) =>
+  createValidator<Record<string, T | undefined>>((maybeObject) => {
+    if (typeof maybeObject !== "object" || maybeObject === null) {
+      return {
+        type: "invalid",
+        error: `expected object, got ${stringify(maybeObject)}`,
+      }
+    }
+
+    for (const value of Object.values(maybeObject)) {
+      if (value === undefined) continue
+
+      const result = valueType.validate(value)
+      if (result.type === "invalid") {
+        return {
           type: "invalid",
-          error: `shape validation failed:\n${errors.join("\n")}`,
+          error: `dictionary validation failed: ${result.error}`,
         }
-      : { type: "valid" }
+      }
+    }
+
+    return { type: "valid" }
   })

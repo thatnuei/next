@@ -109,3 +109,19 @@ test("shape (loose)", () => {
   expect(() => validator.parse({ a: 123, c: "oops" })).toThrow()
   expect(() => validator.parse(null)).toThrow()
 })
+
+test("dictionary", () => {
+  const validator = v.dictionary(v.number)
+
+  expect(validator.parse({})).toEqual({})
+  expect(validator.parse({ nothing: 0, everything: 42 })).toEqual({
+    nothing: 0,
+    everything: 42,
+  })
+
+  // undefined values are allowed in dictionaries
+  expect(validator.parse({ a: undefined })).toEqual({ a: undefined })
+
+  expect(() => validator.parse({ a: "hi" })).toThrow()
+  expect(() => validator.parse({ a: null })).toThrow()
+})
