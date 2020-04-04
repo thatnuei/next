@@ -32,7 +32,7 @@ function PrivateChatView({ chat, ...props }: Props) {
       </div>
 
       <div css={tw`flex flex-row flex-1 min-h-0 my-gap bg-background-1`}>
-        <MessageList messages={chat.messageList.items} />
+        <MessageList list={chat.messageList} />
       </div>
 
       <ChatInput />

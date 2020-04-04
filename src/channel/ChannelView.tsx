@@ -7,8 +7,6 @@ import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
-import { MessageModel } from "../message/MessageModel"
-import { MessageType } from "../message/types"
 import { fadedButton, headerText2 } from "../ui/components"
 import Icon from "../ui/Icon"
 import { users } from "../ui/icons"
@@ -23,23 +21,6 @@ type Props = {
 
 function ChannelView({ channel, ...props }: Props) {
   const isLargeScreen = useMediaQuery(screenQueries.large)
-
-  const isType = (...types: MessageType[]) => (message: MessageModel) =>
-    types.includes(message.type)
-
-  const filteredMessages = (() => {
-    if (channel.selectedMode === "chat") {
-      return channel.messageList.items.filter(
-        isType("normal", "system", "admin"),
-      )
-    }
-
-    if (channel.selectedMode === "ads") {
-      return channel.messageList.items.filter(isType("lfrp", "system", "admin"))
-    }
-
-    return channel.messageList.items
-  })()
 
   return (
     <div css={tw`flex flex-col`} {...props}>
@@ -61,7 +42,10 @@ function ChannelView({ channel, ...props }: Props) {
 
       <div css={tw`flex flex-row flex-1 min-h-0 my-gap`}>
         <main css={tw`flex-1 bg-background-1`}>
-          <MessageList messages={filteredMessages} />
+          <MessageList
+            list={channel.messageList}
+            filter={(it) => channel.shouldShowMessage(it.type)}
+          />
         </main>
 
         {isLargeScreen && (
