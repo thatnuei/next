@@ -110,6 +110,21 @@ test("shape (loose)", () => {
   expect(() => validator.parse(null)).toThrow()
 })
 
+test("shape - optional values", () => {
+  const validator = v.shape({
+    a: v.number,
+    b: v.optional(v.string),
+  })
+
+  expect(validator.parse({ a: 123 })).toEqual({ a: 123 })
+  expect(validator.parse({ a: 123, b: null })).toEqual({ a: 123, b: null })
+  expect(validator.parse({ a: 123, b: undefined })).toEqual({
+    a: 123,
+    b: undefined,
+  })
+  expect(validator.parse({ a: 123, b: "nice" })).toEqual({ a: 123, b: "nice" })
+})
+
 test("dictionary", () => {
   const validator = v.dictionary(v.number)
 
@@ -124,4 +139,41 @@ test("dictionary", () => {
 
   expect(() => validator.parse({ a: "hi" })).toThrow()
   expect(() => validator.parse({ a: null })).toThrow()
+})
+
+test("kitchen sink", () => {
+  const validator = v.shape({
+    num: v.number,
+    str: v.string,
+    bool: v.boolean,
+    option: v.optional(v.string),
+    literal: v.literal("has to be exactly this" as const),
+    possibilities: v.union(v.string, v.number),
+    array: v.array(v.number),
+    dict: v.dictionary(v.string),
+    nested: v.shape({
+      a: v.string,
+      b: v.optional(v.union(v.string, v.number, v.array(v.boolean))),
+    }),
+  })
+
+  const subject: v.ValidatorType<typeof validator> = {
+    num: 123,
+    str: "hi",
+    bool: true,
+    option: undefined,
+    literal: "has to be exactly this",
+    possibilities: "ye",
+    array: [1, 2, 3],
+    dict: {
+      a: "what",
+      b: "secret",
+    },
+    nested: {
+      a: "what",
+      b: [true, false],
+    },
+  }
+
+  expect(validator.parse(subject)).toBe(subject)
 })

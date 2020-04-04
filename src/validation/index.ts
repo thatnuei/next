@@ -8,7 +8,7 @@ type Validator<T = unknown> = {
   is: (value: unknown) => value is T
 }
 
-type ValidatorType<V> = V extends Validator<infer T> ? T : never
+export type ValidatorType<V> = V extends Validator<infer T> ? T : never
 
 const raise = (error: string): never => {
   throw new Error(error)
@@ -63,6 +63,9 @@ export const literal = <T>(expectedValue: T) =>
           error: `expected an exact value, got ${stringify(value)}`,
         },
   )
+
+export const optional = <T>(type: Validator<T>) =>
+  union(type, literal(null), literal(undefined))
 
 export const union = <T extends Validator[]>(...members: T) =>
   createValidator<ValidatorType<T[number]>>((value) => {
