@@ -17,7 +17,7 @@ function MessageList({ list, filter: shouldShow = () => true }: Props) {
       {list.items.map((message) =>
         shouldShow(message) ? (
           <li key={message.key}>
-            <MessageListItem message={message} />
+            <MessageListItem message={message} css={tw`mb-px2`} />
           </li>
         ) : null,
       )}

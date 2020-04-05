@@ -3,13 +3,14 @@ import tw from "twin.macro"
 import BBC from "../bbc/BBC"
 import CharacterName from "../character/CharacterName"
 import { useChatState } from "../chat/chatStateContext"
+import { TagProps } from "../jsx/types"
 import { MessageModel } from "./MessageModel"
 
 type Props = {
   message: MessageModel
-}
+} & TagProps<"div">
 
-function MessageListItem({ message }: Props) {
+function MessageListItem({ message, ...props }: Props) {
   const state = useChatState()
 
   const typeStyle = {
@@ -20,7 +21,7 @@ function MessageListItem({ message }: Props) {
   }[message.type]
 
   return (
-    <div css={[tw`px-3 py-1`, typeStyle]}>
+    <div css={[tw`px-3 py-1`, typeStyle]} {...props}>
       <span css={messageStyle}>
         {new Date(message.timestamp).toLocaleTimeString()}
       </span>
