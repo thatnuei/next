@@ -164,12 +164,12 @@ function BBCLink({ url, children }: PropsWithChildren<{ url: string }>) {
     <span css={tw`inline-flex items-baseline leading-none `}>
       <Icon
         which={icons.link}
-        css={tw`self-center inline w-4 h-4 mr-1 opacity-75`}
+        css={tw`self-center inline w-4 h-4 opacity-75 mr-px2`}
       />
-      <ExternalLink href={url} css={tw`underline hover:no-underline`}>
-        {children}
+      <ExternalLink href={url} className="group">
+        <span css={tw`underline group-hover:no-underline`}>{children}</span>
+        {domain && <span css={tw`ml-1 text-sm`}>[{domain}] </span>}
       </ExternalLink>
-      {domain && <span css={tw`ml-1 text-sm`}>[{domain}] </span>}
     </span>
   )
 }
