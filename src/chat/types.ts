@@ -16,6 +16,8 @@ type ChatEventMap = {
   "refresh-channel-browser": {}
   "show-status-update": {}
   "submit-status-update": {}
+  "send-channel-message": { channelId: string; text: string }
+  "send-private-message": { recipientName: string; text: string }
 }
 
 export type ChatEvent = ValueOf<

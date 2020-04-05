@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import ChatInput from "../chat/ChatInput"
+import { useChatStream } from "../chat/streamContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
@@ -20,6 +21,7 @@ type Props = {
 } & TagProps<"div">
 
 function ChannelView({ channel, ...props }: Props) {
+  const stream = useChatStream()
   const isLargeScreen = useMediaQuery(screenQueries.large)
 
   return (
@@ -53,7 +55,16 @@ function ChannelView({ channel, ...props }: Props) {
         )}
       </div>
 
-      <ChatInput />
+      <ChatInput
+        inputModel={channel.chatInput}
+        onSubmit={(text) =>
+          stream.send({
+            type: "send-channel-message",
+            channelId: channel.id,
+            text,
+          })
+        }
+      />
     </div>
   )
 }

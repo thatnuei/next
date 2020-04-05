@@ -7,6 +7,7 @@ import { useChatCredentials } from "../chat/credentialsContext"
 import { useChatSocket } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useChatNav } from "../chatNav/state"
+import { InputModel } from "../form/InputModel"
 import { MessageListModel } from "../message/MessageListModel"
 import { MessageType } from "../message/MessageModel"
 import { useStreamListener } from "../state/stream"
@@ -29,6 +30,7 @@ export class ChannelModel {
   @observable.shallow ops = new Set<string>()
 
   messageList = new MessageListModel()
+  chatInput = new InputModel("")
 
   @action
   setSelectedMode = (mode: ChannelMode) => {
@@ -106,6 +108,16 @@ export function useChannelListeners() {
         channel.joinState = "leaving"
       })
       socket.send({ type: "LCH", params: { channel: event.id } })
+    }
+
+    if (event.type === "send-channel-message") {
+      channels.update(event.channelId, (channel) => {
+        channel.messageList.add(identity, event.text, "normal", Date.now())
+      })
+      socket.send({
+        type: "MSG",
+        params: { channel: event.channelId, message: event.text },
+      })
     }
   })
 

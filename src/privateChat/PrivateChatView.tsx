@@ -6,6 +6,7 @@ import CharacterName from "../character/CharacterName"
 import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
 import { useChatState } from "../chat/chatStateContext"
+import { useChatStream } from "../chat/streamContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
@@ -18,6 +19,7 @@ type Props = {
 
 function PrivateChatView({ chat, ...props }: Props) {
   const state = useChatState()
+  const stream = useChatStream()
   const character = state.characters.get(chat.partnerName)
 
   return (
@@ -35,7 +37,16 @@ function PrivateChatView({ chat, ...props }: Props) {
         <MessageList list={chat.messageList} />
       </div>
 
-      <ChatInput />
+      <ChatInput
+        inputModel={chat.chatInput}
+        onSubmit={(text) =>
+          stream.send({
+            type: "send-private-message",
+            recipientName: chat.partnerName,
+            text,
+          })
+        }
+      />
     </div>
   )
 }
