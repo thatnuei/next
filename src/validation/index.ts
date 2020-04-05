@@ -134,7 +134,7 @@ export const shape = <S extends Record<string, Validator>>(
     if (!allowExtraKeys) {
       for (const key of Object.keys(maybeObject)) {
         if (!(key in shape)) {
-          errors.push(`extra key ${key}`)
+          errors.push(`extra key "${key}"`)
         }
       }
     }
