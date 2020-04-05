@@ -11,3 +11,5 @@ export type TagProps<
 export type ComponentProps<
   C extends React.ComponentType
 > = React.ComponentPropsWithoutRef<C>
+
+export type ChildrenProps = { children: React.ReactNode }
