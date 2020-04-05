@@ -10,6 +10,7 @@ export default function Reset() {
         {
           ":root": tw`text-text bg-background-2 font-body`,
           "button, input, textarea, select": tw`text-left rounded-none`,
+          "*": tw`min-w-0 min-h-0`,
         },
         {
           ":root": { wordBreak: "break-word" },
