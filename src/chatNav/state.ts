@@ -10,7 +10,7 @@ import { getStoredRooms, StoredRoomList } from "./storage"
 
 type RoomBase = { readonly key: string; isUnread: boolean }
 
-type Room =
+export type Room =
   | ({ readonly type: "channel"; readonly id: string } & RoomBase)
   | ({ readonly type: "privateChat"; readonly partnerName: string } & RoomBase)
 
