@@ -2,21 +2,34 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
+import { useChannelListeners } from "../channel/state"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
+import { useChannelBrowserListeners } from "../channelBrowser/state"
+import { useCharacterListeners } from "../character/state"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import ChatNav from "../chatNav/ChatNav"
 import { useChatNav } from "../chatNav/state"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import PrivateChatView from "../privateChat/PrivateChatView"
+import { usePrivateChatListeners } from "../privateChat/state"
+import { useStatusUpdateListeners } from "../statusUpdate/state"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import Drawer from "../ui/Drawer"
 import { fixedCover } from "../ui/helpers"
 import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
-import { useChatContext } from "./context"
+import { useChatState } from "./chatStateContext"
+import { useChatSocketConnection } from "./socketContext"
 
 function Chat() {
-  const { state } = useChatContext()
+  useChatSocketConnection()
+  useChannelListeners()
+  useCharacterListeners()
+  usePrivateChatListeners()
+  useChannelBrowserListeners()
+  useStatusUpdateListeners()
+
+  const state = useChatState()
   const { currentChannel, currentPrivateChat } = useChatNav()
   const isSmallScreen = useMediaQuery(screenQueries.small)
 

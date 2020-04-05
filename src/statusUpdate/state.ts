@@ -1,8 +1,12 @@
 import { observable } from "mobx"
 import { CharacterStatus } from "../character/types"
-import { ChatState } from "../chat/ChatState"
+import { useChatState } from "../chat/chatStateContext"
 import { createCommandHandler } from "../chat/commandHelpers"
-import { useChatContext } from "../chat/context"
+import { useCommandStream } from "../chat/commandStreamContext"
+import { useChatCredentials } from "../chat/credentialsContext"
+import { useChatSocket } from "../chat/socketContext"
+import { useChatStream } from "../chat/streamContext"
+import { useStreamListener } from "../state/stream"
 import { OverlayModel } from "../ui/OverlayModel"
 
 export class StatusUpdateState {
@@ -15,20 +19,24 @@ export class StatusUpdateState {
   overlay = new OverlayModel()
 }
 
-export function useStatusUpdateActions() {
-  const { state, socket, identity } = useChatContext()
+export function useStatusUpdateListeners() {
+  const state = useChatState()
+  const form = state.statusUpdate
 
-  return {
-    showStatusUpdateScreen() {
+  const socket = useChatSocket()
+  const { identity } = useChatCredentials()
+  const chatStream = useChatStream()
+  const commandStream = useCommandStream()
+
+  useStreamListener(chatStream, (event) => {
+    if (event.type === "show-status-update") {
       const { status, statusMessage } = state.characters.get(identity)
-      state.statusUpdate.status = status
-      state.statusUpdate.statusMessage = statusMessage
-      state.statusUpdate.overlay.show()
-    },
+      form.status = status
+      form.statusMessage = statusMessage
+      form.overlay.show()
+    }
 
-    submitStatusUpdate() {
-      const form = state.statusUpdate
-
+    if (event.type === "submit-status-update") {
       if (!form.canSubmit) return
       form.canSubmit = false
 
@@ -43,22 +51,23 @@ export function useStatusUpdateActions() {
       setTimeout(() => {
         form.canSubmit = true
       }, form.timeout)
-    },
-  }
-}
-
-export function createStatusCommandHandler(state: ChatState, identity: string) {
-  return createCommandHandler({
-    VAR({ variable, value }) {
-      if (variable === "sta_flood") {
-        state.statusUpdate.timeout = (Number(value) || 5) * 1000 // value is in seconds
-      }
-    },
-
-    STA({ character }) {
-      if (character === identity) {
-        state.statusUpdate.overlay.hide()
-      }
-    },
+    }
   })
+
+  useStreamListener(
+    commandStream,
+    createCommandHandler({
+      VAR({ variable, value }) {
+        if (variable === "sta_flood") {
+          state.statusUpdate.timeout = (Number(value) || 5) * 1000 // value is in seconds
+        }
+      },
+
+      STA({ character }) {
+        if (character === identity) {
+          state.statusUpdate.overlay.hide()
+        }
+      },
+    }),
+  )
 }

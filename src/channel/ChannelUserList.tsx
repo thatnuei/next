@@ -3,7 +3,7 @@ import React from "react"
 import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
 import { CharacterModel } from "../character/state"
-import { useChatContext } from "../chat/context"
+import { useChatState } from "../chat/chatStateContext"
 import { compare } from "../common/compare"
 import { ValueOf } from "../common/types"
 import { TagProps } from "../jsx/types"
@@ -18,7 +18,7 @@ const itemTypes = ["admin", "op", "friend", "looking", "default"] as const
 type ItemType = ValueOf<typeof itemTypes>
 
 function ChannelUserList({ channel, ...props }: Props) {
-  const { state } = useChatContext()
+  const state = useChatState()
 
   const getItemType = (character: CharacterModel): ItemType => {
     if (state.admins.has(character.name)) return "admin"

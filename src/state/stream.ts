@@ -18,8 +18,8 @@ export class Stream<T> {
 }
 
 export function useStreamListener<T>(
-  channel: Stream<T>,
+  stream: Stream<T>,
   listener: StreamListener<T>,
 ) {
-  useEffect(() => channel.listen(listener), [channel, listener])
+  useEffect(() => stream.listen(listener), [stream, listener])
 }

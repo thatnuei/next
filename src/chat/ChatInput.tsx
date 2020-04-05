@@ -3,12 +3,12 @@ import React from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
 import { input, solidButton } from "../ui/components"
-import { useChatContext } from "./context"
+import { useChatCredentials } from "./credentialsContext"
 
 type Props = {}
 
 function ChatInput(props: Props) {
-  const { identity } = useChatContext()
+  const { identity } = useChatCredentials()
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()

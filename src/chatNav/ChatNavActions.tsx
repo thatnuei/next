@@ -1,25 +1,23 @@
 import React from "react"
 import tw from "twin.macro"
-import { useChannelBrowserHelpers } from "../channelBrowser/state"
-import { useStatusUpdateActions } from "../statusUpdate/state"
+import { useChatStream } from "../chat/streamContext"
 import * as icons from "../ui/icons"
 import NavAction from "./NavAction"
 
 function ChatNavActions() {
-  const { openChannelBrowser } = useChannelBrowserHelpers()
-  const { showStatusUpdateScreen } = useStatusUpdateActions()
+  const stream = useChatStream()
 
   return (
     <>
       <NavAction
         icon={icons.list}
         title="Browse channels"
-        onClick={openChannelBrowser}
+        onClick={() => stream.send({ type: "open-channel-browser" })}
       />
       <NavAction
         icon={icons.updateStatus}
         title="Update your status"
-        onClick={showStatusUpdateScreen}
+        onClick={() => stream.send({ type: "show-status-update" })}
       />
       <NavAction icon={icons.users} title="See online friends and bookmarks" />
       <NavAction icon={icons.about} title="About next" />

@@ -1,8 +1,12 @@
 import { observable } from "mobx"
-import { ChatState } from "../chat/ChatState"
+import { useChatState } from "../chat/chatStateContext"
 import { createCommandHandler } from "../chat/commandHelpers"
-import { createChatNavHelpers } from "../chatNav/state"
+import { useCommandStream } from "../chat/commandStreamContext"
+import { useChatCredentials } from "../chat/credentialsContext"
+import { useChatStream } from "../chat/streamContext"
+import { useChatNav } from "../chatNav/state"
 import { MessageListModel } from "../message/MessageListModel"
+import { useStreamListener } from "../state/stream"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
 import { TypingStatus } from "./types"
@@ -20,7 +24,20 @@ export class PrivateChatModel {
   @observable isUnread = false
 }
 
-export function createPrivateChatHelpers(state: ChatState, identity: string) {
+export function usePrivateChatListeners() {
+  const chatStream = useChatStream()
+  const commandStream = useCommandStream()
+  const state = useChatState()
+  const { identity } = useChatCredentials()
+  const nav = useChatNav()
+
+  function openChat(name: string) {
+    state.privateChats.update(name, (chat) => {
+      chat.isOpen = true
+    })
+    save()
+  }
+
   function save() {
     const chats = [...state.privateChats.values()].filter((chat) => chat.isOpen)
 
@@ -49,52 +66,40 @@ export function createPrivateChatHelpers(state: ChatState, identity: string) {
     }
   }
 
-  function openChat(name: string) {
-    state.privateChats.update(name, (chat) => {
-      chat.isOpen = true
-    })
-    save()
-  }
+  useStreamListener(chatStream, (event) => {
+    if (event.type === "open-private-chat") {
+      openChat(event.name)
+    }
 
-  function closeChat(name: string) {
-    state.privateChats.update(name, (chat) => {
-      chat.isOpen = false
-    })
-    save()
-  }
-
-  return {
-    openChat,
-    closeChat,
-    restore,
-  }
-}
-
-export function createPrivateChatCommandHandler(
-  state: ChatState,
-  identity: string,
-) {
-  const helpers = createPrivateChatHelpers(state, identity)
-  const navHelpers = createChatNavHelpers(state)
-
-  return createCommandHandler({
-    IDN() {
-      helpers.restore()
-    },
-    PRI({ character, message }) {
-      state.privateChats.update(character, (chat) => {
-        chat.messageList.add(character, message, "normal", Date.now())
-        helpers.openChat(character)
-
-        if (navHelpers.currentPrivateChat !== chat) {
-          chat.isUnread = true
-        }
+    if (event.type === "close-private-chat") {
+      state.privateChats.update(event.name, (chat) => {
+        chat.isOpen = false
       })
-    },
-    TPN({ character, status }) {
-      state.privateChats.update(character, (chat) => {
-        chat.typingStatus = status
-      })
-    },
+      save()
+    }
   })
+
+  useStreamListener(
+    commandStream,
+    createCommandHandler({
+      IDN() {
+        restore()
+      },
+      PRI({ character, message }) {
+        state.privateChats.update(character, (chat) => {
+          chat.messageList.add(character, message, "normal", Date.now())
+          openChat(character)
+
+          if (nav.currentPrivateChat !== chat) {
+            chat.isUnread = true
+          }
+        })
+      },
+      TPN({ character, status }) {
+        state.privateChats.update(character, (chat) => {
+          chat.typingStatus = status
+        })
+      },
+    }),
+  )
 }

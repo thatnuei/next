@@ -1,6 +1,8 @@
 import { observable } from "mobx"
-import { ChatState } from "../chat/ChatState"
+import { useChatState } from "../chat/chatStateContext"
 import { createCommandHandler } from "../chat/commandHelpers"
+import { useCommandStream } from "../chat/commandStreamContext"
+import { useStreamListener } from "../state/stream"
 import { CharacterGender, CharacterStatus } from "./types"
 
 export class CharacterModel {
@@ -25,58 +27,64 @@ export class CharacterModel {
   statusMessage: string
 }
 
-export function createCharacterCommandHandler(state: ChatState) {
-  return createCommandHandler({
-    FRL({ characters }) {
-      state.friends = new Set(characters)
-    },
+export function useCharacterListeners() {
+  const commandStream = useCommandStream()
+  const state = useChatState()
 
-    IGN(params) {
-      if (params.action === "init" || params.action === "list") {
-        state.ignored = new Set(params.characters)
-      }
-      if (params.action === "add") {
-        state.ignored.add(params.character)
-      }
-      if (params.action === "delete") {
-        state.ignored.delete(params.character)
-      }
-    },
+  useStreamListener(
+    commandStream,
+    createCommandHandler({
+      FRL({ characters }) {
+        state.friends = new Set(characters)
+      },
 
-    ADL({ ops }) {
-      state.admins = new Set(ops)
-    },
+      IGN(params) {
+        if (params.action === "init" || params.action === "list") {
+          state.ignored = new Set(params.characters)
+        }
+        if (params.action === "add") {
+          state.ignored.add(params.character)
+        }
+        if (params.action === "delete") {
+          state.ignored.delete(params.character)
+        }
+      },
 
-    LIS({ characters }) {
-      for (const [name, gender, status, statusMessage] of characters) {
+      ADL({ ops }) {
+        state.admins = new Set(ops)
+      },
+
+      LIS({ characters }) {
+        for (const [name, gender, status, statusMessage] of characters) {
+          state.characters.update(name, (char) => {
+            char.gender = gender
+            char.status = status
+            char.statusMessage = statusMessage
+          })
+        }
+      },
+
+      NLN({ identity: name, gender, status }) {
         state.characters.update(name, (char) => {
           char.gender = gender
           char.status = status
-          char.statusMessage = statusMessage
+          char.statusMessage = ""
         })
-      }
-    },
+      },
 
-    NLN({ identity: name, gender, status }) {
-      state.characters.update(name, (char) => {
-        char.gender = gender
-        char.status = status
-        char.statusMessage = ""
-      })
-    },
+      FLN({ character: name }) {
+        state.characters.update(name, (char) => {
+          char.status = "offline"
+          char.statusMessage = ""
+        })
+      },
 
-    FLN({ character: name }) {
-      state.characters.update(name, (char) => {
-        char.status = "offline"
-        char.statusMessage = ""
-      })
-    },
-
-    STA({ character: name, status, statusmsg }) {
-      state.characters.update(name, (char) => {
-        char.status = status
-        char.statusMessage = statusmsg
-      })
-    },
-  })
+      STA({ character: name, status, statusmsg }) {
+        state.characters.update(name, (char) => {
+          char.status = status
+          char.statusMessage = statusmsg
+        })
+      },
+    }),
+  )
 }

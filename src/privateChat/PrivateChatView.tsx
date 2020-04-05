@@ -5,7 +5,7 @@ import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
 import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
-import { useChatContext } from "../chat/context"
+import { useChatState } from "../chat/chatStateContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
@@ -17,7 +17,7 @@ type Props = {
 } & TagProps<"div">
 
 function PrivateChatView({ chat, ...props }: Props) {
-  const { state } = useChatContext()
+  const state = useChatState()
   const character = state.characters.get(chat.partnerName)
 
   return (

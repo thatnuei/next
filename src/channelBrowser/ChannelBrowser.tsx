@@ -2,7 +2,8 @@ import fuzzysearch from "fuzzysearch"
 import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
 import tw from "twin.macro"
-import { useChatContext } from "../chat/context"
+import { useChatState } from "../chat/chatStateContext"
+import { useChatStream } from "../chat/streamContext"
 import { compare, compareReverse } from "../common/compare"
 import Button from "../dom/Button"
 import { TagProps } from "../jsx/types"
@@ -12,13 +13,13 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
-import { ChannelBrowserItemInfo, useChannelBrowserHelpers } from "./state"
+import { ChannelBrowserItemInfo } from "./state"
 
 type Props = TagProps<"div">
 
 function ChannelBrowser(props: Props) {
-  const { state } = useChatContext()
-  const { refresh } = useChannelBrowserHelpers()
+  const state = useChatState()
+  const stream = useChatStream()
   const [query, setQuery] = useState("")
   const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
 
@@ -77,7 +78,7 @@ function ChannelBrowser(props: Props) {
         <Button
           title="Refresh"
           css={[solidButton, tw`ml-2`]}
-          onClick={refresh}
+          onClick={() => stream.send({ type: "refresh-channel-browser" })}
           disabled={!state.channelBrowser.canRefresh}
         >
           <Icon which={icons.refresh} />

@@ -1,9 +1,9 @@
 import React, { CSSProperties, Fragment, PropsWithChildren } from "react"
 import tw from "twin.macro"
-import { useChannels } from "../channel/state"
 import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
 import { useChatState } from "../chat/chatStateContext"
+import { useChatStream } from "../chat/streamContext"
 import ExternalLink from "../dom/ExternalLink"
 import { getIconUrl, getProfileUrl } from "../flist/helpers"
 import Icon from "../ui/Icon"
@@ -183,7 +183,7 @@ function BBCChannelLink({
   title: string
   type: "public" | "private"
 }>) {
-  const { join } = useChannels()
+  const stream = useChatStream()
 
   return (
     <span css={tw`inline-flex items-baseline leading-none`}>
@@ -191,7 +191,10 @@ function BBCChannelLink({
         which={type === "public" ? icons.earth : icons.lock}
         css={tw`self-center inline w-4 h-4 mr-1 opacity-75`}
       />
-      <button onClick={() => join(id)} css={tw`underline hover:no-underline`}>
+      <button
+        onClick={() => stream.send({ type: "join-channel", id, title })}
+        css={tw`underline hover:no-underline`}
+      >
         {title}
       </button>
     </span>

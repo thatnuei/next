@@ -1,13 +1,10 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
-import { useChannels } from "../channel/state"
-import { useChannelBrowserHelpers } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import { useChatState } from "../chat/chatStateContext"
-import { useChatContext } from "../chat/context"
+import { useChatStream } from "../chat/streamContext"
 import { compare } from "../common/compare"
-import { createPrivateChatHelpers } from "../privateChat/state"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import RoomTab from "./RoomTab"
@@ -15,11 +12,8 @@ import { useChatNav } from "./state"
 
 function RoomTabList() {
   const state = useChatState()
-  const { identity } = useChatContext()
+  const stream = useChatStream()
   const { setView, currentChannel, currentPrivateChat } = useChatNav()
-  const { isPublic } = useChannelBrowserHelpers()
-  const { leave } = useChannels()
-  const { closeChat } = createPrivateChatHelpers(state, identity)
 
   const privateChatTabs = [...state.privateChats.values()]
     .filter((it) => it.isOpen)
@@ -34,7 +28,9 @@ function RoomTabList() {
         onClick={() =>
           setView({ type: "privateChat", partnerName: chat.partnerName })
         }
-        onClose={() => closeChat(chat.partnerName)}
+        onClose={() =>
+          stream.send({ type: "close-private-chat", name: chat.partnerName })
+        }
       />
     ))
 
@@ -46,7 +42,7 @@ function RoomTabList() {
         key={channel.id}
         title={channel.title}
         icon={
-          isPublic(channel.id) ? (
+          state.channelBrowser.isPublic(channel.id) ? (
             <Icon which={icons.earth} css={tw`w-5 h-5`} />
           ) : (
             <Icon which={icons.lock} css={tw`w-5 h-5`} />
@@ -55,7 +51,7 @@ function RoomTabList() {
         isActive={channel === currentChannel}
         isUnread={channel.isUnread}
         onClick={() => setView({ type: "channel", id: channel.id })}
-        onClose={() => leave(channel.id)}
+        onClose={() => stream.send({ type: "leave-channel", id: channel.id })}
       />
     ))
 

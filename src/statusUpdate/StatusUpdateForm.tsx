@@ -2,21 +2,20 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import { CharacterStatus } from "../character/types"
-import { useChatContext } from "../chat/context"
+import { useChatState } from "../chat/chatStateContext"
+import { useChatStream } from "../chat/streamContext"
 import Button from "../dom/Button"
 import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
-import { useStatusUpdateActions } from "./state"
 
 function StatusUpdateForm() {
-  const { state } = useChatContext()
+  const state = useChatState()
+  const stream = useChatStream()
   const form = state.statusUpdate
-
-  const { submitStatusUpdate } = useStatusUpdateActions()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    submitStatusUpdate()
+    stream.send({ type: "submit-status-update" })
   }
 
   return (
@@ -51,7 +50,7 @@ function StatusUpdateForm() {
           }}
           onKeyPress={(event) => {
             if (event.key === "\n" && event.ctrlKey) {
-              submitStatusUpdate()
+              stream.send({ type: "submit-status-update" })
             }
           }}
         />

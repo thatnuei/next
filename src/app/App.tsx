@@ -1,5 +1,6 @@
 import React, { useState } from "react"
-import ChatRoot from "../chat/ChatRoot"
+import Chat from "../chat/Chat"
+import ChatProviders from "../chat/ChatRoot"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
 import CharacterSelect from "./CharacterSelect"
@@ -60,11 +61,13 @@ function App() {
 
     case "chat":
       return (
-        <ChatRoot
+        <ChatProviders
           account={screen.userData.account}
           ticket={screen.userData.ticket}
           identity={screen.identity}
-        />
+        >
+          <Chat />
+        </ChatProviders>
       )
   }
 }

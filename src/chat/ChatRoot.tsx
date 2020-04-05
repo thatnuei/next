@@ -1,22 +1,26 @@
 import React from "react"
-import Chat from "./Chat"
+import { ChildrenProps } from "../jsx/types"
 import { ChatStateProvider } from "./chatStateContext"
-import { ChatProvider } from "./context"
+import { CommandStreamProvider } from "./commandStreamContext"
+import { ChatCredentialsProvider } from "./credentialsContext"
+import { ChatSocketProvider } from "./socketContext"
 import { ChatStreamProvider } from "./streamContext"
 import { ChatCredentials } from "./types"
 
-type Props = ChatCredentials
+type Props = ChatCredentials & ChildrenProps
 
-function ChatRoot(props: Props) {
+function ChatProviders(props: Props) {
   return (
     <ChatStateProvider>
       <ChatStreamProvider>
-        <ChatProvider {...props}>
-          <Chat />
-        </ChatProvider>
+        <ChatCredentialsProvider {...props}>
+          <CommandStreamProvider>
+            <ChatSocketProvider>{props.children}</ChatSocketProvider>
+          </CommandStreamProvider>
+        </ChatCredentialsProvider>
       </ChatStreamProvider>
     </ChatStateProvider>
   )
 }
 
-export default ChatRoot
+export default ChatProviders
