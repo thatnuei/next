@@ -117,12 +117,14 @@ test("shape - optional values", () => {
   })
 
   expect(validator.parse({ a: 123 })).toEqual({ a: 123 })
-  expect(validator.parse({ a: 123, b: null })).toEqual({ a: 123, b: null })
   expect(validator.parse({ a: 123, b: undefined })).toEqual({
     a: 123,
     b: undefined,
   })
   expect(validator.parse({ a: 123, b: "nice" })).toEqual({ a: 123, b: "nice" })
+
+  // optional does not allow null
+  expect(() => validator.parse({ a: 123, b: null })).toThrow()
 })
 
 test("dictionary", () => {
