@@ -3,6 +3,7 @@ import Chat from "../chat/Chat"
 import { ChatStateProvider } from "../chat/chatStateContext"
 import { ChatProvider } from "../chat/context"
 import { createStoredValue } from "../storage/createStoredValue"
+import * as v from "../validation"
 import CharacterSelect from "./CharacterSelect"
 import Login, { LoginSuccessData } from "./Login"
 
@@ -14,7 +15,7 @@ type AppScreen =
 type UserData = LoginSuccessData
 
 const storedIdentity = (account: string) =>
-  createStoredValue<string>(`${account}:identity`)
+  createStoredValue(`${account}:identity`, v.string)
 
 function App() {
   const [screen, setScreen] = useState<AppScreen>({ name: "login" })

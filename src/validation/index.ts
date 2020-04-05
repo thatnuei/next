@@ -4,7 +4,7 @@ type ValidatorResult<T> = { type: "valid" } | { type: "invalid"; error: string }
 
 type ValidateFn<T> = (value: unknown) => ValidatorResult<T>
 
-type Validator<T = unknown> = {
+export type Validator<T = unknown> = {
   validate: ValidateFn<T>
   parse: (value: unknown) => T
   is: (value: unknown) => value is T
