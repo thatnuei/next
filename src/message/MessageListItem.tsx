@@ -30,7 +30,10 @@ function MessageListItem({ message, ...props }: Props) {
       {message.senderName && (
         <CharacterName
           character={state.characters.get(message.senderName)}
-          css={tw`inline-block mr-2`}
+          css={[
+            tw`inline-block`,
+            message.type === "action" ? tw`mr-1` : tw`mr-2`,
+          ]}
         />
       )}
 
