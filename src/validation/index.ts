@@ -63,7 +63,7 @@ export const literal = <T>(expectedValue: T) =>
   )
 
 export const optional = <T>(type: Validator<T>) =>
-  union(type, literal(null), literal(undefined))
+  union(type, literal(undefined))
 
 export const union = <T extends Validator[]>(...members: T) =>
   createValidator<ValidatorType<T[number]>>((value) => {
