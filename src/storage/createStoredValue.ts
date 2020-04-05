@@ -26,9 +26,21 @@ const keyValueStore = {
 }
 
 export function createStoredValue<V>(key: string, validator: Validator<V>) {
+  const get = async (): Promise<V> =>
+    validator.parse(await keyValueStore.get(key))
+  const set = async (value: V): Promise<void> => keyValueStore.set(key, value)
+  const del = (): Promise<void> => keyValueStore.delete(key)
+
+  const update = (
+    doUpdate: (data: V) => V,
+    createNew: () => V,
+  ): Promise<void> =>
+    get().then(validator.parse).catch(createNew).then(doUpdate).then(set)
+
   return {
-    get: async (): Promise<V> => validator.parse(await keyValueStore.get(key)),
-    set: async (value: V): Promise<void> => keyValueStore.set(key, value),
-    delete: (): Promise<void> => keyValueStore.delete(key),
+    get,
+    set,
+    delete: del,
+    update,
   }
 }

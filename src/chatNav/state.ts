@@ -1,213 +1,54 @@
-import { action, computed, observable, toJS } from "mobx"
-import { useObserver } from "mobx-react-lite"
-import { useChannels } from "../channel/state"
-import { createChannelBrowserHelpers } from "../channelBrowser/state"
+import { action, observable } from "mobx"
+import { useLocalStore } from "mobx-react-lite"
 import { ChatState } from "../chat/ChatState"
-import { createCommandHandler } from "../chat/commandHelpers"
-import { useChatContext } from "../chat/context"
-import { SocketHandler } from "../chat/SocketHandler"
-import { getStoredRooms, StoredRoomList } from "./storage"
+import { useChatState } from "../chat/chatStateContext"
 
-type RoomBase = { readonly key: string; isUnread: boolean }
+type ChatNavView =
+  | { type: "channel"; id: string }
+  | { type: "privateChat"; partnerName: string }
 
-export type Room =
-  | ({ readonly type: "channel"; readonly id: string } & RoomBase)
-  | ({ readonly type: "privateChat"; readonly partnerName: string } & RoomBase)
+export class ChatNavState {
+  @observable.ref
+  view?: ChatNavView
 
-const getChannelKey = (id: string) => `channel-${id}`
-const getPrivateChatKey = (name: string) => `privateChat-${name}`
-
-async function loadSavedRoomData(account: string, identity: string) {
-  const data: StoredRoomList = await getStoredRooms(account)
-    .get()
-    .catch((error) => {
-      console.warn(`couldn't load rooms:`, error)
-      return { characters: {} }
-    })
-
-  return data.characters[identity]
+  @action
+  setView = (view: ChatNavView) => {
+    this.view = view
+  }
 }
 
-export class RoomListModel {
-  @observable
-  rooms: Room[] = []
+export function createChatNavHelpers(state: ChatState) {
+  return {
+    get view() {
+      return state.nav.view
+    },
 
-  @observable.ref
-  currentKey?: string
+    get currentChannel() {
+      return this.view?.type === "channel"
+        ? state.channels.get(this.view.id)
+        : undefined
+    },
 
-  @action
-  add = (room: Room) => {
-    if (this.find(room.key)) return
-    this.rooms.push(room)
+    get currentPrivateChat() {
+      return this.view?.type === "privateChat"
+        ? state.privateChats.get(this.view.partnerName)
+        : undefined
+    },
+
+    setView: (view: ChatNavView) => {
+      state.nav.setView(view)
+      state.sideMenuOverlay.hide()
+
+      if (view.type === "channel") {
+        state.channels.get(view.id).isUnread = false
+      } else {
+        state.privateChats.get(view.partnerName).isUnread = false
+      }
+    },
   }
-
-  @action
-  remove = (key: string) => {
-    this.rooms = this.rooms.filter((it) => it.key !== key)
-  }
-
-  @action
-  setCurrent = (key: string) => {
-    this.currentKey = key
-
-    const room = this.find(key)
-    if (room) room.isUnread = false
-  }
-
-  @action
-  markUnread = (key: string) => {
-    const room = this.find(key)
-    if (room && this.currentKey !== key) {
-      room.isUnread = true
-    }
-  }
-
-  @computed
-  get currentRoom(): Room | undefined {
-    return this.currentKey ? this.find(this.currentKey) : undefined
-  }
-
-  save = async (account: string, identity: string) => {
-    const storage = getStoredRooms(account)
-
-    const data: StoredRoomList = await storage.get().catch((error) => {
-      console.warn(`couldn't load rooms:`, error)
-      return { characters: {} }
-    })
-
-    data.characters[identity] = {
-      rooms: toJS(this.rooms),
-      currentKey: this.currentKey,
-    }
-
-    await storage.set(data)
-  }
-
-  find = (key: string) => this.rooms.find((room) => room.key === key)
-
-  isCurrent = (key: string) => this.currentKey === key
 }
 
 export function useChatNav() {
-  const { state } = useChatContext()
-  const { leave } = useChannels()
-  const { roomList } = state
-
-  const currentRoom = useObserver(() => roomList.currentRoom)
-
-  const currentChannel = useObserver(() =>
-    currentRoom?.type === "channel"
-      ? state.channels.get(currentRoom.id)
-      : undefined,
-  )
-
-  const currentPrivateChat = useObserver(() =>
-    currentRoom?.type === "privateChat"
-      ? state.privateChats.get(currentRoom.partnerName)
-      : undefined,
-  )
-
-  return {
-    currentRoom,
-    currentChannel,
-    currentPrivateChat,
-
-    setRoom(room: Room) {
-      state.roomList.setCurrent(room.key)
-      state.sideMenuOverlay.hide()
-    },
-
-    closeRoom(room: Room) {
-      if (room.type === "channel") {
-        leave(room.id)
-      } else {
-        state.roomList.remove(room.key)
-      }
-    },
-  }
-}
-
-export function createChatNavCommandHandler(
-  state: ChatState,
-  socket: SocketHandler,
-  account: string,
-  identity: string,
-) {
-  const channelBrowserActions = createChannelBrowserHelpers(state, socket)
-
-  return createCommandHandler({
-    async IDN() {
-      const data = await loadSavedRoomData(account, identity)
-      const rooms = data?.rooms || []
-
-      for (const room of rooms) {
-        if (room.type === "channel") {
-          socket.send({ type: "JCH", params: { channel: room.id } })
-
-          // add the room tabs preemtively so the user knows the client is actually joining the rooms
-          // temporary UX until we get proper join/leave loading states
-          state.roomList.add({
-            type: "channel",
-            id: room.id,
-            key: getChannelKey(room.id),
-            isUnread: false,
-          })
-        } else {
-          state.roomList.add({
-            type: "privateChat",
-            partnerName: room.partnerName,
-            key: getPrivateChatKey(room.partnerName),
-            isUnread: false,
-          })
-        }
-      }
-
-      if (data?.currentKey) {
-        state.roomList.setCurrent(data.currentKey)
-      }
-
-      if (rooms.length === 0) {
-        channelBrowserActions.openChannelBrowser()
-      }
-    },
-
-    JCH({ character, channel: id }) {
-      if (character.identity === identity) {
-        state.roomList.add({
-          type: "channel",
-          id,
-          key: getChannelKey(id),
-          isUnread: false,
-        })
-        state.roomList.save(account, identity)
-      }
-    },
-
-    LCH({ character, channel }) {
-      if (character === identity) {
-        state.roomList.remove(getChannelKey(channel))
-        state.roomList.save(account, identity)
-      }
-    },
-
-    MSG({ channel: id }) {
-      const channel = state.channels.get(id)
-      const key = getChannelKey(id)
-      if (channel.shouldShowMessage("normal")) {
-        state.roomList.markUnread(key)
-      }
-    },
-
-    PRI({ character }) {
-      const room: Room = {
-        type: "privateChat",
-        partnerName: character,
-        key: getPrivateChatKey(character),
-        isUnread: false,
-      }
-      state.roomList.add(room)
-      state.roomList.save(account, identity)
-      state.roomList.markUnread(room.key)
-    },
-  })
+  const state = useChatState()
+  return useLocalStore(createChatNavHelpers, state)
 }

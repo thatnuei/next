@@ -2,7 +2,6 @@ import { useEffect, useMemo } from "react"
 import { createChannelCommandHandler } from "../channel/state"
 import { createChannelBrowserCommandHandler } from "../channelBrowser/state"
 import { createCharacterCommandHandler } from "../character/state"
-import { createChatNavCommandHandler } from "../chatNav/state"
 import { createPrivateChatCommandHandler } from "../privateChat/state"
 import createContextWrapper from "../react/createContextWrapper"
 import { createStatusCommandHandler } from "../statusUpdate/state"
@@ -19,12 +18,10 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
     () =>
       combineCommandHandlers([
         createCharacterCommandHandler(state),
-        createChannelCommandHandler(state),
-        createPrivateChatCommandHandler(state),
+        createChannelCommandHandler(state, socket, identity, account),
+        createPrivateChatCommandHandler(state, identity),
         createChannelBrowserCommandHandler(state, socket),
         createStatusCommandHandler(state, identity),
-        // TODO: combine these args into a single context object
-        createChatNavCommandHandler(state, socket, account, identity),
       ]),
     [account, identity, socket, state],
   )

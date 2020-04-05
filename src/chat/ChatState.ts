@@ -2,7 +2,7 @@ import { observable } from "mobx"
 import { ChannelModel } from "../channel/state"
 import { ChannelBrowserState } from "../channelBrowser/state"
 import { CharacterModel } from "../character/state"
-import { RoomListModel } from "../chatNav/state"
+import { ChatNavState } from "../chatNav/state"
 import { PrivateChatModel } from "../privateChat/state"
 import { MapWithDefault } from "../state/MapWithDefault"
 import { StatusUpdateState } from "../statusUpdate/state"
@@ -21,7 +21,7 @@ export class ChatState {
 
   privateChats = new MapWithDefault((name) => new PrivateChatModel(name))
 
-  roomList = new RoomListModel()
+  nav = new ChatNavState()
 
   sideMenuOverlay = new OverlayModel()
 

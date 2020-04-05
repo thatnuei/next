@@ -1,6 +1,8 @@
+import { useObserver } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import { useChannels } from "../channel/state"
+import { useChatState } from "../chat/chatStateContext"
 import { TagProps } from "../jsx/types"
 import Icon from "../ui/Icon"
 import { earth, lock } from "../ui/icons"
@@ -11,23 +13,28 @@ type Props = TagProps<"button"> & {
 }
 
 function ChannelBrowserItem({ info, ...props }: Props) {
-  const { join, leave, isJoined: isChannelJoined } = useChannels()
+  const state = useChatState()
 
-  const isJoined = isChannelJoined(info.id)
+  const isAbsent = useObserver(() => {
+    const channel = state.channels.get(info.id)
+    return channel.joinState === "absent"
+  })
+
+  const { join, leave } = useChannels()
 
   const handleClick = () => {
-    if (isJoined) {
-      leave(info.id)
-    } else {
+    if (isAbsent) {
       join(info.id)
+    } else {
+      leave(info.id)
     }
   }
 
   const containerStyle = [
     tw`flex flex-row items-center px-2 py-2 transition-all`,
-    isJoined
-      ? tw`opacity-100 bg-background-0`
-      : tw`opacity-50 hover:opacity-75`,
+    isAbsent
+      ? tw`opacity-50 hover:opacity-75`
+      : tw`opacity-100 bg-background-0`,
   ]
 
   return (

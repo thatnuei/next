@@ -1,21 +1,31 @@
 import { action, computed, observable } from "mobx"
+import { createChannelBrowserHelpers } from "../channelBrowser/state"
 import { ChatState } from "../chat/ChatState"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useChatContext } from "../chat/context"
+import { SocketHandler } from "../chat/SocketHandler"
+import { createChatNavHelpers } from "../chatNav/state"
 import { MessageListModel } from "../message/MessageListModel"
 import { MessageType } from "../message/MessageModel"
+import { getStoredChannels } from "./storage"
+
+export type ChannelMode = "both" | "chat" | "ads"
+type ChannelJoinState = "absent" | "joining" | "present" | "leaving"
 
 export class ChannelModel {
   constructor(public readonly id: string) {}
 
-  @observable title = ""
+  @observable title = this.id
   @observable description = ""
-  @observable.shallow messageList = new MessageListModel()
   @observable mode: ChannelMode = "both"
   @observable selectedMode: ChannelMode = "both"
+  @observable joinState: ChannelJoinState = "absent"
+  @observable isUnread = false
 
   @observable.shallow users = new Set<string>()
   @observable.shallow ops = new Set<string>()
+
+  messageList = new MessageListModel()
 
   @action
   setSelectedMode = (mode: ChannelMode) => {
@@ -39,39 +49,105 @@ export class ChannelModel {
   }
 }
 
-export type ChannelMode = "both" | "chat" | "ads"
+function saveChannels(state: ChatState, account: string, identity: string) {
+  const joinedChannels = [...state.channels.values()].filter(
+    (it) => it.joinState !== "absent",
+  )
 
-// IDEA: might be worth making a version of this which "binds" the helpers to a
-// given channel id? could make things nicer
-export function useChannels() {
-  const { state, socket } = useChatContext()
-  return {
-    isJoined(id: string) {
-      return state.roomList.find(`channel-${id}`)
+  const storage = getStoredChannels(account)
+
+  storage.update(
+    (data) => {
+      data.channelsByIdentity[identity] = joinedChannels.map((it) => ({
+        id: it.id,
+        title: it.title,
+      }))
+      return data
     },
+    () => ({ channelsByIdentity: {} }),
+  )
+}
 
-    join(id: string) {
+async function loadChannels(account: string, identity: string) {
+  const storage = getStoredChannels(account)
+
+  const data = await storage.get().catch((error) => {
+    console.warn(`could not restore channels:`, error)
+    return undefined
+  })
+
+  return data?.channelsByIdentity[identity] || []
+}
+
+function createChannelHelpers(state: ChatState, socket: SocketHandler) {
+  return {
+    join(id: string, title?: string) {
+      state.channels.update(id, (channel) => {
+        channel.joinState = "joining"
+        if (title) channel.title = title
+      })
       socket.send({ type: "JCH", params: { channel: id } })
     },
 
     leave(id: string) {
+      state.channels.update(id, (channel) => {
+        channel.joinState = "leaving"
+      })
       socket.send({ type: "LCH", params: { channel: id } })
     },
   }
 }
 
-export function createChannelCommandHandler({ channels }: ChatState) {
+// IDEA: might be worth making a version of this which "binds" the helpers to a
+// given channel id? could make things nicer
+export function useChannels() {
+  const { state, socket } = useChatContext()
+  return createChannelHelpers(state, socket)
+}
+
+export function createChannelCommandHandler(
+  state: ChatState,
+  socket: SocketHandler,
+  identity: string,
+  account: string,
+) {
+  const { channels } = state
+  const helpers = createChannelHelpers(state, socket)
+  const navHelpers = createChatNavHelpers(state)
+  const channelBrowserHelpers = createChannelBrowserHelpers(state, socket)
+
   return createCommandHandler({
+    async IDN() {
+      const channels = await loadChannels(account, identity)
+      if (channels.length === 0) {
+        channelBrowserHelpers.openChannelBrowser()
+      } else {
+        for (const { id, title } of channels) {
+          helpers.join(id, title)
+        }
+      }
+    },
+
     JCH({ channel: id, character: { identity: name }, title }) {
       channels.update(id, (channel) => {
         channel.title = title
         channel.users.add(name)
+
+        if (name === identity) {
+          channel.joinState = "present"
+          saveChannels(state, account, identity)
+        }
       })
     },
 
     LCH({ channel: id, character }) {
       channels.update(id, (channel) => {
         channel.users.delete(character)
+
+        if (character === identity) {
+          channel.joinState = "absent"
+          saveChannels(state, account, identity)
+        }
       })
     },
 
@@ -103,6 +179,10 @@ export function createChannelCommandHandler({ channels }: ChatState) {
     MSG({ channel: id, character, message }) {
       channels.update(id, (channel) => {
         channel.messageList.add(character, message, "normal", Date.now())
+
+        if (navHelpers.currentChannel !== channel) {
+          channel.isUnread = true
+        }
       })
     },
 
