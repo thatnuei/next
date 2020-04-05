@@ -14,6 +14,7 @@ function Avatar({ name, ...props }: Props) {
       alt=""
       role="presentation"
       css={tw`w-24 h-24`}
+      key={name}
       {...props}
     />
   )
