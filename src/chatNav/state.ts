@@ -1,7 +1,7 @@
 import { action, computed, observable, toJS } from "mobx"
 import { useObserver } from "mobx-react-lite"
 import { useChannels } from "../channel/state"
-import { createChannelBrowserActions } from "../channelBrowser/state"
+import { createChannelBrowserHelpers } from "../channelBrowser/state"
 import { ChatState } from "../chat/ChatState"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useChatContext } from "../chat/context"
@@ -133,7 +133,7 @@ export function createChatNavCommandHandler(
   account: string,
   identity: string,
 ) {
-  const channelBrowserActions = createChannelBrowserActions(state, socket)
+  const channelBrowserActions = createChannelBrowserHelpers(state, socket)
 
   return createCommandHandler({
     async IDN() {
@@ -143,6 +143,15 @@ export function createChatNavCommandHandler(
       for (const room of rooms) {
         if (room.type === "channel") {
           socket.send({ type: "JCH", params: { channel: room.id } })
+
+          // add the room tabs preemtively so the user knows the client is actually joining the rooms
+          // temporary UX until we get proper join/leave loading states
+          state.roomList.add({
+            type: "channel",
+            id: room.id,
+            key: getChannelKey(room.id),
+            isUnread: false,
+          })
         } else {
           state.roomList.add({
             type: "privateChat",
