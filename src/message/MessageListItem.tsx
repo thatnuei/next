@@ -15,21 +15,23 @@ function MessageListItem({ message, ...props }: Props) {
 
   const typeStyle = {
     normal: undefined,
-    lfrp: lfrpStyle,
-    admin: adminStyle,
-    system: systemStyle,
+    action: tw`italic`,
+    lfrp: tw`bg-green-faded`,
+    warning: tw`bg-red-faded`,
+    system: tw`bg-black-faded`,
   }[message.type]
 
   return (
     <div css={[tw`px-3 py-1`, typeStyle]} {...props}>
-      <span css={messageStyle}>
+      <span css={tw`inline-block float-right ml-3 text-sm opacity-50`}>
         {new Date(message.timestamp).toLocaleTimeString()}
       </span>
 
       {message.senderName && (
-        <span css={tw`inline-block mr-2`}>
-          <CharacterName character={state.characters.get(message.senderName)} />
-        </span>
+        <CharacterName
+          character={state.characters.get(message.senderName)}
+          css={tw`inline-block mr-2`}
+        />
       )}
 
       <BBC text={message.text} />
@@ -38,8 +40,3 @@ function MessageListItem({ message, ...props }: Props) {
 }
 
 export default MessageListItem
-
-const messageStyle = tw`inline-block float-right ml-3 text-sm opacity-50`
-const lfrpStyle = tw`bg-green-faded`
-const adminStyle = tw`bg-red-faded`
-const systemStyle = tw`bg-black-faded`

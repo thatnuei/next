@@ -9,7 +9,7 @@ import { useChatStream } from "../chat/streamContext"
 import { useChatNav } from "../chatNav/state"
 import { InputModel } from "../form/InputModel"
 import { MessageListModel } from "../message/MessageListModel"
-import { MessageType } from "../message/MessageModel"
+import { MessageModel, MessageType } from "../message/MessageModel"
 import { useStreamListener } from "../state/stream"
 import { getStoredChannels } from "./storage"
 
@@ -112,7 +112,9 @@ export function useChannelListeners() {
 
     if (event.type === "send-channel-message") {
       channels.update(event.channelId, (channel) => {
-        channel.messageList.add(identity, event.text, "normal", Date.now())
+        channel.messageList.add(
+          MessageModel.fromChannelMessage(identity, event.text),
+        )
       })
       socket.send({
         type: "MSG",
@@ -185,7 +187,9 @@ export function useChannelListeners() {
 
       MSG({ channel: id, character, message }) {
         channels.update(id, (channel) => {
-          channel.messageList.add(character, message, "normal", Date.now())
+          channel.messageList.add(
+            MessageModel.fromChannelMessage(character, message),
+          )
 
           if (nav.currentChannel !== channel) {
             channel.isUnread = true
@@ -195,7 +199,7 @@ export function useChannelListeners() {
 
       LRP({ channel: id, character, message }) {
         channels.update(id, (channel) => {
-          channel.messageList.add(character, message, "lfrp", Date.now())
+          channel.messageList.add(MessageModel.fromAd(character, message))
         })
       },
 
@@ -204,7 +208,7 @@ export function useChannelListeners() {
           const { channel: id, message } = params
 
           channels.update(id, (channel) => {
-            channel.messageList.add(undefined, message, "system", Date.now())
+            channel.messageList.add(MessageModel.fromSystem(message))
           })
         }
       },

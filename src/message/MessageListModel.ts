@@ -13,9 +13,7 @@ export class MessageListModel {
   }
 
   @action
-  add(...args: ConstructorParameters<typeof MessageModel>) {
-    const message = new MessageModel(...args)
-
+  add = (message: MessageModel) => {
     // -subtract 1, so the new message will add up to the set count
     // (otherwise we'd have one extra over max)
     this._messages = [...this._messages.slice(-(maxMessageCount - 1)), message]

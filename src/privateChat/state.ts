@@ -8,6 +8,7 @@ import { useChatStream } from "../chat/streamContext"
 import { useChatNav } from "../chatNav/state"
 import { InputModel } from "../form/InputModel"
 import { MessageListModel } from "../message/MessageListModel"
+import { MessageModel } from "../message/MessageModel"
 import { useStreamListener } from "../state/stream"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
@@ -53,7 +54,9 @@ export function usePrivateChatListeners() {
         params: { recipient: event.recipientName, message: event.text },
       })
       state.privateChats.update(event.recipientName, (chat) => {
-        chat.messageList.add(identity, event.text, "normal", Date.now())
+        chat.messageList.add(
+          MessageModel.fromPrivateMessage(identity, event.text),
+        )
       })
     }
   })
@@ -66,7 +69,9 @@ export function usePrivateChatListeners() {
       },
       PRI({ character, message }) {
         state.privateChats.update(character, (chat) => {
-          chat.messageList.add(character, message, "normal", Date.now())
+          chat.messageList.add(
+            MessageModel.fromPrivateMessage(character, message),
+          )
           openChat(character)
 
           if (nav.currentPrivateChat !== chat) {
