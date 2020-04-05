@@ -12,13 +12,13 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
-import { ChannelBrowserItemInfo, useChannelBrowserActions } from "./state"
+import { ChannelBrowserItemInfo, useChannelBrowserHelpers } from "./state"
 
 type Props = TagProps<"div">
 
 function ChannelBrowser(props: Props) {
   const { state } = useChatContext()
-  const { refresh } = useChannelBrowserActions()
+  const { refresh } = useChannelBrowserHelpers()
   const [query, setQuery] = useState("")
   const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
 

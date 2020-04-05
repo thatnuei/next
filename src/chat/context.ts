@@ -21,7 +21,7 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
         createCharacterCommandHandler(state),
         createChannelCommandHandler(state),
         createPrivateChatCommandHandler(state),
-        createChannelBrowserCommandHandler(state),
+        createChannelBrowserCommandHandler(state, socket),
         createStatusCommandHandler(state, identity),
         // TODO: combine these args into a single context object
         createChatNavCommandHandler(state, socket, account, identity),

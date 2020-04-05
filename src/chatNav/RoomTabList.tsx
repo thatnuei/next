@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
+import { useChannelBrowserHelpers } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import { useChatContext } from "../chat/context"
 import { compare } from "../common/compare"
@@ -12,39 +13,50 @@ import { Room, useChatNav } from "./state"
 function RoomTabList() {
   const { state } = useChatContext()
   const { currentRoom, setRoom, closeRoom } = useChatNav()
+  const { isPublic } = useChannelBrowserHelpers()
 
   function getTitle(room: Room) {
-    return room.type === "channel"
-      ? state.channels.get(room.id).title
-      : room.partnerName
+    if (room.type === "privateChat") {
+      return room.partnerName
+    }
+
+    const channel = state.channels.get(room.id)
+    return channel.title || channel.id // to account for a blank title when restoring saved rooms
+  }
+
+  function getIcon(room: Room) {
+    if (room.type === "privateChat") {
+      return <Avatar name={room.partnerName} css={tw`w-5 h-5`} />
+    }
+
+    return isPublic(room.id) ? (
+      <Icon which={icons.earth} css={tw`w-5 h-5`} />
+    ) : (
+      <Icon which={icons.lock} css={tw`w-5 h-5`} />
+    )
+  }
+
+  function getSortGroup(room: Room) {
+    if (room.type === "privateChat") return 0
+    if (isPublic(room.id)) return 1
+    return 2
   }
 
   return state.roomList.rooms
     .slice()
     .sort(compare(getTitle))
-    .sort(compare((room) => (room.type === "privateChat" ? 0 : 1)))
-    .map((room) => {
-      const title = getTitle(room)
-
-      const icon =
-        room.type === "channel" ? (
-          <Icon which={icons.earth} css={tw`w-5 h-5`} />
-        ) : (
-          <Avatar name={room.partnerName} css={tw`w-5 h-5`} />
-        )
-
-      return (
-        <RoomTab
-          key={room.key}
-          icon={icon}
-          title={title}
-          isActive={room === currentRoom}
-          isUnread={room.isUnread}
-          onClick={() => setRoom(room)}
-          onClose={() => closeRoom(room)}
-        />
-      )
-    }) as any
+    .sort(compare(getSortGroup))
+    .map((room) => (
+      <RoomTab
+        key={room.key}
+        title={getTitle(room)}
+        icon={getIcon(room)}
+        isActive={room === currentRoom}
+        isUnread={room.isUnread}
+        onClick={() => setRoom(room)}
+        onClose={() => closeRoom(room)}
+      />
+    )) as any
 }
 
 export default observer(RoomTabList)

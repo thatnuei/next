@@ -17,28 +17,7 @@ export class ChannelBrowserState {
   @observable canRefresh = true
 }
 
-export function createChannelBrowserCommandHandler(state: ChatState) {
-  return createCommandHandler({
-    CHA({ channels }) {
-      state.channelBrowser.publicChannels = channels.map((it) => ({
-        id: it.name,
-        title: it.name,
-        userCount: it.characters,
-        type: "public",
-      }))
-    },
-    ORS({ channels }) {
-      state.channelBrowser.privateChannels = channels.map((it) => ({
-        id: it.name,
-        title: it.title,
-        userCount: it.characters,
-        type: "private",
-      }))
-    },
-  })
-}
-
-export function createChannelBrowserActions(
+export function createChannelBrowserHelpers(
   state: ChatState,
   socket: SocketHandler,
 ) {
@@ -60,13 +39,51 @@ export function createChannelBrowserActions(
     refresh()
   }
 
+  function isPublic(channelId: string) {
+    return state.channelBrowser.publicChannels.some(
+      (entry) => entry.id === channelId,
+    )
+  }
+
   return {
     refresh,
     openChannelBrowser,
+    isPublic,
   }
 }
 
-export function useChannelBrowserActions() {
+export function useChannelBrowserHelpers() {
   const { state, socket } = useChatContext()
-  return createChannelBrowserActions(state, socket)
+  return createChannelBrowserHelpers(state, socket)
+}
+
+export function createChannelBrowserCommandHandler(
+  state: ChatState,
+  socket: SocketHandler,
+) {
+  const helpers = createChannelBrowserHelpers(state, socket)
+
+  return createCommandHandler({
+    IDN() {
+      helpers.refresh()
+    },
+
+    CHA({ channels }) {
+      state.channelBrowser.publicChannels = channels.map((it) => ({
+        id: it.name,
+        title: it.name,
+        userCount: it.characters,
+        type: "public",
+      }))
+    },
+
+    ORS({ channels }) {
+      state.channelBrowser.privateChannels = channels.map((it) => ({
+        id: it.name,
+        title: it.title,
+        userCount: it.characters,
+        type: "private",
+      }))
+    },
+  })
 }

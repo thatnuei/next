@@ -1,12 +1,12 @@
 import React from "react"
 import tw from "twin.macro"
-import { useChannelBrowserActions } from "../channelBrowser/state"
+import { useChannelBrowserHelpers } from "../channelBrowser/state"
 import { useStatusUpdateActions } from "../statusUpdate/state"
 import * as icons from "../ui/icons"
 import NavAction from "./NavAction"
 
 function ChatNavActions() {
-  const { openChannelBrowser } = useChannelBrowserActions()
+  const { openChannelBrowser } = useChannelBrowserHelpers()
   const { showStatusUpdateScreen } = useStatusUpdateActions()
 
   return (
