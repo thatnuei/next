@@ -23,9 +23,10 @@ function useChat({ account, ticket, identity }: ChatCredentials) {
         createPrivateChatCommandHandler(state),
         createChannelBrowserCommandHandler(state),
         createStatusCommandHandler(state, identity),
-        createChatNavCommandHandler(state, identity, socket),
+        // TODO: combine these args into a single context object
+        createChatNavCommandHandler(state, socket, account, identity),
       ]),
-    [identity, socket, state],
+    [account, identity, socket, state],
   )
 
   useEffect(() => {

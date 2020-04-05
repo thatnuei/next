@@ -1,10 +1,11 @@
-import { action, computed, observable } from "mobx"
+import { action, computed, observable, toJS } from "mobx"
 import { useObserver } from "mobx-react-lite"
 import { useChannels } from "../channel/state"
 import { ChatState } from "../chat/ChatState"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useChatContext } from "../chat/context"
 import { SocketHandler } from "../chat/SocketHandler"
+import { getStoredRooms, StoredRoomList } from "./storage"
 
 type RoomBase = { readonly key: string; isUnread: boolean }
 
@@ -14,6 +15,17 @@ type Room =
 
 const getChannelKey = (id: string) => `channel-${id}`
 const getPrivateChatKey = (name: string) => `privateChat-${name}`
+
+async function loadSavedRoomData(account: string, identity: string) {
+  const data: StoredRoomList = await getStoredRooms(account)
+    .get()
+    .catch((error) => {
+      console.warn(`couldn't load rooms:`, error)
+      return { characters: {} }
+    })
+
+  return data.characters[identity]
+}
 
 export class RoomListModel {
   @observable
@@ -52,6 +64,22 @@ export class RoomListModel {
   @computed
   get currentRoom(): Room | undefined {
     return this.currentKey ? this.find(this.currentKey) : undefined
+  }
+
+  save = async (account: string, identity: string) => {
+    const storage = getStoredRooms(account)
+
+    const data: StoredRoomList = await storage.get().catch((error) => {
+      console.warn(`couldn't load rooms:`, error)
+      return { characters: {} }
+    })
+
+    data.characters[identity] = {
+      rooms: toJS(this.rooms),
+      currentKey: this.currentKey,
+    }
+
+    await storage.set(data)
   }
 
   find = (key: string) => this.rooms.find((room) => room.key === key)
@@ -100,18 +128,30 @@ export function useChatNav() {
 
 export function createChatNavCommandHandler(
   state: ChatState,
-  identity: string,
   socket: SocketHandler,
+  account: string,
+  identity: string,
 ) {
   return createCommandHandler({
-    IDN() {
-      socket.send({ type: "JCH", params: { channel: "Frontpage" } })
-      socket.send({ type: "JCH", params: { channel: "Fantasy" } })
-      socket.send({
-        type: "JCH",
-        params: { channel: "Story Driven LFRP" },
-      })
-      socket.send({ type: "JCH", params: { channel: "Development" } })
+    async IDN() {
+      const data = await loadSavedRoomData(account, identity)
+
+      for (const room of data?.rooms || []) {
+        if (room.type === "channel") {
+          socket.send({ type: "JCH", params: { channel: room.id } })
+        } else {
+          state.roomList.add({
+            type: "privateChat",
+            partnerName: room.partnerName,
+            key: getPrivateChatKey(room.partnerName),
+            isUnread: false,
+          })
+        }
+      }
+
+      if (data?.currentKey) {
+        state.roomList.setCurrent(data.currentKey)
+      }
     },
 
     JCH({ character, channel: id }) {
@@ -122,12 +162,14 @@ export function createChatNavCommandHandler(
           key: getChannelKey(id),
           isUnread: false,
         })
+        state.roomList.save(account, identity)
       }
     },
 
     LCH({ character, channel }) {
       if (character === identity) {
         state.roomList.remove(getChannelKey(channel))
+        state.roomList.save(account, identity)
       }
     },
 
@@ -147,6 +189,7 @@ export function createChatNavCommandHandler(
         isUnread: false,
       }
       state.roomList.add(room)
+      state.roomList.save(account, identity)
       state.roomList.markUnread(room.key)
     },
   })
