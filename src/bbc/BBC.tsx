@@ -209,7 +209,6 @@ const colorStyles: { [color in string]?: CSSProperties } = {
   },
   gray: {
     color: "rgb(149, 165, 166)",
-    textShadow: darkColorShadow,
   },
   red: { color: "rgb(236, 93, 93)" },
   blue: { color: "rgb(52, 152, 219)" },
