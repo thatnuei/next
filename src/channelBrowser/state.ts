@@ -2,6 +2,7 @@ import { observable } from "mobx"
 import { ChatState } from "../chat/ChatState"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useChatContext } from "../chat/context"
+import { SocketHandler } from "../chat/SocketHandler"
 
 export type ChannelBrowserItemInfo = {
   id: string
@@ -37,9 +38,10 @@ export function createChannelBrowserCommandHandler(state: ChatState) {
   })
 }
 
-export function useChannelBrowserActions() {
-  const { state, socket } = useChatContext()
-
+export function createChannelBrowserActions(
+  state: ChatState,
+  socket: SocketHandler,
+) {
   function refresh() {
     if (!state.channelBrowser.canRefresh) return
     state.channelBrowser.canRefresh = false
@@ -62,4 +64,9 @@ export function useChannelBrowserActions() {
     refresh,
     openChannelBrowser,
   }
+}
+
+export function useChannelBrowserActions() {
+  const { state, socket } = useChatContext()
+  return createChannelBrowserActions(state, socket)
 }

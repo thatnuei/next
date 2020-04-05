@@ -1,6 +1,7 @@
 import { action, computed, observable, toJS } from "mobx"
 import { useObserver } from "mobx-react-lite"
 import { useChannels } from "../channel/state"
+import { createChannelBrowserActions } from "../channelBrowser/state"
 import { ChatState } from "../chat/ChatState"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useChatContext } from "../chat/context"
@@ -132,11 +133,14 @@ export function createChatNavCommandHandler(
   account: string,
   identity: string,
 ) {
+  const channelBrowserActions = createChannelBrowserActions(state, socket)
+
   return createCommandHandler({
     async IDN() {
       const data = await loadSavedRoomData(account, identity)
+      const rooms = data?.rooms || []
 
-      for (const room of data?.rooms || []) {
+      for (const room of rooms) {
         if (room.type === "channel") {
           socket.send({ type: "JCH", params: { channel: room.id } })
         } else {
@@ -151,6 +155,10 @@ export function createChatNavCommandHandler(
 
       if (data?.currentKey) {
         state.roomList.setCurrent(data.currentKey)
+      }
+
+      if (rooms.length === 0) {
+        channelBrowserActions.openChannelBrowser()
       }
     },
 
