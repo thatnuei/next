@@ -16,7 +16,7 @@ type Props = {
 }
 
 function RoomTab(props: Props) {
-  const inactiveHoverReveal = tw`opacity-50 hover:opacity-75`
+  const inactiveHoverReveal = tw`opacity-50 hover:opacity-100`
 
   const unreadHighlight = tw`bg-green-faded`
 
