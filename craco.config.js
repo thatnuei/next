@@ -1,5 +1,6 @@
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 
+// TODO: make these plugins so this doesn't look as terrifying
 module.exports = {
   babel: {
     presets: [
