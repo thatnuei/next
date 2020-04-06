@@ -7,8 +7,8 @@ import { useChatSocket } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useChatNav } from "../chatNav/state"
 import { InputModel } from "../form/InputModel"
-import { MessageListModel } from "../message/MessageListModel"
-import { MessageModel } from "../message/MessageModel"
+import { createMessageListModel } from "../message/message-list-model"
+import { createPrivateMessage } from "../message/message-model"
 import { useStreamListener } from "../state/stream"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
@@ -20,7 +20,7 @@ const getStoredPrivateChats = (identity: string) =>
 export class PrivateChatModel {
   constructor(public readonly partnerName: string) {}
 
-  messageList = new MessageListModel()
+  messageList = createMessageListModel()
   chatInput = new InputModel("")
 
   @observable.ref typingStatus: TypingStatus = "clear"
@@ -54,9 +54,7 @@ export function usePrivateChatListeners() {
         params: { recipient: event.recipientName, message: event.text },
       })
       state.privateChats.update(event.recipientName, (chat) => {
-        chat.messageList.add(
-          MessageModel.fromPrivateMessage(identity, event.text),
-        )
+        chat.messageList.add(createPrivateMessage(identity, event.text))
       })
     }
   })
@@ -69,9 +67,7 @@ export function usePrivateChatListeners() {
       },
       PRI({ character, message }) {
         state.privateChats.update(character, (chat) => {
-          chat.messageList.add(
-            MessageModel.fromPrivateMessage(character, message),
-          )
+          chat.messageList.add(createPrivateMessage(character, message))
           openChat(character)
 
           if (nav.currentPrivateChat !== chat) {

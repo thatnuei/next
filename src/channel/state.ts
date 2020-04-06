@@ -8,8 +8,13 @@ import { useChatSocket } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useChatNav } from "../chatNav/state"
 import { InputModel } from "../form/InputModel"
-import { MessageListModel } from "../message/MessageListModel"
-import { MessageModel, MessageType } from "../message/MessageModel"
+import { createMessageListModel } from "../message/message-list-model"
+import {
+  createAdMessage,
+  createChannelMessage,
+  createSystemMessage,
+  MessageType,
+} from "../message/message-model"
 import { useStreamListener } from "../state/stream"
 import { getStoredChannels } from "./storage"
 
@@ -29,7 +34,7 @@ export class ChannelModel {
   @observable.shallow users = new Set<string>()
   @observable.shallow ops = new Set<string>()
 
-  messageList = new MessageListModel()
+  messageList = createMessageListModel()
   chatInput = new InputModel("")
 
   @action
@@ -112,9 +117,7 @@ export function useChannelListeners() {
 
     if (event.type === "send-channel-message") {
       channels.update(event.channelId, (channel) => {
-        channel.messageList.add(
-          MessageModel.fromChannelMessage(identity, event.text),
-        )
+        channel.messageList.add(createChannelMessage(identity, event.text))
       })
       socket.send({
         type: "MSG",
@@ -187,9 +190,7 @@ export function useChannelListeners() {
 
       MSG({ channel: id, character, message }) {
         channels.update(id, (channel) => {
-          channel.messageList.add(
-            MessageModel.fromChannelMessage(character, message),
-          )
+          channel.messageList.add(createChannelMessage(character, message))
 
           if (nav.currentChannel !== channel) {
             channel.isUnread = true
@@ -199,7 +200,7 @@ export function useChannelListeners() {
 
       LRP({ channel: id, character, message }) {
         channels.update(id, (channel) => {
-          channel.messageList.add(MessageModel.fromAd(character, message))
+          channel.messageList.add(createAdMessage(character, message))
         })
       },
 
@@ -208,7 +209,7 @@ export function useChannelListeners() {
           const { channel: id, message } = params
 
           channels.update(id, (channel) => {
-            channel.messageList.add(MessageModel.fromSystem(message))
+            channel.messageList.add(createSystemMessage(message))
           })
         }
       },
