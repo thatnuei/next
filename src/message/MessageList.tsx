@@ -11,7 +11,7 @@ type Props = {
   filter?: (message: MessageModel) => boolean
 }
 
-const scrolledToBottomThreshold = 100
+const scrolledToBottomThreshold = 50
 
 function MessageList({ list, filter: shouldShow = () => true }: Props) {
   const [container, setContainer] = useState<HTMLElement | null>()
