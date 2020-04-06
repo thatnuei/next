@@ -1,6 +1,8 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
+import ExternalLink from "../dom/ExternalLink"
+import { getProfileUrl } from "../flist/helpers"
 import { TagProps } from "../jsx/types"
 import { genderColors, statusColors } from "./colors"
 import { CharacterModel } from "./state"
@@ -11,7 +13,11 @@ type Props = TagProps<"span"> & {
 
 function CharacterName({ character, ...props }: Props) {
   return (
-    <span css={tw`font-weight-bold`} {...props}>
+    <ExternalLink
+      href={getProfileUrl(character.name)}
+      css={tw`font-weight-bold`}
+      {...props}
+    >
       {character.status && (
         <span css={[{ color: statusColors[character.status] }, statusDotStyle]}>
           •
@@ -20,7 +26,7 @@ function CharacterName({ character, ...props }: Props) {
       <span css={{ color: genderColors[character.gender] }}>
         {character.name}
       </span>
-    </span>
+    </ExternalLink>
   )
 }
 
