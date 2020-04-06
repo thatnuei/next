@@ -101,18 +101,22 @@ export function useChannelListeners() {
 
   useStreamListener(chatStream, (event) => {
     if (event.type === "join-channel") {
-      channels.update(event.id, (channel) => {
-        channel.joinState = "joining"
-        if (event.title) channel.title = event.title
-      })
-      socket.send({ type: "JCH", params: { channel: event.id } })
+      if (channels.get(event.id).joinState === "absent") {
+        channels.update(event.id, (channel) => {
+          channel.joinState = "joining"
+          if (event.title) channel.title = event.title
+        })
+        socket.send({ type: "JCH", params: { channel: event.id } })
+      }
     }
 
     if (event.type === "leave-channel") {
-      channels.update(event.id, (channel) => {
-        channel.joinState = "leaving"
-      })
-      socket.send({ type: "LCH", params: { channel: event.id } })
+      if (channels.get(event.id).joinState === "present") {
+        channels.update(event.id, (channel) => {
+          channel.joinState = "leaving"
+        })
+        socket.send({ type: "LCH", params: { channel: event.id } })
+      }
     }
 
     if (event.type === "send-channel-message") {
