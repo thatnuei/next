@@ -117,7 +117,9 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
       }
 
       case "session": {
-        const channelId = getNodeChildrenAsText(node)
+        // some links could come with a case-insensitive "adh" at the start
+        // need to replace it so it doesn't clash with the rest of our uppercased IDs
+        const channelId = getNodeChildrenAsText(node).replace(/^adh/i, "ADH")
         const title = node.value
         return <BBCChannelLink id={channelId} title={title} type="private" />
       }

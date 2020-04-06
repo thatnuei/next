@@ -61,7 +61,7 @@ export class ChannelModel {
 
 function saveChannels(state: ChatState, account: string, identity: string) {
   const joinedChannels = [...state.channels.values()].filter(
-    (it) => it.joinState !== "absent",
+    (it) => it.joinState === "present",
   )
 
   const storage = getStoredChannels(account)
@@ -116,6 +116,7 @@ export function useChannelListeners() {
           channel.joinState = "leaving"
         })
         socket.send({ type: "LCH", params: { channel: event.id } })
+        saveChannels(state, account, identity)
       }
     }
 
@@ -162,7 +163,6 @@ export function useChannelListeners() {
 
           if (character === identity) {
             channel.joinState = "absent"
-            saveChannels(state, account, identity)
           }
         })
       },
