@@ -5,24 +5,30 @@ import tw from "twin.macro"
 import Button from "../dom/Button"
 import {
   fadedButton,
-  headerText,
+  headerText2,
   raisedPanel,
   raisedPanelHeader,
 } from "./components"
-import { fixedCover, transition } from "./helpers"
+import { absoluteCover, fixedCover, transition } from "./helpers"
 import Icon from "./Icon"
 import { close } from "./icons"
 import { OverlayModel } from "./OverlayModel"
 
 type Props = {
   title: string
-  width: number
-  height: number
+  width: number | string
+  height: number | string
   model: OverlayModel
+  fillMode?: "fixed" | "absolute"
+  verticalPanelAlign?: "top" | "middle"
   children?: React.ReactNode
 }
 
-function Modal(props: Props) {
+function Modal({
+  fillMode = "fixed",
+  verticalPanelAlign = "middle",
+  ...props
+}: Props) {
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -38,8 +44,14 @@ function Modal(props: Props) {
   }
 
   const shadeStyle = [
-    tw`flex flex-col items-center justify-center p-4 bg-black-faded`,
-    fixedCover,
+    tw`flex flex-col p-4 bg-black-faded`,
+
+    verticalPanelAlign === "top" && tw`items-center justify-start`,
+    verticalPanelAlign === "middle" && tw`items-center justify-center`,
+
+    fillMode === "absolute" && absoluteCover,
+    fillMode === "fixed" && fixedCover,
+
     props.model.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
     transition,
     tw`transition-all`,
@@ -63,7 +75,7 @@ function Modal(props: Props) {
     <div css={shadeStyle} onPointerDown={handleShadeClick}>
       <div css={panelStyle}>
         <header css={[raisedPanelHeader, tw`relative px-16 text-center`]}>
-          <h1 css={headerText}>{props.title}</h1>
+          <h1 css={headerText2}>{props.title}</h1>
           <Button
             css={closeButtonStyle}
             onClick={props.model.hide}
