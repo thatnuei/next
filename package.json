@@ -60,7 +60,7 @@
     "serve": "^11.3.0",
     "source-map-explorer": "^2.4.2",
     "twin.macro": "^1.0.0-alpha.8",
-    "typescript": "^3.9.0-beta",
+    "typescript": "^3.9.0-dev.20200405",
     "typescript-plugin-tw-template": "^1.0.2",
     "typesync": "^0.6.1",
     "webpack-hot-middleware": "^2.25.0"
