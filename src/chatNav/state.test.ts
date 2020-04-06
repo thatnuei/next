@@ -1,8 +1,8 @@
-import { ChatState } from "../chat/ChatState"
+import { createChatState } from "../chat/chat-state"
 import { createChatNavHelpers } from "./state"
 
 test("setting view updates unread state", () => {
-  const state = new ChatState()
+  const state = createChatState()
   const helpers = createChatNavHelpers(state)
 
   state.channels.update("test", (it) => {

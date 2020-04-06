@@ -1,5 +1,5 @@
 import { action, computed, observable } from "mobx"
-import { ChatState } from "../chat/ChatState"
+import { ChatState } from "../chat/chat-state"
 import { useChatState } from "../chat/chatStateContext"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useCommandStream } from "../chat/commandStreamContext"

@@ -35,12 +35,12 @@ export function useCharacterListeners() {
     commandStream,
     createCommandHandler({
       FRL({ characters }) {
-        state.friends = new Set(characters)
+        state.friends.replace(characters)
       },
 
       IGN(params) {
         if (params.action === "init" || params.action === "list") {
-          state.ignored = new Set(params.characters)
+          state.ignored.replace(params.characters)
         }
         if (params.action === "add") {
           state.ignored.add(params.character)
@@ -51,7 +51,7 @@ export function useCharacterListeners() {
       },
 
       ADL({ ops }) {
-        state.admins = new Set(ops)
+        state.admins.replace(ops)
       },
 
       LIS({ characters }) {
