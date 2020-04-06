@@ -2,12 +2,12 @@ import { act } from "@testing-library/react"
 import { observable } from "mobx"
 import React from "react"
 import { renderWithProviders } from "../test/renderWithProviders"
-import { createMessageListModel } from "./message-list-model"
-import { createChannelMessage } from "./message-model"
+import { createMessageListState } from "./message-list-state"
+import { createChannelMessage } from "./message-state"
 import MessageList from "./MessageList"
 
 it("renders new messages as they come in", async () => {
-  const list = observable(createMessageListModel())
+  const list = observable(createMessageListState())
   const messageText = `awesome message ${Math.random()}`
   const helpers = renderWithProviders(<MessageList list={list} />)
 

@@ -1,14 +1,14 @@
 import { observable } from "mobx"
-import { MessageModel } from "./message-model"
+import { MessageState } from "./message-state"
 
-export type MessageListModel = ReturnType<typeof createMessageListModel>
+export type MessageListState = ReturnType<typeof createMessageListState>
 
 export const maxMessageCount = 100
 
-export function createMessageListModel() {
+export function createMessageListState() {
   const self = observable({
-    messages: [] as MessageModel[],
-    add(message: MessageModel) {
+    messages: [] as MessageState[],
+    add(message: MessageState) {
       self.messages.push(message)
       self.messages.splice(0, self.messages.length - maxMessageCount)
     },

@@ -2,13 +2,13 @@ import { useObserver } from "mobx-react-lite"
 import React, { useCallback, useLayoutEffect, useState } from "react"
 import tw from "twin.macro"
 import { scrollVertical } from "../ui/helpers"
-import { MessageListModel } from "./message-list-model"
-import { MessageModel } from "./message-model"
+import { MessageListState } from "./message-list-state"
+import { MessageState } from "./message-state"
 import MessageListItem from "./MessageListItem"
 
 type Props = {
-  list: MessageListModel
-  filter?: (message: MessageModel) => boolean
+  list: MessageListState
+  filter?: (message: MessageState) => boolean
 }
 
 const scrolledToBottomThreshold = 50

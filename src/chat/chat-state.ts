@@ -3,7 +3,7 @@ import { ChannelModel } from "../channel/state"
 import { ChannelBrowserState } from "../channelBrowser/state"
 import { CharacterModel } from "../character/state"
 import { ChatNavState } from "../chatNav/state"
-import { PrivateChatModel } from "../privateChat/state"
+import { createPrivateChatState } from "../privateChat/private-chat-state"
 import { MapWithDefault } from "../state/MapWithDefault"
 import { StatusUpdateState } from "../statusUpdate/state"
 import { OverlayModel } from "../ui/OverlayModel"
@@ -14,7 +14,7 @@ export function createChatState() {
   return {
     characters: new MapWithDefault((name) => new CharacterModel(name)),
     channels: new MapWithDefault((id) => new ChannelModel(id)),
-    privateChats: new MapWithDefault((name) => new PrivateChatModel(name)),
+    privateChats: new MapWithDefault(createPrivateChatState),
 
     friends: observable.set<string>(),
     ignored: observable.set<string>(),

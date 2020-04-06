@@ -1,9 +1,9 @@
 import { range } from "../common/range"
-import { createMessageListModel, maxMessageCount } from "./message-list-model"
-import { createChannelMessage } from "./message-model"
+import { createMessageListState, maxMessageCount } from "./message-list-state"
+import { createChannelMessage } from "./message-state"
 
 it("stores a limited amount of messages, removing the older ones", async () => {
-  const list = createMessageListModel()
+  const list = createMessageListState()
   const messageText = `awesome message`
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

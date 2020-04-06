@@ -4,10 +4,10 @@ import BBC from "../bbc/BBC"
 import CharacterName from "../character/CharacterName"
 import { useChatState } from "../chat/chatStateContext"
 import { TagProps } from "../jsx/types"
-import { MessageModel } from "./message-model"
+import { MessageState } from "./message-state"
 
 type Props = {
-  message: MessageModel
+  message: MessageState
 } & TagProps<"div">
 
 function MessageListItem({ message, ...props }: Props) {

@@ -11,10 +11,10 @@ import ChatMenuButton from "../chatNav/ChatMenuButton"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
 import { scrollVertical } from "../ui/helpers"
-import { PrivateChatModel } from "./state"
+import { PrivateChatState } from "./private-chat-state"
 
 type Props = {
-  chat: PrivateChatModel
+  chat: PrivateChatState
 } & TagProps<"div">
 
 function PrivateChatView({ chat, ...props }: Props) {

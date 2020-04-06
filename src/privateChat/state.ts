@@ -1,4 +1,3 @@
-import { observable } from "mobx"
 import { useChatState } from "../chat/chatStateContext"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useCommandStream } from "../chat/commandStreamContext"
@@ -6,27 +5,13 @@ import { useChatCredentials } from "../chat/credentialsContext"
 import { useChatSocket } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useChatNav } from "../chatNav/state"
-import { InputModel } from "../form/InputModel"
-import { createMessageListModel } from "../message/message-list-model"
-import { createPrivateMessage } from "../message/message-model"
+import { createPrivateMessage } from "../message/message-state"
 import { useStreamListener } from "../state/stream"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
-import { TypingStatus } from "./types"
 
 const getStoredPrivateChats = (identity: string) =>
   createStoredValue(`privateChats:${identity}`, v.dictionary(v.array(v.string)))
-
-export class PrivateChatModel {
-  constructor(public readonly partnerName: string) {}
-
-  messageList = createMessageListModel()
-  chatInput = new InputModel("")
-
-  @observable.ref typingStatus: TypingStatus = "clear"
-  @observable isOpen = false
-  @observable isUnread = false
-}
 
 export function usePrivateChatListeners() {
   const chatStream = useChatStream()

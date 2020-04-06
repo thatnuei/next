@@ -8,13 +8,13 @@ import { useChatSocket } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useChatNav } from "../chatNav/state"
 import { InputModel } from "../form/InputModel"
-import { createMessageListModel } from "../message/message-list-model"
+import { createMessageListState } from "../message/message-list-state"
 import {
   createAdMessage,
   createChannelMessage,
   createSystemMessage,
   MessageType,
-} from "../message/message-model"
+} from "../message/message-state"
 import { useStreamListener } from "../state/stream"
 import { getStoredChannels } from "./storage"
 
@@ -34,7 +34,7 @@ export class ChannelModel {
   @observable.shallow users = new Set<string>()
   @observable.shallow ops = new Set<string>()
 
-  messageList = createMessageListModel()
+  messageList = createMessageListState()
   chatInput = new InputModel("")
 
   @action
