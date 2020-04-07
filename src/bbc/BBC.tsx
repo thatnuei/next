@@ -163,7 +163,7 @@ function BBCLink({ url, children }: PropsWithChildren<{ url: string }>) {
   })()
 
   return (
-    <span css={tw`inline-flex items-baseline leading-none `}>
+    <span css={tw`inline-flex items-baseline`}>
       <Icon
         which={icons.link}
         css={tw`self-center inline w-4 h-4 opacity-75 mr-px2`}
@@ -188,7 +188,7 @@ function BBCChannelLink({
   const stream = useChatStream()
 
   return (
-    <span css={tw`inline-flex items-baseline leading-none`}>
+    <span css={tw`inline-flex items-baseline`}>
       <Icon
         which={type === "public" ? icons.earth : icons.lock}
         css={tw`self-center inline w-4 h-4 mr-1 opacity-75`}
