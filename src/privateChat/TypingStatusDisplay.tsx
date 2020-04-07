@@ -12,16 +12,15 @@ type Props = {
 } & TagProps<"div">
 
 function TypingStatusDisplay({ name, status, ...props }: Props) {
+  const containerStyle = [
+    tw`relative px-2 text-sm transition-all duration-300`,
+    status === "clear"
+      ? [tw`h-0 opacity-0`, { transitionDelay: "0.3s" }]
+      : tw`h-6 opacity-50`,
+  ]
+
   return (
-    <div
-      css={[
-        tw`relative px-2 text-sm transition-all duration-300`,
-        status === "clear"
-          ? [tw`h-0 opacity-0`, { transitionDelay: "0.3s" }]
-          : tw`h-6 opacity-50`,
-      ]}
-      {...props}
-    >
+    <div css={containerStyle} {...props}>
       <div css={statusTextStyle(status === "typing")}>
         <Icon which={pencil} css={[iconStyle, bounceAnimation]} />
         <span>{name} is typing...</span>
