@@ -65,6 +65,7 @@ function ChannelView({ channel, ...props }: Props) {
           <MessageList
             list={channel.messageList}
             filter={(it) => channel.shouldShowMessage(it.type)}
+            css={tw`w-full h-full`}
           />
           <Modal
             title="Description"

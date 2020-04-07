@@ -1,6 +1,7 @@
 import { useObserver } from "mobx-react-lite"
 import React, { useCallback, useLayoutEffect, useState } from "react"
 import tw from "twin.macro"
+import { TagProps } from "../jsx/types"
 import { scrollVertical } from "../ui/helpers"
 import { MessageListState } from "./message-list-state"
 import { MessageState } from "./message-state"
@@ -9,11 +10,15 @@ import MessageListItem from "./MessageListItem"
 type Props = {
   list: MessageListState
   filter?: (message: MessageState) => boolean
-}
+} & TagProps<"ol">
 
 const scrolledToBottomThreshold = 50
 
-function MessageList({ list, filter: shouldShow = () => true }: Props) {
+function MessageList({
+  list,
+  filter: shouldShow = () => true,
+  ...props
+}: Props) {
   const [container, setContainer] = useState<HTMLElement | null>()
 
   const lastMessage = useObserver(() => {
@@ -22,7 +27,7 @@ function MessageList({ list, filter: shouldShow = () => true }: Props) {
   useBottomScroll(container, lastMessage)
 
   return useObserver(() => (
-    <ol css={[tw`w-full h-full`, scrollVertical]} ref={setContainer}>
+    <ol css={[scrollVertical]} ref={setContainer} {...props}>
       {list.messages.map((message) =>
         shouldShow(message) ? (
           <li key={message.key}>
