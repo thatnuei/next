@@ -13,23 +13,19 @@ type Props = TagProps<"span"> & {
 }
 
 function CharacterName({ character, ...props }: Props) {
+  const statusDotStyle = [
+    tw`inline-block mr-1 transform scale-150`,
+    { color: statusColors[character.status] },
+    character.status === "crown" && rainbowAnimation,
+  ]
+
   return (
     <ExternalLink
       href={getProfileUrl(character.name)}
       css={tw`font-weight-bold`}
       {...props}
     >
-      {character.status && (
-        <span
-          css={[
-            { color: statusColors[character.status] },
-            statusDotStyle,
-            character.status === "crown" && rainbowAnimation,
-          ]}
-        >
-          •
-        </span>
-      )}
+      <span css={statusDotStyle}>•</span>
       <span css={{ color: genderColors[character.gender] }}>
         {character.name}
       </span>
@@ -38,5 +34,3 @@ function CharacterName({ character, ...props }: Props) {
 }
 
 export default observer(CharacterName)
-
-const statusDotStyle = tw`inline-block mr-1 transform scale-150`
