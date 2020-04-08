@@ -9,7 +9,7 @@ import { ChatCredentials } from "./types"
 
 type SocketListener = (command: ServerCommand) => void
 
-type SocketStatus =
+export type SocketStatus =
   | "idle"
   | "connecting"
   | "identifying"
