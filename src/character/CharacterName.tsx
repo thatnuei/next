@@ -4,6 +4,7 @@ import tw from "twin.macro"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
 import { TagProps } from "../jsx/types"
+import { rainbowAnimation } from "../ui/helpers"
 import { genderColors, statusColors } from "./colors"
 import { CharacterModel } from "./state"
 
@@ -19,7 +20,13 @@ function CharacterName({ character, ...props }: Props) {
       {...props}
     >
       {character.status && (
-        <span css={[{ color: statusColors[character.status] }, statusDotStyle]}>
+        <span
+          css={[
+            { color: statusColors[character.status] },
+            statusDotStyle,
+            character.status === "crown" && rainbowAnimation,
+          ]}
+        >
           •
         </span>
       )}
