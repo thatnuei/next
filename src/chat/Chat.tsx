@@ -13,6 +13,7 @@ import { Dict } from "../common/types"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { usePrivateChatListeners } from "../privateChat/listeners"
 import PrivateChatView from "../privateChat/PrivateChatView"
+import { useStreamListener } from "../state/stream"
 import { useStatusUpdateListeners } from "../statusUpdate/state"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import Drawer from "../ui/Drawer"
@@ -23,6 +24,7 @@ import { screenQueries } from "../ui/screens"
 import { useChatState } from "./chatStateContext"
 import { useChatSocket, useChatSocketConnection } from "./socketContext"
 import { SocketStatus } from "./SocketHandler"
+import { useChatStream } from "./streamContext"
 
 type Props = {
   onDisconnect: () => void
@@ -37,10 +39,17 @@ function Chat({ onDisconnect }: Props) {
   useStatusUpdateListeners()
 
   const state = useChatState()
-  const socket = useChatSocket()
   const { currentChannel, currentPrivateChat } = useChatNav()
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
+  const stream = useChatStream()
+  useStreamListener(stream, (event) => {
+    if (event.type === "log-out") {
+      onDisconnect()
+    }
+  })
+
+  const socket = useChatSocket()
   const loadingStatuses: Dict<string, SocketStatus> = {
     connecting: "Connecting...",
     identifying: "Identifying...",

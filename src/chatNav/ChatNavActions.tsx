@@ -22,7 +22,11 @@ function ChatNavActions() {
       <NavAction icon={icons.users} title="See online friends and bookmarks" />
       <NavAction icon={icons.about} title="About next" />
       <div css={tw`flex-1`} />
-      <NavAction icon={icons.logout} title="Log out" />
+      <NavAction
+        icon={icons.logout}
+        title="Log out"
+        onClick={() => stream.send({ type: "log-out" })}
+      />
     </>
   )
 }
