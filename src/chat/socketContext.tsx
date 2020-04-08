@@ -19,14 +19,15 @@ export function useChatSocket() {
   return useContext(ChatSocketContext)
 }
 
-export function useChatSocketConnection() {
+export function useChatSocketConnection({ onDisconnect = () => {} }) {
   const socket = useChatSocket()
   const stream = useCommandStream()
   const creds = useChatCredentials()
 
   useEffect(() => {
     socket.listener = stream.send
-  }, [socket, stream.send])
+    socket.onDisconnect = onDisconnect
+  }, [socket, stream.send, onDisconnect])
 
   useEffect(() => {
     socket.connect(creds)

@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import Chat from "../chat/Chat"
-import ChatProviders from "../chat/ChatRoot"
+import ChatContainer from "../chat/ChatContainer"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
 import CharacterSelect from "./CharacterSelect"
@@ -61,13 +61,13 @@ function App() {
 
     case "chat":
       return (
-        <ChatProviders
+        <ChatContainer
           account={screen.userData.account}
           ticket={screen.userData.ticket}
           identity={screen.identity}
         >
-          <Chat />
-        </ChatProviders>
+          <Chat onDisconnect={() => setScreen({ name: "login" })} />
+        </ChatContainer>
       )
   }
 }

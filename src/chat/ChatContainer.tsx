@@ -9,7 +9,7 @@ import { ChatCredentials } from "./types"
 
 type Props = ChatCredentials & ChildrenProps
 
-function ChatProviders(props: Props) {
+function ChatContainer(props: Props) {
   return (
     <ChatStateProvider>
       <ChatStreamProvider>
@@ -23,4 +23,4 @@ function ChatProviders(props: Props) {
   )
 }
 
-export default ChatProviders
+export default ChatContainer

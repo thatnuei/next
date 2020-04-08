@@ -10,8 +10,8 @@ import ChatMenuButton from "../chatNav/ChatMenuButton"
 import ChatNav from "../chatNav/ChatNav"
 import { useChatNav } from "../chatNav/state"
 import { useMediaQuery } from "../dom/useMediaQuery"
-import PrivateChatView from "../privateChat/PrivateChatView"
 import { usePrivateChatListeners } from "../privateChat/listeners"
+import PrivateChatView from "../privateChat/PrivateChatView"
 import { useStatusUpdateListeners } from "../statusUpdate/state"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import Drawer from "../ui/Drawer"
@@ -21,8 +21,12 @@ import { screenQueries } from "../ui/screens"
 import { useChatState } from "./chatStateContext"
 import { useChatSocketConnection } from "./socketContext"
 
-function Chat() {
-  useChatSocketConnection()
+type Props = {
+  onDisconnect: () => void
+}
+
+function Chat({ onDisconnect }: Props) {
+  useChatSocketConnection({ onDisconnect })
   useChannelListeners()
   useCharacterListeners()
   usePrivateChatListeners()

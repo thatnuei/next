@@ -22,6 +22,7 @@ export class SocketHandler {
   status: SocketStatus = "idle"
 
   listener: SocketListener = () => {}
+  onDisconnect = () => {}
 
   private socket?: WebSocket
 
@@ -48,11 +49,13 @@ export class SocketHandler {
     socket.onclose = () => {
       this.status = "closed"
       this.socket = undefined
+      this.onDisconnect()
     }
 
     socket.onerror = () => {
       this.status = "error"
       this.socket = undefined
+      this.onDisconnect()
     }
 
     socket.onmessage = ({ data }) => {
@@ -75,6 +78,10 @@ export class SocketHandler {
 
       if (command.type === "IDN") {
         this.status = "online"
+      }
+
+      if (command.type === "ERR") {
+        console.warn("Socket error", command.params.message)
       }
 
       this.listener(command)
