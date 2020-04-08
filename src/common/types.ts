@@ -1,4 +1,4 @@
-export type Dict<T> = { [_ in string]?: T }
+export type Dict<T, K extends string | number | symbol> = { [_ in K]?: T }
 
 export type ValueOf<T> = T extends readonly (infer V)[] ? V : T[keyof T]
 
