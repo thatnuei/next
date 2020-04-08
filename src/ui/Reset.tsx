@@ -13,7 +13,8 @@ export default function Reset() {
           "*": tw`min-w-0 min-h-0`,
         },
         {
-          ":root": { wordBreak: "break-word" },
+          ":root": { wordBreak: "break-word", letterSpacing: "0.1px" },
+          "button, input, textarea, select": { letterSpacing: "inherit" },
         },
       ]}
     />

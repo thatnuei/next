@@ -15,8 +15,8 @@ const river = rgb(52, 152, 219)
 module.exports = {
   theme: {
     fontFamily: {
-      body: `Roboto, sans-serif`,
-      header: `'Roboto Condensed', sans-serif`,
+      body: `'Fira Sans', sans-serif`,
+      header: `'Fira Sans Condensed', sans-serif`,
     },
     fontWeight: {
       "weight-light": "300",
@@ -74,15 +74,15 @@ module.exports = {
 
     // TODO: change these names because they're not good
     fontSize: {
-      "sm": "0.8rem",
-      "base": "1rem",
-      "lg": "1.125rem",
-      "xl": "1.25rem",
-      "2xl": "1.5rem",
-      "3xl": "1.875rem",
-      "4xl": "2.25rem",
-      "5xl": "3rem",
-      "6xl": "4rem",
+      "sm": "13px",
+      "base": "16px",
+      "lg": "18px",
+      "xl": "20px",
+      "2xl": "24px",
+      "3xl": "30px",
+      "4xl": "36px",
+      "5xl": "48px",
+      "6xl": "64px",
     },
   },
   plugins: [],
