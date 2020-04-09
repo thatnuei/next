@@ -12,7 +12,7 @@ type Props = {
   filter?: (message: MessageState) => boolean
 } & TagProps<"ol">
 
-const scrolledToBottomThreshold = 50
+const scrolledToBottomThreshold = 20
 
 function MessageList({
   list,
