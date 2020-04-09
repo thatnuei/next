@@ -5,6 +5,7 @@ import ChannelView from "../channel/ChannelView"
 import { useChannelListeners } from "../channel/state"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import { useChannelBrowserListeners } from "../channelBrowser/state"
+import { CharacterMenu } from "../character/CharacterMenu"
 import { useCharacterListeners } from "../character/state"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import ChatNav from "../chatNav/ChatNav"
@@ -89,6 +90,8 @@ function Chat({ onDisconnect }: Props) {
         model={state.statusUpdate.overlay}
         children={<StatusUpdateForm />}
       />
+
+      <CharacterMenu />
 
       <LoadingOverlay
         text={loadingStatuses[socket.status] || "Online!"}

@@ -24,6 +24,7 @@ function CharacterName({ character, ...props }: Props) {
       href={getProfileUrl(character.name)}
       css={tw`font-weight-bold`}
       {...props}
+      data-character={character.name}
     >
       <span css={statusDotStyle}>•</span>
       <span css={{ color: genderColors[character.gender] }}>
