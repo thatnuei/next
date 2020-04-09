@@ -9,7 +9,7 @@ import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
-import { fadedButton, headerText2 } from "../ui/components"
+import { fadedButton, headerText } from "../ui/components"
 import { scrollVertical } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { earth, users } from "../ui/icons"
@@ -35,7 +35,7 @@ function ChannelView({ channel, ...props }: Props) {
         <ChatMenuButton css={tw`mr-3`} />
 
         <div css={tw`flex flex-col flex-1`}>
-          <h1 css={[headerText2, tw`flex-1`]}>{channel.title}</h1>
+          <h1 css={[headerText, tw`flex-1`]}>{channel.title}</h1>
           <div css={tw`flex flex-row`}>
             <Button
               css={fadedButton}

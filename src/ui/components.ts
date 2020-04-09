@@ -35,15 +35,15 @@ export const select = [
   { borderRadius: "0.00000001px" },
 ]
 
-export const headerText = tw`font-header font-weight-light text-3xl`
-export const headerText2 = tw`font-header font-weight-light text-2xl`
+export const headerText = tw`text-2xl font-header font-weight-light`
+export const headerText2 = tw`text-xl font-header font-weight-light`
 
 export const raisedPanel = tw`shadow-normal bg-background-0`
 
 export const raisedPanelHeader = [
-  tw`bg-background-1 px-4 py-2`,
+  tw`px-4 py-2 bg-background-1`,
   flexRow,
   centerItems,
 ]
 
-export const anchor = [tw`opacity-50 hover:opacity-100 underline`, transition]
+export const anchor = [tw`underline opacity-50 hover:opacity-100`, transition]

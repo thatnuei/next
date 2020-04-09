@@ -5,7 +5,7 @@ import tw from "twin.macro"
 import Button from "../dom/Button"
 import {
   fadedButton,
-  headerText2,
+  headerText,
   raisedPanel,
   raisedPanelHeader,
 } from "./components"
@@ -75,7 +75,7 @@ function Modal({
     <div css={shadeStyle} onPointerDown={handleShadeClick}>
       <div css={panelStyle}>
         <header css={[raisedPanelHeader, tw`relative px-16 text-center`]}>
-          <h1 css={headerText2}>{props.title}</h1>
+          <h1 css={headerText}>{props.title}</h1>
           <Button
             css={closeButtonStyle}
             onClick={props.model.hide}
