@@ -7,7 +7,6 @@ import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import { useChannelBrowserListeners } from "../channelBrowser/state"
 import { CharacterMenu } from "../character/CharacterMenu"
 import { useCharacterListeners } from "../character/state"
-import ChatMenuButton from "../chatNav/ChatMenuButton"
 import ChatNav from "../chatNav/ChatNav"
 import { useChatNav } from "../chatNav/state"
 import { Dict } from "../common/types"
@@ -23,6 +22,7 @@ import LoadingOverlay from "../ui/LoadingOverlay"
 import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import { useChatState } from "./chatStateContext"
+import NoRoomView from "./NoRoomView"
 import { useChatSocket, useChatSocketConnection } from "./socketContext"
 import { SocketStatus } from "./SocketHandler"
 import { useChatStream } from "./streamContext"
@@ -65,8 +65,9 @@ function Chat({ onDisconnect }: Props) {
       ) : currentPrivateChat ? (
         <PrivateChatView css={tw`flex-1`} chat={currentPrivateChat} />
       ) : (
-        // TODO: proper "no room" default header
-        <ChatMenuButton />
+        <div>
+          <NoRoomView />
+        </div>
       )}
 
       {isSmallScreen && (
