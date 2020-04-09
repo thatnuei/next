@@ -19,10 +19,10 @@ function LoadingOverlay(props: Props) {
       ]}
     >
       <div css={[tw`grid grid-cols-2 grid-rows-2 gap-4 p-4`, spinAnimation]}>
+        <div css={[dotStyle, tw`bg-blue`]}></div>
         <div css={dotStyle}></div>
         <div css={dotStyle}></div>
-        <div css={dotStyle}></div>
-        <div css={dotStyle}></div>
+        <div css={[dotStyle, tw`bg-blue`]}></div>
       </div>
       <p css={headerText2}>{props.text}</p>
     </div>
@@ -31,15 +31,24 @@ function LoadingOverlay(props: Props) {
 
 export default LoadingOverlay
 
-const spin = keyframes`
-  from {
+const turn = keyframes`
+  0% {
     transform: rotate(0deg);
   }
-  to {
-    transform: rotate(360deg);
+  25% {
+    transform: rotate(calc(270deg * 1));
+  }
+  50% {
+    transform: rotate(calc(270deg * 2));
+  }
+  75% {
+    transform: rotate(calc(270deg * 3));
+  }
+  100% {
+    transform: rotate(calc(270deg * 4));
   }
 `
 
 const spinAnimation = css({
-  animation: `${spin} 1.5s infinite`,
+  animation: `${turn} 3.7s infinite`,
 })
