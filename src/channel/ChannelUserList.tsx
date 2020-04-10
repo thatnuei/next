@@ -14,7 +14,14 @@ type Props = TagProps<"div"> & {
   channel: ChannelModel
 }
 
-const itemTypes = ["admin", "op", "friend", "looking", "default"] as const
+const itemTypes = [
+  "friend",
+  "bookmark",
+  "admin",
+  "op",
+  "looking",
+  "default",
+] as const
 type ItemType = ValueOf<typeof itemTypes>
 
 function ChannelUserList({ channel, ...props }: Props) {
@@ -24,6 +31,7 @@ function ChannelUserList({ channel, ...props }: Props) {
     if (state.admins.has(character.name)) return "admin"
     if (channel.ops.has(character.name)) return "op"
     if (state.friends.has(character.name)) return "friend"
+    if (state.bookmarks.has(character.name)) return "bookmark"
     if (character.status === "looking") return "looking"
     return "default"
   }
@@ -31,7 +39,8 @@ function ChannelUserList({ channel, ...props }: Props) {
   const getTypeCss = (type: ItemType) => {
     if (type === "admin") return tw`bg-red-faded`
     if (type === "op") return tw`bg-yellow-faded`
-    if (type === "friend") return tw`bg-blue-faded`
+    if (type === "friend") return tw`bg-green-faded`
+    if (type === "bookmark") return tw`bg-blue-faded`
   }
 
   const characters = [...channel.users].map(state.characters.get)
