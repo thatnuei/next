@@ -31,9 +31,7 @@ type AuthState = {
   ticketTimestamp: number
 }
 
-// the actual expiration time is 30 minutes,
-// but we'll do 25 to be conservative
-const ticketExpireTime = 1000 * 60 * 25
+const ticketExpireTime = 1000 * 60 * 15
 
 async function refetchTicket(currentState: AuthState) {
   const ticketTimestamp = Date.now()
@@ -124,5 +122,27 @@ export function createFListApi() {
     )
   }
 
-  return { authenticate, addBookmark, removeBookmark, getFriendsAndBookmarks }
+  async function getMemo({ name }: { name: string }): Promise<string> {
+    const res = await fetchWithAuth(
+      "https://www.f-list.net/json/api/character-memo-get2.php",
+      { target: name },
+    )
+    return res.note || ""
+  }
+
+  async function setMemo({ name, note }: { name: string; note: string }) {
+    await fetchWithAuth(
+      "https://www.f-list.net/json/api/character-memo-save.php",
+      { target_name: name, note },
+    )
+  }
+
+  return {
+    authenticate,
+    addBookmark,
+    removeBookmark,
+    getFriendsAndBookmarks,
+    getMemo,
+    setMemo,
+  }
 }

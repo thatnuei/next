@@ -9,6 +9,7 @@ import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
+import CharacterMemoInput from "./CharacterMemoInput"
 import CharacterSummary from "./CharacterSummary"
 import { CharacterModel } from "./state"
 
@@ -122,6 +123,9 @@ function CharacterMenu() {
               })
             }}
           />
+        </div>
+        <div css={tw`p-2 bg-background-0`} onClick={(e) => e.stopPropagation()}>
+          <CharacterMemoInput name={character.name} css={tw`block w-full`} />
         </div>
       </div>
     </FocusOn>
