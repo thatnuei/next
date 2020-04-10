@@ -73,10 +73,18 @@ function CharacterMenu() {
   const isBookmarked = chatState.bookmarks.has(character.name)
 
   return (
-    <FocusOn enabled={isOpen} onClickOutside={() => setIsOpen(false)}>
+    <FocusOn
+      enabled={isOpen}
+      onEscapeKey={() => setIsOpen(false)}
+      onClickOutside={() => setIsOpen(false)}
+    >
       <div css={containerStyle} ref={setContainer}>
-        <CharacterSummary character={character} css={tw`p-3 bg-background-0`} />
-        <div css={tw`flex flex-col`} onClick={() => setIsOpen(false)}>
+        <CharacterSummary
+          character={character}
+          css={tw`p-3 bg-background-0`}
+          onClick={(e) => e.stopPropagation()}
+        />
+        <div css={tw`flex flex-col`}>
           <LinkItem
             icon={icons.link}
             text="Profile"
