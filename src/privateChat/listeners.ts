@@ -24,6 +24,7 @@ export function usePrivateChatListeners() {
   useStreamListener(chatStream, (event) => {
     if (event.type === "open-private-chat") {
       openChat(event.name)
+      nav.setView({ type: "privateChat", partnerName: event.name })
     }
 
     if (event.type === "close-private-chat") {
