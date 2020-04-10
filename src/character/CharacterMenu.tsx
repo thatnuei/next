@@ -1,13 +1,21 @@
+import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
+import { FocusOn } from "react-focus-on"
 import tw from "twin.macro"
 import { useChatState } from "../chat/chatStateContext"
+import { useChatStream } from "../chat/streamContext"
 import { safeIndex } from "../common/safeIndex"
+import ExternalLink from "../dom/ExternalLink"
 import { useWindowEvent } from "../dom/useWindowEvent"
+import { getProfileUrl } from "../flist/helpers"
+import Icon from "../ui/Icon"
+import * as icons from "../ui/icons"
 import CharacterSummary from "./CharacterSummary"
 import { CharacterModel } from "./state"
 
-export function CharacterMenu() {
+function CharacterMenu() {
   const chatState = useChatState()
+  const chatStream = useChatStream()
   const [container, setContainer] = useState<HTMLElement | null>()
   const [isOpen, setIsOpen] = useState(false)
   const [character, setCharacter] = useState<CharacterModel>()
@@ -42,12 +50,6 @@ export function CharacterMenu() {
   useWindowEvent("contextmenu", openMenu)
   useWindowEvent("touchend", openMenu)
 
-  useWindowEvent("click", (event) => {
-    if (!container?.contains(event.target as Node)) {
-      setIsOpen(false)
-    }
-  })
-
   const containerWidth = container?.clientWidth ?? 0
   const containerHeight = container?.clientHeight ?? 0
 
@@ -64,7 +66,7 @@ export function CharacterMenu() {
   )
 
   const containerStyle = [
-    tw`fixed w-56 duration-300 bg-background-0 shadow-normal`,
+    tw`fixed w-56 duration-300 shadow-normal bg-background-1`,
     { transitionProperty: "transform, opacity, visibility" },
     isOpen
       ? tw`visible transform translate-y-0 opacity-100`
@@ -72,9 +74,69 @@ export function CharacterMenu() {
     { left, top },
   ]
 
+  if (!character) return null
+
+  const isIgnored = chatState.ignored.has(character.name)
+
   return (
-    <div css={containerStyle} ref={setContainer}>
-      {character && <CharacterSummary character={character} css={tw`p-3`} />}
-    </div>
+    <FocusOn enabled={isOpen} onClickOutside={() => setIsOpen(false)}>
+      <div css={containerStyle} ref={setContainer}>
+        <CharacterSummary character={character} css={tw`p-3 bg-background-0`} />
+        <div css={tw`flex flex-col`} onClick={() => setIsOpen(false)}>
+          <ButtonItem
+            icon={icons.message}
+            text="Message"
+            onClick={() => {
+              chatStream.send({
+                type: "open-private-chat",
+                name: character.name,
+              })
+            }}
+          />
+          <LinkItem
+            icon={icons.link}
+            text="Profile"
+            href={getProfileUrl(character.name)}
+          />
+          <ButtonItem
+            icon={icons.ignore}
+            text={isIgnored ? "Unignore" : "Ignore"}
+            onClick={() => {
+              chatStream.send({
+                type: "update-ignored",
+                name: character.name,
+                action: isIgnored ? "delete" : "add",
+              })
+            }}
+          />
+        </div>
+      </div>
+    </FocusOn>
+  )
+}
+
+export default observer(CharacterMenu)
+
+const itemStyle = tw`flex flex-row p-2 transition duration-300 opacity-50 hover:opacity-100`
+
+function ButtonItem(props: {
+  icon: string
+  text: string
+  onClick: () => void
+}) {
+  return (
+    <button css={itemStyle} onClick={props.onClick}>
+      <Icon which={props.icon} />
+      <span css={tw`ml-2`}>{props.text}</span>
+    </button>
+  )
+}
+
+function LinkItem(props: { icon: string; text: string; href: string }) {
+  return (
+    <ExternalLink css={itemStyle} href={props.href}>
+      <Icon which={props.icon} />
+      <span css={tw`ml-2`}>{props.text}</span>
+    </ExternalLink>
   )
 }
