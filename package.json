@@ -27,6 +27,7 @@
     "preact": "^10.3.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-focus-on": "^3.3.0",
     "react-window": "^1.8.5",
     "resize-observer-polyfill": "^1.5.1",
     "tailwindcss": "^1.2.0"
