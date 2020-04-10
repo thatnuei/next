@@ -2,6 +2,8 @@ import { observable } from "mobx"
 import { useChatState } from "../chat/chatStateContext"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useCommandStream } from "../chat/commandStreamContext"
+import { useChatSocket } from "../chat/socketContext"
+import { useChatStream } from "../chat/streamContext"
 import { useStreamListener } from "../state/stream"
 import { CharacterGender, CharacterStatus } from "./types"
 
@@ -28,11 +30,20 @@ export class CharacterModel {
 }
 
 export function useCharacterListeners() {
-  const commandStream = useCommandStream()
   const state = useChatState()
+  const socket = useChatSocket()
+
+  useStreamListener(useChatStream(), (event) => {
+    if (event.type === "update-ignored") {
+      socket.send({
+        type: "IGN",
+        params: { action: event.action, character: event.name },
+      })
+    }
+  })
 
   useStreamListener(
-    commandStream,
+    useCommandStream(),
     createCommandHandler({
       FRL({ characters }) {
         state.friends.replace(characters)

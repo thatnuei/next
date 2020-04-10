@@ -19,6 +19,7 @@ type ChatEventMap = {
   "send-channel-message": { channelId: string; text: string }
   "send-private-message": { recipientName: string; text: string }
   "log-out": {}
+  "update-ignored": { action: "add" | "delete"; name: string }
 }
 
 export type ChatEvent = ValueOf<
