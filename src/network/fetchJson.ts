@@ -1,15 +1,15 @@
 import { Dict } from "../common/types"
 
-function createFormData(fields: Dict<string>) {
+function createFormData(fields: Dict<unknown>) {
   const body = new FormData()
   for (const [name, value] of Object.entries(fields)) {
-    if (value != null) body.set(name, value)
+    if (value != null) body.set(name, String(value))
   }
   return body
 }
 
 type FetchJsonOptions = {
-  body: Dict<string, string>
+  body: Dict<unknown>
   method: "get" | "post" | "patch" | "put" | "delete"
 }
 
