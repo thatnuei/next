@@ -3,7 +3,7 @@ import React from "react"
 import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
 import { rainbowAnimation } from "../ui/helpers"
-import CharacterLink from "./CharacterLink"
+import CharacterMenuTarget from "./CharacterMenuTarget"
 import { genderColors, statusColors } from "./colors"
 import { CharacterModel } from "./state"
 
@@ -19,12 +19,16 @@ function CharacterName({ character, ...props }: Props) {
   ]
 
   return (
-    <CharacterLink name={character.name} css={tw`font-weight-bold`} {...props}>
+    <CharacterMenuTarget
+      name={character.name}
+      css={tw`font-weight-bold`}
+      {...props}
+    >
       <span css={statusDotStyle}>•</span>
       <span css={{ color: genderColors[character.gender] }}>
         {character.name}
       </span>
-    </CharacterLink>
+    </CharacterMenuTarget>
   )
 }
 

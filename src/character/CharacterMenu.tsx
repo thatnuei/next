@@ -4,7 +4,6 @@ import { FocusOn } from "react-focus-on"
 import tw from "twin.macro"
 import { useChatState } from "../chat/chatStateContext"
 import { useChatStream } from "../chat/streamContext"
-import { safeIndex } from "../common/safeIndex"
 import ExternalLink from "../dom/ExternalLink"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
@@ -21,7 +20,7 @@ function CharacterMenu() {
   const [character, setCharacter] = useState<CharacterModel>()
   const [position, setPosition] = useState({ x: 0, y: 0 })
 
-  function openMenu(event: MouseEvent | TouchEvent) {
+  useWindowEvent("click", function openMenu(event: MouseEvent) {
     const characterName = (() => {
       for (const target of event.composedPath()) {
         if (target instanceof HTMLElement && target.dataset.character) {
@@ -31,11 +30,8 @@ function CharacterMenu() {
     })()
 
     if (characterName) {
-      const touch =
-        "clientX" in event ? event : safeIndex(event.changedTouches, 0)
-
-      const x = touch?.clientX ?? 0
-      const y = touch?.clientY ?? 0
+      const x = event.clientX
+      const y = event.clientY
 
       setCharacter(chatState.characters.get(characterName))
       setPosition({ x, y })
@@ -45,10 +41,7 @@ function CharacterMenu() {
     } else {
       setIsOpen(false)
     }
-  }
-
-  useWindowEvent("contextmenu", openMenu)
-  useWindowEvent("touchend", openMenu)
+  })
 
   const containerWidth = container?.clientWidth ?? 0
   const containerHeight = container?.clientHeight ?? 0
@@ -83,6 +76,11 @@ function CharacterMenu() {
       <div css={containerStyle} ref={setContainer}>
         <CharacterSummary character={character} css={tw`p-3 bg-background-0`} />
         <div css={tw`flex flex-col`} onClick={() => setIsOpen(false)}>
+          <LinkItem
+            icon={icons.link}
+            text="Profile"
+            href={getProfileUrl(character.name)}
+          />
           <ButtonItem
             icon={icons.message}
             text="Message"
@@ -92,11 +90,6 @@ function CharacterMenu() {
                 name: character.name,
               })
             }}
-          />
-          <LinkItem
-            icon={icons.link}
-            text="Profile"
-            href={getProfileUrl(character.name)}
           />
           <ButtonItem
             icon={icons.ignore}

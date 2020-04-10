@@ -1,11 +1,12 @@
 import React, { CSSProperties, Fragment, PropsWithChildren } from "react"
 import tw from "twin.macro"
 import Avatar from "../character/Avatar"
+import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import { useChatState } from "../chat/chatStateContext"
 import { useChatStream } from "../chat/streamContext"
 import ExternalLink from "../dom/ExternalLink"
-import { getIconUrl, getProfileUrl } from "../flist/helpers"
+import { getIconUrl } from "../flist/helpers"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import { createBbcTree, getNodeChildrenAsText } from "./helpers"
@@ -88,9 +89,9 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
       case "icon": {
         const characterName = getNodeChildrenAsText(node)
         return (
-          <ExternalLink href={getProfileUrl(characterName)}>
+          <CharacterMenuTarget name={characterName}>
             <Avatar name={characterName} css={tw`inline w-10 h-10`} />
-          </ExternalLink>
+          </CharacterMenuTarget>
         )
       }
 

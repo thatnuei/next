@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import Avatar from "../character/Avatar"
-import CharacterLink from "../character/CharacterLink"
+import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
@@ -28,9 +28,9 @@ function PrivateChatView({ chat, ...props }: Props) {
       <div css={tw`flex flex-row items-center h-20 bg-background-0`}>
         <ChatMenuButton css={tw`ml-3`} />
 
-        <CharacterLink name={chat.partnerName} css={tw`ml-3`}>
+        <CharacterMenuTarget name={chat.partnerName} css={tw`ml-3`}>
           <Avatar name={chat.partnerName} css={tw`w-12 h-12`} />
-        </CharacterLink>
+        </CharacterMenuTarget>
 
         <div
           css={tw`flex flex-col self-stretch justify-center flex-1 ml-3 overflow-y-auto`}
