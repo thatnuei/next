@@ -12,8 +12,6 @@ type Props = {
   filter?: (message: MessageState) => boolean
 } & TagProps<"ol">
 
-const scrolledToBottomThreshold = 20
-
 function MessageList({
   list,
   filter: shouldShow = () => true,
@@ -47,10 +45,7 @@ function useBottomScroll(
 ) {
   const wasScrolledToBottom =
     container &&
-    container.scrollHeight >=
-      container.scrollHeight -
-        container.clientHeight -
-        scrolledToBottomThreshold
+    container.scrollHeight >= container.scrollHeight - container.clientHeight
 
   const scrollToBottom = useCallback(() => {
     if (!container) return
