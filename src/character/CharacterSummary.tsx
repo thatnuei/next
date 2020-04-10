@@ -4,6 +4,7 @@ import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
 import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
+import CharacterLink from "./CharacterLink"
 import CharacterStatusText from "./CharacterStatusText"
 import { genderColors } from "./colors"
 import { CharacterModel } from "./state"
@@ -14,10 +15,15 @@ function CharacterSummary({ character, ...props }: Props) {
   const genderColor = { color: genderColors[character.gender] }
   return (
     <div {...props}>
-      <h1 css={[headerText2, genderColor, tw`leading-none`]}>
+      <CharacterLink
+        name={character.name}
+        css={[headerText2, genderColor, tw`leading-none`]}
+      >
         {character.name}
-      </h1>
-      <Avatar name={character.name} css={tw`my-3`} />
+      </CharacterLink>
+      <CharacterLink name={character.name}>
+        <Avatar name={character.name} css={tw`my-3`} />
+      </CharacterLink>
       <CharacterStatusText
         character={character}
         css={[
