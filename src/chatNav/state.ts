@@ -24,15 +24,23 @@ export function createChatNavHelpers(state: ChatState) {
     },
 
     get currentChannel() {
-      return this.view?.type === "channel"
-        ? state.channels.get(this.view.id)
-        : undefined
+      if (this.view?.type === "channel") {
+        const channel = state.channels.get(this.view.id)
+        if (channel.joinState !== "absent") {
+          return channel
+        }
+      }
+      return undefined
     },
 
     get currentPrivateChat() {
-      return this.view?.type === "privateChat"
-        ? state.privateChats.get(this.view.partnerName)
-        : undefined
+      if (this.view?.type === "privateChat") {
+        const chat = state.privateChats.get(this.view.partnerName)
+        if (chat.isOpen) {
+          return chat
+        }
+      }
+      return undefined
     },
 
     setView: (view: ChatNavView) => {
