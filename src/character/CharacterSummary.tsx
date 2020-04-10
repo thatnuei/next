@@ -20,7 +20,10 @@ function CharacterSummary({ character, ...props }: Props) {
       <Avatar name={character.name} css={tw`my-3`} />
       <CharacterStatusText
         character={character}
-        css={tw`px-3 py-2 bg-background-1`}
+        css={[
+          tw`px-3 py-2 overflow-y-auto bg-background-1`,
+          { maxHeight: 100 }, // some statuses can get really big
+        ]}
       />
     </div>
   )
