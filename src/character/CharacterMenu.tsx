@@ -79,7 +79,7 @@ function CharacterMenu() {
     >
       <div css={containerStyle} ref={setContainer}>
         <CharacterSummary character={character} css={tw`p-3 bg-background-0`} />
-        <div css={tw`flex flex-col`}>
+        <div css={tw`flex flex-col`} onClick={() => setIsOpen(false)}>
           <LinkItem
             icon={icons.link}
             text="Profile"
