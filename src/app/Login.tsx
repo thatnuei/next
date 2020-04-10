@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import tw from "twin.macro"
 import { extractErrorMessage } from "../common/extractErrorMessage"
 import Button from "../dom/Button"
-import { authenticate } from "../flist/authenticate"
+import { useApiContext } from "../flist/api-context"
 import {
   headerText,
   input,
@@ -32,6 +32,7 @@ export default function Login(props: Props) {
   const [state, setState] = useState<State>({ current: "idle" })
   const [account, setAccount] = useState("")
   const [password, setPassword] = useState("")
+  const api = useApiContext()
 
   const canSubmit =
     account !== "" && password !== "" && state.current !== "loading"
@@ -44,7 +45,8 @@ export default function Login(props: Props) {
     if (state.current === "loading") return
     setState({ current: "loading" })
 
-    authenticate({ account, password })
+    api
+      .authenticate({ account, password })
       .then((data) => {
         setState({ current: "idle" })
         props.onSuccess({ ...data, account })
@@ -60,7 +62,7 @@ export default function Login(props: Props) {
         <header css={raisedPanelHeader}>
           <h1 css={headerText}>Login</h1>
         </header>
-        <form css={[flexColumn, tw`p-4 items-start`]} onSubmit={handleSubmit}>
+        <form css={[flexColumn, tw`items-start p-4`]} onSubmit={handleSubmit}>
           <FormField css={tw`mb-4`} labelText="Username">
             <input
               css={input}
@@ -88,7 +90,7 @@ export default function Login(props: Props) {
           </Button>
 
           {state.current === "error" && (
-            <p css={tw`mt-4 max-w-xs`}>{state.error}</p>
+            <p css={tw`max-w-xs mt-4`}>{state.error}</p>
           )}
         </form>
       </div>

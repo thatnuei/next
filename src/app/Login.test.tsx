@@ -1,6 +1,6 @@
 import { fireEvent, waitFor } from "@testing-library/react"
 import React from "react"
-import { AuthenticateResponse, LoginCredentials } from "../flist/authenticate"
+import { AuthenticateResponse, LoginCredentials } from "../flist/api"
 import { renderWithProviders } from "../test/renderWithProviders"
 import Login, { LoginSuccessData } from "./Login"
 
@@ -13,15 +13,18 @@ const mockAuthResponse: AuthenticateResponse = {
   ticket: "asdf",
 }
 
-jest.mock("../flist/authenticate", () => ({
-  async authenticate(creds: LoginCredentials) {
-    if (
-      creds.account === mockCreds.account &&
-      creds.password === mockCreds.password
-    ) {
-      return mockAuthResponse
+jest.mock("../flist/api", () => ({
+  createFListApi() {
+    async function authenticate(creds: LoginCredentials) {
+      if (
+        creds.account === mockCreds.account &&
+        creds.password === mockCreds.password
+      ) {
+        return mockAuthResponse
+      }
+      throw new Error(mockErrorMessage)
     }
-    throw new Error(mockErrorMessage)
+    return { authenticate }
   },
 }))
 
