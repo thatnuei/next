@@ -12,6 +12,18 @@ export type AuthenticateResponse = {
   characters: string[]
 }
 
+export type FriendsAndBookmarksResponse = {
+  bookmarklist: string[]
+  friendlist: FriendListEntry[]
+}
+
+type FriendListEntry = {
+  /** Your character */
+  source: string
+  /** Their character */
+  dest: string
+}
+
 type AuthState = {
   account: string
   ticket: string
@@ -23,40 +35,43 @@ type AuthState = {
 // but we'll do 25 to be conservative
 const ticketExpireTime = 1000 * 60 * 25
 
+async function refetchTicket(currentState: AuthState) {
+  const ticketTimestamp = Date.now()
+
+  const data = await fetchJson("https://www.f-list.net/json/getApiTicket.php", {
+    method: "post",
+    body: {
+      account: currentState.account,
+      password: currentState.password,
+      no_friends: "true",
+      no_bookmarks: "true",
+    },
+  })
+
+  return {
+    ...currentState,
+    ticket: data.ticket,
+    ticketTimestamp,
+  }
+}
+
 export function createFListApi() {
   let authState: AuthState | undefined
 
   async function validateAuthState(): Promise<AuthState> {
     assert(authState, "Not authenticated")
-
     if (Date.now() - authState.ticketTimestamp >= ticketExpireTime) {
-      await refetchTicket(authState)
+      authState = await refetchTicket(authState)
     }
-
     return authState
   }
 
-  async function refetchTicket(currentState: AuthState) {
-    const ticketTimestamp = Date.now()
-
-    const data = await fetchJson(
-      "https://www.f-list.net/json/getApiTicket.php",
-      {
-        method: "post",
-        body: {
-          account: currentState.account,
-          password: currentState.password,
-          no_friends: "true",
-          no_bookmarks: "true",
-        },
-      },
-    )
-
-    authState = {
-      ...currentState,
-      ticket: data.ticket,
-      ticketTimestamp,
-    }
+  async function fetchWithAuth(url: string, body?: object) {
+    const state = await validateAuthState()
+    return fetchJson(url, {
+      method: "post", // every API request is a post request
+      body: { account: state.account, ticket: state.ticket, ...body },
+    })
   }
 
   async function authenticate(
@@ -86,22 +101,28 @@ export function createFListApi() {
   }
 
   async function addBookmark({ name }: { name: string }) {
-    const state = await validateAuthState()
-
-    await fetchJson("https://www.f-list.net/json/api/bookmark-add.php", {
-      method: "post",
-      body: { account: state.account, ticket: state.ticket, name },
+    await fetchWithAuth("https://www.f-list.net/json/api/bookmark-add.php", {
+      name,
     })
   }
 
   async function removeBookmark({ name }: { name: string }) {
-    const state = await validateAuthState()
-
-    await fetchJson("https://www.f-list.net/json/api/bookmark-remove.php", {
-      method: "post",
-      body: { account: state.account, ticket: state.ticket, name },
+    await fetchWithAuth("https://www.f-list.net/json/api/bookmark-remove.php", {
+      name,
     })
   }
 
-  return { authenticate, addBookmark, removeBookmark }
+  async function getFriendsAndBookmarks(): Promise<
+    FriendsAndBookmarksResponse
+  > {
+    return fetchWithAuth(
+      "https://www.f-list.net/json/api/friend-bookmark-lists.php",
+      {
+        bookmarklist: true,
+        friendlist: true,
+      },
+    )
+  }
+
+  return { authenticate, addBookmark, removeBookmark, getFriendsAndBookmarks }
 }

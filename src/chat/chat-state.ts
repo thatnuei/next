@@ -17,6 +17,7 @@ export function createChatState() {
     privateChats: new MapWithDefault(createPrivateChatState),
 
     friends: observable.set<string>(),
+    bookmarks: observable.set<string>(),
     ignored: observable.set<string>(),
     admins: observable.set<string>(),
 

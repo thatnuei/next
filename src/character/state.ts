@@ -4,6 +4,7 @@ import { createCommandHandler } from "../chat/commandHelpers"
 import { useCommandStream } from "../chat/commandStreamContext"
 import { useChatSocket } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
+import { useApiContext } from "../flist/api-context"
 import { useStreamListener } from "../state/stream"
 import { CharacterGender, CharacterStatus } from "./types"
 
@@ -32,6 +33,7 @@ export class CharacterModel {
 export function useCharacterListeners() {
   const state = useChatState()
   const socket = useChatSocket()
+  const api = useApiContext()
 
   useStreamListener(useChatStream(), (event) => {
     if (event.type === "update-ignored") {
@@ -45,8 +47,10 @@ export function useCharacterListeners() {
   useStreamListener(
     useCommandStream(),
     createCommandHandler({
-      FRL({ characters }) {
-        state.friends.replace(characters)
+      async IDN() {
+        const { friendlist, bookmarklist } = await api.getFriendsAndBookmarks()
+        state.bookmarks.replace(bookmarklist)
+        state.friends.replace(friendlist.map((entry) => entry.dest))
       },
 
       IGN(params) {
@@ -63,6 +67,28 @@ export function useCharacterListeners() {
 
       ADL({ ops }) {
         state.admins.replace(ops)
+      },
+
+      RTB(params) {
+        if (params.type === "trackadd") {
+          state.bookmarks.add(params.name)
+          // show toast
+        }
+
+        if (params.type === "trackrem") {
+          state.bookmarks.delete(params.name)
+          // show toast
+        }
+
+        if (params.type === "friendadd") {
+          state.friends.add(params.name)
+          // show toast
+        }
+
+        if (params.type === "friendremove") {
+          state.friends.delete(params.name)
+          // show toast
+        }
       },
 
       LIS({ characters }) {
