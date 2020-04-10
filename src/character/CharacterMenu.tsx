@@ -70,6 +70,7 @@ function CharacterMenu() {
   if (!character) return null
 
   const isIgnored = chatState.ignored.has(character.name)
+  const isBookmarked = chatState.bookmarks.has(character.name)
 
   return (
     <FocusOn enabled={isOpen} onClickOutside={() => setIsOpen(false)}>
@@ -88,6 +89,17 @@ function CharacterMenu() {
               chatStream.send({
                 type: "open-private-chat",
                 name: character.name,
+              })
+            }}
+          />
+          <ButtonItem
+            icon={icons.bookmark}
+            text={isBookmarked ? "Remove bookmark" : "Bookmark"}
+            onClick={() => {
+              chatStream.send({
+                type: "update-bookmark",
+                name: character.name,
+                action: isBookmarked ? "delete" : "add",
               })
             }}
           />

@@ -42,6 +42,14 @@ export function useCharacterListeners() {
         params: { action: event.action, character: event.name },
       })
     }
+
+    if (event.type === "update-bookmark") {
+      if (event.action === "add") {
+        api.addBookmark({ name: event.name }).catch(console.error) // show error toast
+      } else {
+        api.removeBookmark({ name: event.name }).catch(console.error) // show error toast
+      }
+    }
   })
 
   useStreamListener(

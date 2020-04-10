@@ -20,6 +20,7 @@ type ChatEventMap = {
   "send-private-message": { recipientName: string; text: string }
   "log-out": {}
   "update-ignored": { action: "add" | "delete"; name: string }
+  "update-bookmark": { action: "add" | "delete"; name: string }
 }
 
 export type ChatEvent = ValueOf<
