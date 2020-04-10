@@ -21,7 +21,7 @@ export const fadedButton = [
 
 export const input = [
   baseControlStyle,
-  tw`w-full shadow-inner focus:bg-background-2 focus:outline-none`,
+  tw`w-full shadow-inner focus:bg-background-2 focus:outline-none disabled:pointer-events-none`,
 ]
 
 export const select = [
