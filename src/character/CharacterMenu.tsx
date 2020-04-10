@@ -39,8 +39,6 @@ function CharacterMenu() {
       setIsOpen(true)
 
       event.preventDefault()
-    } else {
-      setIsOpen(false)
     }
   })
 
@@ -80,11 +78,7 @@ function CharacterMenu() {
       onClickOutside={() => setIsOpen(false)}
     >
       <div css={containerStyle} ref={setContainer}>
-        <CharacterSummary
-          character={character}
-          css={tw`p-3 bg-background-0`}
-          onClick={(e) => e.stopPropagation()}
-        />
+        <CharacterSummary character={character} css={tw`p-3 bg-background-0`} />
         <div css={tw`flex flex-col`}>
           <LinkItem
             icon={icons.link}
@@ -124,7 +118,7 @@ function CharacterMenu() {
             }}
           />
         </div>
-        <div css={tw`p-2 bg-background-0`} onClick={(e) => e.stopPropagation()}>
+        <div css={tw`p-2 bg-background-0`}>
           <CharacterMemoInput name={character.name} css={tw`block w-full`} />
         </div>
       </div>
