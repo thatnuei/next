@@ -57,10 +57,12 @@ export default function CharacterMemoInput({
     return () => sub.unsubscribe()
   }, [api.setMemo, memoInput$])
 
+  const style = [input, tw`h-24 text-sm`]
+
   if (state.status === "loading") {
     return (
       <textarea
-        css={[input, tw`text-sm italic`]}
+        css={[style, tw`italic`]}
         disabled
         placeholder="Loading..."
         {...props}
@@ -71,7 +73,7 @@ export default function CharacterMemoInput({
   if (state.status === "editing") {
     return (
       <textarea
-        css={[input, tw`text-sm`, state.note === "" && tw`italic`]}
+        css={[style, state.note === "" && tw`italic`]}
         value={state.note}
         onChange={(event) => {
           setState({ ...state, note: event.target.value })
