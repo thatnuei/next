@@ -53,8 +53,14 @@ export class ChannelModel {
   }
 
   shouldShowMessage = (messageType: MessageType) => {
-    if (this.actualMode === "ads") return messageType !== "normal"
-    if (this.actualMode === "chat") return messageType !== "lfrp"
+    if (this.actualMode === "ads") {
+      return messageType !== "normal" && messageType !== "action"
+    }
+
+    if (this.actualMode === "chat") {
+      return messageType !== "lfrp"
+    }
+
     return true
   }
 }
