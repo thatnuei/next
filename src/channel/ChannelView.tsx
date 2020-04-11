@@ -46,24 +46,11 @@ function ChannelView({ channel, ...props }: Props) {
 
         <div css={tw`w-3`} />
 
-        <div css={tw`flex flex-col`}>
-          <h1 css={headerText2}>{channel.title}</h1>
-          {!isLargeScreen && (
-            <ChannelFilters
-              selectedMode={channel.selectedMode}
-              onModeChange={channel.setSelectedMode}
-            />
-          )}
-        </div>
+        <h1 css={headerText2}>{channel.title}</h1>
 
         <div css={tw`flex-1`} />
 
-        {isLargeScreen && (
-          <ChannelFilters
-            selectedMode={channel.selectedMode}
-            onModeChange={channel.setSelectedMode}
-          />
-        )}
+        {isLargeScreen && <ChannelFilters channel={channel} />}
 
         {!isLargeScreen && (
           <Button
@@ -117,7 +104,11 @@ function ChannelView({ channel, ...props }: Props) {
 
       {!isLargeScreen && (
         <Drawer model={mobileDrawer} side="right">
-          <ChannelUserList channel={channel} css={tw`w-56 h-full`} />
+          <div css={tw`flex flex-col h-full bg-background-2`}>
+            <ChannelUserList channel={channel} css={tw`flex-1 w-56`} />
+            <div css={tw`h-gap`} />
+            <ChannelFilters channel={channel} css={tw`p-2 bg-background-0`} />
+          </div>
         </Drawer>
       )}
     </div>

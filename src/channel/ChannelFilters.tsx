@@ -1,16 +1,17 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
-import { ChannelMode } from "./state"
+import { TagProps } from "../jsx/types"
+import { ChannelMode, ChannelModel } from "./state"
 
 type Props = {
-  selectedMode: ChannelMode
-  onModeChange: (newMode: ChannelMode) => void
-}
+  channel: ChannelModel
+} & TagProps<"div">
 
-export default function ChannelFilters(props: Props) {
+function ChannelFilters({ channel, ...props }: Props) {
   function renderFilterButton(mode: ChannelMode, label: string) {
-    const isSelected = props.selectedMode === mode
+    const isSelected = channel.selectedMode === mode
 
     const style = [
       tw`block whitespace-no-wrap transition-opacity`,
@@ -20,7 +21,7 @@ export default function ChannelFilters(props: Props) {
     return (
       <Button
         css={style}
-        onClick={() => props.onModeChange(mode)}
+        onClick={() => channel.setSelectedMode(mode)}
         role="radio"
         aria-checked={isSelected}
       >
@@ -30,7 +31,7 @@ export default function ChannelFilters(props: Props) {
   }
 
   return (
-    <div css={tw`flex flex-row`} role="radiogroup">
+    <div css={tw`flex flex-row`} role="radiogroup" {...props}>
       {renderFilterButton("both", "Both")}
       <div css={tw`w-3`} />
       {renderFilterButton("chat", "Chat")}
@@ -39,3 +40,5 @@ export default function ChannelFilters(props: Props) {
     </div>
   )
 }
+
+export default observer(ChannelFilters)
