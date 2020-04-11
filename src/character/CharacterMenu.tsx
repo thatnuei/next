@@ -4,12 +4,11 @@ import { FocusOn } from "react-focus-on"
 import tw from "twin.macro"
 import { useChatState } from "../chat/chatStateContext"
 import { useChatStream } from "../chat/streamContext"
-import ExternalLink from "../dom/ExternalLink"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
-import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import CharacterMemoInput from "./CharacterMemoInput"
+import CharacterMenuItem from "./CharacterMenuItem"
 import CharacterSummary from "./CharacterSummary"
 import { CharacterModel } from "./state"
 
@@ -80,12 +79,12 @@ function CharacterMenu() {
       <div css={containerStyle} ref={setContainer}>
         <CharacterSummary character={character} css={tw`p-3 bg-background-0`} />
         <div css={tw`flex flex-col`} onClick={() => setIsOpen(false)}>
-          <LinkItem
+          <CharacterMenuItem
             icon={icons.link}
             text="Profile"
             href={getProfileUrl(character.name)}
           />
-          <ButtonItem
+          <CharacterMenuItem
             icon={icons.message}
             text="Message"
             onClick={() => {
@@ -95,7 +94,7 @@ function CharacterMenu() {
               })
             }}
           />
-          <ButtonItem
+          <CharacterMenuItem
             icon={icons.bookmark}
             text={isBookmarked ? "Remove bookmark" : "Bookmark"}
             onClick={() => {
@@ -106,7 +105,7 @@ function CharacterMenu() {
               })
             }}
           />
-          <ButtonItem
+          <CharacterMenuItem
             icon={icons.ignore}
             text={isIgnored ? "Unignore" : "Ignore"}
             onClick={() => {
@@ -127,27 +126,3 @@ function CharacterMenu() {
 }
 
 export default observer(CharacterMenu)
-
-const itemStyle = tw`flex flex-row p-2 transition duration-300 opacity-50 hover:opacity-100`
-
-function ButtonItem(props: {
-  icon: string
-  text: string
-  onClick: () => void
-}) {
-  return (
-    <button css={itemStyle} onClick={props.onClick}>
-      <Icon which={props.icon} />
-      <span css={tw`ml-2`}>{props.text}</span>
-    </button>
-  )
-}
-
-function LinkItem(props: { icon: string; text: string; href: string }) {
-  return (
-    <ExternalLink css={itemStyle} href={props.href}>
-      <Icon which={props.icon} />
-      <span css={tw`ml-2`}>{props.text}</span>
-    </ExternalLink>
-  )
-}
