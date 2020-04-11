@@ -71,7 +71,7 @@ function Chat({ onDisconnect }: Props) {
       )}
 
       {isSmallScreen && (
-        <Drawer model={state.sideMenuOverlay}>
+        <Drawer model={state.sideMenuOverlay} side="left">
           <ChatNav css={tw`h-full bg-background-2`} />
         </Drawer>
       )}
