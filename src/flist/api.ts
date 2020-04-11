@@ -31,7 +31,7 @@ type AuthState = {
   ticketTimestamp: number
 }
 
-const ticketExpireTime = 1000 * 60 * 15
+const ticketExpireTime = 1000 * 60 * 10
 
 async function refetchTicket(currentState: AuthState) {
   const ticketTimestamp = Date.now()
