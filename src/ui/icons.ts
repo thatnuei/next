@@ -1,6 +1,7 @@
 import * as mdi from "@mdi/js"
 export const about = mdi.mdiInformation
 export const bookmark = mdi.mdiBookmark
+export const bookmarkHollow = mdi.mdiBookmarkOutline
 export const channels = mdi.mdiForum
 export const checkFilled = mdi.mdiCheckboxMarkedOutline
 export const checkOutline = mdi.mdiCheckboxBlankOutline
@@ -10,6 +11,7 @@ export const envelope = mdi.mdiEmail
 export const heart = mdi.mdiHeart
 export const home = mdi.mdiHome
 export const ignore = mdi.mdiMinusCircle
+export const ignoreHollow = mdi.mdiMinusCircleOutline
 export const link = mdi.mdiLinkVariant
 export const lock = mdi.mdiLock
 export const lockOpen = mdi.mdiLockOpen

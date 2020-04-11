@@ -1,15 +1,14 @@
-import { observer } from "mobx-react-lite"
-import React, { useState } from "react"
-import { FocusOn } from "react-focus-on"
+import { useLocalStore, useObserver } from "mobx-react-lite"
+import React from "react"
 import tw from "twin.macro"
 import { useChatState } from "../chat/chatStateContext"
 import { useChatStream } from "../chat/streamContext"
-import { useElementSize } from "../dom/useElementSize"
 import { useWindowEvent } from "../dom/useWindowEvent"
-import { useWindowSize } from "../dom/useWindowSize"
 import { getProfileUrl } from "../flist/helpers"
+import ContextMenu from "../ui/ContextMenu"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
+import { OverlayModel } from "../ui/OverlayModel"
 import CharacterMemoInput from "./CharacterMemoInput"
 import CharacterMenuItem from "./CharacterMenuItem"
 import CharacterSummary from "./CharacterSummary"
@@ -19,76 +18,48 @@ function CharacterMenu() {
   const chatState = useChatState()
   const chatStream = useChatStream()
 
-  const [isOpen, setIsOpen] = useState(false)
-  const [character, setCharacter] = useState<CharacterModel>()
-  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const state = useLocalStore(() => ({
+    menu: new OverlayModel(),
+    character: undefined as CharacterModel | undefined,
+    position: { x: 0, y: 0 },
 
-  useWindowEvent("click", function openMenu(event: MouseEvent) {
-    const characterName = (() => {
-      for (const target of event.composedPath()) {
-        if (target instanceof HTMLElement && target.dataset.character) {
-          return target.dataset.character
+    handleClick(event: MouseEvent) {
+      const characterName = (() => {
+        for (const target of event.composedPath()) {
+          if (target instanceof HTMLElement && target.dataset.character) {
+            return target.dataset.character
+          }
         }
+      })()
+
+      if (characterName) {
+        const x = event.clientX
+        const y = event.clientY
+
+        state.character = chatState.characters.get(characterName)
+        state.position = { x, y }
+        state.menu.show()
+
+        event.preventDefault()
       }
-    })()
+    },
+  }))
 
-    if (characterName) {
-      const x = event.clientX
-      const y = event.clientY
+  useWindowEvent("click", state.handleClick)
 
-      setCharacter(chatState.characters.get(characterName))
-      setPosition({ x, y })
-      setIsOpen(true)
+  return useObserver(() => {
+    const { character, position, menu } = state
+    if (!character) return null
 
-      event.preventDefault()
-    }
-  })
+    const isIgnored = chatState.ignored.has(character.name)
+    const isBookmarked = chatState.bookmarks.has(character.name)
 
-  const [container, setContainer] = useState<HTMLElement | null>()
-  const containerSize = useElementSize(container)
+    const friendshipItems = [...chatState.friends].filter(
+      (it) => it.them === character.name,
+    )
 
-  const windowSize = useWindowSize()
-
-  const edgeSpacing = 12
-
-  const left = Math.max(
-    Math.min(position.x, windowSize.width - containerSize.width - edgeSpacing),
-    edgeSpacing,
-  )
-
-  const top = Math.max(
-    Math.min(
-      position.y,
-      windowSize.height - containerSize.height - edgeSpacing,
-    ),
-    edgeSpacing,
-  )
-
-  const containerStyle = [
-    tw`fixed w-56 overflow-y-auto duration-300 shadow-normal bg-background-1`,
-    { transitionProperty: "transform, opacity, visibility" },
-    isOpen
-      ? tw`visible transform translate-y-0 opacity-100`
-      : tw`invisible transform -translate-y-2 opacity-0`,
-    { left, top, maxHeight: `calc(100vh - ${edgeSpacing * 2}px)` },
-  ]
-
-  if (!character) return null
-
-  const isIgnored = chatState.ignored.has(character.name)
-  const isBookmarked = chatState.bookmarks.has(character.name)
-
-  const friendshipItems = [...chatState.friends].filter(
-    (it) => it.them === character.name,
-  )
-
-  return (
-    <FocusOn
-      enabled={isOpen}
-      onEscapeKey={() => setIsOpen(false)}
-      onClickOutside={() => setIsOpen(false)}
-    >
-      <div css={containerStyle} ref={setContainer}>
+    return (
+      <ContextMenu state={menu} {...position} css={tw`w-56`}>
         <div css={tw`p-3 bg-background-0`}>
           <CharacterSummary character={character} />
 
@@ -103,7 +74,7 @@ function CharacterMenu() {
           ))}
         </div>
 
-        <div css={tw`flex flex-col`} onClick={() => setIsOpen(false)}>
+        <div css={tw`flex flex-col`} onClick={menu.hide}>
           <CharacterMenuItem
             icon={icons.link}
             text="Profile"
@@ -120,7 +91,7 @@ function CharacterMenu() {
             }}
           />
           <CharacterMenuItem
-            icon={icons.bookmark}
+            icon={isBookmarked ? icons.bookmark : icons.bookmarkHollow}
             text={isBookmarked ? "Remove bookmark" : "Bookmark"}
             onClick={() => {
               chatStream.send({
@@ -131,7 +102,7 @@ function CharacterMenu() {
             }}
           />
           <CharacterMenuItem
-            icon={icons.ignore}
+            icon={isIgnored ? icons.ignore : icons.ignoreHollow}
             text={isIgnored ? "Unignore" : "Ignore"}
             onClick={() => {
               chatStream.send({
@@ -145,9 +116,9 @@ function CharacterMenu() {
         <div css={tw`p-2 bg-background-0`}>
           <CharacterMemoInput name={character.name} css={tw`block w-full`} />
         </div>
-      </div>
-    </FocusOn>
-  )
+      </ContextMenu>
+    )
+  })
 }
 
-export default observer(CharacterMenu)
+export default CharacterMenu
