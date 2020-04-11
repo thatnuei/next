@@ -74,8 +74,8 @@ module.exports = {
 
     // TODO: change these names because they're not good
     fontSize: {
-      "sm": "12px",
-      "base": "15px",
+      "sm": "13px",
+      "base": "16px",
       "xl": "20px",
       "2xl": "24px",
     },
