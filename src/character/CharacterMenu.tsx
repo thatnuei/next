@@ -4,6 +4,7 @@ import { FocusOn } from "react-focus-on"
 import tw from "twin.macro"
 import { useChatState } from "../chat/chatStateContext"
 import { useChatStream } from "../chat/streamContext"
+import { useElementSize } from "../dom/useElementSize"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { useWindowSize } from "../dom/useWindowSize"
 import { getProfileUrl } from "../flist/helpers"
@@ -44,20 +45,22 @@ function CharacterMenu() {
   })
 
   const [container, setContainer] = useState<HTMLElement | null>()
-  const containerWidth = container?.clientWidth ?? 0
-  const containerHeight = container?.clientHeight ?? 0
+  const containerSize = useElementSize(container)
 
   const windowSize = useWindowSize()
 
   const edgeSpacing = 12
 
   const left = Math.max(
-    Math.min(position.x, windowSize.width - containerWidth - edgeSpacing),
+    Math.min(position.x, windowSize.width - containerSize.width - edgeSpacing),
     edgeSpacing,
   )
 
   const top = Math.max(
-    Math.min(position.y, windowSize.height - containerHeight - edgeSpacing),
+    Math.min(
+      position.y,
+      windowSize.height - containerSize.height - edgeSpacing,
+    ),
     edgeSpacing,
   )
 
