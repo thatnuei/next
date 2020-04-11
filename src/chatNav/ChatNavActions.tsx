@@ -9,7 +9,10 @@ function ChatNavActions(props: TagProps<"div">) {
   const stream = useChatStream()
 
   return (
-    <div css={tw`flex flex-col`} {...props}>
+    <div
+      css={[tw`flex flex-col overflow-y-auto`, { "> *": tw`flex-shrink-0` }]}
+      {...props}
+    >
       <NavAction
         icon={icons.list}
         title="Browse channels"
