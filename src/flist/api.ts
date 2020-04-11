@@ -41,8 +41,10 @@ async function refetchTicket(currentState: AuthState) {
     body: {
       account: currentState.account,
       password: currentState.password,
-      no_friends: "true",
-      no_bookmarks: "true",
+      no_friends: true,
+      no_bookmarks: true,
+      no_characters: true,
+      no_default_character: true,
     },
   })
 
@@ -82,8 +84,8 @@ export function createFListApi() {
         body: {
           account: creds.account,
           password: creds.password,
-          no_friends: "true",
-          no_bookmarks: "true",
+          no_friends: true,
+          no_bookmarks: true,
         },
       },
     )
