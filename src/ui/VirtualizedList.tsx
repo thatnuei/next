@@ -1,7 +1,7 @@
-import React, { Key, useEffect, useState } from "react"
+import React, { Key, useState } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
-import ResizeObserver from "resize-observer-polyfill"
 import tw from "twin.macro"
+import { useElementSize } from "../dom/useElementSize"
 import { TagProps } from "../jsx/types"
 
 type Props<T> = TagProps<"div"> & {
@@ -24,18 +24,7 @@ function VirtualizedList<T>({
   ...props
 }: Props<T>) {
   const [container, setContainer] = useState<Element | null>()
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
-
-  useEffect(() => {
-    if (!container) return
-
-    const observer = new ResizeObserver(([info]) =>
-      setDimensions(info.contentRect),
-    )
-    observer.observe(container)
-
-    return () => observer.disconnect()
-  }, [container])
+  const dimensions = useElementSize(container)
 
   return (
     <div css={tw`w-full h-full`} ref={setContainer} {...props}>
