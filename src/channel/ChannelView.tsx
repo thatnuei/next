@@ -29,7 +29,7 @@ function ChannelView({ channel, ...props }: Props) {
   const stream = useChatStream()
   const isLargeScreen = useMediaQuery(screenQueries.large)
   const descriptionOverlay = useMemo(() => new OverlayModel(), [])
-  const mobileDrawer = useMemo(() => new OverlayModel(), [])
+  const userListDrawer = useMemo(() => new OverlayModel(), [])
 
   return (
     <div css={tw`flex flex-col`} {...props}>
@@ -38,7 +38,7 @@ function ChannelView({ channel, ...props }: Props) {
 
         <Button
           title="Description"
-          css={[fadedButton, tw`flex flex-row flex-shrink-0`]}
+          css={[fadedButton]}
           onClick={descriptionOverlay.toggle}
         >
           <Icon which={icons.about} />
@@ -46,21 +46,82 @@ function ChannelView({ channel, ...props }: Props) {
 
         <div css={tw`w-3`} />
 
-        <h1 css={headerText2}>{channel.title}</h1>
+        <h1 css={[headerText2, tw`flex-1`]}>{channel.title}</h1>
 
-        <div css={tw`flex-1`} />
+        {/* <div css={tw`w-3`} />
+
+        <Button
+          css={[fadedButton, tw`flex flex-row items-center flex-shrink-0`]}
+          onClick={descriptionOverlay.toggle}
+        >
+          <Icon which={icons.about} />
+          <div css={tw`w-1`} />
+          <span>Description</span>
+        </Button> */}
+
+        {/* <div css={tw`w-3`} />
+
+        <Button
+          css={[fadedButton, tw`flex flex-row items-center flex-shrink-0`]}
+        >
+          <Icon which={icons.clearMessages} />
+          <div css={tw`w-1`} />
+          <span>Clear messages</span>
+        </Button>
+
+        <div css={tw`w-3`} />
+
+        <Button
+          css={[fadedButton, tw`flex flex-row items-center flex-shrink-0`]}
+        >
+          <Icon which={icons.pencilSquare} />
+          <div css={tw`w-1`} />
+          <span>Manage</span>
+        </Button>
+
+        <div css={tw`w-3`} />
+
+        <Button
+          css={[fadedButton, tw`flex flex-row items-center flex-shrink-0`]}
+        >
+          <Icon which={icons.heart} />
+          <div css={tw`w-1`} />
+          <span>Invite</span>
+        </Button>
+
+        <div css={tw`w-3`} />
+
+        <Button
+          css={[fadedButton, tw`flex flex-row items-center flex-shrink-0`]}
+        >
+          <Icon which={icons.code} />
+          <div css={tw`w-1`} />
+          <span>Copy room code</span>
+        </Button> */}
+
+        {/* <div css={tw`flex-1`} /> */}
 
         {isLargeScreen && <ChannelFilters channel={channel} />}
 
         {!isLargeScreen && (
-          <Button
-            title="More"
-            css={[fadedButton, tw`ml-3`]}
-            onClick={mobileDrawer.show}
-          >
-            <Icon which={icons.users} />
-          </Button>
+          <>
+            <div css={tw`w-3`} />
+
+            <Button
+              title="User list"
+              css={fadedButton}
+              onClick={userListDrawer.show}
+            >
+              <Icon which={icons.users} />
+            </Button>
+          </>
         )}
+
+        <div css={tw`w-3`} />
+
+        <Button title="More" css={fadedButton}>
+          <Icon which={icons.more} />
+        </Button>
       </header>
 
       <div css={tw`flex flex-row flex-1 min-h-0 my-gap`}>
@@ -103,7 +164,7 @@ function ChannelView({ channel, ...props }: Props) {
       />
 
       {!isLargeScreen && (
-        <Drawer model={mobileDrawer} side="right">
+        <Drawer model={userListDrawer} side="right">
           <div css={tw`flex flex-col h-full bg-background-2`}>
             <ChannelUserList channel={channel} css={tw`flex-1 w-56`} />
             <div css={tw`h-gap`} />
