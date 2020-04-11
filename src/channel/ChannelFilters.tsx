@@ -13,7 +13,7 @@ export default function ChannelFilters(props: Props) {
     const isSelected = props.selectedMode === mode
 
     const style = [
-      tw`block ml-4 whitespace-no-wrap transition-opacity`,
+      tw`block whitespace-no-wrap transition-opacity`,
       isSelected ? tw`opacity-100` : tw`opacity-50 hover:opacity-75`,
     ]
 
@@ -32,7 +32,9 @@ export default function ChannelFilters(props: Props) {
   return (
     <div css={tw`flex flex-row`} role="radiogroup">
       {renderFilterButton("both", "Both")}
+      <div css={tw`w-3`} />
       {renderFilterButton("chat", "Chat")}
+      <div css={tw`w-3`} />
       {renderFilterButton("ads", "Ads")}
     </div>
   )

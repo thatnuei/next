@@ -9,10 +9,11 @@ import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
-import { fadedButton, headerText } from "../ui/components"
+import { fadedButton, headerText2 } from "../ui/components"
+import Drawer from "../ui/Drawer"
 import { scrollVertical } from "../ui/helpers"
 import Icon from "../ui/Icon"
-import { earth, users } from "../ui/icons"
+import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
 import { OverlayModel } from "../ui/OverlayModel"
 import { screenQueries } from "../ui/screens"
@@ -28,34 +29,49 @@ function ChannelView({ channel, ...props }: Props) {
   const stream = useChatStream()
   const isLargeScreen = useMediaQuery(screenQueries.large)
   const descriptionOverlay = useMemo(() => new OverlayModel(), [])
+  const mobileDrawer = useMemo(() => new OverlayModel(), [])
 
   return (
     <div css={tw`flex flex-col`} {...props}>
       <header css={tw`flex flex-row items-center p-3 bg-background-0`}>
         <ChatMenuButton css={tw`mr-3`} />
 
-        <div css={tw`flex flex-col flex-1`}>
-          <h1 css={[headerText, tw`flex-1`]}>{channel.title}</h1>
-          <div css={tw`flex flex-row`}>
-            <Button
-              css={fadedButton}
-              tw="flex flex-row"
-              onClick={descriptionOverlay.toggle}
-            >
-              <Icon which={earth} />
-              <span css={tw`ml-1`}>Description</span>
-            </Button>
-          </div>
+        <Button
+          title="Description"
+          css={[fadedButton, tw`flex flex-row flex-shrink-0`]}
+          onClick={descriptionOverlay.toggle}
+        >
+          <Icon which={icons.about} />
+        </Button>
+
+        <div css={tw`w-3`} />
+
+        <div css={tw`flex flex-col`}>
+          <h1 css={headerText2}>{channel.title}</h1>
+          {!isLargeScreen && (
+            <ChannelFilters
+              selectedMode={channel.selectedMode}
+              onModeChange={channel.setSelectedMode}
+            />
+          )}
         </div>
 
-        <ChannelFilters
-          selectedMode={channel.selectedMode}
-          onModeChange={channel.setSelectedMode}
-        />
+        <div css={tw`flex-1`} />
+
+        {isLargeScreen && (
+          <ChannelFilters
+            selectedMode={channel.selectedMode}
+            onModeChange={channel.setSelectedMode}
+          />
+        )}
 
         {!isLargeScreen && (
-          <Button title="Show users" css={[fadedButton, tw`ml-3`]}>
-            <Icon which={users} />
+          <Button
+            title="More"
+            css={[fadedButton, tw`ml-3`]}
+            onClick={mobileDrawer.show}
+          >
+            <Icon which={icons.users} />
           </Button>
         )}
       </header>
@@ -70,7 +86,7 @@ function ChannelView({ channel, ...props }: Props) {
           <Modal
             title="Description"
             width="100%"
-            height="max(60%, 400px)"
+            height="max(60%, 500px)"
             model={descriptionOverlay}
             fillMode="absolute"
             verticalPanelAlign="top"
@@ -98,6 +114,12 @@ function ChannelView({ channel, ...props }: Props) {
           })
         }
       />
+
+      {!isLargeScreen && (
+        <Drawer model={mobileDrawer} side="right">
+          <ChannelUserList channel={channel} css={tw`w-56 h-full`} />
+        </Drawer>
+      )}
     </div>
   )
 }
