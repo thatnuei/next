@@ -13,15 +13,13 @@ function ChatNav(props: TagProps<"nav">) {
   const { identity } = useChatCredentials()
   return (
     <nav css={tw`flex`} {...props}>
-      <div css={tw`flex flex-col mr-gap`}>
-        <ChatNavActions />
-      </div>
-      <div css={tw`flex flex-col w-56`}>
+      <ChatNavActions />
+      <div css={tw`flex flex-col w-56 overflow-y-auto bg-background-1`}>
         <CharacterSummary
           character={state.characters.get(identity)}
           css={tw`p-3 bg-background-0 mb-gap`}
         />
-        <div css={tw`flex-1 bg-background-1`}>
+        <div css={tw`flex-1`}>
           <RoomTabList />
         </div>
       </div>

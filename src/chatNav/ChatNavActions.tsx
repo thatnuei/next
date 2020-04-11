@@ -1,14 +1,15 @@
 import React from "react"
 import tw from "twin.macro"
 import { useChatStream } from "../chat/streamContext"
+import { TagProps } from "../jsx/types"
 import * as icons from "../ui/icons"
 import NavAction from "./NavAction"
 
-function ChatNavActions() {
+function ChatNavActions(props: TagProps<"div">) {
   const stream = useChatStream()
 
   return (
-    <>
+    <div css={tw`flex flex-col`} {...props}>
       <NavAction
         icon={icons.list}
         title="Browse channels"
@@ -27,7 +28,7 @@ function ChatNavActions() {
         title="Log out"
         onClick={() => stream.send({ type: "log-out" })}
       />
-    </>
+    </div>
   )
 }
 
