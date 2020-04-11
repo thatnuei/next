@@ -1,10 +1,29 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { merge, Subject } from "rxjs"
-import { debounceTime, filter, map, scan } from "rxjs/operators"
+import { merge, Observable, of, Subject } from "rxjs"
+import {
+  catchError,
+  debounceTime,
+  filter,
+  map,
+  scan,
+  switchMap,
+} from "rxjs/operators"
 import tw from "twin.macro"
+import Button from "../dom/Button"
 import { useApiContext } from "../flist/api-context"
 import { TagProps } from "../jsx/types"
-import { input } from "../ui/components"
+import { input, solidButton } from "../ui/components"
+
+function useObservable<T>(observable: Observable<T>, initialValue: T): T {
+  const [value, setValue] = useState(initialValue)
+
+  useEffect(() => {
+    const sub = observable.subscribe(setValue)
+    return () => sub.unsubscribe()
+  }, [observable])
+
+  return value
+}
 
 export default function CharacterMemoInput({
   name,
@@ -12,32 +31,39 @@ export default function CharacterMemoInput({
 }: { name: string } & TagProps<"textarea">) {
   const api = useApiContext()
 
+  type Action =
+    | { type: "loadMemo"; name: string }
+    | { type: "setMemo"; name: string; note: string }
+
   type State =
     | { status: "loading" }
-    | { status: "editing"; name: string; note: string }
+    | { status: "editing"; note: string }
     | { status: "error" }
 
-  const [state, setState] = useState<State>({ status: "loading" })
+  const actionSubject = useMemo(() => new Subject<Action>(), [])
 
-  useEffect(() => {
-    let cancelled = false
+  const loadMemoObservable = useMemo(
+    () =>
+      actionSubject.pipe(
+        filter(
+          (action): action is { type: "loadMemo"; name: string } =>
+            action.type === "loadMemo",
+        ),
+        switchMap((action) =>
+          merge(
+            of<State>({ status: "loading" }),
+            of(action.name).pipe(
+              switchMap((name) => api.getMemo({ name })),
+              map((note): State => ({ status: "editing", note })),
+            ),
+          ),
+        ),
+        catchError(() => of<State>({ status: "error" })),
+      ),
+    [actionSubject, api],
+  )
 
-    api
-      .getMemo({ name })
-      .then((note) => {
-        if (cancelled) return
-        setState({ status: "editing", name, note })
-      })
-      .catch(() => {
-        if (cancelled) return
-        setState({ status: "error" })
-      })
-
-    return () => {
-      cancelled = true
-      setState({ status: "loading" })
-    }
-  }, [api, name])
+  const state = useObservable(loadMemoObservable, { status: "loading" })
 
   type MemoData = { name: string; note: string }
   const memoInput$ = useMemo(() => new Subject<MemoData>(), [])
@@ -57,7 +83,11 @@ export default function CharacterMemoInput({
     return () => sub.unsubscribe()
   }, [api.setMemo, memoInput$])
 
-  const style = [input, tw`h-24 text-sm`]
+  useEffect(() => {
+    actionSubject.next({ type: "loadMemo", name })
+  }, [actionSubject, name])
+
+  const style = [input, tw`h-20 text-sm`]
 
   if (state.status === "loading") {
     return (
@@ -76,7 +106,7 @@ export default function CharacterMemoInput({
         css={[style, state.note === "" && tw`italic`]}
         value={state.note}
         onChange={(event) => {
-          setState({ ...state, note: event.target.value })
+          // setState({ ...state, note: event.target.value })
           memoInput$.next({ name, note: event.target.value })
         }}
         placeholder="Enter a memo"
@@ -85,6 +115,19 @@ export default function CharacterMemoInput({
     )
   }
 
-  // TODO: error state + retry button(?)
+  if (state.status === "error") {
+    return (
+      <div css={tw`text-sm`}>
+        <div css={tw`mb-1`}>Failed to load memo</div>
+        <Button
+          css={[solidButton, tw`px-2 py-1 text-sm`]}
+          onClick={() => actionSubject.next({ type: "loadMemo", name })}
+        >
+          Try again
+        </Button>
+      </div>
+    )
+  }
+
   return null
 }
