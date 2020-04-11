@@ -2,6 +2,7 @@ import { observable } from "mobx"
 import { useChatState } from "../chat/chatStateContext"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useCommandStream } from "../chat/commandStreamContext"
+import { useChatCredentials } from "../chat/credentialsContext"
 import { useChatSocket } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useApiContext } from "../flist/api-context"
@@ -34,6 +35,7 @@ export function useCharacterListeners() {
   const state = useChatState()
   const socket = useChatSocket()
   const api = useApiContext()
+  const { identity } = useChatCredentials()
 
   useStreamListener(useChatStream(), (event) => {
     if (event.type === "update-ignored") {
@@ -58,7 +60,9 @@ export function useCharacterListeners() {
       async IDN() {
         const { friendlist, bookmarklist } = await api.getFriendsAndBookmarks()
         state.bookmarks.replace(bookmarklist)
-        state.friends.replace(friendlist.map((entry) => entry.dest))
+        state.friends.replace(
+          friendlist.map((entry) => ({ us: entry.source, them: entry.dest })),
+        )
       },
 
       IGN(params) {
@@ -89,7 +93,7 @@ export function useCharacterListeners() {
         }
 
         if (params.type === "friendadd") {
-          state.friends.add(params.name)
+          state.friends.add({ us: identity, them: params.name })
           // show toast
         }
 

@@ -30,7 +30,7 @@ function ChannelUserList({ channel, ...props }: Props) {
   const getItemType = (character: CharacterModel): ItemType => {
     if (state.admins.has(character.name)) return "admin"
     if (channel.ops.has(character.name)) return "op"
-    if (state.friends.has(character.name)) return "friend"
+    if (state.isFriend(character.name)) return "friend"
     if (state.bookmarks.has(character.name)) return "bookmark"
     if (character.status === "looking") return "looking"
     return "default"

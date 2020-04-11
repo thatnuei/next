@@ -10,13 +10,18 @@ import { OverlayModel } from "../ui/OverlayModel"
 
 export type ChatState = ReturnType<typeof createChatState>
 
+type FriendshipInfo = {
+  us: string
+  them: string
+}
+
 export function createChatState() {
-  return {
+  const self = {
     characters: new MapWithDefault((name) => new CharacterModel(name)),
     channels: new MapWithDefault((id) => new ChannelModel(id)),
     privateChats: new MapWithDefault(createPrivateChatState),
 
-    friends: observable.set<string>(),
+    friends: observable.set<FriendshipInfo>(),
     bookmarks: observable.set<string>(),
     ignored: observable.set<string>(),
     admins: observable.set<string>(),
@@ -27,5 +32,9 @@ export function createChatState() {
     channelBrowser: new ChannelBrowserState(),
     nav: new ChatNavState(),
     statusUpdate: new StatusUpdateState(),
+
+    isFriend: (name: string) =>
+      [...self.friends].some((info) => info.them === name),
   }
+  return self
 }
