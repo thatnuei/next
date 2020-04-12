@@ -6,7 +6,7 @@ import { useChatStream } from "../chat/streamContext"
 import { TagProps } from "../jsx/types"
 import Icon from "../ui/Icon"
 import { earth, lock } from "../ui/icons"
-import { ChannelBrowserItemInfo } from "./state"
+import { ChannelBrowserItemInfo } from "./ChannelBrowserState"
 
 type Props = TagProps<"button"> & {
   info: ChannelBrowserItemInfo

@@ -1,11 +1,11 @@
 import { waitFor } from "@testing-library/react"
-import { createTask } from "./task"
+import { Task } from "./task"
 
 test("start & complete", async () => {
   const onStart = jest.fn()
   const onComplete = jest.fn()
 
-  const task = createTask({
+  const task = new Task({
     run: () => Promise.resolve(123),
     onStart,
     onComplete,
@@ -22,7 +22,7 @@ test("start & complete", async () => {
 test("error", async () => {
   const onError = jest.fn()
 
-  const task = createTask({
+  const task = new Task({
     run: () => Promise.reject(123),
     onError,
   })
@@ -40,7 +40,7 @@ test("cancel", async () => {
   const onError = jest.fn()
   const onCancelled = jest.fn()
 
-  const task = createTask({
+  const task = new Task({
     run: () => Promise.resolve(123),
     onStart,
     onComplete,

@@ -2,16 +2,16 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
-import { CharacterModel } from "../character/state"
+import { CharacterState } from "../character/CharacterState"
 import { useChatState } from "../chat/chatStateContext"
 import { compare } from "../common/compare"
 import { ValueOf } from "../common/types"
 import { TagProps } from "../jsx/types"
 import VirtualizedList from "../ui/VirtualizedList"
-import { ChannelModel } from "./state"
+import { ChannelState } from "./ChannelState"
 
 type Props = TagProps<"div"> & {
-  channel: ChannelModel
+  channel: ChannelState
 }
 
 const itemTypes = [
@@ -27,7 +27,7 @@ type ItemType = ValueOf<typeof itemTypes>
 function ChannelUserList({ channel, ...props }: Props) {
   const state = useChatState()
 
-  const getItemType = (character: CharacterModel): ItemType => {
+  const getItemType = (character: CharacterState): ItemType => {
     if (state.admins.has(character.name)) return "admin"
     if (channel.ops.has(character.name)) return "op"
     if (state.isFriend(character.name)) return "friend"

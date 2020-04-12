@@ -15,21 +15,21 @@ import { scrollVertical } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
-import { OverlayModel } from "../ui/OverlayModel"
+import { OverlayState } from "../ui/OverlayState"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
+import { ChannelState } from "./ChannelState"
 import ChannelUserList from "./ChannelUserList"
-import { ChannelModel } from "./state"
 
 type Props = {
-  channel: ChannelModel
+  channel: ChannelState
 } & TagProps<"div">
 
 function ChannelView({ channel, ...props }: Props) {
   const stream = useChatStream()
   const isLargeScreen = useMediaQuery(screenQueries.large)
-  const descriptionOverlay = useMemo(() => new OverlayModel(), [])
-  const userListDrawer = useMemo(() => new OverlayModel(), [])
+  const descriptionOverlay = useMemo(() => new OverlayState(), [])
+  const userListDrawer = useMemo(() => new OverlayState(), [])
 
   return (
     <div css={tw`flex flex-col`} {...props}>
@@ -135,7 +135,7 @@ function ChannelView({ channel, ...props }: Props) {
             title="Description"
             width="100%"
             height="max(60%, 500px)"
-            model={descriptionOverlay}
+            state={descriptionOverlay}
             fillMode="absolute"
             verticalPanelAlign="top"
           >
@@ -164,7 +164,7 @@ function ChannelView({ channel, ...props }: Props) {
       />
 
       {!isLargeScreen && (
-        <Drawer model={userListDrawer} side="right">
+        <Drawer state={userListDrawer} side="right">
           <div css={tw`flex flex-col h-full bg-background-2`}>
             <ChannelUserList channel={channel} css={tw`flex-1 w-56`} />
             <div css={tw`h-gap`} />

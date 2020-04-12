@@ -1,6 +1,6 @@
 import { assert } from "../common/assert"
 import { compareLower } from "../common/compareLower"
-import { fetchJson } from "../network/fetchJson"
+import { fetchJson } from "./fetchJson"
 
 export type LoginCredentials = {
   account: string
@@ -58,6 +58,8 @@ async function refetchTicket(currentState: AuthState) {
 }
 
 export function createFListApi() {
+  // using a factory function instead of a class to keep hard privacy on this,
+  // since it contains some sensitive info
   let authState: AuthState | undefined
 
   async function validateAuthState(): Promise<AuthState> {

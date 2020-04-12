@@ -6,13 +6,12 @@ import tw from "twin.macro"
 import { useElementSize } from "../dom/useElementSize"
 import { useWindowSize } from "../dom/useWindowSize"
 import { TagProps } from "../jsx/types"
+import { OverlayState } from "./OverlayState"
 
 type Props = {
   state: PopoverState
   children: React.ReactNode
 } & TagProps<"div">
-
-type PopoverState = ReturnType<typeof createPopoverState>
 
 const edgeSpacing = 12
 
@@ -61,17 +60,12 @@ function Popover({ state, children, ...props }: Props) {
 
 export default observer(Popover)
 
-export function createPopoverState() {
-  const self = observable({
-    isVisible: false,
-    position: { x: 0, y: 0 },
-    show(position: { x: number; y: number }) {
-      self.position = position
-      self.isVisible = true
-    },
-    hide() {
-      self.isVisible = false
-    },
-  })
-  return self
+export class PopoverState extends OverlayState {
+  @observable.ref
+  position = { x: 0, y: 0 }
+
+  showAt = (position: { x: number; y: number }) => {
+    this.position = position
+    this.show()
+  }
 }

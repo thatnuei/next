@@ -4,11 +4,11 @@ import tw from "twin.macro"
 import BBC from "../bbc/BBC"
 import { TagProps } from "../jsx/types"
 import { rainbowAnimation } from "../ui/helpers"
+import { CharacterState } from "./CharacterState"
 import { statusColors } from "./colors"
-import { CharacterModel } from "./state"
 
 type Props = TagProps<"p"> & {
-  character: CharacterModel
+  character: CharacterState
 }
 
 function CharacterStatusText({ character, ...props }: Props) {

@@ -1,10 +1,10 @@
 import { action, observable } from "mobx"
 
-export type InputModelType<M extends InputModel> = M extends InputModel<infer T>
+export type InputStateType<M extends InputState> = M extends InputState<infer T>
   ? T
   : never
 
-export class InputModel<T = unknown> {
+export class InputState<T = unknown> {
   constructor(initialValue: T) {
     this.value = this.initialValue = initialValue
   }

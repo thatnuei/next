@@ -1,12 +1,6 @@
 import { observable } from "mobx"
 
-export type Task = {
-  status: "idle" | "running" | "complete" | "error" | "cancelled"
-  run(): void
-  cancel(): void
-}
-
-export type TaskOptions<T> = {
+type TaskOptions<T> = {
   run: () => Promise<T>
   onStart?: () => void
   onComplete?: (result: T) => void
@@ -14,32 +8,34 @@ export type TaskOptions<T> = {
   onCancelled?: () => void
 }
 
-export function createTask<T>(options: TaskOptions<T>) {
-  const task = observable<Task>({
-    status: "idle",
-    run() {
-      if (task.status !== "idle") return
-      task.status = "running"
-      options.onStart?.()
+export class Task<T> {
+  constructor(private readonly options: TaskOptions<T>) {}
 
-      options
-        .run()
-        .then((result) => {
-          if (task.status === "cancelled") return
-          task.status = "complete"
-          options.onComplete?.(result)
-        })
-        .catch(() => {
-          if (task.status === "cancelled") return
-          task.status = "error"
-          options.onError?.()
-        })
-    },
-    cancel() {
-      if (task.status !== "running") return
-      task.status = "cancelled"
-      options.onCancelled?.()
-    },
-  })
-  return task
+  @observable
+  status: "idle" | "running" | "complete" | "error" | "cancelled" = "idle"
+
+  run = () => {
+    if (this.status !== "idle") return
+    this.status = "running"
+    this.options.onStart?.()
+
+    this.options
+      .run()
+      .then((result) => {
+        if (this.status === "cancelled") return
+        this.status = "complete"
+        this.options.onComplete?.(result)
+      })
+      .catch(() => {
+        if (this.status === "cancelled") return
+        this.status = "error"
+        this.options.onError?.()
+      })
+  }
+
+  cancel = () => {
+    if (this.status !== "running") return
+    this.status = "cancelled"
+    this.options.onCancelled?.()
+  }
 }

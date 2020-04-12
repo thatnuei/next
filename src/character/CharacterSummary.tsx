@@ -6,11 +6,11 @@ import { getProfileUrl } from "../flist/helpers"
 import { TagProps } from "../jsx/types"
 import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
+import { CharacterState } from "./CharacterState"
 import CharacterStatusText from "./CharacterStatusText"
 import { genderColors } from "./colors"
-import { CharacterModel } from "./state"
 
-type Props = TagProps<"div"> & { character: CharacterModel }
+type Props = TagProps<"div"> & { character: CharacterState }
 
 function CharacterSummary({ character, ...props }: Props) {
   const genderColor = { color: genderColors[character.gender] }

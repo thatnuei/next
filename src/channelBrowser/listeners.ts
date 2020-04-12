@@ -1,26 +1,9 @@
-import { observable } from "mobx"
 import { useChatState } from "../chat/chatStateContext"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useCommandStream } from "../chat/commandStreamContext"
 import { useChatSocket } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useStreamListener } from "../state/stream"
-
-export type ChannelBrowserItemInfo = {
-  id: string
-  title: string
-  type: "public" | "private"
-  userCount: number
-}
-
-export class ChannelBrowserState {
-  @observable.ref publicChannels: ChannelBrowserItemInfo[] = []
-  @observable.ref privateChannels: ChannelBrowserItemInfo[] = []
-  @observable canRefresh = true
-
-  isPublic = (channelId: string) =>
-    this.publicChannels.some((entry) => entry.id === channelId)
-}
 
 export function useChannelBrowserListeners() {
   const chatStream = useChatStream()

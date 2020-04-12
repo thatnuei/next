@@ -1,6 +1,6 @@
 import { action, observable } from "mobx"
 import { useLocalStore } from "mobx-react-lite"
-import { ChatState } from "../chat/chat-state"
+import { ChatState } from "../chat/ChatState"
 import { useChatState } from "../chat/chatStateContext"
 
 type ChatNavView =

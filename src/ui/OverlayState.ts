@@ -1,6 +1,6 @@
 import { observable } from "mobx"
 
-export class OverlayModel {
+export class OverlayState {
   @observable
   isVisible = false
 

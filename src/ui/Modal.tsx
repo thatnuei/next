@@ -12,13 +12,13 @@ import {
 import { absoluteCover, fixedCover, transition } from "./helpers"
 import Icon from "./Icon"
 import { close } from "./icons"
-import { OverlayModel } from "./OverlayModel"
+import { OverlayState } from "./OverlayState"
 
 type Props = {
+  state: OverlayState
   title: string
   width: number | string
   height: number | string
-  model: OverlayModel
   fillMode?: "fixed" | "absolute"
   verticalPanelAlign?: "top" | "middle"
   children?: React.ReactNode
@@ -32,14 +32,14 @@ function Modal({
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    if (props.model.isVisible) {
+    if (props.state.isVisible) {
       closeButtonRef.current?.focus()
     }
-  }, [props.model.isVisible])
+  }, [props.state.isVisible])
 
   const handleShadeClick = (event: MouseEvent) => {
     if (event.target === event.currentTarget) {
-      props.model.hide()
+      props.state.hide()
     }
   }
 
@@ -52,7 +52,7 @@ function Modal({
     fillMode === "absolute" && absoluteCover,
     fillMode === "fixed" && fixedCover,
 
-    props.model.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
+    props.state.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
     transition,
     tw`transition-all`,
   ]
@@ -60,7 +60,7 @@ function Modal({
   const panelStyle = [
     raisedPanel,
     tw`flex flex-col w-full h-full`,
-    props.model.isVisible ? undefined : tw`transform translate-y-4`,
+    props.state.isVisible ? undefined : tw`transform translate-y-4`,
     css({ maxWidth: props.width }),
     css({ maxHeight: props.height }),
     transition,
@@ -78,7 +78,7 @@ function Modal({
           <h1 css={headerText}>{props.title}</h1>
           <Button
             css={closeButtonStyle}
-            onClick={props.model.hide}
+            onClick={props.state.hide}
             ref={closeButtonRef}
           >
             <Icon which={close} />

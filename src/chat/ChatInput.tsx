@@ -2,13 +2,13 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
-import { InputModel } from "../form/InputModel"
+import { InputState } from "../form/InputState"
 import TextArea from "../form/TextArea"
 import { input, solidButton } from "../ui/components"
 import { useChatCredentials } from "./credentialsContext"
 
 type Props = {
-  inputModel: InputModel<string>
+  inputModel: InputState<string>
   onSubmit: (text: string) => void
 }
 
@@ -38,7 +38,7 @@ function ChatInput(props: Props) {
       css={tw`flex flex-row p-2 bg-background-0`}
     >
       <TextArea
-        model={props.inputModel}
+        state={props.inputModel}
         placeholder={`Chatting as ${identity}...`}
         css={[input, tw`flex-1 block mr-2`]}
         onKeyDown={handleKeyDown}

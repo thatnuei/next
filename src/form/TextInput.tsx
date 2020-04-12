@@ -1,15 +1,15 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { TagProps } from "../jsx/types"
-import { InputModel } from "./InputModel"
+import { InputState } from "./InputState"
 
-type Props = { model: InputModel<string> } & TagProps<"input">
+type Props = { state: InputState<string> } & TagProps<"input">
 
-function TextInput({ model, ...props }: Props) {
+function TextInput({ state, ...props }: Props) {
   return (
     <input
-      value={model.value}
-      onChange={(event) => model.set(event.target.value)}
+      value={state.value}
+      onChange={(event) => state.set(event.target.value)}
       {...props}
     />
   )

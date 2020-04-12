@@ -1,4 +1,3 @@
-import { observable } from "mobx"
 import { useChatState } from "../chat/chatStateContext"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useCommandStream } from "../chat/commandStreamContext"
@@ -7,29 +6,6 @@ import { useChatSocket } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useApiContext } from "../flist/api-context"
 import { useStreamListener } from "../state/stream"
-import { CharacterGender, CharacterStatus } from "./types"
-
-export class CharacterModel {
-  constructor(
-    public readonly name: string,
-    gender: CharacterGender = "None",
-    status: CharacterStatus = "offline",
-    statusMessage: string = "",
-  ) {
-    this.gender = gender
-    this.status = status
-    this.statusMessage = statusMessage
-  }
-
-  @observable
-  gender: CharacterGender
-
-  @observable
-  status: CharacterStatus
-
-  @observable
-  statusMessage: string
-}
 
 export function useCharacterListeners() {
   const state = useChatState()

@@ -4,11 +4,11 @@ import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
 import { rainbowAnimation } from "../ui/helpers"
 import CharacterMenuTarget from "./CharacterMenuTarget"
+import { CharacterState } from "./CharacterState"
 import { genderColors, statusColors } from "./colors"
-import { CharacterModel } from "./state"
 
 type Props = TagProps<"span"> & {
-  character: CharacterModel
+  character: CharacterState
 }
 
 function CharacterName({ character, ...props }: Props) {

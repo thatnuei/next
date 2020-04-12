@@ -6,27 +6,27 @@ import * as icons from "../ui/icons"
 import { fadedButton } from "./components"
 import { fixedCover, transition } from "./helpers"
 import Icon from "./Icon"
-import { OverlayModel } from "./OverlayModel"
+import { OverlayState } from "./OverlayState"
 
 type Props = {
-  model: OverlayModel
+  state: OverlayState
   side: "left" | "right"
   children: React.ReactNode
 }
 
-function Drawer({ model, side, children }: Props) {
+function Drawer({ state, side, children }: Props) {
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
   const handleShadeClick = (event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {
-      model.hide()
+      state.hide()
     }
   }
 
   const shadeStyle = [
     fixedCover,
     tw`bg-black-faded`,
-    model.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
+    state.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
     transition,
     tw`transition-all`,
   ]
@@ -35,11 +35,11 @@ function Drawer({ model, side, children }: Props) {
     tw`absolute flex items-start transition-all duration-300`,
     side === "left" && [
       tw`top-0 bottom-0 left-0`,
-      model.isVisible ? undefined : tw`transform -translate-x-full`,
+      state.isVisible ? undefined : tw`transform -translate-x-full`,
     ],
     side === "right" && [
       tw`top-0 bottom-0 right-0`,
-      model.isVisible ? undefined : tw`transform translate-x-full`,
+      state.isVisible ? undefined : tw`transform translate-x-full`,
     ],
   ]
 
@@ -47,7 +47,7 @@ function Drawer({ model, side, children }: Props) {
     <Button
       title="close"
       css={[fadedButton, tw`p-2`]}
-      onClick={model.hide}
+      onClick={state.hide}
       ref={closeButtonRef}
     >
       <Icon which={icons.close} />

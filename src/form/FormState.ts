@@ -1,13 +1,13 @@
 import { action, computed } from "mobx"
-import { InputModel, InputModelType } from "./InputModel"
+import { InputState, InputStateType } from "./InputState"
 
-type FormModelFields = Record<string, InputModel<any>>
+type FormStateFields = Record<string, InputState<any>>
 
-type FormModelValues<F extends FormModelFields> = {
-  [K in keyof F]: InputModelType<F[K]>
+type FormStateValues<F extends FormStateFields> = {
+  [K in keyof F]: InputStateType<F[K]>
 }
 
-export class FormModel<F extends FormModelFields> {
+export class FormState<F extends FormStateFields> {
   constructor(readonly fields: F) {}
 
   @action
@@ -18,14 +18,14 @@ export class FormModel<F extends FormModelFields> {
   }
 
   @action
-  hydrate(values: FormModelValues<F>) {
+  hydrate(values: FormStateValues<F>) {
     for (const [key, value] of Object.entries(values)) {
       this.fields[key]?.set(value)
     }
   }
 
   @computed
-  get values(): FormModelValues<F> {
+  get values(): FormStateValues<F> {
     const values: any = {}
     for (const [key, model] of Object.entries(this.fields)) {
       values[key] = model.value

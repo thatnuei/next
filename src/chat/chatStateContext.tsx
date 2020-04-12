@@ -1,10 +1,10 @@
 import React, { useContext, useMemo } from "react"
-import { ChatState, createChatState } from "./chat-state"
+import { ChatState } from "./ChatState"
 
 const ChatStateContext = React.createContext<ChatState | undefined>(undefined)
 
 export function ChatStateProvider(props: { children: React.ReactNode }) {
-  const state = useMemo(createChatState, [])
+  const state = useMemo(() => new ChatState(), [])
   return (
     <ChatStateContext.Provider value={state}>
       {props.children}
@@ -19,6 +19,6 @@ export function useChatState() {
   const context = useContext(ChatStateContext)
   if (context) return context
 
-  if (!fallback) fallback = createChatState()
+  if (!fallback) fallback = new ChatState()
   return fallback
 }

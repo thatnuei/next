@@ -3,10 +3,11 @@ import React from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
 import { TagProps } from "../jsx/types"
-import { ChannelMode, ChannelModel } from "./state"
+import { ChannelState } from "./ChannelState"
+import { ChannelMode } from "./types"
 
 type Props = {
-  channel: ChannelModel
+  channel: ChannelState
 } & TagProps<"div">
 
 function ChannelFilters({ channel, ...props }: Props) {

@@ -3,9 +3,9 @@ import React, { useCallback, useLayoutEffect, useState } from "react"
 import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
 import { scrollVertical } from "../ui/helpers"
-import { MessageListState } from "./message-list-state"
-import { MessageState } from "./message-state"
 import MessageListItem from "./MessageListItem"
+import { MessageListState } from "./MessageListState"
+import { MessageState } from "./MessageState"
 
 type Props = {
   list: MessageListState

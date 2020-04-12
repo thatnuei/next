@@ -3,24 +3,25 @@ import React, { useMemo } from "react"
 import tw from "twin.macro"
 import { useChatState } from "../chat/chatStateContext"
 import { useChatStream } from "../chat/streamContext"
+import { factoryFrom } from "../common/factoryFrom"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import MenuItem from "../ui/MenuItem"
-import Popover, { createPopoverState } from "../ui/Popover"
+import Popover, { PopoverState } from "../ui/Popover"
 import CharacterMemoInput from "./CharacterMemoInput"
+import { CharacterState } from "./CharacterState"
 import CharacterSummary from "./CharacterSummary"
-import { CharacterModel } from "./state"
 
 function CharacterMenu() {
   const chatState = useChatState()
   const chatStream = useChatStream()
 
-  const popover = useMemo(createPopoverState, [])
+  const popover = useMemo(factoryFrom(PopoverState), [])
 
   const state = useLocalStore(() => ({
-    character: undefined as CharacterModel | undefined,
+    character: undefined as CharacterState | undefined,
 
     handleClick(event: MouseEvent) {
       const characterName = (() => {
@@ -33,7 +34,7 @@ function CharacterMenu() {
 
       if (characterName) {
         state.character = chatState.characters.get(characterName)
-        popover.show({ x: event.clientX, y: event.clientY })
+        popover.showAt({ x: event.clientX, y: event.clientY })
         event.preventDefault()
       }
     },

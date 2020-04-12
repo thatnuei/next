@@ -2,11 +2,11 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
-import { useChannelListeners } from "../channel/state"
+import { useChannelListeners } from "../channel/listeners"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
-import { useChannelBrowserListeners } from "../channelBrowser/state"
+import { useChannelBrowserListeners } from "../channelBrowser/listeners"
 import CharacterMenu from "../character/CharacterMenu"
-import { useCharacterListeners } from "../character/state"
+import { useCharacterListeners } from "../character/listeners"
 import ChatNav from "../chatNav/ChatNav"
 import { useChatNav } from "../chatNav/state"
 import { Dict } from "../common/types"
@@ -14,7 +14,7 @@ import { useMediaQuery } from "../dom/useMediaQuery"
 import { usePrivateChatListeners } from "../privateChat/listeners"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { useStreamListener } from "../state/stream"
-import { useStatusUpdateListeners } from "../statusUpdate/state"
+import { useStatusUpdateListeners } from "../statusUpdate/listeners"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import Drawer from "../ui/Drawer"
 import { fixedCover } from "../ui/helpers"
@@ -71,7 +71,7 @@ function Chat({ onDisconnect }: Props) {
       )}
 
       {isSmallScreen && (
-        <Drawer model={state.sideMenuOverlay} side="left">
+        <Drawer state={state.sideMenuOverlay} side="left">
           <ChatNav css={tw`h-full bg-background-2`} />
         </Drawer>
       )}
@@ -80,7 +80,7 @@ function Chat({ onDisconnect }: Props) {
         title="Channels"
         width={480}
         height={720}
-        model={state.channelBrowserOverlay}
+        state={state.channelBrowserOverlay}
         children={<ChannelBrowser />}
       />
 
@@ -88,7 +88,7 @@ function Chat({ onDisconnect }: Props) {
         title="Update Your Status"
         width={480}
         height={360}
-        model={state.statusUpdate.overlay}
+        state={state.statusUpdate.overlay}
         children={<StatusUpdateForm />}
       />
 

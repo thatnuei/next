@@ -13,7 +13,7 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
-import { ChannelBrowserItemInfo } from "./state"
+import { ChannelBrowserItemInfo } from "./ChannelBrowserState"
 
 type Props = TagProps<"div">
 

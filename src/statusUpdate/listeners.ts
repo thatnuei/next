@@ -1,5 +1,3 @@
-import { observable } from "mobx"
-import { CharacterStatus } from "../character/types"
 import { useChatState } from "../chat/chatStateContext"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useCommandStream } from "../chat/commandStreamContext"
@@ -7,17 +5,6 @@ import { useChatCredentials } from "../chat/credentialsContext"
 import { useChatSocket } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useStreamListener } from "../state/stream"
-import { OverlayModel } from "../ui/OverlayModel"
-
-export class StatusUpdateState {
-  @observable status: CharacterStatus = "online"
-  @observable statusMessage = ""
-
-  @observable canSubmit = true
-  timeout = 5000
-
-  overlay = new OverlayModel()
-}
 
 export function useStatusUpdateListeners() {
   const state = useChatState()

@@ -11,7 +11,7 @@ import { useChatStream } from "../chat/streamContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
-import { PrivateChatState } from "./private-chat-state"
+import { PrivateChatState } from "./PrivateChatState"
 import TypingStatusDisplay from "./TypingStatusDisplay"
 
 type Props = {
