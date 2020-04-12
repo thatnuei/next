@@ -1,3 +1,4 @@
+import { observable } from "mobx"
 import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
 import { FocusOn } from "react-focus-on"
@@ -5,34 +6,39 @@ import tw from "twin.macro"
 import { useElementSize } from "../dom/useElementSize"
 import { useWindowSize } from "../dom/useWindowSize"
 import { TagProps } from "../jsx/types"
-import { OverlayModel } from "./OverlayModel"
 
 type Props = {
-  state: OverlayModel
-  x: number
-  y: number
+  state: PopoverState
   children: React.ReactNode
 } & TagProps<"div">
 
+type PopoverState = ReturnType<typeof createPopoverState>
+
 const edgeSpacing = 12
 
-function ContextMenu({ state, children, x, y, ...props }: Props) {
+function Popover({ state, children, ...props }: Props) {
   const [container, setContainer] = useState<HTMLElement | null>()
   const containerSize = useElementSize(container)
   const windowSize = useWindowSize()
 
   const left = Math.max(
-    Math.min(x, windowSize.width - containerSize.width - edgeSpacing),
+    Math.min(
+      state.position.x,
+      windowSize.width - containerSize.width - edgeSpacing,
+    ),
     edgeSpacing,
   )
 
   const top = Math.max(
-    Math.min(y, windowSize.height - containerSize.height - edgeSpacing),
+    Math.min(
+      state.position.y,
+      windowSize.height - containerSize.height - edgeSpacing,
+    ),
     edgeSpacing,
   )
 
   const containerStyle = [
-    tw`fixed overflow-y-auto duration-300  shadow-normal bg-background-1`,
+    tw`fixed overflow-y-auto duration-300 shadow-normal bg-background-1`,
     { transitionProperty: "transform, opacity, visibility" },
     state.isVisible
       ? tw`visible transform translate-y-0 opacity-100`
@@ -53,4 +59,19 @@ function ContextMenu({ state, children, x, y, ...props }: Props) {
   )
 }
 
-export default observer(ContextMenu)
+export default observer(Popover)
+
+export function createPopoverState() {
+  const self = observable({
+    isVisible: false,
+    position: { x: 0, y: 0 },
+    show(position: { x: number; y: number }) {
+      self.position = position
+      self.isVisible = true
+    },
+    hide() {
+      self.isVisible = false
+    },
+  })
+  return self
+}

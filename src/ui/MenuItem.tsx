@@ -1,7 +1,7 @@
 import React from "react"
 import tw from "twin.macro"
 import ExternalLink from "../dom/ExternalLink"
-import Icon from "../ui/Icon"
+import Icon from "./Icon"
 
 type Props = {
   icon: string
@@ -10,7 +10,7 @@ type Props = {
 
 const itemStyle = tw`flex flex-row p-2 transition duration-300 opacity-50 hover:opacity-100`
 
-export default function CharacterMenuItem(props: Props) {
+export default function MenuItem(props: Props) {
   const content = (
     <>
       <Icon which={props.icon} />

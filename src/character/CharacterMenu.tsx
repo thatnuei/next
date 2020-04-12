@@ -1,16 +1,15 @@
 import { useLocalStore, useObserver } from "mobx-react-lite"
-import React from "react"
+import React, { useMemo } from "react"
 import tw from "twin.macro"
 import { useChatState } from "../chat/chatStateContext"
 import { useChatStream } from "../chat/streamContext"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
-import ContextMenu from "../ui/ContextMenu"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import { OverlayModel } from "../ui/OverlayModel"
+import MenuItem from "../ui/MenuItem"
+import Popover, { createPopoverState } from "../ui/Popover"
 import CharacterMemoInput from "./CharacterMemoInput"
-import CharacterMenuItem from "./CharacterMenuItem"
 import CharacterSummary from "./CharacterSummary"
 import { CharacterModel } from "./state"
 
@@ -18,10 +17,10 @@ function CharacterMenu() {
   const chatState = useChatState()
   const chatStream = useChatStream()
 
+  const popover = useMemo(createPopoverState, [])
+
   const state = useLocalStore(() => ({
-    menu: new OverlayModel(),
     character: undefined as CharacterModel | undefined,
-    position: { x: 0, y: 0 },
 
     handleClick(event: MouseEvent) {
       const characterName = (() => {
@@ -33,13 +32,8 @@ function CharacterMenu() {
       })()
 
       if (characterName) {
-        const x = event.clientX
-        const y = event.clientY
-
         state.character = chatState.characters.get(characterName)
-        state.position = { x, y }
-        state.menu.show()
-
+        popover.show({ x: event.clientX, y: event.clientY })
         event.preventDefault()
       }
     },
@@ -48,7 +42,7 @@ function CharacterMenu() {
   useWindowEvent("click", state.handleClick)
 
   return useObserver(() => {
-    const { character, position, menu } = state
+    const { character } = state
     if (!character) return null
 
     const isIgnored = chatState.ignored.has(character.name)
@@ -59,7 +53,7 @@ function CharacterMenu() {
     )
 
     return (
-      <ContextMenu state={menu} {...position} css={tw`w-56`}>
+      <Popover state={popover} css={tw`w-56`}>
         <div css={tw`p-3 bg-background-0`}>
           <CharacterSummary character={character} />
 
@@ -74,13 +68,13 @@ function CharacterMenu() {
           ))}
         </div>
 
-        <div css={tw`flex flex-col`} onClick={menu.hide}>
-          <CharacterMenuItem
+        <div css={tw`flex flex-col`} onClick={popover.hide}>
+          <MenuItem
             icon={icons.link}
             text="Profile"
             href={getProfileUrl(character.name)}
           />
-          <CharacterMenuItem
+          <MenuItem
             icon={icons.message}
             text="Message"
             onClick={() => {
@@ -90,7 +84,7 @@ function CharacterMenu() {
               })
             }}
           />
-          <CharacterMenuItem
+          <MenuItem
             icon={isBookmarked ? icons.bookmark : icons.bookmarkHollow}
             text={isBookmarked ? "Remove bookmark" : "Bookmark"}
             onClick={() => {
@@ -101,7 +95,7 @@ function CharacterMenu() {
               })
             }}
           />
-          <CharacterMenuItem
+          <MenuItem
             icon={isIgnored ? icons.ignore : icons.ignoreHollow}
             text={isIgnored ? "Unignore" : "Ignore"}
             onClick={() => {
@@ -116,7 +110,7 @@ function CharacterMenu() {
         <div css={tw`p-2 bg-background-0`}>
           <CharacterMemoInput name={character.name} css={tw`block w-full`} />
         </div>
-      </ContextMenu>
+      </Popover>
     )
   })
 }
