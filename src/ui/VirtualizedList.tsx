@@ -11,7 +11,7 @@ type Props<T> = TagProps<"div"> & {
   getItemKey: (item: T) => Key
 }
 
-type RenderItemInfo<T> = {
+export type RenderItemInfo<T> = {
   item: T
   style: React.CSSProperties
 }
