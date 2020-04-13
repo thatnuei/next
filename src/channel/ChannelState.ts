@@ -10,7 +10,7 @@ export class ChannelState {
   @observable title = this.id
   @observable description = ""
   @observable mode: ChannelMode = "both"
-  @observable selectedMode: ChannelMode = "both"
+  @observable selectedMode: ChannelMode = "chat"
   @observable joinState: ChannelJoinState = "absent"
   @observable isUnread = false
 
