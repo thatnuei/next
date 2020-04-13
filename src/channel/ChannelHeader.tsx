@@ -1,6 +1,7 @@
 import React, { useMemo } from "react"
 import tw from "twin.macro"
 import { useChatState } from "../chat/chatStateContext"
+import { useChatCredentials } from "../chat/credentialsContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
@@ -33,6 +34,7 @@ function ChannelHeader({
   const isLargeScreen = useMediaQuery(screenQueries.large)
   const menu = useMemo(() => new PopoverState(), [])
   const inviteDialog = useMemo(() => new OverlayState(), [])
+  const { identity } = useChatCredentials()
 
   function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
     const target = event.currentTarget
@@ -41,6 +43,9 @@ function ChannelHeader({
       y: target.offsetTop + target.clientHeight,
     })
   }
+
+  const shouldShowInviteOption =
+    !state.channelBrowser.isPublic(channel.id) && channel.ops.has(identity)
 
   return (
     <header css={tw`flex flex-row items-center p-3 bg-background-0`} {...props}>
@@ -77,6 +82,9 @@ function ChannelHeader({
       </Button>
 
       <Popover state={menu} css={tw`w-56`}>
+        {!isLargeScreen && (
+          <ChannelFilters channel={channel} css={tw`p-2 bg-background-0`} />
+        )}
         <div css={tw`flex flex-col`} onClick={menu.hide}>
           <MenuItem
             text="Clear messages"
@@ -90,7 +98,7 @@ function ChannelHeader({
               window.navigator.clipboard.writeText(channel.linkCode)
             }}
           />
-          {!state.channelBrowser.isPublic(channel.id) && (
+          {shouldShowInviteOption && (
             <MenuItem
               text="Invite"
               icon={icons.invite}
