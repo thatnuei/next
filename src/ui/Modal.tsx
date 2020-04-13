@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import React, { MouseEvent, useEffect, useRef } from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
+import Portal from "../react/Portal"
 import {
   fadedButton,
   headerText,
@@ -72,21 +73,23 @@ function Modal({
   ]
 
   return (
-    <div css={shadeStyle} onPointerDown={handleShadeClick}>
-      <div css={panelStyle}>
-        <header css={[raisedPanelHeader, tw`relative px-16 text-center`]}>
-          <h1 css={headerText}>{props.title}</h1>
-          <Button
-            css={closeButtonStyle}
-            onClick={props.state.hide}
-            ref={closeButtonRef}
-          >
-            <Icon which={close} />
-          </Button>
-        </header>
-        <main css={tw`flex-1 min-h-0`}>{props.children}</main>
+    <Portal>
+      <div css={shadeStyle} onPointerDown={handleShadeClick}>
+        <div css={panelStyle}>
+          <header css={[raisedPanelHeader, tw`relative px-16 text-center`]}>
+            <h1 css={headerText}>{props.title}</h1>
+            <Button
+              css={closeButtonStyle}
+              onClick={props.state.hide}
+              ref={closeButtonRef}
+            >
+              <Icon which={close} />
+            </Button>
+          </header>
+          <main css={tw`flex-1 min-h-0`}>{props.children}</main>
+        </div>
       </div>
-    </div>
+    </Portal>
   )
 }
 
