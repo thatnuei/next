@@ -8,10 +8,13 @@ import { fadedButton, headerText2 } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import MenuItem from "../ui/MenuItem"
+import Modal from "../ui/Modal"
+import { OverlayState } from "../ui/OverlayState"
 import Popover, { PopoverState } from "../ui/Popover"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
 import { ChannelState } from "./ChannelState"
+import InviteUsersForm from "./InviteUsersForm"
 
 type Props = {
   channel: ChannelState
@@ -26,11 +29,12 @@ function ChannelHeader({
   ...props
 }: Props) {
   const isLargeScreen = useMediaQuery(screenQueries.large)
-  const menuState = useMemo(() => new PopoverState(), [])
+  const menu = useMemo(() => new PopoverState(), [])
+  const inviteDialog = useMemo(() => new OverlayState(), [])
 
   function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
     const target = event.currentTarget
-    menuState.showAt({
+    menu.showAt({
       x: target.offsetLeft,
       y: target.offsetTop + target.clientHeight,
     })
@@ -70,8 +74,8 @@ function ChannelHeader({
         <Icon which={icons.more} />
       </Button>
 
-      <Popover state={menuState} css={tw`w-56`}>
-        <div css={tw`flex flex-col`} onClick={menuState.hide}>
+      <Popover state={menu} css={tw`w-56`}>
+        <div css={tw`flex flex-col`} onClick={menu.hide}>
           <MenuItem
             text="Clear messages"
             icon={icons.clearMessages}
@@ -86,13 +90,20 @@ function ChannelHeader({
           />
           <MenuItem
             text="Invite"
-            icon={icons.heart}
-            onClick={() => {
-              // todo
-            }}
+            icon={icons.invite}
+            onClick={inviteDialog.show}
           />
         </div>
       </Popover>
+
+      <Modal
+        state={inviteDialog}
+        title={`Invite to ${channel.title}`}
+        width={400}
+        height={700}
+      >
+        <InviteUsersForm />
+      </Modal>
     </header>
   )
 }
