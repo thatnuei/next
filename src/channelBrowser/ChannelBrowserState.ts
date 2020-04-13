@@ -14,4 +14,9 @@ export class ChannelBrowserState {
 
   isPublic = (channelId: string) =>
     this.publicChannels.some((entry) => entry.id === channelId)
+
+  getUserCount = (id: string) =>
+    [...this.publicChannels, ...this.privateChannels].find(
+      (entry) => entry.id === id,
+    )?.userCount ?? 0
 }

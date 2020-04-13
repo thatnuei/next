@@ -186,7 +186,10 @@ function BBCChannelLink({
   title: string
   type: "public" | "private"
 }>) {
+  const state = useChatState()
   const stream = useChatStream()
+
+  const userCount = state.channelBrowser.getUserCount(id)
 
   return (
     <span css={tw`inline-flex items-baseline`}>
@@ -195,10 +198,11 @@ function BBCChannelLink({
         css={tw`self-center inline w-4 h-4 mr-1 opacity-75`}
       />
       <button
+        className="group"
         onClick={() => stream.send({ type: "join-channel", id, title })}
-        css={tw`underline hover:no-underline`}
       >
-        {title}
+        <span css={tw`underline group-hover:no-underline`}>{title}</span> (
+        {userCount})
       </button>
     </span>
   )
