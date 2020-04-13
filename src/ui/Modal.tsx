@@ -72,25 +72,27 @@ function Modal({
     tw`absolute top-0 bottom-0 right-0 flex flex-row justify-center w-16`,
   ]
 
-  return (
-    <Portal>
-      <div css={shadeStyle} onPointerDown={handleShadeClick}>
-        <div css={panelStyle}>
-          <header css={[raisedPanelHeader, tw`relative px-16 text-center`]}>
-            <h1 css={headerText}>{props.title}</h1>
-            <Button
-              css={closeButtonStyle}
-              onClick={props.state.hide}
-              ref={closeButtonRef}
-            >
-              <Icon which={close} />
-            </Button>
-          </header>
-          <main css={tw`flex-1 min-h-0`}>{props.children}</main>
-        </div>
+  const content = (
+    <div css={shadeStyle} onPointerDown={handleShadeClick}>
+      <div css={panelStyle}>
+        <header css={[raisedPanelHeader, tw`relative px-16 text-center`]}>
+          <h1 css={headerText}>{props.title}</h1>
+          <Button
+            css={closeButtonStyle}
+            onClick={props.state.hide}
+            ref={closeButtonRef}
+          >
+            <Icon which={close} />
+          </Button>
+        </header>
+        <main css={tw`flex-1 min-h-0`}>{props.children}</main>
       </div>
-    </Portal>
+    </div>
   )
+
+  // fixed means we want to fill the entire screen, so we only use a portal then
+  // if it's absolute, no portal, to allow rendering in a specific place
+  return fillMode === "fixed" ? <Portal>{content}</Portal> : content
 }
 
 export default observer(Modal)
