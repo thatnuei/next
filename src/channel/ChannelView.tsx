@@ -12,7 +12,6 @@ import { scrollVertical } from "../ui/helpers"
 import Modal from "../ui/Modal"
 import { OverlayState } from "../ui/OverlayState"
 import { screenQueries } from "../ui/screens"
-import ChannelFilters from "./ChannelFilters"
 import ChannelHeader from "./ChannelHeader"
 import { ChannelState } from "./ChannelState"
 import ChannelUserList from "./ChannelUserList"
@@ -56,7 +55,7 @@ function ChannelView({ channel, ...props }: Props) {
             width="100%"
             height="max(60%, 500px)"
             state={descriptionOverlay}
-            fillMode="absolute"
+            fillMode="contained"
             verticalPanelAlign="top"
           >
             <div css={[tw`w-full h-full`, scrollVertical]}>
@@ -79,11 +78,10 @@ function ChannelView({ channel, ...props }: Props) {
 
       {!isLargeScreen && (
         <Drawer state={userListDrawer} side="right">
-          <div css={tw`flex flex-col h-full bg-background-2`}>
-            <ChannelUserList channel={channel} css={tw`flex-1 w-56`} />
-            <div css={tw`h-gap`} />
-            <ChannelFilters channel={channel} css={tw`p-2 bg-background-0`} />
-          </div>
+          <ChannelUserList
+            channel={channel}
+            css={tw`w-56 h-full bg-background-2`}
+          />
         </Drawer>
       )}
     </div>
