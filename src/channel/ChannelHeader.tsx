@@ -81,22 +81,25 @@ function ChannelHeader({
         <Icon which={icons.more} />
       </Button>
 
-      <Popover state={menu} css={tw`w-56`}>
+      <Popover state={menu} css={tw`w-48 bg-background-2`}>
         {!isLargeScreen && (
-          <ChannelFilters channel={channel} css={tw`p-2 bg-background-0`} />
-        )}
-        <div css={tw`flex flex-col`} onClick={menu.hide}>
-          <MenuItem
-            text="Clear messages"
-            icon={icons.clearMessages}
-            onClick={channel.messageList.clear}
+          <ChannelFilters
+            channel={channel}
+            css={tw`px-3 py-2 bg-background-0 mb-gap`}
           />
+        )}
+        <div css={tw`flex flex-col bg-background-1`} onClick={menu.hide}>
           <MenuItem
             text="Copy code"
             icon={icons.code}
             onClick={() => {
               window.navigator.clipboard.writeText(channel.linkCode)
             }}
+          />
+          <MenuItem
+            text="Clear messages"
+            icon={icons.clearMessages}
+            onClick={channel.messageList.clear}
           />
           {shouldShowInviteOption && (
             <MenuItem
