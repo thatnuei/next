@@ -5,7 +5,7 @@ module.exports = {
   babel: {
     presets: [
       [
-        "@emotion/css-prop",
+        "@emotion/babel-preset-css-prop",
         {
           // enabling autoLabel causes issues with css prop overrides
           autoLabel: "never",
