@@ -1,5 +1,4 @@
 import { action, observable } from "mobx"
-import { useLocalStore } from "mobx-react-lite"
 import { ChatState } from "../chat/ChatState"
 import { useChatState } from "../chat/chatStateContext"
 
@@ -58,5 +57,5 @@ export function createChatNavHelpers(state: ChatState) {
 
 export function useChatNav() {
   const state = useChatState()
-  return useLocalStore(createChatNavHelpers, state)
+  return createChatNavHelpers(state)
 }
