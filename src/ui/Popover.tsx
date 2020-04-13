@@ -6,6 +6,7 @@ import tw from "twin.macro"
 import { useElementSize } from "../dom/useElementSize"
 import { useWindowSize } from "../dom/useWindowSize"
 import { TagProps } from "../jsx/types"
+import Portal from "../react/Portal"
 import { OverlayState } from "./OverlayState"
 
 type Props = {
@@ -46,15 +47,17 @@ function Popover({ state, children, ...props }: Props) {
   ]
 
   return (
-    <FocusOn
-      enabled={state.isVisible}
-      onEscapeKey={state.hide}
-      onClickOutside={state.hide}
-    >
-      <div css={containerStyle} {...props} ref={setContainer}>
-        {children}
-      </div>
-    </FocusOn>
+    <Portal>
+      <FocusOn
+        enabled={state.isVisible}
+        onEscapeKey={state.hide}
+        onClickOutside={state.hide}
+      >
+        <div css={containerStyle} {...props} ref={setContainer}>
+          {children}
+        </div>
+      </FocusOn>
+    </Portal>
   )
 }
 
