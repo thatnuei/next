@@ -20,13 +20,13 @@ type Props = {
   title: string
   width: number | string
   height: number | string
-  fillMode?: "fixed" | "absolute"
+  fillMode?: "fullscreen" | "contained"
   verticalPanelAlign?: "top" | "middle"
   children?: React.ReactNode
 }
 
 function Modal({
-  fillMode = "fixed",
+  fillMode = "fullscreen",
   verticalPanelAlign = "middle",
   ...props
 }: Props) {
@@ -50,8 +50,8 @@ function Modal({
     verticalPanelAlign === "top" && tw`items-center justify-start`,
     verticalPanelAlign === "middle" && tw`items-center justify-center`,
 
-    fillMode === "absolute" && absoluteCover,
-    fillMode === "fixed" && fixedCover,
+    fillMode === "contained" && absoluteCover,
+    fillMode === "fullscreen" && fixedCover,
 
     props.state.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
     transition,
@@ -90,9 +90,7 @@ function Modal({
     </div>
   )
 
-  // fixed means we want to fill the entire screen, so we only use a portal then
-  // if it's absolute, no portal, to allow rendering in a specific place
-  return fillMode === "fixed" ? <Portal>{content}</Portal> : content
+  return fillMode === "fullscreen" ? <Portal>{content}</Portal> : content
 }
 
 export default observer(Modal)
