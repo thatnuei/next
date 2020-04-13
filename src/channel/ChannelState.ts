@@ -36,6 +36,13 @@ export class ChannelState {
     return this.mode === "both" ? this.selectedMode : this.mode
   }
 
+  @computed
+  get linkCode() {
+    return this.id === this.title
+      ? `[channel]${this.id}[/channel]`
+      : `[session=${this.id}]${this.title}[/session]`
+  }
+
   shouldShowMessage = (messageType: MessageType) => {
     if (this.actualMode === "ads") {
       return messageType !== "normal" && messageType !== "action"
