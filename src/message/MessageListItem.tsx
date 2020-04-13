@@ -23,7 +23,9 @@ function MessageListItem({ message, ...props }: Props) {
 
   return (
     <div css={[tw`px-3 py-1`, typeStyle]} {...props}>
-      <span css={tw`inline-block float-right ml-3 text-sm opacity-50`}>
+      <span
+        css={tw`inline-block float-right ml-3 text-sm not-italic opacity-50`}
+      >
         {new Date(message.timestamp).toLocaleTimeString()}
       </span>
 
