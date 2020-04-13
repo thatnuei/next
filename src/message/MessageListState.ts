@@ -11,4 +11,8 @@ export class MessageListState {
     this.messages.push(message)
     this.messages.splice(0, this.messages.length - maxMessageCount)
   }
+
+  clear = () => {
+    this.messages.splice(0)
+  }
 }
