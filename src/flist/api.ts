@@ -33,7 +33,7 @@ type AuthState = {
 
 export type FListApi = ReturnType<typeof createFListApi>
 
-const ticketExpireTime = 1000 * 60 * 10
+const ticketExpireTime = 1000 * 60 * 5
 
 async function refetchTicket(currentState: AuthState) {
   const ticketTimestamp = Date.now()
