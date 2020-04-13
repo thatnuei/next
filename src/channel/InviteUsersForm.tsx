@@ -5,6 +5,7 @@ import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
 import { CharacterState } from "../character/CharacterState"
 import { useChatState } from "../chat/chatStateContext"
+import { useChatSocket } from "../chat/socketContext"
 import { compare } from "../common/compare"
 import { unique } from "../common/unique"
 import { InputState } from "../form/InputState"
@@ -12,14 +13,18 @@ import TextInput from "../form/TextInput"
 import { fadedButton, input } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import VirtualizedList from "../ui/VirtualizedList"
+import VirtualizedList, { RenderItemInfo } from "../ui/VirtualizedList"
+import { ChannelState } from "./ChannelState"
+
+type Props = { channel: ChannelState }
 
 const byLower = compare((it: string) => it.toLowerCase())
 
 const byName = compare((it: CharacterState) => it.name.toLowerCase())
 
-function InviteUsersForm() {
+function InviteUsersForm({ channel }: Props) {
   const state = useChatState()
+  const socket = useChatSocket()
   const searchInput = useMemo(() => new InputState(""), [])
 
   const matchesQuery = (it: CharacterState) =>
@@ -51,16 +56,21 @@ function InviteUsersForm() {
       .sort(byGroupOrder)
   })()
 
-  const renderItem = ({
-    item,
-    style,
-  }: {
-    item: CharacterState
-    style: React.CSSProperties
-  }) => (
+  const sendInvite = (name: string) => {
+    // untested lol!
+    socket.send({
+      type: "CIU",
+      params: { channel: channel.id, character: name },
+    })
+  }
+
+  const renderItem = ({ item, style }: RenderItemInfo<CharacterState>) => (
     <div css={tw`flex flex-row items-center px-3 py-2`} style={style}>
       <CharacterName character={item} tw="flex-1" />
-      <button css={[fadedButton, tw`flex flex-row ml-2`]}>
+      <button
+        css={[fadedButton, tw`flex flex-row ml-2`]}
+        onClick={() => sendInvite(item.name)}
+      >
         <Icon which={icons.invite} />
         <span css={tw`ml-2`}>Invite</span>
       </button>

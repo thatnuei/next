@@ -1,5 +1,6 @@
 import React, { useMemo } from "react"
 import tw from "twin.macro"
+import { useChatState } from "../chat/chatStateContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
@@ -28,6 +29,7 @@ function ChannelHeader({
   onShowUsers,
   ...props
 }: Props) {
+  const state = useChatState()
   const isLargeScreen = useMediaQuery(screenQueries.large)
   const menu = useMemo(() => new PopoverState(), [])
   const inviteDialog = useMemo(() => new OverlayState(), [])
@@ -88,11 +90,13 @@ function ChannelHeader({
               window.navigator.clipboard.writeText(channel.linkCode)
             }}
           />
-          <MenuItem
-            text="Invite"
-            icon={icons.invite}
-            onClick={inviteDialog.show}
-          />
+          {!state.channelBrowser.isPublic(channel.id) && (
+            <MenuItem
+              text="Invite"
+              icon={icons.invite}
+              onClick={inviteDialog.show}
+            />
+          )}
         </div>
       </Popover>
 
@@ -102,7 +106,7 @@ function ChannelHeader({
         width={400}
         height={700}
       >
-        <InviteUsersForm />
+        <InviteUsersForm channel={channel} />
       </Modal>
     </header>
   )
