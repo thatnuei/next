@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { RecoilRoot } from "recoil"
 import Chat from "../chat/Chat"
 import ChatContainer from "../chat/ChatContainer"
 import { createStoredValue } from "../storage/createStoredValue"
@@ -61,13 +62,15 @@ function App() {
 
     case "chat":
       return (
-        <ChatContainer
-          account={screen.userData.account}
-          ticket={screen.userData.ticket}
-          identity={screen.identity}
-        >
-          <Chat onDisconnect={() => setScreen({ name: "login" })} />
-        </ChatContainer>
+        <RecoilRoot>
+          <ChatContainer
+            account={screen.userData.account}
+            ticket={screen.userData.ticket}
+            identity={screen.identity}
+          >
+            <Chat onDisconnect={() => setScreen({ name: "login" })} />
+          </ChatContainer>
+        </RecoilRoot>
       )
   }
 }
