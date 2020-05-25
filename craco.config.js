@@ -40,7 +40,7 @@ function reactRefreshPlugin() {
         // either way, our workaround is to explicitly add it as a loader here,
         // skipping over node_modules completely
         webpackConfig.module.rules.unshift({
-          test: /\.(js|ts)x?$/,
+          test: /\.[jt]sx?$/,
           exclude: /node_modules/,
           use: {
             loader: require.resolve("babel-loader"),
