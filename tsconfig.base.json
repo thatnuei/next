@@ -1,0 +1,10 @@
+// this is here to trick CRA into not undoing the paths changes,
+// which are needed to get custom lib typings from the types folder
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["./types/*"]
+    }
+  }
+}
