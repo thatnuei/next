@@ -1,5 +1,7 @@
 import React, { CSSProperties, Fragment, PropsWithChildren } from "react"
+import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
+import { userCountSelector } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
@@ -186,10 +188,8 @@ function BBCChannelLink({
   title: string
   type: "public" | "private"
 }>) {
-  const state = useChatState()
   const stream = useChatStream()
-
-  const userCount = state.channelBrowser.getUserCount(id)
+  const userCount = useRecoilValue(userCountSelector(id))
 
   return (
     <span css={tw`inline-flex items-baseline`}>

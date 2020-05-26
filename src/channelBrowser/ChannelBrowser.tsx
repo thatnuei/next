@@ -1,8 +1,8 @@
 import fuzzysearch from "fuzzysearch"
 import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
+import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
-import { useChatState } from "../chat/chatStateContext"
 import { useChatStream } from "../chat/streamContext"
 import { compare, compareReverse } from "../common/compare"
 import Button from "../dom/Button"
@@ -13,20 +13,27 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
-import { ChannelBrowserItemInfo } from "./ChannelBrowserState"
+import {
+  canRefreshAtom,
+  ChannelBrowserChannel,
+  privateChannelsAtom,
+  publicChannelsAtom,
+} from "./state"
 
 type Props = TagProps<"div">
 
 function ChannelBrowser(props: Props) {
-  const state = useChatState()
   const stream = useChatStream()
   const [query, setQuery] = useState("")
   const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
+  const publicChannels = useRecoilValue(publicChannelsAtom)
+  const privateChannels = useRecoilValue(privateChannelsAtom)
+  const canRefresh = useRecoilValue(canRefreshAtom)
 
   const cycleSortMode = () =>
     setSortMode((mode) => (mode === "title" ? "userCount" : "title"))
 
-  const processChannels = (channels: ChannelBrowserItemInfo[]) => {
+  const processChannels = (channels: ChannelBrowserChannel[]) => {
     const normalizedQuery = query.trim().toLowerCase()
 
     const sorted =
@@ -42,8 +49,8 @@ function ChannelBrowser(props: Props) {
   }
 
   const channels = [
-    ...processChannels(state.channelBrowser.publicChannels),
-    ...processChannels(state.channelBrowser.privateChannels),
+    ...processChannels(publicChannels),
+    ...processChannels(privateChannels),
   ]
 
   return (
@@ -79,7 +86,7 @@ function ChannelBrowser(props: Props) {
           title="Refresh"
           css={[solidButton, tw`ml-2`]}
           onClick={() => stream.send({ type: "refresh-channel-browser" })}
-          disabled={!state.channelBrowser.canRefresh}
+          disabled={!canRefresh}
         >
           <Icon which={icons.refresh} />
         </Button>

@@ -6,7 +6,7 @@ import { ellipsize, transition } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { close } from "../ui/icons"
 
-type Props = {
+export type RoomTabProps = {
   title: string
   icon: React.ReactNode
   isActive: boolean
@@ -15,7 +15,7 @@ type Props = {
   onClose: () => void
 }
 
-function RoomTab(props: Props) {
+function RoomTab(props: RoomTabProps) {
   const inactiveHoverReveal = tw`opacity-50 hover:opacity-100`
 
   const unreadHighlight = tw`bg-green-faded`

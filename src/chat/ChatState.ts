@@ -1,6 +1,5 @@
 import { observable } from "mobx"
 import { ChannelState } from "../channel/ChannelState"
-import { ChannelBrowserState } from "../channelBrowser/ChannelBrowserState"
 import { CharacterState } from "../character/CharacterState"
 import { ChatNavState } from "../chatNav/state"
 import { factoryFrom } from "../common/factoryFrom"
@@ -16,7 +15,6 @@ export class ChatState {
 
   channelBrowserOverlay = new OverlayState()
   sideMenuOverlay = new OverlayState()
-  channelBrowser = new ChannelBrowserState()
   nav = new ChatNavState()
   statusUpdate = new StatusUpdateState()
 

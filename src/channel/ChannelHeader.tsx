@@ -1,6 +1,7 @@
 import React, { useMemo } from "react"
+import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
-import { useChatState } from "../chat/chatStateContext"
+import { isPublicSelector } from "../channelBrowser/state"
 import { useChatCredentials } from "../chat/credentialsContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
@@ -30,11 +31,13 @@ function ChannelHeader({
   onShowUsers,
   ...props
 }: Props) {
-  const state = useChatState()
   const isLargeScreen = useMediaQuery(screenQueries.large)
   const menu = useMemo(() => new PopoverState(), [])
   const inviteDialog = useMemo(() => new OverlayState(), [])
   const { identity } = useChatCredentials()
+  const isPublic = useRecoilValue(isPublicSelector(channel.id))
+
+  const shouldShowInviteOption = isPublic && channel.ops.has(identity)
 
   function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
     const target = event.currentTarget
@@ -43,9 +46,6 @@ function ChannelHeader({
       y: target.offsetTop + target.clientHeight,
     })
   }
-
-  const shouldShowInviteOption =
-    !state.channelBrowser.isPublic(channel.id) && channel.ops.has(identity)
 
   return (
     <header css={tw`flex flex-row items-center p-3 bg-background-0`} {...props}>
