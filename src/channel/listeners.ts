@@ -1,4 +1,4 @@
-import { useRecoilCallback } from "../../types/recoil"
+import { useRecoilCallback } from "recoil"
 import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { useChatState } from "../chat/chatStateContext"
 import {

@@ -1,6 +1,6 @@
 import React from "react"
+import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
-import { useRecoilValue } from "../../types/recoil"
 import { channelAtom } from "../channel/state"
 import { useChatStream } from "../chat/streamContext"
 import { TagProps } from "../jsx/types"
