@@ -1,5 +1,4 @@
 import { css } from "@emotion/react"
-import { observer } from "mobx-react-lite"
 import React, { MouseEvent } from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
@@ -81,4 +80,4 @@ function Modal({
   return fillMode === "fullscreen" ? <Portal>{content}</Portal> : content
 }
 
-export default observer(Modal)
+export default Modal
