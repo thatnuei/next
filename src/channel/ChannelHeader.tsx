@@ -112,7 +112,8 @@ function ChannelHeader({
       </Popover>
 
       <Modal
-        state={inviteDialog}
+        isVisible={inviteDialog.isVisible}
+        onDismiss={inviteDialog.hide}
         title={`Invite to ${channel.title}`}
         width={400}
         height={700}

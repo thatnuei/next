@@ -54,7 +54,8 @@ function ChannelView({ channel, ...props }: Props) {
             title="Description"
             width="100%"
             height="max(60%, 500px)"
-            state={descriptionOverlay}
+            isVisible={descriptionOverlay.isVisible}
+            onDismiss={descriptionOverlay.hide}
             fillMode="contained"
             verticalPanelAlign="top"
           >

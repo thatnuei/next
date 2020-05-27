@@ -69,7 +69,7 @@ function Modal({
       <div css={panelStyle}>
         <header css={[raisedPanelHeader, tw`relative px-16 text-center`]}>
           <h1 css={headerText}>{props.title}</h1>
-          <Button css={closeButtonStyle} onClick={props.state.hide}>
+          <Button css={closeButtonStyle} onClick={props.onDismiss}>
             <Icon which={close} />
           </Button>
         </header>

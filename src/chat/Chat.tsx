@@ -80,7 +80,8 @@ function Chat({ onDisconnect }: Props) {
         title="Channels"
         width={480}
         height={720}
-        state={state.channelBrowserOverlay}
+        isVisible={state.channelBrowserOverlay.isVisible}
+        onDismiss={state.channelBrowserOverlay.hide}
         children={<ChannelBrowser />}
       />
 
@@ -88,7 +89,8 @@ function Chat({ onDisconnect }: Props) {
         title="Update Your Status"
         width={480}
         height={360}
-        state={state.statusUpdate.overlay}
+        isVisible={state.statusUpdate.overlay.isVisible}
+        onDismiss={state.statusUpdate.overlay.hide}
         children={<StatusUpdateForm />}
       />
 
