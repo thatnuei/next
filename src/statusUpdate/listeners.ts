@@ -1,8 +1,6 @@
 import { useChatState } from "../chat/chatStateContext"
-import { createCommandHandler } from "../chat/commandHelpers"
-import { useCommandStream } from "../chat/commandStreamContext"
 import { useChatCredentials } from "../chat/credentialsContext"
-import { useChatSocket } from "../chat/socketContext"
+import { useChatSocket, useChatSocketListener } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useStreamListener } from "../state/stream"
 
@@ -13,7 +11,6 @@ export function useStatusUpdateListeners() {
   const socket = useChatSocket()
   const { identity } = useChatCredentials()
   const chatStream = useChatStream()
-  const commandStream = useCommandStream()
 
   useStreamListener(chatStream, (event) => {
     if (event.type === "show-status-update") {
@@ -41,20 +38,17 @@ export function useStatusUpdateListeners() {
     }
   })
 
-  useStreamListener(
-    commandStream,
-    createCommandHandler({
-      VAR({ variable, value }) {
-        if (variable === "sta_flood") {
-          state.statusUpdate.timeout = (Number(value) || 5) * 1000 // value is in seconds
-        }
-      },
+  useChatSocketListener({
+    VAR({ variable, value }) {
+      if (variable === "sta_flood") {
+        state.statusUpdate.timeout = (Number(value) || 5) * 1000 // value is in seconds
+      }
+    },
 
-      STA({ character }) {
-        if (character === identity) {
-          state.statusUpdate.overlay.hide()
-        }
-      },
-    }),
-  )
+    STA({ character }) {
+      if (character === identity) {
+        state.statusUpdate.overlay.hide()
+      }
+    },
+  })
 }

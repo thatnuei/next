@@ -1,7 +1,5 @@
 import { useSetRecoilState } from "recoil"
-import { createCommandHandler } from "../chat/commandHelpers"
-import { useCommandStream } from "../chat/commandStreamContext"
-import { useStreamListener } from "../state/stream"
+import { useChatSocketListener } from "../chat/socketContext"
 import {
   privateChannelsAtom,
   publicChannelsAtom,
@@ -9,39 +7,35 @@ import {
 } from "./state"
 
 export function useChannelBrowserListeners() {
-  const commandStream = useCommandStream()
   const setPublicChannels = useSetRecoilState(publicChannelsAtom)
   const setPrivateChannels = useSetRecoilState(privateChannelsAtom)
   const refresh = useRefreshChannelBrowserAction()
 
-  useStreamListener(
-    commandStream,
-    createCommandHandler({
-      IDN() {
-        refresh()
-      },
+  useChatSocketListener({
+    IDN() {
+      refresh()
+    },
 
-      CHA({ channels }) {
-        setPublicChannels(
-          channels.map((it) => ({
-            id: it.name,
-            title: it.name,
-            userCount: it.characters,
-            type: "public",
-          })),
-        )
-      },
+    CHA({ channels }) {
+      setPublicChannels(
+        channels.map((it) => ({
+          id: it.name,
+          title: it.name,
+          userCount: it.characters,
+          type: "public",
+        })),
+      )
+    },
 
-      ORS({ channels }) {
-        setPrivateChannels(
-          channels.map((it) => ({
-            id: it.name,
-            title: it.title,
-            userCount: it.characters,
-            type: "private",
-          })),
-        )
-      },
-    }),
-  )
+    ORS({ channels }) {
+      setPrivateChannels(
+        channels.map((it) => ({
+          id: it.name,
+          title: it.title,
+          userCount: it.characters,
+          type: "private",
+        })),
+      )
+    },
+  })
 }

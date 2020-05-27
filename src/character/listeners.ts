@@ -1,8 +1,6 @@
 import { useChatState } from "../chat/chatStateContext"
-import { createCommandHandler } from "../chat/commandHelpers"
-import { useCommandStream } from "../chat/commandStreamContext"
 import { useChatCredentials } from "../chat/credentialsContext"
-import { useChatSocket } from "../chat/socketContext"
+import { useChatSocket, useChatSocketListener } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useApiContext } from "../flist/api-context"
 import { useStreamListener } from "../state/stream"
@@ -30,86 +28,83 @@ export function useCharacterListeners() {
     }
   })
 
-  useStreamListener(
-    useCommandStream(),
-    createCommandHandler({
-      async IDN() {
-        const { friendlist, bookmarklist } = await api.getFriendsAndBookmarks()
-        state.bookmarks.replace(bookmarklist)
-        state.friends.replace(
-          friendlist.map((entry) => ({ us: entry.source, them: entry.dest })),
-        )
-      },
+  useChatSocketListener({
+    async IDN() {
+      const { friendlist, bookmarklist } = await api.getFriendsAndBookmarks()
+      state.bookmarks.replace(bookmarklist)
+      state.friends.replace(
+        friendlist.map((entry) => ({ us: entry.source, them: entry.dest })),
+      )
+    },
 
-      IGN(params) {
-        if (params.action === "init" || params.action === "list") {
-          state.ignored.replace(params.characters)
-        }
-        if (params.action === "add") {
-          state.ignored.add(params.character)
-        }
-        if (params.action === "delete") {
-          state.ignored.delete(params.character)
-        }
-      },
+    IGN(params) {
+      if (params.action === "init" || params.action === "list") {
+        state.ignored.replace(params.characters)
+      }
+      if (params.action === "add") {
+        state.ignored.add(params.character)
+      }
+      if (params.action === "delete") {
+        state.ignored.delete(params.character)
+      }
+    },
 
-      ADL({ ops }) {
-        state.admins.replace(ops)
-      },
+    ADL({ ops }) {
+      state.admins.replace(ops)
+    },
 
-      RTB(params) {
-        if (params.type === "trackadd") {
-          state.bookmarks.add(params.name)
-          // show toast
-        }
+    RTB(params) {
+      if (params.type === "trackadd") {
+        state.bookmarks.add(params.name)
+        // show toast
+      }
 
-        if (params.type === "trackrem") {
-          state.bookmarks.delete(params.name)
-          // show toast
-        }
+      if (params.type === "trackrem") {
+        state.bookmarks.delete(params.name)
+        // show toast
+      }
 
-        if (params.type === "friendadd") {
-          state.friends.add({ us: identity, them: params.name })
-          // show toast
-        }
+      if (params.type === "friendadd") {
+        state.friends.add({ us: identity, them: params.name })
+        // show toast
+      }
 
-        if (params.type === "friendremove") {
-          state.friends.delete(params.name)
-          // show toast
-        }
-      },
+      if (params.type === "friendremove") {
+        state.friends.delete(params.name)
+        // show toast
+      }
+    },
 
-      LIS({ characters }) {
-        for (const [name, gender, status, statusMessage] of characters) {
-          state.characters.update(name, (char) => {
-            char.gender = gender
-            char.status = status
-            char.statusMessage = statusMessage
-          })
-        }
-      },
-
-      NLN({ identity: name, gender, status }) {
+    LIS({ characters }) {
+      for (const [name, gender, status, statusMessage] of characters) {
         state.characters.update(name, (char) => {
           char.gender = gender
           char.status = status
-          char.statusMessage = ""
+          char.statusMessage = statusMessage
         })
-      },
+      }
+    },
 
-      FLN({ character: name }) {
-        state.characters.update(name, (char) => {
-          char.status = "offline"
-          char.statusMessage = ""
-        })
-      },
+    NLN({ identity: name, gender, status }) {
+      state.characters.update(name, (char) => {
+        char.gender = gender
+        char.status = status
+        char.statusMessage = ""
+      })
+    },
 
-      STA({ character: name, status, statusmsg }) {
-        state.characters.update(name, (char) => {
-          char.status = status
-          char.statusMessage = statusmsg
-        })
-      },
-    }),
-  )
+    FLN({ character: name }) {
+      state.characters.update(name, (char) => {
+        char.status = "offline"
+        char.statusMessage = ""
+      })
+    },
+
+    STA({ character: name, status, statusmsg }) {
+      state.characters.update(name, (char) => {
+        char.status = status
+        char.statusMessage = statusmsg
+      })
+    },
+  })
 }

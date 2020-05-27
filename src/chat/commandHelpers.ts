@@ -28,7 +28,7 @@ export function createCommandString(command: ClientCommand): string {
     : command.type
 }
 
-type CommandHandlerMap = {
+export type CommandHandlerMap = {
   [K in keyof ServerCommandRecord]?: (params: ServerCommandRecord[K]) => void
 }
 

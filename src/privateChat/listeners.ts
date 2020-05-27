@@ -1,8 +1,6 @@
 import { useChatState } from "../chat/chatStateContext"
-import { createCommandHandler } from "../chat/commandHelpers"
-import { useCommandStream } from "../chat/commandStreamContext"
 import { useChatCredentials } from "../chat/credentialsContext"
-import { useChatSocket } from "../chat/socketContext"
+import { useChatSocket, useChatSocketListener } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useChatNav } from "../chatNav/state"
 import { createPrivateMessage } from "../message/MessageState"
@@ -15,7 +13,6 @@ const getStoredPrivateChats = (identity: string) =>
 
 export function usePrivateChatListeners() {
   const chatStream = useChatStream()
-  const commandStream = useCommandStream()
   const state = useChatState()
   const socket = useChatSocket()
   const { identity } = useChatCredentials()
@@ -45,29 +42,26 @@ export function usePrivateChatListeners() {
     }
   })
 
-  useStreamListener(
-    commandStream,
-    createCommandHandler({
-      IDN() {
-        restore()
-      },
-      PRI({ character, message }) {
-        state.privateChats.update(character, (chat) => {
-          chat.messageList.add(createPrivateMessage(character, message))
-          openChat(character)
+  useChatSocketListener({
+    IDN() {
+      restore()
+    },
+    PRI({ character, message }) {
+      state.privateChats.update(character, (chat) => {
+        chat.messageList.add(createPrivateMessage(character, message))
+        openChat(character)
 
-          if (nav.currentPrivateChat !== chat) {
-            chat.isUnread = true
-          }
-        })
-      },
-      TPN({ character, status }) {
-        state.privateChats.update(character, (chat) => {
-          chat.typingStatus = status
-        })
-      },
-    }),
-  )
+        if (nav.currentPrivateChat !== chat) {
+          chat.isUnread = true
+        }
+      })
+    },
+    TPN({ character, status }) {
+      state.privateChats.update(character, (chat) => {
+        chat.typingStatus = status
+      })
+    },
+  })
 
   function openChat(name: string) {
     state.privateChats.update(name, (chat) => {

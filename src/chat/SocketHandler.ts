@@ -1,4 +1,5 @@
 import { observable } from "mobx"
+import { Stream } from "../state/stream"
 import {
   ClientCommand,
   createCommandString,
@@ -6,8 +7,6 @@ import {
   ServerCommand,
 } from "./commandHelpers"
 import { ChatCredentials } from "./types"
-
-type SocketListener = (command: ServerCommand) => void
 
 export type SocketStatus =
   | "idle"
@@ -21,7 +20,8 @@ export class SocketHandler {
   @observable
   status: SocketStatus = "idle"
 
-  listener: SocketListener = () => {}
+  commandStream = new Stream<ServerCommand>()
+
   onDisconnect = () => {}
 
   private socket?: WebSocket
@@ -84,7 +84,7 @@ export class SocketHandler {
         console.warn("Socket error", command.params.message)
       }
 
-      this.listener(command)
+      this.commandStream.send(command)
     }
   }
 

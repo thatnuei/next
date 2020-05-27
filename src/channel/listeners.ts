@@ -1,9 +1,7 @@
 import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { useChatState } from "../chat/chatStateContext"
-import { createCommandHandler } from "../chat/commandHelpers"
-import { useCommandStream } from "../chat/commandStreamContext"
 import { useChatCredentials } from "../chat/credentialsContext"
-import { useChatSocket } from "../chat/socketContext"
+import { useChatSocket, useChatSocketListener } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useChatNav } from "../chatNav/state"
 import {
@@ -19,7 +17,6 @@ export function useChannelListeners() {
   const { channels } = state
 
   const chatStream = useChatStream()
-  const commandStream = useCommandStream()
   const socket = useChatSocket()
   const { account, identity } = useChatCredentials()
   const nav = useChatNav()
@@ -57,92 +54,89 @@ export function useChannelListeners() {
     }
   })
 
-  useStreamListener(
-    commandStream,
-    createCommandHandler({
-      async IDN() {
-        const channels = await loadChannels(account, identity)
-        if (channels.length === 0) {
-          openChannelBrowser()
-        } else {
-          for (const { id, title } of channels) {
-            chatStream.send({ type: "join-channel", id, title })
-          }
+  useChatSocketListener({
+    async IDN() {
+      const channels = await loadChannels(account, identity)
+      if (channels.length === 0) {
+        openChannelBrowser()
+      } else {
+        for (const { id, title } of channels) {
+          chatStream.send({ type: "join-channel", id, title })
         }
-      },
+      }
+    },
 
-      JCH({ channel: id, character: { identity: name }, title }) {
-        channels.update(id, (channel) => {
-          channel.title = title
-          channel.users.add(name)
+    JCH({ channel: id, character: { identity: name }, title }) {
+      channels.update(id, (channel) => {
+        channel.title = title
+        channel.users.add(name)
 
-          if (name === identity) {
-            channel.joinState = "present"
-            saveChannels(state, account, identity)
-          }
-        })
-      },
-
-      LCH({ channel: id, character }) {
-        channels.update(id, (channel) => {
-          channel.users.delete(character)
-
-          if (character === identity) {
-            channel.joinState = "absent"
-          }
-        })
-      },
-
-      FLN({ character }) {
-        for (const channel of channels.values()) {
-          channel.users.delete(character)
+        if (name === identity) {
+          channel.joinState = "present"
+          saveChannels(state, account, identity)
         }
-      },
+      })
+    },
 
-      ICH({ channel: id, users, mode }) {
-        channels.update(id, (channel) => {
-          channel.users = new Set(users.map((it) => it.identity))
-          channel.mode = mode
-        })
-      },
+    LCH({ channel: id, character }) {
+      channels.update(id, (channel) => {
+        channel.users.delete(character)
 
-      CDS({ channel: id, description }) {
-        channels.update(id, (channel) => {
-          channel.description = description
-        })
-      },
-
-      COL({ channel: id, oplist }) {
-        channels.update(id, (channel) => {
-          channel.ops = new Set(oplist)
-        })
-      },
-
-      MSG({ channel: id, character, message }) {
-        channels.update(id, (channel) => {
-          channel.messageList.add(createChannelMessage(character, message))
-
-          if (nav.currentChannel !== channel) {
-            channel.isUnread = true
-          }
-        })
-      },
-
-      LRP({ channel: id, character, message }) {
-        channels.update(id, (channel) => {
-          channel.messageList.add(createAdMessage(character, message))
-        })
-      },
-
-      RLL(params) {
-        if ("channel" in params) {
-          const { channel: id, message } = params
-
-          channels.update(id, (channel) => {
-            channel.messageList.add(createSystemMessage(message))
-          })
+        if (character === identity) {
+          channel.joinState = "absent"
         }
-      },
-    }),
-  )
+      })
+    },
+
+    FLN({ character }) {
+      for (const channel of channels.values()) {
+        channel.users.delete(character)
+      }
+    },
+
+    ICH({ channel: id, users, mode }) {
+      channels.update(id, (channel) => {
+        channel.users = new Set(users.map((it) => it.identity))
+        channel.mode = mode
+      })
+    },
+
+    CDS({ channel: id, description }) {
+      channels.update(id, (channel) => {
+        channel.description = description
+      })
+    },
+
+    COL({ channel: id, oplist }) {
+      channels.update(id, (channel) => {
+        channel.ops = new Set(oplist)
+      })
+    },
+
+    MSG({ channel: id, character, message }) {
+      channels.update(id, (channel) => {
+        channel.messageList.add(createChannelMessage(character, message))
+
+        if (nav.currentChannel !== channel) {
+          channel.isUnread = true
+        }
+      })
+    },
+
+    LRP({ channel: id, character, message }) {
+      channels.update(id, (channel) => {
+        channel.messageList.add(createAdMessage(character, message))
+      })
+    },
+
+    RLL(params) {
+      if ("channel" in params) {
+        const { channel: id, message } = params
+
+        channels.update(id, (channel) => {
+          channel.messageList.add(createSystemMessage(message))
+        })
+      }
+    },
+  })
 }
