@@ -1,5 +1,4 @@
 import fuzzysearch from "fuzzysearch"
-import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
@@ -95,4 +94,4 @@ function ChannelBrowser(props: Props) {
   )
 }
 
-export default observer(ChannelBrowser)
+export default ChannelBrowser
