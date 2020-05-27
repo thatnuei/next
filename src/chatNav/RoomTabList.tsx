@@ -37,6 +37,7 @@ function RoomTabList() {
       />
     ))
 
+  // TODO: get from list of channel IDs
   const channelTabs = [...state.channels.values()]
     .filter((it) => it.joinState !== "absent")
     .sort(compare((it) => it.title.toLowerCase()))

@@ -1,142 +1,168 @@
+import { useRecoilCallback } from "../../types/recoil"
 import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { useChatState } from "../chat/chatStateContext"
+import {
+  CommandHandlerMap,
+  createCommandHandler,
+  ServerCommand,
+} from "../chat/commandHelpers"
 import { useChatCredentials } from "../chat/credentialsContext"
 import { useChatSocket, useChatSocketListener } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
-import { useChatNav } from "../chatNav/state"
+import { ChatEvent } from "../chat/types"
+import { unique } from "../common/unique"
 import {
   createAdMessage,
   createChannelMessage,
   createSystemMessage,
 } from "../message/MessageState"
 import { useStreamListener } from "../state/stream"
+import { channelAtom, channelMessagesAtom, ChannelState } from "./state"
 import { loadChannels, saveChannels } from "./storage"
 
 export function useChannelListeners() {
   const state = useChatState()
-  const { channels } = state
 
   const chatStream = useChatStream()
   const socket = useChatSocket()
   const { account, identity } = useChatCredentials()
-  const nav = useChatNav()
   const openChannelBrowser = useOpenChannelBrowserAction()
 
-  useStreamListener(chatStream, (event) => {
-    if (event.type === "join-channel") {
-      if (channels.get(event.id).joinState === "absent") {
-        channels.update(event.id, (channel) => {
-          channel.joinState = "joining"
-          if (event.title) channel.title = event.title
-        })
-        socket.send({ type: "JCH", params: { channel: event.id } })
-      }
-    }
+  const streamListener = useRecoilCallback(
+    async ({ set, getPromise }, event: ChatEvent) => {
+      if (event.type === "join-channel") {
+        const channel = await getPromise(channelAtom(event.id))
 
-    if (event.type === "leave-channel") {
-      if (channels.get(event.id).joinState === "present") {
-        channels.update(event.id, (channel) => {
-          channel.joinState = "leaving"
-        })
-        socket.send({ type: "LCH", params: { channel: event.id } })
-        saveChannels(state, account, identity)
-      }
-    }
-
-    if (event.type === "send-channel-message") {
-      channels.update(event.channelId, (channel) => {
-        channel.messageList.add(createChannelMessage(identity, event.text))
-      })
-      socket.send({
-        type: "MSG",
-        params: { channel: event.channelId, message: event.text },
-      })
-    }
-  })
-
-  useChatSocketListener({
-    async IDN() {
-      const channels = await loadChannels(account, identity)
-      if (channels.length === 0) {
-        openChannelBrowser()
-      } else {
-        for (const { id, title } of channels) {
-          chatStream.send({ type: "join-channel", id, title })
+        if (channel.joinState === "absent") {
+          set(
+            channelAtom(event.id),
+            (prev): ChannelState => ({
+              ...prev,
+              joinState: "joining",
+              title: event.title ?? prev.title,
+            }),
+          )
+          socket.send({ type: "JCH", params: { channel: event.id } })
         }
       }
-    },
 
-    JCH({ channel: id, character: { identity: name }, title }) {
-      channels.update(id, (channel) => {
-        channel.title = title
-        channel.users.add(name)
+      if (event.type === "leave-channel") {
+        const channel = await getPromise(channelAtom(event.id))
 
-        if (name === identity) {
-          channel.joinState = "present"
+        if (channel.joinState === "present") {
+          set(
+            channelAtom(event.id),
+            (prev): ChannelState => ({
+              ...prev,
+              joinState: "leaving",
+            }),
+          )
+
+          socket.send({ type: "LCH", params: { channel: event.id } })
           saveChannels(state, account, identity)
         }
-      })
-    },
-
-    LCH({ channel: id, character }) {
-      channels.update(id, (channel) => {
-        channel.users.delete(character)
-
-        if (character === identity) {
-          channel.joinState = "absent"
-        }
-      })
-    },
-
-    FLN({ character }) {
-      for (const channel of channels.values()) {
-        channel.users.delete(character)
       }
-    },
 
-    ICH({ channel: id, users, mode }) {
-      channels.update(id, (channel) => {
-        channel.users = new Set(users.map((it) => it.identity))
-        channel.mode = mode
-      })
-    },
-
-    CDS({ channel: id, description }) {
-      channels.update(id, (channel) => {
-        channel.description = description
-      })
-    },
-
-    COL({ channel: id, oplist }) {
-      channels.update(id, (channel) => {
-        channel.ops = new Set(oplist)
-      })
-    },
-
-    MSG({ channel: id, character, message }) {
-      channels.update(id, (channel) => {
-        channel.messageList.add(createChannelMessage(character, message))
-
-        if (nav.currentChannel !== channel) {
-          channel.isUnread = true
-        }
-      })
-    },
-
-    LRP({ channel: id, character, message }) {
-      channels.update(id, (channel) => {
-        channel.messageList.add(createAdMessage(character, message))
-      })
-    },
-
-    RLL(params) {
-      if ("channel" in params) {
-        const { channel: id, message } = params
-
-        channels.update(id, (channel) => {
-          channel.messageList.add(createSystemMessage(message))
+      if (event.type === "send-channel-message") {
+        set(channelMessagesAtom(event.channelId), (prev) => [
+          ...prev,
+          createChannelMessage(identity, event.text),
+        ])
+        socket.send({
+          type: "MSG",
+          params: { channel: event.channelId, message: event.text },
         })
       }
     },
-  })
+  )
+
+  const commandListener = useRecoilCallback(
+    ({ set, getPromise }, command: ServerCommand) => {
+      const handlerMap: CommandHandlerMap = {
+        async IDN() {
+          const channels = await loadChannels(account, identity)
+          if (channels.length === 0) {
+            openChannelBrowser()
+          } else {
+            for (const { id, title } of channels) {
+              chatStream.send({ type: "join-channel", id, title })
+            }
+          }
+        },
+
+        JCH({ channel: id, character: { identity: name }, title }) {
+          set(
+            channelAtom(id),
+            (prev): ChannelState => ({
+              ...prev,
+              title,
+              users: unique([...prev.users, name]),
+              joinState: name === identity ? "present" : prev.joinState,
+            }),
+          )
+
+          if (name === identity) {
+            // we can't get all of the channel states,
+            // so we'll probably have to store an array of joined channel IDs somewhere else
+            // saveChannels(state, account, identity)
+          }
+        },
+
+        LCH({ channel: id, character }) {
+          set(channelAtom(id), (prev) => ({
+            ...prev,
+            users: prev.users.filter((name) => name !== character),
+            joinState: character === identity ? "absent" : prev.joinState,
+          }))
+        },
+
+        ICH({ channel: id, users, mode }) {
+          set(channelAtom(id), (prev) => ({
+            ...prev,
+            users: unique(users.map((it) => it.identity)),
+            mode,
+          }))
+        },
+
+        CDS({ channel: id, description }) {
+          set(channelAtom(id), (prev) => ({ ...prev, description }))
+        },
+
+        COL({ channel: id, oplist }) {
+          set(channelAtom(id), (prev) => ({ ...prev, ops: oplist }))
+        },
+
+        MSG({ channel: id, character, message }) {
+          set(channelMessagesAtom(id), (prev) => [
+            ...prev,
+            createChannelMessage(character, message),
+          ])
+
+          // update unread state
+        },
+
+        LRP({ channel: id, character, message }) {
+          set(channelMessagesAtom(id), (prev) => [
+            ...prev,
+            createAdMessage(character, message),
+          ])
+        },
+
+        RLL(params) {
+          if ("channel" in params) {
+            const { channel: id, message } = params
+            set(channelMessagesAtom(id), (prev) => [
+              ...prev,
+              createSystemMessage(message),
+            ])
+          }
+        },
+      }
+
+      return createCommandHandler(handlerMap)(command)
+    },
+  )
+
+  useStreamListener(chatStream, streamListener)
+  useChatSocketListener(commandListener)
 }

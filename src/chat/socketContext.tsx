@@ -1,7 +1,11 @@
 import React, { useContext, useEffect, useMemo } from "react"
 import { ChildrenProps } from "../jsx/types"
 import { useStreamListener } from "../state/stream"
-import { CommandHandlerMap, createCommandHandler } from "./commandHelpers"
+import {
+  CommandHandlerFn,
+  CommandHandlerMap,
+  createCommandHandler,
+} from "./commandHelpers"
 import { useChatCredentials } from "./credentialsContext"
 import { SocketHandler } from "./SocketHandler"
 
@@ -34,7 +38,12 @@ export function useChatSocketConnection({ onDisconnect = () => {} }) {
   }, [creds, socket])
 }
 
-export function useChatSocketListener(handlerMap: CommandHandlerMap) {
+export function useChatSocketListener(
+  handler: CommandHandlerFn | CommandHandlerMap,
+) {
   const socket = useChatSocket()
-  useStreamListener(socket.commandStream, createCommandHandler(handlerMap))
+  useStreamListener(
+    socket.commandStream,
+    typeof handler === "function" ? handler : createCommandHandler(handler),
+  )
 }

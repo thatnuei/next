@@ -17,6 +17,8 @@ export class ChatNavState {
 }
 
 export function createChatNavHelpers(state: ChatState) {
+  // TODO: these need to maybe be separate values/hooks,
+  // and the functions should probably be recoil values or selectors
   return {
     get view() {
       return state.nav.view

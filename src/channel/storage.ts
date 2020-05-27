@@ -1,6 +1,6 @@
-import { ChatState } from "../chat/ChatState"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
+import { ChannelState } from "./state"
 
 const serializedChannelsSchema = v.shape({
   channelsByIdentity: v.dictionary(
@@ -17,13 +17,11 @@ const getStoredChannels = (account: string) =>
   createStoredValue(`channels:${account}`, serializedChannelsSchema)
 
 export function saveChannels(
-  state: ChatState,
+  channels: ChannelState[],
   account: string,
   identity: string,
 ) {
-  const joinedChannels = [...state.channels.values()].filter(
-    (it) => it.joinState === "present",
-  )
+  const joinedChannels = channels.filter((it) => it.joinState === "present")
 
   const storage = getStoredChannels(account)
 

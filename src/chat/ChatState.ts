@@ -1,5 +1,4 @@
 import { observable } from "mobx"
-import { ChannelState } from "../channel/ChannelState"
 import { CharacterState } from "../character/CharacterState"
 import { ChatNavState } from "../chatNav/state"
 import { factoryFrom } from "../common/factoryFrom"
@@ -10,7 +9,6 @@ import { OverlayState } from "../ui/OverlayState"
 
 export class ChatState {
   characters = new MapWithDefault(factoryFrom(CharacterState))
-  channels = new MapWithDefault(factoryFrom(ChannelState))
   privateChats = new MapWithDefault(factoryFrom(PrivateChatState))
 
   sideMenuOverlay = new OverlayState()
