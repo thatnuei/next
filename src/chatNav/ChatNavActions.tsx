@@ -1,5 +1,6 @@
 import React from "react"
 import tw from "twin.macro"
+import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { useChatStream } from "../chat/streamContext"
 import { TagProps } from "../jsx/types"
 import * as icons from "../ui/icons"
@@ -7,6 +8,7 @@ import NavAction from "./NavAction"
 
 function ChatNavActions(props: TagProps<"div">) {
   const stream = useChatStream()
+  const openChannelBrowser = useOpenChannelBrowserAction()
 
   return (
     <div
@@ -16,7 +18,7 @@ function ChatNavActions(props: TagProps<"div">) {
       <NavAction
         icon={icons.list}
         title="Browse channels"
-        onClick={() => stream.send({ type: "open-channel-browser" })}
+        onClick={openChannelBrowser}
       />
       <NavAction
         icon={icons.updateStatus}

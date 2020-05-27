@@ -12,8 +12,6 @@ type ChatEventMap = {
   "leave-channel": { id: string }
   "open-private-chat": { name: string }
   "close-private-chat": { name: string }
-  "open-channel-browser": {}
-  "refresh-channel-browser": {}
   "show-status-update": {}
   "submit-status-update": {}
   "send-channel-message": { channelId: string; text: string }

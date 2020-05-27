@@ -2,7 +2,6 @@ import fuzzysearch from "fuzzysearch"
 import React, { useState } from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
-import { useChatStream } from "../chat/streamContext"
 import { compare, compareReverse } from "../common/compare"
 import Button from "../dom/Button"
 import { TagProps } from "../jsx/types"
@@ -17,17 +16,18 @@ import {
   ChannelBrowserChannel,
   privateChannelsAtom,
   publicChannelsAtom,
+  useRefreshChannelBrowserAction,
 } from "./state"
 
 type Props = TagProps<"div">
 
 function ChannelBrowser(props: Props) {
-  const stream = useChatStream()
   const [query, setQuery] = useState("")
   const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
   const publicChannels = useRecoilValue(publicChannelsAtom)
   const privateChannels = useRecoilValue(privateChannelsAtom)
   const canRefresh = useRecoilValue(canRefreshAtom)
+  const refresh = useRefreshChannelBrowserAction()
 
   const cycleSortMode = () =>
     setSortMode((mode) => (mode === "title" ? "userCount" : "title"))
@@ -84,7 +84,7 @@ function ChannelBrowser(props: Props) {
         <Button
           title="Refresh"
           css={[solidButton, tw`ml-2`]}
-          onClick={() => stream.send({ type: "refresh-channel-browser" })}
+          onClick={refresh}
           disabled={!canRefresh}
         >
           <Icon which={icons.refresh} />

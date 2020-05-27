@@ -1,3 +1,4 @@
+import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { useChatState } from "../chat/chatStateContext"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useCommandStream } from "../chat/commandStreamContext"
@@ -22,6 +23,7 @@ export function useChannelListeners() {
   const socket = useChatSocket()
   const { account, identity } = useChatCredentials()
   const nav = useChatNav()
+  const openChannelBrowser = useOpenChannelBrowserAction()
 
   useStreamListener(chatStream, (event) => {
     if (event.type === "join-channel") {
@@ -61,7 +63,7 @@ export function useChannelListeners() {
       async IDN() {
         const channels = await loadChannels(account, identity)
         if (channels.length === 0) {
-          chatStream.send({ type: "open-channel-browser" })
+          openChannelBrowser()
         } else {
           for (const { id, title } of channels) {
             chatStream.send({ type: "join-channel", id, title })
