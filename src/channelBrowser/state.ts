@@ -1,8 +1,7 @@
 import { useCallback } from "react"
-import { atom, selector, useRecoilState, useSetRecoilState } from "recoil"
+import { atom, selector, useRecoilCallback, useSetRecoilState } from "recoil"
 import { useChatSocket } from "../chat/socketContext"
 import { memoize } from "../common/memoize"
-import { useEffectRef } from "../react/useEffectRef"
 
 export type ChannelBrowserChannel = {
   id: string
@@ -50,27 +49,27 @@ export const userCountSelector = memoize((channelId: string) =>
 
 export function useRefreshChannelBrowserAction() {
   const socket = useChatSocket()
-  const [canRefresh, setCanRefresh] = useRecoilState(canRefreshAtom)
-  const canRefreshRef = useEffectRef(canRefresh)
+  const setCanRefresh = useSetRecoilState(canRefreshAtom)
 
-  return useCallback(() => {
-    if (!canRefreshRef.current) return
-
-    setCanRefresh(false)
+  return useRecoilCallback(async ({ getPromise }) => {
+    const canRefresh = await getPromise(canRefreshAtom)
+    if (!canRefresh) return
 
     socket.send({ type: "CHA" })
     socket.send({ type: "ORS" })
 
     // the server has a 7 second timeout on refreshes
+    setCanRefresh(false)
     setTimeout(() => {
       setCanRefresh(true)
     }, 7000)
-  }, [canRefreshRef, setCanRefresh, socket])
+  })
 }
 
 export function useOpenChannelBrowserAction() {
   const setVisible = useSetRecoilState(isChannelBrowserVisibleAtom)
   const refresh = useRefreshChannelBrowserAction()
+
   return useCallback(() => {
     setVisible(true)
     refresh()
