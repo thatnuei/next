@@ -1,5 +1,4 @@
 import { useRecoilState, useSetRecoilState } from "recoil"
-import { useChatState } from "../chat/chatStateContext"
 import { createCommandHandler } from "../chat/commandHelpers"
 import { useCommandStream } from "../chat/commandStreamContext"
 import { useChatSocket } from "../chat/socketContext"
@@ -7,6 +6,7 @@ import { useChatStream } from "../chat/streamContext"
 import { useStreamListener } from "../state/stream"
 import {
   canRefreshAtom,
+  isChannelBrowserVisibleAtom,
   privateChannelsAtom,
   publicChannelsAtom,
 } from "./state"
@@ -14,11 +14,11 @@ import {
 export function useChannelBrowserListeners() {
   const chatStream = useChatStream()
   const commandStream = useCommandStream()
-  const state = useChatState()
   const socket = useChatSocket()
   const setPublicChannels = useSetRecoilState(publicChannelsAtom)
   const setPrivateChannels = useSetRecoilState(privateChannelsAtom)
   const [canRefresh, setCanRefresh] = useRecoilState(canRefreshAtom)
+  const setVisible = useSetRecoilState(isChannelBrowserVisibleAtom)
 
   useStreamListener(chatStream, (event) => {
     if (event.type === "refresh-channel-browser") {
@@ -26,7 +26,7 @@ export function useChannelBrowserListeners() {
     }
 
     if (event.type === "open-channel-browser") {
-      state.channelBrowserOverlay.show()
+      setVisible(true)
       refresh()
     }
   })

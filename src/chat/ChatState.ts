@@ -13,7 +13,6 @@ export class ChatState {
   channels = new MapWithDefault(factoryFrom(ChannelState))
   privateChats = new MapWithDefault(factoryFrom(PrivateChatState))
 
-  channelBrowserOverlay = new OverlayState()
   sideMenuOverlay = new OverlayState()
   nav = new ChatNavState()
   statusUpdate = new StatusUpdateState()

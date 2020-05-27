@@ -1,10 +1,12 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
+import { useRecoilState } from "recoil"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import { useChannelListeners } from "../channel/listeners"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import { useChannelBrowserListeners } from "../channelBrowser/listeners"
+import { isChannelBrowserVisibleAtom } from "../channelBrowser/state"
 import CharacterMenu from "../character/CharacterMenu"
 import { useCharacterListeners } from "../character/listeners"
 import ChatNav from "../chatNav/ChatNav"
@@ -13,6 +15,7 @@ import { Dict } from "../common/types"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { usePrivateChatListeners } from "../privateChat/listeners"
 import PrivateChatView from "../privateChat/PrivateChatView"
+import HookScope from "../react/HookScope"
 import { useStreamListener } from "../state/stream"
 import { useStatusUpdateListeners } from "../statusUpdate/listeners"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
@@ -76,14 +79,23 @@ function Chat({ onDisconnect }: Props) {
         </Drawer>
       )}
 
-      <Modal
-        title="Channels"
-        width={480}
-        height={720}
-        isVisible={state.channelBrowserOverlay.isVisible}
-        onDismiss={state.channelBrowserOverlay.hide}
-        children={<ChannelBrowser />}
-      />
+      <HookScope>
+        {function useScope() {
+          const [isVisible, setVisible] = useRecoilState(
+            isChannelBrowserVisibleAtom,
+          )
+          return (
+            <Modal
+              title="Channels"
+              width={480}
+              height={720}
+              isVisible={isVisible}
+              onDismiss={() => setVisible(false)}
+              children={<ChannelBrowser />}
+            />
+          )
+        }}
+      </HookScope>
 
       <Modal
         title="Update Your Status"

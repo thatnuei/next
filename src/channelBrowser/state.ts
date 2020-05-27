@@ -8,7 +8,7 @@ export type ChannelBrowserChannel = {
   userCount: number
 }
 
-export const isVisibleAtom = atom({
+export const isChannelBrowserVisibleAtom = atom({
   key: "channelBrowser:isVisible",
   default: false,
 })
