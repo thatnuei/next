@@ -1,6 +1,7 @@
 import { useCallback } from "react"
 import { atom, selector, useRecoilCallback, useSetRecoilState } from "recoil"
 import { useChatSocket } from "../chat/socketContext"
+import { delay } from "../common/delay"
 import { memoize } from "../common/memoize"
 
 export type ChannelBrowserChannel = {
@@ -60,9 +61,8 @@ export function useRefreshChannelBrowserAction() {
 
     // the server has a 7 second timeout on refreshes
     setCanRefresh(false)
-    setTimeout(() => {
-      setCanRefresh(true)
-    }, 7000)
+    await delay(7000)
+    setCanRefresh(true)
   })
 }
 
