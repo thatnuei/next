@@ -1,0 +1,9 @@
+{
+  "plugins": ["@snowpack/plugin-babel"],
+  "scripts": {
+    "mount:public": "mount public --to /",
+    "mount:src": "mount src",
+    "mount:web_modules": "mount $WEB_MODULES --to /web_modules",
+    "build:js,jsx,ts,tsx": "@snowpack/plugin-babel"
+  }
+}
