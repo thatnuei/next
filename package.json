@@ -60,7 +60,7 @@
     "preval.macro": "^5.0.0",
     "react-refresh": "^0.8.3",
     "serve": "^11.3.1",
-    "snowpack": "2.0.1",
+    "snowpack": "2.0.2",
     "source-map-explorer": "^2.4.2",
     "tailwindcss": "^1.4.6",
     "twin.macro": "^1.2.0",
