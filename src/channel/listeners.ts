@@ -74,6 +74,7 @@ export function useChannelListeners() {
         })
       }
     },
+    [account, identity, socket, state],
   )
 
   const commandListener = useRecoilCallback(
@@ -161,6 +162,7 @@ export function useChannelListeners() {
 
       return createCommandHandler(handlerMap)(command)
     },
+    [account, chatStream, identity, openChannelBrowser],
   )
 
   useStreamListener(chatStream, streamListener)

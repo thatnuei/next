@@ -53,18 +53,21 @@ export function useRefreshChannelBrowserAction() {
   const socket = useChatSocket()
   const setCanRefresh = useSetRecoilState(canRefreshAtom)
 
-  return useRecoilCallback(async ({ getPromise }) => {
-    const canRefresh = await getPromise(canRefreshAtom)
-    if (!canRefresh) return
+  return useRecoilCallback(
+    async ({ getPromise }) => {
+      const canRefresh = await getPromise(canRefreshAtom)
+      if (!canRefresh) return
 
-    socket.send({ type: "CHA" })
-    socket.send({ type: "ORS" })
+      socket.send({ type: "CHA" })
+      socket.send({ type: "ORS" })
 
-    // the server has a 7 second timeout on refreshes
-    setCanRefresh(false)
-    await delay(7000)
-    setCanRefresh(true)
-  })
+      // the server has a 7 second timeout on refreshes
+      setCanRefresh(false)
+      await delay(7000)
+      setCanRefresh(true)
+    },
+    [setCanRefresh, socket],
+  )
 }
 
 export function useOpenChannelBrowserAction() {
