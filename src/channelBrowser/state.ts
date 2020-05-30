@@ -5,8 +5,8 @@ import {
   useRecoilCallback,
   useSetRecoilState,
 } from "recoil"
-import { useChatSocket } from "../chat/socketContext"
 import { delay } from "../common/delay"
+import { useSocket } from "../socket/socketContext"
 
 export type ChannelBrowserChannel = {
   id: string
@@ -50,7 +50,7 @@ export const userCountSelector = selectorFamily({
 })
 
 export function useRefreshChannelBrowserAction() {
-  const socket = useChatSocket()
+  const socket = useSocket()
   const setCanRefresh = useSetRecoilState(canRefreshAtom)
 
   return useRecoilCallback(

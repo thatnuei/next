@@ -1,8 +1,8 @@
 import React from "react"
 import { ChildrenProps } from "../jsx/types"
+import { SocketProvider } from "../socket/socketContext"
 import { ChatStateProvider } from "./chatStateContext"
 import { ChatCredentialsProvider } from "./credentialsContext"
-import { ChatSocketProvider } from "./socketContext"
 import { ChatStreamProvider } from "./streamContext"
 import { ChatCredentials } from "./types"
 
@@ -13,7 +13,7 @@ function ChatContainer(props: Props) {
     <ChatStateProvider>
       <ChatStreamProvider>
         <ChatCredentialsProvider {...props}>
-          <ChatSocketProvider>{props.children}</ChatSocketProvider>
+          <SocketProvider>{props.children}</SocketProvider>
         </ChatCredentialsProvider>
       </ChatStreamProvider>
     </ChatStateProvider>

@@ -5,11 +5,11 @@ import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
 import { CharacterState } from "../character/CharacterState"
 import { useChatState } from "../chat/chatStateContext"
-import { useChatSocket } from "../chat/socketContext"
 import { compare } from "../common/compare"
 import { unique } from "../common/unique"
 import { InputState } from "../form/InputState"
 import TextInput from "../form/TextInput"
+import { useSocket } from "../socket/socketContext"
 import { fadedButton, input } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -24,7 +24,7 @@ const byName = compare((it: CharacterState) => it.name.toLowerCase())
 
 function InviteUsersForm({ channel }: Props) {
   const state = useChatState()
-  const socket = useChatSocket()
+  const socket = useSocket()
   const searchInput = useMemo(() => new InputState(""), [])
 
   const matchesQuery = (it: CharacterState) =>

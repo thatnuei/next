@@ -1,5 +1,5 @@
 import { useSetRecoilState } from "recoil"
-import { useChatSocketListener } from "../chat/socketContext"
+import { useSocketListener } from "../socket/socketContext"
 import {
   privateChannelsAtom,
   publicChannelsAtom,
@@ -11,7 +11,7 @@ export function useChannelBrowserListeners() {
   const setPrivateChannels = useSetRecoilState(privateChannelsAtom)
   const refresh = useRefreshChannelBrowserAction()
 
-  useChatSocketListener({
+  useSocketListener({
     IDN() {
       refresh()
     },

@@ -1,13 +1,7 @@
 import { useRecoilCallback } from "recoil"
 import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { useChatState } from "../chat/chatStateContext"
-import {
-  CommandHandlerMap,
-  createCommandHandler,
-  ServerCommand,
-} from "../chat/commandHelpers"
 import { useChatCredentials } from "../chat/credentialsContext"
-import { useChatSocket, useChatSocketListener } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { ChatEvent } from "../chat/types"
 import { unique } from "../common/unique"
@@ -16,6 +10,12 @@ import {
   createChannelMessage,
   createSystemMessage,
 } from "../message/MessageState"
+import {
+  CommandHandlerMap,
+  createCommandHandler,
+  ServerCommand,
+} from "../socket/commandHelpers"
+import { useSocket, useSocketListener } from "../socket/socketContext"
 import { useStreamListener } from "../state/stream"
 import { channelAtom, channelMessagesAtom, ChannelState } from "./state"
 import { loadChannels, saveChannels } from "./storage"
@@ -24,7 +24,7 @@ export function useChannelListeners() {
   const state = useChatState()
 
   const chatStream = useChatStream()
-  const socket = useChatSocket()
+  const socket = useSocket()
   const { account, identity } = useChatCredentials()
   const openChannelBrowser = useOpenChannelBrowserAction()
 
@@ -166,5 +166,5 @@ export function useChannelListeners() {
   )
 
   useStreamListener(chatStream, streamListener)
-  useChatSocketListener(commandListener)
+  useSocketListener(commandListener)
 }

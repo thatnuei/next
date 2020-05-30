@@ -16,6 +16,8 @@ import { useMediaQuery } from "../dom/useMediaQuery"
 import { usePrivateChatListeners } from "../privateChat/listeners"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import HookScope from "../react/HookScope"
+import { useSocket, useSocketConnection } from "../socket/socketContext"
+import { SocketStatus } from "../socket/SocketHandler"
 import { useStreamListener } from "../state/stream"
 import { useStatusUpdateListeners } from "../statusUpdate/listeners"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
@@ -26,8 +28,6 @@ import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import { useChatState } from "./chatStateContext"
 import NoRoomView from "./NoRoomView"
-import { useChatSocket, useChatSocketConnection } from "./socketContext"
-import { SocketStatus } from "./SocketHandler"
 import { useChatStream } from "./streamContext"
 
 type Props = {
@@ -35,7 +35,7 @@ type Props = {
 }
 
 function Chat({ onDisconnect }: Props) {
-  useChatSocketConnection({ onDisconnect })
+  useSocketConnection({ onDisconnect })
   useChannelListeners()
   useCharacterListeners()
   usePrivateChatListeners()
@@ -53,7 +53,7 @@ function Chat({ onDisconnect }: Props) {
     }
   })
 
-  const socket = useChatSocket()
+  const socket = useSocket()
   const loadingStatuses: Dict<string, SocketStatus> = {
     connecting: "Connecting...",
     identifying: "Identifying...",
