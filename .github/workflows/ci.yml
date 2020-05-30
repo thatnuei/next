@@ -3,9 +3,17 @@ on: [push]
 env:
   CI: true
 jobs:
-  ci:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: git submodule update --init --recursive
       - run: yarn
-      - run: yarn run ci
+      - run: yarn build
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: git submodule update --init --recursive
+      - run: yarn
+      - run: yarn test
