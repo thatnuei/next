@@ -63,8 +63,9 @@
   "eslintConfig": {
     "extends": "react-app",
     "ignorePatterns": [
-      "**/node_modules/**/*",
-      "/build/**/*"
+      "/node_modules/",
+      "/src/node_modules/",
+      "/build/"
     ]
   },
   "browserslist": {
