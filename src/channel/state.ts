@@ -1,9 +1,9 @@
-import { atom } from "recoil"
-import { memoize } from "../common/memoize"
+import { atomFamily } from "recoil"
+import { DeepReadonly } from "../common/types"
 import { MessageState, MessageType } from "../message/MessageState"
 import { ChannelJoinState, ChannelMode } from "./types"
 
-export type ChannelState = {
+export type ChannelState = DeepReadonly<{
   id: string
   title: string
   description: string
@@ -11,35 +11,31 @@ export type ChannelState = {
   selectedMode: ChannelMode
   joinState: ChannelJoinState
   isUnread: boolean
-  users: readonly string[]
-  ops: readonly string[]
+  users: string[]
+  ops: string[]
   chatInput: string
-}
+}>
 
-export const channelAtom = memoize((id: string) =>
-  atom<ChannelState>({
-    key: `channel:${id}`,
-    default: {
-      id,
-      title: id,
-      description: "",
-      mode: "both",
-      selectedMode: "chat",
-      joinState: "absent",
-      isUnread: false,
-      users: [],
-      ops: [],
-      chatInput: "", // maybe make this an atom
-    },
+export const channelAtom = atomFamily({
+  key: "channel",
+  default: (id: string): ChannelState => ({
+    id,
+    title: id,
+    description: "",
+    mode: "both",
+    selectedMode: "chat",
+    joinState: "absent",
+    isUnread: false,
+    users: [], // maybe make this an atom
+    ops: [],
+    chatInput: "", // maybe make this an atom
   }),
-)
+})
 
-export const channelMessagesAtom = memoize((id: string) =>
-  atom<MessageState[]>({
-    key: `channelMessages:${id}`,
-    default: [],
-  }),
-)
+export const channelMessagesAtom = atomFamily<MessageState[], string>({
+  key: "channelMessages",
+  default: [],
+})
 
 export function getActualMode(channel: ChannelState) {
   return channel.mode === "both" ? channel.selectedMode : channel.mode

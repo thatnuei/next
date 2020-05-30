@@ -1,8 +1,12 @@
 import { useCallback } from "react"
-import { atom, selector, useRecoilCallback, useSetRecoilState } from "recoil"
+import {
+  atom,
+  selectorFamily,
+  useRecoilCallback,
+  useSetRecoilState,
+} from "recoil"
 import { useChatSocket } from "../chat/socketContext"
 import { delay } from "../common/delay"
-import { memoize } from "../common/memoize"
 
 export type ChannelBrowserChannel = {
   id: string
@@ -31,22 +35,19 @@ export const canRefreshAtom = atom({
   default: true,
 })
 
-export const isPublicSelector = memoize((channelId: string) =>
-  selector({
-    key: `channelBrowser:isPublic:${channelId}`,
-    get: ({ get }) => get(publicChannelsAtom).some((ch) => ch.id === channelId),
-  }),
-)
+export const isPublicSelector = selectorFamily({
+  key: "channelBrowser:isPublic",
+  get: (channelId: string) => ({ get }) =>
+    get(publicChannelsAtom).some((ch) => ch.id === channelId),
+})
 
-export const userCountSelector = memoize((channelId: string) =>
-  selector({
-    key: `channelBrowser:userCount:${channelId}`,
-    get: ({ get }) =>
-      get(publicChannelsAtom)
-        .concat(get(privateChannelsAtom))
-        .find((ch) => ch.id === channelId)?.userCount ?? 0,
-  }),
-)
+export const userCountSelector = selectorFamily({
+  key: "channelBrowser:userCount",
+  get: (channelId: string) => ({ get }) =>
+    get(publicChannelsAtom)
+      .concat(get(privateChannelsAtom))
+      .find((ch) => ch.id === channelId)?.userCount ?? 0,
+})
 
 export function useRefreshChannelBrowserAction() {
   const socket = useChatSocket()
