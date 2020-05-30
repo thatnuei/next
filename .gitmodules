@@ -1,0 +1,3 @@
+[submodule "src/node_modules/recoil"]
+	path = src/node_modules/recoil
+	url = https://github.com/facebookexperimental/Recoil.git
