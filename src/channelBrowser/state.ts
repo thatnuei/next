@@ -5,7 +5,7 @@ import {
   useRecoilCallback,
   useSetRecoilState,
 } from "recoil"
-import { delay } from "../common/delay"
+import { delay } from "../helpers/common/delay"
 import { useSocket } from "../socket/socketContext"
 
 export type ChannelBrowserChannel = {

@@ -4,7 +4,7 @@ import { useChatState } from "../chat/chatStateContext"
 import { useChatCredentials } from "../chat/credentialsContext"
 import { useChatStream } from "../chat/streamContext"
 import { ChatEvent } from "../chat/types"
-import { unique } from "../common/unique"
+import { unique } from "../helpers/common/unique"
 import {
   createAdMessage,
   createChannelMessage,

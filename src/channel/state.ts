@@ -1,5 +1,5 @@
 import { atomFamily } from "recoil"
-import { DeepReadonly } from "../common/types"
+import { DeepReadonly } from "../helpers/common/types"
 import { MessageState, MessageType } from "../message/MessageState"
 import { ChannelJoinState, ChannelMode } from "./types"
 

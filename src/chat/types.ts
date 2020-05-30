@@ -1,4 +1,4 @@
-import { ValueOf } from "../common/types"
+import { ValueOf } from "../helpers/common/types"
 import { Stream } from "../state/stream"
 
 export type ChatCredentials = {
