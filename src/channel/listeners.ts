@@ -1,3 +1,4 @@
+import { useCallback } from "react"
 import { useRecoilCallback } from "recoil"
 import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { useChatCredentials } from "../chat/credentialsContext"
@@ -21,6 +22,7 @@ import {
   channelMessagesAtom,
   ChannelState,
   joinedChannelIdsAtom,
+  useJoinedChannelIds,
 } from "./state"
 import { loadChannels, saveChannels } from "./storage"
 
@@ -30,29 +32,26 @@ export function useChannelListeners() {
   const { account, identity } = useChatCredentials()
   const openChannelBrowser = useOpenChannelBrowserAction()
 
-  const streamListener = useRecoilCallback(
-    async ({ set, getPromise }, event: ChatEvent) => {
-      const joinedIds = await getPromise(joinedChannelIdsAtom)
-      const isPresent = (id: string) => joinedIds.includes(id)
+  const joinedIds = useJoinedChannelIds()
+  const isPresent = useCallback((id: string) => joinedIds.includes(id), [
+    joinedIds,
+  ])
 
-      if (event.type === "join-channel") {
-        if (!isPresent(event.id)) {
-          set(
-            channelAtom(event.id),
-            (prev): ChannelState => ({
-              ...prev,
-              title: event.title ?? prev.title,
-            }),
-          )
-          socket.send({ type: "JCH", params: { channel: event.id } })
-        }
+  const streamListener = useRecoilCallback(
+    ({ set }, event: ChatEvent) => {
+      if (event.type === "join-channel" && !isPresent(event.id)) {
+        set(
+          channelAtom(event.id),
+          (prev): ChannelState => ({
+            ...prev,
+            title: event.title ?? prev.title,
+          }),
+        )
+        socket.send({ type: "JCH", params: { channel: event.id } })
       }
 
-      if (event.type === "leave-channel") {
-        if (isPresent(event.id)) {
-          socket.send({ type: "LCH", params: { channel: event.id } })
-          saveChannels(joinedIds, account, identity)
-        }
+      if (event.type === "leave-channel" && isPresent(event.id)) {
+        socket.send({ type: "LCH", params: { channel: event.id } })
       }
 
       if (event.type === "send-channel-message") {
@@ -66,11 +65,11 @@ export function useChannelListeners() {
         })
       }
     },
-    [account, identity, socket],
+    [identity, isPresent, socket],
   )
 
   const commandListener = useRecoilCallback(
-    ({ set, getPromise }, command: ServerCommand) => {
+    ({ set }, command: ServerCommand) => {
       const handlerMap: CommandHandlerMap = {
         async IDN() {
           const channelIds = await loadChannels(account, identity)
@@ -84,8 +83,6 @@ export function useChannelListeners() {
         },
 
         JCH({ channel: id, character: { identity: name }, title }) {
-          set(joinedChannelIdsAtom, (prev) => [...prev, id])
-
           set(
             channelAtom(id),
             (prev): ChannelState => ({
@@ -96,9 +93,9 @@ export function useChannelListeners() {
           )
 
           if (name === identity) {
-            // we can't get all of the channel states,
-            // so we'll probably have to store an array of joined channel IDs somewhere else
-            // saveChannels(state, account, identity)
+            const newJoinedIds = unique([...joinedIds, id])
+            set(joinedChannelIdsAtom, newJoinedIds)
+            saveChannels(newJoinedIds, account, identity)
           }
         },
 
@@ -108,9 +105,13 @@ export function useChannelListeners() {
             users: prev.users.filter((name) => name !== character),
           }))
 
-          set(joinedChannelIdsAtom, (prev) =>
-            prev.filter((current) => current !== id),
-          )
+          if (character === identity) {
+            const newJoinedIds = unique(
+              joinedIds.filter((current) => current !== id),
+            )
+            set(joinedChannelIdsAtom, newJoinedIds)
+            saveChannels(newJoinedIds, account, identity)
+          }
         },
 
         ICH({ channel: id, users, mode }) {
@@ -158,7 +159,7 @@ export function useChannelListeners() {
 
       return createCommandHandler(handlerMap)(command)
     },
-    [account, chatStream, identity, openChannelBrowser],
+    [account, chatStream, identity, joinedIds, openChannelBrowser],
   )
 
   useStreamListener(chatStream, streamListener)
