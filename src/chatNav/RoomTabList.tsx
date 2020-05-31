@@ -2,7 +2,11 @@ import { observer, useObserver } from "mobx-react-lite"
 import React from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
-import { channelAtom, useJoinedChannelIds } from "../channel/state"
+import {
+  channelAtom,
+  useJoinedChannelIds,
+  useLeaveChannelAction,
+} from "../channel/state"
 import { isPublicSelector } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import { useChatState } from "../chat/chatStateContext"
@@ -53,13 +57,12 @@ function ChannelRoomTab({ id }: { id: string }) {
   const channel = useRecoilValue(channelAtom(id))
   const isPublic = useRecoilValue(isPublicSelector(id))
   const setView = useSetViewAction()
+  const leaveChannel = useLeaveChannelAction()
 
   const state = useChatState()
   const isActive = useObserver(
     () => state.nav.view?.type === "channel" && state.nav.view.id === id,
   )
-
-  const stream = useChatStream()
 
   return (
     <RoomTab
@@ -75,7 +78,7 @@ function ChannelRoomTab({ id }: { id: string }) {
       isActive={isActive}
       isUnread={channel.isUnread}
       onClick={() => setView({ type: "channel", id })}
-      onClose={() => stream.send({ type: "leave-channel", id })}
+      onClose={() => leaveChannel(id)}
     />
   )
 }

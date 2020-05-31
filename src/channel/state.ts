@@ -1,7 +1,13 @@
 import { useCallback } from "react"
-import { atom, atomFamily, useRecoilValue } from "recoil"
+import { atom, atomFamily, useRecoilCallback, useRecoilValue } from "recoil"
+import { useChatCredentials } from "../chat/credentialsContext"
 import { DeepReadonly } from "../helpers/common/types"
-import { MessageState, MessageType } from "../message/MessageState"
+import {
+  createChannelMessage,
+  MessageState,
+  MessageType,
+} from "../message/MessageState"
+import { useSocket } from "../socket/socketContext"
 import { ChannelMode } from "./types"
 
 export type ChannelState = DeepReadonly<{
@@ -50,6 +56,58 @@ export function useIsPresent() {
   return useCallback(
     (channelId: string) => joinedChannelIds.includes(channelId),
     [joinedChannelIds],
+  )
+}
+
+export function useJoinChannelAction() {
+  const socket = useSocket()
+  const isPresent = useIsPresent()
+
+  return useRecoilCallback(
+    ({ set }, id: string, title?: string) => {
+      if (isPresent(id)) return
+      set(
+        channelAtom(id),
+        (prev): ChannelState => ({
+          ...prev,
+          title: title ?? prev.title,
+        }),
+      )
+      socket.send({ type: "JCH", params: { channel: id } })
+    },
+    [isPresent, socket],
+  )
+}
+
+export function useLeaveChannelAction() {
+  const socket = useSocket()
+  const isPresent = useIsPresent()
+
+  return useCallback(
+    (id: string) => {
+      if (!isPresent(id)) return
+      socket.send({ type: "LCH", params: { channel: id } })
+    },
+    [isPresent, socket],
+  )
+}
+
+export function useSendChannelMessageAction() {
+  const socket = useSocket()
+  const { identity } = useChatCredentials()
+
+  return useRecoilCallback(
+    ({ set }, channelId: string, text: string) => {
+      set(channelMessagesAtom(channelId), (prev) => [
+        ...prev,
+        createChannelMessage(identity, text),
+      ])
+      socket.send({
+        type: "MSG",
+        params: { channel: channelId, message: text },
+      })
+    },
+    [identity, socket],
   )
 }
 

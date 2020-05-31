@@ -1,9 +1,6 @@
-import { useCallback } from "react"
 import { useRecoilCallback } from "recoil"
 import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { useChatCredentials } from "../chat/credentialsContext"
-import { useChatStream } from "../chat/streamContext"
-import { ChatEvent } from "../chat/types"
 import { unique } from "../helpers/common/unique"
 import {
   createAdMessage,
@@ -11,58 +8,22 @@ import {
   createSystemMessage,
 } from "../message/MessageState"
 import { runCommand, ServerCommand } from "../socket/commandHelpers"
-import { useSocket, useSocketListener } from "../socket/socketContext"
-import { useStreamListener } from "../state/stream"
+import { useSocketListener } from "../socket/socketContext"
 import {
   channelAtom,
   channelMessagesAtom,
   ChannelState,
   joinedChannelIdsAtom,
+  useJoinChannelAction,
   useJoinedChannelIds,
 } from "./state"
 import { loadChannels, saveChannels } from "./storage"
 
 export function useChannelListeners() {
-  const chatStream = useChatStream()
-  const socket = useSocket()
   const { account, identity } = useChatCredentials()
   const openChannelBrowser = useOpenChannelBrowserAction()
-
   const joinedIds = useJoinedChannelIds()
-  const isPresent = useCallback((id: string) => joinedIds.includes(id), [
-    joinedIds,
-  ])
-
-  const streamListener = useRecoilCallback(
-    ({ set }, event: ChatEvent) => {
-      if (event.type === "join-channel" && !isPresent(event.id)) {
-        set(
-          channelAtom(event.id),
-          (prev): ChannelState => ({
-            ...prev,
-            title: event.title ?? prev.title,
-          }),
-        )
-        socket.send({ type: "JCH", params: { channel: event.id } })
-      }
-
-      if (event.type === "leave-channel" && isPresent(event.id)) {
-        socket.send({ type: "LCH", params: { channel: event.id } })
-      }
-
-      if (event.type === "send-channel-message") {
-        set(channelMessagesAtom(event.channelId), (prev) => [
-          ...prev,
-          createChannelMessage(identity, event.text),
-        ])
-        socket.send({
-          type: "MSG",
-          params: { channel: event.channelId, message: event.text },
-        })
-      }
-    },
-    [identity, isPresent, socket],
-  )
+  const joinChannel = useJoinChannelAction()
 
   const commandListener = useRecoilCallback(
     ({ set }, command: ServerCommand) =>
@@ -72,9 +33,7 @@ export function useChannelListeners() {
           if (channelIds.length === 0) {
             openChannelBrowser()
           } else {
-            for (const id of channelIds) {
-              chatStream.send({ type: "join-channel", id })
-            }
+            for (const id of channelIds) joinChannel(id)
           }
         },
 
@@ -152,9 +111,8 @@ export function useChannelListeners() {
           }
         },
       }),
-    [account, chatStream, identity, joinedIds, openChannelBrowser],
+    [account, identity, joinChannel, joinedIds, openChannelBrowser],
   )
 
-  useStreamListener(chatStream, streamListener)
   useSocketListener(commandListener)
 }

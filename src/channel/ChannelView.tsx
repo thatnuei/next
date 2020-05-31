@@ -4,7 +4,6 @@ import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import BBC from "../bbc/BBC"
 import ChatInput from "../chat/ChatInput"
-import { useChatStream } from "../chat/streamContext"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
@@ -16,7 +15,12 @@ import { OverlayState } from "../ui/OverlayState"
 import { screenQueries } from "../ui/screens"
 import ChannelHeader from "./ChannelHeader"
 import ChannelUserList from "./ChannelUserList"
-import { channelAtom, channelMessagesAtom, shouldShowMessage } from "./state"
+import {
+  channelAtom,
+  channelMessagesAtom,
+  shouldShowMessage,
+  useSendChannelMessageAction,
+} from "./state"
 
 type Props = {
   channelId: string
@@ -24,21 +28,17 @@ type Props = {
 
 function ChannelView({ channelId, ...props }: Props) {
   const [channel, setChannel] = useRecoilState(channelAtom(channelId))
-  const stream = useChatStream()
   const isLargeScreen = useMediaQuery(screenQueries.large)
   const descriptionOverlay = useMemo(() => new OverlayState(), [])
   const userListDrawer = useMemo(() => new OverlayState(), [])
+  const sendMessage = useSendChannelMessageAction()
 
   function updateChatInput(chatInput: string) {
     setChannel((prev) => ({ ...prev, chatInput }))
   }
 
   function submitChatInput(text: string) {
-    stream.send({
-      type: "send-channel-message",
-      channelId: channel.id,
-      text,
-    })
+    sendMessage(channelId, text)
   }
 
   return (

@@ -1,12 +1,12 @@
 import React, { CSSProperties, Fragment, PropsWithChildren } from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
+import { useJoinChannelAction } from "../channel/state"
 import { userCountSelector } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import { useChatState } from "../chat/chatStateContext"
-import { useChatStream } from "../chat/streamContext"
 import ExternalLink from "../dom/ExternalLink"
 import { getIconUrl } from "../flist/helpers"
 import Icon from "../ui/Icon"
@@ -188,8 +188,8 @@ function BBCChannelLink({
   title: string
   type: "public" | "private"
 }>) {
-  const stream = useChatStream()
   const userCount = useRecoilValue(userCountSelector(id))
+  const joinChannel = useJoinChannelAction()
 
   return (
     <span css={tw`inline-flex items-baseline`}>
@@ -197,10 +197,7 @@ function BBCChannelLink({
         which={type === "public" ? icons.earth : icons.lock}
         css={tw`self-center inline w-4 h-4 mr-1 opacity-75`}
       />
-      <button
-        className="group"
-        onClick={() => stream.send({ type: "join-channel", id, title })}
-      >
+      <button className="group" onClick={() => joinChannel(id, title)}>
         <span css={tw`underline group-hover:no-underline`}>{title}</span> (
         {userCount})
       </button>

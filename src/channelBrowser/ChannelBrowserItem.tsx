@@ -1,7 +1,10 @@
 import React from "react"
 import tw from "twin.macro"
-import { useIsPresent } from "../channel/state"
-import { useChatStream } from "../chat/streamContext"
+import {
+  useIsPresent,
+  useJoinChannelAction,
+  useLeaveChannelAction,
+} from "../channel/state"
 import { TagProps } from "../jsx/types"
 import Icon from "../ui/Icon"
 import { earth, lock } from "../ui/icons"
@@ -12,14 +15,15 @@ type Props = TagProps<"button"> & {
 }
 
 function ChannelBrowserItem({ info, ...props }: Props) {
-  const stream = useChatStream()
   const isPresent = useIsPresent()(info.id)
+  const joinChannel = useJoinChannelAction()
+  const leaveChannel = useLeaveChannelAction()
 
   const handleClick = () => {
     if (isPresent) {
-      stream.send({ type: "leave-channel", id: info.id })
+      leaveChannel(info.id)
     } else {
-      stream.send({ type: "join-channel", id: info.id, title: info.title })
+      joinChannel(info.id, info.title)
     }
   }
 
