@@ -11,8 +11,7 @@
     "typecheck": "tsc --noEmit",
     "analyze": "yarn build && source-map-explorer build/static/js/**/*.js",
     "ci": "npm-run-all --parallel --print-label --continue-on-error build test typecheck",
-    "format": "prettier --write .",
-    "prepare": "yarn --cwd ./src/node_modules/recoil && yarn --cwd ./src/node_modules/recoil build"
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@emotion/react": "^11.0.0-next.12",
@@ -29,6 +28,7 @@
     "react-dom": "^16.13.1",
     "react-focus-on": "^3.4.1",
     "react-window": "^1.8.5",
+    "recoil": "0.0.8",
     "resize-observer-polyfill": "^1.5.1"
   },
   "devDependencies": {
@@ -42,6 +42,7 @@
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@types/react-window": "^1.8.2",
+    "@types/recoil": "0.0.0",
     "@types/testing-library__jest-dom": "^5.7.0",
     "@types/testing-library__react": "^10.0.1",
     "babel-loader": "^8.1.0",
