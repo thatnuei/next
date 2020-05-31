@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRecoilState } from "recoil"
 import tw from "twin.macro"
@@ -49,4 +48,4 @@ function ChannelFilters({ channelId, ...props }: Props) {
   )
 }
 
-export default observer(ChannelFilters)
+export default ChannelFilters

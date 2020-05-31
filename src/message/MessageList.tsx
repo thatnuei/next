@@ -1,4 +1,3 @@
-import { useObserver } from "mobx-react-lite"
 import React, { useCallback, useLayoutEffect, useState } from "react"
 import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
@@ -15,7 +14,7 @@ function MessageList({ messages, ...props }: Props) {
 
   useBottomScroll(container, messages[messages.length - 1])
 
-  return useObserver(() => (
+  return (
     <ol css={[scrollVertical]} ref={setContainer} {...props}>
       {messages.map((message) => (
         <li key={message.key}>
@@ -23,7 +22,7 @@ function MessageList({ messages, ...props }: Props) {
         </li>
       ))}
     </ol>
-  ))
+  )
 }
 
 export default MessageList

@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
@@ -50,4 +49,4 @@ function ChatInput(props: Props) {
   )
 }
 
-export default observer(ChatInput)
+export default ChatInput
