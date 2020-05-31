@@ -17,17 +17,17 @@ function ChannelBrowserItem({ info, ...props }: Props) {
 
   const handleClick = () => {
     if (isPresent) {
-      stream.send({ type: "join-channel", id: info.id, title: info.title })
-    } else {
       stream.send({ type: "leave-channel", id: info.id })
+    } else {
+      stream.send({ type: "join-channel", id: info.id, title: info.title })
     }
   }
 
   const containerStyle = [
     tw`flex flex-row items-center px-2 py-2 transition-all`,
     isPresent
-      ? tw`opacity-50 hover:opacity-75`
-      : tw`opacity-100 bg-background-0`,
+      ? tw`opacity-100 bg-background-0`
+      : tw`opacity-50 hover:opacity-75`,
   ]
 
   return (
