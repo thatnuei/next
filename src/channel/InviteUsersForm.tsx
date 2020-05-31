@@ -1,10 +1,12 @@
 import fuzzysearch from "fuzzysearch"
 import { observer } from "mobx-react-lite"
 import React, { useMemo } from "react"
+import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
 import { CharacterState } from "../character/CharacterState"
 import { useChatState } from "../chat/chatStateContext"
+import { bookmarksAtom, friendsAtom, isFriend } from "../chat/state"
 import { InputState } from "../form/InputState"
 import TextInput from "../form/TextInput"
 import { compare } from "../helpers/common/compare"
@@ -25,13 +27,15 @@ function InviteUsersForm({ channelId }: Props) {
   const state = useChatState()
   const socket = useSocket()
   const searchInput = useMemo(() => new InputState(""), [])
+  const friends = useRecoilValue(friendsAtom)
+  const bookmarks = useRecoilValue(bookmarksAtom)
 
   const matchesQuery = (it: CharacterState) =>
     fuzzysearch(searchInput.value.toLowerCase(), it.name.toLowerCase())
 
   const byGroupOrder = compare((it: CharacterState) => {
-    if (state.isFriend(it.name)) return 1
-    if (state.bookmarks.has(it.name)) return 2
+    if (isFriend(friends)(it.name)) return 1
+    if (bookmarks.includes(it.name)) return 2
     return 3
   })
 
@@ -39,9 +43,8 @@ function InviteUsersForm({ channelId }: Props) {
     const searchQuery = searchInput.value.toLowerCase().trim()
 
     if (!searchQuery) {
-      const friendNames = [...state.friends].map((it) => it.them).sort(byLower)
-
-      const bookmarkNames = [...state.bookmarks].sort(byLower)
+      const friendNames = friends.map((it) => it.them).sort(byLower)
+      const bookmarkNames = bookmarks.slice().sort(byLower)
 
       return [...friendNames, ...bookmarkNames]
         .map(state.characters.get)

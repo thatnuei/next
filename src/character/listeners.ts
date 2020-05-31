@@ -1,7 +1,16 @@
+import { useSetRecoilState } from "recoil"
 import { useChatState } from "../chat/chatStateContext"
 import { useChatCredentials } from "../chat/credentialsContext"
+import {
+  adminsAtom,
+  bookmarksAtom,
+  friendsAtom,
+  ignoredAtom,
+} from "../chat/state"
 import { useChatStream } from "../chat/streamContext"
 import { useApiContext } from "../flist/api-context"
+import { append } from "../helpers/common/append"
+import { without } from "../helpers/common/without"
 import { useSocket, useSocketListener } from "../socket/socketContext"
 import { useStreamListener } from "../state/stream"
 
@@ -10,6 +19,10 @@ export function useCharacterListeners() {
   const socket = useSocket()
   const api = useApiContext()
   const { identity } = useChatCredentials()
+  const setFriends = useSetRecoilState(friendsAtom)
+  const setBookmarks = useSetRecoilState(bookmarksAtom)
+  const setIgnored = useSetRecoilState(ignoredAtom)
+  const setAdmins = useSetRecoilState(adminsAtom)
 
   useStreamListener(useChatStream(), (event) => {
     if (event.type === "update-ignored") {
@@ -31,46 +44,46 @@ export function useCharacterListeners() {
   useSocketListener({
     async IDN() {
       const { friendlist, bookmarklist } = await api.getFriendsAndBookmarks()
-      state.bookmarks.replace(bookmarklist)
-      state.friends.replace(
+      setBookmarks(bookmarklist)
+      setFriends(
         friendlist.map((entry) => ({ us: entry.source, them: entry.dest })),
       )
     },
 
     IGN(params) {
       if (params.action === "init" || params.action === "list") {
-        state.ignored.replace(params.characters)
+        setIgnored(params.characters)
       }
       if (params.action === "add") {
-        state.ignored.add(params.character)
+        setIgnored(append(params.character))
       }
       if (params.action === "delete") {
-        state.ignored.delete(params.character)
+        setIgnored(without.curried(params.character))
       }
     },
 
     ADL({ ops }) {
-      state.admins.replace(ops)
+      setAdmins(ops)
     },
 
     RTB(params) {
       if (params.type === "trackadd") {
-        state.bookmarks.add(params.name)
+        setBookmarks(append(params.name))
         // show toast
       }
 
       if (params.type === "trackrem") {
-        state.bookmarks.delete(params.name)
+        setBookmarks(without.curried(params.name))
         // show toast
       }
 
       if (params.type === "friendadd") {
-        state.friends.add({ us: identity, them: params.name })
+        setFriends(append({ us: identity, them: params.name }))
         // show toast
       }
 
       if (params.type === "friendremove") {
-        state.friends.delete(params.name)
+        setFriends((friends) => friends.filter((it) => it.them === params.name))
         // show toast
       }
     },
