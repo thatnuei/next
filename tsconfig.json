@@ -14,11 +14,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "plugins": [
-      {
-        "name": "typescript-plugin-tw-template"
-      }
-    ],
+    "plugins": [{ "name": "typescript-plugin-tw-template" }],
     "experimentalDecorators": true
   },
   "include": ["src", "types"]
