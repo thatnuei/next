@@ -1,10 +1,9 @@
+import { concat, filter, without } from "lodash/fp"
 import { useSetRecoilState } from "recoil"
 import { useChatState } from "../chat/chatStateContext"
 import { useChatCredentials } from "../chat/credentialsContext"
 import { useChatStream } from "../chat/streamContext"
 import { useApiContext } from "../flist/api-context"
-import { append } from "../helpers/common/append"
-import { without } from "../helpers/common/without"
 import { useSocket, useSocketListener } from "../socket/socketContext"
 import { useStreamListener } from "../state/stream"
 import { adminsAtom, bookmarksAtom, friendsAtom, ignoredAtom } from "./state"
@@ -50,10 +49,10 @@ export function useCharacterListeners() {
         setIgnored(params.characters)
       }
       if (params.action === "add") {
-        setIgnored(append(params.character))
+        setIgnored(concat(params.character))
       }
       if (params.action === "delete") {
-        setIgnored(without.curried(params.character))
+        setIgnored(without([params.character]))
       }
     },
 
@@ -63,22 +62,22 @@ export function useCharacterListeners() {
 
     RTB(params) {
       if (params.type === "trackadd") {
-        setBookmarks(append(params.name))
+        setBookmarks(concat(params.name))
         // show toast
       }
 
       if (params.type === "trackrem") {
-        setBookmarks(without.curried(params.name))
+        setBookmarks(without([params.name]))
         // show toast
       }
 
       if (params.type === "friendadd") {
-        setFriends(append({ us: identity, them: params.name }))
+        setFriends(concat({ us: identity, them: params.name }))
         // show toast
       }
 
       if (params.type === "friendremove") {
-        setFriends((friends) => friends.filter((it) => it.them === params.name))
+        setFriends(filter((it) => it.them === params.name))
         // show toast
       }
     },

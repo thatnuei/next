@@ -1,3 +1,4 @@
+import { sortBy } from "lodash/fp"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRecoilValue } from "recoil"
@@ -6,7 +7,6 @@ import CharacterName from "../character/CharacterName"
 import { CharacterState } from "../character/CharacterState"
 import { adminsAtom, bookmarksAtom, useIsFriend } from "../character/state"
 import { useChatState } from "../chat/chatStateContext"
-import { compare } from "../helpers/common/compare"
 import { ValueOf } from "../helpers/common/types"
 import { TagProps } from "../jsx/types"
 import VirtualizedList from "../ui/VirtualizedList"
@@ -60,9 +60,10 @@ function ChannelUserList({ channel, ...props }: Props) {
     }
   })
 
-  const sortedItems = listItems
-    .sort(compare((it) => it.character.name.toLowerCase()))
-    .sort(compare((it) => it.order))
+  const sortedItems = sortBy(
+    ["order", (it) => it.character.name.toLowerCase()],
+    listItems,
+  )
 
   return (
     <div css={tw`flex flex-col`} {...props}>
