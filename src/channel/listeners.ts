@@ -10,11 +10,7 @@ import {
   createChannelMessage,
   createSystemMessage,
 } from "../message/MessageState"
-import {
-  CommandHandlerMap,
-  createCommandHandler,
-  ServerCommand,
-} from "../socket/commandHelpers"
+import { runCommand, ServerCommand } from "../socket/commandHelpers"
 import { useSocket, useSocketListener } from "../socket/socketContext"
 import { useStreamListener } from "../state/stream"
 import {
@@ -69,8 +65,8 @@ export function useChannelListeners() {
   )
 
   const commandListener = useRecoilCallback(
-    ({ set }, command: ServerCommand) => {
-      const handlerMap: CommandHandlerMap = {
+    ({ set }, command: ServerCommand) =>
+      runCommand(command, {
         async IDN() {
           const channelIds = await loadChannels(account, identity)
           if (channelIds.length === 0) {
@@ -155,10 +151,7 @@ export function useChannelListeners() {
             ])
           }
         },
-      }
-
-      return createCommandHandler(handlerMap)(command)
-    },
+      }),
     [account, chatStream, identity, joinedIds, openChannelBrowser],
   )
 
