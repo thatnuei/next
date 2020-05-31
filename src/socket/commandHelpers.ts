@@ -1,5 +1,5 @@
 import * as fchat from "fchat"
-import { ValueOf } from "../common/types"
+import { ValueOf } from "../helpers/common/types"
 
 type CommandUnionFromRecord<T> = ValueOf<
   {
@@ -34,13 +34,20 @@ export type CommandHandlerMap = {
 
 export type CommandHandlerFn = (command: ServerCommand) => boolean
 
+export function runCommand(
+  command: ServerCommand,
+  handlers: CommandHandlerMap,
+) {
+  const handler = handlers[command.type]
+  handler?.(command.params as never) // lol
+  return handler != null
+}
+
 export function createCommandHandler(
   handlers: CommandHandlerMap,
 ): CommandHandlerFn {
   return function handleCommand(command: ServerCommand) {
-    const handler = handlers[command.type]
-    handler?.(command.params as never) // lol
-    return handler != null
+    return runCommand(command, handlers)
   }
 }
 

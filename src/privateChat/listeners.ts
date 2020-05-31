@@ -1,9 +1,9 @@
 import { useChatState } from "../chat/chatStateContext"
 import { useChatCredentials } from "../chat/credentialsContext"
-import { useChatSocket, useChatSocketListener } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
-import { useChatNav } from "../chatNav/state"
+import { useChatNav, useSetViewAction } from "../chatNav/state"
 import { createPrivateMessage } from "../message/MessageState"
+import { useSocket, useSocketListener } from "../socket/socketContext"
 import { useStreamListener } from "../state/stream"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
@@ -14,14 +14,15 @@ const getStoredPrivateChats = (identity: string) =>
 export function usePrivateChatListeners() {
   const chatStream = useChatStream()
   const state = useChatState()
-  const socket = useChatSocket()
+  const socket = useSocket()
   const { identity } = useChatCredentials()
   const nav = useChatNav()
+  const setView = useSetViewAction()
 
   useStreamListener(chatStream, (event) => {
     if (event.type === "open-private-chat") {
       openChat(event.name)
-      nav.setView({ type: "privateChat", partnerName: event.name })
+      setView({ type: "privateChat", partnerName: event.name })
     }
 
     if (event.type === "close-private-chat") {
@@ -42,7 +43,7 @@ export function usePrivateChatListeners() {
     }
   })
 
-  useChatSocketListener({
+  useSocketListener({
     IDN() {
       restore()
     },

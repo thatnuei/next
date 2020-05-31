@@ -11,11 +11,13 @@ import CharacterMenu from "../character/CharacterMenu"
 import { useCharacterListeners } from "../character/listeners"
 import ChatNav from "../chatNav/ChatNav"
 import { useChatNav } from "../chatNav/state"
-import { Dict } from "../common/types"
 import { useMediaQuery } from "../dom/useMediaQuery"
+import { Dict } from "../helpers/common/types"
 import { usePrivateChatListeners } from "../privateChat/listeners"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import HookScope from "../react/HookScope"
+import { useSocket, useSocketConnection } from "../socket/socketContext"
+import { SocketStatus } from "../socket/SocketHandler"
 import { useStreamListener } from "../state/stream"
 import { useStatusUpdateListeners } from "../statusUpdate/listeners"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
@@ -26,8 +28,6 @@ import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import { useChatState } from "./chatStateContext"
 import NoRoomView from "./NoRoomView"
-import { useChatSocket, useChatSocketConnection } from "./socketContext"
-import { SocketStatus } from "./SocketHandler"
 import { useChatStream } from "./streamContext"
 
 type Props = {
@@ -35,7 +35,7 @@ type Props = {
 }
 
 function Chat({ onDisconnect }: Props) {
-  useChatSocketConnection({ onDisconnect })
+  useSocketConnection({ onDisconnect })
   useChannelListeners()
   useCharacterListeners()
   usePrivateChatListeners()
@@ -43,7 +43,7 @@ function Chat({ onDisconnect }: Props) {
   useStatusUpdateListeners()
 
   const state = useChatState()
-  const { currentChannel, currentPrivateChat } = useChatNav()
+  const { currentPrivateChat } = useChatNav()
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
   const stream = useChatStream()
@@ -53,7 +53,7 @@ function Chat({ onDisconnect }: Props) {
     }
   })
 
-  const socket = useChatSocket()
+  const socket = useSocket()
   const loadingStatuses: Dict<string, SocketStatus> = {
     connecting: "Connecting...",
     identifying: "Identifying...",
@@ -63,8 +63,8 @@ function Chat({ onDisconnect }: Props) {
     <div css={[fixedCover, tw`flex`]}>
       {!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
 
-      {currentChannel ? (
-        <ChannelView css={tw`flex-1`} channel={currentChannel} />
+      {state.nav.view?.type === "channel" ? (
+        <ChannelView css={tw`flex-1`} channelId={state.nav.view.id} />
       ) : currentPrivateChat ? (
         <PrivateChatView css={tw`flex-1`} chat={currentPrivateChat} />
       ) : (

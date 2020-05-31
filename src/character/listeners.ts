@@ -1,13 +1,13 @@
 import { useChatState } from "../chat/chatStateContext"
 import { useChatCredentials } from "../chat/credentialsContext"
-import { useChatSocket, useChatSocketListener } from "../chat/socketContext"
 import { useChatStream } from "../chat/streamContext"
 import { useApiContext } from "../flist/api-context"
+import { useSocket, useSocketListener } from "../socket/socketContext"
 import { useStreamListener } from "../state/stream"
 
 export function useCharacterListeners() {
   const state = useChatState()
-  const socket = useChatSocket()
+  const socket = useSocket()
   const api = useApiContext()
   const { identity } = useChatCredentials()
 
@@ -28,7 +28,7 @@ export function useCharacterListeners() {
     }
   })
 
-  useChatSocketListener({
+  useSocketListener({
     async IDN() {
       const { friendlist, bookmarklist } = await api.getFriendsAndBookmarks()
       state.bookmarks.replace(bookmarklist)

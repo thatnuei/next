@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import tw from "twin.macro"
-import { extractErrorMessage } from "../common/extractErrorMessage"
 import Button from "../dom/Button"
 import { useApiContext } from "../flist/api-context"
+import { extractErrorMessage } from "../helpers/common/extractErrorMessage"
 import {
   headerText,
   input,

@@ -1,4 +1,4 @@
-import createContextWrapper from "../react/createContextWrapper"
+import createContextWrapper from "../helpers/react/createContextWrapper"
 import { createFListApi } from "./api"
 
 export const useApiContext = createContextWrapper(() => createFListApi())

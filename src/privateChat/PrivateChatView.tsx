@@ -50,11 +50,15 @@ function PrivateChatView({ chat, ...props }: Props) {
           status={chat.typingStatus}
           css={chat.typingStatus === "clear" && tw`h-gap`}
         />
-        <MessageList list={chat.messageList} css={tw`flex-1 bg-background-1`} />
+        <MessageList
+          messages={chat.messageList.messages}
+          css={tw`flex-1 bg-background-1`}
+        />
       </div>
 
       <ChatInput
-        inputModel={chat.chatInput}
+        value={chat.chatInput.value}
+        onChangeText={chat.chatInput.set}
         onSubmit={(text) => {
           stream.send({
             type: "send-private-message",

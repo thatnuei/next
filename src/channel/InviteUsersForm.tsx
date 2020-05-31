@@ -5,26 +5,25 @@ import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
 import { CharacterState } from "../character/CharacterState"
 import { useChatState } from "../chat/chatStateContext"
-import { useChatSocket } from "../chat/socketContext"
-import { compare } from "../common/compare"
-import { unique } from "../common/unique"
 import { InputState } from "../form/InputState"
 import TextInput from "../form/TextInput"
+import { compare } from "../helpers/common/compare"
+import { unique } from "../helpers/common/unique"
+import { useSocket } from "../socket/socketContext"
 import { fadedButton, input } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList, { RenderItemInfo } from "../ui/VirtualizedList"
-import { ChannelState } from "./ChannelState"
 
-type Props = { channel: ChannelState }
+type Props = { channelId: string }
 
 const byLower = compare((it: string) => it.toLowerCase())
 
 const byName = compare((it: CharacterState) => it.name.toLowerCase())
 
-function InviteUsersForm({ channel }: Props) {
+function InviteUsersForm({ channelId }: Props) {
   const state = useChatState()
-  const socket = useChatSocket()
+  const socket = useSocket()
   const searchInput = useMemo(() => new InputState(""), [])
 
   const matchesQuery = (it: CharacterState) =>
@@ -60,7 +59,7 @@ function InviteUsersForm({ channel }: Props) {
     // untested lol!
     socket.send({
       type: "CIU",
-      params: { channel: channel.id, character: name },
+      params: { channel: channelId, character: name },
     })
   }
 

@@ -1,5 +1,5 @@
-import { assert } from "../common/assert"
-import { compareLower } from "../common/compareLower"
+import { assert } from "../helpers/common/assert"
+import { compareLower } from "../helpers/common/compareLower"
 import { fetchJson } from "./fetchJson"
 
 export type LoginCredentials = {

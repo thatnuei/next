@@ -1,4 +1,4 @@
-import { range } from "../common/range"
+import { range } from "../helpers/common/range"
 import { maxMessageCount, MessageListState } from "./MessageListState"
 import { createChannelMessage } from "./MessageState"
 

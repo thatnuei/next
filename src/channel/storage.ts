@@ -1,40 +1,29 @@
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
-import { ChannelState } from "./state"
 
 const serializedChannelsSchema = v.shape({
-  channelsByIdentity: v.dictionary(
-    v.array(
-      v.shape({
-        id: v.string,
-        title: v.string,
-      }),
-    ),
-  ),
+  channelsByIdentity: v.dictionary(v.array(v.string)),
 })
 
 const getStoredChannels = (account: string) =>
   createStoredValue(`channels:${account}`, serializedChannelsSchema)
 
 export function saveChannels(
-  channels: ChannelState[],
+  channelIds: string[],
   account: string,
   identity: string,
 ) {
-  const joinedChannels = channels.filter((it) => it.joinState === "present")
-
   const storage = getStoredChannels(account)
 
-  storage.update(
-    (data) => {
-      data.channelsByIdentity[identity] = joinedChannels.map((it) => ({
-        id: it.id,
-        title: it.title,
-      }))
-      return data
-    },
-    () => ({ channelsByIdentity: {} }),
-  )
+  storage
+    .update(
+      (data) => {
+        data.channelsByIdentity[identity] = channelIds
+        return data
+      },
+      () => ({ channelsByIdentity: {} }),
+    )
+    .catch(console.warn)
 }
 
 export async function loadChannels(account: string, identity: string) {

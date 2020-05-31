@@ -1,4 +1,5 @@
 import { observable } from "mobx"
+import { ChatCredentials } from "../chat/types"
 import { Stream } from "../state/stream"
 import {
   ClientCommand,
@@ -6,7 +7,6 @@ import {
   parseServerCommand,
   ServerCommand,
 } from "./commandHelpers"
-import { ChatCredentials } from "./types"
 
 export type SocketStatus =
   | "idle"

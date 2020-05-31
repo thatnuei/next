@@ -1,4 +1,4 @@
-import { Dict } from "../common/types"
+import { Dict } from "../helpers/common/types"
 
 function createFormData(fields: Dict<unknown>) {
   const body = new FormData()

@@ -1,8 +1,10 @@
 import React from "react"
-import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
-import { channelAtom } from "../channel/state"
-import { useChatStream } from "../chat/streamContext"
+import {
+  useIsPresent,
+  useJoinChannelAction,
+  useLeaveChannelAction,
+} from "../channel/state"
 import { TagProps } from "../jsx/types"
 import Icon from "../ui/Icon"
 import { earth, lock } from "../ui/icons"
@@ -13,22 +15,23 @@ type Props = TagProps<"button"> & {
 }
 
 function ChannelBrowserItem({ info, ...props }: Props) {
-  const stream = useChatStream()
-  const channel = useRecoilValue(channelAtom(info.id))
+  const isPresent = useIsPresent()(info.id)
+  const joinChannel = useJoinChannelAction()
+  const leaveChannel = useLeaveChannelAction()
 
   const handleClick = () => {
-    if (channel.joinState === "absent") {
-      stream.send({ type: "join-channel", id: info.id, title: info.title })
+    if (isPresent) {
+      leaveChannel(info.id)
     } else {
-      stream.send({ type: "leave-channel", id: info.id })
+      joinChannel(info.id, info.title)
     }
   }
 
   const containerStyle = [
     tw`flex flex-row items-center px-2 py-2 transition-all`,
-    channel.joinState === "absent"
-      ? tw`opacity-50 hover:opacity-75`
-      : tw`opacity-100 bg-background-0`,
+    isPresent
+      ? tw`opacity-100 bg-background-0`
+      : tw`opacity-50 hover:opacity-75`,
   ]
 
   return (
