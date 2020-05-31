@@ -1,18 +1,13 @@
 import { useSetRecoilState } from "recoil"
 import { useChatState } from "../chat/chatStateContext"
 import { useChatCredentials } from "../chat/credentialsContext"
-import {
-  adminsAtom,
-  bookmarksAtom,
-  friendsAtom,
-  ignoredAtom,
-} from "../chat/state"
 import { useChatStream } from "../chat/streamContext"
 import { useApiContext } from "../flist/api-context"
 import { append } from "../helpers/common/append"
 import { without } from "../helpers/common/without"
 import { useSocket, useSocketListener } from "../socket/socketContext"
 import { useStreamListener } from "../state/stream"
+import { adminsAtom, bookmarksAtom, friendsAtom, ignoredAtom } from "./state"
 
 export function useCharacterListeners() {
   const state = useChatState()

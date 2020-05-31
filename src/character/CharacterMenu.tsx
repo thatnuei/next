@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import { useChatState } from "../chat/chatStateContext"
-import { bookmarksAtom, friendsAtom, ignoredAtom } from "../chat/state"
 import { useChatStream } from "../chat/streamContext"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
@@ -14,6 +13,7 @@ import Popover, { PopoverState } from "../ui/Popover"
 import CharacterMemoInput from "./CharacterMemoInput"
 import { CharacterState } from "./CharacterState"
 import CharacterSummary from "./CharacterSummary"
+import { bookmarksAtom, friendsAtom, ignoredAtom } from "./state"
 
 function CharacterMenu() {
   const chatState = useChatState()
