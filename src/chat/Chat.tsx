@@ -43,7 +43,7 @@ function Chat({ onDisconnect }: Props) {
   useStatusUpdateListeners()
 
   const state = useChatState()
-  const { currentChannel, currentPrivateChat } = useChatNav()
+  const { currentPrivateChat } = useChatNav()
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
   const stream = useChatStream()
@@ -63,8 +63,8 @@ function Chat({ onDisconnect }: Props) {
     <div css={[fixedCover, tw`flex`]}>
       {!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
 
-      {currentChannel ? (
-        <ChannelView css={tw`flex-1`} channel={currentChannel} />
+      {state.nav.view?.type === "channel" ? (
+        <ChannelView css={tw`flex-1`} channelId={state.nav.view.id} />
       ) : currentPrivateChat ? (
         <PrivateChatView css={tw`flex-1`} chat={currentPrivateChat} />
       ) : (

@@ -14,15 +14,14 @@ import { fadedButton, input } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList, { RenderItemInfo } from "../ui/VirtualizedList"
-import { ChannelState } from "./ChannelState"
 
-type Props = { channel: ChannelState }
+type Props = { channelId: string }
 
 const byLower = compare((it: string) => it.toLowerCase())
 
 const byName = compare((it: CharacterState) => it.name.toLowerCase())
 
-function InviteUsersForm({ channel }: Props) {
+function InviteUsersForm({ channelId }: Props) {
   const state = useChatState()
   const socket = useSocket()
   const searchInput = useMemo(() => new InputState(""), [])
@@ -60,7 +59,7 @@ function InviteUsersForm({ channel }: Props) {
     // untested lol!
     socket.send({
       type: "CIU",
-      params: { channel: channel.id, character: name },
+      params: { channel: channelId, character: name },
     })
   }
 

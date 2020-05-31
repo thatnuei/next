@@ -1,6 +1,5 @@
 import { useRecoilCallback } from "recoil"
 import { useOpenChannelBrowserAction } from "../channelBrowser/state"
-import { useChatState } from "../chat/chatStateContext"
 import { useChatCredentials } from "../chat/credentialsContext"
 import { useChatStream } from "../chat/streamContext"
 import { ChatEvent } from "../chat/types"
@@ -17,12 +16,15 @@ import {
 } from "../socket/commandHelpers"
 import { useSocket, useSocketListener } from "../socket/socketContext"
 import { useStreamListener } from "../state/stream"
-import { channelAtom, channelMessagesAtom, ChannelState } from "./state"
+import {
+  channelAtom,
+  channelMessagesAtom,
+  ChannelState,
+  joinedChannelIdsAtom,
+} from "./state"
 import { loadChannels, saveChannels } from "./storage"
 
 export function useChannelListeners() {
-  const state = useChatState()
-
   const chatStream = useChatStream()
   const socket = useSocket()
   const { account, identity } = useChatCredentials()
@@ -30,15 +32,15 @@ export function useChannelListeners() {
 
   const streamListener = useRecoilCallback(
     async ({ set, getPromise }, event: ChatEvent) => {
-      if (event.type === "join-channel") {
-        const channel = await getPromise(channelAtom(event.id))
+      const joinedIds = await getPromise(joinedChannelIdsAtom)
+      const isPresent = (id: string) => joinedIds.includes(id)
 
-        if (channel.joinState === "absent") {
+      if (event.type === "join-channel") {
+        if (!isPresent(event.id)) {
           set(
             channelAtom(event.id),
             (prev): ChannelState => ({
               ...prev,
-              joinState: "joining",
               title: event.title ?? prev.title,
             }),
           )
@@ -47,19 +49,9 @@ export function useChannelListeners() {
       }
 
       if (event.type === "leave-channel") {
-        const channel = await getPromise(channelAtom(event.id))
-
-        if (channel.joinState === "present") {
-          set(
-            channelAtom(event.id),
-            (prev): ChannelState => ({
-              ...prev,
-              joinState: "leaving",
-            }),
-          )
-
+        if (isPresent(event.id)) {
           socket.send({ type: "LCH", params: { channel: event.id } })
-          saveChannels(state, account, identity)
+          saveChannels(joinedIds, account, identity)
         }
       }
 
@@ -74,31 +66,32 @@ export function useChannelListeners() {
         })
       }
     },
-    [account, identity, socket, state],
+    [account, identity, socket],
   )
 
   const commandListener = useRecoilCallback(
     ({ set, getPromise }, command: ServerCommand) => {
       const handlerMap: CommandHandlerMap = {
         async IDN() {
-          const channels = await loadChannels(account, identity)
-          if (channels.length === 0) {
+          const channelIds = await loadChannels(account, identity)
+          if (channelIds.length === 0) {
             openChannelBrowser()
           } else {
-            for (const { id, title } of channels) {
-              chatStream.send({ type: "join-channel", id, title })
+            for (const id of channelIds) {
+              chatStream.send({ type: "join-channel", id })
             }
           }
         },
 
         JCH({ channel: id, character: { identity: name }, title }) {
+          set(joinedChannelIdsAtom, (prev) => [...prev, id])
+
           set(
             channelAtom(id),
             (prev): ChannelState => ({
               ...prev,
               title,
               users: unique([...prev.users, name]),
-              joinState: name === identity ? "present" : prev.joinState,
             }),
           )
 
@@ -113,8 +106,11 @@ export function useChannelListeners() {
           set(channelAtom(id), (prev) => ({
             ...prev,
             users: prev.users.filter((name) => name !== character),
-            joinState: character === identity ? "absent" : prev.joinState,
           }))
+
+          set(joinedChannelIdsAtom, (prev) =>
+            prev.filter((current) => current !== id),
+          )
         },
 
         ICH({ channel: id, users, mode }) {

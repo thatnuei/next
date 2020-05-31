@@ -1,7 +1,8 @@
-import { atomFamily } from "recoil"
+import { useCallback } from "react"
+import { atom, atomFamily, useRecoilValue } from "recoil"
 import { DeepReadonly } from "../helpers/common/types"
 import { MessageState, MessageType } from "../message/MessageState"
-import { ChannelJoinState, ChannelMode } from "./types"
+import { ChannelMode } from "./types"
 
 export type ChannelState = DeepReadonly<{
   id: string
@@ -9,7 +10,6 @@ export type ChannelState = DeepReadonly<{
   description: string
   mode: ChannelMode
   selectedMode: ChannelMode
-  joinState: ChannelJoinState
   isUnread: boolean
   users: string[]
   ops: string[]
@@ -24,7 +24,6 @@ export const channelAtom = atomFamily({
     description: "",
     mode: "both",
     selectedMode: "chat",
-    joinState: "absent",
     isUnread: false,
     users: [], // maybe make this an atom
     ops: [],
@@ -36,6 +35,23 @@ export const channelMessagesAtom = atomFamily<MessageState[], string>({
   key: "channelMessages",
   default: [],
 })
+
+export const joinedChannelIdsAtom = atom<string[]>({
+  key: "joinedChannelIds",
+  default: [],
+})
+
+export function useJoinedChannelIds() {
+  return useRecoilValue(joinedChannelIdsAtom)
+}
+
+export function useIsPresent() {
+  const joinedChannelIds = useJoinedChannelIds()
+  return useCallback(
+    (channelId: string) => joinedChannelIds.includes(channelId),
+    [joinedChannelIds],
+  )
+}
 
 export function getActualMode(channel: ChannelState) {
   return channel.mode === "both" ? channel.selectedMode : channel.mode

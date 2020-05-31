@@ -1,5 +1,5 @@
 import React, { useMemo } from "react"
-import { useRecoilValue } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import tw from "twin.macro"
 import { isPublicSelector } from "../channelBrowser/state"
 import { useChatCredentials } from "../chat/credentialsContext"
@@ -16,28 +16,30 @@ import { OverlayState } from "../ui/OverlayState"
 import Popover, { PopoverState } from "../ui/Popover"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
-import { ChannelState } from "./ChannelState"
 import InviteUsersForm from "./InviteUsersForm"
+import { channelAtom, channelMessagesAtom, getLinkCode } from "./state"
 
 type Props = {
-  channel: ChannelState
+  channelId: string
   onToggleDescription: () => void
   onShowUsers: () => void
 } & TagProps<"header">
 
 function ChannelHeader({
-  channel,
+  channelId,
   onToggleDescription,
   onShowUsers,
   ...props
 }: Props) {
+  const channel = useRecoilValue(channelAtom(channelId))
+  const setChannelMessages = useSetRecoilState(channelMessagesAtom(channelId))
   const isLargeScreen = useMediaQuery(screenQueries.large)
   const menu = useMemo(() => new PopoverState(), [])
   const inviteDialog = useMemo(() => new OverlayState(), [])
   const { identity } = useChatCredentials()
   const isPublic = useRecoilValue(isPublicSelector(channel.id))
 
-  const shouldShowInviteOption = isPublic && channel.ops.has(identity)
+  const shouldShowInviteOption = isPublic && channel.ops.includes(identity)
 
   function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
     const target = event.currentTarget
@@ -45,6 +47,10 @@ function ChannelHeader({
       x: target.offsetLeft,
       y: target.offsetTop + target.clientHeight,
     })
+  }
+
+  function clearChannelMessages() {
+    setChannelMessages([])
   }
 
   return (
@@ -63,7 +69,7 @@ function ChannelHeader({
 
       <h1 css={[headerText2, tw`flex-1`]}>{channel.title}</h1>
 
-      {isLargeScreen && <ChannelFilters channel={channel} />}
+      {isLargeScreen && <ChannelFilters channelId={channel.id} />}
 
       {!isLargeScreen && (
         <>
@@ -84,7 +90,7 @@ function ChannelHeader({
       <Popover state={menu} css={tw`w-48 bg-background-2`}>
         {!isLargeScreen && (
           <ChannelFilters
-            channel={channel}
+            channelId={channel.id}
             css={tw`px-3 py-2 bg-background-0 mb-gap`}
           />
         )}
@@ -93,13 +99,13 @@ function ChannelHeader({
             text="Copy code"
             icon={icons.code}
             onClick={() => {
-              window.navigator.clipboard.writeText(channel.linkCode)
+              window.navigator.clipboard.writeText(getLinkCode(channel))
             }}
           />
           <MenuItem
             text="Clear messages"
             icon={icons.clearMessages}
-            onClick={channel.messageList.clear}
+            onClick={clearChannelMessages}
           />
           {shouldShowInviteOption && (
             <MenuItem
@@ -118,7 +124,7 @@ function ChannelHeader({
         width={400}
         height={700}
       >
-        <InviteUsersForm channel={channel} />
+        <InviteUsersForm channelId={channelId} />
       </Modal>
     </header>
   )

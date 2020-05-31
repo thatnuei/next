@@ -8,7 +8,7 @@ import { compare } from "../helpers/common/compare"
 import { ValueOf } from "../helpers/common/types"
 import { TagProps } from "../jsx/types"
 import VirtualizedList from "../ui/VirtualizedList"
-import { ChannelState } from "./ChannelState"
+import { ChannelState } from "./state"
 
 type Props = TagProps<"div"> & {
   channel: ChannelState
@@ -29,7 +29,7 @@ function ChannelUserList({ channel, ...props }: Props) {
 
   const getItemType = (character: CharacterState): ItemType => {
     if (state.admins.has(character.name)) return "admin"
-    if (channel.ops.has(character.name)) return "op"
+    if (channel.ops.includes(character.name)) return "op"
     if (state.isFriend(character.name)) return "friend"
     if (state.bookmarks.has(character.name)) return "bookmark"
     if (character.status === "looking") return "looking"
