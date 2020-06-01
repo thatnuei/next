@@ -2002,7 +2002,7 @@ ansi-align@^2.0.0:
   dependencies:
     string-width "^2.0.0"
 
-ansi-escapes@^4.2.1, ansi-escapes@^4.3.1:
+ansi-escapes@^4.2.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/ansi-escapes/-/ansi-escapes-4.3.1.tgz#a5c47cc43181f1f38ffd7076837700d395522a61"
   integrity sha512-JWF7ocqNrp8u9oqpgV+wH5ftbt+cfvv+PTjOvKLT3AdYly/LmORARfEVT1iyjwN+4MqE5UmVKoAdIBqeoCHgLA==
@@ -6596,10 +6596,10 @@ snapdragon@^0.8.1:
     source-map-resolve "^0.5.0"
     use "^3.1.0"
 
-snowpack@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/snowpack/-/snowpack-2.1.0.tgz#883af0977766550096a5255e5f28f53dcf6ed515"
-  integrity sha512-mWtgxaX+UewxB5xlHG9KiiNOYKqw6QnYP/wmdyjwjjp2ujMZ8wENK/dD4Fs/LK2fG6miFDkbXQVgwpwTtgGhdw==
+snowpack@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/snowpack/-/snowpack-2.1.1.tgz#9b854e988769474320fd8484cc47cf4ccac42a30"
+  integrity sha512-1Ra3FQipQLexoXljWLkvp/9m4Z6Qv31OEXdEFAVfKavDzFC+1Xe78kGNMkzPJ05Wtr5TvhYHlub9Q6salSCLJQ==
   dependencies:
     "@babel/plugin-syntax-import-meta" "^7.8.3"
     "@rollup/plugin-alias" "^3.0.1"
@@ -6609,7 +6609,6 @@ snowpack@2.1.0:
     "@rollup/plugin-replace" "^2.1.0"
     "@types/http-proxy" "^1.17.4"
     "@types/tar" "^4.0.3"
-    ansi-escapes "^4.3.1"
     cacache "^15.0.0"
     cachedir "^2.3.0"
     chalk "^4.0.0"
