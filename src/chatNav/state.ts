@@ -1,8 +1,8 @@
 import { action, observable } from "mobx"
-import { useRecoilCallback } from "recoil"
+import { useRecoilCallback, useSetRecoilState } from "recoil"
 import { channelAtom } from "../channel/state"
-import { ChatState } from "../chat/ChatState"
 import { useChatState } from "../chat/chatStateContext"
+import { sideMenuVisibleAtom } from "../chat/state"
 
 type ChatNavView =
   | { type: "channel"; id: string }
@@ -20,11 +20,12 @@ export class ChatNavState {
 
 export function useSetViewAction() {
   const state = useChatState()
+  const setSideMenuVisible = useSetRecoilState(sideMenuVisibleAtom)
 
   return useRecoilCallback(
     ({ set }, view: ChatNavView) => {
       state.nav.setView(view)
-      state.sideMenuOverlay.hide()
+      setSideMenuVisible(false)
 
       if (view.type === "channel") {
         set(channelAtom(view.id), (prev) => ({ ...prev, isUnread: false }))
@@ -32,13 +33,12 @@ export function useSetViewAction() {
         state.privateChats.get(view.partnerName).isUnread = false
       }
     },
-    [state.nav, state.privateChats, state.sideMenuOverlay],
+    [setSideMenuVisible, state.nav, state.privateChats],
   )
 }
 
-export function createChatNavHelpers(state: ChatState) {
-  // TODO: these need to maybe be separate values/hooks,
-  // and the functions should probably be recoil values or selectors
+export function useChatNav() {
+  const state = useChatState()
   return {
     get view() {
       return state.nav.view
@@ -53,21 +53,5 @@ export function createChatNavHelpers(state: ChatState) {
       }
       return undefined
     },
-
-    setView: (view: ChatNavView) => {
-      state.nav.setView(view)
-      state.sideMenuOverlay.hide()
-
-      if (view.type === "channel") {
-        // state.channels.get(view.id).isUnread = false
-      } else {
-        state.privateChats.get(view.partnerName).isUnread = false
-      }
-    },
   }
-}
-
-export function useChatNav() {
-  const state = useChatState()
-  return createChatNavHelpers(state)
 }

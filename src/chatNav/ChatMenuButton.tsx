@@ -1,5 +1,6 @@
 import React from "react"
-import { useChatState } from "../chat/chatStateContext"
+import { useSetRecoilState } from "recoil"
+import { sideMenuVisibleAtom } from "../chat/state"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { TagProps } from "../jsx/types"
@@ -11,18 +12,14 @@ import { screenQueries } from "../ui/screens"
 type Props = TagProps<"button">
 
 function ChatMenuButton(props: Props) {
-  const state = useChatState()
   const isSmallScreen = useMediaQuery(screenQueries.small)
-
-  const handleClick = () => {
-    state.sideMenuOverlay.show()
-  }
+  const setSideMenuVisible = useSetRecoilState(sideMenuVisibleAtom)
 
   return isSmallScreen ? (
     <Button
       title="Show side menu"
       css={fadedButton}
-      onClick={handleClick}
+      onClick={() => setSideMenuVisible(true)}
       {...props}
     >
       <Icon which={icons.menu} />

@@ -28,6 +28,7 @@ import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import { useChatState } from "./chatStateContext"
 import NoRoomView from "./NoRoomView"
+import { sideMenuVisibleAtom } from "./state"
 import { useChatStream } from "./streamContext"
 
 type Props = {
@@ -59,6 +60,10 @@ function Chat({ onDisconnect }: Props) {
     identifying: "Identifying...",
   }
 
+  const [sideMenuVisible, setSideMenuVisible] = useRecoilState(
+    sideMenuVisibleAtom,
+  )
+
   return (
     <div css={[fixedCover, tw`flex`]}>
       {!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
@@ -68,13 +73,18 @@ function Chat({ onDisconnect }: Props) {
       ) : currentPrivateChat ? (
         <PrivateChatView css={tw`flex-1`} chat={currentPrivateChat} />
       ) : (
+        // need this extra div because of flex styling (?)
         <div>
           <NoRoomView />
         </div>
       )}
 
       {isSmallScreen && (
-        <Drawer state={state.sideMenuOverlay} side="left">
+        <Drawer
+          side="left"
+          isVisible={sideMenuVisible}
+          onDismiss={() => setSideMenuVisible(false)}
+        >
           <ChatNav css={tw`h-full bg-background-2`} />
         </Drawer>
       )}
