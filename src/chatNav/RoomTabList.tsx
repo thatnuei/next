@@ -1,5 +1,5 @@
 import { filter, flow, map, sortBy } from "lodash/fp"
-import { observer, useObserver } from "mobx-react-lite"
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
@@ -16,7 +16,7 @@ import { PrivateChatState } from "../privateChat/PrivateChatState"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import RoomTab from "./RoomTab"
-import { useChatNav, useSetViewAction } from "./state"
+import { chatNavViewAtom, useChatNav, useSetViewAction } from "./state"
 
 function RoomTabList() {
   const state = useChatState()
@@ -58,13 +58,10 @@ export default observer(RoomTabList)
 function ChannelRoomTab({ id }: { id: string }) {
   const channel = useRecoilValue(channelAtom(id))
   const isPublic = useRecoilValue(isPublicSelector(id))
+  const view = useRecoilValue(chatNavViewAtom)
+  const isActive = view?.type === "channel" && view.id === id
   const setView = useSetViewAction()
   const leaveChannel = useLeaveChannelAction()
-
-  const state = useChatState()
-  const isActive = useObserver(
-    () => state.nav.view?.type === "channel" && state.nav.view.id === id,
-  )
 
   return (
     <RoomTab
