@@ -1,14 +1,14 @@
 import fuzzysearch from "fuzzysearch"
+import { sortBy, toLower, uniqBy } from "lodash/fp"
 import { observer } from "mobx-react-lite"
-import React, { useMemo } from "react"
+import React, { useState } from "react"
+import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
 import { CharacterState } from "../character/CharacterState"
+import { bookmarksAtom, friendsAtom, isFriend } from "../character/state"
 import { useChatState } from "../chat/chatStateContext"
-import { InputState } from "../form/InputState"
-import TextInput from "../form/TextInput"
-import { compare } from "../helpers/common/compare"
-import { unique } from "../helpers/common/unique"
+import TextInput from "../dom/TextInput"
 import { useSocket } from "../socket/socketContext"
 import { fadedButton, input } from "../ui/components"
 import Icon from "../ui/Icon"
@@ -17,31 +17,32 @@ import VirtualizedList, { RenderItemInfo } from "../ui/VirtualizedList"
 
 type Props = { channelId: string }
 
-const byLower = compare((it: string) => it.toLowerCase())
-
-const byName = compare((it: CharacterState) => it.name.toLowerCase())
-
 function InviteUsersForm({ channelId }: Props) {
   const state = useChatState()
   const socket = useSocket()
-  const searchInput = useMemo(() => new InputState(""), [])
+  const [searchInput, setSearchInput] = useState("")
+  const friends = useRecoilValue(friendsAtom)
+  const bookmarks = useRecoilValue(bookmarksAtom)
 
   const matchesQuery = (it: CharacterState) =>
-    fuzzysearch(searchInput.value.toLowerCase(), it.name.toLowerCase())
+    fuzzysearch(searchInput.toLowerCase(), it.name.toLowerCase())
 
-  const byGroupOrder = compare((it: CharacterState) => {
-    if (state.isFriend(it.name)) return 1
-    if (state.bookmarks.has(it.name)) return 2
+  const getGroupOrder = (it: CharacterState) => {
+    if (isFriend(friends)(it.name)) return 1
+    if (bookmarks.includes(it.name)) return 2
     return 3
-  })
+  }
 
   const users = (() => {
-    const searchQuery = searchInput.value.toLowerCase().trim()
+    const searchQuery = searchInput.toLowerCase().trim()
 
     if (!searchQuery) {
-      const friendNames = [...state.friends].map((it) => it.them).sort(byLower)
+      const friendNames = sortBy(
+        toLower,
+        friends.map((it) => it.them),
+      )
 
-      const bookmarkNames = [...state.bookmarks].sort(byLower)
+      const bookmarkNames = sortBy(toLower, bookmarks)
 
       return [...friendNames, ...bookmarkNames]
         .map(state.characters.get)
@@ -49,10 +50,10 @@ function InviteUsersForm({ channelId }: Props) {
         .filter(matchesQuery)
     }
 
-    return [...state.characters.values()]
-      .filter(matchesQuery)
-      .sort(byName)
-      .sort(byGroupOrder)
+    return sortBy(
+      [getGroupOrder, (it) => it.name.toLowerCase()],
+      [...state.characters.values()].filter(matchesQuery),
+    )
   })()
 
   const sendInvite = (name: string) => {
@@ -80,7 +81,7 @@ function InviteUsersForm({ channelId }: Props) {
     <div css={tw`flex flex-col w-full h-full`}>
       <div css={tw`flex-1 bg-background-2`}>
         <VirtualizedList
-          items={unique(users, (user) => user.name)}
+          items={uniqBy((user) => user.name, users)}
           itemSize={40}
           getItemKey={(it) => it.name}
           renderItem={renderItem}
@@ -88,7 +89,8 @@ function InviteUsersForm({ channelId }: Props) {
       </div>
       <div css={tw`m-2`}>
         <TextInput
-          state={searchInput}
+          value={searchInput}
+          onChangeText={setSearchInput}
           type="text"
           css={input}
           placeholder="Search..."

@@ -1,10 +1,12 @@
+import { sortBy } from "lodash/fp"
 import { observer } from "mobx-react-lite"
 import React from "react"
+import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
 import { CharacterState } from "../character/CharacterState"
+import { adminsAtom, bookmarksAtom, useIsFriend } from "../character/state"
 import { useChatState } from "../chat/chatStateContext"
-import { compare } from "../helpers/common/compare"
 import { ValueOf } from "../helpers/common/types"
 import { TagProps } from "../jsx/types"
 import VirtualizedList from "../ui/VirtualizedList"
@@ -26,12 +28,15 @@ type ItemType = ValueOf<typeof itemTypes>
 
 function ChannelUserList({ channel, ...props }: Props) {
   const state = useChatState()
+  const admins = useRecoilValue(adminsAtom)
+  const bookmarks = useRecoilValue(bookmarksAtom)
+  const isFriend = useIsFriend()
 
   const getItemType = (character: CharacterState): ItemType => {
-    if (state.admins.has(character.name)) return "admin"
+    if (admins.includes(character.name)) return "admin"
     if (channel.ops.includes(character.name)) return "op"
-    if (state.isFriend(character.name)) return "friend"
-    if (state.bookmarks.has(character.name)) return "bookmark"
+    if (isFriend(character.name)) return "friend"
+    if (bookmarks.includes(character.name)) return "bookmark"
     if (character.status === "looking") return "looking"
     return "default"
   }
@@ -55,9 +60,10 @@ function ChannelUserList({ channel, ...props }: Props) {
     }
   })
 
-  const sortedItems = listItems
-    .sort(compare((it) => it.character.name.toLowerCase()))
-    .sort(compare((it) => it.order))
+  const sortedItems = sortBy(
+    ["order", (it) => it.character.name.toLowerCase()],
+    listItems,
+  )
 
   return (
     <div css={tw`flex flex-col`} {...props}>

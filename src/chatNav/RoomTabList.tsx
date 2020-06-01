@@ -1,4 +1,5 @@
-import { observer, useObserver } from "mobx-react-lite"
+import { filter, flow, map, sortBy } from "lodash/fp"
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
@@ -11,11 +12,11 @@ import { isPublicSelector } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import { useChatState } from "../chat/chatStateContext"
 import { useChatStream } from "../chat/streamContext"
-import { compare } from "../helpers/common/compare"
+import { PrivateChatState } from "../privateChat/PrivateChatState"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import RoomTab from "./RoomTab"
-import { useChatNav, useSetViewAction } from "./state"
+import { chatNavViewAtom, useChatNav, useSetViewAction } from "./state"
 
 function RoomTabList() {
   const state = useChatState()
@@ -24,10 +25,10 @@ function RoomTabList() {
   const setView = useSetViewAction()
   const joinedChannelIds = useJoinedChannelIds()
 
-  const privateChatTabs = [...state.privateChats.values()]
-    .filter((it) => it.isOpen)
-    .sort(compare((it) => it.partnerName.toLowerCase()))
-    .map((chat) => (
+  const privateChatTabs = flow(
+    filter((chat: PrivateChatState) => chat.isOpen),
+    sortBy((chat) => chat.partnerName.toLowerCase()),
+    map((chat) => (
       <RoomTab
         key={chat.partnerName}
         title={chat.partnerName}
@@ -41,7 +42,8 @@ function RoomTabList() {
           stream.send({ type: "close-private-chat", name: chat.partnerName })
         }
       />
-    ))
+    )),
+  )(state.privateChats.values())
 
   // TODO: get from list of channel IDs
   const channelTabs = joinedChannelIds.map((id) => (
@@ -56,13 +58,10 @@ export default observer(RoomTabList)
 function ChannelRoomTab({ id }: { id: string }) {
   const channel = useRecoilValue(channelAtom(id))
   const isPublic = useRecoilValue(isPublicSelector(id))
+  const view = useRecoilValue(chatNavViewAtom)
+  const isActive = view?.type === "channel" && view.id === id
   const setView = useSetViewAction()
   const leaveChannel = useLeaveChannelAction()
-
-  const state = useChatState()
-  const isActive = useObserver(
-    () => state.nav.view?.type === "channel" && state.nav.view.id === id,
-  )
 
   return (
     <RoomTab

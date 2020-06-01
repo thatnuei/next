@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { useMemo } from "react"
+import React, { useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import BBC from "../bbc/BBC"
@@ -11,7 +11,6 @@ import HookScope from "../react/HookScope"
 import Drawer from "../ui/Drawer"
 import { scrollVertical } from "../ui/helpers"
 import Modal from "../ui/Modal"
-import { OverlayState } from "../ui/OverlayState"
 import { screenQueries } from "../ui/screens"
 import ChannelHeader from "./ChannelHeader"
 import ChannelUserList from "./ChannelUserList"
@@ -29,8 +28,8 @@ type Props = {
 function ChannelView({ channelId, ...props }: Props) {
   const [channel, setChannel] = useRecoilState(channelAtom(channelId))
   const isLargeScreen = useMediaQuery(screenQueries.large)
-  const descriptionOverlay = useMemo(() => new OverlayState(), [])
-  const userListDrawer = useMemo(() => new OverlayState(), [])
+  const [userListVisible, setUserListVisible] = useState(false)
+  const [descriptionVisible, setDescriptionVisible] = useState(false)
   const sendMessage = useSendChannelMessageAction()
 
   function updateChatInput(chatInput: string) {
@@ -45,8 +44,8 @@ function ChannelView({ channelId, ...props }: Props) {
     <div css={tw`flex flex-col`} {...props}>
       <ChannelHeader
         channelId={channelId}
-        onToggleDescription={descriptionOverlay.toggle}
-        onShowUsers={userListDrawer.show}
+        onToggleDescription={() => setDescriptionVisible((v) => !v)}
+        onShowUsers={() => setUserListVisible(true)}
       />
 
       <div css={tw`flex flex-row flex-1 min-h-0 my-gap`}>
@@ -69,8 +68,8 @@ function ChannelView({ channelId, ...props }: Props) {
             title="Description"
             width="100%"
             height="max(60%, 500px)"
-            isVisible={descriptionOverlay.isVisible}
-            onDismiss={descriptionOverlay.hide}
+            isVisible={descriptionVisible}
+            onDismiss={() => setDescriptionVisible(false)}
             fillMode="contained"
             verticalPanelAlign="top"
           >
@@ -94,7 +93,11 @@ function ChannelView({ channelId, ...props }: Props) {
       />
 
       {!isLargeScreen && (
-        <Drawer state={userListDrawer} side="right">
+        <Drawer
+          isVisible={userListVisible}
+          onDismiss={() => setUserListVisible(false)}
+          side="right"
+        >
           <ChannelUserList
             channel={channel}
             css={tw`w-56 h-full bg-background-2`}

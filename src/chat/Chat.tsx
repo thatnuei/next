@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import { useChannelListeners } from "../channel/listeners"
@@ -10,7 +10,7 @@ import { isChannelBrowserVisibleAtom } from "../channelBrowser/state"
 import CharacterMenu from "../character/CharacterMenu"
 import { useCharacterListeners } from "../character/listeners"
 import ChatNav from "../chatNav/ChatNav"
-import { useChatNav } from "../chatNav/state"
+import { chatNavViewAtom, useChatNav } from "../chatNav/state"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { Dict } from "../helpers/common/types"
 import { usePrivateChatListeners } from "../privateChat/listeners"
@@ -28,6 +28,7 @@ import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import { useChatState } from "./chatStateContext"
 import NoRoomView from "./NoRoomView"
+import { sideMenuVisibleAtom } from "./state"
 import { useChatStream } from "./streamContext"
 
 type Props = {
@@ -59,22 +60,33 @@ function Chat({ onDisconnect }: Props) {
     identifying: "Identifying...",
   }
 
+  const view = useRecoilValue(chatNavViewAtom)
+
+  const [sideMenuVisible, setSideMenuVisible] = useRecoilState(
+    sideMenuVisibleAtom,
+  )
+
   return (
     <div css={[fixedCover, tw`flex`]}>
       {!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
 
-      {state.nav.view?.type === "channel" ? (
-        <ChannelView css={tw`flex-1`} channelId={state.nav.view.id} />
+      {view?.type === "channel" ? (
+        <ChannelView css={tw`flex-1`} channelId={view.id} />
       ) : currentPrivateChat ? (
         <PrivateChatView css={tw`flex-1`} chat={currentPrivateChat} />
       ) : (
+        // need this extra div because of flex styling (?)
         <div>
           <NoRoomView />
         </div>
       )}
 
       {isSmallScreen && (
-        <Drawer state={state.sideMenuOverlay} side="left">
+        <Drawer
+          side="left"
+          isVisible={sideMenuVisible}
+          onDismiss={() => setSideMenuVisible(false)}
+        >
           <ChatNav css={tw`h-full bg-background-2`} />
         </Drawer>
       )}

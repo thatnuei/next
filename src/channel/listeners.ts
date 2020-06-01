@@ -1,7 +1,7 @@
+import { uniq } from "lodash/fp"
 import { useRecoilCallback } from "recoil"
 import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { useChatCredentials } from "../chat/credentialsContext"
-import { unique } from "../helpers/common/unique"
 import {
   createAdMessage,
   createChannelMessage,
@@ -43,12 +43,12 @@ export function useChannelListeners() {
             (prev): ChannelState => ({
               ...prev,
               title,
-              users: unique([...prev.users, name]),
+              users: uniq([...prev.users, name]),
             }),
           )
 
           if (name === identity) {
-            const newJoinedIds = unique([...joinedIds, id])
+            const newJoinedIds = uniq([...joinedIds, id])
             set(joinedChannelIdsAtom, newJoinedIds)
             saveChannels(newJoinedIds, account, identity)
           }
@@ -61,7 +61,7 @@ export function useChannelListeners() {
           }))
 
           if (character === identity) {
-            const newJoinedIds = unique(
+            const newJoinedIds = uniq(
               joinedIds.filter((current) => current !== id),
             )
             set(joinedChannelIdsAtom, newJoinedIds)
@@ -72,7 +72,7 @@ export function useChannelListeners() {
         ICH({ channel: id, users, mode }) {
           set(channelAtom(id), (prev) => ({
             ...prev,
-            users: unique(users.map((it) => it.identity)),
+            users: uniq(users.map((it) => it.identity)),
             mode,
           }))
         },
