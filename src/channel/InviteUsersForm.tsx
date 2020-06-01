@@ -1,15 +1,14 @@
 import fuzzysearch from "fuzzysearch"
 import { sortBy, toLower, uniqBy } from "lodash/fp"
 import { observer } from "mobx-react-lite"
-import React, { useMemo } from "react"
+import React, { useState } from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
 import { CharacterState } from "../character/CharacterState"
 import { bookmarksAtom, friendsAtom, isFriend } from "../character/state"
 import { useChatState } from "../chat/chatStateContext"
-import { InputState } from "../form/InputState"
-import TextInput from "../form/TextInput"
+import TextInput from "../dom/TextInput"
 import { useSocket } from "../socket/socketContext"
 import { fadedButton, input } from "../ui/components"
 import Icon from "../ui/Icon"
@@ -21,12 +20,12 @@ type Props = { channelId: string }
 function InviteUsersForm({ channelId }: Props) {
   const state = useChatState()
   const socket = useSocket()
-  const searchInput = useMemo(() => new InputState(""), [])
+  const [searchInput, setSearchInput] = useState("")
   const friends = useRecoilValue(friendsAtom)
   const bookmarks = useRecoilValue(bookmarksAtom)
 
   const matchesQuery = (it: CharacterState) =>
-    fuzzysearch(searchInput.value.toLowerCase(), it.name.toLowerCase())
+    fuzzysearch(searchInput.toLowerCase(), it.name.toLowerCase())
 
   const getGroupOrder = (it: CharacterState) => {
     if (isFriend(friends)(it.name)) return 1
@@ -35,7 +34,7 @@ function InviteUsersForm({ channelId }: Props) {
   }
 
   const users = (() => {
-    const searchQuery = searchInput.value.toLowerCase().trim()
+    const searchQuery = searchInput.toLowerCase().trim()
 
     if (!searchQuery) {
       const friendNames = sortBy(
@@ -90,7 +89,8 @@ function InviteUsersForm({ channelId }: Props) {
       </div>
       <div css={tw`m-2`}>
         <TextInput
-          state={searchInput}
+          value={searchInput}
+          onChangeText={setSearchInput}
           type="text"
           css={input}
           placeholder="Search..."
