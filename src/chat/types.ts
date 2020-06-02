@@ -10,8 +10,6 @@ export type ChatCredentials = {
 type ChatEventMap = {
   "open-private-chat": { name: string }
   "close-private-chat": { name: string }
-  "show-status-update": {}
-  "submit-status-update": {}
   "send-private-message": { recipientName: string; text: string }
   "log-out": {}
   "update-ignored": { action: "add" | "delete"; name: string }

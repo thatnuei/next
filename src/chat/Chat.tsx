@@ -20,13 +20,13 @@ import { useSocket, useSocketConnection } from "../socket/socketContext"
 import { SocketStatus } from "../socket/SocketHandler"
 import { useStreamListener } from "../state/stream"
 import { useStatusUpdateListeners } from "../statusUpdate/listeners"
+import { statusOverlayVisibleAtom } from "../statusUpdate/state"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import Drawer from "../ui/Drawer"
 import { fixedCover } from "../ui/helpers"
 import LoadingOverlay from "../ui/LoadingOverlay"
 import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
-import { useChatState } from "./chatStateContext"
 import NoRoomView from "./NoRoomView"
 import { sideMenuVisibleAtom } from "./state"
 import { useChatStream } from "./streamContext"
@@ -43,7 +43,6 @@ function Chat({ onDisconnect }: Props) {
   useChannelBrowserListeners()
   useStatusUpdateListeners()
 
-  const state = useChatState()
   const { currentPrivateChat } = useChatNav()
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
@@ -109,14 +108,23 @@ function Chat({ onDisconnect }: Props) {
         }}
       </HookScope>
 
-      <Modal
-        title="Update Your Status"
-        width={480}
-        height={360}
-        isVisible={state.statusUpdate.overlay.isVisible}
-        onDismiss={state.statusUpdate.overlay.hide}
-        children={<StatusUpdateForm />}
-      />
+      <HookScope>
+        {function useScope() {
+          const [isVisible, setVisible] = useRecoilState(
+            statusOverlayVisibleAtom,
+          )
+          return (
+            <Modal
+              title="Update Your Status"
+              width={480}
+              height={360}
+              isVisible={isVisible}
+              onDismiss={() => setVisible(false)}
+              children={<StatusUpdateForm />}
+            />
+          )
+        }}
+      </HookScope>
 
       <CharacterMenu />
 
