@@ -60,7 +60,7 @@ function Modal({
 
   const closeButtonStyle = [
     fadedButton,
-    tw`absolute top-0 bottom-0 right-0 flex flex-row justify-center w-16`,
+    tw`absolute top-0 bottom-0 right-0 flex items-center justify-center w-16`,
   ]
 
   const content = (
