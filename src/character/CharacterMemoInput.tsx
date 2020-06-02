@@ -68,20 +68,13 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
   const style = [input, tw`h-20 text-sm`]
 
   if (status === "loading") {
-    return (
-      <textarea
-        css={[style, tw`italic`]}
-        disabled
-        placeholder="Loading..."
-        {...props}
-      />
-    )
+    return <textarea css={style} disabled placeholder="Loading..." {...props} />
   }
 
   if (status === "editing") {
     return (
       <textarea
-        css={[style, memo === "" && tw`italic`]}
+        css={style}
         value={memo}
         onChange={(event) => handleChange(event.target.value)}
         placeholder="Enter a memo"
