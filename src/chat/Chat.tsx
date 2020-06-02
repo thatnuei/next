@@ -10,7 +10,7 @@ import { isChannelBrowserVisibleAtom } from "../channelBrowser/state"
 import CharacterMenu from "../character/CharacterMenu"
 import { useCharacterListeners } from "../character/listeners"
 import ChatNav from "../chatNav/ChatNav"
-import { chatNavViewAtom, useChatNav } from "../chatNav/state"
+import { chatNavViewAtom } from "../chatNav/state"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { Dict } from "../helpers/common/types"
 import { usePrivateChatListeners } from "../privateChat/listeners"
@@ -43,7 +43,6 @@ function Chat({ onDisconnect }: Props) {
   useChannelBrowserListeners()
   useStatusUpdateListeners()
 
-  const { currentPrivateChat } = useChatNav()
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
   const stream = useChatStream()
@@ -71,8 +70,8 @@ function Chat({ onDisconnect }: Props) {
 
       {view?.type === "channel" ? (
         <ChannelView css={tw`flex-1`} channelId={view.id} />
-      ) : currentPrivateChat ? (
-        <PrivateChatView css={tw`flex-1`} chat={currentPrivateChat} />
+      ) : view?.type === "privateChat" ? (
+        <PrivateChatView css={tw`flex-1`} partnerName={view.partnerName} />
       ) : (
         // need this extra div because of flex styling (?)
         <div>

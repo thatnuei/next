@@ -13,7 +13,9 @@ export class Stream<T> {
   }
 
   send = (event: T) => {
-    this.listeners.forEach((listener) => listener(event))
+    for (const listener of [...this.listeners]) {
+      listener(event)
+    }
   }
 }
 

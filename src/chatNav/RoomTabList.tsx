@@ -1,4 +1,4 @@
-import { filter, flow, map, sortBy } from "lodash/fp"
+import { flow, map, sortBy, toLower } from "lodash/fp"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRecoilValue } from "recoil"
@@ -10,42 +10,52 @@ import {
 } from "../channel/state"
 import { isPublicSelector } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
-import { useChatState } from "../chat/chatStateContext"
-import { useChatStream } from "../chat/streamContext"
-import { PrivateChatState } from "../privateChat/PrivateChatState"
+import {
+  openPrivateChatPartnersAtom,
+  privateChatAtom,
+  useClosePrivateChatAction,
+} from "../privateChat/state"
+import HookScope from "../react/HookScope"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import RoomTab from "./RoomTab"
-import { chatNavViewAtom, useChatNav, useSetViewAction } from "./state"
+import { chatNavViewAtom, useSetViewAction } from "./state"
 
 function RoomTabList() {
-  const state = useChatState()
-  const stream = useChatStream()
-  const { currentPrivateChat } = useChatNav()
   const setView = useSetViewAction()
   const joinedChannelIds = useJoinedChannelIds()
+  const privateChats = useRecoilValue(openPrivateChatPartnersAtom)
 
   const privateChatTabs = flow(
-    filter((chat: PrivateChatState) => chat.isOpen),
-    sortBy((chat) => chat.partnerName.toLowerCase()),
-    map((chat) => (
-      <RoomTab
-        key={chat.partnerName}
-        title={chat.partnerName}
-        icon={<Avatar name={chat.partnerName} css={tw`w-5 h-5`} />}
-        isActive={chat === currentPrivateChat}
-        isUnread={chat.isUnread}
-        onClick={() =>
-          setView({ type: "privateChat", partnerName: chat.partnerName })
-        }
-        onClose={() =>
-          stream.send({ type: "close-private-chat", name: chat.partnerName })
-        }
-      />
-    )),
-  )(state.privateChats.values())
+    sortBy(toLower),
+    map((partnerName) => (
+      <HookScope>
+        {function useScope() {
+          const chat = useRecoilValue(privateChatAtom(partnerName))
+          const closeChat = useClosePrivateChatAction()
+          const view = useRecoilValue(chatNavViewAtom)
 
-  // TODO: get from list of channel IDs
+          const isActive =
+            view?.type === "privateChat" && view.partnerName === partnerName
+
+          return (
+            <RoomTab
+              key={chat.partnerName}
+              title={chat.partnerName}
+              icon={<Avatar name={chat.partnerName} css={tw`w-5 h-5`} />}
+              isActive={isActive}
+              isUnread={chat.isUnread}
+              onClick={() =>
+                setView({ type: "privateChat", partnerName: chat.partnerName })
+              }
+              onClose={() => closeChat(partnerName)}
+            />
+          )
+        }}
+      </HookScope>
+    )),
+  )(privateChats)
+
   const channelTabs = joinedChannelIds.map((id) => (
     <ChannelRoomTab key={id} id={id} />
   ))

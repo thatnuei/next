@@ -6,6 +6,7 @@ import { useChatStream } from "../chat/streamContext"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
 import { factoryFrom } from "../helpers/common/factoryFrom"
+import { useOpenAndShowPrivateChatAction } from "../privateChat/state"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import MenuItem from "../ui/MenuItem"
@@ -16,14 +17,16 @@ import CharacterSummary from "./CharacterSummary"
 import { bookmarksAtom, friendsAtom, ignoredAtom } from "./state"
 
 function CharacterMenu() {
+  const popover = useMemo(factoryFrom(PopoverState), [])
+  const [character, setCharacter] = useState<CharacterState | undefined>()
+
   const chatState = useChatState()
   const chatStream = useChatStream()
   const bookmarks = useRecoilValue(bookmarksAtom)
   const ignored = useRecoilValue(ignoredAtom)
   const friends = useRecoilValue(friendsAtom)
 
-  const popover = useMemo(factoryFrom(PopoverState), [])
-  const [character, setCharacter] = useState<CharacterState | undefined>()
+  const openChat = useOpenAndShowPrivateChatAction()
 
   function handleClick(event: MouseEvent) {
     const characterName = (() => {
@@ -74,12 +77,7 @@ function CharacterMenu() {
         <MenuItem
           icon={icons.message}
           text="Message"
-          onClick={() => {
-            chatStream.send({
-              type: "open-private-chat",
-              name: character.name,
-            })
-          }}
+          onClick={() => openChat(character.name)}
         />
         <MenuItem
           icon={isBookmarked ? icons.bookmark : icons.bookmarkHollow}
