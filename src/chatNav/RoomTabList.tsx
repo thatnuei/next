@@ -1,5 +1,4 @@
 import { flow, map, sortBy, toLower } from "lodash/fp"
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
@@ -29,7 +28,7 @@ function RoomTabList() {
   const privateChatTabs = flow(
     sortBy(toLower),
     map((partnerName) => (
-      <HookScope>
+      <HookScope key={partnerName}>
         {function useScope() {
           const chat = useRecoilValue(privateChatAtom(partnerName))
           const closeChat = useClosePrivateChatAction()
@@ -40,7 +39,6 @@ function RoomTabList() {
 
           return (
             <RoomTab
-              key={chat.partnerName}
               title={chat.partnerName}
               icon={<Avatar name={chat.partnerName} css={tw`w-5 h-5`} />}
               isActive={isActive}
@@ -63,7 +61,7 @@ function RoomTabList() {
   return [privateChatTabs, channelTabs] as any
 }
 
-export default observer(RoomTabList)
+export default RoomTabList
 
 function ChannelRoomTab({ id }: { id: string }) {
   const channel = useRecoilValue(channelAtom(id))

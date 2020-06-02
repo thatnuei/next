@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
@@ -108,4 +107,4 @@ function ChannelView({ channelId, ...props }: Props) {
   )
 }
 
-export default observer(ChannelView)
+export default ChannelView

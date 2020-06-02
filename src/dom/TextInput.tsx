@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { TagProps } from "../jsx/types"
 
@@ -16,4 +15,4 @@ function TextInput({ onChange, onChangeText, ...props }: Props) {
   )
 }
 
-export default observer(TextInput)
+export default TextInput
