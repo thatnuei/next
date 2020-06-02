@@ -7,7 +7,7 @@ it("stores a limited amount of messages, removing the older ones", async () => {
   const messageText = `awesome message`
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  for (const n of range(maxMessageCount)) {
+  for (const _n of range(maxMessageCount)) {
     list.add(createChannelMessage("Testificate", messageText))
   }
 
