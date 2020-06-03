@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import { useChannelListeners } from "../channel/listeners"
+import { joinedChannelIdsAtom } from "../channel/state"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import { useChannelBrowserListeners } from "../channelBrowser/listeners"
 import { isChannelBrowserVisibleAtom } from "../channelBrowser/state"
@@ -15,6 +16,7 @@ import { useMediaQuery } from "../dom/useMediaQuery"
 import { Dict } from "../helpers/common/types"
 import { usePrivateChatListeners } from "../privateChat/listeners"
 import PrivateChatView from "../privateChat/PrivateChatView"
+import { openPrivateChatPartnersAtom } from "../privateChat/state"
 import HookScope from "../react/HookScope"
 import { useSocket, useSocketConnection } from "../socket/socketContext"
 import { SocketStatus } from "../socket/SocketHandler"
@@ -61,8 +63,6 @@ function Chat({ onDisconnect }: Props) {
     identifying: "Identifying...",
   }
 
-  const view = useRecoilValue(chatNavViewAtom)
-
   const [sideMenuVisible, setSideMenuVisible] = useRecoilState(
     sideMenuVisibleAtom,
   )
@@ -71,16 +71,7 @@ function Chat({ onDisconnect }: Props) {
     <div css={[fixedCover, tw`flex`]}>
       {!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
 
-      {view?.type === "channel" ? (
-        <ChannelView css={tw`flex-1`} channelId={view.id} />
-      ) : view?.type === "privateChat" ? (
-        <PrivateChatView css={tw`flex-1`} partnerName={view.partnerName} />
-      ) : (
-        // need this extra div because of flex styling (?)
-        <div>
-          <NoRoomView />
-        </div>
-      )}
+      <ChatRoomView />
 
       {isSmallScreen && (
         <Drawer
@@ -139,3 +130,19 @@ function Chat({ onDisconnect }: Props) {
 }
 
 export default Chat
+
+function ChatRoomView() {
+  const view = useRecoilValue(chatNavViewAtom)
+  const joinedChannels = useRecoilValue(joinedChannelIdsAtom)
+  const openChats = useRecoilValue(openPrivateChatPartnersAtom)
+
+  if (view?.type === "channel" && joinedChannels.includes(view.id)) {
+    return <ChannelView css={tw`flex-1`} channelId={view.id} />
+  }
+
+  if (view?.type === "privateChat" && openChats.includes(view.partnerName)) {
+    return <PrivateChatView css={tw`flex-1`} partnerName={view.partnerName} />
+  }
+
+  return <NoRoomView css={tw`self-start`} />
+}
