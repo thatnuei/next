@@ -3,6 +3,7 @@ import { useRecoilCallback, useSetRecoilState } from "recoil"
 import { useChatCredentials } from "../chat/credentialsContext"
 import { useChatStream } from "../chat/streamContext"
 import { useApiContext } from "../flist/api-context"
+import { runCommand, ServerCommand } from "../socket/commandHelpers"
 import { useSocket, useSocketListener } from "../socket/socketContext"
 import { useStreamListener } from "../state/stream"
 import {
@@ -23,13 +24,6 @@ export function useCharacterListeners() {
   const setIgnored = useSetRecoilState(ignoredAtom)
   const setAdmins = useSetRecoilState(adminsAtom)
 
-  const updateCharacter = useRecoilCallback(
-    ({ set }, name: string, props: Partial<CharacterState>) => {
-      set(characterAtom(name), (prev) => ({ ...prev, ...props }))
-    },
-    [],
-  )
-
   useStreamListener(useChatStream(), (event) => {
     if (event.type === "update-ignored") {
       socket.send({
@@ -47,69 +41,76 @@ export function useCharacterListeners() {
     }
   })
 
-  useSocketListener({
-    async IDN() {
-      const { friendlist, bookmarklist } = await api.getFriendsAndBookmarks()
-      setBookmarks(bookmarklist)
-      setFriends(
-        friendlist.map((entry) => ({ us: entry.source, them: entry.dest })),
-      )
-    },
+  const listener = useRecoilCallback(({ set }, command: ServerCommand) => {
+    const updateCharacter = (name: string, props: Partial<CharacterState>) =>
+      set(characterAtom(name), (prev) => ({ ...prev, ...props }))
 
-    IGN(params) {
-      if (params.action === "init" || params.action === "list") {
-        setIgnored(params.characters)
-      }
-      if (params.action === "add") {
-        setIgnored(concat(params.character))
-      }
-      if (params.action === "delete") {
-        setIgnored(without([params.character]))
-      }
-    },
+    return runCommand(command, {
+      async IDN() {
+        const { friendlist, bookmarklist } = await api.getFriendsAndBookmarks()
+        setBookmarks(bookmarklist)
+        setFriends(
+          friendlist.map((entry) => ({ us: entry.source, them: entry.dest })),
+        )
+      },
 
-    ADL({ ops }) {
-      setAdmins(ops)
-    },
+      IGN(params) {
+        if (params.action === "init" || params.action === "list") {
+          setIgnored(params.characters)
+        }
+        if (params.action === "add") {
+          setIgnored(concat(params.character))
+        }
+        if (params.action === "delete") {
+          setIgnored(without([params.character]))
+        }
+      },
 
-    RTB(params) {
-      if (params.type === "trackadd") {
-        setBookmarks(concat(params.name))
-        // show toast
-      }
+      ADL({ ops }) {
+        setAdmins(ops)
+      },
 
-      if (params.type === "trackrem") {
-        setBookmarks(without([params.name]))
-        // show toast
-      }
+      RTB(params) {
+        if (params.type === "trackadd") {
+          setBookmarks(concat(params.name))
+          // show toast
+        }
 
-      if (params.type === "friendadd") {
-        setFriends(concat({ us: identity, them: params.name }))
-        // show toast
-      }
+        if (params.type === "trackrem") {
+          setBookmarks(without([params.name]))
+          // show toast
+        }
 
-      if (params.type === "friendremove") {
-        setFriends(filter((it) => it.them === params.name))
-        // show toast
-      }
-    },
+        if (params.type === "friendadd") {
+          setFriends(concat({ us: identity, them: params.name }))
+          // show toast
+        }
 
-    LIS({ characters }) {
-      for (const [name, gender, status, statusMessage] of characters) {
-        updateCharacter(name, { gender, status, statusMessage })
-      }
-    },
+        if (params.type === "friendremove") {
+          setFriends(filter((it) => it.them === params.name))
+          // show toast
+        }
+      },
 
-    NLN({ identity: name, gender, status }) {
-      updateCharacter(name, { gender, status, statusMessage: "" })
-    },
+      LIS({ characters }) {
+        for (const [name, gender, status, statusMessage] of characters) {
+          updateCharacter(name, { gender, status, statusMessage })
+        }
+      },
 
-    FLN({ character: name }) {
-      updateCharacter(name, { status: "offline", statusMessage: "" })
-    },
+      NLN({ identity: name, gender, status }) {
+        updateCharacter(name, { gender, status, statusMessage: "" })
+      },
 
-    STA({ character: name, status, statusmsg }) {
-      updateCharacter(name, { status, statusMessage: statusmsg })
-    },
+      FLN({ character: name }) {
+        updateCharacter(name, { status: "offline", statusMessage: "" })
+      },
+
+      STA({ character: name, status, statusmsg }) {
+        updateCharacter(name, { status, statusMessage: statusmsg })
+      },
+    })
   })
+
+  useSocketListener(listener)
 }
