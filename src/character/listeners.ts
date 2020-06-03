@@ -41,76 +41,79 @@ export function useCharacterListeners() {
     }
   })
 
-  const listener = useRecoilCallback(({ set }, command: ServerCommand) => {
-    const updateCharacter = (name: string, props: Partial<CharacterState>) =>
-      set(characterAtom(name), (prev) => ({ ...prev, ...props }))
+  useSocketListener(
+    useRecoilCallback(({ set }, command: ServerCommand) => {
+      const updateCharacter = (name: string, props: Partial<CharacterState>) =>
+        set(characterAtom(name), (prev) => ({ ...prev, ...props }))
 
-    return runCommand(command, {
-      async IDN() {
-        const { friendlist, bookmarklist } = await api.getFriendsAndBookmarks()
-        setBookmarks(bookmarklist)
-        setFriends(
-          friendlist.map((entry) => ({ us: entry.source, them: entry.dest })),
-        )
-      },
+      return runCommand(command, {
+        async IDN() {
+          const {
+            friendlist,
+            bookmarklist,
+          } = await api.getFriendsAndBookmarks()
+          setBookmarks(bookmarklist)
+          setFriends(
+            friendlist.map((entry) => ({ us: entry.source, them: entry.dest })),
+          )
+        },
 
-      IGN(params) {
-        if (params.action === "init" || params.action === "list") {
-          setIgnored(params.characters)
-        }
-        if (params.action === "add") {
-          setIgnored(concat(params.character))
-        }
-        if (params.action === "delete") {
-          setIgnored(without([params.character]))
-        }
-      },
+        IGN(params) {
+          if (params.action === "init" || params.action === "list") {
+            setIgnored(params.characters)
+          }
+          if (params.action === "add") {
+            setIgnored(concat(params.character))
+          }
+          if (params.action === "delete") {
+            setIgnored(without([params.character]))
+          }
+        },
 
-      ADL({ ops }) {
-        setAdmins(ops)
-      },
+        ADL({ ops }) {
+          setAdmins(ops)
+        },
 
-      RTB(params) {
-        if (params.type === "trackadd") {
-          setBookmarks(concat(params.name))
-          // show toast
-        }
+        RTB(params) {
+          if (params.type === "trackadd") {
+            setBookmarks(concat(params.name))
+            // show toast
+          }
 
-        if (params.type === "trackrem") {
-          setBookmarks(without([params.name]))
-          // show toast
-        }
+          if (params.type === "trackrem") {
+            setBookmarks(without([params.name]))
+            // show toast
+          }
 
-        if (params.type === "friendadd") {
-          setFriends(concat({ us: identity, them: params.name }))
-          // show toast
-        }
+          if (params.type === "friendadd") {
+            setFriends(concat({ us: identity, them: params.name }))
+            // show toast
+          }
 
-        if (params.type === "friendremove") {
-          setFriends(filter((it) => it.them === params.name))
-          // show toast
-        }
-      },
+          if (params.type === "friendremove") {
+            setFriends(filter((it) => it.them === params.name))
+            // show toast
+          }
+        },
 
-      LIS({ characters }) {
-        for (const [name, gender, status, statusMessage] of characters) {
-          updateCharacter(name, { gender, status, statusMessage })
-        }
-      },
+        LIS({ characters }) {
+          for (const [name, gender, status, statusMessage] of characters) {
+            updateCharacter(name, { gender, status, statusMessage })
+          }
+        },
 
-      NLN({ identity: name, gender, status }) {
-        updateCharacter(name, { gender, status, statusMessage: "" })
-      },
+        NLN({ identity: name, gender, status }) {
+          updateCharacter(name, { gender, status, statusMessage: "" })
+        },
 
-      FLN({ character: name }) {
-        updateCharacter(name, { status: "offline", statusMessage: "" })
-      },
+        FLN({ character: name }) {
+          updateCharacter(name, { status: "offline", statusMessage: "" })
+        },
 
-      STA({ character: name, status, statusmsg }) {
-        updateCharacter(name, { status, statusMessage: statusmsg })
-      },
-    })
-  })
-
-  useSocketListener(listener)
+        STA({ character: name, status, statusmsg }) {
+          updateCharacter(name, { status, statusMessage: statusmsg })
+        },
+      })
+    }),
+  )
 }
