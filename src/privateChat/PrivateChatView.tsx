@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
@@ -7,7 +6,6 @@ import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
-import { useChatState } from "../chat/chatStateContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
@@ -24,11 +22,9 @@ type Props = {
 } & TagProps<"div">
 
 function PrivateChatView({ partnerName, ...props }: Props) {
-  const state = useChatState()
   const chat = useRecoilValue(privateChatAtom(partnerName))
   const messages = useRecoilValue(privateChatMessagesAtom(partnerName))
   const [input, setInput] = useRecoilState(privateChatInputAtom(partnerName))
-  const character = state.characters.get(chat.partnerName)
   const sendMessage = useSendPrivateMessageAction()
 
   return (
@@ -45,9 +41,9 @@ function PrivateChatView({ partnerName, ...props }: Props) {
         >
           {/* need this extra container to keep the children from shrinking */}
           <div css={tw`my-3`}>
-            <CharacterName character={character} />
+            <CharacterName name={chat.partnerName} />
             {/* the bottom margin needs to be here otherwise the scrolling flex column eats the bottom spacing */}
-            <CharacterStatusText character={character} css={tw`mb-3`} />
+            <CharacterStatusText name={chat.partnerName} css={tw`mb-3`} />
           </div>
         </div>
       </div>
@@ -70,4 +66,4 @@ function PrivateChatView({ partnerName, ...props }: Props) {
   )
 }
 
-export default observer(PrivateChatView)
+export default PrivateChatView

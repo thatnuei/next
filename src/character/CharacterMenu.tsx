@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
-import { useChatState } from "../chat/chatStateContext"
 import { useChatStream } from "../chat/streamContext"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
@@ -12,15 +11,12 @@ import * as icons from "../ui/icons"
 import MenuItem from "../ui/MenuItem"
 import Popover, { PopoverState } from "../ui/Popover"
 import CharacterMemoInput from "./CharacterMemoInput"
-import { CharacterState } from "./CharacterState"
 import CharacterSummary from "./CharacterSummary"
 import { bookmarksAtom, friendsAtom, ignoredAtom } from "./state"
 
 function CharacterMenu() {
+  const [characterName, setCharacterName] = useState<string | undefined>()
   const popover = useMemo(factoryFrom(PopoverState), [])
-  const [character, setCharacter] = useState<CharacterState | undefined>()
-
-  const chatState = useChatState()
   const chatStream = useChatStream()
   const bookmarks = useRecoilValue(bookmarksAtom)
   const ignored = useRecoilValue(ignoredAtom)
@@ -38,7 +34,7 @@ function CharacterMenu() {
     })()
 
     if (characterName) {
-      setCharacter(chatState.characters.get(characterName))
+      setCharacterName(characterName)
       popover.showAt({ x: event.clientX, y: event.clientY })
       event.preventDefault()
     }
@@ -46,16 +42,16 @@ function CharacterMenu() {
 
   useWindowEvent("click", handleClick)
 
-  if (!character) return null
+  if (!characterName) return null
 
-  const isIgnored = ignored.includes(character.name)
-  const isBookmarked = bookmarks.includes(character.name)
-  const friendshipItems = friends.filter((it) => it.them === character.name)
+  const isIgnored = ignored.includes(characterName)
+  const isBookmarked = bookmarks.includes(characterName)
+  const friendshipItems = friends.filter((it) => it.them === characterName)
 
   return (
     <Popover state={popover} css={tw`w-56`}>
       <div css={tw`p-3 bg-background-0`}>
-        <CharacterSummary character={character} />
+        <CharacterSummary name={characterName} />
 
         {friendshipItems.map((item, index) => (
           <div
@@ -72,12 +68,12 @@ function CharacterMenu() {
         <MenuItem
           icon={icons.link}
           text="Profile"
-          href={getProfileUrl(character.name)}
+          href={getProfileUrl(characterName)}
         />
         <MenuItem
           icon={icons.message}
           text="Message"
-          onClick={() => openChat(character.name)}
+          onClick={() => openChat(characterName)}
         />
         <MenuItem
           icon={isBookmarked ? icons.bookmark : icons.bookmarkHollow}
@@ -85,7 +81,7 @@ function CharacterMenu() {
           onClick={() => {
             chatStream.send({
               type: "update-bookmark",
-              name: character.name,
+              name: characterName,
               action: isBookmarked ? "delete" : "add",
             })
           }}
@@ -96,14 +92,14 @@ function CharacterMenu() {
           onClick={() => {
             chatStream.send({
               type: "update-ignored",
-              name: character.name,
+              name: characterName,
               action: isIgnored ? "delete" : "add",
             })
           }}
         />
       </div>
       <div css={tw`p-2 bg-background-0`}>
-        <CharacterMemoInput name={character.name} css={tw`block w-full`} />
+        <CharacterMemoInput name={characterName} css={tw`block w-full`} />
       </div>
     </Popover>
   )

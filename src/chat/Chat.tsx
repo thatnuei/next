@@ -1,4 +1,4 @@
-import { observer } from "mobx-react-lite"
+import { useObserver } from "mobx-react-lite"
 import React from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
@@ -53,6 +53,9 @@ function Chat({ onDisconnect }: Props) {
   })
 
   const socket = useSocket()
+
+  const loadingStatus = useObserver(() => socket.status)
+
   const loadingStatuses: Dict<string, SocketStatus> = {
     connecting: "Connecting...",
     identifying: "Identifying...",
@@ -128,11 +131,11 @@ function Chat({ onDisconnect }: Props) {
       <CharacterMenu />
 
       <LoadingOverlay
-        text={loadingStatuses[socket.status] || "Online!"}
-        visible={socket.status in loadingStatuses}
+        text={loadingStatuses[loadingStatus] || "Online!"}
+        visible={loadingStatus in loadingStatuses}
       />
     </div>
   )
 }
 
-export default observer(Chat)
+export default Chat

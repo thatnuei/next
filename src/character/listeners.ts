@@ -1,15 +1,20 @@
 import { concat, filter, without } from "lodash/fp"
-import { useSetRecoilState } from "recoil"
-import { useChatState } from "../chat/chatStateContext"
+import { useRecoilCallback, useSetRecoilState } from "recoil"
 import { useChatCredentials } from "../chat/credentialsContext"
 import { useChatStream } from "../chat/streamContext"
 import { useApiContext } from "../flist/api-context"
 import { useSocket, useSocketListener } from "../socket/socketContext"
 import { useStreamListener } from "../state/stream"
-import { adminsAtom, bookmarksAtom, friendsAtom, ignoredAtom } from "./state"
+import {
+  adminsAtom,
+  bookmarksAtom,
+  characterAtom,
+  CharacterState,
+  friendsAtom,
+  ignoredAtom,
+} from "./state"
 
 export function useCharacterListeners() {
-  const state = useChatState()
   const socket = useSocket()
   const api = useApiContext()
   const { identity } = useChatCredentials()
@@ -17,6 +22,13 @@ export function useCharacterListeners() {
   const setBookmarks = useSetRecoilState(bookmarksAtom)
   const setIgnored = useSetRecoilState(ignoredAtom)
   const setAdmins = useSetRecoilState(adminsAtom)
+
+  const updateCharacter = useRecoilCallback(
+    ({ set }, name: string, props: Partial<CharacterState>) => {
+      set(characterAtom(name), (prev) => ({ ...prev, ...props }))
+    },
+    [],
+  )
 
   useStreamListener(useChatStream(), (event) => {
     if (event.type === "update-ignored") {
@@ -84,34 +96,20 @@ export function useCharacterListeners() {
 
     LIS({ characters }) {
       for (const [name, gender, status, statusMessage] of characters) {
-        state.characters.update(name, (char) => {
-          char.gender = gender
-          char.status = status
-          char.statusMessage = statusMessage
-        })
+        updateCharacter(name, { gender, status, statusMessage })
       }
     },
 
     NLN({ identity: name, gender, status }) {
-      state.characters.update(name, (char) => {
-        char.gender = gender
-        char.status = status
-        char.statusMessage = ""
-      })
+      updateCharacter(name, { gender, status, statusMessage: "" })
     },
 
     FLN({ character: name }) {
-      state.characters.update(name, (char) => {
-        char.status = "offline"
-        char.statusMessage = ""
-      })
+      updateCharacter(name, { status: "offline", statusMessage: "" })
     },
 
     STA({ character: name, status, statusmsg }) {
-      state.characters.update(name, (char) => {
-        char.status = status
-        char.statusMessage = statusmsg
-      })
+      updateCharacter(name, { status, statusMessage: statusmsg })
     },
   })
 }

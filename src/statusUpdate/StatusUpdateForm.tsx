@@ -1,10 +1,8 @@
-import { useObserver } from "mobx-react-lite"
 import React, { useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
+import { useIdentityCharacter } from "../character/state"
 import { CharacterStatus } from "../character/types"
-import { useChatState } from "../chat/chatStateContext"
-import { useChatCredentials } from "../chat/credentialsContext"
 import Button from "../dom/Button"
 import { delay } from "../helpers/common/delay"
 import { useSocket } from "../socket/socketContext"
@@ -13,11 +11,8 @@ import FormField from "../ui/FormField"
 import { canSubmitStatusAtom, statusSubmitDelayAtom } from "./state"
 
 function StatusUpdateForm() {
-  const state = useChatState()
   const socket = useSocket()
-
-  const { identity } = useChatCredentials()
-  const identityCharacter = useObserver(() => state.characters.get(identity))
+  const identityCharacter = useIdentityCharacter()
 
   const [status, setStatus] = useState(identityCharacter.status)
   const [statusMessage, setStatusMessage] = useState(
