@@ -1,5 +1,3 @@
-import { observable } from "mobx"
-
 type TaskOptions<T> = {
   run: () => Promise<T>
   onStart?: () => void
@@ -8,10 +6,10 @@ type TaskOptions<T> = {
   onCancelled?: () => void
 }
 
+// TODO: convert to a hook probably
 export class Task<T> {
   constructor(private readonly options: TaskOptions<T>) {}
 
-  @observable
   status: "idle" | "running" | "complete" | "error" | "cancelled" = "idle"
 
   run = () => {

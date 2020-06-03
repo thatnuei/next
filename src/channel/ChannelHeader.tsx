@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React, { useState } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import tw from "twin.macro"
 import { isPublicSelector } from "../channelBrowser/state"
@@ -12,8 +12,7 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import MenuItem from "../ui/MenuItem"
 import Modal from "../ui/Modal"
-import { OverlayState } from "../ui/OverlayState"
-import Popover, { PopoverState } from "../ui/Popover"
+import Popover, { usePopover } from "../ui/Popover"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
 import InviteUsersForm from "./InviteUsersForm"
@@ -34,8 +33,8 @@ function ChannelHeader({
   const channel = useRecoilValue(channelAtom(channelId))
   const setChannelMessages = useSetRecoilState(channelMessagesAtom(channelId))
   const isLargeScreen = useMediaQuery(screenQueries.large)
-  const menu = useMemo(() => new PopoverState(), [])
-  const inviteDialog = useMemo(() => new OverlayState(), [])
+  const menu = usePopover()
+  const [inviteDialogVisible, setInviteDialogVisible] = useState(false)
   const { identity } = useChatCredentials()
   const isPublic = useRecoilValue(isPublicSelector(channel.id))
 
@@ -43,10 +42,11 @@ function ChannelHeader({
 
   function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
     const target = event.currentTarget
-    menu.showAt({
+    menu.setPosition({
       x: target.offsetLeft,
       y: target.offsetTop + target.clientHeight,
     })
+    menu.setVisible(true)
   }
 
   function clearChannelMessages() {
@@ -87,14 +87,17 @@ function ChannelHeader({
         <Icon which={icons.more} />
       </Button>
 
-      <Popover state={menu} css={tw`w-48 bg-background-2`}>
+      <Popover {...menu} css={tw`w-48 bg-background-2`}>
         {!isLargeScreen && (
           <ChannelFilters
             channelId={channel.id}
             css={tw`px-3 py-2 bg-background-0 mb-gap`}
           />
         )}
-        <div css={tw`flex flex-col bg-background-1`} onClick={menu.hide}>
+        <div
+          css={tw`flex flex-col bg-background-1`}
+          onClick={() => menu.setVisible(false)}
+        >
           <MenuItem
             text="Copy code"
             icon={icons.code}
@@ -111,15 +114,15 @@ function ChannelHeader({
             <MenuItem
               text="Invite"
               icon={icons.invite}
-              onClick={inviteDialog.show}
+              onClick={() => setInviteDialogVisible(true)}
             />
           )}
         </div>
       </Popover>
 
       <Modal
-        isVisible={inviteDialog.isVisible}
-        onDismiss={inviteDialog.hide}
+        isVisible={inviteDialogVisible}
+        onDismiss={() => setInviteDialogVisible(false)}
         title={`Invite to ${channel.title}`}
         width={400}
         height={700}

@@ -1,22 +1,21 @@
-import React, { useMemo, useState } from "react"
+import React, { useState } from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import { useChatStream } from "../chat/streamContext"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
-import { factoryFrom } from "../helpers/common/factoryFrom"
 import { useOpenAndShowPrivateChatAction } from "../privateChat/state"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import MenuItem from "../ui/MenuItem"
-import Popover, { PopoverState } from "../ui/Popover"
+import Popover, { usePopover } from "../ui/Popover"
 import CharacterMemoInput from "./CharacterMemoInput"
 import CharacterSummary from "./CharacterSummary"
 import { bookmarksAtom, friendsAtom, ignoredAtom } from "./state"
 
 function CharacterMenu() {
   const [characterName, setCharacterName] = useState<string | undefined>()
-  const popover = useMemo(factoryFrom(PopoverState), [])
+  const popover = usePopover()
   const chatStream = useChatStream()
   const bookmarks = useRecoilValue(bookmarksAtom)
   const ignored = useRecoilValue(ignoredAtom)
@@ -34,9 +33,10 @@ function CharacterMenu() {
     })()
 
     if (characterName) {
-      setCharacterName(characterName)
-      popover.showAt({ x: event.clientX, y: event.clientY })
       event.preventDefault()
+      setCharacterName(characterName)
+      popover.setPosition({ x: event.clientX, y: event.clientY })
+      popover.setVisible(true)
     }
   }
 
@@ -49,7 +49,7 @@ function CharacterMenu() {
   const friendshipItems = friends.filter((it) => it.them === characterName)
 
   return (
-    <Popover state={popover} css={tw`w-56`}>
+    <Popover {...popover} css={tw`w-56`}>
       <div css={tw`p-3 bg-background-0`}>
         <CharacterSummary name={characterName} />
 
@@ -64,7 +64,7 @@ function CharacterMenu() {
         ))}
       </div>
 
-      <div css={tw`flex flex-col`} onClick={popover.hide}>
+      <div css={tw`flex flex-col`} onClick={() => popover.setVisible(false)}>
         <MenuItem
           icon={icons.link}
           text="Profile"

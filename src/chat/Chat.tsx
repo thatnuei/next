@@ -1,4 +1,3 @@
-import { useObserver } from "mobx-react-lite"
 import React from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
@@ -20,7 +19,7 @@ import { openPrivateChatPartnersAtom } from "../privateChat/state"
 import HookScope from "../react/HookScope"
 import { useSocket, useSocketConnection } from "../socket/socketContext"
 import { SocketStatus } from "../socket/SocketHandler"
-import { useStreamListener } from "../state/stream"
+import { useStreamListener, useStreamValue } from "../state/stream"
 import { useStatusUpdateListeners } from "../statusUpdate/listeners"
 import { statusOverlayVisibleAtom } from "../statusUpdate/state"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
@@ -53,15 +52,6 @@ function Chat({ onDisconnect }: Props) {
       onDisconnect()
     }
   })
-
-  const socket = useSocket()
-
-  const loadingStatus = useObserver(() => socket.status)
-
-  const loadingStatuses: Dict<string, SocketStatus> = {
-    connecting: "Connecting...",
-    identifying: "Identifying...",
-  }
 
   const [sideMenuVisible, setSideMenuVisible] = useRecoilState(
     sideMenuVisibleAtom,
@@ -121,10 +111,24 @@ function Chat({ onDisconnect }: Props) {
 
       <CharacterMenu />
 
-      <LoadingOverlay
-        text={loadingStatuses[loadingStatus] || "Online!"}
-        visible={loadingStatus in loadingStatuses}
-      />
+      <HookScope>
+        {function useScope() {
+          const socket = useSocket()
+          const loadingStatus = useStreamValue(socket.statusStream, "idle")
+
+          const loadingDisplays: Dict<string, SocketStatus> = {
+            connecting: "Connecting...",
+            identifying: "Identifying...",
+          }
+
+          return (
+            <LoadingOverlay
+              text={loadingDisplays[loadingStatus] || "Online!"}
+              visible={loadingStatus in loadingDisplays}
+            />
+          )
+        }}
+      </HookScope>
     </div>
   )
 }

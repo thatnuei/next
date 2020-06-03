@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export type StreamListener<T> = (event: T) => void
 
@@ -24,4 +24,10 @@ export function useStreamListener<T>(
   listener: StreamListener<T>,
 ) {
   useEffect(() => stream.listen(listener), [stream, listener])
+}
+
+export function useStreamValue<T>(stream: Stream<T>, initialValue: T) {
+  const [value, setValue] = useState<T>(initialValue)
+  useStreamListener(stream, setValue)
+  return value
 }
