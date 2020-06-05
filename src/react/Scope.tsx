@@ -1,9 +1,9 @@
 import React from "react"
 
-type HookScopeProps = {
+type ScopeProps = {
   children: () => React.ReactNode
 }
 
-export default function HookScope(props: HookScopeProps) {
+export default function Scope(props: ScopeProps) {
   return <>{props.children()}</>
 }

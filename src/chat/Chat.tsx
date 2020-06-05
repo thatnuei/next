@@ -16,7 +16,7 @@ import { Dict } from "../helpers/common/types"
 import { usePrivateChatListeners } from "../privateChat/listeners"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { openPrivateChatPartnersAtom } from "../privateChat/state"
-import HookScope from "../react/HookScope"
+import Scope from "../react/Scope"
 import { useSocket, useSocketConnection } from "../socket/socketContext"
 import { SocketStatus } from "../socket/SocketHandler"
 import { useStreamListener, useStreamValue } from "../state/stream"
@@ -68,7 +68,7 @@ function Chat({ onDisconnect }: Props) {
         </Drawer>
       )}
 
-      <HookScope>
+      <Scope>
         {function useScope() {
           const overlay = useOverlayControlled(
             useRecoilState(isChannelBrowserVisibleAtom),
@@ -83,9 +83,9 @@ function Chat({ onDisconnect }: Props) {
             />
           )
         }}
-      </HookScope>
+      </Scope>
 
-      <HookScope>
+      <Scope>
         {function useScope() {
           const overlay = useOverlayControlled(
             useRecoilState(statusOverlayVisibleAtom),
@@ -100,11 +100,11 @@ function Chat({ onDisconnect }: Props) {
             />
           )
         }}
-      </HookScope>
+      </Scope>
 
       <CharacterMenu />
 
-      <HookScope>
+      <Scope>
         {function useScope() {
           const socket = useSocket()
           const loadingStatus = useStreamValue(socket.statusStream, "idle")
@@ -121,7 +121,7 @@ function Chat({ onDisconnect }: Props) {
             />
           )
         }}
-      </HookScope>
+      </Scope>
     </div>
   )
 }

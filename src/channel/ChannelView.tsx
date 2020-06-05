@@ -6,7 +6,7 @@ import ChatInput from "../chat/ChatInput"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
-import HookScope from "../react/HookScope"
+import Scope from "../react/Scope"
 import Drawer from "../ui/Drawer"
 import { scrollVertical } from "../ui/helpers"
 import Modal from "../ui/Modal"
@@ -50,7 +50,7 @@ function ChannelView({ channelId, ...props }: Props) {
 
       <div css={tw`flex flex-row flex-1 min-h-0 my-gap`}>
         <main css={tw`relative flex-1 bg-background-1`}>
-          <HookScope>
+          <Scope>
             {function useScope() {
               const messages = useRecoilValue(channelMessagesAtom(channelId))
               return (
@@ -62,7 +62,7 @@ function ChannelView({ channelId, ...props }: Props) {
                 />
               )
             }}
-          </HookScope>
+          </Scope>
 
           <Modal
             title="Description"

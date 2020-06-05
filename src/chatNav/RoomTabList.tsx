@@ -14,7 +14,7 @@ import {
   privateChatAtom,
   useClosePrivateChatAction,
 } from "../privateChat/state"
-import HookScope from "../react/HookScope"
+import Scope from "../react/Scope"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import RoomTab from "./RoomTab"
@@ -28,7 +28,7 @@ function RoomTabList() {
   const privateChatTabs = flow(
     sortBy(toLower),
     map((partnerName) => (
-      <HookScope key={partnerName}>
+      <Scope key={partnerName}>
         {function useScope() {
           const chat = useRecoilValue(privateChatAtom(partnerName))
           const closeChat = useClosePrivateChatAction()
@@ -50,7 +50,7 @@ function RoomTabList() {
             />
           )
         }}
-      </HookScope>
+      </Scope>
     )),
   )(privateChats)
 
