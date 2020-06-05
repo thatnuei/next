@@ -1,33 +1,43 @@
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import { FocusOn } from "react-focus-on"
 import tw from "twin.macro"
 import { useElementSize } from "../dom/useElementSize"
 import { useWindowSize } from "../dom/useWindowSize"
 import { TagProps } from "../jsx/types"
 import Portal from "../react/Portal"
+import { OverlayProps, useOverlay } from "./overlay"
 
-type Props = {
-  x: number
-  y: number
-  children: React.ReactNode
-  isVisible: boolean
-  onDismiss: () => void
-} & TagProps<"div">
+type Props = OverlayProps &
+  TagProps<"div"> & {
+    position: PopoverPosition
+    children: React.ReactNode
+  }
+
+type PopoverPosition = { x: number; y: number }
 
 const edgeSpacing = 12
 
-function Popover({ children, x, y, isVisible, onDismiss, ...props }: Props) {
+function Popover({
+  children,
+  position,
+  isVisible,
+  onDismiss,
+  ...props
+}: Props) {
   const [container, setContainer] = useState<HTMLElement | null>()
   const containerSize = useElementSize(container)
   const windowSize = useWindowSize()
 
   const left = Math.max(
-    Math.min(x, windowSize.width - containerSize.width - edgeSpacing),
+    Math.min(position.x, windowSize.width - containerSize.width - edgeSpacing),
     edgeSpacing,
   )
 
   const top = Math.max(
-    Math.min(y, windowSize.height - containerSize.height - edgeSpacing),
+    Math.min(
+      position.y,
+      windowSize.height - containerSize.height - edgeSpacing,
+    ),
     edgeSpacing,
   )
 
@@ -58,14 +68,22 @@ function Popover({ children, x, y, isVisible, onDismiss, ...props }: Props) {
 export default Popover
 
 export function usePopover() {
-  const [isVisible, setVisible] = useState(false)
+  const state = useOverlay()
   const [position, setPosition] = useState({ x: 0, y: 0 })
 
-  return {
-    ...position,
-    setPosition,
-    isVisible,
-    setVisible,
-    onDismiss: () => setVisible(false),
-  }
+  const { show } = state
+  const showAt = useCallback(
+    (position: PopoverPosition) => {
+      setPosition(position)
+      show()
+    },
+    [show],
+  )
+
+  // TODO: add another callback which accepts an element,
+  // then shows the popover at that element's position,
+  // possibly accepting a position/alignment option
+  // for easier context menus with button triggers
+
+  return { ...state, showAt, props: { ...state.props, position } }
 }

@@ -5,12 +5,11 @@ import * as icons from "../ui/icons"
 import { fadedButton } from "./components"
 import { fixedCover, transition } from "./helpers"
 import Icon from "./Icon"
+import { OverlayProps } from "./overlay"
 
-type Props = {
+type Props = OverlayProps & {
   children: React.ReactNode
-  isVisible: boolean
   side: "left" | "right"
-  onDismiss: () => void
 }
 
 function Drawer({ isVisible, onDismiss, side, children }: Props) {

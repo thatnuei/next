@@ -27,6 +27,7 @@ import Drawer from "../ui/Drawer"
 import { fixedCover } from "../ui/helpers"
 import LoadingOverlay from "../ui/LoadingOverlay"
 import Modal from "../ui/Modal"
+import { useOverlayControlled } from "../ui/overlay"
 import { screenQueries } from "../ui/screens"
 import NoRoomView from "./NoRoomView"
 import { sideMenuVisibleAtom } from "./state"
@@ -53,9 +54,7 @@ function Chat({ onDisconnect }: Props) {
     }
   })
 
-  const [sideMenuVisible, setSideMenuVisible] = useRecoilState(
-    sideMenuVisibleAtom,
-  )
+  const sideMenu = useOverlayControlled(useRecoilState(sideMenuVisibleAtom))
 
   return (
     <div css={[fixedCover, tw`flex`]}>
@@ -64,27 +63,22 @@ function Chat({ onDisconnect }: Props) {
       <ChatRoomView />
 
       {isSmallScreen && (
-        <Drawer
-          side="left"
-          isVisible={sideMenuVisible}
-          onDismiss={() => setSideMenuVisible(false)}
-        >
+        <Drawer side="left" {...sideMenu.props}>
           <ChatNav css={tw`h-full bg-background-2`} />
         </Drawer>
       )}
 
       <HookScope>
         {function useScope() {
-          const [isVisible, setVisible] = useRecoilState(
-            isChannelBrowserVisibleAtom,
+          const overlay = useOverlayControlled(
+            useRecoilState(isChannelBrowserVisibleAtom),
           )
           return (
             <Modal
+              {...overlay.props}
               title="Channels"
               width={480}
               height={720}
-              isVisible={isVisible}
-              onDismiss={() => setVisible(false)}
               children={<ChannelBrowser />}
             />
           )
@@ -93,16 +87,15 @@ function Chat({ onDisconnect }: Props) {
 
       <HookScope>
         {function useScope() {
-          const [isVisible, setVisible] = useRecoilState(
-            statusOverlayVisibleAtom,
+          const overlay = useOverlayControlled(
+            useRecoilState(statusOverlayVisibleAtom),
           )
           return (
             <Modal
+              {...overlay.props}
               title="Update Your Status"
               width={480}
               height={360}
-              isVisible={isVisible}
-              onDismiss={() => setVisible(false)}
               children={<StatusUpdateForm />}
             />
           )

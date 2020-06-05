@@ -35,8 +35,7 @@ function CharacterMenu() {
     if (characterName) {
       event.preventDefault()
       setCharacterName(characterName)
-      popover.setPosition({ x: event.clientX, y: event.clientY })
-      popover.setVisible(true)
+      popover.showAt({ x: event.clientX, y: event.clientY })
     }
   }
 
@@ -49,7 +48,7 @@ function CharacterMenu() {
   const friendshipItems = friends.filter((it) => it.them === characterName)
 
   return (
-    <Popover {...popover} css={tw`w-56`}>
+    <Popover {...popover.props} css={tw`w-56`}>
       <div css={tw`p-3 bg-background-0`}>
         <CharacterSummary name={characterName} />
 
@@ -64,7 +63,7 @@ function CharacterMenu() {
         ))}
       </div>
 
-      <div css={tw`flex flex-col`} onClick={() => popover.setVisible(false)}>
+      <div css={tw`flex flex-col`} onClick={popover.show}>
         <MenuItem
           icon={icons.link}
           text="Profile"
