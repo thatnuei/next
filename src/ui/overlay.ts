@@ -1,25 +1,21 @@
 import { compose } from "lodash/fp"
-import {
-  useVisibleState,
-  useVisibleStateControlled,
-  VisibleState,
-} from "../react/useVisibleState"
+import { SwitchState, useSwitch, useSwitchControlled } from "../react/switch"
 
 export type OverlayProps = {
   isVisible: boolean
   onDismiss: () => void
 }
 
-export const useOverlay = compose(getOverlayState, useVisibleState)
+export const useOverlay = compose(getOverlayState, useSwitch)
 
 export const useOverlayControlled = compose(
   getOverlayState,
-  useVisibleStateControlled,
+  useSwitchControlled,
 )
 
-export function getOverlayState(state: VisibleState) {
+export function getOverlayState(state: SwitchState) {
   return {
     ...state,
-    props: { isVisible: state.isVisible, onDismiss: state.hide },
+    props: { isVisible: state.value, onDismiss: state.hide },
   }
 }
