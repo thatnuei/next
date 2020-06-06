@@ -3,8 +3,6 @@ import { UseStateReturn } from "./types"
 
 export type SwitchState = ReturnType<typeof useSwitchControlled>
 
-export type SwitchControlledArgs = Parameters<typeof useSwitchControlled>
-
 export function useSwitch(initial = false) {
   return useSwitchControlled(useState(initial))
 }
