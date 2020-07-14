@@ -1,8 +1,8 @@
 import preval from "preval.macro"
 
 const screens = preval`
-  const resolveConfig = require('tailwindcss/resolveConfig')
-  const config = resolveConfig(require('../../tailwind.config'))
+  const resolveConfig = require(process.cwd() + '/node_modules/tailwindcss/resolveConfig.js')
+  const config = resolveConfig(require(process.cwd() + '/tailwind.config.js'))
   module.exports = config.theme.screens
 `
 
