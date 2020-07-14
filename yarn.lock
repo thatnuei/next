@@ -1536,7 +1536,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/react@npm:^11.0.0-next.13":
+"@emotion/react@npm:11.0.0-next.13":
   version: 11.0.0-next.13
   resolution: "@emotion/react@npm:11.0.0-next.13"
   dependencies:
@@ -1863,7 +1863,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdi/js@npm:^5.3.45":
+"@mdi/js@npm:5.3.45":
   version: 5.3.45
   resolution: "@mdi/js@npm:5.3.45"
   checksum: dc02a454abc63846cd69e05a3675c87080209612ec289a2592dbc5a089680fa3e99d310b9f5c1f843bf0191f5c14675333366dfcb24d84113d7ea526307fdaaf
@@ -6547,7 +6547,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fchat@npm:^1.4.0":
+"fchat@npm:1.4.0":
   version: 1.4.0
   resolution: "fchat@npm:1.4.0"
   dependencies:
@@ -6774,7 +6774,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"focus-visible@npm:^5.1.0":
+"focus-visible@npm:5.1.0":
   version: 5.1.0
   resolution: "focus-visible@npm:5.1.0"
   checksum: ae6106e1d598583666ea7fff5f11838c981f597fdefd326607b54808e6fa7c479235b39329eac7959ebdb561010ec627062e28ae34e472c8ebca94933c5dd3b9
@@ -7020,7 +7020,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"fuzzysearch@npm:^1.0.3":
+"fuzzysearch@npm:1.0.3":
   version: 1.0.3
   resolution: "fuzzysearch@npm:1.0.3"
   checksum: 3c37111fdd101ae113c00cad6a0fb827a0b86fffa04cdde5e09b7b05e69210b095383ba895d60e37285f7f6697e25631797bf9841f29d2d86493eb6c844fecce
@@ -7641,7 +7641,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"idb@npm:^5.0.4":
+"idb@npm:5.0.4":
   version: 5.0.4
   resolution: "idb@npm:5.0.4"
   checksum: 4c72e13b9179d4d35615669eb60f7a7a0e9eeb93f25323eeddddea2743388698954d4e9270e4db912646ddb0e0436dc148a649226f75949be35cb5b41b2bf18b
@@ -10036,7 +10036,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"mobx-react-lite@npm:^2.0.7":
+"mobx-react-lite@npm:2.0.7":
   version: 2.0.7
   resolution: "mobx-react-lite@npm:2.0.7"
   peerDependencies:
@@ -10046,7 +10046,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"mobx@npm:^5.15.4":
+"mobx@npm:5.15.4":
   version: 5.15.4
   resolution: "mobx@npm:5.15.4"
   checksum: 4f34a46414e9f0c6f707b68d92224078da74c0796f1163d1b97a1534474d080e41ab7d0aff2636c975c5ccb5164bc265bf2c558c296dd1ca89315603a327edea
@@ -10185,8 +10185,8 @@ fsevents@~2.1.2:
   dependencies:
     "@craco/craco": 5.6.4
     "@emotion/babel-preset-css-prop": 11.0.0-next.10
-    "@emotion/react": ^11.0.0-next.13
-    "@mdi/js": ^5.3.45
+    "@emotion/react": 11.0.0-next.13
+    "@mdi/js": 5.3.45
     "@pmmmwh/react-refresh-webpack-plugin": 0.3.3
     "@testing-library/jest-dom": 5.11.0
     "@testing-library/react": 10.4.6
@@ -10198,25 +10198,25 @@ fsevents@~2.1.2:
     "@types/testing-library__jest-dom": 5.9.1
     babel-loader: 8.1.0
     fake-indexeddb: 3.1.0
-    fchat: ^1.4.0
-    focus-visible: ^5.1.0
-    fuzzysearch: ^1.0.3
-    idb: ^5.0.4
+    fchat: 1.4.0
+    focus-visible: 5.1.0
+    fuzzysearch: 1.0.3
+    idb: 5.0.4
     jest-environment-jsdom-sixteen: 1.0.3
-    mobx: ^5.15.4
-    mobx-react-lite: ^2.0.7
+    mobx: 5.15.4
+    mobx-react-lite: 2.0.7
     npm-run-all: 4.1.5
-    polished: ^3.6.5
-    preact: ^10.4.5
+    polished: 3.6.5
+    preact: 10.4.5
     prettier: 2.0.5
     preval.macro: 5.0.0
-    react: ^16.13.1
-    react-dom: ^16.13.1
-    react-focus-on: ^3.4.1
+    react: 16.13.1
+    react-dom: 16.13.1
+    react-focus-on: 3.4.1
     react-refresh: 0.8.3
     react-scripts: 3.4.1
-    react-window: ^1.8.5
-    resize-observer-polyfill: ^1.5.1
+    react-window: 1.8.5
+    resize-observer-polyfill: 1.5.1
     serve: 11.3.2
     source-map-explorer: 2.4.2
     tailwindcss: 1.4.6
@@ -11276,7 +11276,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"polished@npm:^3.6.5":
+"polished@npm:3.6.5":
   version: 3.6.5
   resolution: "polished@npm:3.6.5"
   dependencies:
@@ -12170,7 +12170,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"preact@npm:^10.4.5":
+"preact@npm:10.4.5":
   version: 10.4.5
   resolution: "preact@npm:10.4.5"
   checksum: 9f8696d350f48990ad81e32ada025456d50280cbcebc652603a19ed39222eee8463906d32c780301a3b09f81ae09568a5e66679eae57920eb88bd15fa3ba6a93
@@ -12617,7 +12617,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^16.13.1":
+"react-dom@npm:16.13.1":
   version: 16.13.1
   resolution: "react-dom@npm:16.13.1"
   dependencies:
@@ -12654,7 +12654,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-focus-on@npm:^3.4.1":
+"react-focus-on@npm:3.4.1":
   version: 3.4.1
   resolution: "react-focus-on@npm:3.4.1"
   dependencies:
@@ -12811,7 +12811,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-window@npm:^1.8.5":
+"react-window@npm:1.8.5":
   version: 1.8.5
   resolution: "react-window@npm:1.8.5"
   dependencies:
@@ -12824,7 +12824,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react@npm:^16.13.1":
+"react@npm:16.13.1":
   version: 16.13.1
   resolution: "react@npm:16.13.1"
   dependencies:
@@ -13233,7 +13233,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"resize-observer-polyfill@npm:^1.5.1":
+"resize-observer-polyfill@npm:1.5.1":
   version: 1.5.1
   resolution: "resize-observer-polyfill@npm:1.5.1"
   checksum: ba14bfaf584eda299eafd6a06233a65c76586bc2bab3cdfdd1edd25fc6479f4270788ddd082e65390049b3ed542558f02bdf1f123bd912624de5b11d48857ac8
