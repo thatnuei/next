@@ -5,7 +5,7 @@ import reactPlugin from "vite-plugin-react"
 const babelTransform: Transform = {
   test: (file) => /tsx?$/.test(file.path),
 
-  async transform({ code, path }) {
+  transform({ code, path }) {
     const result = babel.transformSync(code, {
       filename: path,
     })
@@ -17,14 +17,13 @@ const babelTransform: Transform = {
 }
 
 const config: UserConfig = {
-  jsx: "react",
   plugins: [reactPlugin],
   outDir: "build",
-  enableEsbuild: true,
+  enableEsbuild: false,
   transforms: [babelTransform],
   port: 8080,
   optimizeDeps: {
-    include: ["fuzzysearch", "mobx-react-lite/batchingForReactDom"],
+    include: ["fuzzysearch"],
   },
 }
 

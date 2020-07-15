@@ -1,8 +1,10 @@
 import { configure } from "mobx"
-import "mobx-react-lite/batchingForReactDom"
+import { observerBatching } from "mobx-react-lite"
 import React from "react"
 import ReactDOM from "react-dom"
 import Root from "./Root"
+
+observerBatching(ReactDOM.unstable_batchedUpdates as any)
 
 configure({
   reactionRequiresObservable: true,

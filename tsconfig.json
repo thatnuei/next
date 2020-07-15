@@ -13,7 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "plugins": [{ "name": "typescript-plugin-tw-template" }],
     "experimentalDecorators": true
   },
