@@ -1,5 +1,5 @@
-import { assert } from "../common/assert"
-import { compareLower } from "../common/compareLower"
+import { sortBy, toLower } from "lodash/fp"
+import { assert } from "../helpers/common/assert"
 import { fetchJson } from "./fetchJson"
 
 export type LoginCredentials = {
@@ -100,8 +100,10 @@ export function createFListApi() {
       ticketTimestamp: Date.now(),
     }
 
-    data.characters.sort(compareLower)
-    return data
+    return {
+      ...data,
+      characters: sortBy(toLower, data.characters),
+    }
   }
 
   async function addBookmark({ name }: { name: string }) {

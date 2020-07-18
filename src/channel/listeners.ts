@@ -1,146 +1,118 @@
-import { useChatState } from "../chat/chatStateContext"
-import { createCommandHandler } from "../chat/commandHelpers"
-import { useCommandStream } from "../chat/commandStreamContext"
+import { uniq } from "lodash/fp"
+import { useRecoilCallback } from "recoil"
+import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { useChatCredentials } from "../chat/credentialsContext"
-import { useChatSocket } from "../chat/socketContext"
-import { useChatStream } from "../chat/streamContext"
-import { useChatNav } from "../chatNav/state"
 import {
   createAdMessage,
   createChannelMessage,
   createSystemMessage,
 } from "../message/MessageState"
-import { useStreamListener } from "../state/stream"
+import { runCommand, ServerCommand } from "../socket/commandHelpers"
+import { useSocketListener } from "../socket/socketContext"
+import {
+  channelAtom,
+  channelMessagesAtom,
+  ChannelState,
+  joinedChannelIdsAtom,
+  useJoinChannelAction,
+} from "./state"
 import { loadChannels, saveChannels } from "./storage"
 
 export function useChannelListeners() {
-  const state = useChatState()
-  const { channels } = state
-
-  const chatStream = useChatStream()
-  const commandStream = useCommandStream()
-  const socket = useChatSocket()
   const { account, identity } = useChatCredentials()
-  const nav = useChatNav()
+  const openChannelBrowser = useOpenChannelBrowserAction()
+  const joinChannel = useJoinChannelAction()
 
-  useStreamListener(chatStream, (event) => {
-    if (event.type === "join-channel") {
-      if (channels.get(event.id).joinState === "absent") {
-        channels.update(event.id, (channel) => {
-          channel.joinState = "joining"
-          if (event.title) channel.title = event.title
-        })
-        socket.send({ type: "JCH", params: { channel: event.id } })
-      }
-    }
-
-    if (event.type === "leave-channel") {
-      if (channels.get(event.id).joinState === "present") {
-        channels.update(event.id, (channel) => {
-          channel.joinState = "leaving"
-        })
-        socket.send({ type: "LCH", params: { channel: event.id } })
-        saveChannels(state, account, identity)
-      }
-    }
-
-    if (event.type === "send-channel-message") {
-      channels.update(event.channelId, (channel) => {
-        channel.messageList.add(createChannelMessage(identity, event.text))
-      })
-      socket.send({
-        type: "MSG",
-        params: { channel: event.channelId, message: event.text },
-      })
-    }
-  })
-
-  useStreamListener(
-    commandStream,
-    createCommandHandler({
-      async IDN() {
-        const channels = await loadChannels(account, identity)
-        if (channels.length === 0) {
-          chatStream.send({ type: "open-channel-browser" })
-        } else {
-          for (const { id, title } of channels) {
-            chatStream.send({ type: "join-channel", id, title })
+  const commandListener = useRecoilCallback(
+    ({ set, snapshot }) => (command: ServerCommand) =>
+      runCommand(command, {
+        async IDN() {
+          const channelIds = await loadChannels(account, identity)
+          if (channelIds.length === 0) {
+            openChannelBrowser()
+          } else {
+            for (const id of channelIds) joinChannel(id)
           }
-        }
-      },
+        },
 
-      JCH({ channel: id, character: { identity: name }, title }) {
-        channels.update(id, (channel) => {
-          channel.title = title
-          channel.users.add(name)
-
+        async JCH({ channel: id, character: { identity: name }, title }) {
           if (name === identity) {
-            channel.joinState = "present"
-            saveChannels(state, account, identity)
+            const joinedIds = await snapshot.getPromise(joinedChannelIdsAtom)
+            const newJoinedIds = uniq([...joinedIds, id])
+            set(joinedChannelIdsAtom, newJoinedIds)
+            saveChannels(newJoinedIds, account, identity)
           }
-        })
-      },
 
-      LCH({ channel: id, character }) {
-        channels.update(id, (channel) => {
-          channel.users.delete(character)
+          set(
+            channelAtom(id),
+            (prev): ChannelState => ({
+              ...prev,
+              title,
+              users: uniq([...prev.users, name]),
+            }),
+          )
+        },
 
+        async LCH({ channel: id, character }) {
           if (character === identity) {
-            channel.joinState = "absent"
+            const joinedIds = await snapshot.getPromise(joinedChannelIdsAtom)
+            const newJoinedIds = uniq(
+              joinedIds.filter((current) => current !== id),
+            )
+            set(joinedChannelIdsAtom, newJoinedIds)
+            saveChannels(newJoinedIds, account, identity)
           }
-        })
-      },
 
-      FLN({ character }) {
-        for (const channel of channels.values()) {
-          channel.users.delete(character)
-        }
-      },
+          set(channelAtom(id), (prev) => ({
+            ...prev,
+            users: prev.users.filter((name) => name !== character),
+          }))
+        },
 
-      ICH({ channel: id, users, mode }) {
-        channels.update(id, (channel) => {
-          channel.users = new Set(users.map((it) => it.identity))
-          channel.mode = mode
-        })
-      },
+        ICH({ channel: id, users, mode }) {
+          set(channelAtom(id), (prev) => ({
+            ...prev,
+            users: uniq(users.map((it) => it.identity)),
+            mode,
+          }))
+        },
 
-      CDS({ channel: id, description }) {
-        channels.update(id, (channel) => {
-          channel.description = description
-        })
-      },
+        CDS({ channel: id, description }) {
+          set(channelAtom(id), (prev) => ({ ...prev, description }))
+        },
 
-      COL({ channel: id, oplist }) {
-        channels.update(id, (channel) => {
-          channel.ops = new Set(oplist)
-        })
-      },
+        COL({ channel: id, oplist }) {
+          set(channelAtom(id), (prev) => ({ ...prev, ops: oplist as string[] }))
+        },
 
-      MSG({ channel: id, character, message }) {
-        channels.update(id, (channel) => {
-          channel.messageList.add(createChannelMessage(character, message))
+        MSG({ channel: id, character, message }) {
+          set(channelMessagesAtom(id), (prev) => [
+            ...prev,
+            createChannelMessage(character, message),
+          ])
 
-          if (nav.currentChannel !== channel) {
-            channel.isUnread = true
+          // update unread state
+        },
+
+        LRP({ channel: id, character, message }) {
+          set(channelMessagesAtom(id), (prev) => [
+            ...prev,
+            createAdMessage(character, message),
+          ])
+        },
+
+        RLL(params) {
+          if ("channel" in params) {
+            const { channel: id, message } = params
+            set(channelMessagesAtom(id), (prev) => [
+              ...prev,
+              createSystemMessage(message),
+            ])
           }
-        })
-      },
-
-      LRP({ channel: id, character, message }) {
-        channels.update(id, (channel) => {
-          channel.messageList.add(createAdMessage(character, message))
-        })
-      },
-
-      RLL(params) {
-        if ("channel" in params) {
-          const { channel: id, message } = params
-
-          channels.update(id, (channel) => {
-            channel.messageList.add(createSystemMessage(message))
-          })
-        }
-      },
-    }),
+        },
+      }),
+    [account, identity, joinChannel, openChannelBrowser],
   )
+
+  useSocketListener(commandListener)
 }

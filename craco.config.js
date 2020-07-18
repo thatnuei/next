@@ -3,28 +3,15 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 
 // TODO: make these plugins so this doesn't look as terrifying
 module.exports = {
+  babel: {
+    // autoLabel breaks css prop overrides
+    presets: [["@emotion/css-prop", { autoLabel: "never" }]],
+    plugins: ["lodash"],
+  },
   plugins: [
-    emotionCssPropPlugin(),
     ...whenDev(() => [reactRefreshPlugin()], []),
     ...whenProd(() => [preactAliasPlugin()], []),
   ],
-}
-
-function emotionCssPropPlugin() {
-  return {
-    plugin: {
-      overrideCracoConfig({ cracoConfig }) {
-        cracoConfig.babel = cracoConfig.babel || {}
-        cracoConfig.babel.presets = cracoConfig.babel.presets || []
-        cracoConfig.babel.presets.push([
-          "@emotion/css-prop",
-          // autoLabel breaks css prop overrides
-          { autoLabel: "never" },
-        ])
-        return cracoConfig
-      },
-    },
-  }
 }
 
 function reactRefreshPlugin() {

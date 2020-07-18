@@ -1,14 +1,19 @@
-import { observer } from "mobx-react-lite"
+import { sortBy } from "lodash/fp"
 import React from "react"
+import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
-import { CharacterState } from "../character/CharacterState"
-import { useChatState } from "../chat/chatStateContext"
-import { compare } from "../common/compare"
-import { ValueOf } from "../common/types"
+import {
+  adminsAtom,
+  bookmarksAtom,
+  CharacterState,
+  useCharacterList,
+  useIsFriend,
+} from "../character/state"
+import { ValueOf } from "../helpers/common/types"
 import { TagProps } from "../jsx/types"
 import VirtualizedList from "../ui/VirtualizedList"
-import { ChannelState } from "./ChannelState"
+import { ChannelState } from "./state"
 
 type Props = TagProps<"div"> & {
   channel: ChannelState
@@ -25,13 +30,15 @@ const itemTypes = [
 type ItemType = ValueOf<typeof itemTypes>
 
 function ChannelUserList({ channel, ...props }: Props) {
-  const state = useChatState()
+  const admins = useRecoilValue(adminsAtom)
+  const bookmarks = useRecoilValue(bookmarksAtom)
+  const isFriend = useIsFriend()
 
   const getItemType = (character: CharacterState): ItemType => {
-    if (state.admins.has(character.name)) return "admin"
-    if (channel.ops.has(character.name)) return "op"
-    if (state.isFriend(character.name)) return "friend"
-    if (state.bookmarks.has(character.name)) return "bookmark"
+    if (admins.includes(character.name)) return "admin"
+    if (channel.ops.includes(character.name)) return "op"
+    if (isFriend(character.name)) return "friend"
+    if (bookmarks.includes(character.name)) return "bookmark"
     if (character.status === "looking") return "looking"
     return "default"
   }
@@ -43,7 +50,7 @@ function ChannelUserList({ channel, ...props }: Props) {
     if (type === "bookmark") return tw`bg-blue-faded`
   }
 
-  const characters = [...channel.users].map(state.characters.get)
+  const characters = useCharacterList(channel.users)
 
   const listItems = characters.map((character) => {
     const type = getItemType(character)
@@ -55,9 +62,10 @@ function ChannelUserList({ channel, ...props }: Props) {
     }
   })
 
-  const sortedItems = listItems
-    .sort(compare((it) => it.character.name.toLowerCase()))
-    .sort(compare((it) => it.order))
+  const sortedItems = sortBy(
+    ["order", (it) => it.character.name.toLowerCase()],
+    listItems,
+  )
 
   return (
     <div css={tw`flex flex-col`} {...props}>
@@ -72,7 +80,7 @@ function ChannelUserList({ channel, ...props }: Props) {
           renderItem={({ item, style }) => (
             <CharacterName
               role="listitem"
-              character={item.character}
+              name={item.character.name}
               style={style}
               css={[tw`flex items-center px-2`, item.css]}
             />
@@ -83,4 +91,4 @@ function ChannelUserList({ channel, ...props }: Props) {
   )
 }
 
-export default observer(ChannelUserList)
+export default ChannelUserList

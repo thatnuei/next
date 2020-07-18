@@ -21,7 +21,10 @@ export const fadedButton = [
 
 export const input = [
   baseControlStyle,
-  tw`w-full shadow-inner resize-none focus:bg-background-2 focus:outline-none disabled:pointer-events-none`,
+  tw`w-full shadow-inner resize-none`,
+  tw`focus:bg-background-2 focus:outline-none`,
+  tw`disabled:pointer-events-none`,
+  tw`placeholder-shown:italic`,
 ]
 
 export const select = [baseControlStyle, activePress, transition, tw`w-full`]

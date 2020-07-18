@@ -1,35 +1,49 @@
-import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useState } from "react"
+import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
+import { useIdentityCharacter } from "../character/state"
 import { CharacterStatus } from "../character/types"
-import { useChatState } from "../chat/chatStateContext"
-import { useChatStream } from "../chat/streamContext"
 import Button from "../dom/Button"
+import { delay } from "../helpers/common/delay"
+import { useSocket } from "../socket/socketContext"
 import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
+import { canSubmitStatusAtom, statusSubmitDelayAtom } from "./state"
 
 function StatusUpdateForm() {
-  const state = useChatState()
-  const stream = useChatStream()
-  const form = state.statusUpdate
+  const socket = useSocket()
+  const identityCharacter = useIdentityCharacter()
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    stream.send({ type: "submit-status-update" })
+  const [status, setStatus] = useState(identityCharacter.status)
+  const [statusMessage, setStatusMessage] = useState(
+    identityCharacter.statusMessage,
+  )
+
+  const [canSubmit, setCanSubmit] = useRecoilState(canSubmitStatusAtom)
+  const submitDelay = useRecoilValue(statusSubmitDelayAtom)
+
+  const submit = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault()
+
+    if (!canSubmit) return
+
+    socket.send({
+      type: "STA",
+      params: { status, statusmsg: statusMessage },
+    })
+
+    setCanSubmit(false)
+    await delay(submitDelay)
+    setCanSubmit(true)
   }
 
   return (
-    <form
-      css={tw`flex flex-col items-start h-full p-3`}
-      onSubmit={handleSubmit}
-    >
+    <form css={tw`flex flex-col items-start h-full p-3`} onSubmit={submit}>
       <FormField labelText="Status" css={tw`block mb-3`}>
         <select
           css={select}
-          value={form.status}
-          onChange={(e) => {
-            form.status = e.target.value as CharacterStatus
-          }}
+          value={status}
+          onChange={(e) => setStatus(e.target.value as CharacterStatus)}
         >
           <option value="online">Online</option>
           <option value="looking">Looking</option>
@@ -44,22 +58,18 @@ function StatusUpdateForm() {
       >
         <textarea
           css={[input, tw`flex-1`]}
-          value={form.statusMessage}
-          onChange={(e) => {
-            form.statusMessage = e.target.value
-          }}
+          value={statusMessage}
+          onChange={(e) => setStatusMessage(e.target.value)}
           onKeyPress={(event) => {
-            if (event.key === "\n" && event.ctrlKey) {
-              stream.send({ type: "submit-status-update" })
-            }
+            if (event.key === "\n" && event.ctrlKey) submit()
           }}
         />
       </FormField>
-      <Button type="submit" css={solidButton} disabled={!form.canSubmit}>
+      <Button type="submit" css={solidButton} disabled={!canSubmit}>
         Submit
       </Button>
     </form>
   )
 }
 
-export default observer(StatusUpdateForm)
+export default StatusUpdateForm

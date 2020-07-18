@@ -1,64 +1,41 @@
-import { useChatState } from "../chat/chatStateContext"
-import { createCommandHandler } from "../chat/commandHelpers"
-import { useCommandStream } from "../chat/commandStreamContext"
-import { useChatSocket } from "../chat/socketContext"
-import { useChatStream } from "../chat/streamContext"
-import { useStreamListener } from "../state/stream"
+import { useSetRecoilState } from "recoil"
+import { useSocketListener } from "../socket/socketContext"
+import {
+  privateChannelsAtom,
+  publicChannelsAtom,
+  useRefreshChannelBrowserAction,
+} from "./state"
 
 export function useChannelBrowserListeners() {
-  const chatStream = useChatStream()
-  const commandStream = useCommandStream()
-  const state = useChatState()
-  const socket = useChatSocket()
+  const setPublicChannels = useSetRecoilState(publicChannelsAtom)
+  const setPrivateChannels = useSetRecoilState(privateChannelsAtom)
+  const refresh = useRefreshChannelBrowserAction()
 
-  useStreamListener(chatStream, (event) => {
-    if (event.type === "refresh-channel-browser") {
+  useSocketListener({
+    IDN() {
       refresh()
-    }
+    },
 
-    if (event.type === "open-channel-browser") {
-      state.channelBrowserOverlay.show()
-      refresh()
-    }
-  })
-
-  useStreamListener(
-    commandStream,
-    createCommandHandler({
-      IDN() {
-        refresh()
-      },
-
-      CHA({ channels }) {
-        state.channelBrowser.publicChannels = channels.map((it) => ({
+    CHA({ channels }) {
+      setPublicChannels(
+        channels.map((it) => ({
           id: it.name,
           title: it.name,
           userCount: it.characters,
           type: "public",
-        }))
-      },
+        })),
+      )
+    },
 
-      ORS({ channels }) {
-        state.channelBrowser.privateChannels = channels.map((it) => ({
+    ORS({ channels }) {
+      setPrivateChannels(
+        channels.map((it) => ({
           id: it.name,
           title: it.title,
           userCount: it.characters,
           type: "private",
-        }))
-      },
-    }),
-  )
-
-  function refresh() {
-    if (!state.channelBrowser.canRefresh) return
-    state.channelBrowser.canRefresh = false
-
-    socket.send({ type: "CHA" })
-    socket.send({ type: "ORS" })
-
-    // the server has a 7 second timeout on refreshes
-    setTimeout(() => {
-      state.channelBrowser.canRefresh = true
-    }, 7000)
-  }
+        })),
+      )
+    },
+  })
 }

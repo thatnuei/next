@@ -9,8 +9,8 @@
     "serve": "serve -s build",
     "lint": "eslint . --ext js,ts,tsx",
     "typecheck": "tsc --noEmit",
-    "analyze": "yarn build && source-map-explorer build/static/js/**/*.js",
-    "ci": "npm-run-all --parallel --print-label build test typecheck",
+    "analyze": "source-map-explorer build/static/js/**/*.js",
+    "ci": "npm-run-all --parallel --print-label --continue-on-error build test typecheck",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -20,30 +20,35 @@
     "focus-visible": "5.1.0",
     "fuzzysearch": "1.0.3",
     "idb": "5.0.4",
-    "mobx": "5.15.4",
-    "mobx-react-lite": "2.0.7",
+    "lodash": "4.17.19",
     "polished": "3.6.5",
-    "preact": "10.4.5",
+    "preact": "10.4.6",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-focus-on": "3.4.1",
     "react-window": "1.8.5",
+    "recoil": "0.0.10",
     "resize-observer-polyfill": "1.5.1"
   },
   "devDependencies": {
     "@craco/craco": "5.6.4",
     "@emotion/babel-preset-css-prop": "11.0.0-next.10",
     "@pmmmwh/react-refresh-webpack-plugin": "0.3.3",
-    "@testing-library/jest-dom": "5.11.0",
-    "@testing-library/react": "10.4.6",
+    "@testing-library/jest-dom": "5.11.1",
+    "@testing-library/react": "10.4.7",
+    "@types/lodash": "4.14.157",
     "@types/node": "14.0.23",
     "@types/preval.macro": "3.0.0",
     "@types/react": "16.9.43",
     "@types/react-dom": "16.9.8",
     "@types/react-window": "1.8.2",
+    "@types/recoil": "0.0.1",
     "@types/testing-library__jest-dom": "5.9.1",
+    "@types/testing-library__react": "10.2.0",
+    "@types/webpack-env": "1.15.2",
     "babel-loader": "8.1.0",
-    "fake-indexeddb": "3.1.0",
+    "babel-plugin-lodash": "3.3.4",
+    "fake-indexeddb": "3.1.1",
     "jest-environment-jsdom-sixteen": "1.0.3",
     "npm-run-all": "4.1.5",
     "prettier": "2.0.5",
@@ -52,18 +57,27 @@
     "react-scripts": "3.4.1",
     "serve": "11.3.2",
     "source-map-explorer": "2.4.2",
-    "tailwindcss": "1.4.6",
+    "tailwindcss": "1.5.1",
     "twin.macro": "1.5.0",
-    "typescript": "4.0.0-beta",
+    "typescript": "3.9.7",
     "typescript-plugin-tw-template": "2.0.1",
     "webpack-hot-middleware": "2.25.0"
   },
   "eslintConfig": {
     "extends": "react-app",
     "ignorePatterns": [
-      "node_modules",
-      "build"
-    ]
+      "/node_modules/",
+      "/src/node_modules/",
+      "/build/"
+    ],
+    "rules": {
+      "react-hooks/exhaustive-deps": [
+        "warn",
+        {
+          "additionalHooks": "useRecoilCallback"
+        }
+      ]
+    }
   },
   "browserslist": {
     "production": [

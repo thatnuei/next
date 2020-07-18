@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { RecoilRoot } from "recoil"
 import Chat from "../chat/Chat"
 import ChatContainer from "../chat/ChatContainer"
 import { createStoredValue } from "../storage/createStoredValue"
@@ -21,23 +22,20 @@ function App() {
 
   switch (screen.name) {
     case "login": {
-      const handleLoginSuccess = (userData: LoginSuccessData) => {
+      const handleLoginSuccess = async (userData: LoginSuccessData) => {
+        const identity = await storedIdentity(userData.account)
+          .get()
+          .catch((error) => {
+            console.warn("could not load stored identity", error)
+          })
+
         const defaultIdentity = userData.characters[0]
 
-        storedIdentity(userData.account)
-          .get()
-          .then((identity) => identity || defaultIdentity)
-          .catch((error) => {
-            console.warn("error loading stored identity", error)
-            return defaultIdentity
-          })
-          .then((initialCharacter) => {
-            setScreen({
-              name: "character-select",
-              userData,
-              initialCharacter,
-            })
-          })
+        setScreen({
+          name: "character-select",
+          userData,
+          initialCharacter: identity || defaultIdentity,
+        })
       }
 
       return <Login onSuccess={handleLoginSuccess} />
@@ -61,13 +59,15 @@ function App() {
 
     case "chat":
       return (
-        <ChatContainer
-          account={screen.userData.account}
-          ticket={screen.userData.ticket}
-          identity={screen.identity}
-        >
-          <Chat onDisconnect={() => setScreen({ name: "login" })} />
-        </ChatContainer>
+        <RecoilRoot>
+          <ChatContainer
+            account={screen.userData.account}
+            ticket={screen.userData.ticket}
+            identity={screen.identity}
+          >
+            <Chat onDisconnect={() => setScreen({ name: "login" })} />
+          </ChatContainer>
+        </RecoilRoot>
       )
   }
 }

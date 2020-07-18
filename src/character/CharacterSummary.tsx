@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import ExternalLink from "../dom/ExternalLink"
@@ -6,27 +5,31 @@ import { getProfileUrl } from "../flist/helpers"
 import { TagProps } from "../jsx/types"
 import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
-import { CharacterState } from "./CharacterState"
 import CharacterStatusText from "./CharacterStatusText"
 import { genderColors } from "./colors"
+import { useCharacter } from "./state"
 
-type Props = TagProps<"div"> & { character: CharacterState }
+type Props = TagProps<"div"> & { name: string }
 
-function CharacterSummary({ character, ...props }: Props) {
-  const genderColor = { color: genderColors[character.gender] }
+function CharacterSummary({ name, ...props }: Props) {
+  const { gender } = useCharacter(name)
+  const genderColor = { color: genderColors[gender] }
+
   return (
     <div {...props}>
       <ExternalLink
-        href={getProfileUrl(character.name)}
+        href={getProfileUrl(name)}
         css={[headerText2, genderColor, tw`leading-none`]}
       >
-        {character.name}
+        {name}
       </ExternalLink>
-      <ExternalLink href={getProfileUrl(character.name)}>
-        <Avatar name={character.name} css={tw`my-3`} />
+
+      <ExternalLink href={getProfileUrl(name)}>
+        <Avatar name={name} css={tw`my-3`} />
       </ExternalLink>
+
       <CharacterStatusText
-        character={character}
+        name={name}
         css={[
           tw`px-3 py-2 overflow-y-auto bg-background-1`,
           { maxHeight: 100 }, // some statuses can get really big
@@ -36,4 +39,4 @@ function CharacterSummary({ character, ...props }: Props) {
   )
 }
 
-export default observer(CharacterSummary)
+export default CharacterSummary

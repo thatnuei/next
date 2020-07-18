@@ -1,60 +1,74 @@
-import { observer } from "mobx-react-lite"
-import React, { useMemo } from "react"
+import React from "react"
+import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import BBC from "../bbc/BBC"
 import ChatInput from "../chat/ChatInput"
-import { useChatStream } from "../chat/streamContext"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
+import Scope from "../react/Scope"
 import Drawer from "../ui/Drawer"
 import { scrollVertical } from "../ui/helpers"
 import Modal from "../ui/Modal"
-import { OverlayState } from "../ui/OverlayState"
+import { useOverlay } from "../ui/overlay"
 import { screenQueries } from "../ui/screens"
 import ChannelHeader from "./ChannelHeader"
-import { ChannelState } from "./ChannelState"
 import ChannelUserList from "./ChannelUserList"
+import {
+  channelAtom,
+  channelMessagesAtom,
+  shouldShowMessage,
+  useSendChannelMessageAction,
+} from "./state"
 
 type Props = {
-  channel: ChannelState
+  channelId: string
 } & TagProps<"div">
 
-function ChannelView({ channel, ...props }: Props) {
-  const stream = useChatStream()
+function ChannelView({ channelId, ...props }: Props) {
+  const [channel, setChannel] = useRecoilState(channelAtom(channelId))
   const isLargeScreen = useMediaQuery(screenQueries.large)
-  const descriptionOverlay = useMemo(() => new OverlayState(), [])
-  const userListDrawer = useMemo(() => new OverlayState(), [])
+  const description = useOverlay()
+  const userList = useOverlay()
+  const sendMessage = useSendChannelMessageAction()
 
-  function handleChatInputSubmit(text: string) {
-    stream.send({
-      type: "send-channel-message",
-      channelId: channel.id,
-      text,
-    })
+  function updateChatInput(chatInput: string) {
+    setChannel((prev) => ({ ...prev, chatInput }))
+  }
+
+  function submitChatInput(text: string) {
+    sendMessage(channelId, text)
   }
 
   return (
     <div css={tw`flex flex-col`} {...props}>
       <ChannelHeader
-        channel={channel}
-        onToggleDescription={descriptionOverlay.toggle}
-        onShowUsers={userListDrawer.show}
+        channelId={channelId}
+        onToggleDescription={description.toggle}
+        onShowUsers={userList.show}
       />
 
       <div css={tw`flex flex-row flex-1 min-h-0 my-gap`}>
         <main css={tw`relative flex-1 bg-background-1`}>
-          <MessageList
-            list={channel.messageList}
-            filter={(it) => channel.shouldShowMessage(it.type)}
-            css={tw`w-full h-full`}
-          />
+          <Scope>
+            {function useScope() {
+              const messages = useRecoilValue(channelMessagesAtom(channelId))
+              return (
+                <MessageList
+                  messages={messages.filter((msg) =>
+                    shouldShowMessage(channel, msg.type),
+                  )}
+                  css={tw`w-full h-full`}
+                />
+              )
+            }}
+          </Scope>
 
           <Modal
             title="Description"
             width="100%"
             height="max(60%, 500px)"
-            state={descriptionOverlay}
+            {...description.props}
             fillMode="contained"
             verticalPanelAlign="top"
           >
@@ -72,12 +86,13 @@ function ChannelView({ channel, ...props }: Props) {
       </div>
 
       <ChatInput
-        inputModel={channel.chatInput}
-        onSubmit={handleChatInputSubmit}
+        value={channel.chatInput}
+        onChangeText={updateChatInput}
+        onSubmit={submitChatInput}
       />
 
       {!isLargeScreen && (
-        <Drawer state={userListDrawer} side="right">
+        <Drawer side="right" {...userList.props}>
           <ChannelUserList
             channel={channel}
             css={tw`w-56 h-full bg-background-2`}
@@ -88,4 +103,4 @@ function ChannelView({ channel, ...props }: Props) {
   )
 }
 
-export default observer(ChannelView)
+export default ChannelView

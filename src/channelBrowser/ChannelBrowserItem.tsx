@@ -1,39 +1,38 @@
-import { useObserver } from "mobx-react-lite"
 import React from "react"
+import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
-import { useChatState } from "../chat/chatStateContext"
-import { useChatStream } from "../chat/streamContext"
+import {
+  isPresentInChannelSelector,
+  useJoinChannelAction,
+  useLeaveChannelAction,
+} from "../channel/state"
 import { TagProps } from "../jsx/types"
 import Icon from "../ui/Icon"
 import { earth, lock } from "../ui/icons"
-import { ChannelBrowserItemInfo } from "./ChannelBrowserState"
+import { ChannelBrowserChannel } from "./state"
 
 type Props = TagProps<"button"> & {
-  info: ChannelBrowserItemInfo
+  info: ChannelBrowserChannel
 }
 
 function ChannelBrowserItem({ info, ...props }: Props) {
-  const state = useChatState()
-  const stream = useChatStream()
-
-  const isAbsent = useObserver(() => {
-    const channel = state.channels.get(info.id)
-    return channel.joinState === "absent"
-  })
+  const isPresent = useRecoilValue(isPresentInChannelSelector(info.id))
+  const joinChannel = useJoinChannelAction()
+  const leaveChannel = useLeaveChannelAction()
 
   const handleClick = () => {
-    if (isAbsent) {
-      stream.send({ type: "join-channel", id: info.id, title: info.title })
+    if (isPresent) {
+      leaveChannel(info.id)
     } else {
-      stream.send({ type: "leave-channel", id: info.id })
+      joinChannel(info.id, info.title)
     }
   }
 
   const containerStyle = [
     tw`flex flex-row items-center px-2 py-2 transition-all`,
-    isAbsent
-      ? tw`opacity-50 hover:opacity-75`
-      : tw`opacity-100 bg-background-0`,
+    isPresent
+      ? tw`opacity-100 bg-background-0`
+      : tw`opacity-50 hover:opacity-75`,
   ]
 
   return (

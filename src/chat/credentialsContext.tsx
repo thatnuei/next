@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import createContextWrapper from "../react/createContextWrapper"
+import createContextWrapper from "../helpers/react/createContextWrapper"
 import { ChatCredentials } from "./types"
 
 export const useChatCredentials = createContextWrapper(

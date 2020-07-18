@@ -1,12 +1,17 @@
 import React from "react"
+import { useSetRecoilState } from "recoil"
 import tw from "twin.macro"
+import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { useChatStream } from "../chat/streamContext"
 import { TagProps } from "../jsx/types"
+import { statusOverlayVisibleAtom } from "../statusUpdate/state"
 import * as icons from "../ui/icons"
 import NavAction from "./NavAction"
 
 function ChatNavActions(props: TagProps<"div">) {
   const stream = useChatStream()
+  const openChannelBrowser = useOpenChannelBrowserAction()
+  const setStatusOverlayVisible = useSetRecoilState(statusOverlayVisibleAtom)
 
   return (
     <div
@@ -16,12 +21,12 @@ function ChatNavActions(props: TagProps<"div">) {
       <NavAction
         icon={icons.list}
         title="Browse channels"
-        onClick={() => stream.send({ type: "open-channel-browser" })}
+        onClick={openChannelBrowser}
       />
       <NavAction
         icon={icons.updateStatus}
         title="Update your status"
-        onClick={() => stream.send({ type: "show-status-update" })}
+        onClick={() => setStatusOverlayVisible(true)}
       />
       <NavAction icon={icons.users} title="See online friends and bookmarks" />
       <NavAction icon={icons.about} title="About next" />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useLayoutEffect, useState } from "react"
 import ReactDOM from "react-dom"
 
 type Props = { children: React.ReactNode }
@@ -6,7 +6,7 @@ type Props = { children: React.ReactNode }
 function Portal(props: Props) {
   const [container, setContainer] = useState<HTMLElement>()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = document.createElement("div")
     document.body.append(el)
     setContainer(el)

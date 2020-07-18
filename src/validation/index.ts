@@ -1,4 +1,4 @@
-import { raise } from "../common/raise"
+import { raise } from "../helpers/common/raise"
 
 type ValidatorResult<T> = { type: "valid" } | { type: "invalid"; error: string }
 

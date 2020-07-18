@@ -1,61 +1,35 @@
-import { action, observable } from "mobx"
-import { ChatState } from "../chat/ChatState"
-import { useChatState } from "../chat/chatStateContext"
+import { atom, useRecoilCallback, useSetRecoilState } from "recoil"
+import { channelAtom } from "../channel/state"
+import { sideMenuVisibleAtom } from "../chat/state"
+import { privateChatAtom } from "../privateChat/state"
 
 type ChatNavView =
   | { type: "channel"; id: string }
   | { type: "privateChat"; partnerName: string }
 
-export class ChatNavState {
-  @observable.ref
-  view?: ChatNavView
+export const chatNavViewAtom = atom<ChatNavView | undefined>({
+  key: "chatNavView",
+  default: undefined,
+})
 
-  @action
-  setView = (view: ChatNavView) => {
-    this.view = view
-  }
-}
+export function useSetViewAction() {
+  const setView = useSetRecoilState(chatNavViewAtom)
+  const setSideMenuVisible = useSetRecoilState(sideMenuVisibleAtom)
 
-export function createChatNavHelpers(state: ChatState) {
-  return {
-    get view() {
-      return state.nav.view
-    },
-
-    get currentChannel() {
-      if (this.view?.type === "channel") {
-        const channel = state.channels.get(this.view.id)
-        if (channel.joinState !== "absent") {
-          return channel
-        }
-      }
-      return undefined
-    },
-
-    get currentPrivateChat() {
-      if (this.view?.type === "privateChat") {
-        const chat = state.privateChats.get(this.view.partnerName)
-        if (chat.isOpen) {
-          return chat
-        }
-      }
-      return undefined
-    },
-
-    setView: (view: ChatNavView) => {
-      state.nav.setView(view)
-      state.sideMenuOverlay.hide()
+  return useRecoilCallback(
+    ({ set }) => (view: ChatNavView) => {
+      setView(view)
+      setSideMenuVisible(false)
 
       if (view.type === "channel") {
-        state.channels.get(view.id).isUnread = false
+        set(channelAtom(view.id), (prev) => ({ ...prev, isUnread: false }))
       } else {
-        state.privateChats.get(view.partnerName).isUnread = false
+        set(privateChatAtom(view.partnerName), (prev) => ({
+          ...prev,
+          isUnread: false,
+        }))
       }
     },
-  }
-}
-
-export function useChatNav() {
-  const state = useChatState()
-  return createChatNavHelpers(state)
+    [setSideMenuVisible, setView],
+  )
 }

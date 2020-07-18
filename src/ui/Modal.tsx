@@ -1,6 +1,5 @@
 import { css } from "@emotion/react"
-import { observer } from "mobx-react-lite"
-import React, { MouseEvent, useEffect, useRef } from "react"
+import React, { MouseEvent } from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
 import Portal from "../react/Portal"
@@ -13,10 +12,9 @@ import {
 import { absoluteCover, fixedCover, transition } from "./helpers"
 import Icon from "./Icon"
 import { close } from "./icons"
-import { OverlayState } from "./OverlayState"
+import { OverlayProps } from "./overlay"
 
-type Props = {
-  state: OverlayState
+type Props = OverlayProps & {
   title: string
   width: number | string
   height: number | string
@@ -30,17 +28,9 @@ function Modal({
   verticalPanelAlign = "middle",
   ...props
 }: Props) {
-  const closeButtonRef = useRef<HTMLButtonElement>(null)
-
-  useEffect(() => {
-    if (props.state.isVisible) {
-      closeButtonRef.current?.focus()
-    }
-  }, [props.state.isVisible])
-
   const handleShadeClick = (event: MouseEvent) => {
     if (event.target === event.currentTarget) {
-      props.state.hide()
+      props.onDismiss()
     }
   }
 
@@ -53,7 +43,7 @@ function Modal({
     fillMode === "contained" && absoluteCover,
     fillMode === "fullscreen" && fixedCover,
 
-    props.state.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
+    props.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
     transition,
     tw`transition-all`,
   ]
@@ -61,7 +51,7 @@ function Modal({
   const panelStyle = [
     raisedPanel,
     tw`flex flex-col w-full h-full`,
-    props.state.isVisible ? undefined : tw`transform translate-y-4`,
+    props.isVisible ? undefined : tw`transform translate-y-4`,
     css({ maxWidth: props.width }),
     css({ maxHeight: props.height }),
     transition,
@@ -69,7 +59,7 @@ function Modal({
 
   const closeButtonStyle = [
     fadedButton,
-    tw`absolute top-0 bottom-0 right-0 flex flex-row justify-center w-16`,
+    tw`absolute top-0 bottom-0 right-0 flex items-center justify-center w-16`,
   ]
 
   const content = (
@@ -77,11 +67,7 @@ function Modal({
       <div css={panelStyle}>
         <header css={[raisedPanelHeader, tw`relative px-16 text-center`]}>
           <h1 css={headerText}>{props.title}</h1>
-          <Button
-            css={closeButtonStyle}
-            onClick={props.state.hide}
-            ref={closeButtonRef}
-          >
+          <Button css={closeButtonStyle} onClick={props.onDismiss}>
             <Icon which={close} />
           </Button>
         </header>
@@ -93,4 +79,4 @@ function Modal({
   return fillMode === "fullscreen" ? <Portal>{content}</Portal> : content
 }
 
-export default observer(Modal)
+export default Modal

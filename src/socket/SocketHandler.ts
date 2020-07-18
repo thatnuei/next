@@ -1,13 +1,11 @@
-import { observable } from "mobx"
+import { ChatCredentials } from "../chat/types"
+import { Stream } from "../state/stream"
 import {
   ClientCommand,
   createCommandString,
   parseServerCommand,
   ServerCommand,
 } from "./commandHelpers"
-import { ChatCredentials } from "./types"
-
-type SocketListener = (command: ServerCommand) => void
 
 export type SocketStatus =
   | "idle"
@@ -18,21 +16,20 @@ export type SocketStatus =
   | "error"
 
 export class SocketHandler {
-  @observable
-  status: SocketStatus = "idle"
+  commandStream = new Stream<ServerCommand>()
+  statusStream = new Stream<SocketStatus>()
 
-  listener: SocketListener = () => {}
   onDisconnect = () => {}
 
   private socket?: WebSocket
 
   connect({ account, ticket, identity }: ChatCredentials) {
-    this.status = "connecting"
+    this.statusStream.send("connecting")
 
     const socket = (this.socket = new WebSocket(`wss://chat.f-list.net/chat2`))
 
     socket.onopen = () => {
-      this.status = "identifying"
+      this.statusStream.send("identifying")
       this.send({
         type: "IDN",
         params: {
@@ -47,13 +44,13 @@ export class SocketHandler {
     }
 
     socket.onclose = () => {
-      this.status = "closed"
+      this.statusStream.send("closed")
       this.socket = undefined
       this.onDisconnect()
     }
 
     socket.onerror = () => {
-      this.status = "error"
+      this.statusStream.send("error")
       this.socket = undefined
       this.onDisconnect()
     }
@@ -77,14 +74,14 @@ export class SocketHandler {
       }
 
       if (command.type === "IDN") {
-        this.status = "online"
+        this.statusStream.send("online")
       }
 
       if (command.type === "ERR") {
         console.warn("Socket error", command.params.message)
       }
 
-      this.listener(command)
+      this.commandStream.send(command)
     }
   }
 

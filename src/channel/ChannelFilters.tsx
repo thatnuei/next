@@ -1,16 +1,22 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
+import { useRecoilState } from "recoil"
 import tw from "twin.macro"
 import Button from "../dom/Button"
 import { TagProps } from "../jsx/types"
-import { ChannelState } from "./ChannelState"
+import { channelAtom } from "./state"
 import { ChannelMode } from "./types"
 
 type Props = {
-  channel: ChannelState
+  channelId: string
 } & TagProps<"div">
 
-function ChannelFilters({ channel, ...props }: Props) {
+function ChannelFilters({ channelId, ...props }: Props) {
+  const [channel, setChannel] = useRecoilState(channelAtom(channelId))
+
+  function setSelectedMode(mode: ChannelMode) {
+    setChannel((prev) => ({ ...prev, mode }))
+  }
+
   function renderFilterButton(mode: ChannelMode, label: string) {
     const isSelected = channel.selectedMode === mode
 
@@ -22,7 +28,7 @@ function ChannelFilters({ channel, ...props }: Props) {
     return (
       <Button
         css={style}
-        onClick={() => channel.setSelectedMode(mode)}
+        onClick={() => setSelectedMode(mode)}
         role="radio"
         aria-checked={isSelected}
       >
@@ -42,4 +48,4 @@ function ChannelFilters({ channel, ...props }: Props) {
   )
 }
 
-export default observer(ChannelFilters)
+export default ChannelFilters

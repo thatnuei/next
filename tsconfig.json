@@ -3,7 +3,7 @@
     "target": "es2018",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -15,7 +15,8 @@
     "noEmit": true,
     "jsx": "react",
     "plugins": [{ "name": "typescript-plugin-tw-template" }],
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "noUnusedLocals": true
   },
-  "include": ["src"]
+  "include": ["src", "types"]
 }
