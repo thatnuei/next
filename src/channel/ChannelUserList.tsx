@@ -1,12 +1,15 @@
 import { sortBy } from "lodash/fp"
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import CharacterName from "../character/CharacterName"
-import { CharacterState } from "../character/CharacterState"
-import { adminsAtom, bookmarksAtom, useIsFriend } from "../character/state"
-import { useChatState } from "../chat/chatStateContext"
+import {
+  adminsAtom,
+  bookmarksAtom,
+  CharacterState,
+  useCharacterList,
+  useIsFriend,
+} from "../character/state"
 import { ValueOf } from "../helpers/common/types"
 import { TagProps } from "../jsx/types"
 import VirtualizedList from "../ui/VirtualizedList"
@@ -27,7 +30,6 @@ const itemTypes = [
 type ItemType = ValueOf<typeof itemTypes>
 
 function ChannelUserList({ channel, ...props }: Props) {
-  const state = useChatState()
   const admins = useRecoilValue(adminsAtom)
   const bookmarks = useRecoilValue(bookmarksAtom)
   const isFriend = useIsFriend()
@@ -48,7 +50,7 @@ function ChannelUserList({ channel, ...props }: Props) {
     if (type === "bookmark") return tw`bg-blue-faded`
   }
 
-  const characters = [...channel.users].map(state.characters.get)
+  const characters = useCharacterList(channel.users)
 
   const listItems = characters.map((character) => {
     const type = getItemType(character)
@@ -78,7 +80,7 @@ function ChannelUserList({ channel, ...props }: Props) {
           renderItem={({ item, style }) => (
             <CharacterName
               role="listitem"
-              character={item.character}
+              name={item.character.name}
               style={style}
               css={[tw`flex items-center px-2`, item.css]}
             />
@@ -89,4 +91,4 @@ function ChannelUserList({ channel, ...props }: Props) {
   )
 }
 
-export default observer(ChannelUserList)
+export default ChannelUserList

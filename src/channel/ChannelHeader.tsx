@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import tw from "twin.macro"
 import { isPublicSelector } from "../channelBrowser/state"
@@ -12,8 +12,8 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import MenuItem from "../ui/MenuItem"
 import Modal from "../ui/Modal"
-import { OverlayState } from "../ui/OverlayState"
-import Popover, { PopoverState } from "../ui/Popover"
+import { useOverlay } from "../ui/overlay"
+import Popover, { usePopover } from "../ui/Popover"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
 import InviteUsersForm from "./InviteUsersForm"
@@ -34,10 +34,10 @@ function ChannelHeader({
   const channel = useRecoilValue(channelAtom(channelId))
   const setChannelMessages = useSetRecoilState(channelMessagesAtom(channelId))
   const isLargeScreen = useMediaQuery(screenQueries.large)
-  const menu = useMemo(() => new PopoverState(), [])
-  const inviteDialog = useMemo(() => new OverlayState(), [])
   const { identity } = useChatCredentials()
   const isPublic = useRecoilValue(isPublicSelector(channel.id))
+  const menu = usePopover()
+  const invite = useOverlay()
 
   const shouldShowInviteOption = isPublic && channel.ops.includes(identity)
 
@@ -87,7 +87,7 @@ function ChannelHeader({
         <Icon which={icons.more} />
       </Button>
 
-      <Popover state={menu} css={tw`w-48 bg-background-2`}>
+      <Popover {...menu.props} css={tw`w-48 bg-background-2`}>
         {!isLargeScreen && (
           <ChannelFilters
             channelId={channel.id}
@@ -108,18 +108,13 @@ function ChannelHeader({
             onClick={clearChannelMessages}
           />
           {shouldShowInviteOption && (
-            <MenuItem
-              text="Invite"
-              icon={icons.invite}
-              onClick={inviteDialog.show}
-            />
+            <MenuItem text="Invite" icon={icons.invite} onClick={invite.show} />
           )}
         </div>
       </Popover>
 
       <Modal
-        isVisible={inviteDialog.isVisible}
-        onDismiss={inviteDialog.hide}
+        {...invite.props}
         title={`Invite to ${channel.title}`}
         width={400}
         height={700}

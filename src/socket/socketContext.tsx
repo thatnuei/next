@@ -37,11 +37,17 @@ export function useSocketConnection({ onDisconnect = () => {} }) {
 }
 
 export function useSocketListener(
-  handler: CommandHandlerFn | CommandHandlerMap,
+  handlerArg: CommandHandlerFn | CommandHandlerMap,
 ) {
   const socket = useSocket()
-  useStreamListener(
-    socket.commandStream,
-    typeof handler === "function" ? handler : createCommandHandler(handler),
+
+  const handler = useMemo(
+    () =>
+      typeof handlerArg === "function"
+        ? handlerArg
+        : createCommandHandler(handlerArg),
+    [handlerArg],
   )
+
+  useStreamListener(socket.commandStream, handler)
 }

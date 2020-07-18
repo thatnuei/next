@@ -1,27 +1,31 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
+import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
-import { useChatState } from "../chat/chatStateContext"
-import { useChatStream } from "../chat/streamContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
-import { PrivateChatState } from "./PrivateChatState"
+import {
+  privateChatAtom,
+  privateChatInputAtom,
+  privateChatMessagesAtom,
+  useSendPrivateMessageAction,
+} from "./state"
 import TypingStatusDisplay from "./TypingStatusDisplay"
 
 type Props = {
-  chat: PrivateChatState
+  partnerName: string
 } & TagProps<"div">
 
-function PrivateChatView({ chat, ...props }: Props) {
-  const state = useChatState()
-  const stream = useChatStream()
-  const character = state.characters.get(chat.partnerName)
+function PrivateChatView({ partnerName, ...props }: Props) {
+  const chat = useRecoilValue(privateChatAtom(partnerName))
+  const messages = useRecoilValue(privateChatMessagesAtom(partnerName))
+  const [input, setInput] = useRecoilState(privateChatInputAtom(partnerName))
+  const sendMessage = useSendPrivateMessageAction()
 
   return (
     <div css={tw`flex flex-col`} {...props}>
@@ -37,9 +41,9 @@ function PrivateChatView({ chat, ...props }: Props) {
         >
           {/* need this extra container to keep the children from shrinking */}
           <div css={tw`my-3`}>
-            <CharacterName character={character} />
+            <CharacterName name={chat.partnerName} />
             {/* the bottom margin needs to be here otherwise the scrolling flex column eats the bottom spacing */}
-            <CharacterStatusText character={character} css={tw`mb-3`} />
+            <CharacterStatusText name={chat.partnerName} css={tw`mb-3`} />
           </div>
         </div>
       </div>
@@ -50,25 +54,16 @@ function PrivateChatView({ chat, ...props }: Props) {
           status={chat.typingStatus}
           css={chat.typingStatus === "clear" && tw`h-gap`}
         />
-        <MessageList
-          messages={chat.messageList.messages}
-          css={tw`flex-1 bg-background-1`}
-        />
+        <MessageList messages={messages} css={tw`flex-1 bg-background-1`} />
       </div>
 
       <ChatInput
-        value={chat.chatInput.value}
-        onChangeText={chat.chatInput.set}
-        onSubmit={(text) => {
-          stream.send({
-            type: "send-private-message",
-            recipientName: chat.partnerName,
-            text,
-          })
-        }}
+        value={input}
+        onChangeText={setInput}
+        onSubmit={(text) => sendMessage(chat.partnerName, text)}
       />
     </div>
   )
 }
 
-export default observer(PrivateChatView)
+export default PrivateChatView

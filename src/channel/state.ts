@@ -1,5 +1,10 @@
-import { useCallback } from "react"
-import { atom, atomFamily, useRecoilCallback, useRecoilValue } from "recoil"
+import {
+  atom,
+  atomFamily,
+  selectorFamily,
+  useRecoilCallback,
+  useRecoilValue,
+} from "recoil"
 import { useChatCredentials } from "../chat/credentialsContext"
 import { DeepReadonly } from "../helpers/common/types"
 import {
@@ -47,48 +52,45 @@ export const joinedChannelIdsAtom = atom<string[]>({
   default: [],
 })
 
+export const isPresentInChannelSelector = selectorFamily({
+  key: "isPresentInChannel",
+  get: (channelId: string) => ({ get }) =>
+    get(joinedChannelIdsAtom).includes(channelId),
+})
+
 export function useJoinedChannelIds() {
   return useRecoilValue(joinedChannelIdsAtom)
 }
 
-export function useIsPresent() {
-  const joinedChannelIds = useJoinedChannelIds()
-  return useCallback(
-    (channelId: string) => joinedChannelIds.includes(channelId),
-    [joinedChannelIds],
-  )
-}
-
 export function useJoinChannelAction() {
   const socket = useSocket()
-  const isPresent = useIsPresent()
 
   return useRecoilCallback(
-    ({ set }, id: string, title?: string) => {
-      if (isPresent(id)) return
-      set(
-        channelAtom(id),
-        (prev): ChannelState => ({
-          ...prev,
-          title: title ?? prev.title,
-        }),
-      )
+    async ({ set, getPromise }, id: string, title?: string) => {
+      const isPresent = await getPromise(isPresentInChannelSelector(id))
+      if (isPresent) return
+
+      set(channelAtom(id), (prev) => ({
+        ...prev,
+        title: title ?? prev.title,
+      }))
       socket.send({ type: "JCH", params: { channel: id } })
     },
-    [isPresent, socket],
+    [socket],
   )
 }
 
 export function useLeaveChannelAction() {
   const socket = useSocket()
-  const isPresent = useIsPresent()
 
-  return useCallback(
-    (id: string) => {
-      if (!isPresent(id)) return
+  return useRecoilCallback(
+    async ({ getPromise }, id: string) => {
+      const isPresent = await getPromise(isPresentInChannelSelector(id))
+      if (!isPresent) return
+
       socket.send({ type: "LCH", params: { channel: id } })
     },
-    [isPresent, socket],
+    [socket],
   )
 }
 

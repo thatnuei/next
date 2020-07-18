@@ -2,7 +2,6 @@ import React from "react"
 import tw from "twin.macro"
 import BBC from "../bbc/BBC"
 import CharacterName from "../character/CharacterName"
-import { useChatState } from "../chat/chatStateContext"
 import { TagProps } from "../jsx/types"
 import { MessageState } from "./MessageState"
 
@@ -11,8 +10,6 @@ type Props = {
 } & TagProps<"div">
 
 function MessageListItem({ message, ...props }: Props) {
-  const state = useChatState()
-
   const typeStyle = {
     normal: undefined,
     action: tw`italic`,
@@ -31,7 +28,7 @@ function MessageListItem({ message, ...props }: Props) {
 
       {message.senderName && (
         <CharacterName
-          character={state.characters.get(message.senderName)}
+          name={message.senderName}
           css={[
             tw`inline-block`,
             message.type === "action" ? tw`mr-1` : tw`mr-2`,

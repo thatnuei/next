@@ -1,5 +1,4 @@
-import { observer } from "mobx-react-lite"
-import React, { useState } from "react"
+import React from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import BBC from "../bbc/BBC"
@@ -7,10 +6,11 @@ import ChatInput from "../chat/ChatInput"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
-import HookScope from "../react/HookScope"
+import Scope from "../react/Scope"
 import Drawer from "../ui/Drawer"
 import { scrollVertical } from "../ui/helpers"
 import Modal from "../ui/Modal"
+import { useOverlay } from "../ui/overlay"
 import { screenQueries } from "../ui/screens"
 import ChannelHeader from "./ChannelHeader"
 import ChannelUserList from "./ChannelUserList"
@@ -28,8 +28,8 @@ type Props = {
 function ChannelView({ channelId, ...props }: Props) {
   const [channel, setChannel] = useRecoilState(channelAtom(channelId))
   const isLargeScreen = useMediaQuery(screenQueries.large)
-  const [userListVisible, setUserListVisible] = useState(false)
-  const [descriptionVisible, setDescriptionVisible] = useState(false)
+  const description = useOverlay()
+  const userList = useOverlay()
   const sendMessage = useSendChannelMessageAction()
 
   function updateChatInput(chatInput: string) {
@@ -44,13 +44,13 @@ function ChannelView({ channelId, ...props }: Props) {
     <div css={tw`flex flex-col`} {...props}>
       <ChannelHeader
         channelId={channelId}
-        onToggleDescription={() => setDescriptionVisible((v) => !v)}
-        onShowUsers={() => setUserListVisible(true)}
+        onToggleDescription={description.toggle}
+        onShowUsers={userList.show}
       />
 
       <div css={tw`flex flex-row flex-1 min-h-0 my-gap`}>
         <main css={tw`relative flex-1 bg-background-1`}>
-          <HookScope>
+          <Scope>
             {function useScope() {
               const messages = useRecoilValue(channelMessagesAtom(channelId))
               return (
@@ -62,14 +62,13 @@ function ChannelView({ channelId, ...props }: Props) {
                 />
               )
             }}
-          </HookScope>
+          </Scope>
 
           <Modal
             title="Description"
             width="100%"
             height="max(60%, 500px)"
-            isVisible={descriptionVisible}
-            onDismiss={() => setDescriptionVisible(false)}
+            {...description.props}
             fillMode="contained"
             verticalPanelAlign="top"
           >
@@ -93,11 +92,7 @@ function ChannelView({ channelId, ...props }: Props) {
       />
 
       {!isLargeScreen && (
-        <Drawer
-          isVisible={userListVisible}
-          onDismiss={() => setUserListVisible(false)}
-          side="right"
-        >
+        <Drawer side="right" {...userList.props}>
           <ChannelUserList
             channel={channel}
             css={tw`w-56 h-full bg-background-2`}
@@ -108,4 +103,4 @@ function ChannelView({ channelId, ...props }: Props) {
   )
 }
 
-export default observer(ChannelView)
+export default ChannelView

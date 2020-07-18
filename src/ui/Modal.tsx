@@ -12,16 +12,15 @@ import {
 import { absoluteCover, fixedCover, transition } from "./helpers"
 import Icon from "./Icon"
 import { close } from "./icons"
+import { OverlayProps } from "./overlay"
 
-type Props = {
+type Props = OverlayProps & {
   title: string
   width: number | string
   height: number | string
-  isVisible: boolean
   fillMode?: "fullscreen" | "contained"
   verticalPanelAlign?: "top" | "middle"
   children?: React.ReactNode
-  onDismiss?: () => void
 }
 
 function Modal({
@@ -31,7 +30,7 @@ function Modal({
 }: Props) {
   const handleShadeClick = (event: MouseEvent) => {
     if (event.target === event.currentTarget) {
-      props.onDismiss?.()
+      props.onDismiss()
     }
   }
 
@@ -60,7 +59,7 @@ function Modal({
 
   const closeButtonStyle = [
     fadedButton,
-    tw`absolute top-0 bottom-0 right-0 flex flex-row justify-center w-16`,
+    tw`absolute top-0 bottom-0 right-0 flex items-center justify-center w-16`,
   ]
 
   const content = (

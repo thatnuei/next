@@ -1,7 +1,8 @@
 import React from "react"
+import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import {
-  useIsPresent,
+  isPresentInChannelSelector,
   useJoinChannelAction,
   useLeaveChannelAction,
 } from "../channel/state"
@@ -15,7 +16,7 @@ type Props = TagProps<"button"> & {
 }
 
 function ChannelBrowserItem({ info, ...props }: Props) {
-  const isPresent = useIsPresent()(info.id)
+  const isPresent = useRecoilValue(isPresentInChannelSelector(info.id))
   const joinChannel = useJoinChannelAction()
   const leaveChannel = useLeaveChannelAction()
 

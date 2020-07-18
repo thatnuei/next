@@ -15,18 +15,16 @@ import {
   ChannelState,
   joinedChannelIdsAtom,
   useJoinChannelAction,
-  useJoinedChannelIds,
 } from "./state"
 import { loadChannels, saveChannels } from "./storage"
 
 export function useChannelListeners() {
   const { account, identity } = useChatCredentials()
   const openChannelBrowser = useOpenChannelBrowserAction()
-  const joinedIds = useJoinedChannelIds()
   const joinChannel = useJoinChannelAction()
 
   const commandListener = useRecoilCallback(
-    ({ set }, command: ServerCommand) =>
+    ({ set, getPromise }, command: ServerCommand) =>
       runCommand(command, {
         async IDN() {
           const channelIds = await loadChannels(account, identity)
@@ -37,7 +35,14 @@ export function useChannelListeners() {
           }
         },
 
-        JCH({ channel: id, character: { identity: name }, title }) {
+        async JCH({ channel: id, character: { identity: name }, title }) {
+          if (name === identity) {
+            const joinedIds = await getPromise(joinedChannelIdsAtom)
+            const newJoinedIds = uniq([...joinedIds, id])
+            set(joinedChannelIdsAtom, newJoinedIds)
+            saveChannels(newJoinedIds, account, identity)
+          }
+
           set(
             channelAtom(id),
             (prev): ChannelState => ({
@@ -46,27 +51,22 @@ export function useChannelListeners() {
               users: uniq([...prev.users, name]),
             }),
           )
-
-          if (name === identity) {
-            const newJoinedIds = uniq([...joinedIds, id])
-            set(joinedChannelIdsAtom, newJoinedIds)
-            saveChannels(newJoinedIds, account, identity)
-          }
         },
 
-        LCH({ channel: id, character }) {
-          set(channelAtom(id), (prev) => ({
-            ...prev,
-            users: prev.users.filter((name) => name !== character),
-          }))
-
+        async LCH({ channel: id, character }) {
           if (character === identity) {
+            const joinedIds = await getPromise(joinedChannelIdsAtom)
             const newJoinedIds = uniq(
               joinedIds.filter((current) => current !== id),
             )
             set(joinedChannelIdsAtom, newJoinedIds)
             saveChannels(newJoinedIds, account, identity)
           }
+
+          set(channelAtom(id), (prev) => ({
+            ...prev,
+            users: prev.users.filter((name) => name !== character),
+          }))
         },
 
         ICH({ channel: id, users, mode }) {
@@ -111,7 +111,7 @@ export function useChannelListeners() {
           }
         },
       }),
-    [account, identity, joinChannel, joinedIds, openChannelBrowser],
+    [account, identity, joinChannel, openChannelBrowser],
   )
 
   useSocketListener(commandListener)

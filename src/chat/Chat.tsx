@@ -1,32 +1,34 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import { useChannelListeners } from "../channel/listeners"
+import { joinedChannelIdsAtom } from "../channel/state"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import { useChannelBrowserListeners } from "../channelBrowser/listeners"
 import { isChannelBrowserVisibleAtom } from "../channelBrowser/state"
 import CharacterMenu from "../character/CharacterMenu"
 import { useCharacterListeners } from "../character/listeners"
 import ChatNav from "../chatNav/ChatNav"
-import { chatNavViewAtom, useChatNav } from "../chatNav/state"
+import { chatNavViewAtom } from "../chatNav/state"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { Dict } from "../helpers/common/types"
 import { usePrivateChatListeners } from "../privateChat/listeners"
 import PrivateChatView from "../privateChat/PrivateChatView"
-import HookScope from "../react/HookScope"
+import { openPrivateChatPartnersAtom } from "../privateChat/state"
+import Scope from "../react/Scope"
 import { useSocket, useSocketConnection } from "../socket/socketContext"
 import { SocketStatus } from "../socket/SocketHandler"
-import { useStreamListener } from "../state/stream"
+import { useStreamListener, useStreamValue } from "../state/stream"
 import { useStatusUpdateListeners } from "../statusUpdate/listeners"
+import { statusOverlayVisibleAtom } from "../statusUpdate/state"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import Drawer from "../ui/Drawer"
 import { fixedCover } from "../ui/helpers"
 import LoadingOverlay from "../ui/LoadingOverlay"
 import Modal from "../ui/Modal"
+import { useOverlayControlled } from "../ui/overlay"
 import { screenQueries } from "../ui/screens"
-import { useChatState } from "./chatStateContext"
 import NoRoomView from "./NoRoomView"
 import { sideMenuVisibleAtom } from "./state"
 import { useChatStream } from "./streamContext"
@@ -43,8 +45,6 @@ function Chat({ onDisconnect }: Props) {
   useChannelBrowserListeners()
   useStatusUpdateListeners()
 
-  const state = useChatState()
-  const { currentPrivateChat } = useChatNav()
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
   const stream = useChatStream()
@@ -54,78 +54,92 @@ function Chat({ onDisconnect }: Props) {
     }
   })
 
-  const socket = useSocket()
-  const loadingStatuses: Dict<string, SocketStatus> = {
-    connecting: "Connecting...",
-    identifying: "Identifying...",
-  }
-
-  const view = useRecoilValue(chatNavViewAtom)
-
-  const [sideMenuVisible, setSideMenuVisible] = useRecoilState(
-    sideMenuVisibleAtom,
-  )
+  const sideMenu = useOverlayControlled(useRecoilState(sideMenuVisibleAtom))
 
   return (
     <div css={[fixedCover, tw`flex`]}>
       {!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
 
-      {view?.type === "channel" ? (
-        <ChannelView css={tw`flex-1`} channelId={view.id} />
-      ) : currentPrivateChat ? (
-        <PrivateChatView css={tw`flex-1`} chat={currentPrivateChat} />
-      ) : (
-        // need this extra div because of flex styling (?)
-        <div>
-          <NoRoomView />
-        </div>
-      )}
+      <ChatRoomView />
 
       {isSmallScreen && (
-        <Drawer
-          side="left"
-          isVisible={sideMenuVisible}
-          onDismiss={() => setSideMenuVisible(false)}
-        >
+        <Drawer side="left" {...sideMenu.props}>
           <ChatNav css={tw`h-full bg-background-2`} />
         </Drawer>
       )}
 
-      <HookScope>
+      <Scope>
         {function useScope() {
-          const [isVisible, setVisible] = useRecoilState(
-            isChannelBrowserVisibleAtom,
+          const overlay = useOverlayControlled(
+            useRecoilState(isChannelBrowserVisibleAtom),
           )
           return (
             <Modal
+              {...overlay.props}
               title="Channels"
               width={480}
               height={720}
-              isVisible={isVisible}
-              onDismiss={() => setVisible(false)}
               children={<ChannelBrowser />}
             />
           )
         }}
-      </HookScope>
+      </Scope>
 
-      <Modal
-        title="Update Your Status"
-        width={480}
-        height={360}
-        isVisible={state.statusUpdate.overlay.isVisible}
-        onDismiss={state.statusUpdate.overlay.hide}
-        children={<StatusUpdateForm />}
-      />
+      <Scope>
+        {function useScope() {
+          const overlay = useOverlayControlled(
+            useRecoilState(statusOverlayVisibleAtom),
+          )
+          return (
+            <Modal
+              {...overlay.props}
+              title="Update Your Status"
+              width={480}
+              height={360}
+              children={<StatusUpdateForm />}
+            />
+          )
+        }}
+      </Scope>
 
       <CharacterMenu />
 
-      <LoadingOverlay
-        text={loadingStatuses[socket.status] || "Online!"}
-        visible={socket.status in loadingStatuses}
-      />
+      <Scope>
+        {function useScope() {
+          const socket = useSocket()
+          const loadingStatus = useStreamValue(socket.statusStream, "idle")
+
+          const loadingDisplays: Dict<string, SocketStatus> = {
+            connecting: "Connecting...",
+            identifying: "Identifying...",
+          }
+
+          return (
+            <LoadingOverlay
+              text={loadingDisplays[loadingStatus] || "Online!"}
+              visible={loadingStatus in loadingDisplays}
+            />
+          )
+        }}
+      </Scope>
     </div>
   )
 }
 
-export default observer(Chat)
+export default Chat
+
+function ChatRoomView() {
+  const view = useRecoilValue(chatNavViewAtom)
+  const joinedChannels = useRecoilValue(joinedChannelIdsAtom)
+  const openChats = useRecoilValue(openPrivateChatPartnersAtom)
+
+  if (view?.type === "channel" && joinedChannels.includes(view.id)) {
+    return <ChannelView css={tw`flex-1`} channelId={view.id} />
+  }
+
+  if (view?.type === "privateChat" && openChats.includes(view.partnerName)) {
+    return <PrivateChatView css={tw`flex-1`} partnerName={view.partnerName} />
+  }
+
+  return <NoRoomView css={tw`self-start`} />
+}

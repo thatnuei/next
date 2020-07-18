@@ -1,88 +1,49 @@
 import { debounce } from "lodash/fp"
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import React, { useMemo } from "react"
+import { atomFamily, useRecoilValueLoadable, useSetRecoilState } from "recoil"
 import tw from "twin.macro"
-import Button from "../dom/Button"
 import { useApiContext } from "../flist/api-context"
 import { TagProps } from "../jsx/types"
-import { Task } from "../state/task"
-import { input, solidButton } from "../ui/components"
+import { input } from "../ui/components"
 
 type Props = {
   name: string
 } & TagProps<"textarea">
 
-type Status = "loading" | "editing" | "error"
-
 export default function CharacterMemoInput({ name, ...props }: Props) {
   const api = useApiContext()
 
-  const [status, setStatus] = useState<Status>("loading")
-  const [memo, setMemo] = useState("")
+  const characterMemoSelector = useMemo(() => {
+    return atomFamily({
+      key: "character:memo",
+      default: (name: string) => api.getMemo({ name }),
+    })
+  }, [api])
 
-  const taskRef = useRef<Task<string>>()
+  const setMemo = useSetRecoilState(characterMemoSelector(name))
+  const memoLoadable = useRecoilValueLoadable(characterMemoSelector(name))
 
-  const loadMemo = useCallback(
-    (name: string) => {
-      taskRef.current?.cancel()
-
-      const task = (taskRef.current = new Task({
-        run: () => api.getMemo({ name }),
-        onStart() {
-          setStatus("loading")
-        },
-        onComplete(memo) {
-          setMemo(memo)
-          setStatus("editing")
-        },
-        onError() {
-          setStatus("error")
-        },
-        onCancelled() {
-          setStatus("loading")
-        },
-      }))
-
-      task.run()
-    },
-    [api],
-  )
-
-  const saveMemo = useMemo(
+  const saveMemoDebounced = useMemo(
     () => debounce(2000, (note: string) => api.setMemo({ name, note })),
     [api, name],
   )
 
-  useEffect(() => {
-    loadMemo(name)
-  }, [loadMemo, name])
-
   function handleChange(newMemo: string) {
     setMemo(newMemo)
-    saveMemo(newMemo)
-  }
-
-  function retry() {
-    loadMemo(name)
+    saveMemoDebounced(newMemo)
   }
 
   const style = [input, tw`h-20 text-sm`]
 
-  if (status === "loading") {
-    return (
-      <textarea
-        css={[style, tw`italic`]}
-        disabled
-        placeholder="Loading..."
-        {...props}
-      />
-    )
+  if (memoLoadable.state === "loading") {
+    return <textarea css={style} disabled placeholder="Loading..." {...props} />
   }
 
-  if (status === "editing") {
+  if (memoLoadable.state === "hasValue") {
     return (
       <textarea
-        css={[style, memo === "" && tw`italic`]}
-        value={memo}
+        css={style}
+        value={memoLoadable.contents}
         onChange={(event) => handleChange(event.target.value)}
         placeholder="Enter a memo"
         {...props}
@@ -90,15 +51,8 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
     )
   }
 
-  if (status === "error") {
-    return (
-      <div css={tw`text-sm`}>
-        <div css={tw`mb-1`}>Failed to load memo</div>
-        <Button css={[solidButton, tw`px-2 py-1 text-sm`]} onClick={retry}>
-          Try again
-        </Button>
-      </div>
-    )
+  if (memoLoadable.state === "hasError") {
+    return <p css={tw`text-sm`}>Failed to load memo</p>
   }
 
   return null

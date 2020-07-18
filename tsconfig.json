@@ -15,7 +15,8 @@
     "noEmit": true,
     "jsx": "react",
     "plugins": [{ "name": "typescript-plugin-tw-template" }],
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "noUnusedLocals": true
   },
   "include": ["src", "types"]
 }

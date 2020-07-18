@@ -1,15 +1,21 @@
 import { concat, filter, without } from "lodash/fp"
-import { useSetRecoilState } from "recoil"
-import { useChatState } from "../chat/chatStateContext"
+import { useRecoilCallback, useSetRecoilState } from "recoil"
 import { useChatCredentials } from "../chat/credentialsContext"
 import { useChatStream } from "../chat/streamContext"
 import { useApiContext } from "../flist/api-context"
+import { runCommand, ServerCommand } from "../socket/commandHelpers"
 import { useSocket, useSocketListener } from "../socket/socketContext"
 import { useStreamListener } from "../state/stream"
-import { adminsAtom, bookmarksAtom, friendsAtom, ignoredAtom } from "./state"
+import {
+  adminsAtom,
+  bookmarksAtom,
+  characterAtom,
+  CharacterState,
+  friendsAtom,
+  ignoredAtom,
+} from "./state"
 
 export function useCharacterListeners() {
-  const state = useChatState()
   const socket = useSocket()
   const api = useApiContext()
   const { identity } = useChatCredentials()
@@ -35,83 +41,79 @@ export function useCharacterListeners() {
     }
   })
 
-  useSocketListener({
-    async IDN() {
-      const { friendlist, bookmarklist } = await api.getFriendsAndBookmarks()
-      setBookmarks(bookmarklist)
-      setFriends(
-        friendlist.map((entry) => ({ us: entry.source, them: entry.dest })),
-      )
-    },
+  useSocketListener(
+    useRecoilCallback(({ set }, command: ServerCommand) => {
+      const updateCharacter = (name: string, props: Partial<CharacterState>) =>
+        set(characterAtom(name), (prev) => ({ ...prev, ...props }))
 
-    IGN(params) {
-      if (params.action === "init" || params.action === "list") {
-        setIgnored(params.characters)
-      }
-      if (params.action === "add") {
-        setIgnored(concat(params.character))
-      }
-      if (params.action === "delete") {
-        setIgnored(without([params.character]))
-      }
-    },
+      return runCommand(command, {
+        async IDN() {
+          const {
+            friendlist,
+            bookmarklist,
+          } = await api.getFriendsAndBookmarks()
+          setBookmarks(bookmarklist)
+          setFriends(
+            friendlist.map((entry) => ({ us: entry.source, them: entry.dest })),
+          )
+        },
 
-    ADL({ ops }) {
-      setAdmins(ops)
-    },
+        IGN(params) {
+          if (params.action === "init" || params.action === "list") {
+            setIgnored(params.characters)
+          }
+          if (params.action === "add") {
+            setIgnored(concat(params.character))
+          }
+          if (params.action === "delete") {
+            setIgnored(without([params.character]))
+          }
+        },
 
-    RTB(params) {
-      if (params.type === "trackadd") {
-        setBookmarks(concat(params.name))
-        // show toast
-      }
+        ADL({ ops }) {
+          setAdmins(ops)
+        },
 
-      if (params.type === "trackrem") {
-        setBookmarks(without([params.name]))
-        // show toast
-      }
+        RTB(params) {
+          if (params.type === "trackadd") {
+            setBookmarks(concat(params.name))
+            // show toast
+          }
 
-      if (params.type === "friendadd") {
-        setFriends(concat({ us: identity, them: params.name }))
-        // show toast
-      }
+          if (params.type === "trackrem") {
+            setBookmarks(without([params.name]))
+            // show toast
+          }
 
-      if (params.type === "friendremove") {
-        setFriends(filter((it) => it.them === params.name))
-        // show toast
-      }
-    },
+          if (params.type === "friendadd") {
+            setFriends(concat({ us: identity, them: params.name }))
+            // show toast
+          }
 
-    LIS({ characters }) {
-      for (const [name, gender, status, statusMessage] of characters) {
-        state.characters.update(name, (char) => {
-          char.gender = gender
-          char.status = status
-          char.statusMessage = statusMessage
-        })
-      }
-    },
+          if (params.type === "friendremove") {
+            setFriends(filter((it) => it.them === params.name))
+            // show toast
+          }
+        },
 
-    NLN({ identity: name, gender, status }) {
-      state.characters.update(name, (char) => {
-        char.gender = gender
-        char.status = status
-        char.statusMessage = ""
+        LIS({ characters }) {
+          for (const [name, gender, status, statusMessage] of characters) {
+            updateCharacter(name, { gender, status, statusMessage })
+          }
+        },
+
+        NLN({ identity: name, gender, status }) {
+          updateCharacter(name, { gender, status, statusMessage: "" })
+        },
+
+        FLN({ character: name }) {
+          updateCharacter(name, { status: "offline", statusMessage: "" })
+        },
+
+        STA({ character: name, status, statusmsg }) {
+          updateCharacter(name, { status, statusMessage: statusmsg })
+        },
       })
-    },
-
-    FLN({ character: name }) {
-      state.characters.update(name, (char) => {
-        char.status = "offline"
-        char.statusMessage = ""
-      })
-    },
-
-    STA({ character: name, status, statusmsg }) {
-      state.characters.update(name, (char) => {
-        char.status = status
-        char.statusMessage = statusmsg
-      })
-    },
-  })
+    }),
+  )
 }

@@ -1,12 +1,7 @@
-import {
-  atom,
-  useRecoilCallback,
-  useRecoilValue,
-  useSetRecoilState,
-} from "recoil"
+import { atom, useRecoilCallback, useSetRecoilState } from "recoil"
 import { channelAtom } from "../channel/state"
-import { useChatState } from "../chat/chatStateContext"
 import { sideMenuVisibleAtom } from "../chat/state"
+import { privateChatAtom } from "../privateChat/state"
 
 type ChatNavView =
   | { type: "channel"; id: string }
@@ -18,7 +13,6 @@ export const chatNavViewAtom = atom<ChatNavView | undefined>({
 })
 
 export function useSetViewAction() {
-  const state = useChatState()
   const setView = useSetRecoilState(chatNavViewAtom)
   const setSideMenuVisible = useSetRecoilState(sideMenuVisibleAtom)
 
@@ -30,25 +24,12 @@ export function useSetViewAction() {
       if (view.type === "channel") {
         set(channelAtom(view.id), (prev) => ({ ...prev, isUnread: false }))
       } else {
-        state.privateChats.get(view.partnerName).isUnread = false
+        set(privateChatAtom(view.partnerName), (prev) => ({
+          ...prev,
+          isUnread: false,
+        }))
       }
     },
-    [setSideMenuVisible, setView, state.privateChats],
+    [setSideMenuVisible, setView],
   )
-}
-
-export function useChatNav() {
-  const state = useChatState()
-  const view = useRecoilValue(chatNavViewAtom)
-  return {
-    get currentPrivateChat() {
-      if (view?.type === "privateChat") {
-        const chat = state.privateChats.get(view.partnerName)
-        if (chat.isOpen) {
-          return chat
-        }
-      }
-      return undefined
-    },
-  }
 }

@@ -1,17 +1,17 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import tw from "twin.macro"
 import BBC from "../bbc/BBC"
 import { TagProps } from "../jsx/types"
 import { rainbowAnimation } from "../ui/helpers"
-import { CharacterState } from "./CharacterState"
 import { statusColors } from "./colors"
+import { useCharacter } from "./state"
 
 type Props = TagProps<"p"> & {
-  character: CharacterState
+  name: string
 }
 
-function CharacterStatusText({ character, ...props }: Props) {
+function CharacterStatusText({ name, ...props }: Props) {
+  const character = useCharacter(name)
   return (
     <p css={tw`text-sm`} {...props}>
       <span
@@ -29,4 +29,4 @@ function CharacterStatusText({ character, ...props }: Props) {
   )
 }
 
-export default observer(CharacterStatusText)
+export default CharacterStatusText
