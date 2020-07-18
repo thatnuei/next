@@ -1,75 +1,82 @@
-import React, { useState } from "react"
+import { pick } from "lodash/fp"
+import { useLocalStore, useObserver } from "mobx-react-lite"
+import React from "react"
 import { RecoilRoot } from "recoil"
 import Chat from "../chat/Chat"
 import ChatContainer from "../chat/ChatContainer"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
 import CharacterSelect from "./CharacterSelect"
-import Login, { LoginSuccessData } from "./Login"
+import Login, { LoginResult } from "./Login"
 
-type AppScreen =
-  | { name: "login" }
-  | { name: "character-select"; userData: UserData; initialCharacter: string }
-  | { name: "chat"; userData: UserData; identity: string }
-
-type UserData = LoginSuccessData
+type AppScreen = "login" | "characterSelect" | "chat"
 
 const storedIdentity = (account: string) =>
   createStoredValue(`${account}:identity`, v.string)
 
 function App() {
-  const [screen, setScreen] = useState<AppScreen>({ name: "login" })
+  const store = useLocalStore(() => ({
+    screen: "login" as AppScreen,
+    account: "",
+    ticket: "",
+    characters: [] as string[],
+    identity: "",
 
-  switch (screen.name) {
-    case "login": {
-      const handleLoginSuccess = async (userData: LoginSuccessData) => {
-        const identity = await storedIdentity(userData.account)
-          .get()
-          .catch((error) => {
-            console.warn("could not load stored identity", error)
-          })
-
-        const defaultIdentity = userData.characters[0]
-
-        setScreen({
-          name: "character-select",
-          userData,
-          initialCharacter: identity || defaultIdentity,
+    async handleLoginSuccess({ account, ticket, characters }: LoginResult) {
+      const identity = await storedIdentity(account)
+        .get()
+        .catch((error) => {
+          console.warn("could not load stored identity", error)
+          return undefined
         })
-      }
 
-      return <Login onSuccess={handleLoginSuccess} />
+      this.account = account
+      this.ticket = ticket
+      this.characters = characters
+      this.identity = identity || characters[0]
+      this.screen = "characterSelect"
+    },
+
+    enterChat(identity: string) {
+      storedIdentity(this.account).set(identity)
+      this.identity = identity
+      this.screen = "chat"
+    },
+
+    showLogin() {
+      this.screen = "login"
+    },
+  }))
+
+  return useObserver(() => {
+    if (store.screen === "login") {
+      return <Login onSuccess={store.handleLoginSuccess} />
     }
 
-    case "character-select": {
-      const handleCharacterSubmit = (identity: string) => {
-        storedIdentity(screen.userData.account).set(identity)
-        setScreen({ name: "chat", userData: screen.userData, identity })
-      }
-
+    if (store.screen === "characterSelect") {
       return (
         <CharacterSelect
-          characters={screen.userData.characters}
-          initialCharacter={screen.initialCharacter}
-          onSubmit={handleCharacterSubmit}
-          onReturnToLogin={() => setScreen({ name: "login" })}
+          characters={store.characters}
+          initialCharacter={store.identity}
+          onSubmit={store.enterChat}
+          onReturnToLogin={store.showLogin}
         />
       )
     }
 
-    case "chat":
+    if (store.screen === "chat") {
+      const creds = pick(["account", "ticket", "identity"], store)
       return (
         <RecoilRoot>
-          <ChatContainer
-            account={screen.userData.account}
-            ticket={screen.userData.ticket}
-            identity={screen.identity}
-          >
-            <Chat onDisconnect={() => setScreen({ name: "login" })} />
+          <ChatContainer {...creds}>
+            <Chat onDisconnect={store.showLogin} />
           </ChatContainer>
         </RecoilRoot>
       )
-  }
+    }
+
+    return null
+  })
 }
 
 export default App

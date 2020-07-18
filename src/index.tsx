@@ -8,7 +8,7 @@ configure({
   observableRequiresReaction: true,
   reactionRequiresObservable: true,
   computedRequiresReaction: true,
-  enforceActions: "observed",
+  // enforceActions: "observed",
 })
 
 ReactDOM.render(<Root />, document.getElementById("root"))
