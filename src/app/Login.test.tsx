@@ -2,7 +2,7 @@ import { fireEvent, waitFor } from "@testing-library/react"
 import React from "react"
 import { AuthenticateResponse, LoginCredentials } from "../flist/api"
 import { renderWithProviders } from "../test/renderWithProviders"
-import Login, { LoginSuccessData } from "./Login"
+import Login, { LoginResult } from "./Login"
 
 const mockCreds: LoginCredentials = { account: "test", password: "test" }
 
@@ -70,7 +70,7 @@ describe("Login", () => {
     fireEvent.click(helpers.getByText(/log in/i))
 
     await waitFor(() => {
-      expect(handleSuccess).toBeCalledWith<[LoginSuccessData]>({
+      expect(handleSuccess).toBeCalledWith<[LoginResult]>({
         ...mockAuthResponse,
         account: mockCreds.account,
       })

@@ -14,10 +14,10 @@ import FormField from "../ui/FormField"
 import { centerItems, fixedCover, flexColumn } from "../ui/helpers"
 
 type Props = {
-  onSuccess: (data: LoginSuccessData) => void
+  onSuccess: (result: LoginResult) => void | Promise<void>
 }
 
-export type LoginSuccessData = {
+export type LoginResult = {
   account: string
   ticket: string
   characters: string[]
@@ -49,7 +49,7 @@ export default function Login(props: Props) {
       .authenticate({ account, password })
       .then((data) => {
         setState({ current: "idle" })
-        props.onSuccess({ ...data, account })
+        return props.onSuccess({ ...data, account })
       })
       .catch((error) => {
         setState({ current: "error", error: extractErrorMessage(error) })
