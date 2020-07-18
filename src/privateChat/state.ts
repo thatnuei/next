@@ -43,7 +43,7 @@ export function useSendPrivateMessageAction() {
   const { identity } = useChatCredentials()
 
   return useRecoilCallback(
-    ({ set }, recipientName: string, text: string) => {
+    ({ set }) => (recipientName: string, text: string) => {
       socket.send({
         type: "PRI",
         params: { recipient: recipientName, message: text },

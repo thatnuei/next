@@ -17,7 +17,7 @@ export function useSetViewAction() {
   const setSideMenuVisible = useSetRecoilState(sideMenuVisibleAtom)
 
   return useRecoilCallback(
-    ({ set }, view: ChatNavView) => {
+    ({ set }) => (view: ChatNavView) => {
       setView(view)
       setSideMenuVisible(false)
 

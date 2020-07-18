@@ -22,7 +22,7 @@ export const characterAtom = atomFamily<CharacterState, string>({
 
 const characterListSelector = selectorFamily({
   key: "characterList",
-  get: (names: readonly string[]) => ({ get }) =>
+  get: (names: string[]) => ({ get }) =>
     names.map((name) => get(characterAtom(name))),
 })
 
@@ -35,7 +35,7 @@ export function useIdentityCharacter() {
   return useCharacter(identity)
 }
 
-export function useCharacterList(names: readonly string[]) {
+export function useCharacterList(names: string[]) {
   return useRecoilValue(characterListSelector(names))
 }
 

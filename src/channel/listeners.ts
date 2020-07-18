@@ -24,7 +24,7 @@ export function useChannelListeners() {
   const joinChannel = useJoinChannelAction()
 
   const commandListener = useRecoilCallback(
-    ({ set, getPromise }, command: ServerCommand) =>
+    ({ set, snapshot }) => (command: ServerCommand) =>
       runCommand(command, {
         async IDN() {
           const channelIds = await loadChannels(account, identity)
@@ -37,7 +37,7 @@ export function useChannelListeners() {
 
         async JCH({ channel: id, character: { identity: name }, title }) {
           if (name === identity) {
-            const joinedIds = await getPromise(joinedChannelIdsAtom)
+            const joinedIds = await snapshot.getPromise(joinedChannelIdsAtom)
             const newJoinedIds = uniq([...joinedIds, id])
             set(joinedChannelIdsAtom, newJoinedIds)
             saveChannels(newJoinedIds, account, identity)
@@ -55,7 +55,7 @@ export function useChannelListeners() {
 
         async LCH({ channel: id, character }) {
           if (character === identity) {
-            const joinedIds = await getPromise(joinedChannelIdsAtom)
+            const joinedIds = await snapshot.getPromise(joinedChannelIdsAtom)
             const newJoinedIds = uniq(
               joinedIds.filter((current) => current !== id),
             )
@@ -82,7 +82,7 @@ export function useChannelListeners() {
         },
 
         COL({ channel: id, oplist }) {
-          set(channelAtom(id), (prev) => ({ ...prev, ops: oplist }))
+          set(channelAtom(id), (prev) => ({ ...prev, ops: oplist as string[] }))
         },
 
         MSG({ channel: id, character, message }) {

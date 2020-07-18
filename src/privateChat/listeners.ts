@@ -20,7 +20,7 @@ export function usePrivateChatListeners() {
   const openChat = useOpenPrivateChatAction()
 
   useSocketListener(
-    useRecoilCallback(({ set }, command) => {
+    useRecoilCallback(({ set }) => (command) => {
       return runCommand(command, {
         IDN() {
           restorePrivateChats(identity)

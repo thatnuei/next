@@ -42,7 +42,7 @@ export function useCharacterListeners() {
   })
 
   useSocketListener(
-    useRecoilCallback(({ set }, command: ServerCommand) => {
+    useRecoilCallback(({ set }) => (command: ServerCommand) => {
       const updateCharacter = (name: string, props: Partial<CharacterState>) =>
         set(characterAtom(name), (prev) => ({ ...prev, ...props }))
 

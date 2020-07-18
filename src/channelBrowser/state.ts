@@ -54,8 +54,8 @@ export function useRefreshChannelBrowserAction() {
   const setCanRefresh = useSetRecoilState(canRefreshAtom)
 
   return useRecoilCallback(
-    async ({ getPromise }) => {
-      const canRefresh = await getPromise(canRefreshAtom)
+    ({ snapshot }) => async () => {
+      const canRefresh = await snapshot.getPromise(canRefreshAtom)
       if (!canRefresh) return
 
       socket.send({ type: "CHA" })

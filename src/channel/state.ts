@@ -6,7 +6,6 @@ import {
   useRecoilValue,
 } from "recoil"
 import { useChatCredentials } from "../chat/credentialsContext"
-import { DeepReadonly } from "../helpers/common/types"
 import {
   createChannelMessage,
   MessageState,
@@ -15,7 +14,7 @@ import {
 import { useSocket } from "../socket/socketContext"
 import { ChannelMode } from "./types"
 
-export type ChannelState = DeepReadonly<{
+export type ChannelState = {
   id: string
   title: string
   description: string
@@ -25,7 +24,7 @@ export type ChannelState = DeepReadonly<{
   users: string[]
   ops: string[]
   chatInput: string
-}>
+}
 
 export const channelAtom = atomFamily({
   key: "channel",
@@ -66,8 +65,10 @@ export function useJoinChannelAction() {
   const socket = useSocket()
 
   return useRecoilCallback(
-    async ({ set, getPromise }, id: string, title?: string) => {
-      const isPresent = await getPromise(isPresentInChannelSelector(id))
+    ({ set, snapshot }) => async (id: string, title?: string) => {
+      const isPresent = await snapshot.getPromise(
+        isPresentInChannelSelector(id),
+      )
       if (isPresent) return
 
       set(channelAtom(id), (prev) => ({
@@ -84,8 +85,10 @@ export function useLeaveChannelAction() {
   const socket = useSocket()
 
   return useRecoilCallback(
-    async ({ getPromise }, id: string) => {
-      const isPresent = await getPromise(isPresentInChannelSelector(id))
+    ({ snapshot }) => async (id: string) => {
+      const isPresent = await snapshot.getPromise(
+        isPresentInChannelSelector(id),
+      )
       if (!isPresent) return
 
       socket.send({ type: "LCH", params: { channel: id } })
@@ -99,7 +102,7 @@ export function useSendChannelMessageAction() {
   const { identity } = useChatCredentials()
 
   return useRecoilCallback(
-    ({ set }, channelId: string, text: string) => {
+    ({ set }) => (channelId: string, text: string) => {
       set(channelMessagesAtom(channelId), (prev) => [
         ...prev,
         createChannelMessage(identity, text),
