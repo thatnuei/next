@@ -2,7 +2,6 @@ import { pick } from "lodash/fp"
 import { observable } from "mobx"
 import { useObserver } from "mobx-react-lite"
 import React, { useMemo } from "react"
-import { RecoilRoot } from "recoil"
 import Chat from "../chat/Chat"
 import ChatContainer from "../chat/ChatContainer"
 import { createStoredValue } from "../storage/createStoredValue"
@@ -70,11 +69,9 @@ export default function App() {
     if (store.screen === "chat") {
       const creds = pick(["account", "ticket", "identity"], store)
       return (
-        <RecoilRoot>
-          <ChatContainer {...creds}>
-            <Chat onDisconnect={store.showLogin} />
-          </ChatContainer>
-        </RecoilRoot>
+        <ChatContainer {...creds}>
+          <Chat onDisconnect={store.showLogin} />
+        </ChatContainer>
       )
     }
 
