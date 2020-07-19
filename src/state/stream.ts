@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 export type StreamListener<T> = (event: T) => void
 
-export class Stream<T> {
+export class Stream<T = void> {
   private listeners = new Set<StreamListener<T>>()
 
   listen = (listener: StreamListener<T>) => {
