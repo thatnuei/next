@@ -11348,23 +11348,6 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"mobx-react-lite@npm:2.0.7":
-  version: 2.0.7
-  resolution: "mobx-react-lite@npm:2.0.7"
-  peerDependencies:
-    mobx: ^4.0.0 || ^5.0.0
-    react: ^16.8.0
-  checksum: c9fef956ae25a9616ec9d182ded1fe84f02043923b8db90987fa3c43e2ee33f091d78d587a4eaeb6f2b55899948bd0127a05f33e3373e0a08c01be4fba5a282b
-  languageName: node
-  linkType: hard
-
-"mobx@npm:5.15.4":
-  version: 5.15.4
-  resolution: "mobx@npm:5.15.4"
-  checksum: 4f34a46414e9f0c6f707b68d92224078da74c0796f1163d1b97a1534474d080e41ab7d0aff2636c975c5ccb5164bc265bf2c558c296dd1ca89315603a327edea
-  languageName: node
-  linkType: hard
-
 "move-concurrently@npm:^1.0.1":
   version: 1.0.1
   resolution: "move-concurrently@npm:1.0.1"
@@ -11534,8 +11517,6 @@ fsevents@~2.1.2:
     jest-environment-jsdom-sixteen: 1.0.3
     lodash: 4.17.19
     micro-observables: 1.4.0
-    mobx: 5.15.4
-    mobx-react-lite: 2.0.7
     npm-run-all: 4.1.5
     polished: 3.6.5
     preact: 10.4.6
