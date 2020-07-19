@@ -34,7 +34,7 @@ function ChatNavActions(props: TagProps<"div">) {
       <NavAction
         icon={icons.logout}
         title="Log out"
-        onClick={root.appStore.logOut}
+        onClick={root.appStore.leaveChat}
       />
     </div>
   )

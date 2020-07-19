@@ -1,7 +1,9 @@
 import { AppStore } from "../app/AppStore"
+import { UserStore } from "../app/UserStore"
 import { SocketHandler } from "../socket/SocketHandler"
 
 export class RootStore {
   readonly socket = new SocketHandler()
-  readonly appStore = new AppStore(this.socket)
+  readonly userStore = new UserStore()
+  readonly appStore = new AppStore(this.socket, this.userStore)
 }

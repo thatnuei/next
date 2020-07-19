@@ -2,7 +2,7 @@ import { concat, filter, without } from "lodash/fp"
 import { useRecoilCallback, useSetRecoilState } from "recoil"
 import { useChatCredentials } from "../chat/credentialsContext"
 import { useChatStream } from "../chat/streamContext"
-import { useApiContext } from "../flist/api-context"
+import { useRootStore } from "../root/context"
 import { runCommand, ServerCommand } from "../socket/commandHelpers"
 import { useSocket, useSocketListener } from "../socket/socketContext"
 import { useStreamListener } from "../state/stream"
@@ -17,7 +17,7 @@ import {
 
 export function useCharacterListeners() {
   const socket = useSocket()
-  const api = useApiContext()
+  const root = useRootStore()
   const { identity } = useChatCredentials()
   const setFriends = useSetRecoilState(friendsAtom)
   const setBookmarks = useSetRecoilState(bookmarksAtom)
@@ -34,9 +34,9 @@ export function useCharacterListeners() {
 
     if (event.type === "update-bookmark") {
       if (event.action === "add") {
-        api.addBookmark({ name: event.name }).catch(console.error) // show error toast
+        root.userStore.addBookmark({ name: event.name }).catch(console.error) // show error toast
       } else {
-        api.removeBookmark({ name: event.name }).catch(console.error) // show error toast
+        root.userStore.removeBookmark({ name: event.name }).catch(console.error) // show error toast
       }
     }
   })
@@ -51,7 +51,8 @@ export function useCharacterListeners() {
           const {
             friendlist,
             bookmarklist,
-          } = await api.getFriendsAndBookmarks()
+          } = await root.userStore.getFriendsAndBookmarks()
+
           setBookmarks(bookmarklist)
           setFriends(
             friendlist.map((entry) => ({ us: entry.source, them: entry.dest })),

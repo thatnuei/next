@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
-import { useApiContext } from "../flist/api-context"
 import { extractErrorMessage } from "../helpers/common/extractErrorMessage"
+import { useRootStore } from "../root/context"
 import {
   headerText,
   input,
@@ -12,10 +12,6 @@ import {
 } from "../ui/components"
 import FormField from "../ui/FormField"
 import { centerItems, fixedCover, flexColumn } from "../ui/helpers"
-
-type Props = {
-  onSuccess: (result: LoginResult) => void | Promise<void>
-}
 
 export type LoginResult = {
   account: string
@@ -28,11 +24,11 @@ type State =
   | { current: "loading" }
   | { current: "error"; error: string }
 
-export default function Login(props: Props) {
+export default function Login() {
+  const root = useRootStore()
   const [state, setState] = useState<State>({ current: "idle" })
   const [account, setAccount] = useState("")
   const [password, setPassword] = useState("")
-  const api = useApiContext()
 
   const canSubmit =
     account !== "" && password !== "" && state.current !== "loading"
@@ -45,15 +41,9 @@ export default function Login(props: Props) {
     if (state.current === "loading") return
     setState({ current: "loading" })
 
-    api
-      .authenticate({ account, password })
-      .then((data) => {
-        setState({ current: "idle" })
-        return props.onSuccess({ ...data, account })
-      })
-      .catch((error) => {
-        setState({ current: "error", error: extractErrorMessage(error) })
-      })
+    root.appStore.submitLogin({ account, password }).catch((error) => {
+      setState({ current: "error", error: extractErrorMessage(error) })
+    })
   }
 
   return (

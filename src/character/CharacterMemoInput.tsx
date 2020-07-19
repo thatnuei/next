@@ -2,8 +2,8 @@ import { debounce } from "lodash/fp"
 import React, { useMemo } from "react"
 import { atomFamily, useRecoilValueLoadable, useSetRecoilState } from "recoil"
 import tw from "twin.macro"
-import { useApiContext } from "../flist/api-context"
 import { TagProps } from "../jsx/types"
+import { useRootStore } from "../root/context"
 import { input } from "../ui/components"
 
 type Props = {
@@ -11,21 +11,22 @@ type Props = {
 } & TagProps<"textarea">
 
 export default function CharacterMemoInput({ name, ...props }: Props) {
-  const api = useApiContext()
+  const root = useRootStore()
 
   const characterMemoSelector = useMemo(() => {
     return atomFamily({
       key: "character:memo",
-      default: (name: string) => api.getMemo({ name }),
+      default: (name: string) => root.userStore.getMemo({ name }),
     })
-  }, [api])
+  }, [root.userStore])
 
   const setMemo = useSetRecoilState(characterMemoSelector(name))
   const memoLoadable = useRecoilValueLoadable(characterMemoSelector(name))
 
   const saveMemoDebounced = useMemo(
-    () => debounce(2000, (note: string) => api.setMemo({ name, note })),
-    [api, name],
+    () =>
+      debounce(2000, (note: string) => root.userStore.setMemo({ name, note })),
+    [name, root.userStore],
   )
 
   function handleChange(newMemo: string) {

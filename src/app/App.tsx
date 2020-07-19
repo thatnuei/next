@@ -7,13 +7,13 @@ import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 
 export default function App() {
-  const { appStore } = useRootStore()
-  const screen = useObservable(appStore.screen)
-  const userData = useObservable(appStore.userData)
-  const identity = useObservable(appStore.identity)
+  const root = useRootStore()
+  const screen = useObservable(root.appStore.screen)
+  const userData = useObservable(root.userStore.userData)
+  const identity = useObservable(root.appStore.identity)
 
   if (screen === "login") {
-    return <Login onSuccess={appStore.handleLoginSuccess} />
+    return <Login />
   }
 
   if (screen === "characterSelect") {
@@ -21,8 +21,8 @@ export default function App() {
       <CharacterSelect
         characters={userData.characters}
         initialCharacter={identity}
-        onSubmit={appStore.enterChat}
-        onReturnToLogin={appStore.showLogin}
+        onSubmit={root.appStore.enterChat}
+        onReturnToLogin={root.appStore.showLogin}
       />
     )
   }
@@ -31,7 +31,7 @@ export default function App() {
     const { account, ticket } = userData
     return (
       <ChatContainer {...{ account, ticket, identity }}>
-        <Chat onDisconnect={appStore.showLogin} />
+        <Chat />
       </ChatContainer>
     )
   }

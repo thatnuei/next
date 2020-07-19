@@ -9,7 +9,7 @@ function createFormData(fields: Dict<unknown>) {
   return body
 }
 
-type FetchJsonOptions = {
+export type FetchJsonOptions = {
   body: Dict<unknown>
   method: "get" | "post" | "patch" | "put" | "delete"
 }
@@ -23,9 +23,5 @@ export async function fetchJson<T>(
     body: options?.body && createFormData(options.body),
   })
 
-  if (!res.ok) raise(res.statusText)
-
-  const data = await res.json()
-  if (data?.error) raise(data.error)
-  return data
+  return res.ok ? res.json() : raise(res.statusText)
 }
