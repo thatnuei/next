@@ -1,3 +1,4 @@
+import { raise } from "../helpers/common/raise"
 import { Dict } from "../helpers/common/types"
 
 function createFormData(fields: Dict<unknown>) {
@@ -13,17 +14,18 @@ type FetchJsonOptions = {
   method: "get" | "post" | "patch" | "put" | "delete"
 }
 
-export async function fetchJson(url: string, options?: FetchJsonOptions) {
+export async function fetchJson<T>(
+  url: string,
+  options?: FetchJsonOptions,
+): Promise<T> {
   const res = await fetch(url, {
     method: options?.method,
     body: options?.body && createFormData(options.body),
   })
 
+  if (!res.ok) raise(res.statusText)
+
   const data = await res.json()
-
-  if (data?.error) {
-    throw new Error(data.error)
-  }
-
+  if (data?.error) raise(data.error)
   return data
 }
