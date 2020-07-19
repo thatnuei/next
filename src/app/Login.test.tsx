@@ -1,6 +1,6 @@
 import { fireEvent, waitFor } from "@testing-library/react"
 import React from "react"
-import { AuthenticateResponse, LoginCredentials } from "../flist/api"
+import { AuthenticateResponse, LoginCredentials } from "../flist/api.old"
 import { renderWithProviders } from "../test/renderWithProviders"
 import Login, { LoginResult } from "./Login"
 
