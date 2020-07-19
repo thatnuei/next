@@ -96,11 +96,12 @@ export function useCharacterListeners() {
           }
         },
 
-        LIS({ characters }) {
-          for (const [name, gender, status, statusMessage] of characters) {
-            updateCharacter(name, { gender, status, statusMessage })
-          }
-        },
+        // LIS({ characters }) {
+        // this is causing too much lag, disabling for now
+        // for (const [name, gender, status, statusMessage] of characters) {
+        // updateCharacter(name, { gender, status, statusMessage })
+        // }
+        // },
 
         NLN({ identity: name, gender, status }) {
           updateCharacter(name, { gender, status, statusMessage: "" })
