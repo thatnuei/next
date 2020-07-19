@@ -1,5 +1,5 @@
 import { AnimatePresence } from "framer-motion"
-import { useObserver } from "mobx-react-lite"
+import { useObservable } from "micro-observables"
 import React from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
@@ -111,7 +111,7 @@ function Chat({ onDisconnect }: Props) {
       <Scope>
         {function useScope() {
           const socket = useSocket()
-          const loadingStatus = useObserver(() => socket.status)
+          const status = useObservable(socket.status)
 
           const loadingDisplays: Dict<string, SocketStatus> = {
             connecting: "Connecting...",
@@ -120,8 +120,8 @@ function Chat({ onDisconnect }: Props) {
 
           return (
             <LoadingOverlay
-              text={loadingDisplays[loadingStatus] || "Online!"}
-              visible={loadingStatus in loadingDisplays}
+              text={loadingDisplays[status] || "Online!"}
+              visible={status in loadingDisplays}
             />
           )
         }}

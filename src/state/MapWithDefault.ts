@@ -1,7 +1,4 @@
-import { observable } from "mobx"
-
 export class MapWithDefault<V, K = string> {
-  @observable.shallow
   private readonly items = new Map<K, V>()
 
   constructor(private readonly getDefault: (key: K) => V) {}

@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { observable } from "micro-observables"
 import { ChatCredentials } from "../chat/types"
 import { Stream } from "../state/stream"
 import {
@@ -24,17 +24,17 @@ export class SocketHandler {
   disconnectStream = new Stream()
   commandStream = new Stream<ServerCommand>()
 
-  @observable status: SocketStatus = "idle"
+  status = observable<SocketStatus>("idle")
 
   private socket?: WebSocket
 
   connect({ account, ticket, identity, onDisconnect }: ConnectOptions) {
-    this.status = "connecting"
+    this.status.set("connecting")
 
     const socket = (this.socket = new WebSocket(`wss://chat.f-list.net/chat2`))
 
     socket.onopen = () => {
-      this.status = "identifying"
+      this.status.set("identifying")
       this.send({
         type: "IDN",
         params: {
@@ -49,13 +49,13 @@ export class SocketHandler {
     }
 
     socket.onclose = () => {
-      this.status = "closed"
+      this.status.set("closed")
       this.socket = undefined
       onDisconnect()
     }
 
     socket.onerror = () => {
-      this.status = "error"
+      this.status.set("error")
       this.socket = undefined
       onDisconnect()
     }
@@ -79,7 +79,7 @@ export class SocketHandler {
       }
 
       if (command.type === "IDN") {
-        this.status = "online"
+        this.status.set("online")
       }
 
       if (command.type === "ERR") {

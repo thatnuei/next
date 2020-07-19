@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { observable } from "micro-observables"
 import { SocketHandler } from "../socket/SocketHandler"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
@@ -10,45 +10,50 @@ const storedIdentity = (account: string) =>
   createStoredValue(`${account}:identity`, v.string)
 
 export class AppStore {
-  @observable screen: AppScreen = "login"
-  @observable account = ""
-  @observable ticket = ""
-  @observable.ref characters: string[] = []
-  @observable identity = ""
+  screen = observable<AppScreen>("login")
+
+  userData = observable({
+    account: "",
+    ticket: "",
+    characters: [] as string[],
+  })
+
+  identity = observable("")
 
   constructor(private readonly socket: SocketHandler) {}
 
-  handleLoginSuccess = async ({ account, ticket, characters }: LoginResult) => {
-    const identity = await storedIdentity(account)
+  handleLoginSuccess = async (result: LoginResult) => {
+    const identity = await storedIdentity(result.account)
       .get()
       .catch((error) => {
         console.warn("could not load stored identity", error)
         return undefined
       })
 
-    this.account = account
-    this.ticket = ticket
-    this.characters = characters
-    this.identity = identity || characters[0]
-    this.screen = "characterSelect"
+    this.userData.set(result)
+    this.identity.set(identity || result.characters[0])
+    this.screen.set("characterSelect")
   }
 
   enterChat = (identity: string) => {
-    storedIdentity(this.account).set(identity)
-    this.identity = identity
-    this.screen = "chat"
+    const { account, ticket } = this.userData.get()
+
+    storedIdentity(account).set(identity)
+
+    this.identity.set(identity)
+    this.screen.set("chat")
 
     this.socket.connect({
-      account: this.account,
-      ticket: this.ticket,
+      account,
+      ticket,
       identity,
       onDisconnect: () => {
-        this.screen = "login"
+        this.screen.set("login")
       },
     })
   }
 
   showLogin = () => {
-    this.screen = "login"
+    this.screen.set("login")
   }
 }
