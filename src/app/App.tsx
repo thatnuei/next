@@ -2,7 +2,7 @@ import { useObservable } from "micro-observables"
 import React from "react"
 import Chat from "../chat/Chat"
 import ChatContainer from "../chat/ChatContainer"
-import { useRootStore } from "../root/rootStoreContext"
+import { useRootStore } from "../root/context"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 
