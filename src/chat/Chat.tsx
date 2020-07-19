@@ -19,7 +19,7 @@ import { usePrivateChatListeners } from "../privateChat/listeners"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { openPrivateChatPartnersAtom } from "../privateChat/state"
 import Scope from "../react/Scope"
-import { useSocket, useSocketConnection } from "../socket/socketContext"
+import { useSocket } from "../socket/socketContext"
 import { SocketStatus } from "../socket/SocketHandler"
 import { useStreamListener } from "../state/stream"
 import { useStatusUpdateListeners } from "../statusUpdate/listeners"
@@ -40,7 +40,6 @@ type Props = {
 }
 
 function Chat({ onDisconnect }: Props) {
-  useSocketConnection({ onDisconnect })
   useChannelListeners()
   useCharacterListeners()
   usePrivateChatListeners()

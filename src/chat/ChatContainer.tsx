@@ -1,7 +1,6 @@
 import React from "react"
 import { RecoilRoot } from "recoil"
 import { ChildrenProps } from "../jsx/types"
-import { SocketProvider } from "../socket/socketContext"
 import { ChatCredentialsProvider } from "./credentialsContext"
 import { ChatStreamProvider } from "./streamContext"
 import { ChatCredentials } from "./types"
@@ -13,7 +12,7 @@ function ChatContainer(props: Props) {
     <ChatStreamProvider>
       <RecoilRoot>
         <ChatCredentialsProvider {...props}>
-          <SocketProvider>{props.children}</SocketProvider>
+          {props.children}
         </ChatCredentialsProvider>
       </RecoilRoot>
     </ChatStreamProvider>
