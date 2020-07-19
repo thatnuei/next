@@ -8,7 +8,6 @@ export type ChatCredentials = {
 }
 
 type ChatEventMap = {
-  "log-out": {}
   "update-ignored": { action: "add" | "delete"; name: string }
   "update-bookmark": { action: "add" | "delete"; name: string }
 }

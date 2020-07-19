@@ -2,14 +2,14 @@ import React from "react"
 import { useSetRecoilState } from "recoil"
 import tw from "twin.macro"
 import { useOpenChannelBrowserAction } from "../channelBrowser/state"
-import { useChatStream } from "../chat/streamContext"
 import { TagProps } from "../jsx/types"
+import { useRootStore } from "../root/context"
 import { statusOverlayVisibleAtom } from "../statusUpdate/state"
 import * as icons from "../ui/icons"
 import NavAction from "./NavAction"
 
 function ChatNavActions(props: TagProps<"div">) {
-  const stream = useChatStream()
+  const root = useRootStore()
   const openChannelBrowser = useOpenChannelBrowserAction()
   const setStatusOverlayVisible = useSetRecoilState(statusOverlayVisibleAtom)
 
@@ -34,7 +34,7 @@ function ChatNavActions(props: TagProps<"div">) {
       <NavAction
         icon={icons.logout}
         title="Log out"
-        onClick={() => stream.send({ type: "log-out" })}
+        onClick={root.appStore.logOut}
       />
     </div>
   )

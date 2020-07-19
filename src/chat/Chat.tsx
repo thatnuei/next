@@ -21,7 +21,6 @@ import { openPrivateChatPartnersAtom } from "../privateChat/state"
 import Scope from "../react/Scope"
 import { useSocket } from "../socket/socketContext"
 import { SocketStatus } from "../socket/SocketHandler"
-import { useStreamListener } from "../state/stream"
 import { useStatusUpdateListeners } from "../statusUpdate/listeners"
 import { statusOverlayVisibleAtom } from "../statusUpdate/state"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
@@ -33,13 +32,8 @@ import { useOverlayControlled } from "../ui/overlay"
 import { screenQueries } from "../ui/screens"
 import NoRoomView from "./NoRoomView"
 import { sideMenuVisibleAtom } from "./state"
-import { useChatStream } from "./streamContext"
 
-type Props = {
-  onDisconnect: () => void
-}
-
-function Chat({ onDisconnect }: Props) {
+export default function Chat() {
   useChannelListeners()
   useCharacterListeners()
   usePrivateChatListeners()
@@ -47,14 +41,6 @@ function Chat({ onDisconnect }: Props) {
   useStatusUpdateListeners()
 
   const isSmallScreen = useMediaQuery(screenQueries.small)
-
-  const stream = useChatStream()
-  useStreamListener(stream, (event) => {
-    if (event.type === "log-out") {
-      onDisconnect()
-    }
-  })
-
   const sideMenu = useOverlayControlled(useRecoilState(sideMenuVisibleAtom))
 
   return (
@@ -128,8 +114,6 @@ function Chat({ onDisconnect }: Props) {
     </div>
   )
 }
-
-export default Chat
 
 function ChatRoomView() {
   const view = useRecoilValue(chatNavViewAtom)

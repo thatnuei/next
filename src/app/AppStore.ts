@@ -56,4 +56,11 @@ export class AppStore {
   showLogin = () => {
     this.screen.set("login")
   }
+
+  logOut = () => {
+    if (this.screen.get() === "chat") {
+      this.socket.disconnect()
+      this.screen.set("login")
+    }
+  }
 }
