@@ -38,17 +38,20 @@ const ticketExpireTime = 1000 * 60 * 5
 async function refetchTicket(currentState: AuthState) {
   const ticketTimestamp = Date.now()
 
-  const data = await fetchJson("https://www.f-list.net/json/getApiTicket.php", {
-    method: "post",
-    body: {
-      account: currentState.account,
-      password: currentState.password,
-      no_friends: true,
-      no_bookmarks: true,
-      no_characters: true,
-      no_default_character: true,
+  const data = await fetchJson<AuthenticateResponse>(
+    "https://www.f-list.net/json/getApiTicket.php",
+    {
+      method: "post",
+      body: {
+        account: currentState.account,
+        password: currentState.password,
+        no_friends: true,
+        no_bookmarks: true,
+        no_characters: true,
+        no_default_character: true,
+      },
     },
-  })
+  )
 
   return {
     ...currentState,
@@ -70,9 +73,9 @@ export function createFListApi() {
     return authState
   }
 
-  async function fetchWithAuth(url: string, body?: object) {
+  async function fetchWithAuth<T>(url: string, body?: object) {
     const state = await validateAuthState()
-    return fetchJson(url, {
+    return fetchJson<T>(url, {
       method: "post", // every API request is a post request
       body: { account: state.account, ticket: state.ticket, ...body },
     })
@@ -81,7 +84,7 @@ export function createFListApi() {
   async function authenticate(
     creds: LoginCredentials,
   ): Promise<AuthenticateResponse> {
-    const data = await fetchJson(
+    const data = await fetchJson<AuthenticateResponse>(
       "https://www.f-list.net/json/getApiTicket.php",
       {
         method: "post",
@@ -131,7 +134,7 @@ export function createFListApi() {
   }
 
   async function getMemo({ name }: { name: string }): Promise<string> {
-    const res = await fetchWithAuth(
+    const res = await fetchWithAuth<{ note: string | null }>(
       "https://www.f-list.net/json/api/character-memo-get2.php",
       { target: name },
     )
