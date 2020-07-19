@@ -121,9 +121,7 @@ export function createFListApi() {
     })
   }
 
-  async function getFriendsAndBookmarks(): Promise<
-    FriendsAndBookmarksResponse
-  > {
+  function getFriendsAndBookmarks(): Promise<FriendsAndBookmarksResponse> {
     return fetchWithAuth(
       "https://www.f-list.net/json/api/friend-bookmark-lists.php",
       {
