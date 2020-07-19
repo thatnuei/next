@@ -1,76 +1,37 @@
 import { pick } from "lodash/fp"
-import { observable } from "mobx"
 import { useObserver } from "mobx-react-lite"
-import React, { useMemo } from "react"
+import React from "react"
 import Chat from "../chat/Chat"
 import ChatContainer from "../chat/ChatContainer"
-import { createStoredValue } from "../storage/createStoredValue"
-import * as v from "../validation"
+import { useRootStore } from "../root/rootStoreContext"
 import CharacterSelect from "./CharacterSelect"
-import Login, { LoginResult } from "./Login"
-
-type AppScreen = "login" | "characterSelect" | "chat"
-
-const storedIdentity = (account: string) =>
-  createStoredValue(`${account}:identity`, v.string)
-
-class AppStore {
-  @observable screen: AppScreen = "login"
-  @observable account = ""
-  @observable ticket = ""
-  @observable.ref characters: string[] = []
-  @observable identity = ""
-
-  handleLoginSuccess = async ({ account, ticket, characters }: LoginResult) => {
-    const identity = await storedIdentity(account)
-      .get()
-      .catch((error) => {
-        console.warn("could not load stored identity", error)
-        return undefined
-      })
-
-    this.account = account
-    this.ticket = ticket
-    this.characters = characters
-    this.identity = identity || characters[0]
-    this.screen = "characterSelect"
-  }
-
-  enterChat = (identity: string) => {
-    storedIdentity(this.account).set(identity)
-    this.identity = identity
-    this.screen = "chat"
-  }
-
-  showLogin = () => {
-    this.screen = "login"
-  }
-}
+import Login from "./Login"
 
 export default function App() {
-  const store = useMemo(() => new AppStore(), [])
+  const root = useRootStore()
 
   return useObserver(() => {
-    if (store.screen === "login") {
-      return <Login onSuccess={store.handleLoginSuccess} />
+    const { appStore } = root
+    if (appStore.screen === "login") {
+      return <Login onSuccess={appStore.handleLoginSuccess} />
     }
 
-    if (store.screen === "characterSelect") {
+    if (appStore.screen === "characterSelect") {
       return (
         <CharacterSelect
-          characters={store.characters}
-          initialCharacter={store.identity}
-          onSubmit={store.enterChat}
-          onReturnToLogin={store.showLogin}
+          characters={appStore.characters}
+          initialCharacter={appStore.identity}
+          onSubmit={appStore.enterChat}
+          onReturnToLogin={appStore.showLogin}
         />
       )
     }
 
-    if (store.screen === "chat") {
-      const creds = pick(["account", "ticket", "identity"], store)
+    if (appStore.screen === "chat") {
+      const creds = pick(["account", "ticket", "identity"], appStore)
       return (
         <ChatContainer {...creds}>
-          <Chat onDisconnect={store.showLogin} />
+          <Chat onDisconnect={appStore.showLogin} />
         </ChatContainer>
       )
     }

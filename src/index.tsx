@@ -2,7 +2,7 @@ import { configure } from "mobx"
 import "mobx-react-lite/batchingForReactDom"
 import React from "react"
 import ReactDOM from "react-dom"
-import Root from "./Root"
+import Root from "./root/Root"
 
 configure({
   observableRequiresReaction: true,
