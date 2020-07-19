@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion"
 import React from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
@@ -62,11 +63,13 @@ function Chat({ onDisconnect }: Props) {
 
       <ChatRoomView />
 
-      {isSmallScreen && (
-        <Drawer side="left" {...sideMenu.props}>
-          <ChatNav css={tw`h-full bg-background-2`} />
-        </Drawer>
-      )}
+      <AnimatePresence>
+        {sideMenu.value && isSmallScreen && (
+          <Drawer side="left" onDismiss={sideMenu.hide}>
+            <ChatNav css={tw`h-full bg-background-2`} />
+          </Drawer>
+        )}
+      </AnimatePresence>
 
       <Scope>
         {function useScope() {
