@@ -10,15 +10,15 @@ const storedIdentity = (account: string) =>
   createStoredValue(`${account}:identity`, v.string)
 
 export class AppStore {
-  screen = observable<AppScreen>("login")
+  readonly screen = observable<AppScreen>("login")
 
-  userData = observable({
+  readonly userData = observable({
     account: "",
     ticket: "",
     characters: [] as string[],
   })
 
-  identity = observable("")
+  readonly identity = observable("")
 
   constructor(private readonly socket: SocketHandler) {}
 
