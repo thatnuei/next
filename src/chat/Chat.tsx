@@ -1,4 +1,5 @@
 import { AnimatePresence } from "framer-motion"
+import { useObserver } from "mobx-react-lite"
 import React from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
@@ -20,7 +21,7 @@ import { openPrivateChatPartnersAtom } from "../privateChat/state"
 import Scope from "../react/Scope"
 import { useSocket, useSocketConnection } from "../socket/socketContext"
 import { SocketStatus } from "../socket/SocketHandler"
-import { useStreamListener, useStreamValue } from "../state/stream"
+import { useStreamListener } from "../state/stream"
 import { useStatusUpdateListeners } from "../statusUpdate/listeners"
 import { statusOverlayVisibleAtom } from "../statusUpdate/state"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
@@ -110,7 +111,7 @@ function Chat({ onDisconnect }: Props) {
       <Scope>
         {function useScope() {
           const socket = useSocket()
-          const loadingStatus = useStreamValue(socket.statusStream, "idle")
+          const loadingStatus = useObserver(() => socket.status)
 
           const loadingDisplays: Dict<string, SocketStatus> = {
             connecting: "Connecting...",

@@ -22,18 +22,16 @@ export function useSocket() {
   return useContext(SocketContext)
 }
 
-export function useSocketConnection({ onDisconnect = () => {} }) {
+const noop = () => {}
+
+export function useSocketConnection({ onDisconnect = noop }) {
   const socket = useSocket()
   const creds = useChatCredentials()
 
   useEffect(() => {
-    socket.onDisconnect = onDisconnect
-  }, [socket, onDisconnect])
-
-  useEffect(() => {
-    socket.connect(creds)
+    socket.connect({ ...creds, onDisconnect })
     return () => socket.disconnect()
-  }, [creds, socket])
+  }, [creds, onDisconnect, socket])
 }
 
 export function useSocketListener(
