@@ -28,7 +28,11 @@ export default function App() {
   }
 
   if (screen === "chat") {
-    return <RecoilRoot>{<Chat />}</RecoilRoot>
+    return (
+      <RecoilRoot>
+        <Chat />
+      </RecoilRoot>
+    )
   }
 
   return null
