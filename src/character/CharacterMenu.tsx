@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
-import { useChatStream } from "../chat/streamContext"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
 import { useOpenAndShowPrivateChatAction } from "../privateChat/state"
+import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import MenuItem from "../ui/MenuItem"
@@ -15,8 +15,8 @@ import { bookmarksAtom, friendsAtom, ignoredAtom } from "./state"
 
 function CharacterMenu() {
   const [characterName, setCharacterName] = useState<string | undefined>()
+  const root = useRootStore()
   const popover = usePopover()
-  const chatStream = useChatStream()
   const bookmarks = useRecoilValue(bookmarksAtom)
   const ignored = useRecoilValue(ignoredAtom)
   const friends = useRecoilValue(friendsAtom)
@@ -78,21 +78,27 @@ function CharacterMenu() {
           icon={isBookmarked ? icons.bookmark : icons.bookmarkHollow}
           text={isBookmarked ? "Remove bookmark" : "Bookmark"}
           onClick={() => {
-            chatStream.send({
-              type: "update-bookmark",
-              name: characterName,
-              action: isBookmarked ? "delete" : "add",
-            })
+            if (isBookmarked) {
+              root.userStore
+                .removeBookmark({ name: characterName })
+                .catch(console.error) // show error toast
+            } else {
+              root.userStore
+                .addBookmark({ name: characterName })
+                .catch(console.error) // show error toast
+            }
           }}
         />
         <MenuItem
           icon={isIgnored ? icons.ignore : icons.ignoreHollow}
           text={isIgnored ? "Unignore" : "Ignore"}
           onClick={() => {
-            chatStream.send({
-              type: "update-ignored",
-              name: characterName,
-              action: isIgnored ? "delete" : "add",
+            root.socket.send({
+              type: "IGN",
+              params: {
+                action: isIgnored ? "delete" : "add",
+                character: characterName,
+              },
             })
           }}
         />

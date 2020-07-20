@@ -1,7 +1,7 @@
 import { useObservable } from "micro-observables"
 import React from "react"
+import { RecoilRoot } from "recoil"
 import Chat from "../chat/Chat"
-import ChatContainer from "../chat/ChatContainer"
 import { useRootStore } from "../root/context"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
@@ -28,12 +28,7 @@ export default function App() {
   }
 
   if (screen === "chat") {
-    const { account, ticket } = userData
-    return (
-      <ChatContainer {...{ account, ticket, identity }}>
-        <Chat />
-      </ChatContainer>
-    )
+    return <RecoilRoot>{<Chat />}</RecoilRoot>
   }
 
   return null

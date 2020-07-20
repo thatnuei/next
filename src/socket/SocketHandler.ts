@@ -1,5 +1,4 @@
 import { observable } from "micro-observables"
-import { ChatCredentials } from "../chat/types"
 import { Stream } from "../state/stream"
 import {
   ClientCommand,
@@ -8,7 +7,10 @@ import {
   ServerCommand,
 } from "./commandHelpers"
 
-type ConnectOptions = ChatCredentials & {
+type ConnectOptions = {
+  account: string
+  ticket: string
+  identity: string
   onDisconnect: () => void
 }
 
