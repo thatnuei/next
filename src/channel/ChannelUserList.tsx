@@ -1,17 +1,15 @@
-import { sortBy } from "lodash/fp"
+import { sortBy, zip } from "lodash/fp"
+import { Observable, useObservable } from "micro-observables"
 import React from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
+import { CharacterStatus } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
-import {
-  adminsAtom,
-  bookmarksAtom,
-  CharacterState,
-  useCharacterList,
-  useIsFriend,
-} from "../character/state"
+import { adminsAtom, bookmarksAtom, useIsFriend } from "../character/state"
+import { isPresent } from "../helpers/common/isPresent"
 import { ValueOf } from "../helpers/common/types"
 import { TagProps } from "../jsx/types"
+import { useRootStore } from "../root/context"
 import VirtualizedList from "../ui/VirtualizedList"
 import { ChannelState } from "./state"
 
@@ -34,12 +32,28 @@ function ChannelUserList({ channel, ...props }: Props) {
   const bookmarks = useRecoilValue(bookmarksAtom)
   const isFriend = useIsFriend()
 
-  const getItemType = (character: CharacterState): ItemType => {
-    if (admins.includes(character.name)) return "admin"
-    if (channel.ops.includes(character.name)) return "op"
-    if (isFriend(character.name)) return "friend"
-    if (bookmarks.includes(character.name)) return "bookmark"
-    if (character.status === "looking") return "looking"
+  const root = useRootStore()
+
+  // technically we already have the name and don't need to observe it,
+  // but it's probably slightly more correct? leaving this for now
+  const namesObservable = Observable.merge(
+    channel.users
+      .map(root.characterStore.getCharacter)
+      .map((char) => char.name),
+  )
+
+  const statusesObservable = Observable.merge(
+    channel.users
+      .map(root.characterStore.getCharacter)
+      .map((char) => char.status),
+  )
+
+  const getItemType = (name: string, status: CharacterStatus): ItemType => {
+    if (admins.includes(name)) return "admin"
+    if (channel.ops.includes(name)) return "op"
+    if (isFriend(name)) return "friend"
+    if (bookmarks.includes(name)) return "bookmark"
+    if (status.type === "looking") return "looking"
     return "default"
   }
 
@@ -50,37 +64,40 @@ function ChannelUserList({ channel, ...props }: Props) {
     if (type === "bookmark") return tw`bg-blue-faded`
   }
 
-  const characters = useCharacterList(channel.users)
-
-  const listItems = characters.map((character) => {
-    const type = getItemType(character)
-    return {
-      character,
-      type,
-      order: itemTypes.indexOf(type),
-      css: getTypeCss(type),
-    }
-  })
-
-  const sortedItems = sortBy(
-    ["order", (it) => it.character.name.toLowerCase()],
-    listItems,
+  const entries = useObservable(
+    Observable.from(namesObservable, statusesObservable).transform(
+      ([names, statuses]) =>
+        zip(names, statuses)
+          .map(([name, status]) => {
+            if (!name || !status) return undefined
+            const type = getItemType(name, status)
+            return {
+              name,
+              status,
+              order: itemTypes.indexOf(type),
+              css: getTypeCss(type),
+            }
+          })
+          .filter(isPresent),
+    ),
   )
+
+  const sortedItems = sortBy(["order", (it) => it.name.toLowerCase()], entries)
 
   return (
     <div css={tw`flex flex-col`} {...props}>
       <div css={tw`px-3 py-2 bg-background-0`}>
-        Characters: {characters.length}
+        Characters: {entries.length}
       </div>
       <div css={tw`flex-1 min-h-0 bg-background-1`} role="list">
         <VirtualizedList
           items={sortedItems}
           itemSize={32}
-          getItemKey={(item) => item.character.name}
+          getItemKey={(item) => item.name}
           renderItem={({ item, style }) => (
             <CharacterName
               role="listitem"
-              name={item.character.name}
+              name={item.name}
               style={style}
               css={[tw`flex items-center px-2`, item.css]}
             />

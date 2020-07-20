@@ -1,3 +1,4 @@
+import { useObservable } from "micro-observables"
 import React from "react"
 import tw from "twin.macro"
 import ExternalLink from "../dom/ExternalLink"
@@ -12,7 +13,8 @@ import { useCharacter } from "./state"
 type Props = TagProps<"div"> & { name: string }
 
 function CharacterSummary({ name, ...props }: Props) {
-  const { gender } = useCharacter(name)
+  const char = useCharacter(name)
+  const gender = useObservable(char.gender)
   const genderColor = { color: genderColors[gender] }
 
   return (

@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
+import { CharacterStatusType } from "../character/CharacterModel"
 import { useIdentityCharacter } from "../character/state"
-import { CharacterStatus } from "../character/types"
 import Button from "../dom/Button"
 import { delay } from "../helpers/common/delay"
 import { useSocket } from "../socket/socketContext"
@@ -14,10 +14,7 @@ function StatusUpdateForm() {
   const socket = useSocket()
   const identityCharacter = useIdentityCharacter()
 
-  const [status, setStatus] = useState(identityCharacter.status)
-  const [statusMessage, setStatusMessage] = useState(
-    identityCharacter.statusMessage,
-  )
+  const [status, setStatus] = useState(identityCharacter.status.get())
 
   const [canSubmit, setCanSubmit] = useRecoilState(canSubmitStatusAtom)
   const submitDelay = useRecoilValue(statusSubmitDelayAtom)
@@ -29,7 +26,7 @@ function StatusUpdateForm() {
 
     socket.send({
       type: "STA",
-      params: { status, statusmsg: statusMessage },
+      params: { status: status.type, statusmsg: status.text },
     })
 
     setCanSubmit(false)
@@ -42,8 +39,13 @@ function StatusUpdateForm() {
       <FormField labelText="Status" css={tw`block mb-3`}>
         <select
           css={select}
-          value={status}
-          onChange={(e) => setStatus(e.target.value as CharacterStatus)}
+          value={status.type}
+          onChange={(e) =>
+            setStatus((prev) => ({
+              ...prev,
+              type: e.target.value as CharacterStatusType,
+            }))
+          }
         >
           <option value="online">Online</option>
           <option value="looking">Looking</option>
@@ -58,10 +60,17 @@ function StatusUpdateForm() {
       >
         <textarea
           css={[input, tw`flex-1`]}
-          value={statusMessage}
-          onChange={(e) => setStatusMessage(e.target.value)}
+          value={status.text}
+          onChange={(e) =>
+            setStatus((prev) => ({
+              ...prev,
+              text: e.target.value,
+            }))
+          }
           onKeyPress={(event) => {
-            if (event.key === "\n" && event.ctrlKey) submit()
+            if (event.key === "\n" && (event.ctrlKey || event.shiftKey)) {
+              submit()
+            }
           }}
         />
       </FormField>

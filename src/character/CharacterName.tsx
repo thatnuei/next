@@ -1,3 +1,4 @@
+import { useObservable } from "micro-observables"
 import React from "react"
 import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
@@ -12,23 +13,19 @@ type Props = TagProps<"span"> & {
 
 function CharacterName({ name, ...props }: Props) {
   const character = useCharacter(name)
+  const gender = useObservable(character.gender)
+  const status = useObservable(character.status)
 
   const statusDotStyle = [
     tw`inline-block mr-1 transform scale-150`,
-    { color: statusColors[character.status] },
-    character.status === "crown" && rainbowAnimation,
+    { color: statusColors[status.type] },
+    status.type === "crown" && rainbowAnimation,
   ]
 
   return (
-    <CharacterMenuTarget
-      name={character.name}
-      css={tw`font-weight-bold`}
-      {...props}
-    >
+    <CharacterMenuTarget name={name} css={tw`font-weight-bold`} {...props}>
       <span css={statusDotStyle}>•</span>
-      <span css={{ color: genderColors[character.gender] }}>
-        {character.name}
-      </span>
+      <span css={{ color: genderColors[gender] }}>{name}</span>
     </CharacterMenuTarget>
   )
 }

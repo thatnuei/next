@@ -1,33 +1,11 @@
 import { useCallback } from "react"
-import { atom, atomFamily, selectorFamily, useRecoilValue } from "recoil"
+import { atom, useRecoilValue } from "recoil"
 import { useChatCredentials } from "../chat/credentialsContext"
-import { CharacterGender, CharacterStatus } from "./types"
-
-export type CharacterState = {
-  name: string
-  gender: CharacterGender
-  status: CharacterStatus
-  statusMessage: string
-}
-
-export const characterAtom = atomFamily<CharacterState, string>({
-  key: "character",
-  default: (name) => ({
-    name,
-    gender: "None",
-    status: "offline",
-    statusMessage: "",
-  }),
-})
-
-const characterListSelector = selectorFamily({
-  key: "characterList",
-  get: (names: string[]) => ({ get }) =>
-    names.map((name) => get(characterAtom(name))),
-})
+import { useRootStore } from "../root/context"
 
 export function useCharacter(name: string) {
-  return useRecoilValue(characterAtom(name))
+  const root = useRootStore()
+  return root.characterStore.getCharacter(name)
 }
 
 export function useIdentityCharacter() {
@@ -36,7 +14,8 @@ export function useIdentityCharacter() {
 }
 
 export function useCharacterList(names: string[]) {
-  return useRecoilValue(characterListSelector(names))
+  const root = useRootStore()
+  return names.map(root.characterStore.getCharacter)
 }
 
 type FriendshipInfo = {

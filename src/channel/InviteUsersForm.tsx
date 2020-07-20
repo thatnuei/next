@@ -2,10 +2,10 @@ import { uniqBy } from "lodash/fp"
 import React, { useMemo } from "react"
 import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
+import { CharacterModel } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
 import {
   bookmarksAtom,
-  CharacterState,
   friendsAtom,
   useCharacterList,
 } from "../character/state"
@@ -74,12 +74,12 @@ function InviteUsersForm({ channelId }: Props) {
     })
   }
 
-  const renderItem = ({ item, style }: RenderItemInfo<CharacterState>) => (
+  const renderItem = ({ item, style }: RenderItemInfo<CharacterModel>) => (
     <div css={tw`flex flex-row items-center px-3 py-2`} style={style}>
-      <CharacterName name={item.name} tw="flex-1" />
+      <CharacterName name={item.name.get()} tw="flex-1" />
       <button
         css={[fadedButton, tw`flex flex-row ml-2`]}
-        onClick={() => sendInvite(item.name)}
+        onClick={() => sendInvite(item.name.get())}
       >
         <Icon which={icons.invite} />
         <span css={tw`ml-2`}>Invite</span>
@@ -93,7 +93,7 @@ function InviteUsersForm({ channelId }: Props) {
         <VirtualizedList
           items={uniqBy((user) => user.name, characters)}
           itemSize={40}
-          getItemKey={(it) => it.name}
+          getItemKey={(it) => it.name.get()}
           renderItem={renderItem}
         />
       </div>

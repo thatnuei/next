@@ -28,11 +28,17 @@ export function createCommandString(command: ClientCommand): string {
     : command.type
 }
 
-export type CommandHandlerMap = {
-  [K in keyof ServerCommandRecord]?: (params: ServerCommandRecord[K]) => void
+export type CommandHandlerMap<This = void> = {
+  [K in keyof ServerCommandRecord]?: (
+    this: This,
+    params: ServerCommandRecord[K],
+  ) => void
 }
 
-export type CommandHandlerFn = (command: ServerCommand) => boolean
+export type CommandHandlerFn<This = void> = (
+  this: This,
+  command: ServerCommand,
+) => boolean
 
 export function runCommand(
   command: ServerCommand,
@@ -51,11 +57,13 @@ export function createCommandHandler(
   }
 }
 
-export function combineCommandHandlers(
-  handlers: CommandHandlerFn[],
-): CommandHandlerFn {
+export function createBoundCommandHandler<This>(
+  thisArg: This,
+  handlers: CommandHandlerMap<This>,
+) {
   return function handleCommand(command: ServerCommand) {
-    const results = handlers.map((handle) => handle(command))
-    return results.some((wasHandled) => wasHandled)
+    const handler = handlers[command.type]
+    handler?.call(thisArg, command.params as never) // lol
+    return handler != null
   }
 }

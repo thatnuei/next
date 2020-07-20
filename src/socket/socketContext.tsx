@@ -13,7 +13,7 @@ export function useSocket() {
 }
 
 export function useSocketListener(
-  handlerArg: CommandHandlerFn | CommandHandlerMap,
+  handlerArg: CommandHandlerFn | CommandHandlerMap<void>,
 ) {
   const socket = useSocket()
 
