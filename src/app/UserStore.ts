@@ -1,4 +1,5 @@
 import { observable } from "micro-observables"
+import { compare } from "../helpers/common/compare"
 import { raise } from "../helpers/common/raise"
 import { Dict } from "../helpers/common/types"
 import { fetchJson } from "../network/fetchJson"
@@ -36,7 +37,11 @@ export class UserStore {
       password,
     })
 
-    this.userData.set({ account, ticket, characters })
+    this.userData.set({
+      account,
+      ticket,
+      characters: characters.sort(compare((name) => name.toLowerCase())),
+    })
     this.password = password
     this.lastTicketFetchTime = Date.now()
   }

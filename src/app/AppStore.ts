@@ -30,26 +30,28 @@ export class AppStore {
         return undefined
       })
 
-    this.identity.set(identity || characters[0])
+    this.setIdentity(identity || characters[0], account)
     this.screen.set("characterSelect")
+  }
+
+  setIdentity = (identity: string, account: string) => {
+    this.identity.set(identity)
+    storedIdentity(account).set(identity)
   }
 
   showLogin = () => {
     this.screen.set("login")
   }
 
-  enterChat = (identity: string) => {
+  enterChat = () => {
     const { account, ticket } = this.userStore.userData.get()
 
-    storedIdentity(account).set(identity)
-
-    this.identity.set(identity)
     this.screen.set("chat")
 
     this.socket.connect({
       account,
       ticket,
-      identity,
+      identity: this.identity.get(),
       onDisconnect: () => {
         this.screen.set("login")
       },
