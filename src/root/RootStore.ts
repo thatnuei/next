@@ -3,6 +3,7 @@ import { UserStore } from "../app/UserStore"
 import { ChannelBrowserStore } from "../channelBrowser/ChannelBrowserStore"
 import { CharacterStore } from "../character/CharacterStore"
 import { SocketHandler } from "../socket/SocketHandler"
+import { StatusUpdateStore } from "../statusUpdate/StatusUpdateStore"
 
 export class RootStore {
   readonly socket = new SocketHandler()
@@ -14,4 +15,5 @@ export class RootStore {
     this.appStore,
   )
   readonly channelBrowserStore = new ChannelBrowserStore(this.socket)
+  readonly statusUpdateStore = new StatusUpdateStore(this.socket, this.appStore)
 }

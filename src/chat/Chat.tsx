@@ -19,8 +19,6 @@ import Scope from "../react/Scope"
 import { useRootStore } from "../root/context"
 import { useSocket } from "../socket/socketContext"
 import { SocketStatus } from "../socket/SocketHandler"
-import { useStatusUpdateListeners } from "../statusUpdate/listeners"
-import { statusOverlayVisibleAtom } from "../statusUpdate/state"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import Drawer from "../ui/Drawer"
 import { fixedCover } from "../ui/helpers"
@@ -36,7 +34,6 @@ export default function Chat() {
 
   useChannelListeners()
   usePrivateChatListeners()
-  useStatusUpdateListeners()
 
   const isSmallScreen = useMediaQuery(screenQueries.small)
   const sideMenu = useOverlayControlled(useRecoilState(sideMenuVisibleAtom))
@@ -76,12 +73,11 @@ export default function Chat() {
 
       <Scope>
         {function useScope() {
-          const overlay = useOverlayControlled(
-            useRecoilState(statusOverlayVisibleAtom),
-          )
+          const isVisible = useObservable(root.statusUpdateStore.isVisible)
           return (
             <Modal
-              {...overlay.props}
+              isVisible={isVisible}
+              onDismiss={root.statusUpdateStore.hide}
               title="Update Your Status"
               width={480}
               height={360}

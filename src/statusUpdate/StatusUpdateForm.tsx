@@ -1,37 +1,22 @@
+import { useObservable } from "micro-observables"
 import React, { useState } from "react"
-import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import { CharacterStatusType } from "../character/CharacterModel"
 import { useIdentityCharacter } from "../character/helpers"
 import Button from "../dom/Button"
-import { delay } from "../helpers/common/delay"
-import { useSocket } from "../socket/socketContext"
+import { useRootStore } from "../root/context"
 import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
-import { canSubmitStatusAtom, statusSubmitDelayAtom } from "./state"
 
 function StatusUpdateForm() {
-  const socket = useSocket()
+  const root = useRootStore()
   const identityCharacter = useIdentityCharacter()
-
   const [status, setStatus] = useState(identityCharacter.status.get())
+  const isSubmitting = useObservable(root.statusUpdateStore.isSubmitting)
 
-  const [canSubmit, setCanSubmit] = useRecoilState(canSubmitStatusAtom)
-  const submitDelay = useRecoilValue(statusSubmitDelayAtom)
-
-  const submit = async (e?: React.SyntheticEvent) => {
+  const submit = (e?: React.SyntheticEvent) => {
     e?.preventDefault()
-
-    if (!canSubmit) return
-
-    socket.send({
-      type: "STA",
-      params: { status: status.type, statusmsg: status.text },
-    })
-
-    setCanSubmit(false)
-    await delay(submitDelay)
-    setCanSubmit(true)
+    root.statusUpdateStore.submit(status)
   }
 
   return (
@@ -74,7 +59,7 @@ function StatusUpdateForm() {
           }}
         />
       </FormField>
-      <Button type="submit" css={solidButton} disabled={!canSubmit}>
+      <Button type="submit" css={solidButton} disabled={isSubmitting}>
         Submit
       </Button>
     </form>

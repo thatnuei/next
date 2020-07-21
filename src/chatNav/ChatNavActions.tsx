@@ -1,15 +1,12 @@
 import React from "react"
-import { useSetRecoilState } from "recoil"
 import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
-import { statusOverlayVisibleAtom } from "../statusUpdate/state"
 import * as icons from "../ui/icons"
 import NavAction from "./NavAction"
 
 function ChatNavActions(props: TagProps<"div">) {
   const root = useRootStore()
-  const setStatusOverlayVisible = useSetRecoilState(statusOverlayVisibleAtom)
 
   return (
     <div
@@ -24,7 +21,7 @@ function ChatNavActions(props: TagProps<"div">) {
       <NavAction
         icon={icons.updateStatus}
         title="Update your status"
-        onClick={() => setStatusOverlayVisible(true)}
+        onClick={root.statusUpdateStore.show}
       />
       <NavAction icon={icons.users} title="See online friends and bookmarks" />
       <NavAction icon={icons.about} title="About next" />
