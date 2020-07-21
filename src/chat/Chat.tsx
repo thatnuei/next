@@ -61,7 +61,7 @@ export default function Chat() {
           return (
             <Modal
               isVisible={isChannelBrowserVisible}
-              onDismiss={root.channelBrowserStore.close}
+              onDismiss={root.channelBrowserStore.hide}
               title="Channels"
               width={480}
               height={720}

@@ -24,8 +24,8 @@ export class ChannelBrowserStore {
     })
   }
 
-  open = () => this.isVisible.set(true)
-  close = () => this.isVisible.set(false)
+  show = () => this.isVisible.set(true)
+  hide = () => this.isVisible.set(false)
 
   isPublic = (channelId: string) =>
     this.publicChannels.transform((channels) =>

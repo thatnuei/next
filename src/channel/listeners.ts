@@ -29,7 +29,7 @@ export function useChannelListeners() {
         async IDN() {
           const channelIds = await loadChannels(account, identity)
           if (channelIds.length === 0) {
-            root.channelBrowserStore.open()
+            root.channelBrowserStore.show()
           } else {
             for (const id of channelIds) joinChannel(id)
           }

@@ -16,7 +16,7 @@ function ChatNavActions(props: TagProps<"div">) {
       <NavAction
         icon={icons.list}
         title="Browse channels"
-        onClick={root.channelBrowserStore.open}
+        onClick={root.channelBrowserStore.show}
       />
       <NavAction
         icon={icons.updateStatus}
