@@ -27,6 +27,11 @@ export class ChannelBrowserStore {
   open = () => this.isVisible.set(true)
   close = () => this.isVisible.set(false)
 
+  isPublic = (channelId: string) =>
+    this.publicChannels.transform((channels) =>
+      channels.some((ch) => ch.id === channelId),
+    )
+
   refresh = async () => {
     if (this.isRefreshing.get()) return
 
