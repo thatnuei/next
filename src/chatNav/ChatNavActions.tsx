@@ -1,7 +1,6 @@
 import React from "react"
 import { useSetRecoilState } from "recoil"
 import tw from "twin.macro"
-import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
 import { statusOverlayVisibleAtom } from "../statusUpdate/state"
@@ -10,7 +9,6 @@ import NavAction from "./NavAction"
 
 function ChatNavActions(props: TagProps<"div">) {
   const root = useRootStore()
-  const openChannelBrowser = useOpenChannelBrowserAction()
   const setStatusOverlayVisible = useSetRecoilState(statusOverlayVisibleAtom)
 
   return (
@@ -21,7 +19,7 @@ function ChatNavActions(props: TagProps<"div">) {
       <NavAction
         icon={icons.list}
         title="Browse channels"
-        onClick={openChannelBrowser}
+        onClick={root.channelBrowserStore.open}
       />
       <NavAction
         icon={icons.updateStatus}

@@ -1,13 +1,13 @@
+import { Observable, useObservable } from "micro-observables"
 import React, { CSSProperties, Fragment, PropsWithChildren } from "react"
-import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import { useJoinChannelAction } from "../channel/state"
-import { userCountSelector } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import ExternalLink from "../dom/ExternalLink"
 import { getIconUrl } from "../flist/helpers"
+import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import { createBbcTree, getNodeChildrenAsText } from "./helpers"
@@ -185,7 +185,16 @@ function BBCChannelLink({
   title: string
   type: "public" | "private"
 }>) {
-  const userCount = useRecoilValue(userCountSelector(id))
+  const root = useRootStore()
+
+  const channels = useObservable(
+    Observable.from(
+      root.channelBrowserStore.publicChannels,
+      root.channelBrowserStore.privateChannels,
+    ).transform((lists) => lists.flat()),
+  )
+
+  const userCount = channels.find((ch) => ch.id === id)?.userCount ?? 0
   const joinChannel = useJoinChannelAction()
 
   return (

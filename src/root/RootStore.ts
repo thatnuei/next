@@ -1,5 +1,6 @@
 import { AppStore } from "../app/AppStore"
 import { UserStore } from "../app/UserStore"
+import { ChannelBrowserStore } from "../channelBrowser/ChannelBrowserStore"
 import { CharacterStore } from "../character/CharacterStore"
 import { SocketHandler } from "../socket/SocketHandler"
 
@@ -12,4 +13,5 @@ export class RootStore {
     this.userStore,
     this.appStore,
   )
+  readonly channelBrowserStore = new ChannelBrowserStore(this.socket)
 }

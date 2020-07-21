@@ -7,8 +7,6 @@ import ChannelView from "../channel/ChannelView"
 import { useChannelListeners } from "../channel/listeners"
 import { joinedChannelIdsAtom } from "../channel/state"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
-import { useChannelBrowserListeners } from "../channelBrowser/listeners"
-import { isChannelBrowserVisibleAtom } from "../channelBrowser/state"
 import CharacterMenu from "../character/CharacterMenu"
 import ChatNav from "../chatNav/ChatNav"
 import { chatNavViewAtom } from "../chatNav/state"
@@ -18,6 +16,7 @@ import { usePrivateChatListeners } from "../privateChat/listeners"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { openPrivateChatPartnersAtom } from "../privateChat/state"
 import Scope from "../react/Scope"
+import { useRootStore } from "../root/context"
 import { useSocket } from "../socket/socketContext"
 import { SocketStatus } from "../socket/SocketHandler"
 import { useStatusUpdateListeners } from "../statusUpdate/listeners"
@@ -33,9 +32,10 @@ import NoRoomView from "./NoRoomView"
 import { sideMenuVisibleAtom } from "./state"
 
 export default function Chat() {
+  const root = useRootStore()
+
   useChannelListeners()
   usePrivateChatListeners()
-  useChannelBrowserListeners()
   useStatusUpdateListeners()
 
   const isSmallScreen = useMediaQuery(screenQueries.small)
@@ -57,12 +57,14 @@ export default function Chat() {
 
       <Scope>
         {function useScope() {
-          const overlay = useOverlayControlled(
-            useRecoilState(isChannelBrowserVisibleAtom),
+          const isChannelBrowserVisible = useObservable(
+            root.channelBrowserStore.isVisible,
           )
+
           return (
             <Modal
-              {...overlay.props}
+              isVisible={isChannelBrowserVisible}
+              onDismiss={root.channelBrowserStore.close}
               title="Channels"
               width={480}
               height={720}

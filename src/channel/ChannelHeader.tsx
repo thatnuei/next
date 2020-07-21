@@ -1,7 +1,7 @@
 import React from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import tw from "twin.macro"
-import { isPublicSelector } from "../channelBrowser/state"
+import { useIsPublicChannel } from "../channelBrowser/helpers"
 import { useChatCredentials } from "../chat/helpers"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
@@ -31,11 +31,11 @@ function ChannelHeader({
   onShowUsers,
   ...props
 }: Props) {
+  const isPublic = useIsPublicChannel(channelId)
   const channel = useRecoilValue(channelAtom(channelId))
   const setChannelMessages = useSetRecoilState(channelMessagesAtom(channelId))
   const isLargeScreen = useMediaQuery(screenQueries.large)
   const { identity } = useChatCredentials()
-  const isPublic = useRecoilValue(isPublicSelector(channel.id))
   const menu = usePopover()
   const invite = useOverlay()
 

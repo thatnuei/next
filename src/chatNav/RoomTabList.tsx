@@ -7,7 +7,7 @@ import {
   useJoinedChannelIds,
   useLeaveChannelAction,
 } from "../channel/state"
-import { isPublicSelector } from "../channelBrowser/state"
+import { useIsPublicChannel } from "../channelBrowser/helpers"
 import Avatar from "../character/Avatar"
 import {
   openPrivateChatPartnersAtom,
@@ -64,8 +64,8 @@ function RoomTabList() {
 export default RoomTabList
 
 function ChannelRoomTab({ id }: { id: string }) {
+  const isPublic = useIsPublicChannel(id)
   const channel = useRecoilValue(channelAtom(id))
-  const isPublic = useRecoilValue(isPublicSelector(id))
   const view = useRecoilValue(chatNavViewAtom)
   const isActive = view?.type === "channel" && view.id === id
   const setView = useSetViewAction()

@@ -9,7 +9,7 @@ import {
 import { TagProps } from "../jsx/types"
 import Icon from "../ui/Icon"
 import { earth, lock } from "../ui/icons"
-import { ChannelBrowserChannel } from "./state"
+import { ChannelBrowserChannel } from "./ChannelBrowserStore"
 
 type Props = TagProps<"button"> & {
   info: ChannelBrowserChannel

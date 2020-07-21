@@ -1,33 +1,32 @@
 import fuzzysearch from "fuzzysearch"
 import { sortBy } from "lodash/fp"
+import { useObservable } from "micro-observables"
 import React, { useState } from "react"
-import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import Button from "../dom/Button"
 import { TagProps } from "../jsx/types"
+import { useRootStore } from "../root/context"
 import { input, solidButton } from "../ui/components"
 import { scrollVertical } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
-import {
-  canRefreshAtom,
-  ChannelBrowserChannel,
-  privateChannelsAtom,
-  publicChannelsAtom,
-  useRefreshChannelBrowserAction,
-} from "./state"
+import { ChannelBrowserChannel } from "./ChannelBrowserStore"
 
 type Props = TagProps<"div">
 
 function ChannelBrowser(props: Props) {
+  const root = useRootStore()
+
+  const publicChannels = useObservable(root.channelBrowserStore.publicChannels)
+  const privateChannels = useObservable(
+    root.channelBrowserStore.privateChannels,
+  )
+  const isRefreshing = useObservable(root.channelBrowserStore.isRefreshing)
+
   const [query, setQuery] = useState("")
   const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
-  const publicChannels = useRecoilValue(publicChannelsAtom)
-  const privateChannels = useRecoilValue(privateChannelsAtom)
-  const canRefresh = useRecoilValue(canRefreshAtom)
-  const refresh = useRefreshChannelBrowserAction()
 
   const cycleSortMode = () =>
     setSortMode((mode) => (mode === "title" ? "userCount" : "title"))
@@ -84,8 +83,8 @@ function ChannelBrowser(props: Props) {
         <Button
           title="Refresh"
           css={[solidButton, tw`ml-2`]}
-          onClick={refresh}
-          disabled={!canRefresh}
+          onClick={root.channelBrowserStore.refresh}
+          disabled={isRefreshing}
         >
           <Icon which={icons.refresh} />
         </Button>

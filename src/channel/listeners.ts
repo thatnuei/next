@@ -1,12 +1,12 @@
 import { uniq } from "lodash/fp"
 import { useRecoilCallback } from "recoil"
-import { useOpenChannelBrowserAction } from "../channelBrowser/state"
 import { useChatCredentials } from "../chat/helpers"
 import {
   createAdMessage,
   createChannelMessage,
   createSystemMessage,
 } from "../message/MessageState"
+import { useRootStore } from "../root/context"
 import { runCommand, ServerCommand } from "../socket/commandHelpers"
 import { useSocketListener } from "../socket/socketContext"
 import {
@@ -19,8 +19,8 @@ import {
 import { loadChannels, saveChannels } from "./storage"
 
 export function useChannelListeners() {
+  const root = useRootStore()
   const { account, identity } = useChatCredentials()
-  const openChannelBrowser = useOpenChannelBrowserAction()
   const joinChannel = useJoinChannelAction()
 
   const commandListener = useRecoilCallback(
@@ -29,7 +29,7 @@ export function useChannelListeners() {
         async IDN() {
           const channelIds = await loadChannels(account, identity)
           if (channelIds.length === 0) {
-            openChannelBrowser()
+            root.channelBrowserStore.open()
           } else {
             for (const id of channelIds) joinChannel(id)
           }
@@ -111,7 +111,7 @@ export function useChannelListeners() {
           }
         },
       }),
-    [account, identity, joinChannel, openChannelBrowser],
+    [account, identity, joinChannel, root.channelBrowserStore],
   )
 
   useSocketListener(commandListener)
