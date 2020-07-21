@@ -1,7 +1,7 @@
 import React from "react"
 import tw from "twin.macro"
 import CharacterSummary from "../character/CharacterSummary"
-import { useChatCredentials } from "../chat/credentialsContext"
+import { useChatCredentials } from "../chat/helpers"
 import { TagProps } from "../jsx/types"
 import ChatNavActions from "./ChatNavActions"
 import RoomTabList from "./RoomTabList"

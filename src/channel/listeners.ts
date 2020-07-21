@@ -1,7 +1,7 @@
 import { uniq } from "lodash/fp"
 import { useRecoilCallback } from "recoil"
 import { useOpenChannelBrowserAction } from "../channelBrowser/state"
-import { useChatCredentials } from "../chat/credentialsContext"
+import { useChatCredentials } from "../chat/helpers"
 import {
   createAdMessage,
   createChannelMessage,

@@ -1,7 +1,7 @@
 import { union, uniq, without } from "lodash/fp"
 import { useCallback } from "react"
 import { atom, atomFamily, useRecoilCallback, useRecoilState } from "recoil"
-import { useChatCredentials } from "../chat/credentialsContext"
+import { useChatCredentials } from "../chat/helpers"
 import { useSetViewAction } from "../chatNav/state"
 import { createPrivateMessage, MessageState } from "../message/MessageState"
 import { useSocket } from "../socket/socketContext"

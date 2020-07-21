@@ -8,7 +8,7 @@ import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
 import CharacterStatusText from "./CharacterStatusText"
 import { genderColors } from "./colors"
-import { useCharacter } from "./state"
+import { useCharacter } from "./helpers"
 
 type Props = TagProps<"div"> & { name: string }
 

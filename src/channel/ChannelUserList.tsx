@@ -1,11 +1,9 @@
 import { sortBy, zip } from "lodash/fp"
 import { Observable, useObservable } from "micro-observables"
 import React from "react"
-import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import { CharacterStatus } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
-import { adminsAtom, bookmarksAtom, useIsFriend } from "../character/state"
 import { isPresent } from "../helpers/common/isPresent"
 import { ValueOf } from "../helpers/common/types"
 import { TagProps } from "../jsx/types"
@@ -28,11 +26,12 @@ const itemTypes = [
 type ItemType = ValueOf<typeof itemTypes>
 
 function ChannelUserList({ channel, ...props }: Props) {
-  const admins = useRecoilValue(adminsAtom)
-  const bookmarks = useRecoilValue(bookmarksAtom)
-  const isFriend = useIsFriend()
-
   const root = useRootStore()
+  const admins = useObservable(root.characterStore.admins)
+  const bookmarks = useObservable(root.characterStore.bookmarks)
+  const friends = useObservable(root.characterStore.friends)
+
+  const isFriend = (name: string) => friends.some((f) => f.them === name)
 
   // technically we already have the name and don't need to observe it,
   // but it's probably slightly more correct? leaving this for now

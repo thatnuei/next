@@ -1,6 +1,6 @@
 import { union } from "lodash/fp"
 import { useRecoilCallback, useRecoilValue, useSetRecoilState } from "recoil"
-import { useChatCredentials } from "../chat/credentialsContext"
+import { useChatCredentials } from "../chat/helpers"
 import { chatNavViewAtom } from "../chatNav/state"
 import { createPrivateMessage } from "../message/MessageState"
 import { runCommand } from "../socket/commandHelpers"

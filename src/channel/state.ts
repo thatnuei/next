@@ -5,7 +5,7 @@ import {
   useRecoilCallback,
   useRecoilValue,
 } from "recoil"
-import { useChatCredentials } from "../chat/credentialsContext"
+import { useChatCredentials } from "../chat/helpers"
 import {
   createChannelMessage,
   MessageState,

@@ -1,14 +1,10 @@
 import { uniqBy } from "lodash/fp"
+import { useObservable } from "micro-observables"
 import React, { useMemo } from "react"
-import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import { CharacterModel } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
-import {
-  bookmarksAtom,
-  friendsAtom,
-  useCharacterList,
-} from "../character/state"
+import { useRootStore } from "../root/context"
 import { useSocket } from "../socket/socketContext"
 import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
@@ -20,19 +16,21 @@ type Props = { channelId: string }
 // need to have a list of all online character names in order to make them searchable,
 // do that later
 function InviteUsersForm({ channelId }: Props) {
+  const root = useRootStore()
   const socket = useSocket()
 
   // const [searchInput, setSearchInput] = useState("")
 
-  const friends = useRecoilValue(friendsAtom)
-  const bookmarks = useRecoilValue(bookmarksAtom)
+  const friends = useObservable(root.characterStore.friends)
+  const bookmarks = useObservable(root.characterStore.bookmarks)
 
   const characterNames = useMemo(
     () => [...friends.map((it) => it.them), ...bookmarks],
     [bookmarks, friends],
   )
 
-  const characters = useCharacterList(characterNames)
+  // TODO: needs to be a proper observation
+  const characters = characterNames.map(root.characterStore.getCharacter)
 
   // const matchesQuery = (it: CharacterState) =>
   //   fuzzysearch(searchInput.toLowerCase(), it.name.toLowerCase())

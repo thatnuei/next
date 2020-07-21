@@ -2,7 +2,7 @@ import React from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
 import { input, solidButton } from "../ui/components"
-import { useChatCredentials } from "./credentialsContext"
+import { useChatCredentials } from "./helpers"
 
 type Props = {
   value: string

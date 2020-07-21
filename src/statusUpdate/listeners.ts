@@ -1,5 +1,5 @@
 import { useSetRecoilState } from "recoil"
-import { useChatCredentials } from "../chat/credentialsContext"
+import { useChatCredentials } from "../chat/helpers"
 import { useSocketListener } from "../socket/socketContext"
 import { statusOverlayVisibleAtom, statusSubmitDelayAtom } from "./state"
 

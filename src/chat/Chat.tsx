@@ -10,7 +10,6 @@ import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import { useChannelBrowserListeners } from "../channelBrowser/listeners"
 import { isChannelBrowserVisibleAtom } from "../channelBrowser/state"
 import CharacterMenu from "../character/CharacterMenu"
-import { useCharacterListeners } from "../character/listeners"
 import ChatNav from "../chatNav/ChatNav"
 import { chatNavViewAtom } from "../chatNav/state"
 import { useMediaQuery } from "../dom/useMediaQuery"
@@ -35,7 +34,6 @@ import { sideMenuVisibleAtom } from "./state"
 
 export default function Chat() {
   useChannelListeners()
-  useCharacterListeners()
   usePrivateChatListeners()
   useChannelBrowserListeners()
   useStatusUpdateListeners()

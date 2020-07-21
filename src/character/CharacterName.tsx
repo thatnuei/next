@@ -5,7 +5,7 @@ import { TagProps } from "../jsx/types"
 import { rainbowAnimation } from "../ui/helpers"
 import CharacterMenuTarget from "./CharacterMenuTarget"
 import { genderColors, statusColors } from "./colors"
-import { useCharacter } from "./state"
+import { useCharacter } from "./helpers"
 
 type Props = TagProps<"span"> & {
   name: string

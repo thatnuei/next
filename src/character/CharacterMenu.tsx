@@ -1,5 +1,5 @@
+import { useObservable } from "micro-observables"
 import React, { useState } from "react"
-import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
@@ -11,15 +11,14 @@ import MenuItem from "../ui/MenuItem"
 import Popover, { usePopover } from "../ui/Popover"
 import CharacterMemoInput from "./CharacterMemoInput"
 import CharacterSummary from "./CharacterSummary"
-import { bookmarksAtom, friendsAtom, ignoredAtom } from "./state"
 
 function CharacterMenu() {
   const [characterName, setCharacterName] = useState<string | undefined>()
   const root = useRootStore()
   const popover = usePopover()
-  const bookmarks = useRecoilValue(bookmarksAtom)
-  const ignored = useRecoilValue(ignoredAtom)
-  const friends = useRecoilValue(friendsAtom)
+  const bookmarks = useObservable(root.characterStore.bookmarks)
+  const ignored = useObservable(root.characterStore.ignored)
+  const friends = useObservable(root.characterStore.friends)
 
   const openChat = useOpenAndShowPrivateChatAction()
 

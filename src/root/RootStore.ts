@@ -7,5 +7,9 @@ export class RootStore {
   readonly socket = new SocketHandler()
   readonly userStore = new UserStore()
   readonly appStore = new AppStore(this.socket, this.userStore)
-  readonly characterStore = new CharacterStore(this.socket)
+  readonly characterStore = new CharacterStore(
+    this.socket,
+    this.userStore,
+    this.appStore,
+  )
 }

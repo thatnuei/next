@@ -5,7 +5,7 @@ import BBC from "../bbc/BBC"
 import { TagProps } from "../jsx/types"
 import { rainbowAnimation } from "../ui/helpers"
 import { statusColors } from "./colors"
-import { useCharacter } from "./state"
+import { useCharacter } from "./helpers"
 
 type Props = TagProps<"p"> & {
   name: string
