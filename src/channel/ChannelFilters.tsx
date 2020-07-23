@@ -1,9 +1,9 @@
+import { useObservable } from "micro-observables"
 import React from "react"
-import { useRecoilState } from "recoil"
 import tw from "twin.macro"
 import Button from "../dom/Button"
 import { TagProps } from "../jsx/types"
-import { channelAtom } from "./state"
+import { useChannel } from "./helpers"
 import { ChannelMode } from "./types"
 
 type Props = {
@@ -11,14 +11,15 @@ type Props = {
 } & TagProps<"div">
 
 function ChannelFilters({ channelId, ...props }: Props) {
-  const [channel, setChannel] = useRecoilState(channelAtom(channelId))
+  const channel = useChannel(channelId)
+  const selectedMode = useObservable(channel.selectedMode)
 
   function setSelectedMode(mode: ChannelMode) {
-    setChannel((prev) => ({ ...prev, mode }))
+    channel.selectedMode.set(mode)
   }
 
   function renderFilterButton(mode: ChannelMode, label: string) {
-    const isSelected = channel.selectedMode === mode
+    const isSelected = selectedMode === mode
 
     const style = [
       tw`block whitespace-no-wrap transition-opacity`,

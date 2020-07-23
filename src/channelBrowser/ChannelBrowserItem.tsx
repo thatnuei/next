@@ -1,12 +1,8 @@
+import { useObservable } from "micro-observables"
 import React from "react"
-import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
-import {
-  isPresentInChannelSelector,
-  useJoinChannelAction,
-  useLeaveChannelAction,
-} from "../channel/state"
 import { TagProps } from "../jsx/types"
+import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
 import { earth, lock } from "../ui/icons"
 import { ChannelBrowserChannel } from "./ChannelBrowserStore"
@@ -16,21 +12,20 @@ type Props = TagProps<"button"> & {
 }
 
 function ChannelBrowserItem({ info, ...props }: Props) {
-  const isPresent = useRecoilValue(isPresentInChannelSelector(info.id))
-  const joinChannel = useJoinChannelAction()
-  const leaveChannel = useLeaveChannelAction()
+  const root = useRootStore()
+  const isJoined = useObservable(root.channelStore.isJoined(info.id))
 
   const handleClick = () => {
-    if (isPresent) {
-      leaveChannel(info.id)
+    if (isJoined) {
+      root.channelStore.leave(info.id)
     } else {
-      joinChannel(info.id, info.title)
+      root.channelStore.join(info.id, info.title)
     }
   }
 
   const containerStyle = [
     tw`flex flex-row items-center px-2 py-2 transition-all`,
-    isPresent
+    isJoined
       ? tw`opacity-100 bg-background-0`
       : tw`opacity-50 hover:opacity-75`,
   ]

@@ -1,7 +1,6 @@
 import { Observable, useObservable } from "micro-observables"
 import React, { CSSProperties, Fragment, PropsWithChildren } from "react"
 import tw from "twin.macro"
-import { useJoinChannelAction } from "../channel/state"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
@@ -195,7 +194,6 @@ function BBCChannelLink({
   )
 
   const userCount = channels.find((ch) => ch.id === id)?.userCount ?? 0
-  const joinChannel = useJoinChannelAction()
 
   return (
     <span css={tw`inline-flex items-baseline`}>
@@ -203,7 +201,10 @@ function BBCChannelLink({
         which={type === "public" ? icons.earth : icons.lock}
         css={tw`self-center inline w-4 h-4 mr-1 opacity-75`}
       />
-      <button className="group" onClick={() => joinChannel(id, title)}>
+      <button
+        className="group"
+        onClick={() => root.channelStore.join(id, title)}
+      >
         <span css={tw`underline group-hover:no-underline`}>{title}</span> (
         {userCount})
       </button>

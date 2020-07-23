@@ -4,8 +4,6 @@ import React from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
-import { useChannelListeners } from "../channel/listeners"
-import { joinedChannelIdsAtom } from "../channel/state"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import CharacterMenu from "../character/CharacterMenu"
 import ChatNav from "../chatNav/ChatNav"
@@ -32,7 +30,6 @@ import { sideMenuVisibleAtom } from "./state"
 export default function Chat() {
   const root = useRootStore()
 
-  useChannelListeners()
   usePrivateChatListeners()
 
   const isSmallScreen = useMediaQuery(screenQueries.small)
@@ -112,11 +109,15 @@ export default function Chat() {
 }
 
 function ChatRoomView() {
+  const root = useRootStore()
   const view = useRecoilValue(chatNavViewAtom)
-  const joinedChannels = useRecoilValue(joinedChannelIdsAtom)
   const openChats = useRecoilValue(openPrivateChatPartnersAtom)
 
-  if (view?.type === "channel" && joinedChannels.includes(view.id)) {
+  const isChannelJoined = useObservable(
+    root.channelStore.isJoined(view?.type === "channel" ? view.id : ""),
+  )
+
+  if (view?.type === "channel" && isChannelJoined) {
     return <ChannelView css={tw`flex-1`} channelId={view.id} />
   }
 

@@ -9,10 +9,10 @@ import { ValueOf } from "../helpers/common/types"
 import { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
 import VirtualizedList from "../ui/VirtualizedList"
-import { ChannelState } from "./state"
+import { ChannelModel } from "./ChannelModel"
 
 type Props = TagProps<"div"> & {
-  channel: ChannelState
+  channel: ChannelModel
 }
 
 const itemTypes = [
@@ -26,6 +26,9 @@ const itemTypes = [
 type ItemType = ValueOf<typeof itemTypes>
 
 function ChannelUserList({ channel, ...props }: Props) {
+  const users = useObservable(channel.users)
+  const ops = useObservable(channel.ops)
+
   const root = useRootStore()
   const admins = useObservable(root.characterStore.admins)
   const bookmarks = useObservable(root.characterStore.bookmarks)
@@ -36,20 +39,16 @@ function ChannelUserList({ channel, ...props }: Props) {
   // technically we already have the name and don't need to observe it,
   // but it's probably slightly more correct? leaving this for now
   const namesObservable = Observable.merge(
-    channel.users
-      .map(root.characterStore.getCharacter)
-      .map((char) => char.name),
+    users.map(root.characterStore.getCharacter).map((char) => char.name),
   )
 
   const statusesObservable = Observable.merge(
-    channel.users
-      .map(root.characterStore.getCharacter)
-      .map((char) => char.status),
+    users.map(root.characterStore.getCharacter).map((char) => char.status),
   )
 
   const getItemType = (name: string, status: CharacterStatus): ItemType => {
     if (admins.includes(name)) return "admin"
-    if (channel.ops.includes(name)) return "op"
+    if (ops.includes(name)) return "op"
     if (isFriend(name)) return "friend"
     if (bookmarks.includes(name)) return "bookmark"
     if (status.type === "looking") return "looking"
