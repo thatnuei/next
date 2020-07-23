@@ -1,8 +1,7 @@
+import { useObservable } from "micro-observables"
 import React from "react"
-import { useRecoilValue, useSetRecoilState } from "recoil"
 import tw from "twin.macro"
-import { useIsPublicChannel } from "../channelBrowser/helpers"
-import { useChatCredentials } from "../chat/helpers"
+import { useIdentity } from "../app/helpers"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
@@ -16,8 +15,8 @@ import { useOverlay } from "../ui/overlay"
 import Popover, { usePopover } from "../ui/Popover"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
+import { useChannel } from "./helpers"
 import InviteUsersForm from "./InviteUsersForm"
-import { channelAtom, channelMessagesAtom, getLinkCode } from "./state"
 
 type Props = {
   channelId: string
@@ -31,15 +30,18 @@ function ChannelHeader({
   onShowUsers,
   ...props
 }: Props) {
-  const isPublic = useIsPublicChannel(channelId)
-  const channel = useRecoilValue(channelAtom(channelId))
-  const setChannelMessages = useSetRecoilState(channelMessagesAtom(channelId))
+  const channel = useChannel(channelId)
+  const title = useObservable(channel.title)
+  const isPublic = useObservable(channel.isPublic)
+  const ops = useObservable(channel.ops)
+
+  const identity = useIdentity()
+
   const isLargeScreen = useMediaQuery(screenQueries.large)
-  const { identity } = useChatCredentials()
   const menu = usePopover()
   const invite = useOverlay()
 
-  const shouldShowInviteOption = isPublic && channel.ops.includes(identity)
+  const shouldShowInviteOption = isPublic && ops.includes(identity)
 
   function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
     const target = event.currentTarget
@@ -47,10 +49,6 @@ function ChannelHeader({
       x: target.offsetLeft,
       y: target.offsetTop + target.clientHeight,
     })
-  }
-
-  function clearChannelMessages() {
-    setChannelMessages([])
   }
 
   return (
@@ -67,7 +65,7 @@ function ChannelHeader({
 
       <div css={tw`w-3`} />
 
-      <h1 css={[headerText2, tw`flex-1`]}>{channel.title}</h1>
+      <h1 css={[headerText2, tw`flex-1`]}>{title}</h1>
 
       {isLargeScreen && <ChannelFilters channelId={channel.id} />}
 
@@ -99,13 +97,13 @@ function ChannelHeader({
             text="Copy code"
             icon={icons.code}
             onClick={() => {
-              window.navigator.clipboard.writeText(getLinkCode(channel))
+              window.navigator.clipboard.writeText(channel.linkCode.get())
             }}
           />
           <MenuItem
             text="Clear messages"
             icon={icons.clearMessages}
-            onClick={clearChannelMessages}
+            onClick={channel.clearMessages}
           />
           {shouldShowInviteOption && (
             <MenuItem text="Invite" icon={icons.invite} onClick={invite.show} />
@@ -115,7 +113,7 @@ function ChannelHeader({
 
       <Modal
         {...invite.props}
-        title={`Invite to ${channel.title}`}
+        title={`Invite to ${title}`}
         width={400}
         height={700}
       >
