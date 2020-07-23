@@ -19,13 +19,19 @@ type Friendship = {
   dest: string
 }
 
+export type UserData = {
+  account: string
+  ticket: string
+  characters: string[]
+}
+
 const ticketExpireTime = 1000 * 60 * 5
 
 export class UserStore {
-  readonly userData = observable({
+  readonly userData = observable<UserData>({
     account: "",
     ticket: "",
-    characters: [] as string[],
+    characters: [],
   })
 
   private lastTicketFetchTime = 0
