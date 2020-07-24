@@ -1,13 +1,13 @@
 import { AnimatePresence } from "framer-motion"
 import { useObservable } from "micro-observables"
 import React from "react"
-import { useRecoilState, useRecoilValue } from "recoil"
+import { useRecoilState } from "recoil"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import CharacterMenu from "../character/CharacterMenu"
 import ChatNav from "../chatNav/ChatNav"
-import { chatNavViewAtom } from "../chatNav/state"
+import { useChatNavView } from "../chatNav/helpers"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { Dict } from "../helpers/common/types"
 import PrivateChatView from "../privateChat/PrivateChatView"
@@ -106,24 +106,24 @@ export default function Chat() {
 
 function ChatRoomView() {
   const root = useRootStore()
-  const view = useRecoilValue(chatNavViewAtom)
+  const view = useChatNavView()
 
   const isChannelJoined = useObservable(
-    root.channelStore.isJoined(view?.type === "channel" ? view.id : ""),
+    root.channelStore.isJoined(view.channelId ?? ""),
   )
 
   const isPrivateChatOpen = useObservable(
-    root.privateChatStore.isOpen(
-      view?.type === "privateChat" ? view.partnerName : "",
-    ),
+    root.privateChatStore.isOpen(view.privateChatPartner ?? ""),
   )
 
-  if (view?.type === "channel" && isChannelJoined) {
-    return <ChannelView css={tw`flex-1`} channelId={view.id} />
+  if (view.channelId && isChannelJoined) {
+    return <ChannelView css={tw`flex-1`} channelId={view.channelId} />
   }
 
-  if (view?.type === "privateChat" && isPrivateChatOpen) {
-    return <PrivateChatView css={tw`flex-1`} partnerName={view.partnerName} />
+  if (view.privateChatPartner && isPrivateChatOpen) {
+    return (
+      <PrivateChatView css={tw`flex-1`} partnerName={view.privateChatPartner} />
+    )
   }
 
   return <NoRoomView css={tw`self-start`} />

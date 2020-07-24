@@ -1,7 +1,6 @@
 import { useObservable } from "micro-observables"
 import React, { useState } from "react"
 import tw from "twin.macro"
-import { useSetViewAction } from "../chatNav/state"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
 import { useRootStore } from "../root/context"
@@ -19,8 +18,6 @@ function CharacterMenu() {
   const bookmarks = useObservable(root.characterStore.bookmarks)
   const ignored = useObservable(root.characterStore.ignored)
   const friends = useObservable(root.characterStore.friends)
-
-  const setView = useSetViewAction()
 
   function handleClick(event: MouseEvent) {
     const characterName = (() => {
@@ -71,10 +68,7 @@ function CharacterMenu() {
         <MenuItem
           icon={icons.message}
           text="Message"
-          onClick={() => {
-            root.privateChatStore.open(characterName)
-            setView({ type: "privateChat", partnerName: characterName })
-          }}
+          onClick={() => root.chatNavStore.showPrivateChat(characterName)}
         />
         <MenuItem
           icon={isBookmarked ? icons.bookmark : icons.bookmarkHollow}

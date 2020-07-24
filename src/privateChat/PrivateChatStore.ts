@@ -65,16 +65,6 @@ export class PrivateChatStore {
       this.getChat(character).addMessage(
         createPrivateMessage(character, message),
       )
-
-      // const isCurrent =
-      //   navView?.type === "privateChat" && navView.partnerName === character
-
-      // if (!isCurrent) {
-      //   set(privateChatAtom(character), (prev) => ({
-      //     ...prev,
-      //     isUnread: true,
-      //   }))
-      // }
     },
     TPN({ character, status }) {
       this.getChat(character).typingStatus.set(status)

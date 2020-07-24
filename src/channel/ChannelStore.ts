@@ -109,8 +109,6 @@ export class ChannelStore {
     MSG({ channel: id, character, message }) {
       const channel = this.getChannel(id)
       channel.addMessage(createChannelMessage(character, message))
-
-      // update unread state
     },
 
     LRP({ channel: id, character, message }) {

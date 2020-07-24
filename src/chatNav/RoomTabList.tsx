@@ -1,6 +1,5 @@
 import { useObservable } from "micro-observables"
 import React from "react"
-import { useRecoilValue } from "recoil"
 import tw from "twin.macro"
 import { ChannelModel } from "../channel/ChannelModel"
 import { useJoinedChannels } from "../channel/helpers"
@@ -12,8 +11,8 @@ import { PrivateChatModel } from "../privateChat/PrivateChatModel"
 import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
+import { useChatNavView } from "./helpers"
 import RoomTab from "./RoomTab"
-import { chatNavViewAtom, useSetViewAction } from "./state"
 
 function RoomTabList() {
   const joinedChannels = useJoinedChannels()
@@ -37,10 +36,8 @@ function PrivateChatTab({ chat }: { chat: PrivateChatModel }) {
   const root = useRootStore()
   const isUnread = useObservable(chat.isUnread)
 
-  const view = useRecoilValue(chatNavViewAtom)
-  const isActive =
-    view?.type === "privateChat" && view.partnerName === chat.partnerName
-  const setView = useSetViewAction()
+  const view = useChatNavView()
+  const isActive = view.privateChatPartner === chat.partnerName
 
   return (
     <RoomTab
@@ -48,9 +45,7 @@ function PrivateChatTab({ chat }: { chat: PrivateChatModel }) {
       icon={<Avatar name={chat.partnerName} css={tw`w-5 h-5`} />}
       isActive={isActive}
       isUnread={isUnread}
-      onClick={() =>
-        setView({ type: "privateChat", partnerName: chat.partnerName })
-      }
+      onClick={() => root.chatNavStore.showPrivateChat(chat.partnerName)}
       onClose={() => root.privateChatStore.close(chat.partnerName)}
     />
   )
@@ -63,9 +58,8 @@ function ChannelRoomTab({ channel }: { channel: ChannelModel }) {
   const isUnread = useObservable(channel.isUnread)
   const isPublic = useIsPublicChannel(channel.id)
 
-  const view = useRecoilValue(chatNavViewAtom)
-  const isActive = view?.type === "channel" && view.id === channel.id
-  const setView = useSetViewAction()
+  const view = useChatNavView()
+  const isActive = view.channelId === channel.id
 
   return (
     <RoomTab
@@ -80,7 +74,7 @@ function ChannelRoomTab({ channel }: { channel: ChannelModel }) {
       }
       isActive={isActive}
       isUnread={isUnread}
-      onClick={() => setView({ type: "channel", id: channel.id })}
+      onClick={() => root.chatNavStore.showChannel(channel.id)}
       onClose={() => root.channelStore.leave(channel.id)}
     />
   )
