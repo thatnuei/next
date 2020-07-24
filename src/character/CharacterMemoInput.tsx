@@ -1,6 +1,6 @@
 import { debounce } from "lodash/fp"
-import React, { useMemo } from "react"
-import { atomFamily, useRecoilValueLoadable, useSetRecoilState } from "recoil"
+import React, { useMemo, useState } from "react"
+import { useQuery } from "react-query"
 import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
@@ -12,16 +12,13 @@ type Props = {
 
 export default function CharacterMemoInput({ name, ...props }: Props) {
   const root = useRootStore()
+  const [memo, setMemo] = useState("")
 
-  const characterMemoSelector = useMemo(() => {
-    return atomFamily({
-      key: "character:memo",
-      default: (name: string) => root.userStore.getMemo({ name }),
-    })
-  }, [root.userStore])
-
-  const setMemo = useSetRecoilState(characterMemoSelector(name))
-  const memoLoadable = useRecoilValueLoadable(characterMemoSelector(name))
+  const memoQuery = useQuery(
+    ["characterMemo", name],
+    (_, name) => root.userStore.getMemo({ name }),
+    { onSuccess: setMemo },
+  )
 
   const saveMemoDebounced = useMemo(
     () =>
@@ -36,15 +33,23 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
 
   const style = [input, tw`h-20 text-sm`]
 
-  if (memoLoadable.state === "loading") {
-    return <textarea css={style} disabled placeholder="Loading..." {...props} />
-  }
-
-  if (memoLoadable.state === "hasValue") {
+  if (memoQuery.status === "loading") {
     return (
       <textarea
         css={style}
-        value={memoLoadable.contents}
+        disabled
+        placeholder="Loading..."
+        value=""
+        {...props}
+      />
+    )
+  }
+
+  if (memoQuery.status === "success") {
+    return (
+      <textarea
+        css={style}
+        value={memo}
         onChange={(event) => handleChange(event.target.value)}
         placeholder="Enter a memo"
         {...props}
@@ -52,7 +57,7 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
     )
   }
 
-  if (memoLoadable.state === "hasError") {
+  if (memoQuery.status === "error") {
     return <p css={tw`text-sm`}>Failed to load memo</p>
   }
 
