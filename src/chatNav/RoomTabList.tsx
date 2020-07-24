@@ -1,4 +1,3 @@
-import { flow, map, sortBy, toLower } from "lodash/fp"
 import { useObservable } from "micro-observables"
 import React from "react"
 import { useRecoilValue } from "recoil"
@@ -7,12 +6,9 @@ import { ChannelModel } from "../channel/ChannelModel"
 import { useJoinedChannels } from "../channel/helpers"
 import { useIsPublicChannel } from "../channelBrowser/helpers"
 import Avatar from "../character/Avatar"
-import {
-  openPrivateChatPartnersAtom,
-  privateChatAtom,
-  useClosePrivateChatAction,
-} from "../privateChat/state"
-import Scope from "../react/Scope"
+import { compare } from "../helpers/common/compare"
+import { useOpenPrivateChats } from "../privateChat/helpers"
+import { PrivateChatModel } from "../privateChat/PrivateChatModel"
 import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -21,38 +17,12 @@ import { chatNavViewAtom, useSetViewAction } from "./state"
 
 function RoomTabList() {
   const joinedChannels = useJoinedChannels()
+  const privateChats = useOpenPrivateChats()
 
-  const setView = useSetViewAction()
-  const privateChats = useRecoilValue(openPrivateChatPartnersAtom)
-
-  const privateChatTabs = flow(
-    sortBy(toLower),
-    map((partnerName) => (
-      <Scope key={partnerName}>
-        {function useScope() {
-          const chat = useRecoilValue(privateChatAtom(partnerName))
-          const closeChat = useClosePrivateChatAction()
-          const view = useRecoilValue(chatNavViewAtom)
-
-          const isActive =
-            view?.type === "privateChat" && view.partnerName === partnerName
-
-          return (
-            <RoomTab
-              title={chat.partnerName}
-              icon={<Avatar name={chat.partnerName} css={tw`w-5 h-5`} />}
-              isActive={isActive}
-              isUnread={chat.isUnread}
-              onClick={() =>
-                setView({ type: "privateChat", partnerName: chat.partnerName })
-              }
-              onClose={() => closeChat(partnerName)}
-            />
-          )
-        }}
-      </Scope>
-    )),
-  )(privateChats)
+  const privateChatTabs = privateChats
+    .slice()
+    .sort(compare((chat) => chat.partnerName.toLowerCase()))
+    .map((chat) => <PrivateChatTab key={chat.partnerName} chat={chat} />)
 
   const channelTabs = joinedChannels.map((channel) => (
     <ChannelRoomTab key={channel.id} channel={channel} />
@@ -62,6 +32,29 @@ function RoomTabList() {
 }
 
 export default RoomTabList
+
+function PrivateChatTab({ chat }: { chat: PrivateChatModel }) {
+  const root = useRootStore()
+  const isUnread = useObservable(chat.isUnread)
+
+  const view = useRecoilValue(chatNavViewAtom)
+  const isActive =
+    view?.type === "privateChat" && view.partnerName === chat.partnerName
+  const setView = useSetViewAction()
+
+  return (
+    <RoomTab
+      title={chat.partnerName}
+      icon={<Avatar name={chat.partnerName} css={tw`w-5 h-5`} />}
+      isActive={isActive}
+      isUnread={isUnread}
+      onClick={() =>
+        setView({ type: "privateChat", partnerName: chat.partnerName })
+      }
+      onClose={() => root.privateChatStore.close(chat.partnerName)}
+    />
+  )
+}
 
 function ChannelRoomTab({ channel }: { channel: ChannelModel }) {
   const root = useRootStore()

@@ -1,6 +1,6 @@
-import { atom, useRecoilCallback, useSetRecoilState } from "recoil"
+import { useCallback } from "react"
+import { atom, useSetRecoilState } from "recoil"
 import { sideMenuVisibleAtom } from "../chat/state"
-import { privateChatAtom } from "../privateChat/state"
 import { useRootStore } from "../root/context"
 
 type ChatNavView =
@@ -17,20 +17,17 @@ export function useSetViewAction() {
   const setView = useSetRecoilState(chatNavViewAtom)
   const setSideMenuVisible = useSetRecoilState(sideMenuVisibleAtom)
 
-  return useRecoilCallback(
-    ({ set }) => (view: ChatNavView) => {
+  return useCallback(
+    (view: ChatNavView) => {
       setView(view)
       setSideMenuVisible(false)
 
       if (view.type === "channel") {
         root.channelStore.getChannel(view.id).isUnread.set(false)
       } else {
-        set(privateChatAtom(view.partnerName), (prev) => ({
-          ...prev,
-          isUnread: false,
-        }))
+        root.privateChatStore.getChat(view.partnerName).isUnread.set(false)
       }
     },
-    [root.channelStore, setSideMenuVisible, setView],
+    [root.channelStore, root.privateChatStore, setSideMenuVisible, setView],
   )
 }

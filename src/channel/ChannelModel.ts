@@ -1,20 +1,15 @@
 import { eq } from "lodash/fp"
 import { observable, Observable } from "micro-observables"
-import { MessageState } from "../message/MessageState"
+import { RoomModel } from "../chat/RoomModel"
 import { ChannelMode } from "./types"
 
-export class ChannelModel {
+export class ChannelModel extends RoomModel {
   readonly title = observable(this.id)
   readonly description = observable("")
   readonly mode = observable<ChannelMode>("both")
   readonly selectedMode = observable<ChannelMode>("chat")
-  readonly isUnread = observable(false)
   readonly users = observable<readonly string[]>([])
   readonly ops = observable<readonly string[]>([])
-  readonly chatInput = observable("")
-
-  private readonly _messages = observable<readonly MessageState[]>([])
-  readonly messages = this._messages.readOnly()
 
   readonly actualMode = Observable.from(
     this.mode,
@@ -32,13 +27,7 @@ export class ChannelModel {
       : `[session=${this.id}]${title}[/session]`,
   )
 
-  constructor(readonly id: string) {}
-
-  addMessage = (message: MessageState) => {
-    this._messages.update((messages) => [...messages, message].slice(-300, 0))
-  }
-
-  clearMessages = () => {
-    this._messages.set([])
+  constructor(readonly id: string) {
+    super()
   }
 }

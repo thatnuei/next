@@ -10,9 +10,7 @@ import ChatNav from "../chatNav/ChatNav"
 import { chatNavViewAtom } from "../chatNav/state"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { Dict } from "../helpers/common/types"
-import { usePrivateChatListeners } from "../privateChat/listeners"
 import PrivateChatView from "../privateChat/PrivateChatView"
-import { openPrivateChatPartnersAtom } from "../privateChat/state"
 import Scope from "../react/Scope"
 import { useRootStore } from "../root/context"
 import { useSocket } from "../socket/socketContext"
@@ -29,8 +27,6 @@ import { sideMenuVisibleAtom } from "./state"
 
 export default function Chat() {
   const root = useRootStore()
-
-  usePrivateChatListeners()
 
   const isSmallScreen = useMediaQuery(screenQueries.small)
   const sideMenu = useOverlayControlled(useRecoilState(sideMenuVisibleAtom))
@@ -111,17 +107,22 @@ export default function Chat() {
 function ChatRoomView() {
   const root = useRootStore()
   const view = useRecoilValue(chatNavViewAtom)
-  const openChats = useRecoilValue(openPrivateChatPartnersAtom)
 
   const isChannelJoined = useObservable(
     root.channelStore.isJoined(view?.type === "channel" ? view.id : ""),
+  )
+
+  const isPrivateChatOpen = useObservable(
+    root.privateChatStore.isOpen(
+      view?.type === "privateChat" ? view.partnerName : "",
+    ),
   )
 
   if (view?.type === "channel" && isChannelJoined) {
     return <ChannelView css={tw`flex-1`} channelId={view.id} />
   }
 
-  if (view?.type === "privateChat" && openChats.includes(view.partnerName)) {
+  if (view?.type === "privateChat" && isPrivateChatOpen) {
     return <PrivateChatView css={tw`flex-1`} partnerName={view.partnerName} />
   }
 

@@ -3,6 +3,7 @@ import { UserStore } from "../app/UserStore"
 import { ChannelStore } from "../channel/ChannelStore"
 import { ChannelBrowserStore } from "../channelBrowser/ChannelBrowserStore"
 import { CharacterStore } from "../character/CharacterStore"
+import { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { SocketHandler } from "../socket/SocketHandler"
 import { StatusUpdateStore } from "../statusUpdate/StatusUpdateStore"
 
@@ -18,6 +19,10 @@ export class RootStore {
   readonly channelStore = new ChannelStore(
     this.socket,
     this.userStore.userData,
+    this.appStore.identity,
+  )
+  readonly privateChatStore = new PrivateChatStore(
+    this.socket,
     this.appStore.identity,
   )
   readonly channelBrowserStore = new ChannelBrowserStore(this.socket)
