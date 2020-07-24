@@ -1,7 +1,6 @@
 import { AnimatePresence } from "framer-motion"
 import { useObservable } from "micro-observables"
 import React from "react"
-import { useRecoilState } from "recoil"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
@@ -20,16 +19,13 @@ import Drawer from "../ui/Drawer"
 import { fixedCover } from "../ui/helpers"
 import LoadingOverlay from "../ui/LoadingOverlay"
 import Modal from "../ui/Modal"
-import { useOverlayControlled } from "../ui/overlay"
 import { screenQueries } from "../ui/screens"
 import NoRoomView from "./NoRoomView"
-import { sideMenuVisibleAtom } from "./state"
 
 export default function Chat() {
   const root = useRootStore()
-
+  const isSideMenuVisible = useObservable(root.isSideMenuVisible)
   const isSmallScreen = useMediaQuery(screenQueries.small)
-  const sideMenu = useOverlayControlled(useRecoilState(sideMenuVisibleAtom))
 
   return (
     <div css={[fixedCover, tw`flex`]}>
@@ -38,9 +34,15 @@ export default function Chat() {
       <ChatRoomView />
 
       <AnimatePresence>
-        {sideMenu.value && isSmallScreen && (
-          <Drawer side="left" onDismiss={sideMenu.hide}>
-            <ChatNav css={tw`h-full bg-background-2`} />
+        {isSideMenuVisible && isSmallScreen && (
+          <Drawer
+            side="left"
+            onDismiss={() => root.isSideMenuVisible.set(false)}
+          >
+            <ChatNav
+              css={tw`h-full bg-background-2`}
+              onClick={() => root.isSideMenuVisible.set(false)}
+            />
           </Drawer>
         )}
       </AnimatePresence>

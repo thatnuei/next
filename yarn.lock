@@ -11529,7 +11529,6 @@ fsevents@~2.1.2:
     react-refresh: 0.8.3
     react-scripts: 3.4.1
     react-window: 1.8.5
-    recoil: 0.0.10
     resize-observer-polyfill: 1.5.1
     serve: 11.3.2
     source-map-explorer: 2.4.2
@@ -14280,16 +14279,6 @@ fsevents@~2.1.2:
   dependencies:
     util.promisify: ^1.0.0
   checksum: 67ce6bdaf8f8dd2a85e771b7b79b74b8a47299315a0a3553947df1ab4117de80d1910a2ba856a480d9e4284172cf8d7df209117f5522475e30bb7ecdee63b75b
-  languageName: node
-  linkType: hard
-
-"recoil@npm:0.0.10":
-  version: 0.0.10
-  resolution: "recoil@npm:0.0.10"
-  peerDependencies:
-    react: ^16.13.1
-    react-dom: ^16.13.1
-  checksum: 204948109a1d12003bca3446ac5bc009a66087faed87bf1a51893b983648377f334f205f955e56041a86f48006001e1fb88bdbf8d0293f77746fed055cbcf89d
   languageName: node
   linkType: hard
 

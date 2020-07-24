@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion"
 import { useObservable } from "micro-observables"
 import React from "react"
 import tw from "twin.macro"
@@ -95,14 +96,16 @@ function ChannelView({ channelId, ...props }: Props) {
         onSubmit={submitChatInput}
       />
 
-      {!isLargeScreen && (
-        <Drawer side="right" {...userList.props}>
-          <ChannelUserList
-            channel={channel}
-            css={tw`w-56 h-full bg-background-2`}
-          />
-        </Drawer>
-      )}
+      <AnimatePresence>
+        {!isLargeScreen && userList.value && (
+          <Drawer side="right" onDismiss={userList.hide}>
+            <ChannelUserList
+              channel={channel}
+              css={tw`w-56 h-full bg-background-2`}
+            />
+          </Drawer>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

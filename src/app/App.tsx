@@ -1,6 +1,5 @@
 import { useObservable } from "micro-observables"
 import React from "react"
-import { RecoilRoot } from "recoil"
 import Chat from "../chat/Chat"
 import { useRootStore } from "../root/context"
 import CharacterSelect from "./CharacterSelect"
@@ -14,11 +13,7 @@ export default function App() {
     <>
       {screen === "login" && <Login />}
       {screen === "characterSelect" && <CharacterSelect />}
-      {screen === "chat" && (
-        <RecoilRoot>
-          <Chat />
-        </RecoilRoot>
-      )}
+      {screen === "chat" && <Chat />}
     </>
   )
 }

@@ -1,3 +1,4 @@
+import { observable } from "micro-observables"
 import { AppStore } from "../app/AppStore"
 import { UserStore } from "../app/UserStore"
 import { ChannelStore } from "../channel/ChannelStore"
@@ -9,6 +10,8 @@ import { SocketHandler } from "../socket/SocketHandler"
 import { StatusUpdateStore } from "../statusUpdate/StatusUpdateStore"
 
 export class RootStore {
+  readonly isSideMenuVisible = observable(false)
+
   readonly socket = new SocketHandler()
   readonly userStore = new UserStore()
   readonly appStore = new AppStore(this.socket, this.userStore)
