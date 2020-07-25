@@ -1,4 +1,5 @@
 import { observable } from "micro-observables"
+import { autobind } from "../helpers/common/autobind"
 import { Stream } from "../state/stream"
 import {
   ClientCommand,
@@ -29,6 +30,10 @@ export class SocketHandler {
   status = observable<SocketStatus>("idle")
 
   private socket?: WebSocket
+
+  constructor() {
+    autobind(this)
+  }
 
   connect({ account, ticket, identity, onDisconnect }: ConnectOptions) {
     this.status.set("connecting")

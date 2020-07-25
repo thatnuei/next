@@ -1,4 +1,5 @@
 import { observable } from "micro-observables"
+import { autobind } from "../helpers/common/autobind"
 import { SocketHandler } from "../socket/SocketHandler"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
@@ -16,9 +17,11 @@ export class AppStore {
   constructor(
     private readonly socket: SocketHandler,
     private readonly userStore: UserStore,
-  ) {}
+  ) {
+    autobind(this)
+  }
 
-  submitLogin = async (args: AuthenticateArgs) => {
+  async submitLogin(args: AuthenticateArgs) {
     await this.userStore.login(args)
 
     const { account, characters } = this.userStore.userData.get()
@@ -34,16 +37,16 @@ export class AppStore {
     this.screen.set("characterSelect")
   }
 
-  setIdentity = (identity: string, account: string) => {
+  setIdentity(identity: string, account: string) {
     this.identity.set(identity)
     storedIdentity(account).set(identity)
   }
 
-  showLogin = () => {
+  showLogin() {
     this.screen.set("login")
   }
 
-  enterChat = () => {
+  enterChat() {
     const { account, ticket } = this.userStore.userData.get()
 
     this.screen.set("chat")
@@ -58,7 +61,7 @@ export class AppStore {
     })
   }
 
-  leaveChat = () => {
+  leaveChat() {
     if (this.screen.get() === "chat") {
       this.socket.disconnect()
       this.screen.set("login")
