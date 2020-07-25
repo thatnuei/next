@@ -1,4 +1,4 @@
-import { AnimatePresence } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { useObservable } from "micro-observables"
 import React from "react"
 import tw from "twin.macro"
@@ -8,16 +8,13 @@ import CharacterMenu from "../character/CharacterMenu"
 import ChatNav from "../chatNav/ChatNav"
 import { useChatNavView } from "../chatNav/helpers"
 import { useMediaQuery } from "../dom/useMediaQuery"
-import { Dict } from "../helpers/common/types"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import Scope from "../react/Scope"
 import { useRootStore } from "../root/context"
-import { useSocket } from "../socket/socketContext"
-import { SocketStatus } from "../socket/SocketHandler"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
+import { fadeAnimation } from "../ui/animation"
 import Drawer from "../ui/Drawer"
 import { fixedCover } from "../ui/helpers"
-import LoadingOverlay from "../ui/LoadingOverlay"
 import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import NoRoomView from "./NoRoomView"
@@ -28,7 +25,7 @@ export default function Chat() {
   const isSmallScreen = useMediaQuery(screenQueries.small)
 
   return (
-    <div css={[fixedCover, tw`flex`]}>
+    <motion.div css={[fixedCover, tw`flex`]} {...fadeAnimation}>
       {!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
 
       <ChatRoomView />
@@ -83,26 +80,7 @@ export default function Chat() {
       </Scope>
 
       <CharacterMenu />
-
-      <Scope>
-        {function useScope() {
-          const socket = useSocket()
-          const status = useObservable(socket.status)
-
-          const loadingDisplays: Dict<string, SocketStatus> = {
-            connecting: "Connecting...",
-            identifying: "Identifying...",
-          }
-
-          return (
-            <LoadingOverlay
-              text={loadingDisplays[status] || "Online!"}
-              visible={status in loadingDisplays}
-            />
-          )
-        }}
-      </Scope>
-    </div>
+    </motion.div>
   )
 }
 

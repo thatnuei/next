@@ -3,15 +3,10 @@ import tw from "twin.macro"
 import Button from "../dom/Button"
 import { extractErrorMessage } from "../helpers/common/extractErrorMessage"
 import { useRootStore } from "../root/context"
-import {
-  headerText,
-  input,
-  raisedPanel,
-  raisedPanelHeader,
-  solidButton,
-} from "../ui/components"
+import { input, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
-import { centerItems, fixedCover, flexColumn } from "../ui/helpers"
+import { flexColumn } from "../ui/helpers"
+import IslandLayout from "../ui/IslandLayout"
 
 export type LoginResult = {
   account: string
@@ -47,43 +42,38 @@ export default function Login() {
   }
 
   return (
-    <div css={[fixedCover, flexColumn, centerItems]}>
-      <div css={raisedPanel}>
-        <header css={raisedPanelHeader}>
-          <h1 css={headerText}>Login</h1>
-        </header>
-        <form css={[flexColumn, tw`items-start p-4`]} onSubmit={handleSubmit}>
-          <FormField css={tw`mb-4`} labelText="Username">
-            <input
-              css={input}
-              type="text"
-              placeholder="awesome username"
-              value={account}
-              onChange={(e) => setAccount(e.target.value)}
-              disabled={isFormDisabled}
-            />
-          </FormField>
+    <IslandLayout title="Login">
+      <form css={[flexColumn, tw`items-start p-4`]} onSubmit={handleSubmit}>
+        <FormField css={tw`mb-4`} labelText="Username">
+          <input
+            css={input}
+            type="text"
+            placeholder="awesome username"
+            value={account}
+            onChange={(e) => setAccount(e.target.value)}
+            disabled={isFormDisabled}
+          />
+        </FormField>
 
-          <FormField css={tw`mb-4`} labelText="Password">
-            <input
-              css={input}
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isFormDisabled}
-            />
-          </FormField>
+        <FormField css={tw`mb-4`} labelText="Password">
+          <input
+            css={input}
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={isFormDisabled}
+          />
+        </FormField>
 
-          <Button css={solidButton} type="submit" disabled={!canSubmit}>
-            Log in
-          </Button>
+        <Button css={solidButton} type="submit" disabled={!canSubmit}>
+          Log in
+        </Button>
 
-          {state.current === "error" && (
-            <p css={tw`max-w-xs mt-4`}>{state.error}</p>
-          )}
-        </form>
-      </div>
-    </div>
+        {state.current === "error" && (
+          <p css={tw`max-w-xs mt-4`}>{state.error}</p>
+        )}
+      </form>
+    </IslandLayout>
   )
 }

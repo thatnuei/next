@@ -1,22 +1,20 @@
 import { css, keyframes } from "@emotion/react"
+import { motion } from "framer-motion"
 import React from "react"
 import tw from "twin.macro"
+import { fadeAnimation } from "./animation"
 import { headerText2 } from "./components"
 import { centerItems, fixedCover, flexColumn } from "./helpers"
 
-type Props = { text: string; visible: boolean }
+type Props = { text: string }
 
 function LoadingOverlay(props: Props) {
   const dotStyle = tw`w-4 h-4 bg-white rounded-full`
+
   return (
-    <div
-      css={[
-        fixedCover,
-        flexColumn,
-        centerItems,
-        tw`transition-all duration-300 bg-black-faded`,
-        props.visible ? tw`visible opacity-100` : tw`invisible opacity-0`,
-      ]}
+    <motion.div
+      css={[fixedCover, flexColumn, centerItems, tw`bg-black-faded`]}
+      {...fadeAnimation}
     >
       <div css={[tw`grid grid-cols-2 grid-rows-2 gap-4 p-4`, spinAnimation]}>
         <div css={[dotStyle, tw`bg-blue`]}></div>
@@ -25,7 +23,7 @@ function LoadingOverlay(props: Props) {
         <div css={[dotStyle, tw`bg-blue`]}></div>
       </div>
       <p css={headerText2}>{props.text}</p>
-    </div>
+    </motion.div>
   )
 }
 
