@@ -59,21 +59,26 @@ function CharacterMenu() {
         ))}
       </div>
 
-      <div css={tw`flex flex-col`} onClick={popover.show}>
+      <div css={tw`flex flex-col`}>
         <MenuItem
           icon={icons.link}
           text="Profile"
           href={getProfileUrl(characterName)}
+          onClick={popover.hide}
         />
         <MenuItem
           icon={icons.message}
           text="Message"
-          onClick={() => root.chatNavStore.showPrivateChat(characterName)}
+          onClick={() => {
+            popover.hide()
+            root.chatNavStore.showPrivateChat(characterName)
+          }}
         />
         <MenuItem
           icon={isBookmarked ? icons.bookmark : icons.bookmarkHollow}
           text={isBookmarked ? "Remove bookmark" : "Bookmark"}
           onClick={() => {
+            popover.hide()
             if (isBookmarked) {
               root.userStore
                 .removeBookmark({ name: characterName })

@@ -1,6 +1,6 @@
 import { debounce } from "lodash/fp"
 import React, { useMemo, useState } from "react"
-import { useQuery } from "react-query"
+import { queryCache, useMutation, useQuery } from "react-query"
 import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
@@ -14,21 +14,39 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
   const root = useRootStore()
   const [memo, setMemo] = useState("")
 
+  const characterMemoKey = "characterMemo"
+
   const memoQuery = useQuery(
-    ["characterMemo", name],
+    [characterMemoKey, name],
     (_, name) => root.userStore.getMemo({ name }),
     { onSuccess: setMemo },
   )
 
-  const saveMemoDebounced = useMemo(
-    () =>
-      debounce(2000, (note: string) => root.userStore.setMemo({ name, note })),
-    [name, root.userStore],
+  const [saveMemo] = useMutation(
+    ({ name, note }: { name: string; note: string }) => {
+      return root.userStore.setMemo({ name, note })
+    },
+    {
+      onMutate: (note) => {
+        queryCache.cancelQueries(characterMemoKey)
+
+        const prevNote = queryCache.getQueryData(characterMemoKey)
+        queryCache.setQueryData(characterMemoKey, note)
+
+        return () => queryCache.setQueryData(characterMemoKey, prevNote)
+      },
+
+      onError: (_, __, rollback: () => void) => rollback(),
+
+      onSettled: () => queryCache.invalidateQueries(characterMemoKey),
+    },
   )
 
-  function handleChange(newMemo: string) {
-    setMemo(newMemo)
-    saveMemoDebounced(newMemo)
+  const saveMemoDebounced = useMemo(() => debounce(2000, saveMemo), [saveMemo])
+
+  function handleChange(note: string) {
+    setMemo(note)
+    void saveMemoDebounced({ name, note })
   }
 
   const style = [input, tw`h-20 text-sm`]

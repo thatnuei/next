@@ -17,8 +17,12 @@ export type ServerCommand = CommandUnionFromRecord<ServerCommandRecord>
 
 export function parseServerCommand(commandString: string) {
   const type = commandString.slice(0, 3)
+
   const params =
-    commandString.length > 3 ? JSON.parse(commandString.slice(4)) : undefined
+    commandString.length > 3
+      ? (JSON.parse(commandString.slice(4)) as object)
+      : undefined
+
   return { type, params } as ServerCommand
 }
 

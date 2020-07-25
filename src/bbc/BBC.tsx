@@ -161,7 +161,9 @@ function BBCLink({ url, children }: PropsWithChildren<{ url: string }>) {
     try {
       const { host } = new URL(url)
       return host
-    } catch {}
+    } catch {
+      return undefined
+    }
   })()
 
   return (

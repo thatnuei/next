@@ -25,7 +25,7 @@ function CharacterSelect() {
         <select
           css={[select, tw`my-4`]}
           value={identity}
-          onChange={(e) => root.appStore.setIdentity(e.target.value, account)}
+          onBlur={(e) => root.appStore.setIdentity(e.target.value, account)}
         >
           {characters.map((name) => (
             <option key={name} value={name}>

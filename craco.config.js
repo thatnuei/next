@@ -1,3 +1,4 @@
+/* eslint-disable */
 const { whenDev, whenProd } = require("@craco/craco")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 

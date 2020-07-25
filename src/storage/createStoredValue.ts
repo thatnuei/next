@@ -9,7 +9,7 @@ const dbPromise = openDB("keyval-store", 1, {
 
 const keyValueStore = {
   async get(key: string): Promise<unknown> {
-    return (await dbPromise).get("keyval", key)
+    return (await dbPromise).get("keyval", key) as unknown
   },
   async set(key: string, val: unknown): Promise<void> {
     await (await dbPromise).put("keyval", val, key)
@@ -28,7 +28,7 @@ const keyValueStore = {
 export function createStoredValue<V>(key: string, validator: Validator<V>) {
   const get = async (): Promise<V> =>
     validator.parse(await keyValueStore.get(key))
-  const set = async (value: V): Promise<void> => keyValueStore.set(key, value)
+  const set = (value: V): Promise<void> => keyValueStore.set(key, value)
   const del = (): Promise<void> => keyValueStore.delete(key)
 
   const update = (

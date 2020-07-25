@@ -18,5 +18,5 @@
     "experimentalDecorators": true,
     "noUnusedLocals": true
   },
-  "include": ["src", "types"]
+  "include": ["src", "types", ".eslintrc.js", "./*.js"]
 }

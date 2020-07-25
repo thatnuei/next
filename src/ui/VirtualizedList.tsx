@@ -1,4 +1,4 @@
-import React, { Key, useState } from "react"
+import React, { ComponentType, Key, useState } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
 import tw from "twin.macro"
 import { useElementSize } from "../dom/useElementSize"
@@ -36,7 +36,7 @@ function VirtualizedList<T>({
         itemData={{ items, renderItem }}
         itemKey={(index) => getItemKey(items[index])}
         overscanCount={10}
-        children={ListItem}
+        children={ListItem as ComponentType<ListChildComponentProps>}
       />
     </div>
   )
@@ -44,6 +44,14 @@ function VirtualizedList<T>({
 
 export default VirtualizedList
 
-function ListItem({ index, style, data }: ListChildComponentProps) {
+function ListItem<T>({
+  index,
+  style,
+  data,
+}: {
+  index: number
+  style: React.CSSProperties
+  data: { items: T[]; renderItem: (info: RenderItemInfo<T>) => void }
+}) {
   return data.renderItem({ item: data.items[index], style })
 }

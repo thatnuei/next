@@ -16,7 +16,7 @@ function StatusUpdateForm() {
 
   const submit = (e?: React.SyntheticEvent) => {
     e?.preventDefault()
-    root.statusUpdateStore.submit(status)
+    root.statusUpdateStore.submit(status).catch(console.error)
   }
 
   return (
@@ -25,7 +25,7 @@ function StatusUpdateForm() {
         <select
           css={select}
           value={status.type}
-          onChange={(e) =>
+          onBlur={(e) =>
             setStatus((prev) => ({
               ...prev,
               type: e.target.value as CharacterStatusType,

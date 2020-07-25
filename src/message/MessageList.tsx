@@ -44,5 +44,5 @@ function useBottomScroll(
     if (wasScrolledToBottom) scrollToBottom()
   }, [scrollToBottom, wasScrolledToBottom, watchedValue])
 
-  useLayoutEffect(scrollToBottom, [container])
+  useLayoutEffect(scrollToBottom, [scrollToBottom])
 }

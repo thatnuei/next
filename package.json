@@ -49,18 +49,16 @@
     "@types/testing-library__jest-dom": "5.9.1",
     "@types/testing-library__react": "10.2.0",
     "@types/webpack-env": "1.15.2",
-    "@typescript-eslint/eslint-plugin": "2.x",
-    "@typescript-eslint/parser": "2.x",
-    "babel-eslint": "10.x",
+    "@typescript-eslint/eslint-plugin": "3.7.0",
+    "@typescript-eslint/parser": "3.7.0",
+    "babel-eslint": "10.1.0",
     "babel-loader": "8.1.0",
     "babel-plugin-lodash": "3.3.4",
-    "eslint": "6.x",
-    "eslint-config-react-app": "5.2.1",
-    "eslint-plugin-flowtype": "4.x",
-    "eslint-plugin-import": "2.x",
-    "eslint-plugin-jsx-a11y": "6.x",
-    "eslint-plugin-react": "7.x",
-    "eslint-plugin-react-hooks": "2.x",
+    "eslint": "7.5.0",
+    "eslint-config-prettier": "6.11.0",
+    "eslint-plugin-jsx-a11y": "6.3.1",
+    "eslint-plugin-react": "7.20.3",
+    "eslint-plugin-react-hooks": "4.0.8",
     "fake-indexeddb": "3.1.1",
     "jest-environment-jsdom-sixteen": "1.0.3",
     "npm-run-all": "4.1.5",
@@ -75,23 +73,6 @@
     "typescript": "4.0.0-beta",
     "typescript-plugin-tw-template": "2.0.1",
     "webpack-hot-middleware": "2.25.0"
-  },
-  "eslintConfig": {
-    "extends": "react-app",
-    "ignorePatterns": [
-      "/node_modules/",
-      "/src/node_modules/",
-      "/build/"
-    ],
-    "rules": {
-      "require-await": "error",
-      "react-hooks/exhaustive-deps": [
-        "warn",
-        {
-          "additionalHooks": "useRecoilCallback|useComputedObservable|useMemoizedObservable"
-        }
-      ]
-    }
   },
   "browserslist": {
     "production": [

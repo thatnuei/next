@@ -14,14 +14,11 @@ export type FetchJsonOptions = {
   method: "get" | "post" | "patch" | "put" | "delete"
 }
 
-export async function fetchJson<T>(
-  url: string,
-  options?: FetchJsonOptions,
-): Promise<T> {
+export async function fetchJson<T>(url: string, options?: FetchJsonOptions) {
   const res = await fetch(url, {
     method: options?.method,
     body: options?.body && createFormData(options.body),
   })
 
-  return res.ok ? res.json() : raise(res.statusText)
+  return res.ok ? (res.json() as Promise<T>) : raise(res.statusText)
 }

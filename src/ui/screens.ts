@@ -4,7 +4,7 @@ const screens = preval`
   const resolveConfig = require('tailwindcss/resolveConfig')
   const config = resolveConfig(require('../../tailwind.config'))
   module.exports = config.theme.screens
-`
+` as Record<string, string>
 
 export const screenQueries = {
   small: `(max-width: ${screens.md})`,

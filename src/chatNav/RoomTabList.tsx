@@ -27,7 +27,7 @@ function RoomTabList() {
     <ChannelRoomTab key={channel.id} channel={channel} />
   ))
 
-  return [privateChatTabs, channelTabs] as any
+  return <>{[privateChatTabs, channelTabs]}</>
 }
 
 export default RoomTabList

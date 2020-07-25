@@ -4,7 +4,7 @@ const openTagExpression = /^\[([a-z]+?)(?:=([^\]]+))?\]/i
 const closeTagExpression = /^\[\/([a-z]+?)\]/i
 
 function matchAt(input: string, expression: RegExp, position: number) {
-  return input.slice(position).match(expression)
+  return expression.exec(input.slice(position))
 }
 
 function captureOpenTag(

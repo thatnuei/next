@@ -20,7 +20,7 @@ export class ChannelBrowserStore {
     socket.commands.subscribe(this.handleCommand)
 
     this.isVisible.onChange((isVisible) => {
-      if (isVisible) this.refresh()
+      if (isVisible) this.refresh().catch(console.error)
     })
   }
 
@@ -46,7 +46,7 @@ export class ChannelBrowserStore {
 
   handleCommand = createBoundCommandHandler(this, {
     IDN() {
-      this.refresh()
+      this.refresh().catch(console.error)
     },
 
     CHA({ channels }) {

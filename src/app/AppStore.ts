@@ -39,7 +39,7 @@ export class AppStore {
 
   setIdentity(identity: string, account: string) {
     this.identity.set(identity)
-    storedIdentity(account).set(identity)
+    storedIdentity(account).set(identity).catch(console.error)
   }
 
   showLogin() {

@@ -1,18 +1,18 @@
 import { raise } from "../helpers/common/raise"
 
-type ValidatorResult<T> = { type: "valid" } | { type: "invalid"; error: string }
+type ValidatorResult = { type: "valid" } | { type: "invalid"; error: string }
 
-type ValidateFn<T> = (value: unknown) => ValidatorResult<T>
+type ValidateFn = (value: unknown) => ValidatorResult
 
 export type Validator<T = unknown> = {
-  validate: ValidateFn<T>
+  validate: ValidateFn
   parse: (value: unknown) => T
   is: (value: unknown) => value is T
 }
 
 export type ValidatorType<V> = V extends Validator<infer T> ? T : never
 
-const createValidator = <T>(validate: ValidateFn<T>): Validator<T> => ({
+const createValidator = <T>(validate: ValidateFn): Validator<T> => ({
   validate,
 
   parse: (value) => {
@@ -124,6 +124,7 @@ export const shape = <S extends Record<string, Validator>>(
     const errors: string[] = []
 
     for (const [shapeKey, validator] of Object.entries(shape)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const value = (maybeObject as any)[shapeKey]
       const result = validator.validate(value)
       if (result.type === "invalid") {

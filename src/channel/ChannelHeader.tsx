@@ -93,21 +93,34 @@ function ChannelHeader({
             css={tw`px-3 py-2 bg-background-0 mb-gap`}
           />
         )}
-        <div css={tw`flex flex-col bg-background-1`} onClick={menu.hide}>
+        <div css={tw`flex flex-col bg-background-1`}>
           <MenuItem
             text="Copy code"
             icon={icons.code}
             onClick={() => {
-              window.navigator.clipboard.writeText(channel.linkCode.get())
+              window.navigator.clipboard
+                .writeText(channel.linkCode.get())
+                .catch(console.error)
+              menu.hide()
             }}
           />
           <MenuItem
             text="Clear messages"
             icon={icons.clearMessages}
-            onClick={channel.clearMessages}
+            onClick={() => {
+              channel.clearMessages()
+              menu.hide()
+            }}
           />
           {shouldShowInviteOption && (
-            <MenuItem text="Invite" icon={icons.invite} onClick={invite.show} />
+            <MenuItem
+              text="Invite"
+              icon={icons.invite}
+              onClick={() => {
+                invite.show()
+                menu.hide()
+              }}
+            />
           )}
         </div>
       </Popover>
