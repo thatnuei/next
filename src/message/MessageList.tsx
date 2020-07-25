@@ -15,10 +15,10 @@ function MessageList({ messages, ...props }: Props) {
   useBottomScroll(container, messages[messages.length - 1])
 
   return (
-    <ol css={[scrollVertical]} ref={setContainer} {...props}>
+    <ol css={[scrollVertical, tw`space-y-px2`]} ref={setContainer} {...props}>
       {messages.map((message) => (
         <li key={message.key}>
-          <MessageListItem message={message} css={tw`mb-px2`} />
+          <MessageListItem message={message} />
         </li>
       ))}
     </ol>
