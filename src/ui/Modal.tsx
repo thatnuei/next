@@ -1,26 +1,28 @@
 import { css } from "@emotion/react"
+import { motion } from "framer-motion"
 import React, { MouseEvent } from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
 import Portal from "../react/Portal"
+import { fadeAnimation, slideAnimation } from "./animation"
 import {
   fadedButton,
   headerText,
   raisedPanel,
   raisedPanelHeader,
 } from "./components"
-import { absoluteCover, fixedCover, transition } from "./helpers"
+import { absoluteCover, fixedCover } from "./helpers"
 import Icon from "./Icon"
 import { close } from "./icons"
-import { OverlayProps } from "./overlay"
 
-type Props = OverlayProps & {
+type Props = {
   title: string
   width: number | string
   height: number | string
   fillMode?: "fullscreen" | "contained"
   verticalPanelAlign?: "top" | "middle"
   children?: React.ReactNode
+  onDismiss: () => void
 }
 
 function Modal({
@@ -42,19 +44,13 @@ function Modal({
 
     fillMode === "contained" && absoluteCover,
     fillMode === "fullscreen" && fixedCover,
-
-    props.isVisible ? tw`visible opacity-100` : tw`invisible opacity-0`,
-    transition,
-    tw`transition-all`,
   ]
 
   const panelStyle = [
     raisedPanel,
     tw`flex flex-col w-full h-full`,
-    props.isVisible ? undefined : tw`transform translate-y-4`,
     css({ maxWidth: props.width }),
     css({ maxHeight: props.height }),
-    transition,
   ]
 
   const closeButtonStyle = [
@@ -63,8 +59,12 @@ function Modal({
   ]
 
   const content = (
-    <div css={shadeStyle} onPointerDown={handleShadeClick}>
-      <div css={panelStyle}>
+    <motion.div
+      css={shadeStyle}
+      onPointerDown={handleShadeClick}
+      {...fadeAnimation}
+    >
+      <motion.div css={panelStyle} {...slideAnimation}>
         <header css={[raisedPanelHeader, tw`relative px-16 text-center`]}>
           <h1 css={headerText}>{props.title}</h1>
           <Button css={closeButtonStyle} onClick={props.onDismiss}>
@@ -72,8 +72,8 @@ function Modal({
           </Button>
         </header>
         <main css={tw`flex-1 min-h-0`}>{props.children}</main>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 
   return fillMode === "fullscreen" ? <Portal>{content}</Portal> : content

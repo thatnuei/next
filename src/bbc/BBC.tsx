@@ -6,6 +6,7 @@ import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import ExternalLink from "../dom/ExternalLink"
 import { getIconUrl } from "../flist/helpers"
+import { memoize } from "../helpers/common/memoize"
 import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -14,8 +15,10 @@ import { Node } from "./types"
 
 type Props = { text: string }
 
+const createBbcTreeMemoized = memoize(createBbcTree)
+
 function BBC({ text }: Props) {
-  const nodes = createBbcTree(text)
+  const nodes = createBbcTreeMemoized(text)
   return <BBCTree nodes={nodes} />
 }
 

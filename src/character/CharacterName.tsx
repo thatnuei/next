@@ -30,4 +30,4 @@ function CharacterName({ name, ...props }: Props) {
   )
 }
 
-export default CharacterName
+export default React.memo(CharacterName)

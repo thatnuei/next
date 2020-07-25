@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { useObservable } from "micro-observables"
-import React from "react"
+import React, { useMemo } from "react"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
@@ -9,7 +9,6 @@ import ChatNav from "../chatNav/ChatNav"
 import { useChatNavView } from "../chatNav/helpers"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import PrivateChatView from "../privateChat/PrivateChatView"
-import Scope from "../react/Scope"
 import { useRootStore } from "../root/context"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import { fadeAnimation } from "../ui/animation"
@@ -22,17 +21,24 @@ import NoRoomView from "./NoRoomView"
 export default function Chat() {
   const root = useRootStore()
   const isSideMenuVisible = useObservable(root.isSideMenuVisible)
+  const isChannelBrowserVisible = useObservable(
+    root.channelBrowserStore.isVisible,
+  )
   const isSmallScreen = useMediaQuery(screenQueries.small)
+  const isStatusUpdateVisible = useObservable(root.statusUpdateStore.isVisible)
+
+  const chatRoomView = useMemo(() => <ChatRoomView />, [])
 
   return (
     <motion.div css={[fixedCover, tw`flex`]} {...fadeAnimation}>
       {!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
 
-      <ChatRoomView />
+      {chatRoomView}
 
       <AnimatePresence>
         {isSideMenuVisible && isSmallScreen && (
           <Drawer
+            key="sideMenu"
             side="left"
             onDismiss={() => root.isSideMenuVisible.set(false)}
           >
@@ -42,42 +48,29 @@ export default function Chat() {
             />
           </Drawer>
         )}
+
+        {isChannelBrowserVisible && (
+          <Modal
+            key="channelBrowser"
+            onDismiss={root.channelBrowserStore.hide}
+            title="Channels"
+            width={480}
+            height={720}
+            children={<ChannelBrowser />}
+          />
+        )}
+
+        {isStatusUpdateVisible && (
+          <Modal
+            key="statusUpdate"
+            onDismiss={root.statusUpdateStore.hide}
+            title="Update Your Status"
+            width={480}
+            height={360}
+            children={<StatusUpdateForm />}
+          />
+        )}
       </AnimatePresence>
-
-      <Scope>
-        {function useScope() {
-          const isChannelBrowserVisible = useObservable(
-            root.channelBrowserStore.isVisible,
-          )
-
-          return (
-            <Modal
-              isVisible={isChannelBrowserVisible}
-              onDismiss={root.channelBrowserStore.hide}
-              title="Channels"
-              width={480}
-              height={720}
-              children={<ChannelBrowser />}
-            />
-          )
-        }}
-      </Scope>
-
-      <Scope>
-        {function useScope() {
-          const isVisible = useObservable(root.statusUpdateStore.isVisible)
-          return (
-            <Modal
-              isVisible={isVisible}
-              onDismiss={root.statusUpdateStore.hide}
-              title="Update Your Status"
-              width={480}
-              height={360}
-              children={<StatusUpdateForm />}
-            />
-          )
-        }}
-      </Scope>
 
       <CharacterMenu />
     </motion.div>

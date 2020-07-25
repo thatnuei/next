@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion"
 import { useObservable } from "micro-observables"
 import React from "react"
 import tw from "twin.macro"
@@ -111,14 +112,18 @@ function ChannelHeader({
         </div>
       </Popover>
 
-      <Modal
-        {...invite.props}
-        title={`Invite to ${title}`}
-        width={400}
-        height={700}
-      >
-        <InviteUsersForm channelId={channelId} />
-      </Modal>
+      <AnimatePresence>
+        {invite.value && (
+          <Modal
+            onDismiss={invite.hide}
+            title={`Invite to ${title}`}
+            width={400}
+            height={700}
+          >
+            <InviteUsersForm channelId={channelId} />
+          </Modal>
+        )}
+      </AnimatePresence>
     </header>
   )
 }

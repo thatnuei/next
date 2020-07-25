@@ -3,6 +3,7 @@ import React, { useRef } from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
 import * as icons from "../ui/icons"
+import { fadeAnimation } from "./animation"
 import { fadedButton } from "./components"
 import { fixedCover } from "./helpers"
 import Icon from "./Icon"
@@ -23,11 +24,6 @@ function Drawer({ isVisible, onDismiss, side, children }: Props) {
   }
 
   const shadeStyle = [fixedCover, tw`bg-black-faded`]
-
-  const shadeVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  }
 
   const contentContainerStyle = [
     tw`absolute top-0 bottom-0 flex items-start`,
@@ -58,14 +54,7 @@ function Drawer({ isVisible, onDismiss, side, children }: Props) {
   )
 
   return (
-    <motion.div
-      css={shadeStyle}
-      onClick={handleShadeClick}
-      variants={shadeVariants}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-    >
+    <motion.div css={shadeStyle} onClick={handleShadeClick} {...fadeAnimation}>
       <motion.div
         css={contentContainerStyle}
         variants={panelVariants}
