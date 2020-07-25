@@ -1,8 +1,8 @@
 import React from "react"
 import tw from "twin.macro"
+import { useIdentity } from "../app/helpers"
 import Button from "../dom/Button"
 import { input, solidButton } from "../ui/components"
-import { useChatCredentials } from "./helpers"
 
 type Props = {
   value: string
@@ -11,7 +11,7 @@ type Props = {
 }
 
 function ChatInput(props: Props) {
-  const { identity } = useChatCredentials()
+  const identity = useIdentity()
 
   function submit() {
     props.onSubmit(props.value)

@@ -1,4 +1,4 @@
-import { useChatCredentials } from "../chat/helpers"
+import { useIdentity } from "../app/helpers"
 import { useRootStore } from "../root/context"
 
 export function useCharacter(name: string) {
@@ -7,6 +7,5 @@ export function useCharacter(name: string) {
 }
 
 export function useIdentityCharacter() {
-  const { identity } = useChatCredentials()
-  return useCharacter(identity)
+  return useCharacter(useIdentity())
 }
