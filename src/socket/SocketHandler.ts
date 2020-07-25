@@ -34,8 +34,8 @@ export class SocketHandler {
   }
 
   private get isOffline() {
-    const offlineStatuses: SocketStatus[] = ["idle", "closed", "error"]
-    return offlineStatuses.includes(this.status.get())
+    const statuses: SocketStatus[] = ["idle", "closed", "error"]
+    return statuses.includes(this.status.get())
   }
 
   connect({ account, ticket, identity, onDisconnect }: ConnectOptions) {
