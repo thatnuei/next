@@ -3,7 +3,7 @@ import { observable } from "micro-observables"
 import { AppStore } from "../app/AppStore"
 import { UserStore } from "../app/UserStore"
 import { memoize } from "../helpers/common/memoize"
-import { createBoundCommandHandler } from "../socket/commandHelpers"
+import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
 import { CharacterModel } from "./CharacterModel"
 
@@ -23,7 +23,7 @@ export class CharacterStore {
     private readonly userStore: UserStore,
     private readonly appStore: AppStore,
   ) {
-    socket.commandStream.listen(this.handleCommand)
+    socket.commands.subscribe(this.handleCommand)
   }
 
   private getCharacterById = memoize((id: string, name: string) => {

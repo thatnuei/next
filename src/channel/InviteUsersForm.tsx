@@ -5,7 +5,6 @@ import tw from "twin.macro"
 import { CharacterModel } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
 import { useRootStore } from "../root/context"
-import { useSocket } from "../socket/socketContext"
 import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -17,7 +16,6 @@ type Props = { channelId: string }
 // do that later
 function InviteUsersForm({ channelId }: Props) {
   const root = useRootStore()
-  const socket = useSocket()
 
   // const [searchInput, setSearchInput] = useState("")
 
@@ -66,7 +64,7 @@ function InviteUsersForm({ channelId }: Props) {
 
   const sendInvite = (name: string) => {
     // untested lol!
-    socket.send({
+    root.socket.send({
       type: "CIU",
       params: { channel: channelId, character: name },
     })

@@ -8,7 +8,7 @@ import {
   createChannelMessage,
   createSystemMessage,
 } from "../message/MessageState"
-import { createBoundCommandHandler } from "../socket/commandHelpers"
+import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
 import { ChannelModel } from "./ChannelModel"
 import { loadChannels, saveChannels } from "./storage"
@@ -21,7 +21,7 @@ export class ChannelStore {
     private readonly userData: Observable<UserData>,
     private readonly identity: Observable<string>,
   ) {
-    socket.commandStream.listen(this.handleCommand)
+    socket.commands.subscribe(this.handleCommand)
 
     this.joinedChannelIds.onChange((ids) => {
       saveChannels(ids, userData.get().account, identity.get())

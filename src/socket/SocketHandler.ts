@@ -1,12 +1,12 @@
 import { observable } from "micro-observables"
 import { autobind } from "../helpers/common/autobind"
-import { Stream } from "../state/stream"
+import { PubSub } from "../state/pubsub"
 import {
   ClientCommand,
   createCommandString,
   parseServerCommand,
   ServerCommand,
-} from "./commandHelpers"
+} from "./helpers"
 
 type ConnectOptions = {
   account: string
@@ -24,10 +24,8 @@ export type SocketStatus =
   | "error"
 
 export class SocketHandler {
-  disconnectStream = new Stream()
-  commandStream = new Stream<ServerCommand>()
-
   status = observable<SocketStatus>("idle")
+  commands = new PubSub<ServerCommand>()
 
   private socket?: WebSocket
 
@@ -93,7 +91,7 @@ export class SocketHandler {
         console.warn("Socket error", command.params.message)
       }
 
-      this.commandStream.send(command)
+      this.commands.publish(command)
     }
   }
 

@@ -2,7 +2,7 @@ import { observable } from "micro-observables"
 import { AppStore } from "../app/AppStore"
 import { CharacterStatus } from "../character/CharacterModel"
 import { delay } from "../helpers/common/delay"
-import { createBoundCommandHandler } from "../socket/commandHelpers"
+import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
 
 export class StatusUpdateStore {
@@ -14,7 +14,7 @@ export class StatusUpdateStore {
     private readonly socket: SocketHandler,
     private readonly appStore: AppStore,
   ) {
-    socket.commandStream.listen(this.handleCommand)
+    socket.commands.subscribe(this.handleCommand)
   }
 
   show = () => this.isVisible.set(true)

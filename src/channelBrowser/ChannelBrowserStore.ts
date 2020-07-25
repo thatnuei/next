@@ -1,6 +1,6 @@
 import { observable } from "micro-observables"
 import { delay } from "../helpers/common/delay"
-import { createBoundCommandHandler } from "../socket/commandHelpers"
+import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
 
 export type ChannelBrowserChannel = {
@@ -17,7 +17,7 @@ export class ChannelBrowserStore {
   readonly privateChannels = observable<ChannelBrowserChannel[]>([])
 
   constructor(private readonly socket: SocketHandler) {
-    socket.commandStream.listen(this.handleCommand)
+    socket.commands.subscribe(this.handleCommand)
 
     this.isVisible.onChange((isVisible) => {
       if (isVisible) this.refresh()

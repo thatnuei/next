@@ -1,7 +1,7 @@
 import { observable } from "micro-observables"
 import { ChannelStore } from "../channel/ChannelStore"
 import { PrivateChatStore } from "../privateChat/PrivateChatStore"
-import { createBoundCommandHandler } from "../socket/commandHelpers"
+import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
 
 type ChatNavView = {
@@ -18,7 +18,7 @@ export class ChatNavStore {
     private readonly channelStore: ChannelStore,
     private readonly privateChatStore: PrivateChatStore,
   ) {
-    this.socket.commandStream.listen(this.handleCommand)
+    this.socket.commands.subscribe(this.handleCommand)
   }
 
   showChannel = (channelId: string) => {

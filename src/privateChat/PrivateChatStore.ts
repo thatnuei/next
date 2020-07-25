@@ -3,7 +3,7 @@ import { observable, Observable } from "micro-observables"
 import { factoryFrom } from "../helpers/common/factoryFrom"
 import { memoize } from "../helpers/common/memoize"
 import { createPrivateMessage } from "../message/MessageState"
-import { createBoundCommandHandler } from "../socket/commandHelpers"
+import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
 import { PrivateChatModel } from "./PrivateChatModel"
 import { restorePrivateChats, savePrivateChats } from "./storage"
@@ -13,7 +13,7 @@ export class PrivateChatStore {
     private readonly socket: SocketHandler,
     private readonly identity: Observable<string>,
   ) {
-    socket.commandStream.listen(this.handleCommand)
+    socket.commands.subscribe(this.handleCommand)
 
     this.openChatNames.onChange((names) => {
       savePrivateChats(identity.get(), names)
