@@ -1,7 +1,7 @@
-import { observable } from "micro-observables"
 import { delay } from "../helpers/common/delay"
 import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
+import { Repository } from "../state/repository"
 
 export type ChannelBrowserChannel = {
   id: string
@@ -11,12 +11,23 @@ export type ChannelBrowserChannel = {
 }
 
 export class ChannelBrowserStore {
-  readonly isVisible = observable(false)
-  readonly isRefreshing = observable(false)
-  readonly publicChannels = observable<ChannelBrowserChannel[]>([])
-  readonly privateChannels = observable<ChannelBrowserChannel[]>([])
+  private readonly state = this.repo.namespace("channelBrowser")
 
-  constructor(private readonly socket: SocketHandler) {
+  readonly isVisible = this.state("isVisible", false)
+  readonly isRefreshing = this.state("isRefreshing", false)
+  readonly publicChannels = this.state<ChannelBrowserChannel[]>(
+    "publicChannels",
+    [],
+  )
+  readonly privateChannels = this.state<ChannelBrowserChannel[]>(
+    "privateChannels",
+    [],
+  )
+
+  constructor(
+    private readonly repo: Repository,
+    private readonly socket: SocketHandler,
+  ) {
     socket.commands.subscribe(this.handleCommand)
 
     this.isVisible.onChange((isVisible) => {

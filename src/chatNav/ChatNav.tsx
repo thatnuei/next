@@ -1,6 +1,7 @@
 import { useObservable } from "micro-observables"
 import React from "react"
 import tw from "twin.macro"
+import { useChannelBrowserStore } from "../channelBrowser/helpers"
 import CharacterSummary from "../character/CharacterSummary"
 import Button from "../dom/Button"
 import { ComponentProps, TagProps } from "../jsx/types"
@@ -13,13 +14,15 @@ import RoomTabList from "./RoomTabList"
 export default function ChatNav(props: TagProps<"nav">) {
   const root = useRootStore()
   const identity = useObservable(root.appStore.identity)
+  const channelBrowserStore = useChannelBrowserStore()
+
   return (
     <nav css={tw`flex`} {...props}>
       <div css={tw`flex flex-col`}>
         <NavAction
           icon={icons.list}
           title="Browse channels"
-          onClick={root.channelBrowserStore.show}
+          onClick={channelBrowserStore.show}
         />
         <NavAction
           icon={icons.updateStatus}

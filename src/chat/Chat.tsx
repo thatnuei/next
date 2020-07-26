@@ -4,6 +4,7 @@ import React, { useMemo } from "react"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
+import { useChannelBrowserStore } from "../channelBrowser/helpers"
 import CharacterMenu from "../character/CharacterMenu"
 import ChatNav from "../chatNav/ChatNav"
 import { useChatNavView } from "../chatNav/helpers"
@@ -20,11 +21,10 @@ import NoRoomView from "./NoRoomView"
 
 export default function Chat() {
   const root = useRootStore()
+  const channelBrowserStore = useChannelBrowserStore()
 
   const isSideMenuVisible = useObservable(root.chatNavStore.sideMenu.isVisible)
-  const isChannelBrowserVisible = useObservable(
-    root.channelBrowserStore.isVisible,
-  )
+  const isChannelBrowserVisible = useObservable(channelBrowserStore.isVisible)
   const isStatusUpdateVisible = useObservable(root.statusUpdateStore.isVisible)
   const isSmallScreen = useMediaQuery(screenQueries.small)
   const chatRoomView = useMemo(() => <ChatRoomView />, [])
@@ -49,7 +49,7 @@ export default function Chat() {
         {isChannelBrowserVisible && (
           <Modal
             key="channelBrowser"
-            onDismiss={root.channelBrowserStore.hide}
+            onDismiss={channelBrowserStore.hide}
             title="Channels"
             width={480}
             height={720}

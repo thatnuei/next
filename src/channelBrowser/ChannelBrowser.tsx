@@ -5,7 +5,6 @@ import React, { useState } from "react"
 import tw from "twin.macro"
 import Button from "../dom/Button"
 import { TagProps } from "../jsx/types"
-import { useRootStore } from "../root/context"
 import { input, solidButton } from "../ui/components"
 import { scrollVertical } from "../ui/helpers"
 import Icon from "../ui/Icon"
@@ -13,17 +12,15 @@ import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
 import { ChannelBrowserChannel } from "./ChannelBrowserStore"
+import { useChannelBrowserStore } from "./helpers"
 
 type Props = TagProps<"div">
 
 function ChannelBrowser(props: Props) {
-  const root = useRootStore()
-
-  const publicChannels = useObservable(root.channelBrowserStore.publicChannels)
-  const privateChannels = useObservable(
-    root.channelBrowserStore.privateChannels,
-  )
-  const isRefreshing = useObservable(root.channelBrowserStore.isRefreshing)
+  const channelBrowserStore = useChannelBrowserStore()
+  const publicChannels = useObservable(channelBrowserStore.publicChannels)
+  const privateChannels = useObservable(channelBrowserStore.privateChannels)
+  const isRefreshing = useObservable(channelBrowserStore.isRefreshing)
 
   const [query, setQuery] = useState("")
   const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
@@ -83,7 +80,7 @@ function ChannelBrowser(props: Props) {
         <Button
           title="Refresh"
           css={[solidButton, tw`ml-2`]}
-          onClick={root.channelBrowserStore.refresh}
+          onClick={channelBrowserStore.refresh}
           disabled={isRefreshing}
         >
           <Icon which={icons.refresh} />

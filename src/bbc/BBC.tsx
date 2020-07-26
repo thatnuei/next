@@ -1,6 +1,7 @@
 import { Observable, useObservable } from "micro-observables"
 import React, { CSSProperties, Fragment, PropsWithChildren } from "react"
 import tw from "twin.macro"
+import { useChannelBrowserStore } from "../channelBrowser/helpers"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
@@ -190,11 +191,12 @@ function BBCChannelLink({
   type: "public" | "private"
 }>) {
   const root = useRootStore()
+  const channelBrowserStore = useChannelBrowserStore()
 
   const channels = useObservable(
     Observable.from(
-      root.channelBrowserStore.publicChannels,
-      root.channelBrowserStore.privateChannels,
+      channelBrowserStore.publicChannels,
+      channelBrowserStore.privateChannels,
     ).transform((lists) => lists.flat()),
   )
 
