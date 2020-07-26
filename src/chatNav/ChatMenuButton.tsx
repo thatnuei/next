@@ -18,7 +18,7 @@ function ChatMenuButton(props: Props) {
     <Button
       title="Show side menu"
       css={fadedButton}
-      onClick={() => root.isSideMenuVisible.set(true)}
+      onClick={root.chatNavStore.sideMenu.show}
       {...props}
     >
       <Icon which={icons.menu} />
