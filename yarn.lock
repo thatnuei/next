@@ -3138,13 +3138,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/anymatch@npm:*":
-  version: 1.3.1
-  resolution: "@types/anymatch@npm:1.3.1"
-  checksum: 1647865e528a168f66f57a077e9651c10a4c172b656cc3686fddf176555d42ca0a1647bfc626ea2fceb68fc7701426ab708224be1762b4a5216fe8368ffdba3c
-  languageName: node
-  linkType: hard
-
 "@types/aria-query@npm:^4.2.0":
   version: 4.2.0
   resolution: "@types/aria-query@npm:4.2.0"
@@ -3197,6 +3190,15 @@ __metadata:
   version: 1.1.1
   resolution: "@types/color-name@npm:1.1.1"
   checksum: 8311db94a9c4ecd247763b81e783ee49d87678b4ce6a7ee502e2bd5cea242b7357804a04855db009f713174bc654cc0c01c7303d40d757e5d710f5ac0368500f
+  languageName: node
+  linkType: hard
+
+"@types/connect@npm:*":
+  version: 3.4.33
+  resolution: "@types/connect@npm:3.4.33"
+  dependencies:
+    "@types/node": "*"
+  checksum: 6414495b5995fcb8274feb8b1f113c0685160ea7781e75c638325c6e7a0c226d0c554fa622fe3d278470358c99f68a5994fe49e1b104736f76f3fb3b509e375f
   languageName: node
   linkType: hard
 
@@ -3354,22 +3356,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/recoil@npm:0.0.1":
-  version: 0.0.1
-  resolution: "@types/recoil@npm:0.0.1"
-  dependencies:
-    "@types/react": "*"
-  checksum: c8084febc0cba89abb8c53b6203a71077745e73fe2567d7c2f5add70a92c5854dd75bebb110a6106c5bf0ca6cc2c05c8941a63acecccc05446f70e4903fef4ae
-  languageName: node
-  linkType: hard
-
-"@types/source-list-map@npm:*":
-  version: 0.1.2
-  resolution: "@types/source-list-map@npm:0.1.2"
-  checksum: 191f0e3b056b481e7a0bbb38f3d5b54b015556e38075726ca2637a35d3694df85cd16761b1b188729ac687a55aec3cbc2b07033ac090bcc13efe09ad10a3e935
-  languageName: node
-  linkType: hard
-
 "@types/stack-utils@npm:^1.0.1":
   version: 1.0.1
   resolution: "@types/stack-utils@npm:1.0.1"
@@ -3418,28 +3404,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack-sources@npm:*":
-  version: 1.4.1
-  resolution: "@types/webpack-sources@npm:1.4.1"
+"@types/webpack-hot-middleware@npm:^2":
+  version: 2.25.3
+  resolution: "@types/webpack-hot-middleware@npm:2.25.3"
   dependencies:
-    "@types/node": "*"
-    "@types/source-list-map": "*"
-    source-map: ^0.7.3
-  checksum: ee05f8d8550457dc401729958b184cb480c8a18ed60bd49befa7b9e42459e8995edfaf6c167f7959ac2cf84cb52a6ba88560800ff3fa317f340369959e7b838a
+    "@types/connect": "*"
+    "@types/webpack": "*"
+  checksum: e600c846aeef03450bd5a39944f1f775b36d339d89e084fa68815ba7443ede179fba5168fbc419c16884d852c889a7bb7520df01095d6622ef536fcefbfc9b05
   languageName: node
   linkType: hard
 
-"@types/webpack@npm:4.41.21":
-  version: 4.41.21
-  resolution: "@types/webpack@npm:4.41.21"
+"@types/webpack@npm:*, @types/webpack@npm:4.1.4":
+  version: 4.1.4
+  resolution: "@types/webpack@npm:4.1.4"
   dependencies:
-    "@types/anymatch": "*"
     "@types/node": "*"
     "@types/tapable": "*"
     "@types/uglify-js": "*"
-    "@types/webpack-sources": "*"
     source-map: ^0.6.0
-  checksum: 3a02667221be2d8ecdb2da8d78e74dbc6ef216a4f0c636017e9dbe243198ed80a258e0c9f9e0613eea76efe77b5293f6f052dee4d26adc3dd54e56f38a2031f2
+  checksum: 1f557bf2187c97ea5cf86e5a7c9e46fdc18732e32f97a43c23f0886b020f3af33da6d0147ff695aa1cd2c6198ef41ec53bd911bad3a6850979e91f9369a22087
   languageName: node
   linkType: hard
 
@@ -11910,14 +11893,13 @@ fsevents@~2.1.2:
     "@types/react": 16.9.43
     "@types/react-dom": 16.9.8
     "@types/react-window": 1.8.2
-    "@types/recoil": 0.0.1
     "@types/testing-library__jest-dom": 5.9.1
     "@types/testing-library__react": 10.2.0
-    "@types/webpack": 4.41.21
+    "@types/webpack": 4.1.4
     "@types/webpack-env": 1.15.2
+    "@types/webpack-hot-middleware": ^2
     "@typescript-eslint/eslint-plugin": 3.7.0
     "@typescript-eslint/parser": 3.7.0
-    babel-eslint: 10.1.0
     babel-loader: 8.1.0
     babel-plugin-lodash: 3.3.4
     eslint: 7.5.0
