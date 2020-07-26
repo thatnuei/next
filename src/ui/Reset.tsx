@@ -1,6 +1,5 @@
 import { Global } from "@emotion/react"
 import React from "react"
-import "tailwindcss/dist/base.css"
 import tw from "twin.macro"
 
 export default function Reset() {
