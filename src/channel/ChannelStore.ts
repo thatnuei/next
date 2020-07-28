@@ -83,7 +83,7 @@ export class ChannelStore {
 
     LCH({ channel: id, character }) {
       if (character === this.identity.get()) {
-        this.joinedChannelIds.update(flow(concat(id), uniq))
+        this.joinedChannelIds.update(without([id]))
       }
 
       const channel = this.getChannel(id)

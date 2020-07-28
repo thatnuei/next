@@ -20,13 +20,13 @@ import NoRoomView from "./NoRoomView"
 
 export default function Chat() {
   const root = useRootStore()
-  const isSideMenuVisible = useObservable(root.isSideMenuVisible)
+
+  const isSideMenuVisible = useObservable(root.chatNavStore.sideMenu.isVisible)
   const isChannelBrowserVisible = useObservable(
     root.channelBrowserStore.isVisible,
   )
-  const isSmallScreen = useMediaQuery(screenQueries.small)
   const isStatusUpdateVisible = useObservable(root.statusUpdateStore.isVisible)
-
+  const isSmallScreen = useMediaQuery(screenQueries.small)
   const chatRoomView = useMemo(() => <ChatRoomView />, [])
 
   return (
@@ -36,16 +36,13 @@ export default function Chat() {
       {chatRoomView}
 
       <AnimatePresence>
-        {isSideMenuVisible && isSmallScreen && (
+        {isSmallScreen && isSideMenuVisible && (
           <Drawer
             key="sideMenu"
             side="left"
-            onDismiss={() => root.isSideMenuVisible.set(false)}
+            onDismiss={root.chatNavStore.sideMenu.hide}
           >
-            <ChatNav
-              css={tw`h-full bg-background-2`}
-              onClick={() => root.isSideMenuVisible.set(false)}
-            />
+            <ChatNav css={tw`h-full bg-background-2`} />
           </Drawer>
         )}
 
