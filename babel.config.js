@@ -1,9 +1,7 @@
 module.exports = {
+  extends: "@snowpack/app-scripts-react/babel.config.json",
   presets: [
-    ["@babel/env", { modules: false }],
-    "@babel/react",
-    "@babel/typescript",
-    ["@emotion/css-prop", { autoLabel: "never" }], // autoLabel breaks css prop overrides
+    ["@emotion/babel-preset-css-prop", { autoLabel: "never" }], // autoLabel breaks css prop overrides
   ],
-  plugins: ["@babel/proposal-class-properties", "lodash", "macros"],
+  plugins: ["babel-plugin-lodash", "babel-plugin-macros"],
 }

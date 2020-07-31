@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useState,
 } from "react"
+import "tailwindcss/dist/base.css"
 
 const midnight = rgb(38, 65, 94)
 const clouds = rgb(236, 240, 241)
