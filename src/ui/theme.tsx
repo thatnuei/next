@@ -1,5 +1,5 @@
 import { Global } from "@emotion/react"
-import { rgb, shade } from "polished"
+import { shade } from "polished"
 import React, {
   createContext,
   PropsWithChildren,
@@ -7,11 +7,10 @@ import React, {
   useMemo,
   useState,
 } from "react"
+import { theme } from "twin.macro"
 
-const midnight = rgb(38, 65, 94)
-const clouds = rgb(236, 240, 241)
-// const emerald = rgb(46, 204, 113)
-// const tomato = rgb(231, 76, 60)
+const midnight = (theme`colors.black` as unknown) as string
+const clouds = (theme`colors.white` as unknown) as string
 
 const themes = {
   midnight: {
