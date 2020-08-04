@@ -12,8 +12,8 @@ const babelTransform = (options: TransformOptions = {}): Transform => ({
       ...options,
     })
 
-    if (result.code) {
-      return { code: result.code, map: result.map }
+    if (result && result.code) {
+      return { code: result.code, map: result.map || undefined }
     }
 
     return code
@@ -23,9 +23,19 @@ const babelTransform = (options: TransformOptions = {}): Transform => ({
 const config: UserConfig = {
   jsx: "react",
   plugins: [reactPlugin],
+  outDir: "build",
 
   optimizeDeps: {
-    include: ["lodash/fp", "micro-observables/batchingForReactDom"],
+    include: [
+      "lodash/fp",
+      "micro-observables/batchingForReactDom",
+      "hoist-non-react-statics",
+    ],
+  },
+
+  alias: {
+    "react": "preact/compat",
+    "react-dom": "preact/compat",
   },
 
   transforms: [

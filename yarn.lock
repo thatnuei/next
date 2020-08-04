@@ -523,22 +523,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pika/react-dom@npm:16.13.1":
-  version: 16.13.1
-  resolution: "@pika/react-dom@npm:16.13.1"
-  peerDependencies:
-    react: ^16.0.0
-  checksum: 8e56b76c134205a9c4aa3ac12da046378ffb85b0c54004a46c93eee131bd0517f53bc37edbec6f69fb4e63dba23339a60fdb5d7e19d33348f2c90920d9c2c37b
-  languageName: node
-  linkType: hard
-
-"@pika/react@npm:16.13.1":
-  version: 16.13.1
-  resolution: "@pika/react@npm:16.13.1"
-  checksum: 87e24c399d2cce925c725a87f30589b7cc7ce868b8cd65f351cc130b5d67732cc59c57df36f2c66b296c23cc725b7e8c2f73212b7382867ed343eb1f5e7e04f1
-  languageName: node
-  linkType: hard
-
 "@popmotion/easing@npm:^1.0.1, @popmotion/easing@npm:^1.0.2":
   version: 1.0.2
   resolution: "@popmotion/easing@npm:1.0.2"
@@ -4977,8 +4961,6 @@ fsevents@~2.1.2:
     "@emotion/babel-preset-css-prop": 11.0.0-next.10
     "@emotion/react": 11.0.0-next.14
     "@mdi/js": 5.4.55
-    "@pika/react": 16.13.1
-    "@pika/react-dom": 16.13.1
     "@testing-library/jest-dom": 5.11.2
     "@testing-library/react": 10.4.7
     "@types/babel__core": ^7
@@ -5009,6 +4991,7 @@ fsevents@~2.1.2:
     micro-observables: 1.4.0
     npm-run-all: 4.1.5
     polished: 3.6.5
+    preact: 10.4.6
     prettier: 2.0.5
     preval.macro: 5.0.0
     react-focus-on: 3.4.1
@@ -5780,6 +5763,13 @@ fsevents@~2.1.2:
     source-map: ^0.6.1
     supports-color: ^5.4.0
   checksum: 9b61abdfb366491debc6a633ba3703ae43c674b6c1c64def54e131c8ec01862fc95b3271bde221db805389fc76c3b3f1447b5a9c1d0b332c53cfcc9bfe1b1fa6
+  languageName: node
+  linkType: hard
+
+"preact@npm:10.4.6":
+  version: 10.4.6
+  resolution: "preact@npm:10.4.6"
+  checksum: 15f4e2b8b5940c56cca29a3b2514c1669fc74bafc2b0713c772cd57484206eb425f302d914a405b0e3b4906f52a5684a2c4f481052791397c57071f776e65c65
   languageName: node
   linkType: hard
 
