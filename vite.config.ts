@@ -21,9 +21,10 @@ const babelTransform = (options: TransformOptions = {}): Transform => ({
 })
 
 const config: UserConfig = {
-  jsx: "react",
+  enableEsbuild: false,
   plugins: [reactPlugin],
   outDir: "build",
+  minify: "esbuild", // terser breaks on things
 
   optimizeDeps: {
     include: [
@@ -41,6 +42,9 @@ const config: UserConfig = {
   transforms: [
     babelTransform({
       presets: [
+        ["@babel/preset-env", { modules: false }],
+        "@babel/preset-react",
+        "@babel/preset-typescript",
         ["@emotion/babel-preset-css-prop", { autoLabel: "never" }], // autoLabel breaks css prop overrides
       ],
       plugins: ["babel-plugin-macros"],
