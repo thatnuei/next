@@ -18,5 +18,5 @@
     "experimentalDecorators": true,
     "noUnusedLocals": true
   },
-  "include": ["src", "types", ".eslintrc.js", "./*.js"]
+  "include": ["src", "types", ".eslintrc.js", "./*.js", "vite.config.ts"]
 }
