@@ -5,7 +5,7 @@ export type OverlayProps = {
   onDismiss: () => void
 }
 
-export const useOverlay = (init: boolean) => getOverlayState(useSwitch(init))
+export const useOverlay = (init?: boolean) => getOverlayState(useSwitch(init))
 
 export const useOverlayControlled = (
   ...args: Parameters<typeof useSwitchControlled>
