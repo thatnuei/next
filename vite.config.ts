@@ -24,7 +24,6 @@ const config: UserConfig = {
   enableEsbuild: false,
   plugins: [reactPlugin],
   outDir: "build",
-  minify: "esbuild", // terser breaks on things
 
   optimizeDeps: {
     include: [
