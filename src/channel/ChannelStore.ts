@@ -1,7 +1,7 @@
 import { curry, uniq, without } from "lodash-es"
 import { Observable, observable } from "micro-observables"
 import { UserData } from "../app/UserStore"
-import { concatUniq } from "../helpers/common/concatUniq"
+import { concatUnique } from "../helpers/common/concatUniq"
 import { factoryFrom } from "../helpers/common/factoryFrom"
 import { memoize } from "../helpers/common/memoize"
 import {
@@ -76,12 +76,12 @@ export class ChannelStore {
 
     JCH({ channel: id, character: { identity: name }, title }) {
       if (name === this.identity.get()) {
-        this.joinedChannelIds.update(concatUniq(id))
+        this.joinedChannelIds.update(concatUnique(id))
       }
 
       const channel = this.getChannel(id)
       channel.title.set(title)
-      channel.users.update(concatUniq(name))
+      channel.users.update(concatUnique(name))
     },
 
     LCH({ channel: id, character }) {

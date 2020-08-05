@@ -2,7 +2,7 @@ import { curry, without } from "lodash-es"
 import { observable } from "micro-observables"
 import { AppStore } from "../app/AppStore"
 import { UserStore } from "../app/UserStore"
-import { concatUniq } from "../helpers/common/concatUniq"
+import { concatUnique } from "../helpers/common/concatUniq"
 import { memoize } from "../helpers/common/memoize"
 import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
@@ -54,7 +54,7 @@ export class CharacterStore {
         this.ignored.set(params.characters)
       }
       if (params.action === "add") {
-        this.ignored.update(concatUniq(params.character))
+        this.ignored.update(concatUnique(params.character))
       }
       if (params.action === "delete") {
         this.ignored.update(withoutCurried([params.character]))
@@ -93,7 +93,7 @@ export class CharacterStore {
 
     RTB(params) {
       if (params.type === "trackadd") {
-        this.bookmarks.update(concatUniq(params.name))
+        this.bookmarks.update(concatUnique(params.name))
         // show toast
       }
 
@@ -104,7 +104,7 @@ export class CharacterStore {
 
       if (params.type === "friendadd") {
         this.friends.update(
-          concatUniq({ us: this.appStore.identity.get(), them: params.name }),
+          concatUnique({ us: this.appStore.identity.get(), them: params.name }),
         )
         // show toast
       }

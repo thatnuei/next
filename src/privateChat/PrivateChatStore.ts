@@ -1,6 +1,6 @@
 import { curry, without } from "lodash-es"
 import { observable, Observable } from "micro-observables"
-import { concatUniq } from "../helpers/common/concatUniq"
+import { concatUnique } from "../helpers/common/concatUniq"
 import { factoryFrom } from "../helpers/common/factoryFrom"
 import { memoize } from "../helpers/common/memoize"
 import { createPrivateMessage } from "../message/MessageState"
@@ -34,7 +34,7 @@ export class PrivateChatStore {
     this.openChatNames.transform((names) => names.includes(partnerName))
 
   open = (partnerName: string) => {
-    this.openChatNames.update(concatUniq(partnerName))
+    this.openChatNames.update(concatUnique(partnerName))
   }
 
   close = (partnerName: string) => {
