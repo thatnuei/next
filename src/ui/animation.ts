@@ -15,11 +15,11 @@ export const fadeAnimation: MotionProps = {
 const slideVariants = {
   slideOut: {
     y: 20,
-    transition: { ease: "easeIn", duration: 0.3 },
+    transition: { ease: "easeIn", duration: 0.25 },
   },
   slideIn: {
     y: 0,
-    transition: { ease: "easeOut", duration: 0.3 },
+    transition: { ease: "easeOut", duration: 0.25 },
   },
 }
 
