@@ -12,9 +12,12 @@ type Props = {
 
 export default function CharacterMemoInput({ name, ...props }: Props) {
   const root = useRootStore()
-  const [memo, setMemo] = useState("")
 
   const characterMemoKey = "characterMemo"
+
+  const [memo, setMemo] = useState(
+    queryCache.getQueryData<string>([characterMemoKey, name]),
+  )
 
   const memoQuery = useQuery(
     [characterMemoKey, name],
@@ -29,20 +32,19 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
     {
       onMutate: (note) => {
         queryCache.cancelQueries(characterMemoKey)
-
-        const prevNote = queryCache.getQueryData(characterMemoKey)
         queryCache.setQueryData(characterMemoKey, note)
-
-        return () => queryCache.setQueryData(characterMemoKey, prevNote)
       },
 
-      onError: (_, __, rollback: () => void) => rollback(),
+      onError: (error) => {
+        console.log(error)
+        // show toast?
+      },
 
       onSettled: () => queryCache.invalidateQueries(characterMemoKey),
     },
   )
 
-  const saveMemoDebounced = useMemo(() => debounce(saveMemo, 2000), [saveMemo])
+  const saveMemoDebounced = useMemo(() => debounce(saveMemo, 800), [saveMemo])
 
   function handleChange(note: string) {
     setMemo(note)
