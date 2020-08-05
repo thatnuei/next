@@ -25,12 +25,10 @@ function StatusUpdateForm() {
         <select
           css={select}
           value={status.type}
-          onChange={(e) =>
-            setStatus((prev) => ({
-              ...prev,
-              type: e.target.value as CharacterStatusType,
-            }))
-          }
+          onChange={(e) => {
+            const type = e.target.value as CharacterStatusType
+            setStatus((prev) => ({ ...prev, type }))
+          }}
         >
           <option value="online">Online</option>
           <option value="looking">Looking</option>
@@ -46,12 +44,10 @@ function StatusUpdateForm() {
         <textarea
           css={[input, tw`flex-1`]}
           value={status.text}
-          onChange={(e) =>
-            setStatus((prev) => ({
-              ...prev,
-              text: e.target.value,
-            }))
-          }
+          onChange={(e) => {
+            const text = e.currentTarget.value
+            setStatus((prev) => ({ ...prev, text }))
+          }}
           onKeyPress={(event) => {
             if (event.key === "\n" && (event.ctrlKey || event.shiftKey)) {
               submit()
