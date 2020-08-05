@@ -5852,12 +5852,12 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"micro-observables@npm:1.4.0":
-  version: 1.4.0
-  resolution: "micro-observables@npm:1.4.0"
+"micro-observables@npm:1.5.0-rc7":
+  version: 1.5.0-rc7
+  resolution: "micro-observables@npm:1.5.0-rc7"
   peerDependencies:
     react: ^16.8.0
-  checksum: a011bb0ba75e2b9bcbae5153b8f326b68b3f069106aa10ca07c02964735f1268da234a7e67c45729eaa1b2ce54e46dcd412a2f8de43c6f49203e8b178bd0a455
+  checksum: 1353c71b572eb196f3cf575ad4d150bc5d3c0209abfe27d56dd6c6629d02d7162245efe697a191641265bec91dbe01e93d76820d9831ff245d4396787a68a127
   languageName: node
   linkType: hard
 
@@ -6058,7 +6058,7 @@ fsevents@~2.1.2:
     idb: 5.0.4
     jest-environment-jsdom-sixteen: 1.0.3
     lodash: 4.17.19
-    micro-observables: 1.4.0
+    micro-observables: 1.5.0-rc7
     npm-run-all: 4.1.5
     polished: 3.6.5
     preact: 10.4.6

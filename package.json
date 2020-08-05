@@ -20,7 +20,7 @@
     "fuzzysearch": "1.0.3",
     "idb": "5.0.4",
     "lodash": "4.17.19",
-    "micro-observables": "1.4.0",
+    "micro-observables": "1.5.0-rc7",
     "polished": "3.6.5",
     "preact": "10.4.6",
     "react-focus-on": "3.4.1",
