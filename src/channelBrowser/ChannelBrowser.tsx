@@ -1,5 +1,5 @@
 import fuzzysearch from "fuzzysearch"
-import { sortBy } from "lodash/fp"
+import { sortBy } from "lodash-es"
 import { useObservable } from "micro-observables"
 import React, { useState } from "react"
 import tw from "twin.macro"
@@ -36,8 +36,8 @@ function ChannelBrowser(props: Props) {
 
     const sorted =
       sortMode === "title"
-        ? sortBy([(it) => it.title.toLowerCase()], channels)
-        : sortBy([(it) => it.userCount], channels).reverse()
+        ? sortBy(channels, (it) => it.title.toLowerCase())
+        : sortBy(channels, "userCount").reverse()
 
     return normalizedQuery
       ? sorted.filter((it) =>

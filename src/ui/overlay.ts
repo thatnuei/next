@@ -1,4 +1,3 @@
-import { compose } from "lodash/fp"
 import { SwitchState, useSwitch, useSwitchControlled } from "../react/switch"
 
 export type OverlayProps = {
@@ -6,12 +5,11 @@ export type OverlayProps = {
   onDismiss: () => void
 }
 
-export const useOverlay = compose(getOverlayState, useSwitch)
+export const useOverlay = (init: boolean) => getOverlayState(useSwitch(init))
 
-export const useOverlayControlled = compose(
-  getOverlayState,
-  useSwitchControlled,
-)
+export const useOverlayControlled = (
+  ...args: Parameters<typeof useSwitchControlled>
+) => getOverlayState(useSwitchControlled(...args))
 
 export function getOverlayState(state: SwitchState) {
   return {

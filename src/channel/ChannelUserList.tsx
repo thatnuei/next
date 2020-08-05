@@ -1,4 +1,4 @@
-import { sortBy, zip } from "lodash/fp"
+import { sortBy, zip } from "lodash-es"
 import { Observable, useObservable } from "micro-observables"
 import React from "react"
 import tw from "twin.macro"
@@ -80,7 +80,7 @@ function ChannelUserList({ channel, ...props }: Props) {
     ),
   )
 
-  const sortedItems = sortBy(["order", (it) => it.name.toLowerCase()], entries)
+  const sortedItems = sortBy(entries, ["order", (it) => it.name.toLowerCase()])
 
   return (
     <div css={tw`flex flex-col`} {...props}>

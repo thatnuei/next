@@ -1537,6 +1537,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pika/react-dom@npm:16.13.1":
+  version: 16.13.1
+  resolution: "@pika/react-dom@npm:16.13.1"
+  peerDependencies:
+    react: ^16.0.0
+  checksum: 8e56b76c134205a9c4aa3ac12da046378ffb85b0c54004a46c93eee131bd0517f53bc37edbec6f69fb4e63dba23339a60fdb5d7e19d33348f2c90920d9c2c37b
+  languageName: node
+  linkType: hard
+
+"@pika/react@npm:16.13.1":
+  version: 16.13.1
+  resolution: "@pika/react@npm:16.13.1"
+  checksum: 87e24c399d2cce925c725a87f30589b7cc7ce868b8cd65f351cc130b5d67732cc59c57df36f2c66b296c23cc725b7e8c2f73212b7382867ed343eb1f5e7e04f1
+  languageName: node
+  linkType: hard
+
 "@popmotion/easing@npm:^1.0.1, @popmotion/easing@npm:^1.0.2":
   version: 1.0.2
   resolution: "@popmotion/easing@npm:1.0.2"
@@ -1902,7 +1918,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:4.14.158":
+"@types/lodash-es@npm:^4":
+  version: 4.17.3
+  resolution: "@types/lodash-es@npm:4.17.3"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: d277a0d79dc3093ed683fd5314301d1df083f10921c14f7ec0604270450858239e604498c33cb5378fda9db56f2af2a014d3e42f7d1df5dc391662c8feb9f377
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
   version: 4.14.158
   resolution: "@types/lodash@npm:4.14.158"
   checksum: edee47e7db1f073350433972573050bc6689ccceb0fcc0bf95657477ea1715e4f63e2821499daecc6dc498577b244d9e2cfdf7e12e03cabae881c90b8bebb691
@@ -4457,10 +4482,17 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"fuzzysearch@npm:1.0.3":
+fuzzysearch@1.0.3:
   version: 1.0.3
   resolution: "fuzzysearch@npm:1.0.3"
   checksum: 3c37111fdd101ae113c00cad6a0fb827a0b86fffa04cdde5e09b7b05e69210b095383ba895d60e37285f7f6697e25631797bf9841f29d2d86493eb6c844fecce
+  languageName: node
+  linkType: hard
+
+"fuzzysearch@patch:fuzzysearch@1.0.3#./patches/fuzzysearch.patch::locator=next%40workspace%3A.":
+  version: 1.0.3
+  resolution: "fuzzysearch@patch:fuzzysearch@npm%3A1.0.3#./patches/fuzzysearch.patch::version=1.0.3&hash=fba0ff&locator=next%40workspace%3A."
+  checksum: 84761080b4877e93b5e52bf570c7fc79aa5bbf273937bf940f883812ee45e227cd4b69d6c022625b3c6b552defe06705e43ea561c89e23ee139584467662361f
   languageName: node
   linkType: hard
 
@@ -5707,6 +5739,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"lodash-es@npm:4.17.15":
+  version: 4.17.15
+  resolution: "lodash-es@npm:4.17.15"
+  checksum: ee2871b76deefd1754527e659a8c8b688f2e427e67b30709296878e18ad9cb54b4f0fc16a7161298156b4e0ebc2a37dfe501a3ea8725f195763f9de8a7ba6da6
+  languageName: node
+  linkType: hard
+
 "lodash.camelcase@npm:^4.3.0":
   version: 4.3.0
   resolution: "lodash.camelcase@npm:4.3.0"
@@ -5735,7 +5774,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"lodash@npm:4.17.19, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19":
+"lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.19":
   version: 4.17.19
   resolution: "lodash@npm:4.17.19"
   checksum: ff2b7a95f0129dba9101e346d44e0eda0f159d76bbbf23721eec1969b87a32bde3de0cfef0733218c64620e9be08040a973278d46a686540233b356115f3527c
@@ -6030,11 +6069,13 @@ fsevents@~2.1.2:
     "@emotion/babel-preset-css-prop": 11.0.0-next.10
     "@emotion/react": 11.0.0-next.14
     "@mdi/js": 5.4.55
+    "@pika/react": 16.13.1
+    "@pika/react-dom": 16.13.1
     "@testing-library/jest-dom": 5.11.2
     "@testing-library/react": 10.4.7
     "@types/babel__core": ^7
     "@types/babel__preset-env": ^7
-    "@types/lodash": 4.14.158
+    "@types/lodash-es": ^4
     "@types/node": 14.0.27
     "@types/preval.macro": 3.0.0
     "@types/react": 16.9.44
@@ -6054,14 +6095,13 @@ fsevents@~2.1.2:
     fchat: 1.4.0
     focus-visible: 5.1.0
     framer-motion: 2.3.0
-    fuzzysearch: 1.0.3
+    fuzzysearch: "patch:fuzzysearch@1.0.3#./patches/fuzzysearch.patch"
     idb: 5.0.4
     jest-environment-jsdom-sixteen: 1.0.3
-    lodash: 4.17.19
+    lodash-es: 4.17.15
     micro-observables: 1.5.0-rc7
     npm-run-all: 4.1.5
     polished: 3.6.5
-    preact: 10.4.6
     prettier: 2.0.5
     preval.macro: 5.0.0
     react-focus-on: 3.4.1
@@ -6833,13 +6873,6 @@ fsevents@~2.1.2:
     source-map: ^0.6.1
     supports-color: ^5.4.0
   checksum: 9b61abdfb366491debc6a633ba3703ae43c674b6c1c64def54e131c8ec01862fc95b3271bde221db805389fc76c3b3f1447b5a9c1d0b332c53cfcc9bfe1b1fa6
-  languageName: node
-  linkType: hard
-
-"preact@npm:10.4.6":
-  version: 10.4.6
-  resolution: "preact@npm:10.4.6"
-  checksum: 15f4e2b8b5940c56cca29a3b2514c1669fc74bafc2b0713c772cd57484206eb425f302d914a405b0e3b4906f52a5684a2c4f481052791397c57071f776e65c65
   languageName: node
   linkType: hard
 

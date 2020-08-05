@@ -1,4 +1,4 @@
-import { uniqBy } from "lodash/fp"
+import { uniqBy } from "lodash-es"
 import { useObservable } from "micro-observables"
 import React, { useMemo } from "react"
 import tw from "twin.macro"
@@ -87,7 +87,7 @@ function InviteUsersForm({ channelId }: Props) {
     <div css={tw`flex flex-col w-full h-full`}>
       <div css={tw`flex-1 bg-background-2`}>
         <VirtualizedList
-          items={uniqBy((user) => user.name, characters)}
+          items={uniqBy(characters, "name")}
           itemSize={40}
           getItemKey={(it) => it.name.get()}
           renderItem={renderItem}

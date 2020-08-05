@@ -1,11 +1,14 @@
-import { concat, filter, without } from "lodash/fp"
+import { curry, without } from "lodash-es"
 import { observable } from "micro-observables"
 import { AppStore } from "../app/AppStore"
 import { UserStore } from "../app/UserStore"
+import { concatUniq } from "../helpers/common/concatUniq"
 import { memoize } from "../helpers/common/memoize"
 import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
 import { CharacterModel } from "./CharacterModel"
+
+const withoutCurried = curry(without)
 
 type Friendship = {
   us: string
@@ -51,10 +54,10 @@ export class CharacterStore {
         this.ignored.set(params.characters)
       }
       if (params.action === "add") {
-        this.ignored.update(concat(params.character))
+        this.ignored.update(concatUniq(params.character))
       }
       if (params.action === "delete") {
-        this.ignored.update(without([params.character]))
+        this.ignored.update(withoutCurried([params.character]))
       }
     },
 
@@ -90,24 +93,26 @@ export class CharacterStore {
 
     RTB(params) {
       if (params.type === "trackadd") {
-        this.bookmarks.update(concat(params.name))
+        this.bookmarks.update(concatUniq(params.name))
         // show toast
       }
 
       if (params.type === "trackrem") {
-        this.bookmarks.update(without([params.name]))
+        this.bookmarks.update(withoutCurried([params.name]))
         // show toast
       }
 
       if (params.type === "friendadd") {
         this.friends.update(
-          concat({ us: this.appStore.identity.get(), them: params.name }),
+          concatUniq({ us: this.appStore.identity.get(), them: params.name }),
         )
         // show toast
       }
 
       if (params.type === "friendremove") {
-        this.friends.update(filter((it) => it.them === params.name))
+        this.friends.update((friends) =>
+          friends.filter((it) => it.them === params.name),
+        )
         // show toast
       }
     },

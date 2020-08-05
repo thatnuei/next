@@ -1,4 +1,3 @@
-import { eq } from "lodash/fp"
 import { observable, Observable } from "micro-observables"
 import { RoomModel } from "../chat/RoomModel"
 import { ChannelMode } from "./types"
@@ -16,7 +15,7 @@ export class ChannelModel extends RoomModel {
     this.selectedMode,
   ).transform(([mode, selectedMode]) => (mode === "both" ? selectedMode : mode))
 
-  readonly isPublic = this.title.transform(eq(this.id))
+  readonly isPublic = this.title.transform((title) => title === this.id)
 
   readonly linkCode = Observable.from(
     this.title,

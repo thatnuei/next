@@ -1,6 +1,7 @@
-import { concat, flow, uniq, without } from "lodash/fp"
+import { curry, uniq, without } from "lodash-es"
 import { Observable, observable } from "micro-observables"
 import { UserData } from "../app/UserStore"
+import { concatUniq } from "../helpers/common/concatUniq"
 import { factoryFrom } from "../helpers/common/factoryFrom"
 import { memoize } from "../helpers/common/memoize"
 import {
@@ -12,6 +13,8 @@ import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
 import { ChannelModel } from "./ChannelModel"
 import { loadChannels, saveChannels } from "./storage"
+
+const withoutCurried = curry(without)
 
 export class ChannelStore {
   private readonly joinedChannelIds = observable<string[]>([])
@@ -73,21 +76,21 @@ export class ChannelStore {
 
     JCH({ channel: id, character: { identity: name }, title }) {
       if (name === this.identity.get()) {
-        this.joinedChannelIds.update(flow(concat(id), uniq))
+        this.joinedChannelIds.update(concatUniq(id))
       }
 
       const channel = this.getChannel(id)
       channel.title.set(title)
-      channel.users.update(flow(concat(name), uniq))
+      channel.users.update(concatUniq(name))
     },
 
     LCH({ channel: id, character }) {
       if (character === this.identity.get()) {
-        this.joinedChannelIds.update(without([id]))
+        this.joinedChannelIds.update(withoutCurried([id]))
       }
 
       const channel = this.getChannel(id)
-      channel.users.update(without([character]))
+      channel.users.update(withoutCurried([character]))
     },
 
     ICH({ channel: id, users, mode }) {

@@ -1,4 +1,4 @@
-import { debounce } from "lodash/fp"
+import { debounce } from "lodash-es"
 import React, { useMemo, useState } from "react"
 import { queryCache, useMutation, useQuery } from "react-query"
 import tw from "twin.macro"
@@ -42,7 +42,7 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
     },
   )
 
-  const saveMemoDebounced = useMemo(() => debounce(2000, saveMemo), [saveMemo])
+  const saveMemoDebounced = useMemo(() => debounce(saveMemo, 2000), [saveMemo])
 
   function handleChange(note: string) {
     setMemo(note)

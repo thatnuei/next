@@ -28,15 +28,9 @@ const config: UserConfig = {
 
   optimizeDeps: {
     include: [
-      "lodash/fp",
       "micro-observables/batchingForReactDom",
       "hoist-non-react-statics",
     ],
-  },
-
-  alias: {
-    "react": "preact/compat",
-    "react-dom": "preact/compat",
   },
 
   transforms: [

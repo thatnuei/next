@@ -1,5 +1,6 @@
-import { uniq, without } from "lodash/fp"
+import { curry, without } from "lodash-es"
 import { observable, Observable } from "micro-observables"
+import { concatUniq } from "../helpers/common/concatUniq"
 import { factoryFrom } from "../helpers/common/factoryFrom"
 import { memoize } from "../helpers/common/memoize"
 import { createPrivateMessage } from "../message/MessageState"
@@ -7,6 +8,8 @@ import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
 import { PrivateChatModel } from "./PrivateChatModel"
 import { restorePrivateChats, savePrivateChats } from "./storage"
+
+const withoutCurried = curry(without)
 
 export class PrivateChatStore {
   constructor(
@@ -31,11 +34,11 @@ export class PrivateChatStore {
     this.openChatNames.transform((names) => names.includes(partnerName))
 
   open = (partnerName: string) => {
-    this.openChatNames.update((names) => uniq([...names, partnerName]))
+    this.openChatNames.update(concatUniq(partnerName))
   }
 
   close = (partnerName: string) => {
-    this.openChatNames.update(without([partnerName]))
+    this.openChatNames.update(withoutCurried([partnerName]))
   }
 
   sendMessage = (partnerName: string, text: string) => {
