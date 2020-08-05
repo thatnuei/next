@@ -1,32 +1,35 @@
+import { HTMLMotionProps, motion } from "framer-motion"
 import React, { useCallback, useState } from "react"
-import { FocusOn } from "react-focus-on"
+import FocusLock from "react-focus-lock"
 import tw from "twin.macro"
 import { useElementSize } from "../dom/useElementSize"
+import { useWindowEvent } from "../dom/useWindowEvent"
 import { useWindowSize } from "../dom/useWindowSize"
-import { TagProps } from "../jsx/types"
+import { composeRefs } from "../react/composeRefs"
 import Portal from "../react/Portal"
-import { OverlayProps, useOverlay } from "./overlay"
+import { fadeSlideAnimation } from "./animation"
+import { useOverlay } from "./overlay"
 
-type Props = OverlayProps &
-  TagProps<"div"> & {
-    position: PopoverPosition
-    children: React.ReactNode
-  }
+export type PopoverProps = HTMLMotionProps<"div"> & {
+  onDismiss: () => void
+  position: PopoverPosition
+  children: React.ReactNode
+}
 
 type PopoverPosition = { x: number; y: number }
 
 const edgeSpacing = 12
 
-function Popover({
-  children,
-  position,
-  isVisible,
-  onDismiss,
-  ...props
-}: Props) {
+function Popover({ children, position, onDismiss, ...props }: PopoverProps) {
   const [container, setContainer] = useState<HTMLElement | null>()
   const containerSize = useElementSize(container)
   const windowSize = useWindowSize()
+
+  const clickOutsideRef = useClickOutside(onDismiss)
+
+  useWindowEvent("keydown", (event) => {
+    if (event.key === "Escape") onDismiss()
+  })
 
   const left = Math.max(
     Math.min(position.x, windowSize.width - containerSize.width - edgeSpacing),
@@ -42,25 +45,24 @@ function Popover({
   )
 
   const containerStyle = [
-    tw`fixed overflow-y-auto duration-300 shadow-normal bg-background-1`,
-    { transitionProperty: "transform, opacity, visibility" },
-    isVisible
-      ? tw`visible transform translate-y-0 opacity-100`
-      : tw`invisible transform -translate-y-2 opacity-0`,
+    tw`fixed overflow-y-auto shadow-normal bg-background-1`,
     { left, top, maxHeight: `calc(100vh - ${edgeSpacing * 2}px)` },
   ]
 
   return (
     <Portal>
-      <FocusOn
-        enabled={isVisible}
-        onEscapeKey={onDismiss}
-        onClickOutside={onDismiss}
-      >
-        <div css={containerStyle} {...props} ref={setContainer}>
+      <FocusLock returnFocus>
+        <motion.div
+          data-auto-focus
+          css={containerStyle}
+          {...fadeSlideAnimation}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          ref={composeRefs(setContainer, clickOutsideRef as any) as any}
+          {...props}
+        >
           {children}
-        </div>
-      </FocusOn>
+        </motion.div>
+      </FocusLock>
     </Portal>
   )
 }
@@ -85,5 +87,19 @@ export function usePopover() {
   // possibly accepting a position/alignment option
   // for easier context menus with button triggers
 
-  return { ...state, showAt, props: { ...state.props, position } }
+  return { ...state, showAt, props: { onDismiss: state.hide, position } }
+}
+
+function useClickOutside(callback: () => void) {
+  const [element, setElement] = useState<Element | null>()
+
+  useWindowEvent("click", (event) => {
+    const clickedInsideElement = event
+      .composedPath()
+      .some((el) => el === element)
+
+    if (!clickedInsideElement) callback()
+  })
+
+  return setElement
 }

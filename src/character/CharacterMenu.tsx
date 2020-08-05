@@ -1,52 +1,34 @@
 import { useObservable } from "micro-observables"
-import React, { useState } from "react"
+import React from "react"
 import tw from "twin.macro"
-import { useWindowEvent } from "../dom/useWindowEvent"
 import { getProfileUrl } from "../flist/helpers"
 import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import MenuItem from "../ui/MenuItem"
-import Popover, { usePopover } from "../ui/Popover"
+import Popover, { PopoverProps } from "../ui/Popover"
 import CharacterMemoInput from "./CharacterMemoInput"
 import CharacterSummary from "./CharacterSummary"
 
-function CharacterMenu() {
-  const [characterName, setCharacterName] = useState<string | undefined>()
+function CharacterMenu({
+  name,
+  ...props
+}: Omit<PopoverProps, "children"> & { name: string }) {
   const root = useRootStore()
-  const popover = usePopover()
+
   const bookmarks = useObservable(root.characterStore.bookmarks)
-  const ignored = useObservable(root.characterStore.ignored)
+  const isBookmarked = bookmarks.includes(name)
+
   const friends = useObservable(root.characterStore.friends)
+  const friendshipItems = friends.filter((it) => it.them === name)
 
-  function handleClick(event: MouseEvent) {
-    const characterName = (() => {
-      for (const target of event.composedPath()) {
-        if (target instanceof HTMLElement && target.dataset.character) {
-          return target.dataset.character
-        }
-      }
-    })()
-
-    if (characterName) {
-      event.preventDefault()
-      setCharacterName(characterName)
-      popover.showAt({ x: event.clientX, y: event.clientY })
-    }
-  }
-
-  useWindowEvent("click", handleClick)
-
-  if (!characterName) return null
-
-  const isIgnored = ignored.includes(characterName)
-  const isBookmarked = bookmarks.includes(characterName)
-  const friendshipItems = friends.filter((it) => it.them === characterName)
+  const ignored = useObservable(root.characterStore.ignored)
+  const isIgnored = ignored.includes(name)
 
   return (
-    <Popover {...popover.props} css={tw`w-56`}>
+    <Popover {...props} css={tw`w-56`}>
       <div css={tw`p-3 bg-background-0`}>
-        <CharacterSummary name={characterName} />
+        <CharacterSummary name={name} />
 
         {friendshipItems.map((item, index) => (
           <div
@@ -63,30 +45,26 @@ function CharacterMenu() {
         <MenuItem
           icon={icons.link}
           text="Profile"
-          href={getProfileUrl(characterName)}
-          onClick={popover.hide}
+          href={getProfileUrl(name)}
+          onClick={props.onDismiss}
         />
         <MenuItem
           icon={icons.message}
           text="Message"
           onClick={() => {
-            popover.hide()
-            root.chatNavStore.showPrivateChat(characterName)
+            props.onDismiss()
+            root.chatNavStore.showPrivateChat(name)
           }}
         />
         <MenuItem
           icon={isBookmarked ? icons.bookmark : icons.bookmarkHollow}
           text={isBookmarked ? "Remove bookmark" : "Bookmark"}
           onClick={() => {
-            popover.hide()
+            props.onDismiss()
             if (isBookmarked) {
-              root.userStore
-                .removeBookmark({ name: characterName })
-                .catch(console.error) // show error toast
+              root.userStore.removeBookmark({ name }).catch(console.error) // show error toast
             } else {
-              root.userStore
-                .addBookmark({ name: characterName })
-                .catch(console.error) // show error toast
+              root.userStore.addBookmark({ name }).catch(console.error) // show error toast
             }
           }}
         />
@@ -98,14 +76,14 @@ function CharacterMenu() {
               type: "IGN",
               params: {
                 action: isIgnored ? "delete" : "add",
-                character: characterName,
+                character: name,
               },
             })
           }}
         />
       </div>
       <div css={tw`p-2 bg-background-0`}>
-        <CharacterMemoInput name={characterName} css={tw`block w-full`} />
+        <CharacterMemoInput name={name} css={tw`block w-full`} />
       </div>
     </Popover>
   )

@@ -24,7 +24,7 @@
     "lodash-es": "4.17.15",
     "micro-observables": "1.5.0-rc7",
     "polished": "3.6.5",
-    "react-focus-on": "3.4.1",
+    "react-focus-lock": "2.4.1",
     "react-query": "2.5.13",
     "react-window": "1.8.5",
     "resize-observer-polyfill": "1.5.1"

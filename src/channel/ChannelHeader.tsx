@@ -86,44 +86,48 @@ function ChannelHeader({
         <Icon which={icons.more} />
       </Button>
 
-      <Popover {...menu.props} css={tw`w-48 bg-background-2`}>
-        {!isLargeScreen && (
-          <ChannelFilters
-            channelId={channel.id}
-            css={tw`px-3 py-2 bg-background-0 mb-gap`}
-          />
+      <AnimatePresence>
+        {menu.value && (
+          <Popover {...menu.props} css={tw`w-48 bg-background-2`}>
+            {!isLargeScreen && (
+              <ChannelFilters
+                channelId={channel.id}
+                css={tw`px-3 py-2 bg-background-0 mb-gap`}
+              />
+            )}
+            <div css={tw`flex flex-col bg-background-1`}>
+              <MenuItem
+                text="Copy code"
+                icon={icons.code}
+                onClick={() => {
+                  window.navigator.clipboard
+                    .writeText(channel.linkCode.get())
+                    .catch(console.error)
+                  menu.hide()
+                }}
+              />
+              <MenuItem
+                text="Clear messages"
+                icon={icons.clearMessages}
+                onClick={() => {
+                  channel.clearMessages()
+                  menu.hide()
+                }}
+              />
+              {shouldShowInviteOption && (
+                <MenuItem
+                  text="Invite"
+                  icon={icons.invite}
+                  onClick={() => {
+                    invite.show()
+                    menu.hide()
+                  }}
+                />
+              )}
+            </div>
+          </Popover>
         )}
-        <div css={tw`flex flex-col bg-background-1`}>
-          <MenuItem
-            text="Copy code"
-            icon={icons.code}
-            onClick={() => {
-              window.navigator.clipboard
-                .writeText(channel.linkCode.get())
-                .catch(console.error)
-              menu.hide()
-            }}
-          />
-          <MenuItem
-            text="Clear messages"
-            icon={icons.clearMessages}
-            onClick={() => {
-              channel.clearMessages()
-              menu.hide()
-            }}
-          />
-          {shouldShowInviteOption && (
-            <MenuItem
-              text="Invite"
-              icon={icons.invite}
-              onClick={() => {
-                invite.show()
-                menu.hide()
-              }}
-            />
-          )}
-        </div>
-      </Popover>
+      </AnimatePresence>
 
       <AnimatePresence>
         {invite.value && (

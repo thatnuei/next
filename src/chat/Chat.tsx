@@ -4,7 +4,6 @@ import React, { useMemo } from "react"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
-import CharacterMenu from "../character/CharacterMenu"
 import ChatNav from "../chatNav/ChatNav"
 import { useChatNavView } from "../chatNav/helpers"
 import { useMediaQuery } from "../dom/useMediaQuery"
@@ -68,8 +67,6 @@ export default function Chat() {
           />
         )}
       </AnimatePresence>
-
-      <CharacterMenu />
     </motion.div>
   )
 }
