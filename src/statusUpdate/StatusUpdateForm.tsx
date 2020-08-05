@@ -25,7 +25,7 @@ function StatusUpdateForm() {
         <select
           css={select}
           value={status.type}
-          onBlur={(e) =>
+          onChange={(e) =>
             setStatus((prev) => ({
               ...prev,
               type: e.target.value as CharacterStatusType,

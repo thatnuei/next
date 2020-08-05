@@ -23,7 +23,7 @@ function DevTools() {
         <select
           css={[select, tw`text-text`]}
           value={currentTheme}
-          onBlur={(e) => setTheme(e.target.value as ThemeName)}
+          onChange={(e) => setTheme(e.target.value as ThemeName)}
         >
           {Object.entries(themes).map(([id, { name }]) => (
             <option key={id} value={id}>

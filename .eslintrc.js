@@ -36,6 +36,7 @@ module.exports = {
     "react/no-children-prop": "off",
     "react/prop-types": "off",
     "@typescript-eslint/unbound-method": "off",
+    "jsx-a11y/no-onchange": "off",
   },
   ignorePatterns: ["/node_modules/", "/src/node_modules/", "/build/"],
   settings: {
