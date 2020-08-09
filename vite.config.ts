@@ -7,8 +7,6 @@ const babelTransform = (options: TransformOptions = {}): Transform => ({
   async transform({ code, path }) {
     const result = await transformAsync(code, {
       filename: path.replace("\u0000", ""),
-      babelrc: false,
-      configFile: false,
       ...options,
     })
 
@@ -32,20 +30,7 @@ const config: UserConfig = {
     ],
   },
 
-  transforms: [
-    babelTransform({
-      presets: [
-        ["@babel/preset-env", { modules: false }],
-        "@babel/preset-react",
-        "@babel/preset-typescript",
-        ["@emotion/babel-preset-css-prop", { autoLabel: "never" }], // autoLabel breaks css prop overrides
-      ],
-      plugins: [
-        "@babel/plugin-proposal-class-properties",
-        "babel-plugin-macros",
-      ],
-    }),
-  ],
+  transforms: [babelTransform()],
 }
 
 export default config
