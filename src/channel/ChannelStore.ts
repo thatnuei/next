@@ -63,6 +63,8 @@ export class ChannelStore {
 
   handleCommand = createBoundCommandHandler(this, {
     async IDN() {
+      this.joinedChannelIds.set([])
+
       const { account } = this.userData.get()
       const identity = this.identity.get()
       const channelIds = await loadChannels(account, identity)
