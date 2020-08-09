@@ -1,6 +1,5 @@
 import { debounce } from "lodash-es"
-import React, { useMemo, useState } from "react"
-import { queryCache, useMutation, useQuery } from "react-query"
+import React, { useEffect, useMemo, useState } from "react"
 import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
@@ -13,47 +12,50 @@ type Props = {
 export default function CharacterMemoInput({ name, ...props }: Props) {
   const root = useRootStore()
 
-  const characterMemoKey = "characterMemo"
+  type State =
+    | { status: "loading" }
+    | { status: "editing"; memo: string }
+    | { status: "error" }
 
-  const [memo, setMemo] = useState(
-    queryCache.getQueryData<string>([characterMemoKey, name]),
-  )
+  const [state, setState] = useState<State>({ status: "loading" })
 
-  const memoQuery = useQuery(
-    [characterMemoKey, name],
-    (_, name) => root.userStore.getMemo({ name }),
-    { onSuccess: setMemo },
-  )
+  useEffect(() => {
+    setState({ status: "loading" })
 
-  const [saveMemo] = useMutation(
-    ({ name, note }: { name: string; note: string }) => {
-      return root.userStore.setMemo({ name, note })
-    },
-    {
-      onMutate: (note) => {
-        queryCache.cancelQueries(characterMemoKey)
-        queryCache.setQueryData(characterMemoKey, note)
-      },
+    let cancelled = false
 
-      onError: (error) => {
-        console.log(error)
-        // show toast?
-      },
+    root.userStore
+      .getMemo({ name })
+      .then((memo): State => ({ status: "editing", memo }))
+      .catch((): State => ({ status: "error" }))
+      .then((state) => {
+        if (cancelled) return
+        setState(state)
+      })
+      .catch(console.warn)
 
-      onSettled: () => queryCache.invalidateQueries(characterMemoKey),
-    },
-  )
+    return () => {
+      cancelled = true
+    }
+  }, [name, root.userStore])
 
-  const saveMemoDebounced = useMemo(() => debounce(saveMemo, 800), [saveMemo])
+  const saveMemoDebounced = useMemo(() => {
+    const setMemo = (memo: string) => {
+      root.userStore.setMemo({ name, note: memo }).catch(console.warn)
+    }
+    return debounce(setMemo, 800)
+  }, [name, root.userStore])
 
-  function handleChange(note: string) {
-    setMemo(note)
-    void saveMemoDebounced({ name, note })
+  function handleChange(memo: string) {
+    if (state.status === "editing") {
+      setState({ ...state, memo })
+    }
+    void saveMemoDebounced(memo)
   }
 
   const style = [input, tw`h-20 text-sm`]
 
-  if (memoQuery.status === "loading") {
+  if (state.status === "loading") {
     return (
       <textarea
         css={style}
@@ -65,11 +67,11 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
     )
   }
 
-  if (memoQuery.status === "success") {
+  if (state.status === "editing") {
     return (
       <textarea
         css={style}
-        value={memo}
+        value={state.memo}
         onChange={(event) => handleChange(event.target.value)}
         placeholder="Enter a memo"
         {...props}
@@ -77,7 +79,7 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
     )
   }
 
-  if (memoQuery.status === "error") {
+  if (state.status === "error") {
     return <p css={tw`text-sm`}>Failed to load memo</p>
   }
 
