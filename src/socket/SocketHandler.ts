@@ -110,6 +110,7 @@ export class SocketHandler {
     this.socket.onerror = null
     this.socket.onmessage = null
     this.socket.close()
+    this.status.set("idle")
   }
 
   send(command: ClientCommand) {
