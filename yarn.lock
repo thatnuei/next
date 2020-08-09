@@ -6102,7 +6102,6 @@ fuzzysearch@1.0.3:
     prettier: 2.0.5
     preval.macro: 5.0.0
     react-focus-lock: 2.4.1
-    react-query: 2.5.13
     react-window: 1.8.5
     resize-observer-polyfill: 1.5.1
     serve: 11.3.2
@@ -7067,17 +7066,6 @@ fuzzysearch@1.0.3:
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: 11bcf1267a314a522615f626f3ce3727a3a24cdbf61c4d452add3550a7875326669631326cfb1ba3e92b6f72244c32ffecf93ad21c0cad8455d3e169d0e3f060
-  languageName: node
-  linkType: hard
-
-"react-query@npm:2.5.13":
-  version: 2.5.13
-  resolution: "react-query@npm:2.5.13"
-  dependencies:
-    ts-toolbelt: ^6.9.4
-  peerDependencies:
-    react: ^16.8.0
-  checksum: dab2c64f916179209b2aa1ee79b3d498a2718f27b8751af2983e8445d992bc72bb31ad0590932423e3457fd0672f6b11fdc0179b76daef0e88a9be8869aaae22
   languageName: node
   linkType: hard
 
@@ -8313,13 +8301,6 @@ fuzzysearch@1.0.3:
   dependencies:
     punycode: ^2.1.1
   checksum: c8c221907944e8b577c4fff14d180a213c21a29b54a12a031aa6986cbb711a5d470588b556a7be9c7844f09142e12deef6b76fe10f6bd4d274b54f1a7e0aac9e
-  languageName: node
-  linkType: hard
-
-"ts-toolbelt@npm:^6.9.4":
-  version: 6.13.39
-  resolution: "ts-toolbelt@npm:6.13.39"
-  checksum: 67351ca3af9353e63e4ba1174a40dcaac0a0c0583de6a9211a9851caf251f3b2c616de2f61aeb3cc1c76b2a1e24ddfac0aa5c3e9777de8a4b9e12b6bd82e0fc0
   languageName: node
   linkType: hard
 
