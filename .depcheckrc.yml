@@ -1,0 +1,5 @@
+ignore-dirs:
+  - node_modules
+  - build
+  - patches
+  - public
