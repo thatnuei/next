@@ -1,5 +1,3 @@
 module.exports = {
-  babel: {
-    mode: "file",
-  },
+  babel: require("./babel.config"),
 }
