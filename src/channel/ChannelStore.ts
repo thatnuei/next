@@ -1,9 +1,10 @@
-import { uniq, without as lodashWithout } from "lodash-es"
 import { Observable, observable } from "micro-observables"
 import { UserData } from "../app/UserStore"
 import { concatUnique } from "../helpers/common/concatUniq"
 import { factoryFrom } from "../helpers/common/factoryFrom"
 import { memoize } from "../helpers/common/memoize"
+import { unique } from "../helpers/common/unique"
+import { without } from "../helpers/common/without"
 import {
   createAdMessage,
   createChannelMessage,
@@ -13,9 +14,6 @@ import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
 import { ChannelModel } from "./ChannelModel"
 import { loadChannels, saveChannels } from "./storage"
-
-const without = <T>(item: T) => (items: readonly T[]) =>
-  lodashWithout(items, item)
 
 export class ChannelStore {
   private readonly joinedChannelIds = observable<string[]>([])
@@ -89,16 +87,16 @@ export class ChannelStore {
 
     LCH({ channel: id, character }) {
       if (character === this.identity.get()) {
-        this.joinedChannelIds.update(without(id))
+        this.joinedChannelIds.update(without.curried(id))
       }
 
       const channel = this.getChannel(id)
-      channel.users.update(without(character))
+      channel.users.update(without.curried(character))
     },
 
     ICH({ channel: id, users, mode }) {
       const channel = this.getChannel(id)
-      channel.users.set(uniq(users.map((it) => it.identity)))
+      channel.users.set(unique(users.map((it) => it.identity)))
       channel.mode.set(mode)
     },
 

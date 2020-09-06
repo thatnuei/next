@@ -1,14 +1,12 @@
-import { curry, without } from "lodash-es"
 import { observable } from "micro-observables"
 import { AppStore } from "../app/AppStore"
 import { UserStore } from "../app/UserStore"
 import { concatUnique } from "../helpers/common/concatUniq"
 import { memoize } from "../helpers/common/memoize"
+import { without } from "../helpers/common/without"
 import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
 import { CharacterModel } from "./CharacterModel"
-
-const withoutCurried = curry(without)
 
 type Friendship = {
   us: string
@@ -57,7 +55,7 @@ export class CharacterStore {
         this.ignored.update(concatUnique(params.character))
       }
       if (params.action === "delete") {
-        this.ignored.update(withoutCurried([params.character]))
+        this.ignored.update(without.curried(params.character))
       }
     },
 
@@ -98,7 +96,7 @@ export class CharacterStore {
       }
 
       if (params.type === "trackrem") {
-        this.bookmarks.update(withoutCurried([params.name]))
+        this.bookmarks.update(without.curried(params.name))
         // show toast
       }
 
