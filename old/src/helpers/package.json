@@ -1,0 +1,10 @@
+{
+  "name": "helpers",
+  "version": "1.0.0",
+  "author": "kingdaro",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "16.9.35",
+    "typescript": "3.9.3"
+  }
+}
