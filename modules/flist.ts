@@ -1,7 +1,7 @@
 export async function flistFetch<T>(
 	endpoint: string,
 	data: Record<string, string | number>,
-) {
+): Promise<T> {
 	const body = new FormData()
 	for (const [key, value] of Object.entries(data)) {
 		body.set(key, String(value))
@@ -16,14 +16,22 @@ export async function flistFetch<T>(
 		throw new Error(response.statusText)
 	}
 
-	const {
-		error,
-		...responseData
-	}: T & { error?: string } = await response.json()
-
-	if (error) {
-		throw new Error(error)
-	}
+	const { error, ...responseData } = await response.json()
+	if (error) throw new Error(error)
 
 	return responseData
+}
+
+type AuthenticateResponse = {
+	ticket: string
+	characters: string
+}
+
+export function authenticate(data: { account: string; password: string }) {
+	return flistFetch<AuthenticateResponse>(`/json/getApiTicket.php`, {
+		...data,
+		no_characters: "true",
+		no_friends: "true",
+		no_bookmarks: "true",
+	})
 }

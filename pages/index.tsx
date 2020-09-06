@@ -1,5 +1,6 @@
+import * as idb from "idb-keyval"
 import { useState } from "react"
-import { flistFetch } from "../modules/flist"
+import { authenticate } from "../modules/flist"
 
 export default function Index() {
 	const [account, setAccount] = useState("")
@@ -8,13 +9,13 @@ export default function Index() {
 	function handleSubmit(event: React.FormEvent) {
 		event.preventDefault()
 
-		flistFetch(`/json/getApiTicket.php`, { account, password })
-			.then(console.log)
+		authenticate({ account, password })
+			.then(({ ticket }) => idb.set("session", { account, ticket }))
 			.catch(console.error)
 	}
 
 	return (
-		<main>
+		<main className="p-4">
 			<form onSubmit={handleSubmit}>
 				<label>
 					<div>Username</div>
