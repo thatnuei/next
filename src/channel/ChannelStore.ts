@@ -1,4 +1,4 @@
-import { curryRight, uniq, without } from "lodash-es"
+import { uniq, without as lodashWithout } from "lodash-es"
 import { Observable, observable } from "micro-observables"
 import { UserData } from "../app/UserStore"
 import { concatUnique } from "../helpers/common/concatUniq"
@@ -14,7 +14,8 @@ import { SocketHandler } from "../socket/SocketHandler"
 import { ChannelModel } from "./ChannelModel"
 import { loadChannels, saveChannels } from "./storage"
 
-const withoutCurried = curryRight(without)
+const without = <T>(item: T) => (items: readonly T[]) =>
+  lodashWithout(items, item)
 
 export class ChannelStore {
   private readonly joinedChannelIds = observable<string[]>([])
@@ -88,11 +89,11 @@ export class ChannelStore {
 
     LCH({ channel: id, character }) {
       if (character === this.identity.get()) {
-        this.joinedChannelIds.update(withoutCurried([id]))
+        this.joinedChannelIds.update(without(id))
       }
 
       const channel = this.getChannel(id)
-      channel.users.update(withoutCurried([character]))
+      channel.users.update(without(character))
     },
 
     ICH({ channel: id, users, mode }) {
