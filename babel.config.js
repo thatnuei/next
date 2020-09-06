@@ -1,9 +1,7 @@
 module.exports = {
   presets: [
-    ["@babel/preset-env", { modules: false }],
-    "@babel/preset-react",
-    "@babel/preset-typescript",
-    ["@emotion/babel-preset-css-prop", { autoLabel: "never" }], // autoLabel breaks css prop overrides
+    // autoLabel breaks css prop overrides
+    ["@emotion/babel-preset-css-prop", { autoLabel: "never" }],
   ],
-  plugins: ["@babel/plugin-proposal-class-properties", "babel-plugin-macros"],
+  plugins: ["@babel/plugin-proposal-class-properties"],
 }
