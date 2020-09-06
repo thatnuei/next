@@ -112,18 +112,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helper-builder-react-jsx-experimental@npm:^7.10.4":
-  version: 7.10.5
-  resolution: "@babel/helper-builder-react-jsx-experimental@npm:7.10.5"
-  dependencies:
-    "@babel/helper-annotate-as-pure": ^7.10.4
-    "@babel/helper-module-imports": ^7.10.4
-    "@babel/types": ^7.10.5
-  checksum: 9505bc9d365e1c66cde44b196b3a5884fe35aae526cdef8696d7236cce01a58ce660f6ea727c6cba964f8f0a7b75e57634e8ccfbbeb1f5694a7277a55417eaaf
-  languageName: node
-  linkType: hard
-
-"@babel/helper-builder-react-jsx-experimental@npm:^7.11.5":
+"@babel/helper-builder-react-jsx-experimental@npm:^7.10.4, @babel/helper-builder-react-jsx-experimental@npm:^7.11.5":
   version: 7.11.5
   resolution: "@babel/helper-builder-react-jsx-experimental@npm:7.11.5"
   dependencies:
@@ -497,7 +486,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-nullish-coalescing-operator@npm:7.8.3, @babel/plugin-proposal-nullish-coalescing-operator@npm:^7.8.3":
+"@babel/plugin-proposal-nullish-coalescing-operator@npm:7.8.3":
   version: 7.8.3
   resolution: "@babel/plugin-proposal-nullish-coalescing-operator@npm:7.8.3"
   dependencies:
@@ -509,7 +498,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-nullish-coalescing-operator@npm:^7.10.4":
+"@babel/plugin-proposal-nullish-coalescing-operator@npm:^7.10.4, @babel/plugin-proposal-nullish-coalescing-operator@npm:^7.8.3":
   version: 7.10.4
   resolution: "@babel/plugin-proposal-nullish-coalescing-operator@npm:7.10.4"
   dependencies:
@@ -521,7 +510,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-numeric-separator@npm:7.8.3, @babel/plugin-proposal-numeric-separator@npm:^7.8.3":
+"@babel/plugin-proposal-numeric-separator@npm:7.8.3":
   version: 7.8.3
   resolution: "@babel/plugin-proposal-numeric-separator@npm:7.8.3"
   dependencies:
@@ -533,7 +522,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-numeric-separator@npm:^7.10.4":
+"@babel/plugin-proposal-numeric-separator@npm:^7.10.4, @babel/plugin-proposal-numeric-separator@npm:^7.8.3":
   version: 7.10.4
   resolution: "@babel/plugin-proposal-numeric-separator@npm:7.10.4"
   dependencies:
@@ -570,7 +559,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-optional-chaining@npm:7.9.0, @babel/plugin-proposal-optional-chaining@npm:^7.9.0":
+"@babel/plugin-proposal-optional-chaining@npm:7.9.0":
   version: 7.9.0
   resolution: "@babel/plugin-proposal-optional-chaining@npm:7.9.0"
   dependencies:
@@ -582,7 +571,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-optional-chaining@npm:^7.11.0":
+"@babel/plugin-proposal-optional-chaining@npm:^7.11.0, @babel/plugin-proposal-optional-chaining@npm:^7.9.0":
   version: 7.11.0
   resolution: "@babel/plugin-proposal-optional-chaining@npm:7.11.0"
   dependencies:
@@ -1094,7 +1083,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-react-display-name@npm:7.8.3, @babel/plugin-transform-react-display-name@npm:^7.8.3":
+"@babel/plugin-transform-react-display-name@npm:7.8.3":
   version: 7.8.3
   resolution: "@babel/plugin-transform-react-display-name@npm:7.8.3"
   dependencies:
@@ -1105,7 +1094,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-react-display-name@npm:^7.10.4":
+"@babel/plugin-transform-react-display-name@npm:^7.10.4, @babel/plugin-transform-react-display-name@npm:^7.8.3":
   version: 7.10.4
   resolution: "@babel/plugin-transform-react-display-name@npm:7.10.4"
   dependencies:
@@ -1116,20 +1105,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-react-jsx-development@npm:^7.10.4":
-  version: 7.10.4
-  resolution: "@babel/plugin-transform-react-jsx-development@npm:7.10.4"
-  dependencies:
-    "@babel/helper-builder-react-jsx-experimental": ^7.10.4
-    "@babel/helper-plugin-utils": ^7.10.4
-    "@babel/plugin-syntax-jsx": ^7.10.4
-  peerDependencies:
-    "@babel/core": ^7.0.0-0
-  checksum: ca014ab370cc3f42a13fda34e04a54b1d16212eb8f74e1403fc4b37c01f2f36d1756543fcadd2f618f1ee315380ba175ced38c3c66873f4de0bc8c24fa46d69f
-  languageName: node
-  linkType: hard
-
-"@babel/plugin-transform-react-jsx-development@npm:^7.9.0":
+"@babel/plugin-transform-react-jsx-development@npm:^7.10.4, @babel/plugin-transform-react-jsx-development@npm:^7.9.0":
   version: 7.11.5
   resolution: "@babel/plugin-transform-react-jsx-development@npm:7.11.5"
   dependencies:
@@ -2395,14 +2371,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-schema@npm:^7.0.3":
-  version: 7.0.5
-  resolution: "@types/json-schema@npm:7.0.5"
-  checksum: 6290f9fe93ac957b244262d5ff56cfd3045c63da6ed88dcc2d5b84131e6284c8e6213bf0cb81423a4f940182647bcd69057309c982f8db64dfff8f65f800ef80
-  languageName: node
-  linkType: hard
-
-"@types/json-schema@npm:^7.0.5":
+"@types/json-schema@npm:^7.0.3, @types/json-schema@npm:^7.0.5":
   version: 7.0.6
   resolution: "@types/json-schema@npm:7.0.6"
   checksum: 820cabe35ac915b93e38b0c01957e5c49d7d9f69251dddfbf39af0ff4fe24f6e08b39e55603e0d212dea7bcaa383b1218b58a738d1c02013dc22df06547ff238
@@ -4192,17 +4161,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30000981, caniuse-lite@npm:^1.0.30001035":
+"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30000981, caniuse-lite@npm:^1.0.30001035, caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001111":
   version: 1.0.30001124
   resolution: "caniuse-lite@npm:1.0.30001124"
   checksum: 61f208bfd7dc7fce7355392288d26180c48f095df251bd3fb94db542edfdea804cf2646f2f05c7f2b5bd613c7d935214bb0c4e257ae9508829d00644b823ceff
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001111":
-  version: 1.0.30001112
-  resolution: "caniuse-lite@npm:1.0.30001112"
-  checksum: 08293122dfa4c1493cdc78357008eb1af36eec5a61d6201d689c1d3b4bd62218be8e2eda72f85223e239a7ef00ac0f1dede8aafc24b7d1297f67c627ea241b28
   languageName: node
   linkType: hard
 
@@ -7174,7 +7136,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-fsevents@2.1.2:
+"fsevents@2.1.2, fsevents@~2.1.2":
   version: 2.1.2
   resolution: "fsevents@npm:2.1.2"
   dependencies:
@@ -7193,7 +7155,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"fsevents@patch:fsevents@2.1.2#builtin<compat/fsevents>":
+"fsevents@patch:fsevents@2.1.2#builtin<compat/fsevents>, fsevents@patch:fsevents@~2.1.2#builtin<compat/fsevents>":
   version: 2.1.2
   resolution: "fsevents@patch:fsevents@npm%3A2.1.2#builtin<compat/fsevents>::version=2.1.2&hash=495457"
   dependencies:
@@ -7209,24 +7171,6 @@ fsevents@^1.2.7:
     bindings: ^1.5.0
     nan: ^2.12.1
   checksum: 508a7e7e1e365236a7a0478392827145ba05c0181b1928b73b20c1a5212d15f6529735db897d617d7b0b051248c5720160f74c113bd727fc02de4f6cf885e1ff
-  languageName: node
-  linkType: hard
-
-"fsevents@patch:fsevents@~2.1.2#builtin<compat/fsevents>":
-  version: 2.1.3
-  resolution: "fsevents@patch:fsevents@npm%3A2.1.3#builtin<compat/fsevents>::version=2.1.3&hash=495457"
-  dependencies:
-    node-gyp: latest
-  checksum: 0005677b72f38a129a3cbe8c3794bdc83081a2bec53dfc03b085c2e5e4ca7a33a861a779d623313652df89746d97f79d24e4fef3b101c11c39ce1ea8a9690e18
-  languageName: node
-  linkType: hard
-
-fsevents@~2.1.2:
-  version: 2.1.3
-  resolution: "fsevents@npm:2.1.3"
-  dependencies:
-    node-gyp: latest
-  checksum: 8977781884d06c5bcb97b5f909efdce9683c925f2a0ce7e098d2cdffe2e0a0a50b1868547bb94dca75428c06535a4a70517a7bb3bb5a974d93bf9ffc067291eb
   languageName: node
   linkType: hard
 
@@ -10018,7 +9962,7 @@ fuzzysearch@1.0.3:
   languageName: node
   linkType: hard
 
-"mime-types@npm:2.1.18, mime-types@npm:~2.1.17":
+"mime-types@npm:2.1.18":
   version: 2.1.18
   resolution: "mime-types@npm:2.1.18"
   dependencies:
@@ -10027,7 +9971,7 @@ fuzzysearch@1.0.3:
   languageName: node
   linkType: hard
 
-"mime-types@npm:^2.1.12, mime-types@npm:~2.1.19, mime-types@npm:~2.1.24":
+"mime-types@npm:^2.1.12, mime-types@npm:~2.1.17, mime-types@npm:~2.1.19, mime-types@npm:~2.1.24":
   version: 2.1.27
   resolution: "mime-types@npm:2.1.27"
   dependencies:
@@ -13424,7 +13368,7 @@ resolve@1.15.0:
   languageName: node
   linkType: hard
 
-"rimraf@npm:2.6.3, rimraf@npm:^2.6.3, rimraf@npm:~2.6.2":
+"rimraf@npm:2.6.3, rimraf@npm:~2.6.2":
   version: 2.6.3
   resolution: "rimraf@npm:2.6.3"
   dependencies:
@@ -13435,7 +13379,7 @@ resolve@1.15.0:
   languageName: node
   linkType: hard
 
-"rimraf@npm:^2.5.4, rimraf@npm:^2.7.1":
+"rimraf@npm:^2.5.4, rimraf@npm:^2.6.3, rimraf@npm:^2.7.1":
   version: 2.7.1
   resolution: "rimraf@npm:2.7.1"
   dependencies:
@@ -13488,14 +13432,14 @@ resolve@1.15.0:
   languageName: node
   linkType: hard
 
-"safe-buffer@npm:5.1.2, safe-buffer@npm:^5.0.1, safe-buffer@npm:^5.1.0, safe-buffer@npm:^5.1.2, safe-buffer@npm:~5.1.0, safe-buffer@npm:~5.1.1":
+"safe-buffer@npm:5.1.2, safe-buffer@npm:~5.1.0, safe-buffer@npm:~5.1.1":
   version: 5.1.2
   resolution: "safe-buffer@npm:5.1.2"
   checksum: 2708587c1b5e70a5e420714ceb59f30f5791c6e831d39812125a008eca63a4ac18578abd020a0776ea497ff03b4543f2b2a223a7b9073bf2d6c7af9ec6829218
   languageName: node
   linkType: hard
 
-"safe-buffer@npm:^5.1.1, safe-buffer@npm:^5.2.0, safe-buffer@npm:~5.2.0":
+"safe-buffer@npm:^5.0.1, safe-buffer@npm:^5.1.0, safe-buffer@npm:^5.1.1, safe-buffer@npm:^5.1.2, safe-buffer@npm:^5.2.0, safe-buffer@npm:~5.2.0":
   version: 5.2.1
   resolution: "safe-buffer@npm:5.2.1"
   checksum: 0bb57f0d8f9d1fa4fe35ad8a2db1f83a027d48f2822d59ede88fd5cd4ddad83c0b497213feb7a70fbf90597a70c5217f735b0eb1850df40ce9b4ae81dd22b3f9
