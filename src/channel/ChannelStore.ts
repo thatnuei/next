@@ -1,4 +1,4 @@
-import { curry, uniq, without } from "lodash-es"
+import { curryRight, uniq, without } from "lodash-es"
 import { Observable, observable } from "micro-observables"
 import { UserData } from "../app/UserStore"
 import { concatUnique } from "../helpers/common/concatUniq"
@@ -14,7 +14,7 @@ import { SocketHandler } from "../socket/SocketHandler"
 import { ChannelModel } from "./ChannelModel"
 import { loadChannels, saveChannels } from "./storage"
 
-const withoutCurried = curry(without)
+const withoutCurried = curryRight(without)
 
 export class ChannelStore {
   private readonly joinedChannelIds = observable<string[]>([])
