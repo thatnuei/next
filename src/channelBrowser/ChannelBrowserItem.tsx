@@ -32,12 +32,15 @@ function ChannelBrowserItem({ info, ...props }: Props) {
 
   return (
     <button css={containerStyle} onClick={handleClick} {...props}>
-      <Icon
-        which={info.type === "public" ? earth : lock}
-        css={tw`flex-shrink-0 mr-2`}
+      <Icon which={info.type === "public" ? earth : lock} css={tw`mr-2`} />
+      <div
+        css={[
+          tw`flex-1 overflow-hidden whitespace-no-wrap`,
+          { textOverflow: "ellipsis" },
+        ]}
+        dangerouslySetInnerHTML={{ __html: info.title }}
       />
-      <div dangerouslySetInnerHTML={{ __html: info.title }} />
-      <div css={tw`flex-1 flex-shrink-0 w-12 text-right`}>{info.userCount}</div>
+      <div css={tw`w-12 text-right`}>{info.userCount}</div>
     </button>
   )
 }
