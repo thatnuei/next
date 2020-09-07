@@ -24,14 +24,22 @@ export async function flistFetch<T>(
 
 type AuthenticateResponse = {
 	ticket: string
-	characters: string
+	characters: string[]
 }
 
-export function authenticate(data: { account: string; password: string }) {
-	return flistFetch<AuthenticateResponse>(`/json/getApiTicket.php`, {
-		...data,
-		no_characters: "true",
-		no_friends: "true",
-		no_bookmarks: "true",
-	})
+export async function authenticate(data: {
+	account: string
+	password: string
+}): Promise<AuthenticateResponse> {
+	const response = await flistFetch<AuthenticateResponse>(
+		`/json/getApiTicket.php`,
+		{
+			...data,
+			no_characters: "true",
+			no_friends: "true",
+			no_bookmarks: "true",
+		},
+	)
+
+	return { ...response, characters: response.characters.slice().sort() }
 }
