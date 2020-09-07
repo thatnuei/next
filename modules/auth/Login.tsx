@@ -1,17 +1,24 @@
-import * as idb from "idb-keyval"
 import { useState } from "react"
 import { authenticate } from "../flist"
+import { Session } from "./types"
 
-export default function Login() {
+type Props = {
+	onSuccess: (session: Session) => void
+}
+
+export default function Login(props: Props) {
 	const [account, setAccount] = useState("")
 	const [password, setPassword] = useState("")
+	const [error, setError] = useState<string>()
 
 	function handleSubmit(event: React.FormEvent) {
 		event.preventDefault()
 
 		authenticate({ account, password })
-			.then(({ ticket }) => idb.set("session", { account, ticket }))
-			.catch(console.error)
+			.then(({ ticket, characters }) =>
+				props.onSuccess({ account, ticket, characters }),
+			)
+			.catch((error) => setError(String(error)))
 	}
 
 	return (
@@ -38,6 +45,7 @@ export default function Login() {
 					<button type="submit">Submit</button>
 				</div>
 			</form>
+			{error ? <p className="text-red-600">{error}</p> : null}
 		</main>
 	)
 }
