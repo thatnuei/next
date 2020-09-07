@@ -35,7 +35,6 @@ export async function authenticate(data: {
 		`/json/getApiTicket.php`,
 		{
 			...data,
-			no_characters: "true",
 			no_friends: "true",
 			no_bookmarks: "true",
 		},
