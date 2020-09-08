@@ -1,40 +1,54 @@
 import Router from "next/router"
 import { useState } from "react"
+import { useMutation } from "react-query"
 import { useCharacterListQuery } from "../modules/auth/character-list"
 import { storedUserSession } from "../modules/auth/session"
-import { authenticate } from "../modules/flist"
+import { flistFetch } from "../modules/flist"
+
+type LoginData = {
+	ticket: string
+	characters: string[]
+}
 
 export default function Login() {
 	const [account, setAccount] = useState("")
 	const [password, setPassword] = useState("")
-	const [error, setError] = useState<string>()
 
 	const characterListQuery = useCharacterListQuery({
 		enabled: false,
 	})
 
-	async function handleSubmit(event: React.FormEvent) {
-		event.preventDefault()
+	const [login, loginMutation] = useMutation(async () => {
+		const { ticket, characters } = await flistFetch<LoginData>(
+			`/json/getApiTicket.php`,
+			{
+				account,
+				password,
+				no_friends: "true",
+				no_bookmarks: "true",
+			},
+		)
 
-		try {
-			const { ticket, characters } = await authenticate({ account, password })
-			await storedUserSession.set({ account, ticket })
-			characterListQuery.setData({ characters })
-			Router.push("/character-select")
-		} catch (error) {
-			setError(String(error))
-		}
-	}
+		await storedUserSession.set({ account, ticket })
+		characterListQuery.setData({ characters })
+		Router.push("/character-select")
+	})
 
 	return (
 		<main className="p-4">
-			<form onSubmit={handleSubmit}>
+			<form
+				onSubmit={(e) => {
+					e.preventDefault()
+					login()
+				}}
+			>
 				<label>
 					<div>Username</div>
 					<input
 						className="border"
 						value={account}
 						onChange={(e) => setAccount(e.target.value)}
+						disabled={loginMutation.isLoading}
 					/>
 				</label>
 				<label>
@@ -44,13 +58,21 @@ export default function Login() {
 						type="password"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
+						disabled={loginMutation.isLoading}
 					/>
 				</label>
 				<div>
-					<button type="submit">Submit</button>
+					<button type="submit" disabled={loginMutation.isLoading}>
+						Submit
+					</button>
 				</div>
 			</form>
-			{error ? <p className="text-red-600">{error}</p> : null}
+
+			{loginMutation.isLoading ? (
+				<p>Logging in...</p>
+			) : loginMutation.error ? (
+				<p className="text-red-600">{String(loginMutation.error)}</p>
+			) : null}
 		</main>
 	)
 }
