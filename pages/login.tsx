@@ -1,24 +1,32 @@
+import { set } from "idb-keyval"
+import Router from "next/router"
 import { useState } from "react"
-import { authenticate } from "../flist"
-import { Session } from "./types"
+import { useCharacterListQuery } from "../modules/auth/queries"
+import { authenticate } from "../modules/flist"
 
-type Props = {
-	onSuccess: (session: Session) => void
-}
-
-export default function Login(props: Props) {
+export default function Login() {
 	const [account, setAccount] = useState("")
 	const [password, setPassword] = useState("")
 	const [error, setError] = useState<string>()
 
-	function handleSubmit(event: React.FormEvent) {
+	const characterListQuery = useCharacterListQuery({
+		enabled: false,
+	})
+
+	async function handleSubmit(event: React.FormEvent) {
 		event.preventDefault()
 
-		authenticate({ account, password })
-			.then(({ ticket, characters }) =>
-				props.onSuccess({ account, ticket, characters }),
-			)
-			.catch((error) => setError(String(error)))
+		try {
+			const { ticket, characters } = await authenticate({ account, password })
+
+			await set("session", { account, ticket })
+
+			characterListQuery.setData({ characters })
+
+			Router.push("/character-select")
+		} catch (error) {
+			setError(String(error))
+		}
 	}
 
 	return (
