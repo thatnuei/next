@@ -12,7 +12,7 @@ export function useCharacterListQuery(config?: QueryConfig<CharacterListData>) {
 		"characters",
 		async () => {
 			const session = await storedUserSession.get()
-			if (!session) throw new Error("Unauthorized")
+			if (!session) throw new Error("Login required")
 
 			return flistFetch<CharacterListData>(
 				`/json/api/character-list.php`,
