@@ -2,6 +2,8 @@ import Link from "next/link"
 import Router from "next/router"
 import { useState } from "react"
 import { useCharacterListQuery } from "../modules/auth/character-list"
+import { storedUserSession } from "../modules/auth/session"
+import { storedIdentity } from "../modules/auth/stored-identity"
 import { compare } from "../modules/helpers/compare"
 
 export default function CharacterSelect() {
@@ -38,13 +40,19 @@ function CharacterSelectForm(props: {
 }) {
 	const [character, setCharacter] = useState(props.initialCharacter)
 
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault()
+
+		const session = await storedUserSession.get()
+		if (!session) return
+
+		await storedIdentity(session.account).set(character)
+
+		Router.push(`/chat`)
+	}
+
 	return (
-		<form
-			onSubmit={(e) => {
-				e.preventDefault()
-				Router.push(`/chat?identity=${character}`)
-			}}
-		>
+		<form onSubmit={handleSubmit}>
 			<select value={character} onChange={(e) => setCharacter(e.target.value)}>
 				{props.characters
 					.slice()

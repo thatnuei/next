@@ -1,7 +1,16 @@
-import { useRouter } from "next/router"
+import { useObservable } from "micro-observables"
+import { useEffect, useMemo } from "react"
+import { SocketHandler } from "../modules/chat/socket"
 
 export default function Chat() {
-	const router = useRouter()
-	const identity = String(router.query.identity)
-	return identity
+	const socket = useMemo(() => new SocketHandler(), [])
+	const socketStatus = useObservable(socket.status)
+
+	useEffect(() => {
+		socket.connect()
+		return () => socket.disconnect()
+	}, [socket])
+
+	// TODO: switch on status
+	return socketStatus
 }
