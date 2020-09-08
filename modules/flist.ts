@@ -42,19 +42,3 @@ export async function authenticate(data: {
 
 	return { ...response, characters: response.characters.slice().sort() }
 }
-
-export type GetCharactersResponse = {
-	characters: string[]
-}
-
-export async function getCharacters(data: {
-	account: string
-	ticket: string
-}): Promise<GetCharactersResponse> {
-	const response = await flistFetch<GetCharactersResponse>(
-		`/json/api/character-list.php`,
-		data,
-	)
-
-	return { ...response, characters: response.characters.slice().sort() }
-}

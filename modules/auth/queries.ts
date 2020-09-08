@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 import { queryCache, QueryConfig, useQuery } from "react-query"
-import { getCharacters, GetCharactersResponse } from "../flist"
+import { flistFetch, GetCharactersResponse } from "../flist"
 import { storedUserSession } from "./session"
 
 export function useCharacterListQuery(
@@ -11,7 +11,16 @@ export function useCharacterListQuery(
 		async () => {
 			const session = await storedUserSession.get()
 			if (!session) throw new Error("Unauthorized")
-			return getCharacters(session)
+
+			const response = await flistFetch<GetCharactersResponse>(
+				`/json/api/character-list.php`,
+				session,
+			)
+
+			return {
+				...response,
+				characters: response.characters.slice().sort(),
+			}
 		},
 		config,
 	)
