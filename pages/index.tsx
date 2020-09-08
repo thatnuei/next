@@ -1,7 +1,7 @@
 import Router from "next/router"
 import { useEffect } from "react"
 import { QueryStatus } from "react-query"
-import { useCharacterListQuery } from "../modules/auth/queries"
+import { useCharacterListQuery } from "../modules/auth/character-list"
 
 export default function Index() {
 	const characterListQuery = useCharacterListQuery()

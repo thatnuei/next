@@ -1,6 +1,6 @@
 import Router from "next/router"
 import { useState } from "react"
-import { useCharacterListQuery } from "../modules/auth/queries"
+import { useCharacterListQuery } from "../modules/auth/character-list"
 import { storedUserSession } from "../modules/auth/session"
 import { authenticate } from "../modules/flist"
 

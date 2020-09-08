@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Router from "next/router"
 import { useState } from "react"
-import { useCharacterListQuery } from "../modules/auth/queries"
+import { useCharacterListQuery } from "../modules/auth/character-list"
 
 export default function CharacterSelect() {
 	const query = useCharacterListQuery()
