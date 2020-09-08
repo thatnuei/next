@@ -46,7 +46,8 @@ function CharacterSelectForm(props: {
 			}}
 		>
 			<select value={character} onChange={(e) => setCharacter(e.target.value)}>
-				{[...props.characters]
+				{props.characters
+					.slice()
 					.sort(compare((name) => name.toLowerCase()))
 					.map((name) => (
 						<option key={name} value={name}>
