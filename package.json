@@ -2,9 +2,9 @@
 	"name": "next",
 	"private": true,
 	"scripts": {
-		"dev": "next dev src --port 8080",
-		"build": "next build src",
-		"start": "next start src"
+		"dev": "next dev --port 8080",
+		"build": "next build",
+		"start": "next start"
 	},
 	"dependencies": {
 		"idb-keyval": "^3.2.0",
