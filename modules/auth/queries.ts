@@ -1,8 +1,7 @@
-import { get } from "idb-keyval"
 import { useCallback } from "react"
 import { queryCache, QueryConfig, useQuery } from "react-query"
 import { getCharacters, GetCharactersResponse } from "../flist"
-import { UserSession } from "./session"
+import { storedUserSession } from "./session"
 
 export function useCharacterListQuery(
 	config?: QueryConfig<GetCharactersResponse>,
@@ -10,7 +9,7 @@ export function useCharacterListQuery(
 	const query = useQuery(
 		"characters",
 		async () => {
-			const session = await get<UserSession | null>("session")
+			const session = await storedUserSession.get()
 			if (!session) throw new Error("Unauthorized")
 			return getCharacters(session)
 		},

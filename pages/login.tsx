@@ -1,7 +1,7 @@
-import { set } from "idb-keyval"
 import Router from "next/router"
 import { useState } from "react"
 import { useCharacterListQuery } from "../modules/auth/queries"
+import { storedUserSession } from "../modules/auth/session"
 import { authenticate } from "../modules/flist"
 
 export default function Login() {
@@ -18,11 +18,8 @@ export default function Login() {
 
 		try {
 			const { ticket, characters } = await authenticate({ account, password })
-
-			await set("session", { account, ticket })
-
+			await storedUserSession.set({ account, ticket })
 			characterListQuery.setData({ characters })
-
 			Router.push("/character-select")
 		} catch (error) {
 			setError(String(error))

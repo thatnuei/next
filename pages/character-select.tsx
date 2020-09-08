@@ -1,20 +1,16 @@
 import Link from "next/link"
+import Router from "next/router"
 import { useState } from "react"
-import { QueryStatus } from "react-query"
 import { useCharacterListQuery } from "../modules/auth/queries"
 
 export default function CharacterSelect() {
-	const [character, setCharacter] = useState("")
+	const query = useCharacterListQuery()
 
-	const query = useCharacterListQuery({
-		onSuccess: (data) => setCharacter(data.characters[0]),
-	})
-
-	if (query.status === QueryStatus.Loading) {
+	if (query.isLoading) {
 		return <p>Loading...</p>
 	}
 
-	if (query.status === QueryStatus.Error) {
+	if (query.error) {
 		return (
 			<>
 				<p className="text-red-600">{String(query.error)}</p>
@@ -25,23 +21,40 @@ export default function CharacterSelect() {
 		)
 	}
 
-	if (query.status === QueryStatus.Success) {
+	if (query.data) {
 		return (
-			<form
-				onSubmit={(e) => {
-					e.preventDefault()
-				}}
-			>
-				<select
-					value={character}
-					onChange={(e) => setCharacter(e.target.value)}
-				>
-					{query.data?.characters.map((name) => (
-						<option value={name}>{name}</option>
-					))}
-				</select>
-				<button type="submit">Enter chat</button>
-			</form>
+			<CharacterSelectForm
+				characters={query.data.characters}
+				initialCharacter={query.data.characters[0]}
+			/>
 		)
 	}
+}
+
+function CharacterSelectForm(props: {
+	characters: string[]
+	initialCharacter: string
+}) {
+	const [character, setCharacter] = useState(props.initialCharacter)
+
+	return (
+		<form
+			onSubmit={(e) => {
+				e.preventDefault()
+				Router.push(`/chat?identity=${character}`)
+			}}
+		>
+			<select value={character} onChange={(e) => setCharacter(e.target.value)}>
+				{props.characters.map((name) => (
+					<option key={name} value={name}>
+						{name}
+					</option>
+				))}
+			</select>
+			<button type="submit">Enter chat</button>
+			<Link href="/login">
+				<a>Return to login</a>
+			</Link>
+		</form>
+	)
 }
