@@ -14,15 +14,10 @@ export function useCharacterListQuery(config?: QueryConfig<CharacterListData>) {
 			const session = await storedUserSession.get()
 			if (!session) throw new Error("Unauthorized")
 
-			const response = await flistFetch<CharacterListData>(
+			return flistFetch<CharacterListData>(
 				`/json/api/character-list.php`,
 				session,
 			)
-
-			return {
-				...response,
-				characters: response.characters.slice().sort(),
-			}
 		},
 		config,
 	)
