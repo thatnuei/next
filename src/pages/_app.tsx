@@ -1,7 +1,10 @@
+import { enableMapSet } from "immer"
 import { AppProps } from "next/app"
 import Head from "next/head"
 import { ReactQueryConfig, ReactQueryConfigProvider } from "react-query"
 import "../styles/index.css"
+
+enableMapSet()
 
 const reactQueryConfig: ReactQueryConfig = {
 	queries: {

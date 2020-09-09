@@ -1,7 +1,11 @@
 import { observable } from "micro-observables"
 import { storedUserSession } from "../auth/session"
 import { storedIdentity } from "../auth/stored-identity"
-import { ClientCommand, parseCommandString } from "./socket-command"
+import {
+	ClientCommand,
+	parseCommandString,
+	ServerCommand,
+} from "./socket-command"
 
 type SocketStatus =
 	| "idle"
@@ -15,6 +19,8 @@ type SocketStatus =
 export class SocketHandler {
 	readonly status = observable<SocketStatus>("idle")
 	private socket?: WebSocket
+
+	onCommand = (command: ServerCommand) => {}
 
 	send(command: ClientCommand) {
 		const message = command.params
@@ -59,6 +65,21 @@ export class SocketHandler {
 			if (command.type === "PIN") {
 				this.send({ type: "PIN" })
 			}
+			if (command.type === "HLO") {
+				console.info(command.params.message)
+			}
+			if (command.type === "CON") {
+				console.info(`There are ${command.params.count} characters in chat`)
+			}
+			if (command.type === "ERR") {
+				// identification failed, probably due to expired ticket
+				if (command.params.number === 4) {
+					console.log("wat")
+					this.status.set("no-session")
+					this.disconnect()
+				}
+			}
+			this.onCommand(command)
 		}
 
 		socket.onclose = () => {
