@@ -40,6 +40,8 @@ export class SocketHandler {
 		const identity = await storedIdentity(session.account).get()
 		if (!identity) return this.status.set("no-session")
 
+		this.status.set("connecting")
+
 		const socket = (this.socket = new WebSocket(`wss://chat.f-list.net/chat2`))
 
 		socket.onopen = () => {
