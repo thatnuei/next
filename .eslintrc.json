@@ -18,6 +18,7 @@
 		"react/react-in-jsx-scope": "off",
 		"react/button-has-type": "warn",
 		"jsx-a11y/no-onchange": "off",
-		"jsx-a11y/anchor-is-valid": "off"
+		"jsx-a11y/anchor-is-valid": "off",
+		"require-await": "warn"
 	}
 }
