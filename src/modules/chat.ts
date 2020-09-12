@@ -1,5 +1,5 @@
-import { ChannelStore } from "../channel"
-import { CharacterStore } from "../character"
+import { ChannelStore } from "./channel"
+import { CharacterStore } from "./character"
 import { SocketHandler } from "./socket"
 
 export class ChatStore {

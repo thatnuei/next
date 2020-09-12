@@ -1,8 +1,8 @@
 import { observable } from "micro-observables"
-import { createCommandHandler } from "./chat/commandHelpers"
-import { SocketHandler } from "./chat/socket"
+import { createCommandHandler } from "./chat-command"
 import { repository } from "./helpers/repository"
 import { setImmutableDelete } from "./helpers/setImmutableDelete"
+import { SocketHandler } from "./socket"
 
 export type ChannelMessage = {
 	senderName: string

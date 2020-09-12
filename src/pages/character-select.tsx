@@ -2,9 +2,9 @@ import Link from "next/link"
 import Router from "next/router"
 import { useState } from "react"
 import { useCharacterListQuery } from "../modules/auth/character-list"
-import { storedUserSession } from "../modules/auth/session"
 import { storedIdentity } from "../modules/auth/stored-identity"
 import { compare } from "../modules/helpers/compare"
+import { storedUserSession } from "../modules/user"
 
 export default function CharacterSelect() {
 	const query = useCharacterListQuery()

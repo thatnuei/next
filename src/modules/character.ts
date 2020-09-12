@@ -1,6 +1,6 @@
 import * as fchat from "fchat"
 import { observable } from "micro-observables"
-import { createCommandHandler } from "./chat/commandHelpers"
+import { createCommandHandler } from "./chat-command"
 import { repository } from "./helpers/repository"
 
 export type Character = {

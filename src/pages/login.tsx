@@ -2,8 +2,8 @@ import Router from "next/router"
 import { useState } from "react"
 import { useMutation } from "react-query"
 import { useCharacterListQuery } from "../modules/auth/character-list"
-import { storedUserSession } from "../modules/auth/session"
 import { flistFetch } from "../modules/flist"
+import { storedUserSession } from "../modules/user"
 
 type LoginData = {
 	ticket: string

@@ -1,15 +1,18 @@
 import { useCallback } from "react"
 import { queryCache, QueryConfig, useQuery } from "react-query"
 import { flistFetch } from "../flist"
-import { storedUserSession } from "./session"
+import { storedUserSession, UserSession } from "../user"
 
 type CharacterListData = {
 	characters: string[]
 }
 
-export function useCharacterListQuery(config?: QueryConfig<CharacterListData>) {
+export function useCharacterListQuery(
+	session: UserSession | undefined,
+	config?: QueryConfig<CharacterListData>,
+) {
 	const query = useQuery(
-		"characters",
+		[session && "characters", session],
 		async () => {
 			const session = await storedUserSession.get()
 			if (!session) throw new Error("Login required")
