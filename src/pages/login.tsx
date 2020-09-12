@@ -1,9 +1,8 @@
 import Router from "next/router"
 import { useState } from "react"
 import { useMutation } from "react-query"
-import { useCharacterListQuery } from "../modules/auth/character-list"
 import { flistFetch } from "../modules/flist"
-import { storedUserSession } from "../modules/user"
+import { characterListResource, sessionResource } from "../modules/user"
 
 type LoginData = {
 	ticket: string
@@ -13,10 +12,6 @@ type LoginData = {
 export default function Login() {
 	const [account, setAccount] = useState("")
 	const [password, setPassword] = useState("")
-
-	const characterListQuery = useCharacterListQuery({
-		enabled: false,
-	})
 
 	const [login, loginMutation] = useMutation(async () => {
 		const { ticket, characters } = await flistFetch<LoginData>(
@@ -29,8 +24,9 @@ export default function Login() {
 			},
 		)
 
-		await storedUserSession.set({ account, ticket })
-		characterListQuery.setData({ characters })
+		sessionResource.setData({ account, ticket })
+		characterListResource.setData({ characters }, { account, ticket })
+
 		Router.push("/character-select")
 	})
 

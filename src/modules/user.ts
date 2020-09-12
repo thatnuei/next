@@ -1,52 +1,28 @@
-import { useCallback } from "react"
-import { queryCache, useQuery } from "react-query"
+import { flistFetch } from "./flist"
+import { Resource } from "./resource"
 import { createIdbStorage } from "./storage/idb"
 
-export type UserSession = {
+/// session
+type UserSession = {
 	account: string
 	ticket: string
 }
 
 const storedSession = createIdbStorage<UserSession>("session")
 
-export function useSessionQuery() {
-	const query = useQuery("session", () => storedSession.get(), {
-		suspense: true,
-	})
+export const sessionResource = Resource.of(() => storedSession.get())
 
-	const setData = useCallback((data: UserSession) => {
-		queryCache.setQueryData("session", data)
-	}, [])
+/// identity
+const storedIdentity = (account: string) =>
+	createIdbStorage<string>(`identity:${account}`)
 
-	return { ...query, setData }
-}
+export const identityResource = Resource.of((account: string) => {
+	return storedIdentity(account).get()
+})
 
-const storedIdentity = createIdbStorage<string>("identity")
+/// character list
+type CharacterListData = { characters: string[] }
 
-export function useIdentityQuery() {
-	const query = useQuery("identity", () => storedIdentity.get(), {
-		suspense: true,
-	})
-
-	const setData = useCallback((data: string) => {
-		queryCache.setQueryData("identity", data)
-	}, [])
-
-	return { ...query, setData }
-}
-
-// const emptySession: UserSession = {
-// 	account: "",
-// 	ticket: "",
-// 	characters: [],
-// 	identity: "",
-// }
-
-// const UserSessionContext = React.createContext(emptySession)
-
-// export function UserSessionProvider() {
-// 	const [session, setSession] = useState<UserSession>()
-
-// }
-
-// export function useUserSession() {}
+export const characterListResource = Resource.of((session: UserSession) => {
+	return flistFetch<CharacterListData>(`/json/api/character-list.php`, session)
+})

@@ -7,13 +7,15 @@
 		"start": "next start"
 	},
 	"dependencies": {
+		"fast-json-stable-stringify": "^2.1.0",
 		"fchat": "^1.4.0",
 		"idb-keyval": "^3.2.0",
 		"immer": "^7.0.8",
 		"micro-observables": "^1.5.0",
 		"next": "9.5.3",
-		"react": "^0.0.0-experimental-94c0244ba",
-		"react-dom": "^0.0.0-experimental-94c0244ba",
+		"react": "^17.0.0-rc.1",
+		"react-dom": "^17.0.0-rc.1",
+		"react-error-boundary": "^3.0.1",
 		"react-query": "2.15.4"
 	},
 	"devDependencies": {
@@ -25,7 +27,7 @@
 		"eslint": "^7.8.1",
 		"eslint-plugin-jsx-a11y": "^6.3.1",
 		"eslint-plugin-react": "^7.20.6",
-		"eslint-plugin-react-hooks": "^4.1.0",
+		"eslint-plugin-react-hooks": "^4.1.2",
 		"postcss-flexbugs-fixes": "4.2.1",
 		"postcss-preset-env": "6.7.0",
 		"tailwindcss": "1.8.3",
