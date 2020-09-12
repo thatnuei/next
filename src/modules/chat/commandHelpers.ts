@@ -20,3 +20,13 @@ export function parseCommandString(string: string): ServerCommand {
 	const params = string.length === 3 ? undefined : JSON.parse(string.slice(4))
 	return { type, params } as ServerCommand
 }
+
+type HandlerRecord = {
+	[K in keyof ServerCommandRecord]?: (params: ServerCommandRecord[K]) => void
+}
+
+export function createCommandHandler(handlers: HandlerRecord) {
+	return (command: ServerCommand) => {
+		handlers[command.type]?.(command.params as never)
+	}
+}

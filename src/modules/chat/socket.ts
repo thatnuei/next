@@ -1,11 +1,9 @@
 import { observable } from "micro-observables"
-import { storedUserSession } from "../auth/session"
-import { storedIdentity } from "../auth/stored-identity"
 import {
 	ClientCommand,
 	parseCommandString,
 	ServerCommand,
-} from "./socket-command"
+} from "./commandHelpers"
 
 type SocketStatus =
 	| "idle"
@@ -30,15 +28,9 @@ export class SocketHandler {
 		this.socket?.send(message)
 	}
 
-	async connect() {
+	connect(account: string, ticket: string, character: string) {
 		const status = this.status.get()
 		if (status !== "idle" && status !== "closed") return
-
-		const session = await storedUserSession.get()
-		if (!session) return this.status.set("no-session")
-
-		const identity = await storedIdentity(session.account).get()
-		if (!identity) return this.status.set("no-session")
 
 		this.status.set("connecting")
 
@@ -49,12 +41,12 @@ export class SocketHandler {
 			this.send({
 				type: "IDN",
 				params: {
-					method: "ticket",
-					account: session.account,
-					ticket: session.ticket,
-					character: identity,
+					account,
+					ticket,
+					character,
 					cname: "next",
 					cversion: "0.0.0",
+					method: "ticket",
 				},
 			})
 		}
