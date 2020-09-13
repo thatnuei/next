@@ -1,6 +1,11 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { useMutation } from "react-query"
 import { flistFetch } from "../flist/helpers"
+import { SolidButton } from "../ui/button"
+import { ErrorText } from "../ui/error-text"
+import { TextInput } from "../ui/input"
+import { IslandContainer, IslandPanel, IslandPanelHeader } from "../ui/island"
+import { Label } from "../ui/label"
 
 type Props = {
 	onSuccess: (data: LoginData) => void | Promise<void>
@@ -31,44 +36,53 @@ export default function Login(props: Props) {
 	})
 
 	return (
-		<main className="p-4">
-			<form
-				onSubmit={e => {
-					e.preventDefault()
-					login()
-				}}
-			>
-				<label>
-					<div>Username</div>
-					<input
-						className="border"
-						value={account}
-						onChange={e => setAccount(e.target.value)}
-						disabled={loginMutation.isLoading}
-					/>
-				</label>
-				<label>
-					<div>Password</div>
-					<input
-						className="border"
-						type="password"
-						value={password}
-						onChange={e => setPassword(e.target.value)}
-						disabled={loginMutation.isLoading}
-					/>
-				</label>
-				<div>
-					<button type="submit" disabled={loginMutation.isLoading}>
-						Submit
-					</button>
-				</div>
-			</form>
+		<IslandContainer>
+			<IslandPanel>
+				<main>
+					<IslandPanelHeader>
+						<h1>Login</h1>
+					</IslandPanelHeader>
 
-			{loginMutation.isLoading ? (
-				<p>Logging in...</p>
-			) : loginMutation.error ? (
-				<p className="text-red-600">{String(loginMutation.error)}</p>
-			) : null}
-		</main>
+					<form
+						className="flex flex-col items-start p-4 space-y-4"
+						onSubmit={e => {
+							e.preventDefault()
+							login()
+						}}
+					>
+						<Label text="Username">
+							<TextInput
+								placeholder="awesome_username"
+								value={account}
+								onChangeText={setAccount}
+								disabled={loginMutation.isLoading}
+							/>
+						</Label>
+
+						<Label text="Password">
+							<TextInput
+								type="password"
+								placeholder="••••••••"
+								value={password}
+								onChangeText={setPassword}
+								disabled={loginMutation.isLoading}
+							/>
+						</Label>
+
+						<SolidButton type="submit" disabled={loginMutation.isLoading}>
+							Submit
+						</SolidButton>
+
+						<div className="max-w-xs">
+							{loginMutation.isLoading ? (
+								<p>Logging in...</p>
+							) : loginMutation.error ? (
+								<ErrorText>{String(loginMutation.error)}</ErrorText>
+							) : null}
+						</div>
+					</form>
+				</main>
+			</IslandPanel>
+		</IslandContainer>
 	)
 }

@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+	button,
+	input,
+	select,
+	textarea {
+		border-radius: 0;
+	}
+
+	::placeholder {
+		opacity: 0.5;
+	}
+
+	.js-focus-visible :focus:not(.focus-visible) {
+		outline: none;
+	}
+}
