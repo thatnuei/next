@@ -51,9 +51,8 @@ export class Resource<T, I extends ResourceInput = void> {
 }
 
 export function useResource<T, I extends ResourceInput>(res: Resource<T, I>) {
-	const [, forceUpdate] = useReducer((state) => !state, false)
+	const [, forceUpdate] = useReducer(state => !state, false)
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const read = useCallback((input: I) => res.read(input), [res])
 
 	const setData = useCallback(
@@ -61,7 +60,6 @@ export function useResource<T, I extends ResourceInput>(res: Resource<T, I>) {
 			res.setData(data, input)
 			forceUpdate()
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[res],
 	)
 
@@ -70,7 +68,6 @@ export function useResource<T, I extends ResourceInput>(res: Resource<T, I>) {
 			res.invalidate(input)
 			forceUpdate()
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[res],
 	)
 

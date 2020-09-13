@@ -1,15 +1,18 @@
-import Router from "next/router"
 import { useState } from "react"
 import { useMutation } from "react-query"
-import { flistFetch } from "../modules/flist"
-import { characterListResource, sessionResource } from "../modules/user"
+import { flistFetch } from "../flist"
 
-type LoginData = {
+type Props = {
+	onSuccess: (data: LoginData) => void
+}
+
+export type LoginData = {
+	account: string
 	ticket: string
 	characters: string[]
 }
 
-export default function Login() {
+export default function Login(props: Props) {
 	const [account, setAccount] = useState("")
 	const [password, setPassword] = useState("")
 
@@ -24,16 +27,13 @@ export default function Login() {
 			},
 		)
 
-		sessionResource.setData({ account, ticket })
-		characterListResource.setData({ characters }, { account, ticket })
-
-		Router.push("/character-select")
+		props.onSuccess({ account, ticket, characters })
 	})
 
 	return (
 		<main className="p-4">
 			<form
-				onSubmit={(e) => {
+				onSubmit={e => {
 					e.preventDefault()
 					login()
 				}}
@@ -43,7 +43,7 @@ export default function Login() {
 					<input
 						className="border"
 						value={account}
-						onChange={(e) => setAccount(e.target.value)}
+						onChange={e => setAccount(e.target.value)}
 						disabled={loginMutation.isLoading}
 					/>
 				</label>
@@ -53,7 +53,7 @@ export default function Login() {
 						className="border"
 						type="password"
 						value={password}
-						onChange={(e) => setPassword(e.target.value)}
+						onChange={e => setPassword(e.target.value)}
 						disabled={loginMutation.isLoading}
 					/>
 				</label>

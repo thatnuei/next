@@ -1,12 +1,35 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import CharacterSelect from "./CharacterSelect"
+import Login, { LoginData } from "./Login"
+
+type View =
+	| { name: "login" }
+	| { name: "characterSelect"; data: LoginData }
+	| { name: "chat" }
 
 export default function App() {
-	const [count, setCount] = useState(0)
+	const [view, setView] = useState<View>({ name: "login" })
 
-	useEffect(() => {
-		const id = setInterval(() => setCount((c) => c + 1), 1000)
-		return () => clearInterval(id)
-	}, [])
+	switch (view.name) {
+		case "login":
+			return (
+				<Login
+					onSuccess={(data) => {
+						setView({ name: "characterSelect", data })
+					}}
+				/>
+			)
 
-	return <p>hello {count}</p>
+		case "characterSelect":
+			return (
+				<CharacterSelect
+					characters={view.data.characters}
+					onSubmit={() => setView({ name: "chat" })}
+					onBack={() => setView({ name: "login" })}
+				/>
+			)
+
+		case "chat":
+			return <p>chat</p>
+	}
 }
