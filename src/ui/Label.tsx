@@ -1,6 +1,6 @@
 import { ComponentPropsWithoutRef } from "react"
 
-export function Label({
+export default function Label({
 	text,
 	children,
 	className,

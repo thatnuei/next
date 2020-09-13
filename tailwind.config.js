@@ -11,11 +11,6 @@ const carrot = rgb(230, 126, 34)
 const river = rgb(52, 152, 219)
 
 module.exports = {
-	future: {
-		removeDeprecatedGapUtilities: true,
-		purgeLayersByDefault: true,
-	},
-	purge: ["./src/**/*.{ts,tsx,html}"],
 	theme: {
 		fontFamily: {
 			body: `'Fira Sans', sans-serif`,
@@ -47,4 +42,12 @@ module.exports = {
 	},
 	variants: {},
 	plugins: [],
+	purge: ["./src/**/*.{ts,tsx,html}"],
+	future: {
+		removeDeprecatedGapUtilities: true,
+		purgeLayersByDefault: true,
+	},
+	experimental: {
+		applyComplexClasses: true,
+	},
 }
