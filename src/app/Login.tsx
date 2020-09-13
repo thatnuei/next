@@ -69,7 +69,7 @@ export default function Login(props: Props) {
 					<Button
 						type="submit"
 						className="button-solid"
-						disabled={loginMutation.isLoading}
+						disabled={loginMutation.isLoading || !account || !password}
 					>
 						Submit
 					</Button>
