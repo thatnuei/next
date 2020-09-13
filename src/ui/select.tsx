@@ -6,7 +6,7 @@ export function Select({
 	className,
 	...props
 }: ComponentPropsWithoutRef<"select"> & {
-	onChangeValue?: (text: string) => void
+	onChangeValue?: (value: string) => void
 }) {
 	return (
 		<select
