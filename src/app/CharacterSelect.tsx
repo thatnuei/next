@@ -1,5 +1,10 @@
 import { useState } from "react"
+import { getAvatarUrl } from "../flist/helpers"
 import { compare } from "../helpers/compare"
+import { AnchorText } from "../ui/anchor"
+import { SolidButton } from "../ui/button"
+import { IslandContainer, IslandPanel, IslandPanelHeader } from "../ui/island"
+import { Select } from "../ui/select"
 
 type Props = {
 	characters: string[]
@@ -18,31 +23,52 @@ export default function CharacterSelect(props: Props) {
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<h1>Choose your identity</h1>
+		<IslandContainer>
+			<main className="flex flex-col items-center space-y-4">
+				<IslandPanel>
+					<IslandPanelHeader>
+						<h1>Choose your identity</h1>
+					</IslandPanelHeader>
 
-			<select
-				value={character}
-				onChange={e => {
-					setCharacter(e.target.value)
-					props.onChange(e.target.value)
-				}}
-			>
-				{props.characters
-					.slice()
-					.sort(compare(name => name.toLowerCase()))
-					.map(name => (
-						<option key={name} value={name}>
-							{name}
-						</option>
-					))}
-			</select>
+					<form
+						onSubmit={handleSubmit}
+						className="flex flex-col items-center p-4 space-y-4"
+					>
+						<img
+							src={getAvatarUrl(character)}
+							alt=""
+							role="presentation"
+							className="block w-24 h-24"
+						/>
 
-			<button type="submit">Enter chat</button>
+						<div className="max-w-xs">
+							<Select
+								aria-label="Identity"
+								value={character}
+								onChangeValue={value => {
+									setCharacter(value)
+									props.onChange(value)
+								}}
+							>
+								{props.characters
+									.slice()
+									.sort(compare(name => name.toLowerCase()))
+									.map(name => (
+										<option key={name} value={name}>
+											{name}
+										</option>
+									))}
+							</Select>
+						</div>
 
-			<button type="button" onClick={props.onBack}>
-				Return to login
-			</button>
-		</form>
+						<SolidButton type="submit">Enter chat</SolidButton>
+					</form>
+				</IslandPanel>
+
+				<button type="button" onClick={props.onBack}>
+					<AnchorText>Return to login</AnchorText>
+				</button>
+			</main>
+		</IslandContainer>
 	)
 }

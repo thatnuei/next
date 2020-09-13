@@ -30,7 +30,7 @@ export function IslandPanelHeader({
 	return (
 		<div
 			className={clsx(
-				"p-4 text-3xl leading-none text-center bg-midnight-1 font-header",
+				"p-4 text-3xl leading-9 text-center bg-midnight-1 font-header",
 				className,
 			)}
 			{...props}

@@ -73,13 +73,13 @@ export default function Login(props: Props) {
 							Submit
 						</SolidButton>
 
-						<div className="max-w-xs">
-							{loginMutation.isLoading ? (
-								<p>Logging in...</p>
-							) : loginMutation.error ? (
+						{loginMutation.isLoading ? (
+							<p>Logging in...</p>
+						) : loginMutation.error ? (
+							<div className="max-w-xs">
 								<ErrorText>{String(loginMutation.error)}</ErrorText>
-							) : null}
-						</div>
+							</div>
+						) : null}
 					</form>
 				</main>
 			</IslandPanel>
