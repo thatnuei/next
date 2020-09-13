@@ -16,7 +16,8 @@
 
 # production
 /build
-.next
+/dist
+/.next
 
 # env files
 .env.local

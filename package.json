@@ -2,9 +2,8 @@
 	"name": "next",
 	"private": true,
 	"scripts": {
-		"dev": "next dev --port 8080",
-		"build": "next build",
-		"start": "next start"
+		"dev": "poi ./src/index.html --serve --no-clear-console",
+		"build": "poi ./src/index.html --prod --no-clear-console"
 	},
 	"dependencies": {
 		"fast-json-stable-stringify": "^2.1.0",
@@ -12,7 +11,6 @@
 		"idb-keyval": "^3.2.0",
 		"immer": "^7.0.8",
 		"micro-observables": "^1.5.0",
-		"next": "9.5.3",
 		"react": "^17.0.0-rc.1",
 		"react-dom": "^17.0.0-rc.1",
 		"react-error-boundary": "^3.0.1",
@@ -28,9 +26,13 @@
 		"eslint-plugin-jsx-a11y": "^6.3.1",
 		"eslint-plugin-react": "^7.20.6",
 		"eslint-plugin-react-hooks": "^4.1.2",
-		"postcss-flexbugs-fixes": "4.2.1",
-		"postcss-preset-env": "6.7.0",
+		"poi": "^12.10.2",
 		"tailwindcss": "1.8.3",
 		"typescript": "4.0.2"
-	}
+	},
+	"browserslist": [
+		"last 2 chrome versions",
+		"last 2 firefox versions",
+		"last 2 edge versions"
+	]
 }
