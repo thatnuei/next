@@ -15,7 +15,7 @@ module.exports = {
 		removeDeprecatedGapUtilities: true,
 		purgeLayersByDefault: true,
 	},
-	purge: ["./src/**/*.{ts,tsx}"],
+	purge: ["./src/**/*.{ts,tsx,html}"],
 	theme: {
 		fontFamily: {
 			body: `'Fira Sans', sans-serif`,
