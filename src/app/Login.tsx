@@ -3,7 +3,7 @@ import { useMutation } from "react-query"
 import { flistFetch } from "../flist"
 
 type Props = {
-	onSuccess: (data: LoginData) => void
+	onSuccess: (data: LoginData) => void | Promise<void>
 }
 
 export type LoginData = {
@@ -27,7 +27,7 @@ export default function Login(props: Props) {
 			},
 		)
 
-		props.onSuccess({ account, ticket, characters })
+		await props.onSuccess({ account, ticket, characters })
 	})
 
 	return (

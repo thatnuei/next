@@ -1,12 +1,16 @@
 import { useState } from "react"
+import { createIdbStorage } from "../storage/idb"
 import CharacterSelect from "./CharacterSelect"
 import Chat from "./Chat"
 import Login, { LoginData } from "./Login"
 
 type View =
 	| { name: "login" }
-	| { name: "characterSelect"; data: LoginData }
+	| { name: "characterSelect"; data: LoginData; initialCharacter: string }
 	| { name: "chat"; data: LoginData; identity: string }
+
+const storedIdentity = (account: string) =>
+	createIdbStorage<string>(`identity:${account}`)
 
 export default function App() {
 	const [view, setView] = useState<View>({ name: "login" })
@@ -15,8 +19,16 @@ export default function App() {
 		case "login":
 			return (
 				<Login
-					onSuccess={(data) => {
-						setView({ name: "characterSelect", data })
+					onSuccess={async (data) => {
+						const lastIdentity = await storedIdentity(data.account)
+							.get()
+							.catch()
+
+						setView({
+							name: "characterSelect",
+							data,
+							initialCharacter: lastIdentity || data.characters[0],
+						})
 					}}
 				/>
 			)
@@ -25,7 +37,13 @@ export default function App() {
 			return (
 				<CharacterSelect
 					characters={view.data.characters}
-					onSubmit={(identity) => setView({ ...view, name: "chat", identity })}
+					initialCharacter={view.initialCharacter}
+					onChange={(identity) => {
+						storedIdentity(view.data.account).set(identity)
+					}}
+					onSubmit={(identity) => {
+						setView({ ...view, name: "chat", identity })
+					}}
 					onBack={() => setView({ name: "login" })}
 				/>
 			)
