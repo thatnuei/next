@@ -1,8 +1,8 @@
 import { observable } from "micro-observables"
-import { createCommandHandler } from "./chat-command"
-import { repository } from "./helpers/repository"
-import { setImmutableDelete } from "./helpers/setImmutableDelete"
-import { SocketHandler } from "./socket"
+import { createCommandHandler } from "../chat/chatCommand"
+import { SocketHandler } from "../chat/SocketHandler"
+import { ImmutableSet } from "../helpers/ImmutableSet"
+import { repository } from "../helpers/repository"
 
 export type ChannelMessage = {
 	senderName: string
@@ -15,7 +15,7 @@ export class Channel {
 	title = observable(this.id)
 	description = observable("")
 	messages = observable<ChannelMessage[]>([])
-	users = observable(new Set<string>())
+	users = observable(ImmutableSet.of<string>())
 }
 
 export class ChannelStore {
@@ -24,9 +24,9 @@ export class ChannelStore {
 		private readonly socket: SocketHandler,
 	) {}
 
-	joinedChannels = observable(new Set<string>())
+	joinedChannels = observable(ImmutableSet.of<string>())
 
-	getChannel = repository((id) => new Channel(id))
+	getChannel = repository(id => new Channel(id))
 
 	handleCommand = createCommandHandler({
 		IDN: () => {
@@ -42,25 +42,25 @@ export class ChannelStore {
 		JCH: ({ channel: id, title, character: { identity: name } }) => {
 			const channel = this.getChannel(id)
 			channel.title.set(title)
-			channel.users.update((users) => new Set([...users, name]))
+			channel.users.update(users => users.add(name))
 
 			if (name === this.identity) {
-				this.joinedChannels.update((channels) => new Set([...channels, id]))
+				this.joinedChannels.update(channels => channels.add(id))
 			}
 		},
 
 		LCH: ({ channel: id, character: name }) => {
 			const channel = this.getChannel(id)
-			channel.users.update(setImmutableDelete(name))
+			channel.users.update(users => users.delete(name))
 
 			if (name === this.identity) {
-				this.joinedChannels.update(setImmutableDelete(id))
+				this.joinedChannels.update(ids => ids.delete(id))
 			}
 		},
 
 		FLN: ({ character }) => {
 			for (const channel of this.getChannel.values()) {
-				channel.users.update(setImmutableDelete(character))
+				channel.users.update(users => users.delete(character))
 			}
 		},
 	})

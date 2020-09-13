@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useMutation } from "react-query"
-import { flistFetch } from "../flist"
+import { flistFetch } from "../flist/helpers"
 
 type Props = {
 	onSuccess: (data: LoginData) => void | Promise<void>

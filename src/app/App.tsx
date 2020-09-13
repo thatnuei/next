@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { createIdbStorage } from "../storage/idb"
 import CharacterSelect from "./CharacterSelect"
-import Chat from "./Chat"
+import Chat from "../chat/Chat"
 import Login, { LoginData } from "./Login"
 
 type View =

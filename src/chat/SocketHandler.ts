@@ -3,7 +3,7 @@ import {
 	ClientCommand,
 	parseCommandString,
 	ServerCommand,
-} from "./chat-command"
+} from "./chatCommand"
 
 type SocketStatus =
 	| "idle"

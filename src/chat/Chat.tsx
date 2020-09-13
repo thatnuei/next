@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { ChatStore } from "../chat"
+import { ChatStore } from "./ChatStore"
 import { useInstanceValue } from "../react/useInstanceValue"
 
 type Props = {

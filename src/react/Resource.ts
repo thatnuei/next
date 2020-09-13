@@ -1,5 +1,4 @@
 import stringify from "fast-json-stable-stringify"
-import { useCallback, useReducer } from "react"
 
 type ResourceInput =
 	| string
@@ -48,28 +47,4 @@ export class Resource<T, I extends ResourceInput = void> {
 	invalidate(input: I) {
 		this.items.delete(stringify(input))
 	}
-}
-
-export function useResource<T, I extends ResourceInput>(res: Resource<T, I>) {
-	const [, forceUpdate] = useReducer(state => !state, false)
-
-	const read = useCallback((input: I) => res.read(input), [res])
-
-	const setData = useCallback(
-		(data: T, input: I) => {
-			res.setData(data, input)
-			forceUpdate()
-		},
-		[res],
-	)
-
-	const invalidate = useCallback(
-		(input: I) => {
-			res.invalidate(input)
-			forceUpdate()
-		},
-		[res],
-	)
-
-	return { read, setData, invalidate }
 }
