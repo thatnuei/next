@@ -61,9 +61,9 @@ export default function CharacterSelect(props: Props) {
 				</form>
 			</div>
 
-			<button type="button" className="anchor" onClick={props.onBack}>
+			<Button className="anchor" onClick={props.onBack}>
 				Return to login
-			</button>
+			</Button>
 		</main>
 	)
 }
