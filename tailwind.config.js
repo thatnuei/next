@@ -28,6 +28,7 @@ module.exports = {
 		},
 		boxShadow: {
 			default: `0 4px 10px rgba(0, 0, 0, 0.3)`,
+			inner: `0 0 3px rgba(0, 0, 0, 0.3) inset`,
 		},
 	},
 	variants: {},

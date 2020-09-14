@@ -3,7 +3,11 @@
 }
 
 .input-solid {
-	@apply block w-full px-3 py-2 transition duration-200 bg-midnight-1 focus:outline-none focus:bg-midnight-2;
+	@apply block w-full px-3 py-2 transition duration-200 shadow-inner bg-midnight-1 focus:outline-none focus:bg-midnight-2;
+}
+
+.select-solid {
+	@apply block w-full px-3 py-2 transition duration-200 bg-midnight-1 hover:bg-midnight-2;
 }
 
 .anchor {

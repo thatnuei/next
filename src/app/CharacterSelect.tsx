@@ -37,7 +37,7 @@ export default function CharacterSelect(props: Props) {
 					/>
 
 					<Select
-						className="max-w-xs input-solid"
+						className="max-w-xs select-solid"
 						aria-label="Identity"
 						value={character}
 						onChangeValue={value => {
