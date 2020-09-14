@@ -1,9 +1,5 @@
 import { observable } from "micro-observables"
-import {
-	ClientCommand,
-	parseCommandString,
-	ServerCommand,
-} from "./chatCommand"
+import { ClientCommand, parseCommandString, ServerCommand } from "./chatCommand"
 
 type SocketStatus =
 	| "idle"
@@ -51,7 +47,7 @@ export class SocketHandler {
 			})
 		}
 
-		socket.onmessage = (event) => {
+		socket.onmessage = event => {
 			const command = parseCommandString(String(event.data))
 			if (command.type === "IDN") {
 				this.status.set("online")
@@ -68,7 +64,6 @@ export class SocketHandler {
 			if (command.type === "ERR") {
 				// identification failed, probably due to expired ticket
 				if (command.params.number === 4) {
-					console.log("wat")
 					this.status.set("no-session")
 					this.disconnect()
 				}
