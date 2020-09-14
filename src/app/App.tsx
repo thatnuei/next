@@ -1,7 +1,9 @@
 import { useState } from "react"
-import { createIdbStorage } from "../storage/idb"
-import CharacterSelect from "./CharacterSelect"
 import Chat from "../chat/Chat"
+import { createIdbStorage } from "../storage/idb"
+import { ToastProvider } from "../toast/ToastContext"
+import ToastListOverlay from "../toast/ToastListOverlay"
+import CharacterSelect from "./CharacterSelect"
 import Login, { LoginData } from "./Login"
 
 type View =
@@ -13,13 +15,22 @@ const storedIdentity = (account: string) =>
 	createIdbStorage<string>(`identity:${account}`)
 
 export default function App() {
+	return (
+		<ToastProvider>
+			<ToastListOverlay />
+			<AppNavigation />
+		</ToastProvider>
+	)
+}
+
+function AppNavigation() {
 	const [view, setView] = useState<View>({ name: "login" })
 
 	switch (view.name) {
 		case "login":
 			return (
 				<Login
-					onSuccess={async (data) => {
+					onSuccess={async data => {
 						const lastIdentity = await storedIdentity(data.account)
 							.get()
 							.catch()
@@ -38,10 +49,10 @@ export default function App() {
 				<CharacterSelect
 					characters={view.data.characters}
 					initialCharacter={view.initialCharacter}
-					onChange={(identity) => {
+					onChange={identity => {
 						storedIdentity(view.data.account).set(identity)
 					}}
-					onSubmit={(identity) => {
+					onSubmit={identity => {
 						setView({ ...view, name: "chat", identity })
 					}}
 					onBack={() => setView({ name: "login" })}

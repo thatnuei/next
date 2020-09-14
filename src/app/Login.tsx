@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useMutation } from "react-query"
 import { flistFetch } from "../flist/helpers"
+import { useToastContext } from "../toast/ToastContext"
 import Button from "../ui/Button"
 import Label from "../ui/Label"
 import TextInput from "../ui/TextInput"
@@ -18,20 +19,28 @@ export type LoginData = {
 export default function Login(props: Props) {
 	const [account, setAccount] = useState("")
 	const [password, setPassword] = useState("")
+	const { addToast } = useToastContext()
 
-	const [login, loginMutation] = useMutation(async () => {
-		const { ticket, characters } = await flistFetch<LoginData>(
-			`/json/getApiTicket.php`,
-			{
-				account,
-				password,
-				no_friends: "true",
-				no_bookmarks: "true",
+	const [login, loginMutation] = useMutation(
+		async () => {
+			const { ticket, characters } = await flistFetch<LoginData>(
+				`/json/getApiTicket.php`,
+				{
+					account,
+					password,
+					no_friends: "true",
+					no_bookmarks: "true",
+				},
+			)
+
+			await props.onSuccess({ account, ticket, characters })
+		},
+		{
+			onError: error => {
+				addToast(String(error))
 			},
-		)
-
-		await props.onSuccess({ account, ticket, characters })
-	})
+		},
+	)
 
 	return (
 		<div className="island-container">
@@ -73,14 +82,6 @@ export default function Login(props: Props) {
 					>
 						Submit
 					</Button>
-
-					{loginMutation.isLoading ? (
-						<p>Logging in...</p>
-					) : loginMutation.error ? (
-						<p role="alert" className="max-w-xs error">
-							{String(loginMutation.error)}
-						</p>
-					) : null}
 				</form>
 			</main>
 		</div>
