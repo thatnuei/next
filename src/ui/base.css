@@ -1,0 +1,18 @@
+button,
+input,
+select,
+textarea {
+	border-radius: 0;
+}
+
+:disabled {
+	opacity: 0.5;
+}
+
+::placeholder {
+	opacity: 0.5;
+}
+
+.js-focus-visible :focus:not(.focus-visible) {
+	outline: none;
+}

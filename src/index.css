@@ -1,54 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "./ui/base.css";
 
-@layer base {
-	button,
-	input,
-	select,
-	textarea {
-		border-radius: 0;
-	}
+@import "tailwindcss/components";
+@import "./ui/components.css";
 
-	:disabled {
-		opacity: 0.5;
-	}
-
-	::placeholder {
-		opacity: 0.5;
-	}
-
-	.js-focus-visible :focus:not(.focus-visible) {
-		outline: none;
-	}
-}
-
-@layer components {
-	.button-solid {
-		@apply px-3 py-2 transition duration-200 bg-midnight-1 hover:bg-midnight-2;
-	}
-
-	.input-solid {
-		@apply block w-full px-3 py-2 transition duration-200 bg-midnight-1 focus:outline-none focus:bg-midnight-2;
-	}
-
-	.anchor {
-		@apply underline transition-opacity duration-200 opacity-50 hover:opacity-75;
-	}
-
-	.error {
-		@apply text-red;
-	}
-
-	.island-container {
-		@apply flex flex-col items-center justify-center min-h-screen p-8;
-	}
-
-	.island-panel {
-		@apply shadow bg-midnight-0;
-	}
-
-	.island-panel-header {
-		@apply p-4 text-3xl leading-9 text-center bg-midnight-1 font-header;
-	}
-}
+@import "tailwindcss/utilities";

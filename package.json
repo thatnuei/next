@@ -31,6 +31,7 @@
 		"eslint-plugin-react": "^7.20.6",
 		"eslint-plugin-react-hooks": "^4.1.2",
 		"poi": "^12.10.2",
+		"postcss-import": "^12.0.1",
 		"preact": "^10.4.8",
 		"serve": "^11.3.2",
 		"tailwindcss": "1.8.3",
