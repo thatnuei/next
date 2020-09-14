@@ -1,6 +1,6 @@
 import { observable } from "micro-observables"
 
-type Toast = {
+export type Toast = {
 	key: string
 	text: string
 }
