@@ -17,7 +17,9 @@ const storedIdentity = (account: string) =>
 export default function App() {
 	return (
 		<ToastStoreProvider>
-			<ToastListOverlay />
+			<aside>
+				<ToastListOverlay />
+			</aside>
 			<AppNavigation />
 		</ToastStoreProvider>
 	)
