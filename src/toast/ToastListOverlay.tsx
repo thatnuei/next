@@ -1,10 +1,12 @@
 import { AnimatePresence, motion } from "framer-motion"
+import { useObservable } from "micro-observables"
 import Button from "../ui/Button"
 import { alertIcon, closeCircleIcon } from "../ui/icons"
-import { useToastContext } from "./ToastContext"
+import { useToastStoreContext } from "./context"
 
 export default function ToastListOverlay() {
-	const { toasts, removeToast } = useToastContext()
+	const store = useToastStoreContext()
+	const toasts = useObservable(store.toasts)
 
 	return (
 		<div className="fixed inset-x-0 top-0 flex flex-col items-center p-4 space-y-4">
@@ -24,7 +26,7 @@ export default function ToastListOverlay() {
 						<Button
 							className="ml-3"
 							aria-label="Dismiss"
-							onClick={() => removeToast(key)}
+							onClick={() => store.remove(key)}
 						>
 							{closeCircleIcon}
 						</Button>

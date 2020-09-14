@@ -1,7 +1,7 @@
 import { useState } from "react"
 import Chat from "../chat/Chat"
 import { createIdbStorage } from "../storage/idb"
-import { ToastProvider } from "../toast/ToastContext"
+import { ToastStoreProvider } from "../toast/context"
 import ToastListOverlay from "../toast/ToastListOverlay"
 import CharacterSelect from "./CharacterSelect"
 import Login, { LoginData } from "./Login"
@@ -16,10 +16,10 @@ const storedIdentity = (account: string) =>
 
 export default function App() {
 	return (
-		<ToastProvider>
+		<ToastStoreProvider>
 			<ToastListOverlay />
 			<AppNavigation />
-		</ToastProvider>
+		</ToastStoreProvider>
 	)
 }
 

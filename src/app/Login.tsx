@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { useMutation } from "react-query"
 import { flistFetch } from "../flist/helpers"
-import { useToastContext } from "../toast/ToastContext"
+import { useToastStoreContext } from "../toast/context"
 import Button from "../ui/Button"
 import Label from "../ui/Label"
 import TextInput from "../ui/TextInput"
@@ -19,7 +19,7 @@ export type LoginData = {
 export default function Login(props: Props) {
 	const [account, setAccount] = useState("")
 	const [password, setPassword] = useState("")
-	const { addToast } = useToastContext()
+	const toastStore = useToastStoreContext()
 
 	const [login, loginMutation] = useMutation(
 		async () => {
@@ -37,7 +37,7 @@ export default function Login(props: Props) {
 		},
 		{
 			onError: error => {
-				addToast(String(error))
+				toastStore.show(String(error))
 			},
 		},
 	)
