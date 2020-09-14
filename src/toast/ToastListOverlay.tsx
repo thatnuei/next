@@ -23,7 +23,7 @@ export default function ToastListOverlay() {
 						layout
 					>
 						<Button
-							className="flex items-start max-w-sm p-2 text-left text-white bg-red-800 shadow"
+							className="flex items-start max-w-md p-2 text-left text-white bg-red-800 shadow"
 							onClick={() => store.remove(toast.key)}
 							onKeyDown={event => {
 								if (event.key === "Escape") {
