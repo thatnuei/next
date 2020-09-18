@@ -1,4 +1,4 @@
-import { useImmer } from "use-immer"
+import { computed, createSetup, reactive } from "reactivue"
 import { createCommandHandler } from "../chat/chatCommand"
 
 type Channel = {
@@ -25,53 +25,40 @@ function createChannel(id: string, title = id): Channel {
 	}
 }
 
-export function useChannels(identity: string) {
-	const [channels, updateChannels] = useImmer<Record<string, Channel>>({})
+type Props = { identity: string }
 
-	const [joinedIdsDict, updateJoinedIdsDict] = useImmer<Record<string, true>>(
-		{},
-	)
+export const useChannelStore = createSetup((props: Props) => {
+	const channels = reactive<Record<string, Channel>>({})
+	const joinedIdsSet = reactive(new Set<string>())
 
-	const joined = Object.keys(joinedIdsDict).map((key) => channels[key])
+	const joined = computed(() => [...joinedIdsSet].map((id) => channels[id]))
 
 	const handleCommand = createCommandHandler({
-		IDN() {},
-
 		JCH({ channel: id, title, character: { identity: name } }) {
-			updateChannels((channels) => {
-				const channel = (channels[id] ||= createChannel(id, title))
-				channel.title = title
-				channel.users[name] = true
-			})
+			const channel = (channels[id] ||= createChannel(id, title))
+			channel.title = title
+			channel.users[name] = true
 
-			if (name === identity) {
-				updateJoinedIdsDict((dict) => {
-					dict[id] = true
-				})
+			if (name === props.identity) {
+				joinedIdsSet.add(id)
 			}
 		},
 
 		LCH({ channel: id, character: name }) {
-			updateChannels((channels) => {
-				const channel = (channels[id] ||= createChannel(id))
-				delete channel.users[name]
-			})
+			const channel = (channels[id] ||= createChannel(id))
+			delete channel.users[name]
 
-			if (name === identity) {
-				updateJoinedIdsDict((dict) => {
-					delete dict[id]
-				})
+			if (name === props.identity) {
+				joinedIdsSet.delete(id)
 			}
 		},
 
 		FLN({ character }) {
-			updateChannels((channels) => {
-				for (const channel of Object.values(channels)) {
-					delete channel.users[character]
-				}
-			})
+			for (const channel of Object.values(channels)) {
+				delete channel.users[character]
+			}
 		},
 	})
 
 	return { joined, handleCommand }
-}
+})

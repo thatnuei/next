@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
-import { useEffectRef } from "../react/useEffectRef"
+import { createSetup, ref } from "reactivue"
 import { ClientCommand, parseCommandString, ServerCommand } from "./chatCommand"
 
 type SocketStatus =
@@ -11,45 +10,36 @@ type SocketStatus =
 	| "error"
 	| "no-session"
 
-export function useSocket(
-	account: string,
-	ticket: string,
-	character: string,
-	onCommand: (command: ServerCommand) => void,
-) {
-	const socketRef = useRef<WebSocket>()
-	const [status, setStatus] = useState<SocketStatus>("idle")
-	const onCommandRef = useEffectRef(onCommand)
+type ConnectOptions = {
+	account: string
+	ticket: string
+	character: string
+}
 
-	const send = useCallback((command: ClientCommand) => {
+type CommandHandler = (command: ServerCommand) => void
+
+export const useSocket = createSetup(() => {
+	const status = ref<SocketStatus>("idle")
+	const listeners = new Set<CommandHandler>()
+	let socket: WebSocket | undefined
+
+	function send(command: ClientCommand) {
 		const message = command.params
 			? `${command.type} ${JSON.stringify(command.params)}`
 			: command.type
 
-		socketRef.current?.send(message)
-	}, [])
+		socket?.send(message)
+	}
 
-	const disconnect = useCallback((newStatus: SocketStatus = "closed") => {
-		setStatus(newStatus)
+	function connect(options: ConnectOptions) {
+		status.value = "connecting"
 
-		const socket = socketRef.current
-		if (!socket) return
-		socket.onopen = null
-		socket.onmessage = null
-		socket.onclose = null
-		socket.onerror = null
-		socket.close()
-	}, [])
-
-	useEffect(() => {
-		setStatus("connecting")
-
-		const socket = (socketRef.current = new WebSocket(
-			`wss://chat.f-list.net/chat2`,
-		))
+		socket = new WebSocket(`wss://chat.f-list.net/chat2`)
 
 		socket.onopen = () => {
-			setStatus("identifying")
+			status.value = "identifying"
+
+			const { account, ticket, character } = options
 			send({
 				type: "IDN",
 				params: {
@@ -63,11 +53,11 @@ export function useSocket(
 			})
 		}
 
-		socket.onmessage = event => {
+		socket.onmessage = (event) => {
 			const command = parseCommandString(String(event.data))
 
 			if (command.type === "IDN") {
-				setStatus("online")
+				status.value = "online"
 			}
 
 			if (command.type === "PIN") {
@@ -89,19 +79,35 @@ export function useSocket(
 				}
 			}
 
-			onCommandRef.current(command)
+			listeners.forEach((h) => h(command))
 		}
 
 		socket.onclose = () => {
-			setStatus("closed") // disconnected from server
+			status.value = "closed" // disconnected from server
 		}
 
 		socket.onerror = () => {
-			setStatus("error") // failed to connect, network error
+			status.value = "error" // failed to connect, network error
 		}
+	}
 
-		return disconnect
-	}, [account, character, disconnect, onCommandRef, send, ticket])
+	function disconnect(newStatus: SocketStatus = "closed") {
+		status.value = newStatus
 
-	return { status, send, disconnect }
-}
+		if (!socket) return
+		socket.onopen = null
+		socket.onmessage = null
+		socket.onclose = null
+		socket.onerror = null
+		socket.close()
+	}
+
+	function listen(listener: CommandHandler) {
+		listeners.add(listener)
+		return () => {
+			listeners.delete(listener)
+		}
+	}
+
+	return { send, connect, disconnect, listen, status }
+})

@@ -1,17 +1,16 @@
 import { AnimatePresence, motion } from "framer-motion"
-import { useObservable } from "micro-observables"
 import Button from "../ui/Button"
 import { alertIcon } from "../ui/icons"
-import { useToastStoreContext } from "./context"
+import { useToastStoreActions, useToastStoreState } from "./context"
 
 export default function ToastListOverlay() {
-	const store = useToastStoreContext()
-	const toasts = useObservable(store.toasts)
+	const toasts = useToastStoreState()
+	const { remove } = useToastStoreActions()
 
 	return (
 		<div className="fixed inset-x-0 top-0 flex flex-col items-center max-h-screen p-4 space-y-4 overflow-y-auto">
 			<AnimatePresence>
-				{toasts.map(toast => (
+				{toasts.map((toast) => (
 					<motion.div
 						key={toast.key}
 						role="alert"
@@ -24,10 +23,10 @@ export default function ToastListOverlay() {
 					>
 						<Button
 							className="flex items-start max-w-md p-2 text-left text-white bg-red-800 shadow"
-							onClick={() => store.remove(toast.key)}
-							onKeyDown={event => {
+							onClick={() => remove(toast.key)}
+							onKeyDown={(event) => {
 								if (event.key === "Escape") {
-									store.remove(toast.key)
+									remove(toast.key)
 								}
 							}}
 						>

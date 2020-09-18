@@ -1,4 +1,5 @@
-import { useChannels } from "../channel/state"
+import { useEffect } from "react"
+import { useChannelStore } from "../channel/state"
 import { useSocket } from "./socket"
 
 type Props = {
@@ -8,19 +9,37 @@ type Props = {
 }
 
 export default function Chat({ account, ticket, identity }: Props) {
-	const channels = useChannels(identity)
+	const socket = useSocket()
+	const channelStore = useChannelStore({ identity })
 
-	const socket = useSocket(account, ticket, identity, (command) => {
-		socket.send({ type: "JCH", params: { channel: "Frontpage" } })
-		socket.send({ type: "JCH", params: { channel: "Fantasy" } })
-		socket.send({ type: "JCH", params: { channel: "Development" } })
-		socket.send({
-			type: "JCH",
-			params: { channel: "Story Driven LFRP" },
+	useEffect(() => socket.listen(channelStore.handleCommand))
+
+	useEffect(() => {
+		return socket.listen((command) => {
+			if (command.type === "IDN") {
+				socket.send({ type: "JCH", params: { channel: "Frontpage" } })
+				socket.send({ type: "JCH", params: { channel: "Fantasy" } })
+				socket.send({ type: "JCH", params: { channel: "Development" } })
+				socket.send({
+					type: "JCH",
+					params: { channel: "Story Driven LFRP" },
+				})
+			}
 		})
+	}, [socket])
 
-		channels.handleCommand(command)
-	})
+	useEffect(() => {
+		socket.connect({ account, ticket, character: identity })
+		return () => socket.disconnect()
+	}, [account, identity, socket, ticket])
 
-	return <>{socket.status}</>
+	return (
+		<main>
+			<ul>
+				{channelStore.joined.map((ch) => (
+					<li key={ch.id}>{ch.title}</li>
+				))}
+			</ul>
+		</main>
+	)
 }
