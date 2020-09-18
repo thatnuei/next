@@ -4,7 +4,8 @@
 	"scripts": {
 		"dev": "poi ./src/index.html --serve --no-clear-console",
 		"build": "NODE_ENV=production poi ./src/index.html --prod --no-clear-console",
-		"serve": "serve dist"
+		"serve": "serve dist",
+		"format": "prettier --write ."
 	},
 	"dependencies": {
 		"clsx": "^1.1.1",
@@ -34,6 +35,7 @@
 		"eslint-plugin-react-hooks": "^4.1.2",
 		"poi": "^12.10.2",
 		"postcss-import": "^12.0.1",
+		"prettier": "^2.1.2",
 		"serve": "^11.3.2",
 		"tailwindcss": "1.8.3",
 		"typescript": "4.0.2"
