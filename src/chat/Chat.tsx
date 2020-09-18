@@ -26,7 +26,7 @@ export default function Chat({ account, ticket, identity }: Props) {
 				})
 			}
 		})
-	}, [socket])
+	})
 
 	useEffect(() => {
 		socket.connect({ account, ticket, character: identity })
