@@ -9,7 +9,7 @@ type Props = {
 }
 
 export default function Chat({ account, ticket, identity }: Props) {
-	const socket = useSocket()
+	const socket = useSocket({})
 	const channelStore = useChannelStore({ identity })
 
 	useEffect(() => socket.listen(channelStore.handleCommand))
