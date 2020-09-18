@@ -1,8 +1,8 @@
 import { observable } from "micro-observables"
 import { createCommandHandler } from "../chat/chatCommand"
 import { SocketHandler } from "../chat/SocketHandler"
-import { ImmutableSet } from "../helpers/ImmutableSet"
-import { repository } from "../helpers/repository"
+import { dictRemove, dictSet } from "../helpers/dict"
+import { MapWithDefault } from "../helpers/MapWithDefault"
 
 export type ChannelMessage = {
 	senderName: string
@@ -15,7 +15,15 @@ export class Channel {
 	title = observable(this.id)
 	description = observable("")
 	messages = observable<ChannelMessage[]>([])
-	users = observable(ImmutableSet.of<string>())
+	users = observable<Record<string, true>>({})
+
+	addUser(name: string) {
+		this.users.update(dictSet(name, true))
+	}
+
+	removeUser(name: string) {
+		this.users.update(dictRemove(name))
+	}
 }
 
 export class ChannelStore {
@@ -24,9 +32,13 @@ export class ChannelStore {
 		private readonly socket: SocketHandler,
 	) {}
 
-	joinedChannels = observable(ImmutableSet.of<string>())
+	readonly channels = new MapWithDefault(id => new Channel(id))
 
-	getChannel = repository(id => new Channel(id))
+	private readonly joinedChannelIdsDict = observable<Record<string, true>>({})
+
+	readonly joinedChannels = this.joinedChannelIdsDict.transform(ids =>
+		Object.keys(ids).map(id => this.channels.get(id)),
+	)
 
 	handleCommand = createCommandHandler({
 		IDN: () => {
@@ -40,27 +52,27 @@ export class ChannelStore {
 		},
 
 		JCH: ({ channel: id, title, character: { identity: name } }) => {
-			const channel = this.getChannel(id)
+			const channel = this.channels.get(id)
 			channel.title.set(title)
-			channel.users.update(users => users.add(name))
+			channel.addUser(name)
 
 			if (name === this.identity) {
-				this.joinedChannels.update(channels => channels.add(id))
+				this.joinedChannelIdsDict.update(dictSet(id, true))
 			}
 		},
 
 		LCH: ({ channel: id, character: name }) => {
-			const channel = this.getChannel(id)
-			channel.users.update(users => users.delete(name))
+			const channel = this.channels.get(id)
+			channel.removeUser(name)
 
 			if (name === this.identity) {
-				this.joinedChannels.update(ids => ids.delete(id))
+				this.joinedChannelIdsDict.update(dictRemove(id))
 			}
 		},
 
 		FLN: ({ character }) => {
-			for (const channel of this.getChannel.values()) {
-				channel.users.update(users => users.delete(character))
+			for (const channel of this.channels.values()) {
+				channel.removeUser(character)
 			}
 		},
 	})

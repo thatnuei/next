@@ -21,7 +21,8 @@
 		"react": "^17.0.0-rc.1",
 		"react-dom": "^17.0.0-rc.1",
 		"react-error-boundary": "^3.0.1",
-		"react-query": "2.15.4"
+		"react-query": "2.15.4",
+		"use-immer": "^0.4.1"
 	},
 	"devDependencies": {
 		"@types/node": "14.6.4",

@@ -3,12 +3,8 @@ export class ImmutableSet<T> {
 
 	static empty = new ImmutableSet<never>()
 
-	static of<T>(): ImmutableSet<T> {
-		return ImmutableSet.empty
-	}
-
-	static from<T>(iterable: Iterable<T>) {
-		return new ImmutableSet(new Set(iterable))
+	static of<T>(iterable?: Iterable<T>): ImmutableSet<T> {
+		return iterable ? new ImmutableSet(new Set(iterable)) : ImmutableSet.empty
 	}
 
 	get size() {
