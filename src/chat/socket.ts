@@ -1,4 +1,4 @@
-import { createSetup, ref } from "reactivue"
+import { ref } from "reactivue"
 import { ClientCommand, parseCommandString, ServerCommand } from "./chatCommand"
 
 type SocketStatus =
@@ -18,7 +18,7 @@ type ConnectOptions = {
 
 type CommandHandler = (command: ServerCommand) => void
 
-export const useSocket = createSetup(() => {
+export function createSocketHandler() {
 	const status = ref<SocketStatus>("idle")
 	const listeners = new Set<CommandHandler>()
 	let socket: WebSocket | undefined
@@ -109,5 +109,9 @@ export const useSocket = createSetup(() => {
 		}
 	}
 
-	return { send, connect, disconnect, listen, status }
-})
+	function removeListeners() {
+		listeners.clear()
+	}
+
+	return { send, connect, disconnect, listen, removeListeners, status }
+}

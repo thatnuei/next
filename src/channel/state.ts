@@ -1,8 +1,8 @@
-import { computed, createSetup, reactive } from "reactivue"
+import { computed, reactive } from "reactivue"
 import { createCommandHandler } from "../chat/chatCommand"
 import { isTruthy } from "../helpers/isTruthy"
 
-type Channel = {
+export type Channel = {
 	id: string
 	title: string
 	description: string
@@ -10,13 +10,13 @@ type Channel = {
 	users: Record<string, true>
 }
 
-type ChannelMessage = {
+export type ChannelMessage = {
 	senderName: string
 	text: string
 	time: number
 }
 
-function createChannel(id: string, title = id): Channel {
+export function createChannel(id: string, title = id): Channel {
 	return {
 		id,
 		title,
@@ -26,42 +26,43 @@ function createChannel(id: string, title = id): Channel {
 	}
 }
 
-type Props = { identity: string }
-
-export const useChannelStore = createSetup((props: Props) => {
+export function createChannelStore(identity: string) {
 	const channels = reactive<Record<string, Channel>>({})
 	const joinedIdsSet = reactive(new Set<string>())
 
-	const joined = computed(() => {
+	const joinedChannels = computed(() => {
 		return [...joinedIdsSet].map((id) => channels[id]).filter(isTruthy)
 	})
 
 	const handleCommand = createCommandHandler({
 		JCH({ channel: id, title, character: { identity: name } }) {
+			console.log("JCH")
 			const channel = (channels[id] ||= createChannel(id, title))
-			channel.title = title
 			channel.users[name] = true
 
-			if (name === props.identity) {
+			if (name === identity) {
+				channel.title = title
 				joinedIdsSet.add(id)
 			}
 		},
 
 		LCH({ channel: id, character: name }) {
+			console.log("LCH")
 			const channel = (channels[id] ||= createChannel(id))
 			delete channel.users[name]
 
-			if (name === props.identity) {
+			if (name === identity) {
 				joinedIdsSet.delete(id)
 			}
 		},
 
 		FLN({ character }) {
+			console.log("FLN")
 			for (const channel of Object.values(channels)) {
 				delete channel.users[character]
 			}
 		},
 	})
 
-	return { joined, handleCommand }
-})
+	return { joinedChannels, handleCommand }
+}
