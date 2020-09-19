@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { useMutation } from "react-query"
 import { flistFetch } from "../flist/helpers"
-import { useToastStoreContext } from "../toast/context"
+import { useToastStoreActions } from "../toast/context"
 import Button from "../ui/Button"
 import Label from "../ui/Label"
 import TextInput from "../ui/TextInput"
@@ -19,7 +19,7 @@ export type LoginData = {
 export default function Login(props: Props) {
 	const [account, setAccount] = useState("")
 	const [password, setPassword] = useState("")
-	const toastStore = useToastStoreContext()
+	const { show } = useToastStoreActions()
 
 	const [login, loginMutation] = useMutation(
 		async () => {
@@ -36,8 +36,8 @@ export default function Login(props: Props) {
 			await props.onSuccess({ account, ticket, characters })
 		},
 		{
-			onError: error => {
-				toastStore.show(String(error))
+			onError: (error) => {
+				show(String(error))
 			},
 		},
 	)
@@ -49,7 +49,7 @@ export default function Login(props: Props) {
 
 				<form
 					className="flex flex-col items-start p-4 space-y-4"
-					onSubmit={e => {
+					onSubmit={(e) => {
 						e.preventDefault()
 						login()
 					}}

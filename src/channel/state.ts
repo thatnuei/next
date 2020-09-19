@@ -1,5 +1,6 @@
 import { computed, createSetup, reactive } from "reactivue"
 import { createCommandHandler } from "../chat/chatCommand"
+import { isTruthy } from "../helpers/isTruthy"
 
 type Channel = {
 	id: string
@@ -31,7 +32,9 @@ export const useChannelStore = createSetup((props: Props) => {
 	const channels = reactive<Record<string, Channel>>({})
 	const joinedIdsSet = reactive(new Set<string>())
 
-	const joined = computed(() => [...joinedIdsSet].map((id) => channels[id]))
+	const joined = computed(() => {
+		return [...joinedIdsSet].map((id) => channels[id]).filter(isTruthy)
+	})
 
 	const handleCommand = createCommandHandler({
 		JCH({ channel: id, title, character: { identity: name } }) {

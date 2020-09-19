@@ -32,7 +32,7 @@ function AppNavigation() {
 		case "login":
 			return (
 				<Login
-					onSuccess={async data => {
+					onSuccess={async (data) => {
 						const lastIdentity = await storedIdentity(data.account)
 							.get()
 							.catch()
@@ -40,7 +40,7 @@ function AppNavigation() {
 						setView({
 							name: "characterSelect",
 							data,
-							initialCharacter: lastIdentity || data.characters[0],
+							initialCharacter: lastIdentity || data.characters[0] || "",
 						})
 					}}
 				/>
@@ -51,10 +51,10 @@ function AppNavigation() {
 				<CharacterSelect
 					characters={view.data.characters}
 					initialCharacter={view.initialCharacter}
-					onChange={identity => {
+					onChange={(identity) => {
 						storedIdentity(view.data.account).set(identity)
 					}}
-					onSubmit={identity => {
+					onSubmit={(identity) => {
 						setView({ ...view, name: "chat", identity })
 					}}
 					onBack={() => setView({ name: "login" })}
