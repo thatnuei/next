@@ -7,8 +7,8 @@ module.exports = {
 			? {
 					resolve: {
 						alias: {
-							react: "preact/compat",
-							"react-dom": "preact/compat",
+							react: require.resolve("preact/compat"),
+							"react-dom": require.resolve("preact/compat"),
 						},
 					},
 			  }
