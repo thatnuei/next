@@ -1,30 +1,17 @@
-import * as fchat from "fchat"
-import { observable } from "micro-observables"
+import { observable, WritableObservable } from "micro-observables"
 import { createCommandHandler } from "../chat/chatCommand"
-import { repository } from "../helpers/repository"
-
-export type Character = {
-	name: string
-	gender: fchat.Character.Gender
-	status: {
-		type: fchat.Character.Status
-		text: string
-	}
-}
+import { Character } from "./types"
 
 export class CharacterStore {
-	getCharacter = repository((name) => {
-		return observable<Character>({
-			name,
-			gender: "None",
-			status: { type: "offline", text: "" },
-		})
-	})
+	private readonly characters: Record<
+		string,
+		WritableObservable<Character>
+	> = {}
 
 	handleCommand = createCommandHandler({
 		LIS: ({ characters }) => {
 			for (const [name, gender, type, text] of characters) {
-				this.getCharacter(name).set({
+				this.characters[name] = observable({
 					name,
 					gender,
 					status: { type, text },
@@ -33,22 +20,34 @@ export class CharacterStore {
 		},
 
 		NLN: ({ identity, gender, status }) => {
-			this.getCharacter(identity).set({
+			this.characters[identity] = observable({
 				name: identity,
 				gender,
 				status: { type: "online", text: status },
 			})
 		},
 
-		FLN: ({ character }) => {
-			this.getCharacter(character).update((char) => ({
+		FLN: ({ character: name }) => {
+			const char = (this.characters[name] ||= observable({
+				name,
+				gender: "None",
+				status: { type: "offline", text: "" },
+			}))
+
+			char.update((char) => ({
 				...char,
 				status: { type: "offline", text: "" },
 			}))
 		},
 
-		STA: ({ character, status: type, statusmsg: text }) => {
-			this.getCharacter(character).update((char) => ({
+		STA: ({ character: name, status: type, statusmsg: text }) => {
+			const char = (this.characters[name] ||= observable({
+				name,
+				gender: "None",
+				status: { type: "offline", text: "" },
+			}))
+
+			char.update((char) => ({
 				...char,
 				status: { type, text },
 			}))

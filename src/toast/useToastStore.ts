@@ -1,20 +1,21 @@
-import { createSetup, ref } from "reactivue"
+import { observable } from "micro-observables"
 
 export type Toast = {
 	key: string
 	text: string
 }
 
-export const useToastStore = createSetup(() => {
-	const toasts = ref<Toast[]>([])
+export class ToastStore {
+	toasts = observable<Toast[]>([])
 
-	const show = (text: string) => {
-		toasts.value = [...toasts.value, { text, key: String(Math.random()) }]
+	show = (text: string) => {
+		this.toasts.update((toasts) => [
+			...toasts,
+			{ text, key: String(Math.random()) },
+		])
 	}
 
-	const remove = (id: Toast["key"]) => {
-		toasts.value = toasts.value.filter((t) => t.key !== id)
+	remove = (id: Toast["key"]) => {
+		this.toasts.update((toasts) => toasts.filter((t) => t.key !== id))
 	}
-
-	return { toasts, show, remove }
-})
+}
