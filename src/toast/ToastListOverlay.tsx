@@ -8,7 +8,7 @@ export default function ToastListOverlay() {
 	const { remove } = useToastStoreActions()
 
 	return (
-		<div className="fixed inset-x-0 top-0 flex flex-col items-center max-h-screen p-4 space-y-4 overflow-y-auto">
+		<div className="fixed inset-x-0 top-0 flex flex-col items-center max-h-screen p-4 space-y-4 overflow-y-auto pointer-events-none">
 			<AnimatePresence>
 				{toasts.map((toast) => (
 					<motion.div
@@ -22,7 +22,7 @@ export default function ToastListOverlay() {
 						layout
 					>
 						<Button
-							className="flex items-start max-w-md p-2 text-left text-white bg-red-800 shadow"
+							className="flex items-start max-w-md p-2 text-left text-white bg-red-800 shadow pointer-events-auto"
 							onClick={() => remove(toast.key)}
 							onKeyDown={(event) => {
 								if (event.key === "Escape") {
