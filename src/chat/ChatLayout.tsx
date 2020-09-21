@@ -55,9 +55,9 @@ export default function ChatLayout() {
 
 function Chatbox(props: { onSubmit: (message: string) => void }) {
 	const [rawValue, setRawValue] = useState("")
-	const value = rawValue.trim()
 
 	function submit() {
+		const value = rawValue.trim()
 		if (value) {
 			props.onSubmit(value)
 			setRawValue("")
