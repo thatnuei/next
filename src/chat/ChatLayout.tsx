@@ -33,21 +33,25 @@ export default function ChatLayout() {
 				</button>
 			</section>
 
-			<ul
-				className="flex-1 min-h-0 px-3 py-2 space-y-2 overflow-y-auto"
-				tabIndex={0}
-			>
+			<ul className="flex-1 min-h-0 space-y-1 overflow-y-auto" tabIndex={0}>
 				{[...range(0, 10)].map((n) => (
-					<li key={n}>
-						<strong className="inline-block mr-3 font-medium">someone</strong>
-						<span>
-							Adipisicing ut sint laborum dolore amet irure proident sunt culpa
-							tempor sunt commodo. Consequat duis occaecat nostrud mollit quis
-							nisi labore. Adipisicing occaecat sit velit et. Ea nisi excepteur
-							ullamco pariatur incididunt sint sit veniam do duis labore est.
-							Veniam ipsum labore amet pariatur sit elit. In sint reprehenderit
-							laborum do nulla aliquip elit commodo velit amet elit dolor.
-						</span>
+					<li key={n} className={`bg-midnight-1`}>
+						<div
+							className={`px-3 py-1 ${
+								Math.random() > 0.5 ? "" : "bg-green-500 bg-opacity-25"
+							}`}
+						>
+							<strong className="inline-block mr-3 font-medium">someone</strong>
+							<span>
+								Adipisicing ut sint laborum dolore amet irure proident sunt
+								culpa tempor sunt commodo. Consequat duis occaecat nostrud
+								mollit quis nisi labore. Adipisicing occaecat sit velit et. Ea
+								nisi excepteur ullamco pariatur incididunt sint sit veniam do
+								duis labore est. Veniam ipsum labore amet pariatur sit elit. In
+								sint reprehenderit laborum do nulla aliquip elit commodo velit
+								amet elit dolor.
+							</span>
+						</div>
 					</li>
 				))}
 			</ul>
