@@ -1,11 +1,12 @@
-import { AnimatePresence, motion } from "framer-motion"
-import { useState } from "react"
+import React from "react"
 import { range } from "../helpers/range"
+import Button from "../ui/Button"
 import { MenuIcon, MoreIcon } from "../ui/icons"
+import SideDrawer, { useSideDrawer } from "../ui/SideDrawer"
 import { Chatbox } from "./Chatbox"
 
 export default function ChatLayout() {
-	const [menu, setMenu] = useState(false)
+	const menu = useSideDrawer()
 
 	return (
 		<main className="absolute inset-0 flex flex-col">
@@ -13,7 +14,7 @@ export default function ChatLayout() {
 				<button
 					type="button"
 					className="transition-opacity duration-300 opacity-50 active:opacity-100 active:transition-none"
-					aria-label="Menu"
+					title="Menu"
 				>
 					<MenuIcon className="size-5" />
 				</button>
@@ -25,8 +26,8 @@ export default function ChatLayout() {
 				<button
 					type="button"
 					className="transition-opacity duration-300 opacity-50 active:opacity-100 active:transition-none"
-					aria-label="More"
-					onClick={() => setMenu(true)}
+					title="More"
+					onClick={menu.show}
 				>
 					<MoreIcon className="size-5" />
 				</button>
@@ -53,30 +54,13 @@ export default function ChatLayout() {
 
 			<Chatbox onSubmit={console.log} />
 
-			<AnimatePresence>
-				{menu && (
-					<motion.div
-						className="fixed inset-0 bg-black bg-opacity-50"
-						onClick={(e) => {
-							if (e.target === e.currentTarget) setMenu(false)
-						}}
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={{ duration: 0.3, ease: "easeOut" }}
-					>
-						<motion.div
-							className="fixed inset-y-0 right-0"
-							initial={{ translateX: 100 }}
-							animate={{ translateX: 0 }}
-							exit={{ translateX: 100 }}
-							transition={{ duration: 0.3, ease: "easeOut" }}
-						>
-							<section className="w-64 h-full bg-midnight-0">nani</section>
-						</motion.div>
-					</motion.div>
-				)}
-			</AnimatePresence>
+			<SideDrawer {...menu.props}>
+				<section className="w-64 h-full bg-midnight-0">
+					<Button>test</Button>
+					<Button>test</Button>
+					<Button>test</Button>
+				</section>
+			</SideDrawer>
 		</main>
 	)
 }

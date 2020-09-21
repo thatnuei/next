@@ -20,6 +20,7 @@
 		"react": "^17.0.0-rc.1",
 		"react-dom": "^17.0.0-rc.1",
 		"react-expanding-textarea": "^2.2.3",
+		"react-focus-lock": "^2.4.1",
 		"react-query": "2.23.0"
 	},
 	"devDependencies": {
