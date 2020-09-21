@@ -19,6 +19,7 @@
 		"preact": "^10.4.8",
 		"react": "^17.0.0-rc.1",
 		"react-dom": "^17.0.0-rc.1",
+		"react-expanding-textarea": "^2.2.3",
 		"react-query": "2.23.0"
 	},
 	"devDependencies": {

@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion"
 import Button from "../ui/Button"
-import { alertIcon } from "../ui/icons"
+import { AlertIcon } from "../ui/icons"
 import { useToastStoreActions, useToastStoreState } from "./context"
 
 export default function ToastListOverlay() {
@@ -30,7 +30,9 @@ export default function ToastListOverlay() {
 								}
 							}}
 						>
-							<div>{alertIcon}</div>
+							<div>
+								<AlertIcon className="size-5" />
+							</div>
 							<div className="ml-2 space-y-1">
 								<p className="leading-snug">{toast.text}</p>
 								<p className="text-xs opacity-75">Click to dismiss</p>

@@ -1,5 +1,7 @@
 // @ts-check
 const { rgb, shade } = require("polished")
+const plugin = require("tailwindcss/plugin")
+const config = require("tailwindcss/defaultConfig")
 
 // https://flatuicolors.com/palette/defo
 const midnight = rgb(38, 65, 94)
@@ -24,8 +26,13 @@ module.exports = {
 			inner: `0 0 3px rgba(0, 0, 0, 0.3) inset`,
 		},
 	},
-	variants: {},
-	plugins: [],
+	variants: {
+		translate: [...config.variants.translate, "active"],
+		transitionProperty: [...config.variants.transitionProperty, "active"],
+		transitionDuration: [...config.variants.transitionDuration, "active"],
+		opacity: [...config.variants.opacity, "active"],
+	},
+	plugins: [sizePlugin()],
 	purge: ["./src/**/*.{ts,tsx,html}"],
 	future: {
 		removeDeprecatedGapUtilities: true,
@@ -34,4 +41,17 @@ module.exports = {
 	experimental: {
 		applyComplexClasses: true,
 	},
+}
+
+function sizePlugin() {
+	return plugin(({ addUtilities, e, theme }) => {
+		for (const [key, value] of Object.entries(theme("width"))) {
+			addUtilities({
+				[`.size-${e(key)}`]: {
+					width: value,
+					height: value,
+				},
+			})
+		}
+	})
 }

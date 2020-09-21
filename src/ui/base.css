@@ -1,3 +1,10 @@
+* {
+	/* keep really long words from breaking outside their boxes */
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
+
+/* form controls on edge have rounded edges, we don't want that */
 button,
 input,
 select,
@@ -5,15 +12,18 @@ textarea {
 	border-radius: 0;
 }
 
+/* fade out disabled stuff and prevent interaction */
 :disabled {
 	opacity: 0.5;
 	pointer-events: none;
 }
 
+/* fade placeholders a little more */
 ::placeholder {
 	opacity: 0.5;
 }
 
+/* hide focus ring if the user is not using the keyboard */
 .js-focus-visible :focus:not(.focus-visible) {
 	outline: none;
 }

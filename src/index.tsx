@@ -1,7 +1,6 @@
 import "focus-visible"
-import React from "react"
 import ReactDOM from "react-dom"
-import App from "./app/App"
+import ChatLayout from "./chat/ChatLayout"
 import "./index.css"
 
-ReactDOM.render(<App />, document.getElementById("root"))
+ReactDOM.render(<ChatLayout />, document.getElementById("root"))
