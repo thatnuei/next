@@ -1,12 +1,47 @@
-import React from "react"
-import { range } from "../helpers/range"
+import React, { useState } from "react"
+import { ChannelMessage } from "../channel/types"
 import Button from "../ui/Button"
 import { MenuIcon, MoreIcon } from "../ui/icons"
 import SideDrawer, { useSideDrawer } from "../ui/SideDrawer"
 import { Chatbox } from "./Chatbox"
+import MessageList from "./MessageList"
 
 export default function ChatLayout() {
 	const menu = useSideDrawer()
+	const [messages, setMessages] = useState<ChannelMessage[]>([
+		{
+			id: "1",
+			text:
+				"Reprehenderit laborum magna occaecat deserunt nisi nostrud ut duis mollit dolor ullamco dolore sit velit. Dolore ut culpa in consequat sunt aliqua commodo sunt amet commodo aliqua. Exercitation quis proident do ullamco deserunt. Amet tempor laborum adipisicing duis nulla proident.",
+			time: Date.now(),
+			type: "normal",
+			senderName: "someone",
+		},
+		{
+			id: "2",
+			text:
+				"Reprehenderit laborum magna occaecat deserunt nisi nostrud ut duis mollit dolor ullamco dolore sit velit. Dolore ut culpa in consequat sunt aliqua commodo sunt amet commodo aliqua. Exercitation quis proident do ullamco deserunt. Amet tempor laborum adipisicing duis nulla proident.",
+			time: Date.now(),
+			type: "ad",
+			senderName: "someone",
+		},
+		{
+			id: "3",
+			text:
+				"Reprehenderit laborum magna occaecat deserunt nisi nostrud ut duis mollit dolor ullamco dolore sit velit. Dolore ut culpa in consequat sunt aliqua commodo sunt amet commodo aliqua. Exercitation quis proident do ullamco deserunt. Amet tempor laborum adipisicing duis nulla proident.",
+			time: Date.now(),
+			type: "admin",
+			senderName: "someone",
+		},
+		{
+			id: "4",
+			text:
+				"Reprehenderit laborum magna occaecat deserunt nisi nostrud ut duis mollit dolor ullamco dolore sit velit. Dolore ut culpa in consequat sunt aliqua commodo sunt amet commodo aliqua. Exercitation quis proident do ullamco deserunt. Amet tempor laborum adipisicing duis nulla proident.",
+			time: Date.now(),
+			type: "system",
+			senderName: "someone",
+		},
+	])
 
 	return (
 		<main className="absolute inset-0 flex flex-col">
@@ -33,30 +68,24 @@ export default function ChatLayout() {
 				</button>
 			</section>
 
-			<ul className="flex-1 min-h-0 space-y-1 overflow-y-auto" tabIndex={0}>
-				{[...range(0, 10)].map((n) => (
-					<li key={n} className={`bg-midnight-1`}>
-						<div
-							className={`px-3 py-1 ${
-								Math.random() > 0.5 ? "" : "bg-green-500 bg-opacity-25"
-							}`}
-						>
-							<strong className="inline-block mr-3 font-medium">someone</strong>
-							<span>
-								Adipisicing ut sint laborum dolore amet irure proident sunt
-								culpa tempor sunt commodo. Consequat duis occaecat nostrud
-								mollit quis nisi labore. Adipisicing occaecat sit velit et. Ea
-								nisi excepteur ullamco pariatur incididunt sint sit veniam do
-								duis labore est. Veniam ipsum labore amet pariatur sit elit. In
-								sint reprehenderit laborum do nulla aliquip elit commodo velit
-								amet elit dolor.
-							</span>
-						</div>
-					</li>
-				))}
-			</ul>
+			<section className="flex-1 min-h-0">
+				<MessageList messages={messages} />
+			</section>
 
-			<Chatbox onSubmit={console.log} />
+			<Chatbox
+				onSubmit={(text) =>
+					setMessages((messages) => [
+						...messages,
+						{
+							id: String(Math.random()),
+							text,
+							time: Date.now(),
+							type: "normal",
+							senderName: "someone",
+						},
+					])
+				}
+			/>
 
 			<SideDrawer {...menu.props}>
 				<section className="w-64 h-full bg-midnight-0">

@@ -9,6 +9,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
+		"clsx": "^1.1.1",
 		"constate": "^3.0.1",
 		"fast-json-stable-stringify": "^2.1.0",
 		"fchat": "^1.4.0",

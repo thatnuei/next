@@ -1,5 +1,7 @@
 export type ChannelMessage = {
-	senderName: string
+	id: string
+	senderName?: string
 	text: string
 	time: number
+	type: "normal" | "ad" | "admin" | "system"
 }

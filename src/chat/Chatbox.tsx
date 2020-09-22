@@ -1,11 +1,13 @@
-import { useState } from "react"
+import { SyntheticEvent, useState } from "react"
 import ExpandingTextArea from "react-expanding-textarea"
 import Button from "../ui/Button"
 
 export function Chatbox(props: { onSubmit: (message: string) => void }) {
 	const [rawValue, setRawValue] = useState("")
 
-	function submit() {
+	function submit(e: SyntheticEvent) {
+		e.preventDefault()
+
 		const value = rawValue.trim()
 		if (value) {
 			props.onSubmit(value)
@@ -14,21 +16,17 @@ export function Chatbox(props: { onSubmit: (message: string) => void }) {
 	}
 
 	return (
-		<form
-			className="flex p-2 space-x-2 bg-midnight-0"
-			onSubmit={(e) => {
-				e.preventDefault()
-				submit()
-			}}
-		>
+		<form className="flex p-2 space-x-2 bg-midnight-0" onSubmit={submit}>
 			<ExpandingTextArea
 				value={rawValue}
-				onChange={(e) => setRawValue(e.currentTarget.value)}
-				onKeyDown={(e) => {
-					if (e.key === "Enter" && !e.ctrlKey && !e.shiftKey) {
-						submit()
-						e.preventDefault()
+				onChange={(event) => setRawValue(event.currentTarget.value)}
+				onKeyDown={(event) => {
+					if (event.key === "Enter" && !event.ctrlKey && !event.shiftKey) {
+						event.preventDefault()
 					}
+				}}
+				onKeyUp={(event) => {
+					if (event.key === "Enter") submit(event)
 				}}
 				className="flex-1 resize-none input-solid"
 				placeholder="Say something..."
