@@ -1,12 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion"
-import { useCallback, useState } from "react"
 import FocusLock from "react-focus-lock"
 import { useWindowEvent } from "../dom/useWindowEvent"
+import { DialogProps } from "./dialog"
 
-type SideDrawerProps = {
+type SideDrawerProps = DialogProps & {
 	children: React.ReactNode
-	isVisible: boolean
-	onDismiss: () => void
 }
 
 export default function SideDrawer({
@@ -15,7 +13,7 @@ export default function SideDrawer({
 	onDismiss,
 }: SideDrawerProps) {
 	useWindowEvent("keydown", (event) => {
-		if (event.key === "Escape") onDismiss()
+		if (event.key === "Escape") onDismiss?.()
 	})
 
 	return (
@@ -24,7 +22,7 @@ export default function SideDrawer({
 				<motion.div
 					className="fixed inset-0 bg-black bg-opacity-50"
 					onClick={(e) => {
-						if (e.target === e.currentTarget) onDismiss()
+						if (e.target === e.currentTarget) onDismiss?.()
 					}}
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
@@ -46,18 +44,4 @@ export default function SideDrawer({
 			)}
 		</AnimatePresence>
 	)
-}
-
-export function useSideDrawer() {
-	const [isVisible, setVisible] = useState(false)
-
-	return {
-		isVisible,
-		show: useCallback(() => setVisible(true), []),
-		hide: useCallback(() => setVisible(false), []),
-		props: {
-			isVisible,
-			onDismiss: () => setVisible(false),
-		},
-	}
 }

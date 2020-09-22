@@ -1,13 +1,15 @@
 import React, { useState } from "react"
 import { ChannelMessage } from "../channel/types"
 import Button from "../ui/Button"
+import { useDialog } from "../ui/dialog"
 import { MenuIcon, MoreIcon } from "../ui/icons"
-import SideDrawer, { useSideDrawer } from "../ui/SideDrawer"
+import SideDrawer from "../ui/SideDrawer"
 import { Chatbox } from "./Chatbox"
 import MessageList from "./MessageList"
 
 export default function ChatLayout() {
-	const menu = useSideDrawer()
+	const menu = useDialog()
+
 	const [messages, setMessages] = useState<ChannelMessage[]>([
 		{
 			id: "1",
