@@ -23,10 +23,8 @@ export function Chatbox(props: { onSubmit: (message: string) => void }) {
 				onKeyDown={(event) => {
 					if (event.key === "Enter" && !event.ctrlKey && !event.shiftKey) {
 						event.preventDefault()
+						submit(event)
 					}
-				}}
-				onKeyUp={(event) => {
-					if (event.key === "Enter") submit(event)
 				}}
 				className="flex-1 resize-none input-solid"
 				placeholder="Say something..."
