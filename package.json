@@ -9,6 +9,7 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
+		"@seznam/compose-react-refs": "^1.0.4",
 		"clsx": "^1.1.1",
 		"constate": "^3.0.1",
 		"fast-json-stable-stringify": "^2.1.0",
@@ -22,7 +23,8 @@
 		"react-dom": "^17.0.0-rc.1",
 		"react-expanding-textarea": "^2.2.3",
 		"react-focus-lock": "^2.4.1",
-		"react-query": "2.23.0"
+		"react-query": "2.23.0",
+		"react-virtual": "^2.2.6"
 	},
 	"devDependencies": {
 		"@types/react": "16.9.49",
