@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion"
+import { useRef } from "react"
 import FocusLock from "react-focus-lock"
 import { useEventTarget } from "../dom/useEventTarget"
 import { DialogProps } from "./dialog"
@@ -12,7 +13,7 @@ export default function SideDrawer({
 	isVisible,
 	onDismiss,
 }: SideDrawerProps) {
-	useEventTarget(window, "keydown", (event) => {
+	useEventTarget(useRef(window), "keydown", (event) => {
 		if (event.key === "Escape") onDismiss?.()
 	})
 
