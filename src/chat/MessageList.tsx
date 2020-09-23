@@ -1,6 +1,6 @@
 import clsx from "clsx"
 import { AnimatePresence, motion } from "framer-motion"
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { ChannelMessage } from "../channel/types"
 import { useEventTarget } from "../dom/useEventTarget"
 
@@ -8,12 +8,11 @@ type Props = {
 	messages: ChannelMessage[]
 }
 
-// FIXME: has scrolling performance issues
 export default function MessageList({ messages }: Props) {
 	const [list, setList] = useState<HTMLElement | null>()
 
 	const getScrolledToBottom = () => {
-		if (!list) return false
+		if (!list) return true
 		return list.scrollTop >= list.scrollHeight - list.clientHeight - 20
 	}
 
@@ -21,9 +20,14 @@ export default function MessageList({ messages }: Props) {
 		getScrolledToBottom,
 	)
 
-	useEventTarget(list, "scroll", () => {
-		setIsScrolledToBottom(getScrolledToBottom())
-	})
+	useEventTarget(
+		list,
+		"scroll",
+		() => {
+			setIsScrolledToBottom(getScrolledToBottom())
+		},
+		{ passive: true },
+	)
 
 	const scrollToBottom = useCallback(() => {
 		list?.scrollTo({
@@ -38,8 +42,8 @@ export default function MessageList({ messages }: Props) {
 		}
 	}, [isScrolledToBottom, list, messages, scrollToBottom])
 
-	return (
-		<div className="relative h-full overflow-hidden">
+	const messageList = useMemo(() => {
+		return (
 			<ul
 				className="h-full space-y-1 overflow-y-auto"
 				tabIndex={0}
@@ -63,6 +67,12 @@ export default function MessageList({ messages }: Props) {
 					</li>
 				))}
 			</ul>
+		)
+	}, [messages])
+
+	return (
+		<div className="relative h-full overflow-hidden">
+			{messageList}
 
 			<AnimatePresence>
 				{!isScrolledToBottom && (
