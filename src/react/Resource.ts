@@ -15,36 +15,42 @@ type ResourceItemState<T> =
 	| { status: "loaded"; data: T }
 	| { status: "error"; error: unknown }
 
-export class Resource<T, I extends ResourceInput = void> {
-	private items = new Map<string, ResourceItemState<T>>()
+export class Resource<T, I extends ResourceInput> {
+	private static cache = new Map<string | symbol, unknown>()
 
-	constructor(private readonly getData: (input: I) => Promise<T>) {}
+	private state: ResourceItemState<T>
 
-	static of<T, I extends ResourceInput>(getData: (input: I) => Promise<T>) {
-		return new Resource(getData)
-	}
+	constructor(input: I, getData: (input: I) => Promise<T>) {
+		const key = typeof input === "symbol" ? input : stringify(input)
 
-	read(input: I): T {
-		const key = stringify(input)
-		const item = this.items.get(key)
-
-		if (!item) {
-			const promise = this.getData(input)
-			this.items.set(key, { status: "pending", promise })
-			throw promise
+		if (Resource.cache.has(key)) {
+			this.state = { status: "loaded", data: Resource.cache.get(key) as T }
+			return
 		}
 
-		if (item.status === "pending") throw item.promise
-		if (item.status === "error") throw item.error
+		const promise = getData(input)
+		this.state = { status: "pending", promise }
 
-		return item.data
+		promise
+			.then((data) => {
+				this.state = { status: "loaded", data }
+				Resource.cache.set(key, data)
+			})
+			.catch((error: unknown) => {
+				this.state = { status: "error", error }
+			})
 	}
 
-	setData(data: T, input: I) {
-		this.items.set(stringify(input), { status: "loaded", data })
+	static of<T, I extends ResourceInput>(
+		input: I,
+		getData: (input: I) => Promise<T>,
+	) {
+		return new Resource(input, getData)
 	}
 
-	invalidate(input: I) {
-		this.items.delete(stringify(input))
+	read(): T {
+		if (this.state.status === "pending") throw this.state.promise
+		if (this.state.status === "error") throw this.state.error
+		return this.state.data
 	}
 }
