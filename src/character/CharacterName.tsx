@@ -1,5 +1,5 @@
 import { useObservable } from "micro-observables"
-import React from "react"
+import { memo } from "react"
 import tw from "twin.macro"
 import { TagProps } from "../jsx/types"
 import { rainbowAnimation } from "../ui/helpers"
@@ -8,26 +8,26 @@ import { genderColors, statusColors } from "./colors"
 import { useCharacter } from "./helpers"
 
 type Props = TagProps<"span"> & {
-  name: string
+	name: string
 }
 
 function CharacterName({ name, ...props }: Props) {
-  const character = useCharacter(name)
-  const gender = useObservable(character.gender)
-  const status = useObservable(character.status)
+	const character = useCharacter(name)
+	const gender = useObservable(character.gender)
+	const status = useObservable(character.status)
 
-  const statusDotStyle = [
-    tw`inline-block mr-1 transform scale-150`,
-    { color: statusColors[status.type] },
-    status.type === "crown" && rainbowAnimation,
-  ]
+	const statusDotStyle = [
+		tw`inline-block mr-1 transform scale-150`,
+		{ color: statusColors[status.type] },
+		status.type === "crown" && rainbowAnimation,
+	]
 
-  return (
-    <CharacterMenuTarget name={name} css={tw`font-weight-bold`} {...props}>
-      <span css={statusDotStyle}>•</span>
-      <span css={{ color: genderColors[gender] }}>{name}</span>
-    </CharacterMenuTarget>
-  )
+	return (
+		<CharacterMenuTarget name={name} css={tw`font-weight-bold`} {...props}>
+			<span css={statusDotStyle}>•</span>
+			<span css={{ color: genderColors[gender] }}>{name}</span>
+		</CharacterMenuTarget>
+	)
 }
 
-export default React.memo(CharacterName)
+export default memo(CharacterName)

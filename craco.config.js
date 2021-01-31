@@ -1,3 +1,3 @@
 module.exports = {
-  babel: require("./babel.config"),
+	babel: require("./babel.config"),
 }

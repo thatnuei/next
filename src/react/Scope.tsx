@@ -1,9 +1,9 @@
-import React from "react"
+import * as React from "react"
 
 type ScopeProps = {
-  children: () => React.ReactNode
+	children: () => React.ReactNode
 }
 
 export default function Scope(props: ScopeProps) {
-  return <>{props.children()}</>
+	return <>{props.children()}</>
 }

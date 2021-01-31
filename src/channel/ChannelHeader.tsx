@@ -1,6 +1,6 @@
 import { AnimatePresence } from "framer-motion"
 import { useObservable } from "micro-observables"
-import React from "react"
+import * as React from "react"
 import tw from "twin.macro"
 import { useIdentity } from "../app/helpers"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
@@ -20,129 +20,129 @@ import { useChannel } from "./helpers"
 import InviteUsersForm from "./InviteUsersForm"
 
 type Props = {
-  channelId: string
-  onToggleDescription: () => void
-  onShowUsers: () => void
+	channelId: string
+	onToggleDescription: () => void
+	onShowUsers: () => void
 } & TagProps<"header">
 
 function ChannelHeader({
-  channelId,
-  onToggleDescription,
-  onShowUsers,
-  ...props
+	channelId,
+	onToggleDescription,
+	onShowUsers,
+	...props
 }: Props) {
-  const channel = useChannel(channelId)
-  const title = useObservable(channel.title)
-  const isPublic = useObservable(channel.isPublic)
-  const ops = useObservable(channel.ops)
+	const channel = useChannel(channelId)
+	const title = useObservable(channel.title)
+	const isPublic = useObservable(channel.isPublic)
+	const ops = useObservable(channel.ops)
 
-  const identity = useIdentity()
+	const identity = useIdentity()
 
-  const isLargeScreen = useMediaQuery(screenQueries.large)
-  const menu = usePopover()
-  const invite = useOverlay()
+	const isLargeScreen = useMediaQuery(screenQueries.large)
+	const menu = usePopover()
+	const invite = useOverlay()
 
-  const shouldShowInviteOption = isPublic && ops.includes(identity)
+	const shouldShowInviteOption = isPublic && ops.includes(identity)
 
-  function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
-    const target = event.currentTarget
-    menu.showAt({
-      x: target.offsetLeft,
-      y: target.offsetTop + target.clientHeight,
-    })
-  }
+	function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
+		const target = event.currentTarget
+		menu.showAt({
+			x: target.offsetLeft,
+			y: target.offsetTop + target.clientHeight,
+		})
+	}
 
-  return (
-    <header css={tw`flex flex-row items-center p-3 bg-background-0`} {...props}>
-      <ChatMenuButton css={tw`mr-3`} />
+	return (
+		<header css={tw`flex flex-row items-center p-3 bg-background-0`} {...props}>
+			<ChatMenuButton css={tw`mr-3`} />
 
-      <Button
-        title="Description"
-        css={[fadedButton]}
-        onClick={onToggleDescription}
-      >
-        <Icon which={icons.about} />
-      </Button>
+			<Button
+				title="Description"
+				css={[fadedButton]}
+				onClick={onToggleDescription}
+			>
+				<Icon which={icons.about} />
+			</Button>
 
-      <div css={tw`w-3`} />
+			<div css={tw`w-3`} />
 
-      <h1 css={[headerText2, tw`flex-1`]}>{title}</h1>
+			<h1 css={[headerText2, tw`flex-1`]}>{title}</h1>
 
-      {isLargeScreen && <ChannelFilters channelId={channel.id} />}
+			{isLargeScreen && <ChannelFilters channelId={channel.id} />}
 
-      {!isLargeScreen && (
-        <>
-          <div css={tw`w-3`} />
+			{!isLargeScreen && (
+				<>
+					<div css={tw`w-3`} />
 
-          <Button title="User list" css={fadedButton} onClick={onShowUsers}>
-            <Icon which={icons.users} />
-          </Button>
-        </>
-      )}
+					<Button title="User list" css={fadedButton} onClick={onShowUsers}>
+						<Icon which={icons.users} />
+					</Button>
+				</>
+			)}
 
-      <div css={tw`w-3`} />
+			<div css={tw`w-3`} />
 
-      <Button title="More" css={fadedButton} onClick={showMenu}>
-        <Icon which={icons.more} />
-      </Button>
+			<Button title="More" css={fadedButton} onClick={showMenu}>
+				<Icon which={icons.more} />
+			</Button>
 
-      <AnimatePresence>
-        {menu.value && (
-          <Popover {...menu.props} css={tw`w-48 bg-background-2`}>
-            {!isLargeScreen && (
-              <ChannelFilters
-                channelId={channel.id}
-                css={tw`px-3 py-2 bg-background-0 mb-gap`}
-              />
-            )}
-            <div css={tw`flex flex-col bg-background-1`}>
-              <MenuItem
-                text="Copy code"
-                icon={icons.code}
-                onClick={() => {
-                  window.navigator.clipboard
-                    .writeText(channel.linkCode.get())
-                    .catch(console.error)
-                  menu.hide()
-                }}
-              />
-              <MenuItem
-                text="Clear messages"
-                icon={icons.clearMessages}
-                onClick={() => {
-                  channel.clearMessages()
-                  menu.hide()
-                }}
-              />
-              {shouldShowInviteOption && (
-                <MenuItem
-                  text="Invite"
-                  icon={icons.invite}
-                  onClick={() => {
-                    invite.show()
-                    menu.hide()
-                  }}
-                />
-              )}
-            </div>
-          </Popover>
-        )}
-      </AnimatePresence>
+			<AnimatePresence>
+				{menu.value && (
+					<Popover {...menu.props} css={tw`w-48 bg-background-2`}>
+						{!isLargeScreen && (
+							<ChannelFilters
+								channelId={channel.id}
+								css={tw`px-3 py-2 bg-background-0 mb-gap`}
+							/>
+						)}
+						<div css={tw`flex flex-col bg-background-1`}>
+							<MenuItem
+								text="Copy code"
+								icon={icons.code}
+								onClick={() => {
+									window.navigator.clipboard
+										.writeText(channel.linkCode.get())
+										.catch(console.error)
+									menu.hide()
+								}}
+							/>
+							<MenuItem
+								text="Clear messages"
+								icon={icons.clearMessages}
+								onClick={() => {
+									channel.clearMessages()
+									menu.hide()
+								}}
+							/>
+							{shouldShowInviteOption && (
+								<MenuItem
+									text="Invite"
+									icon={icons.invite}
+									onClick={() => {
+										invite.show()
+										menu.hide()
+									}}
+								/>
+							)}
+						</div>
+					</Popover>
+				)}
+			</AnimatePresence>
 
-      <AnimatePresence>
-        {invite.value && (
-          <Modal
-            onDismiss={invite.hide}
-            title={`Invite to ${title}`}
-            width={400}
-            height={700}
-          >
-            <InviteUsersForm channelId={channelId} />
-          </Modal>
-        )}
-      </AnimatePresence>
-    </header>
-  )
+			<AnimatePresence>
+				{invite.value && (
+					<Modal
+						onDismiss={invite.hide}
+						title={`Invite to ${title}`}
+						width={400}
+						height={700}
+					>
+						<InviteUsersForm channelId={channelId} />
+					</Modal>
+				)}
+			</AnimatePresence>
+		</header>
+	)
 }
 
 export default ChannelHeader

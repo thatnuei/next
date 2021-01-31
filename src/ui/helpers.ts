@@ -14,9 +14,9 @@ export const transition = tw`transition duration-300`
 export const scrollVertical = tw`min-h-0 overflow-y-auto`
 
 export const ellipsize = css({
-  overflow: "hidden",
-  whiteSpace: "nowrap",
-  textOverflow: "ellipsis",
+	overflow: "hidden",
+	whiteSpace: "nowrap",
+	textOverflow: "ellipsis",
 })
 
 const rainbow = keyframes`

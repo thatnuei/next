@@ -7,7 +7,7 @@ const screens = preval`
 ` as Record<string, string>
 
 export const screenQueries = {
-  small: `(max-width: ${screens.md})`,
-  medium: `(min-width: ${screens.md}) and (max-width: ${screens.lg})`,
-  large: `(min-width: ${screens.lg})`,
+	small: `(max-width: ${screens.md})`,
+	medium: `(min-width: ${screens.md}) and (max-width: ${screens.lg})`,
+	large: `(min-width: ${screens.lg})`,
 }

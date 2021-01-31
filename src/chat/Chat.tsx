@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { useObservable } from "micro-observables"
-import React, { useMemo } from "react"
+import { useMemo } from "react"
 import tw from "twin.macro"
 import ChannelView from "../channel/ChannelView"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
@@ -18,80 +18,80 @@ import { screenQueries } from "../ui/screens"
 import NoRoomView from "./NoRoomView"
 
 export default function Chat() {
-  const root = useRootStore()
+	const root = useRootStore()
 
-  const isSideMenuVisible = useObservable(root.chatNavStore.sideMenu.isVisible)
-  const isChannelBrowserVisible = useObservable(
-    root.channelBrowserStore.isVisible,
-  )
-  const isStatusUpdateVisible = useObservable(root.statusUpdateStore.isVisible)
-  const isSmallScreen = useMediaQuery(screenQueries.small)
-  const chatRoomView = useMemo(() => <ChatRoomView />, [])
+	const isSideMenuVisible = useObservable(root.chatNavStore.sideMenu.isVisible)
+	const isChannelBrowserVisible = useObservable(
+		root.channelBrowserStore.isVisible,
+	)
+	const isStatusUpdateVisible = useObservable(root.statusUpdateStore.isVisible)
+	const isSmallScreen = useMediaQuery(screenQueries.small)
+	const chatRoomView = useMemo(() => <ChatRoomView />, [])
 
-  return (
-    <motion.div css={[fixedCover, tw`flex`]} {...fadeAnimation}>
-      {!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
+	return (
+		<motion.div css={[fixedCover, tw`flex`]} {...fadeAnimation}>
+			{!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
 
-      {chatRoomView}
+			{chatRoomView}
 
-      <AnimatePresence>
-        {isSmallScreen && isSideMenuVisible && (
-          <Drawer
-            key="sideMenu"
-            side="left"
-            onDismiss={root.chatNavStore.sideMenu.hide}
-          >
-            <ChatNav css={tw`h-full bg-background-2`} />
-          </Drawer>
-        )}
+			<AnimatePresence>
+				{isSmallScreen && isSideMenuVisible && (
+					<Drawer
+						key="sideMenu"
+						side="left"
+						onDismiss={root.chatNavStore.sideMenu.hide}
+					>
+						<ChatNav css={tw`h-full bg-background-2`} />
+					</Drawer>
+				)}
 
-        {isChannelBrowserVisible && (
-          <Modal
-            key="channelBrowser"
-            onDismiss={root.channelBrowserStore.hide}
-            title="Channels"
-            width={480}
-            height={720}
-            children={<ChannelBrowser />}
-          />
-        )}
+				{isChannelBrowserVisible && (
+					<Modal
+						key="channelBrowser"
+						onDismiss={root.channelBrowserStore.hide}
+						title="Channels"
+						width={480}
+						height={720}
+						children={<ChannelBrowser />}
+					/>
+				)}
 
-        {isStatusUpdateVisible && (
-          <Modal
-            key="statusUpdate"
-            onDismiss={root.statusUpdateStore.hide}
-            title="Update Your Status"
-            width={480}
-            height={360}
-            children={<StatusUpdateForm />}
-          />
-        )}
-      </AnimatePresence>
-    </motion.div>
-  )
+				{isStatusUpdateVisible && (
+					<Modal
+						key="statusUpdate"
+						onDismiss={root.statusUpdateStore.hide}
+						title="Update Your Status"
+						width={480}
+						height={360}
+						children={<StatusUpdateForm />}
+					/>
+				)}
+			</AnimatePresence>
+		</motion.div>
+	)
 }
 
 function ChatRoomView() {
-  const root = useRootStore()
-  const view = useChatNavView()
+	const root = useRootStore()
+	const view = useChatNavView()
 
-  const isChannelJoined = useObservable(
-    root.channelStore.isJoined(view.channelId ?? ""),
-  )
+	const isChannelJoined = useObservable(
+		root.channelStore.isJoined(view.channelId ?? ""),
+	)
 
-  const isPrivateChatOpen = useObservable(
-    root.privateChatStore.isOpen(view.privateChatPartner ?? ""),
-  )
+	const isPrivateChatOpen = useObservable(
+		root.privateChatStore.isOpen(view.privateChatPartner ?? ""),
+	)
 
-  if (view.channelId && isChannelJoined) {
-    return <ChannelView css={tw`flex-1`} channelId={view.channelId} />
-  }
+	if (view.channelId && isChannelJoined) {
+		return <ChannelView css={tw`flex-1`} channelId={view.channelId} />
+	}
 
-  if (view.privateChatPartner && isPrivateChatOpen) {
-    return (
-      <PrivateChatView css={tw`flex-1`} partnerName={view.privateChatPartner} />
-    )
-  }
+	if (view.privateChatPartner && isPrivateChatOpen) {
+		return (
+			<PrivateChatView css={tw`flex-1`} partnerName={view.privateChatPartner} />
+		)
+	}
 
-  return <NoRoomView css={tw`self-start`} />
+	return <NoRoomView css={tw`self-start`} />
 }
