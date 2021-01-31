@@ -35,7 +35,7 @@ function ChannelBrowserItem({ info, ...props }: Props) {
       <Icon which={info.type === "public" ? earth : lock} css={tw`mr-2`} />
       <div
         css={[
-          tw`flex-1 overflow-hidden whitespace-no-wrap`,
+          tw`flex-1 overflow-hidden whitespace-nowrap`,
           { textOverflow: "ellipsis" },
         ]}
         dangerouslySetInnerHTML={{ __html: info.title }}

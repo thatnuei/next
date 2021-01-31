@@ -22,7 +22,7 @@ function ChannelFilters({ channelId, ...props }: Props) {
     const isSelected = selectedMode === mode
 
     const style = [
-      tw`block whitespace-no-wrap transition-opacity`,
+      tw`block whitespace-nowrap transition-opacity`,
       isSelected ? tw`opacity-100` : tw`opacity-50 hover:opacity-75`,
     ]
 
