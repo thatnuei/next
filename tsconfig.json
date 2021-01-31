@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2019",
     "module": "esnext",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "noEmit": true,
     "isolatedModules": true,
     "strict": true,
@@ -12,11 +12,25 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "plugins": [{ "name": "typescript-plugin-tw-template" }],
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "plugins": [
+      {
+        "name": "typescript-plugin-tw-template"
+      }
+    ],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "noFallthroughCasesInSwitch": true
   },
-  "exclude": ["build", "node_modules"],
-  "include": ["src"]
+  "exclude": [
+    "build",
+    "node_modules"
+  ],
+  "include": [
+    "src"
+  ]
 }
