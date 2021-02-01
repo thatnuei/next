@@ -1,5 +1,5 @@
 import { observable } from "micro-observables"
-import { autobind } from "../helpers/common/autobind"
+import { autobind } from "../common/autobind"
 import { SocketHandler } from "../socket/SocketHandler"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"

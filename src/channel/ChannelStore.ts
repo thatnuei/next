@@ -1,10 +1,10 @@
 import { Observable, observable } from "micro-observables"
 import { UserData } from "../app/UserStore"
-import { concatUnique } from "../helpers/common/concatUniq"
-import { factoryFrom } from "../helpers/common/factoryFrom"
-import { memoize } from "../helpers/common/memoize"
-import { unique } from "../helpers/common/unique"
-import { without } from "../helpers/common/without"
+import { concatUnique } from "../common/concatUniq"
+import { factoryFrom } from "../common/factoryFrom"
+import { memoize } from "../common/memoize"
+import { unique } from "../common/unique"
+import { without } from "../common/without"
 import {
 	createAdMessage,
 	createChannelMessage,

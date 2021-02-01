@@ -1,7 +1,7 @@
 import { observable } from "micro-observables"
-import { compare } from "../helpers/common/compare"
-import { raise } from "../helpers/common/raise"
-import { Dict } from "../helpers/common/types"
+import { compare } from "../common/compare"
+import { raise } from "../common/raise"
+import { Dict } from "../common/types"
 import { fetchJson } from "../network/fetchJson"
 
 export type AuthenticateArgs = { account: string; password: string }

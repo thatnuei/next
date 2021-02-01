@@ -1,5 +1,5 @@
 import * as fchat from "fchat"
-import { ValueOf } from "../helpers/common/types"
+import { ValueOf } from "../common/types"
 
 type CommandUnionFromRecord<T> = ValueOf<
 	{

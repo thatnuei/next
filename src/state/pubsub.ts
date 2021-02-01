@@ -1,4 +1,4 @@
-import { autobind } from "../helpers/common/autobind"
+import { autobind } from "../common/autobind"
 
 type Listener<T> = (event: T) => void
 

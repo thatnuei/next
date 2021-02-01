@@ -1,7 +1,7 @@
 import { observable } from "micro-observables"
 import { AppStore } from "../app/AppStore"
 import { CharacterStatus } from "../character/CharacterModel"
-import { delay } from "../helpers/common/delay"
+import { delay } from "../common/delay"
 import { createBoundCommandHandler } from "../socket/helpers"
 import { SocketHandler } from "../socket/SocketHandler"
 
