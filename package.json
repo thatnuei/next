@@ -24,6 +24,7 @@
 		"lodash-es": "^4.17.20",
 		"micro-observables": "^1.7.0",
 		"polished": "^4.1.0",
+		"preact": "^10.5.12",
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1",
 		"react-focus-lock": "^2.5.0",

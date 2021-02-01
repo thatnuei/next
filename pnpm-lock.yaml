@@ -9,6 +9,7 @@ dependencies:
   lodash-es: 4.17.20
   micro-observables: 1.7.0_react@17.0.1
   polished: 4.1.0
+  preact: 10.5.12
   react: 17.0.1
   react-dom: 17.0.1_react@17.0.1
   react-focus-lock: 2.5.0_@types+react@17.0.0+react@17.0.1
@@ -2523,6 +2524,10 @@ packages:
       node: ^10 || ^12 || >=14
     resolution:
       integrity: sha512-kRFftRoExRVXZlwUuay9iC824qmXPcQQVzAjbCCgjpXnkdMCJYBu2gTwAaFBzv8ewND6O8xFb3aELmEkh9zTzg==
+  /preact/10.5.12:
+    dev: false
+    resolution:
+      integrity: sha512-r6siDkuD36oszwlCkcqDJCAKBQxGoeEGytw2DGMD5A/GGdu5Tymw+N2OBXwvOLxg6d1FeY8MgMV3cc5aVQo4Cg==
   /prelude-ls/1.2.1:
     dev: true
     engines:
@@ -3412,6 +3417,7 @@ specifiers:
   micro-observables: ^1.7.0
   npm-run-all: ^4.1.5
   polished: ^4.1.0
+  preact: ^10.5.12
   prettier: ^2.2.1
   react: ^17.0.1
   react-dom: ^17.0.1
