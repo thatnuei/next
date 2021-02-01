@@ -1,8 +1,8 @@
 import { rgba, shade } from "polished"
 import { setup } from "twind"
 import { css } from "twind/css"
-import * as colors from "./colors"
-import { clouds, midnight } from "./colors"
+import * as colors from "./ui/colors"
+import { clouds, midnight } from "./ui/colors"
 
 setup({
 	theme: {

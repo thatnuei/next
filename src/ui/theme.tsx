@@ -8,7 +8,7 @@ import {
 	useState,
 } from "react"
 import { tw } from "twind"
-import { clouds, midnight } from "../colors"
+import { clouds, midnight } from "./colors"
 
 const themes = {
 	midnight: {
