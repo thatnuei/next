@@ -16,7 +16,7 @@ function ChatMenuButton(props: Props) {
 	return isSmallScreen ? (
 		<Button
 			title="Show side menu"
-			css={fadedButton}
+			className={fadedButton}
 			onClick={root.chatNavStore.sideMenu.show}
 			{...props}
 		>

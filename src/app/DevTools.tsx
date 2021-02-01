@@ -1,5 +1,5 @@
 import { useState } from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { select } from "../ui/components"
 import FormField from "../ui/FormField"
@@ -18,10 +18,12 @@ function DevTools() {
 	})
 
 	return visible ? (
-		<div css={tw`fixed top-0 left-0 right-0 p-4 text-white bg-black-faded`}>
+		<div
+			className={tw`fixed top-0 left-0 right-0 p-4 text-white bg-black-faded`}
+		>
 			<FormField labelText="Theme">
 				<select
-					css={[select, tw`text-text`]}
+					className={tw([select, tw`text-text`])}
 					value={currentTheme}
 					onChange={(e) => setTheme(e.target.value as ThemeName)}
 				>

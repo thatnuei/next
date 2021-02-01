@@ -1,5 +1,5 @@
 import * as React from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 import Button from "../dom/Button"
 import { fadedButton } from "../ui/components"
 import { ellipsize, transition } from "../ui/helpers"
@@ -27,24 +27,30 @@ function RoomTab(props: RoomTabProps) {
 	})()
 
 	return (
-		<div css={[tw`flex flex-row items-center`, activeStateStyle, transition]}>
+		<div
+			className={tw([
+				tw`flex flex-row items-center`,
+				activeStateStyle,
+				transition,
+			])}
+		>
 			<Button
-				css={[tw`flex flex-row items-center flex-1 p-2`, ellipsize]}
+				className={tw([tw`flex flex-row items-center flex-1 p-2`, ellipsize])}
 				onClick={props.onClick}
 				role="link"
 			>
 				{props.icon}
 				<div
-					css={[tw`flex-1 ml-2`, ellipsize]}
+					className={tw([tw`flex-1 ml-2`, ellipsize])}
 					dangerouslySetInnerHTML={{ __html: props.title }}
 				/>
 			</Button>
 			<Button
-				css={[fadedButton, tw`p-2`]}
+				className={tw([fadedButton, tw`p-2`])}
 				title="Close"
 				onClick={props.onClose}
 			>
-				<Icon which={close} css={tw`w-5 h-5`} />
+				<Icon which={close} className={tw`w-5 h-5`} />
 			</Button>
 		</div>
 	)

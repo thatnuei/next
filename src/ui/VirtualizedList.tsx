@@ -1,7 +1,7 @@
-import { ComponentType, Key, useState } from "react"
 import * as React from "react"
+import { ComponentType, Key, useState } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
-import tw from "twin.macro"
+import { tw } from "twind"
 import { useElementSize } from "../dom/useElementSize"
 import { TagProps } from "../jsx/types"
 
@@ -28,7 +28,7 @@ function VirtualizedList<T>({
 	const dimensions = useElementSize(container)
 
 	return (
-		<div css={tw`w-full h-full`} ref={setContainer} {...props}>
+		<div className={tw`w-full h-full`} ref={setContainer} {...props}>
 			<FixedSizeList
 				width={dimensions.width}
 				height={dimensions.height}

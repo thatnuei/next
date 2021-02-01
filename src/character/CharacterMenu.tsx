@@ -1,5 +1,5 @@
 import { useObservable } from "micro-observables"
-import tw from "twin.macro"
+import { tw } from "twind"
 import { getProfileUrl } from "../flist/helpers"
 import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
@@ -25,22 +25,22 @@ function CharacterMenu({
 	const isIgnored = ignored.includes(name)
 
 	return (
-		<Popover {...props} css={tw`w-56`}>
-			<div css={tw`p-3 bg-background-0`}>
+		<Popover {...props} className={tw`w-56`}>
+			<div className={tw`p-3 bg-background-0`}>
 				<CharacterSummary name={name} />
 
 				{friendshipItems.map((item, index) => (
 					<div
 						key={index}
-						css={tw`flex flex-row items-center px-2 py-1 mt-3 text-sm bg-green-faded text-green`}
+						className={tw`flex flex-row items-center px-2 py-1 mt-3 text-sm bg-green-faded text-green`}
 					>
-						<Icon which={icons.heart} css={tw`w-4 h-4 mr-1`} />
+						<Icon which={icons.heart} className={tw`w-4 h-4 mr-1`} />
 						{item.us}
 					</div>
 				))}
 			</div>
 
-			<div css={tw`flex flex-col`}>
+			<div className={tw`flex flex-col`}>
 				<MenuItem
 					icon={icons.link}
 					text="Profile"
@@ -81,8 +81,8 @@ function CharacterMenu({
 					}}
 				/>
 			</div>
-			<div css={tw`p-2 bg-background-0`}>
-				<CharacterMemoInput name={name} css={tw`block w-full`} />
+			<div className={tw`p-2 bg-background-0`}>
+				<CharacterMemoInput name={name} className={tw`block w-full`} />
 			</div>
 		</Popover>
 	)

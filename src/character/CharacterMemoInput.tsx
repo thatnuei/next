@@ -1,6 +1,6 @@
 import { debounce } from "lodash-es"
 import { useEffect, useMemo, useState } from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 import { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
 import { input } from "../ui/components"
@@ -53,12 +53,12 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
 		void saveMemoDebounced(memo)
 	}
 
-	const style = [input, tw`h-20 text-sm`]
+	const style = tw(input, tw`h-20 text-sm`)
 
 	if (state.status === "loading") {
 		return (
 			<textarea
-				css={style}
+				className={style}
 				disabled
 				placeholder="Loading..."
 				value=""
@@ -70,7 +70,7 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
 	if (state.status === "editing") {
 		return (
 			<textarea
-				css={style}
+				className={style}
 				value={state.memo}
 				onChange={(event) => handleChange(event.target.value)}
 				placeholder="Enter a memo"
@@ -80,7 +80,7 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
 	}
 
 	if (state.status === "error") {
-		return <p css={tw`text-sm`}>Failed to load memo</p>
+		return <p className={tw`text-sm`}>Failed to load memo</p>
 	}
 
 	return null

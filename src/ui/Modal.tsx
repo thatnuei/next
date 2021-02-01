@@ -1,8 +1,8 @@
-import { css } from "@emotion/react"
 import { motion } from "framer-motion"
-import { MouseEvent } from "react"
 import * as React from "react"
-import tw from "twin.macro"
+import { MouseEvent } from "react"
+import { tw } from "twind"
+import { css } from "twind/css"
 import Button from "../dom/Button"
 import Portal from "../react/Portal"
 import { fadeAnimation, slideAnimation } from "./animation"
@@ -37,7 +37,7 @@ function Modal({
 		}
 	}
 
-	const shadeStyle = [
+	const shadeStyle = tw(
 		tw`flex flex-col p-4 bg-black-faded`,
 
 		verticalPanelAlign === "top" && tw`items-center justify-start`,
@@ -45,34 +45,38 @@ function Modal({
 
 		fillMode === "contained" && absoluteCover,
 		fillMode === "fullscreen" && fixedCover,
-	]
+	)
 
-	const panelStyle = [
+	const panelStyle = tw(
 		raisedPanel,
-		tw`flex flex-col w-full h-full`,
+		`flex flex-col w-full h-full`,
+		// @ts-expect-error
 		css({ maxWidth: props.width }),
+		// @ts-expect-error
 		css({ maxHeight: props.height }),
-	]
+	)
 
-	const closeButtonStyle = [
+	const closeButtonStyle = tw(
 		fadedButton,
-		tw`absolute top-0 bottom-0 right-0 flex items-center justify-center w-16`,
-	]
+		`absolute top-0 bottom-0 right-0 flex items-center justify-center w-16`,
+	)
 
 	const content = (
 		<motion.div
-			css={shadeStyle}
+			className={shadeStyle}
 			onPointerDown={handleShadeClick}
 			{...fadeAnimation}
 		>
-			<motion.div css={panelStyle} {...slideAnimation}>
-				<header css={[raisedPanelHeader, tw`relative px-16 text-center`]}>
-					<h1 css={headerText}>{props.title}</h1>
-					<Button css={closeButtonStyle} onClick={props.onDismiss}>
+			<motion.div className={panelStyle} {...slideAnimation}>
+				<header
+					className={tw([raisedPanelHeader, tw`relative px-16 text-center`])}
+				>
+					<h1 className={headerText}>{props.title}</h1>
+					<Button className={closeButtonStyle} onClick={props.onDismiss}>
 						<Icon which={close} />
 					</Button>
 				</header>
-				<main css={tw`flex-1 min-h-0`}>{props.children}</main>
+				<main className={tw`flex-1 min-h-0`}>{props.children}</main>
 			</motion.div>
 		</motion.div>
 	)

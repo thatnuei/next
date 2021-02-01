@@ -1,5 +1,5 @@
 import * as React from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 
 type Props = React.ComponentPropsWithoutRef<"label"> & {
 	labelText: string
@@ -8,8 +8,8 @@ type Props = React.ComponentPropsWithoutRef<"label"> & {
 
 function FormField({ labelText, children, ...props }: Props) {
 	return (
-		<label css={tw`block w-full`} {...props}>
-			<div css={tw`mb-1`}>{labelText}</div>
+		<label className={tw`block w-full`} {...props}>
+			<div className={tw`mb-1`}>{labelText}</div>
 			{children}
 		</label>
 	)

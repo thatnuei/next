@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
-import { useRef } from "react"
 import * as React from "react"
-import tw from "twin.macro"
+import { useRef } from "react"
+import { tw } from "twind"
 import Button from "../dom/Button"
 import * as icons from "../ui/icons"
 import { fadeAnimation } from "./animation"
@@ -24,13 +24,13 @@ function Drawer({ isVisible, onDismiss, side, children }: Props) {
 		}
 	}
 
-	const shadeStyle = [fixedCover, tw`bg-black-faded`]
+	const shadeStyle = tw(fixedCover, tw`bg-black-faded`)
 
-	const contentContainerStyle = [
+	const contentContainerStyle = tw(
 		tw`absolute top-0 bottom-0 flex items-start`,
 		side === "left" && tw`left-0`,
 		side === "right" && tw`right-0`,
-	]
+	)
 
 	const panelVariants = {
 		out: {
@@ -46,7 +46,7 @@ function Drawer({ isVisible, onDismiss, side, children }: Props) {
 	const closeButton = (
 		<Button
 			title="close"
-			css={[fadedButton, tw`p-2`]}
+			className={tw([fadedButton, tw`p-2`])}
 			onClick={onDismiss}
 			ref={closeButtonRef}
 		>
@@ -55,16 +55,20 @@ function Drawer({ isVisible, onDismiss, side, children }: Props) {
 	)
 
 	return (
-		<motion.div css={shadeStyle} onClick={handleShadeClick} {...fadeAnimation}>
+		<motion.div
+			className={shadeStyle}
+			onClick={handleShadeClick}
+			{...fadeAnimation}
+		>
 			<motion.div
-				css={contentContainerStyle}
+				className={contentContainerStyle}
 				variants={panelVariants}
 				initial="out"
 				animate="in"
 				exit="out"
 			>
 				{side === "right" && closeButton}
-				<div css={tw`h-full shadow-normal`}>{children}</div>
+				<div className={tw`h-full shadow-normal`}>{children}</div>
 				{side === "left" && closeButton}
 			</motion.div>
 		</motion.div>

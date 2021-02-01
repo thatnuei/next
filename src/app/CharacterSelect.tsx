@@ -1,6 +1,6 @@
 import { useObservable } from "micro-observables"
 import * as React from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 import Avatar from "../character/Avatar"
 import Button from "../dom/Button"
 import { useRootStore } from "../root/context"
@@ -20,10 +20,13 @@ function CharacterSelect() {
 
 	return (
 		<IslandLayout title="Select a Character">
-			<form css={[flexColumn, tw`items-center p-4`]} onSubmit={handleSubmit}>
+			<form
+				className={tw([flexColumn, tw`items-center p-4`])}
+				onSubmit={handleSubmit}
+			>
 				<Avatar name={identity} />
 				<select
-					css={[select, tw`my-4`]}
+					className={tw([select, tw`my-4`])}
 					value={identity}
 					onChange={(e) => root.appStore.setIdentity(e.target.value, account)}
 				>
@@ -33,10 +36,13 @@ function CharacterSelect() {
 						</option>
 					))}
 				</select>
-				<Button css={solidButton} type="submit">
+				<Button className={solidButton} type="submit">
 					Enter chat
 				</Button>
-				<Button css={[anchor, tw`mt-4`]} onClick={root.appStore.showLogin}>
+				<Button
+					className={tw([anchor, tw`mt-4`])}
+					onClick={root.appStore.showLogin}
+				>
 					Return to Login
 				</Button>
 			</form>

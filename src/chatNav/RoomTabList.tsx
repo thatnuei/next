@@ -1,5 +1,5 @@
 import { useObservable } from "micro-observables"
-import tw from "twin.macro"
+import { tw } from "twind"
 import { ChannelModel } from "../channel/ChannelModel"
 import { useJoinedChannels } from "../channel/helpers"
 import { useIsPublicChannel } from "../channelBrowser/helpers"
@@ -41,7 +41,7 @@ function PrivateChatTab({ chat }: { chat: PrivateChatModel }) {
 	return (
 		<RoomTab
 			title={chat.partnerName}
-			icon={<Avatar name={chat.partnerName} css={tw`w-5 h-5`} />}
+			icon={<Avatar name={chat.partnerName} className={tw`w-5 h-5`} />}
 			isActive={isActive}
 			isUnread={isUnread}
 			onClick={() => root.chatNavStore.showPrivateChat(chat.partnerName)}
@@ -66,9 +66,9 @@ function ChannelRoomTab({ channel }: { channel: ChannelModel }) {
 			title={title}
 			icon={
 				isPublic ? (
-					<Icon which={icons.earth} css={tw`w-5 h-5`} />
+					<Icon which={icons.earth} className={tw`w-5 h-5`} />
 				) : (
-					<Icon which={icons.lock} css={tw`w-5 h-5`} />
+					<Icon which={icons.lock} className={tw`w-5 h-5`} />
 				)
 			}
 			isActive={isActive}

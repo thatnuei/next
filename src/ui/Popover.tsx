@@ -1,9 +1,9 @@
 import composeRefs from "@seznam/compose-react-refs"
 import { HTMLMotionProps, motion } from "framer-motion"
-import { useCallback, useState } from "react"
 import * as React from "react"
+import { useCallback, useState } from "react"
 import FocusLock from "react-focus-lock"
-import tw from "twin.macro"
+import { tw } from "twind"
 import { useElementSize } from "../dom/useElementSize"
 import { useWindowEvent } from "../dom/useWindowEvent"
 import { useWindowSize } from "../dom/useWindowSize"
@@ -45,17 +45,17 @@ function Popover({ children, position, onDismiss, ...props }: PopoverProps) {
 		edgeSpacing,
 	)
 
-	const containerStyle = [
+	const containerStyle = tw(
 		tw`fixed overflow-y-auto shadow-normal bg-background-1`,
 		{ left, top, maxHeight: `calc(100vh - ${edgeSpacing * 2}px)` },
-	]
+	)
 
 	return (
 		<Portal>
 			<FocusLock returnFocus>
 				<motion.div
 					data-auto-focus
-					css={containerStyle}
+					className={containerStyle}
 					{...fadeSlideAnimation}
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 					ref={composeRefs(setContainer, clickOutsideRef as any) as any}

@@ -1,5 +1,5 @@
 import * as React from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 
 export type IconProps = React.ComponentPropsWithoutRef<"svg"> & {
 	which: string
@@ -7,8 +7,8 @@ export type IconProps = React.ComponentPropsWithoutRef<"svg"> & {
 
 function Icon({ which, ...props }: IconProps) {
 	return (
-		<svg css={tw`w-5 h-5`} viewBox="0 0 24 24" {...props}>
-			<path d={which} css={{ fill: "currentColor" }} />
+		<svg className={tw`w-5 h-5`} viewBox="0 0 24 24" {...props}>
+			<path d={which} className={tw`fill-current`} />
 		</svg>
 	)
 }

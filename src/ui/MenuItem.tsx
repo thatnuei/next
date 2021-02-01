@@ -1,4 +1,4 @@
-import tw from "twin.macro"
+import { tw } from "twind"
 import ExternalLink from "../dom/ExternalLink"
 import Icon from "./Icon"
 
@@ -13,16 +13,16 @@ export default function MenuItem(props: Props) {
 	const content = (
 		<>
 			<Icon which={props.icon} />
-			<span css={tw`ml-2`}>{props.text}</span>
+			<span className={tw`ml-2`}>{props.text}</span>
 		</>
 	)
 
 	return "onClick" in props ? (
-		<button css={itemStyle} onClick={props.onClick}>
+		<button className={itemStyle} onClick={props.onClick}>
 			{content}
 		</button>
 	) : (
-		<ExternalLink css={itemStyle} href={props.href}>
+		<ExternalLink className={itemStyle} href={props.href}>
 			{content}
 		</ExternalLink>
 	)

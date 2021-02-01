@@ -1,7 +1,7 @@
 import { uniqBy } from "lodash-es"
 import { useObservable } from "micro-observables"
 import { useMemo } from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 import { CharacterModel } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
 import { useRootStore } from "../root/context"
@@ -71,21 +71,21 @@ function InviteUsersForm({ channelId }: Props) {
 	}
 
 	const renderItem = ({ item, style }: RenderItemInfo<CharacterModel>) => (
-		<div css={tw`flex flex-row items-center px-3 py-2`} style={style}>
-			<CharacterName name={item.name.get()} tw="flex-1" />
+		<div className={tw`flex flex-row items-center px-3 py-2`} style={style}>
+			<CharacterName name={item.name.get()} className={tw`flex-1`} />
 			<button
-				css={[fadedButton, tw`flex flex-row ml-2`]}
+				className={tw([fadedButton, tw`flex flex-row ml-2`])}
 				onClick={() => sendInvite(item.name.get())}
 			>
 				<Icon which={icons.invite} />
-				<span css={tw`ml-2`}>Invite</span>
+				<span className={tw`ml-2`}>Invite</span>
 			</button>
 		</div>
 	)
 
 	return (
-		<div css={tw`flex flex-col w-full h-full`}>
-			<div css={tw`flex-1 bg-background-2`}>
+		<div className={tw`flex flex-col w-full h-full`}>
+			<div className={tw`flex-1 bg-background-2`}>
 				<VirtualizedList
 					items={uniqBy(characters, "name")}
 					itemSize={40}
@@ -93,12 +93,12 @@ function InviteUsersForm({ channelId }: Props) {
 					renderItem={renderItem}
 				/>
 			</div>
-			{/* <div css={tw`m-2`}>
+			{/* <div className={tw`m-2`}>
         <TextInput
           value={searchInput}
           onChangeText={setSearchInput}
           type="text"
-          css={input}
+          className={input}
           placeholder="Search..."
         />
       </div> */}

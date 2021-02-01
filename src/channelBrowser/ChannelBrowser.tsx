@@ -2,7 +2,7 @@ import fuzzysearch from "fuzzysearch"
 import { sortBy } from "lodash-es"
 import { useObservable } from "micro-observables"
 import { useState } from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 import Button from "../dom/Button"
 import { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
@@ -52,8 +52,13 @@ function ChannelBrowser(props: Props) {
 	]
 
 	return (
-		<div css={tw`flex flex-col w-full h-full`} {...props}>
-			<main css={[tw`flex flex-col flex-1 bg-background-2`, scrollVertical]}>
+		<div className={tw`flex flex-col w-full h-full`} {...props}>
+			<main
+				className={tw([
+					tw`flex flex-col flex-1 bg-background-2`,
+					scrollVertical,
+				])}
+			>
 				<VirtualizedList
 					items={channels}
 					getItemKey={(channel) => channel.id}
@@ -64,25 +69,25 @@ function ChannelBrowser(props: Props) {
 				/>
 			</main>
 
-			<footer css={tw`flex flex-row p-2 bg-background-0`}>
+			<footer className={tw`flex flex-row p-2 bg-background-0`}>
 				<input
 					type="text"
 					aria-label="Search"
 					placeholder="Search..."
-					css={[input, tw`flex-1`]}
+					className={tw([input, tw`flex-1`])}
 					value={query}
 					onChange={(event) => setQuery(event.target.value)}
 				/>
 				<Button
 					title="Change sort mode"
-					css={[solidButton, tw`ml-2`]}
+					className={tw([solidButton, tw`ml-2`])}
 					onClick={cycleSortMode}
 				>
 					<Icon which={icons.sortAlphabetical} />
 				</Button>
 				<Button
 					title="Refresh"
-					css={[solidButton, tw`ml-2`]}
+					className={tw([solidButton, tw`ml-2`])}
 					onClick={root.channelBrowserStore.refresh}
 					disabled={isRefreshing}
 				>

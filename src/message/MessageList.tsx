@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect, useState } from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 import { TagProps } from "../jsx/types"
 import { scrollVertical } from "../ui/helpers"
 import MessageListItem from "./MessageListItem"
@@ -15,7 +15,11 @@ function MessageList({ messages, ...props }: Props) {
 	useBottomScroll(container, messages[messages.length - 1])
 
 	return (
-		<ol css={[scrollVertical, tw`space-y-px2`]} ref={setContainer} {...props}>
+		<ol
+			className={tw([scrollVertical, tw`space-y-px2`])}
+			ref={setContainer}
+			{...props}
+		>
 			{messages.map((message) => (
 				<li key={message.key}>
 					<MessageListItem message={message} />

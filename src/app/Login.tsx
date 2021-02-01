@@ -1,6 +1,6 @@
-import { useState } from "react"
 import * as React from "react"
-import tw from "twin.macro"
+import { useState } from "react"
+import { tw } from "twind"
 import Button from "../dom/Button"
 import { extractErrorMessage } from "../helpers/common/extractErrorMessage"
 import { useRootStore } from "../root/context"
@@ -44,10 +44,13 @@ export default function Login() {
 
 	return (
 		<IslandLayout title="Login">
-			<form css={[flexColumn, tw`items-start p-4`]} onSubmit={handleSubmit}>
-				<FormField css={tw`mb-4`} labelText="Username">
+			<form
+				className={tw([flexColumn, tw`items-start p-4`])}
+				onSubmit={handleSubmit}
+			>
+				<FormField className={tw`mb-4`} labelText="Username">
 					<input
-						css={input}
+						className={input}
 						type="text"
 						placeholder="awesome username"
 						value={account}
@@ -56,9 +59,9 @@ export default function Login() {
 					/>
 				</FormField>
 
-				<FormField css={tw`mb-4`} labelText="Password">
+				<FormField className={tw`mb-4`} labelText="Password">
 					<input
-						css={input}
+						className={input}
 						type="password"
 						placeholder="••••••••"
 						value={password}
@@ -67,12 +70,12 @@ export default function Login() {
 					/>
 				</FormField>
 
-				<Button css={solidButton} type="submit" disabled={!canSubmit}>
+				<Button className={solidButton} type="submit" disabled={!canSubmit}>
 					Log in
 				</Button>
 
 				{state.current === "error" && (
-					<p css={tw`max-w-xs mt-4`}>{state.error}</p>
+					<p className={tw`max-w-xs mt-4`}>{state.error}</p>
 				)}
 			</form>
 		</IslandLayout>

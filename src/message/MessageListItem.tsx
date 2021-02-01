@@ -1,4 +1,4 @@
-import tw from "twin.macro"
+import { tw } from "twind"
 import BBC from "../bbc/BBC"
 import CharacterName from "../character/CharacterName"
 import { TagProps } from "../jsx/types"
@@ -18,9 +18,9 @@ function MessageListItem({ message, ...props }: Props) {
 	}[message.type]
 
 	return (
-		<div css={[tw`px-3 py-1`, typeStyle]} {...props}>
+		<div className={tw([tw`px-3 py-1`, typeStyle])} {...props}>
 			<span
-				css={tw`inline-block float-right ml-3 text-sm not-italic opacity-50`}
+				className={tw`inline-block float-right ml-3 text-sm not-italic opacity-50`}
 			>
 				{new Date(message.timestamp).toLocaleTimeString()}
 			</span>
@@ -28,10 +28,10 @@ function MessageListItem({ message, ...props }: Props) {
 			{message.senderName && (
 				<CharacterName
 					name={message.senderName}
-					css={[
+					className={tw(
 						tw`inline-block`,
 						message.type === "action" ? tw`mr-1` : tw`mr-2`,
-					]}
+					)}
 				/>
 			)}
 

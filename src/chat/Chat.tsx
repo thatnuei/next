@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { useObservable } from "micro-observables"
 import { useMemo } from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 import ChannelView from "../channel/ChannelView"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import ChatNav from "../chatNav/ChatNav"
@@ -29,8 +29,8 @@ export default function Chat() {
 	const chatRoomView = useMemo(() => <ChatRoomView />, [])
 
 	return (
-		<motion.div css={[fixedCover, tw`flex`]} {...fadeAnimation}>
-			{!isSmallScreen && <ChatNav css={tw`mr-gap`} />}
+		<motion.div className={tw([fixedCover, tw`flex`])} {...fadeAnimation}>
+			{!isSmallScreen && <ChatNav className={tw`mr-gap`} />}
 
 			{chatRoomView}
 
@@ -41,7 +41,7 @@ export default function Chat() {
 						side="left"
 						onDismiss={root.chatNavStore.sideMenu.hide}
 					>
-						<ChatNav css={tw`h-full bg-background-2`} />
+						<ChatNav className={tw`h-full bg-background-2`} />
 					</Drawer>
 				)}
 
@@ -84,14 +84,17 @@ function ChatRoomView() {
 	)
 
 	if (view.channelId && isChannelJoined) {
-		return <ChannelView css={tw`flex-1`} channelId={view.channelId} />
+		return <ChannelView className={tw`flex-1`} channelId={view.channelId} />
 	}
 
 	if (view.privateChatPartner && isPrivateChatOpen) {
 		return (
-			<PrivateChatView css={tw`flex-1`} partnerName={view.privateChatPartner} />
+			<PrivateChatView
+				className={tw`flex-1`}
+				partnerName={view.privateChatPartner}
+			/>
 		)
 	}
 
-	return <NoRoomView css={tw`self-start`} />
+	return <NoRoomView className={tw`self-start`} />
 }

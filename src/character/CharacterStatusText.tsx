@@ -1,5 +1,5 @@
 import { useObservable } from "micro-observables"
-import tw from "twin.macro"
+import { tw } from "twind"
 import BBC from "../bbc/BBC"
 import { TagProps } from "../jsx/types"
 import { rainbowAnimation } from "../ui/helpers"
@@ -10,17 +10,17 @@ type Props = TagProps<"p"> & {
 	name: string
 }
 
-function CharacterStatusText({ name, ...props }: Props) {
+function CharacterStatusText({ name, className = "", ...props }: Props) {
 	const character = useCharacter(name)
 	const status = useObservable(character.status)
 
 	return (
-		<p css={tw`text-sm`} {...props}>
+		<p className={`${tw`text-sm`} ${className}`} {...props}>
 			<span
-				css={[
+				className={tw(
 					{ color: statusColors[status.type] },
 					status.type === "crown" && rainbowAnimation,
-				]}
+				)}
 			>
 				{status.type === "crown" ? "awesome" : status.type}
 			</span>

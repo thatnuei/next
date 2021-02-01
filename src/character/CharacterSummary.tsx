@@ -1,5 +1,5 @@
 import { useObservable } from "micro-observables"
-import tw from "twin.macro"
+import { tw } from "twind"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
 import { TagProps } from "../jsx/types"
@@ -20,21 +20,21 @@ function CharacterSummary({ name, ...props }: Props) {
 		<div {...props}>
 			<ExternalLink
 				href={getProfileUrl(name)}
-				css={[headerText2, genderColor, tw`leading-none`]}
+				className={tw([headerText2, genderColor, tw`leading-none`])}
 			>
 				{name}
 			</ExternalLink>
 
 			<ExternalLink href={getProfileUrl(name)}>
-				<Avatar name={name} css={tw`my-3`} />
+				<Avatar name={name} className={tw`my-3`} />
 			</ExternalLink>
 
 			<CharacterStatusText
 				name={name}
-				css={[
+				className={tw(
 					tw`px-3 py-2 overflow-y-auto bg-background-1`,
 					{ maxHeight: 100 }, // some statuses can get really big
-				]}
+				)}
 			/>
 		</div>
 	)

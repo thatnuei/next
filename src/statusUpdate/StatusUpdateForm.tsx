@@ -1,7 +1,7 @@
 import { useObservable } from "micro-observables"
-import { useState } from "react"
 import * as React from "react"
-import tw from "twin.macro"
+import { useState } from "react"
+import { tw } from "twind"
 import { CharacterStatusType } from "../character/CharacterModel"
 import { useIdentityCharacter } from "../character/helpers"
 import Button from "../dom/Button"
@@ -21,10 +21,13 @@ function StatusUpdateForm() {
 	}
 
 	return (
-		<form css={tw`flex flex-col items-start h-full p-3`} onSubmit={submit}>
-			<FormField labelText="Status" css={tw`block mb-3`}>
+		<form
+			className={tw`flex flex-col items-start h-full p-3`}
+			onSubmit={submit}
+		>
+			<FormField labelText="Status" className={tw`block mb-3`}>
 				<select
-					css={select}
+					className={select}
 					value={status.type}
 					onChange={(e) => {
 						const type = e.target.value as CharacterStatusType
@@ -40,10 +43,10 @@ function StatusUpdateForm() {
 			</FormField>
 			<FormField
 				labelText="Status message (optional)"
-				css={tw`flex flex-col flex-1 mb-3`}
+				className={tw`flex flex-col flex-1 mb-3`}
 			>
 				<textarea
-					css={[input, tw`flex-1`]}
+					className={tw([input, tw`flex-1`])}
 					value={status.text}
 					onChange={(e) => {
 						const text = e.currentTarget.value
@@ -56,7 +59,7 @@ function StatusUpdateForm() {
 					}}
 				/>
 			</FormField>
-			<Button type="submit" css={solidButton} disabled={isSubmitting}>
+			<Button type="submit" className={solidButton} disabled={isSubmitting}>
 				Submit
 			</Button>
 		</form>

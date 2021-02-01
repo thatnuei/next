@@ -1,16 +1,14 @@
-import { Global } from "@emotion/react"
 import { shade } from "polished"
 import {
 	createContext,
+	CSSProperties,
 	PropsWithChildren,
 	useContext,
 	useMemo,
 	useState,
 } from "react"
-import { theme } from "twin.macro"
-
-const midnight = (theme`colors.black` as unknown) as string
-const clouds = (theme`colors.white` as unknown) as string
+import { tw } from "twind"
+import { clouds, midnight } from "../colors"
 
 const themes = {
 	midnight: {
@@ -56,8 +54,9 @@ export function ThemeProvider({ children }: PropsWithChildren<{}>) {
 
 	return (
 		<ThemeContext.Provider value={contextValue}>
-			{children}
-			<Global styles={{ ":root": theme.vars }} />
+			<div className={tw`contents`} style={theme.vars as CSSProperties}>
+				{children}
+			</div>
 		</ThemeContext.Provider>
 	)
 }

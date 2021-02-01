@@ -1,7 +1,7 @@
 import { AnimatePresence } from "framer-motion"
 import { useObservable } from "micro-observables"
 import * as React from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 import { useIdentity } from "../app/helpers"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
@@ -53,49 +53,56 @@ function ChannelHeader({
 	}
 
 	return (
-		<header css={tw`flex flex-row items-center p-3 bg-background-0`} {...props}>
-			<ChatMenuButton css={tw`mr-3`} />
+		<header
+			className={tw`flex flex-row items-center p-3 bg-background-0`}
+			{...props}
+		>
+			<ChatMenuButton className={tw`mr-3`} />
 
 			<Button
 				title="Description"
-				css={[fadedButton]}
+				className={tw([fadedButton])}
 				onClick={onToggleDescription}
 			>
 				<Icon which={icons.about} />
 			</Button>
 
-			<div css={tw`w-3`} />
+			<div className={tw`w-3`} />
 
-			<h1 css={[headerText2, tw`flex-1`]}>{title}</h1>
+			<h1 className={tw([headerText2, tw`flex-1`])}>{title}</h1>
 
 			{isLargeScreen && <ChannelFilters channelId={channel.id} />}
 
 			{!isLargeScreen && (
 				<>
-					<div css={tw`w-3`} />
+					<div className={tw`w-3`} />
 
-					<Button title="User list" css={fadedButton} onClick={onShowUsers}>
+					<Button
+						title="User list"
+						className={fadedButton}
+						onClick={onShowUsers}
+					>
 						<Icon which={icons.users} />
 					</Button>
 				</>
 			)}
 
-			<div css={tw`w-3`} />
+			<div className={tw`w-3`} />
 
-			<Button title="More" css={fadedButton} onClick={showMenu}>
+			<Button title="More" className={fadedButton} onClick={showMenu}>
 				<Icon which={icons.more} />
 			</Button>
 
 			<AnimatePresence>
 				{menu.value && (
-					<Popover {...menu.props} css={tw`w-48 bg-background-2`}>
+					<Popover {...menu.props} className={tw`w-48 bg-background-2`}>
 						{!isLargeScreen && (
 							<ChannelFilters
 								channelId={channel.id}
-								css={tw`px-3 py-2 bg-background-0 mb-gap`}
+								className={tw`px-3 py-2 bg-background-0 mb-gap`}
 							/>
 						)}
-						<div css={tw`flex flex-col bg-background-1`}>
+						<div className={tw`flex flex-col bg-background-1`}>
 							<MenuItem
 								text="Copy code"
 								icon={icons.code}

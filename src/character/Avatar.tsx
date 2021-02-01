@@ -1,5 +1,5 @@
 import * as React from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 import { getAvatarUrl } from "../flist/helpers"
 
 type Props = React.ComponentPropsWithoutRef<"img"> & {
@@ -13,7 +13,7 @@ function Avatar({ name, ...props }: Props) {
 			title={name}
 			alt=""
 			role="presentation"
-			css={tw`w-24 h-24`}
+			className={tw`w-24 h-24`}
 			key={name}
 			{...props}
 		/>

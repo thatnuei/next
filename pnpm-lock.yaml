@@ -15,6 +15,7 @@ dependencies:
   react-focus-lock: 2.5.0_@types+react@17.0.0+react@17.0.1
   react-window: 1.8.6_react-dom@17.0.1+react@17.0.1
   resize-observer-polyfill: 1.5.1
+  twind: 0.14.4_typescript@4.1.3
 devDependencies:
   '@babel/core': 7.12.10
   '@babel/plugin-proposal-class-properties': 7.12.1_@babel+core@7.12.10
@@ -7136,7 +7137,6 @@ packages:
     resolution:
       integrity: sha512-taOaskGt4z4SOANNseOviYDvjEJinIkRgmp7LbKP2YTTmVxWBl87s/uzK9r+44BclBSp2X7K1hqeNfz9JbBeXA==
   /he/1.2.0:
-    dev: true
     hasBin: true
     resolution:
       integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
@@ -9399,6 +9399,12 @@ packages:
       node: '>= 6.0.0'
     resolution:
       integrity: sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
+  /node-html-parser/2.1.0:
+    dependencies:
+      he: 1.2.0
+    dev: false
+    resolution:
+      integrity: sha512-kbCNfqjrwHAbG+mevL8aqjwVtF0Qv66XurWHoGLOc5G9rPR1L3k602jfeczAUUBldLNnCrdsDmO5G5nqAoMW+g==
   /node-int64/0.4.0:
     dev: true
     resolution:
@@ -12805,6 +12811,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-aOV/HHyynIyTmU27qfs0oAHhFde6BFIvV4+nMerE2MAPZMwYOeQk1/F3S6djxF2u4HdbiieCPs3ZzWsbNUoc9A==
+  /style-vendorizer/2.0.0:
+    dev: false
+    resolution:
+      integrity: sha512-CeqwnrtXd/DKIadVNdJDtHnpCmsc28rWVWLmgpF2HdzTiWFVCE1F1OzWWwskOEtWpOpgm6NrjccfkNGo8qW4MA==
   /stylehacks/4.0.3:
     dependencies:
       browserslist: 4.16.3
@@ -13276,6 +13286,22 @@ packages:
       node: '>=12.13.0'
     resolution:
       integrity: sha512-SBtviYQHAs29ZPGqJz6b2Cu7pNPYLefkB/ukPTpYHLkmb750mGvz7E/hLdbbxft7VpNPWI+l+9MA/uVyfaGPog==
+  /twind/0.14.4_typescript@4.1.3:
+    dependencies:
+      csstype: 3.0.6
+      node-html-parser: 2.1.0
+      style-vendorizer: 2.0.0
+      typescript: 4.1.3
+    dev: false
+    engines:
+      node: '>=10.13'
+    peerDependencies:
+      typescript: ^4.1.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    resolution:
+      integrity: sha512-B6ZfNe7xK2WblbAl4eoY2Y5Snvi11Rm0eK0IxlQeFSOQ+AR4UXSkc8+/n3D0VomJ+BqiOFmqmSyUemWQ6JQbTQ==
   /type-check/0.3.2:
     dependencies:
       prelude-ls: 1.1.2
@@ -14332,5 +14358,6 @@ specifiers:
   source-map-explorer: ^2.5.2
   tailwindcss: ^2.0.2
   twin.macro: ^2.2.0
+  twind: ^0.14.4
   typescript: ^4.1.3
   typescript-plugin-tw-template: ^2.1.0

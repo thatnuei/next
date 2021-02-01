@@ -1,6 +1,6 @@
 import { sortBy, zip } from "lodash-es"
 import { Observable, useObservable } from "micro-observables"
-import tw from "twin.macro"
+import { tw } from "twind"
 import { CharacterStatus } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
 import { isPresent } from "../helpers/common/isPresent"
@@ -82,11 +82,11 @@ function ChannelUserList({ channel, ...props }: Props) {
 	const sortedItems = sortBy(entries, ["order", (it) => it.name.toLowerCase()])
 
 	return (
-		<div css={tw`flex flex-col`} {...props}>
-			<div css={tw`px-3 py-2 bg-background-0`}>
+		<div className={tw`flex flex-col`} {...props}>
+			<div className={tw`px-3 py-2 bg-background-0`}>
 				Characters: {entries.length}
 			</div>
-			<div css={tw`flex-1 min-h-0 bg-background-1`} role="list">
+			<div className={tw`flex-1 min-h-0 bg-background-1`} role="list">
 				<VirtualizedList
 					items={sortedItems}
 					itemSize={32}
@@ -96,7 +96,7 @@ function ChannelUserList({ channel, ...props }: Props) {
 							role="listitem"
 							name={item.name}
 							style={style}
-							css={[tw`flex items-center px-2`, item.css]}
+							className={tw([tw`flex items-center px-2`, item.css])}
 						/>
 					)}
 				/>

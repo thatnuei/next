@@ -1,6 +1,6 @@
 import { Observable, useObservable } from "micro-observables"
-import { memo, CSSProperties, Fragment, PropsWithChildren } from "react"
-import tw from "twin.macro"
+import { CSSProperties, Fragment, memo, PropsWithChildren } from "react"
+import { tw } from "twind"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
@@ -33,7 +33,7 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 		switch (node.tag) {
 			case "b":
 				return (
-					<strong css={tw`font-weight-bold`}>
+					<strong className={tw`font-weight-bold`}>
 						<BBCTree nodes={node.children} />
 					</strong>
 				)
@@ -54,21 +54,21 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 
 			case "s":
 				return (
-					<span css={tw`line-through`}>
+					<span className={tw`line-through`}>
 						<BBCTree nodes={node.children} />
 					</span>
 				)
 
 			case "sup":
 				return (
-					<span css={tw`text-sm align-top`}>
+					<span className={tw`text-sm align-top`}>
 						<BBCTree nodes={node.children} />
 					</span>
 				)
 
 			case "sub":
 				return (
-					<span css={tw`text-sm`}>
+					<span className={tw`text-sm`}>
 						<BBCTree nodes={node.children} />
 					</span>
 				)
@@ -91,7 +91,7 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 				const characterName = getNodeChildrenAsText(node)
 				return (
 					<CharacterMenuTarget name={characterName}>
-						<Avatar name={characterName} css={tw`inline w-10 h-10`} />
+						<Avatar name={characterName} className={tw`inline w-10 h-10`} />
 					</CharacterMenuTarget>
 				)
 			}
@@ -103,7 +103,7 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 						src={getIconUrl(iconName)}
 						alt={iconName}
 						title={iconName}
-						css={tw`inline w-10 h-10`}
+						className={tw`inline w-10 h-10`}
 					/>
 				)
 			}
@@ -148,7 +148,7 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 	}
 
 	return (
-		<span css={tw`whitespace-pre-wrap`}>
+		<span className={tw`whitespace-pre-wrap`}>
 			{nodes.map((node, index) => (
 				<Fragment key={index}>{renderNode(node)}</Fragment>
 			))}
@@ -167,14 +167,16 @@ function BBCLink({ url, children }: PropsWithChildren<{ url: string }>) {
 	})()
 
 	return (
-		<span css={tw`inline-flex items-baseline`}>
+		<span className={tw`inline-flex items-baseline`}>
 			<Icon
 				which={icons.link}
-				css={tw`self-center inline w-4 h-4 opacity-75 mr-px2`}
+				className={tw`self-center inline w-4 h-4 opacity-75 mr-px2`}
 			/>
 			<ExternalLink href={url} className="group">
-				<span css={tw`underline group-hover:no-underline`}>{children}</span>
-				{domain && <span css={tw`ml-1 text-sm`}>[{domain}] </span>}
+				<span className={tw`underline group-hover:no-underline`}>
+					{children}
+				</span>
+				{domain && <span className={tw`ml-1 text-sm`}>[{domain}] </span>}
 			</ExternalLink>
 		</span>
 	)
@@ -201,17 +203,17 @@ function BBCChannelLink({
 	const userCount = channels.find((ch) => ch.id === id)?.userCount ?? 0
 
 	return (
-		<span css={tw`inline-flex items-baseline`}>
+		<span className={tw`inline-flex items-baseline`}>
 			<Icon
 				which={type === "public" ? icons.earth : icons.lock}
-				css={tw`self-center inline w-4 h-4 mr-1 opacity-75`}
+				className={tw`self-center inline w-4 h-4 mr-1 opacity-75`}
 			/>
 			<button
 				className="group"
 				onClick={() => root.channelStore.join(id, title)}
 			>
-				<span css={tw`underline group-hover:no-underline`}>{title}</span> (
-				{userCount})
+				<span className={tw`underline group-hover:no-underline`}>{title}</span>{" "}
+				({userCount})
 			</button>
 		</span>
 	)

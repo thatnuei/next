@@ -1,7 +1,7 @@
 import { AnimatePresence } from "framer-motion"
 import { useObservable } from "micro-observables"
 import { useMemo } from "react"
-import tw from "twin.macro"
+import { tw } from "twind"
 import BBC from "../bbc/BBC"
 import ChatInput from "../chat/ChatInput"
 import { useMediaQuery } from "../dom/useMediaQuery"
@@ -58,21 +58,21 @@ function ChannelView({ channelId, ...props }: Props) {
 		return (
 			<MessageList
 				messages={messages.filter(shouldShowMessage)}
-				css={tw`w-full h-full`}
+				className={tw`w-full h-full`}
 			/>
 		)
 	}, [actualMode, messages])
 
 	return (
-		<div css={tw`flex flex-col`} {...props}>
+		<div className={tw`flex flex-col`} {...props}>
 			<ChannelHeader
 				channelId={channelId}
 				onToggleDescription={descriptionOverlay.toggle}
 				onShowUsers={userList.show}
 			/>
 
-			<div css={tw`flex flex-row flex-1 min-h-0 my-gap`}>
-				<main css={tw`relative flex-1 bg-background-1`}>
+			<div className={tw`flex flex-row flex-1 min-h-0 my-gap`}>
+				<main className={tw`relative flex-1 bg-background-1`}>
 					{messageList}
 
 					<AnimatePresence>
@@ -85,8 +85,8 @@ function ChannelView({ channelId, ...props }: Props) {
 								verticalPanelAlign="top"
 								onDismiss={descriptionOverlay.hide}
 							>
-								<div css={[tw`w-full h-full`, scrollVertical]}>
-									<p css={tw`p-4`}>
+								<div className={tw([tw`w-full h-full`, scrollVertical])}>
+									<p className={tw`p-4`}>
 										<BBC text={description} />
 									</p>
 								</div>
@@ -96,7 +96,10 @@ function ChannelView({ channelId, ...props }: Props) {
 				</main>
 
 				{isLargeScreen && (
-					<ChannelUserList channel={channel} css={tw`w-56 min-h-0 ml-gap`} />
+					<ChannelUserList
+						channel={channel}
+						className={tw`w-56 min-h-0 ml-gap`}
+					/>
 				)}
 			</div>
 
@@ -111,7 +114,7 @@ function ChannelView({ channelId, ...props }: Props) {
 					<Drawer side="right" onDismiss={userList.hide}>
 						<ChannelUserList
 							channel={channel}
-							css={tw`w-56 h-full bg-background-2`}
+							className={tw`w-56 h-full bg-background-2`}
 						/>
 					</Drawer>
 				)}
