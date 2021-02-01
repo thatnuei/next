@@ -1,13 +1,6 @@
-import preval from "preval.macro"
-
-const screens = preval`
-  const resolveConfig = require('tailwindcss/resolveConfig')
-  const config = resolveConfig(require('../../tailwind.config'))
-  module.exports = config.theme.screens
-` as Record<string, string>
-
+// TODO: access twind theme
 export const screenQueries = {
-	small: `(max-width: ${screens.md})`,
-	medium: `(min-width: ${screens.md}) and (max-width: ${screens.lg})`,
-	large: `(min-width: ${screens.lg})`,
+	small: `(max-width: 720px)`,
+	medium: `(min-width: 720px) and (max-width: 1080px)`,
+	large: `(min-width: 1080px)`,
 }
