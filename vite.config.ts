@@ -8,4 +8,7 @@ export default defineConfig({
 		jsxFragment: `_Fragment`,
 	},
 	plugins: [reactRefresh()],
+	build: {
+		sourcemap: true,
+	},
 })
