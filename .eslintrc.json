@@ -33,7 +33,8 @@ eslint-plugin-jsx-a11y
 	"rules": {
 		"no-undef": "off",
 		"no-unused-vars": "off",
-		"react/react-in-jsx-scope": ["off"]
+		"react/react-in-jsx-scope": ["off"],
+		"jsx-a11y/no-onchange": "off"
 	},
 	"ignorePatterns": ["**/node_modules/**", "**/dist/**", "src/generated/**"],
 	"settings": {
