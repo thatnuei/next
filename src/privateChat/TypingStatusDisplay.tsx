@@ -12,7 +12,7 @@ type Props = {
 
 function TypingStatusDisplay({ name, status, className, ...props }: Props) {
 	const containerStyle = tw(
-		tw`relative px-2 text-sm transition-all duration-300`,
+		tw`relative px-2 text-sm transition-all`,
 		status === "clear"
 			? [tw`h-0 opacity-0`, { transitionDelay: "0.3s" }]
 			: tw`h-6 opacity-50`,
@@ -48,7 +48,7 @@ const iconStyle = tw`w-4 h-4 mr-1`
 
 const statusTextStyle = (visible: boolean) =>
 	tw(
-		tw`absolute flex flex-row items-center h-full transition-all duration-300`,
+		tw`absolute flex flex-row items-center h-full transition-all`,
 		visible
 			? [tw`opacity-100`, { transitionDelay: "0.3s" }]
 			: [tw`transform -translate-y-1 opacity-0`],

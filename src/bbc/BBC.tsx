@@ -33,7 +33,7 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 		switch (node.tag) {
 			case "b":
 				return (
-					<strong className={tw`font-weight-bold`}>
+					<strong className={tw`font-bold`}>
 						<BBCTree nodes={node.children} />
 					</strong>
 				)
@@ -170,7 +170,7 @@ function BBCLink({ url, children }: PropsWithChildren<{ url: string }>) {
 		<span className={tw`inline-flex items-baseline`}>
 			<Icon
 				which={icons.link}
-				className={tw`self-center inline w-4 h-4 opacity-75 mr-px2`}
+				className={tw`self-center inline w-4 h-4 opacity-75 mr-0.5`}
 			/>
 			<ExternalLink href={url} className="group">
 				<span className={tw`underline group-hover:no-underline`}>

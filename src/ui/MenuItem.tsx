@@ -7,7 +7,7 @@ type Props = {
 	text: string
 } & ({ href: string } | { onClick: () => void })
 
-const itemStyle = tw`flex flex-row p-2 transition duration-300 opacity-50 hover:opacity-100`
+const itemStyle = tw`flex flex-row p-2 transition opacity-50 hover:opacity-100`
 
 export default function MenuItem(props: Props) {
 	const content = (

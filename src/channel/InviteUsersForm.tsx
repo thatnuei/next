@@ -85,7 +85,7 @@ function InviteUsersForm({ channelId }: Props) {
 
 	return (
 		<div className={tw`flex flex-col w-full h-full`}>
-			<div className={tw`flex-1 bg-background-2`}>
+			<div className={tw`flex-1 bg-midnight-2`}>
 				<VirtualizedList
 					items={uniqBy(characters, "name")}
 					itemSize={40}

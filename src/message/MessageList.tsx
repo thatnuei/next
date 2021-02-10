@@ -16,7 +16,7 @@ function MessageList({ messages, ...props }: Props) {
 
 	return (
 		<ol
-			className={tw([scrollVertical, tw`space-y-px2`])}
+			className={tw([scrollVertical, tw`space-y-0.5`])}
 			ref={setContainer}
 			{...props}
 		>

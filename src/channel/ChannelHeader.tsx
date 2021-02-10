@@ -54,7 +54,7 @@ function ChannelHeader({
 
 	return (
 		<header
-			className={tw`flex flex-row items-center p-3 bg-background-0`}
+			className={tw`flex flex-row items-center p-3 bg-midnight-0`}
 			{...props}
 		>
 			<ChatMenuButton className={tw`mr-3`} />
@@ -95,14 +95,14 @@ function ChannelHeader({
 
 			<AnimatePresence>
 				{menu.value && (
-					<Popover {...menu.props} className={tw`w-48 bg-background-2`}>
+					<Popover {...menu.props} className={tw`w-48 bg-midnight-2`}>
 						{!isLargeScreen && (
 							<ChannelFilters
 								channelId={channel.id}
-								className={tw`px-3 py-2 bg-background-0 mb-gap`}
+								className={tw`px-3 py-2 bg-midnight-0 mb-gap`}
 							/>
 						)}
-						<div className={tw`flex flex-col bg-background-1`}>
+						<div className={tw`flex flex-col bg-midnight-1`}>
 							<MenuItem
 								text="Copy code"
 								icon={icons.code}

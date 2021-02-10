@@ -12,9 +12,9 @@ function MessageListItem({ message, ...props }: Props) {
 	const typeStyle = {
 		normal: undefined,
 		action: tw`italic`,
-		lfrp: tw`bg-green-faded`,
-		warning: tw`bg-red-faded`,
-		system: tw`bg-black-faded`,
+		lfrp: tw`bg-green-500 bg-opacity-20`,
+		warning: tw`bg-red-500 bg-opacity-20`,
+		system: tw`bg-black bg-opacity-50`,
 	}[message.type]
 
 	return (

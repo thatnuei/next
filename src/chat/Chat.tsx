@@ -41,7 +41,7 @@ export default function Chat() {
 						side="left"
 						onDismiss={root.chatNavStore.sideMenu.hide}
 					>
-						<ChatNav className={tw`h-full bg-background-2`} />
+						<ChatNav className={tw`h-full bg-midnight-2`} />
 					</Drawer>
 				)}
 

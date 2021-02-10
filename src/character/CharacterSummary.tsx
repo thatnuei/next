@@ -32,7 +32,7 @@ function CharacterSummary({ name, ...props }: Props) {
 			<CharacterStatusText
 				name={name}
 				className={tw(
-					tw`px-3 py-2 overflow-y-auto bg-background-1`,
+					tw`px-3 py-2 overflow-y-auto bg-midnight-1`,
 					{ maxHeight: 100 }, // some statuses can get really big
 				)}
 			/>

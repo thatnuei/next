@@ -37,10 +37,10 @@ export default function ChatNav(props: TagProps<"nav">) {
 					onClick={root.appStore.leaveChat}
 				/>
 			</div>
-			<div className={tw`flex flex-col w-56 overflow-y-auto bg-background-1`}>
+			<div className={tw`flex flex-col w-56 overflow-y-auto bg-midnight-1`}>
 				<CharacterSummary
 					name={identity}
-					className={tw`p-3 bg-background-0 mb-gap`}
+					className={tw`p-3 bg-midnight-0 mb-gap`}
 				/>
 				<div className={tw`flex-1`}>
 					<RoomTabList />

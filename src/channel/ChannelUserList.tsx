@@ -55,10 +55,10 @@ function ChannelUserList({ channel, ...props }: Props) {
 	}
 
 	const getTypeCss = (type: ItemType) => {
-		if (type === "admin") return tw`bg-red-faded`
-		if (type === "op") return tw`bg-yellow-faded`
-		if (type === "friend") return tw`bg-green-faded`
-		if (type === "bookmark") return tw`bg-blue-faded`
+		if (type === "admin") return tw`bg-red-500 bg-opacity-20`
+		if (type === "op") return tw`bg-yellow-500 bg-opacity-20`
+		if (type === "friend") return tw`bg-green-500 bg-opacity-20`
+		if (type === "bookmark") return tw`bg-blue-500 bg-opacity-20`
 	}
 
 	const entries = useObservable(
@@ -83,10 +83,10 @@ function ChannelUserList({ channel, ...props }: Props) {
 
 	return (
 		<div className={tw`flex flex-col`} {...props}>
-			<div className={tw`px-3 py-2 bg-background-0`}>
+			<div className={tw`px-3 py-2 bg-midnight-0`}>
 				Characters: {entries.length}
 			</div>
-			<div className={tw`flex-1 min-h-0 bg-background-1`} role="list">
+			<div className={tw`flex-1 min-h-0 bg-midnight-1`} role="list">
 				<VirtualizedList
 					items={sortedItems}
 					itemSize={32}

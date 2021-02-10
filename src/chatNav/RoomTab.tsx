@@ -18,10 +18,10 @@ export type RoomTabProps = {
 function RoomTab(props: RoomTabProps) {
 	const inactiveHoverReveal = tw`opacity-50 hover:opacity-100`
 
-	const unreadHighlight = tw`bg-green-faded`
+	const unreadHighlight = tw`bg-green-500 bg-opacity-20`
 
 	const activeStateStyle = (() => {
-		if (props.isActive) return tw`bg-background-0`
+		if (props.isActive) return tw`bg-midnight-0`
 		if (props.isUnread) return [inactiveHoverReveal, unreadHighlight]
 		return inactiveHoverReveal
 	})()

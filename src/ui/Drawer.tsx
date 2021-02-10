@@ -24,7 +24,7 @@ function Drawer({ isVisible, onDismiss, side, children }: Props) {
 		}
 	}
 
-	const shadeStyle = tw(fixedCover, tw`bg-black-faded`)
+	const shadeStyle = tw(fixedCover, tw`bg-black bg-opacity-50`)
 
 	const contentContainerStyle = tw(
 		tw`absolute top-0 bottom-0 flex items-start`,

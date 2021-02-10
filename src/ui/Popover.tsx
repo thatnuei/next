@@ -46,7 +46,7 @@ function Popover({ children, position, onDismiss, ...props }: PopoverProps) {
 	)
 
 	const containerStyle = tw(
-		tw`fixed overflow-y-auto shadow-normal bg-background-1`,
+		tw`fixed overflow-y-auto shadow-normal bg-midnight-1`,
 		{ left, top, maxHeight: `calc(100vh - ${edgeSpacing * 2}px)` },
 	)
 

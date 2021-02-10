@@ -24,9 +24,7 @@ function ChannelBrowserItem({ info, ...props }: Props) {
 
 	const containerStyle = tw(
 		tw`flex flex-row items-center px-2 py-2 transition-all`,
-		isJoined
-			? tw`opacity-100 bg-background-0`
-			: tw`opacity-50 hover:opacity-75`,
+		isJoined ? tw`opacity-100 bg-midnight-0` : tw`opacity-50 hover:opacity-75`,
 	)
 
 	return (

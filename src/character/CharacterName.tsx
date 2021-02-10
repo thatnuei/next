@@ -25,7 +25,7 @@ function CharacterName({ name, className = "", ...props }: Props) {
 	return (
 		<CharacterMenuTarget
 			name={name}
-			className={`${tw`font-weight-bold`} ${className}`}
+			className={`${tw`font-bold`} ${className}`}
 			{...props}
 		>
 			<span className={statusDotStyle}>•</span>

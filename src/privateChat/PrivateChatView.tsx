@@ -25,7 +25,7 @@ function PrivateChatView({ partnerName, ...props }: Props) {
 
 	return (
 		<div className={tw`flex flex-col`} {...props}>
-			<div className={tw`flex flex-row items-center h-20 bg-background-0`}>
+			<div className={tw`flex flex-row items-center h-20 bg-midnight-0`}>
 				<ChatMenuButton className={tw`ml-3`} />
 
 				<CharacterMenuTarget name={partnerName} className={tw`ml-3`}>
@@ -50,10 +50,7 @@ function PrivateChatView({ partnerName, ...props }: Props) {
 					status={typingStatus}
 					className={typingStatus === "clear" ? tw`h-gap` : ""}
 				/>
-				<MessageList
-					messages={messages}
-					className={tw`flex-1 bg-background-1`}
-				/>
+				<MessageList messages={messages} className={tw`flex-1 bg-midnight-1`} />
 			</div>
 
 			<ChatInput

@@ -38,7 +38,7 @@ function Modal({
 	}
 
 	const shadeStyle = tw(
-		tw`flex flex-col p-4 bg-black-faded`,
+		tw`flex flex-col p-4 bg-black bg-opacity-50`,
 
 		verticalPanelAlign === "top" && tw`items-center justify-start`,
 		verticalPanelAlign === "middle" && tw`items-center justify-center`,

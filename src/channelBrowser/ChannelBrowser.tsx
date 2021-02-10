@@ -54,10 +54,7 @@ function ChannelBrowser(props: Props) {
 	return (
 		<div className={tw`flex flex-col w-full h-full`} {...props}>
 			<main
-				className={tw([
-					tw`flex flex-col flex-1 bg-background-2`,
-					scrollVertical,
-				])}
+				className={tw([tw`flex flex-col flex-1 bg-midnight-2`, scrollVertical])}
 			>
 				<VirtualizedList
 					items={channels}
@@ -69,7 +66,7 @@ function ChannelBrowser(props: Props) {
 				/>
 			</main>
 
-			<footer className={tw`flex flex-row p-2 bg-background-0`}>
+			<footer className={tw`flex flex-row p-2 bg-midnight-0`}>
 				<input
 					type="text"
 					aria-label="Search"

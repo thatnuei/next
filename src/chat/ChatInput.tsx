@@ -33,7 +33,7 @@ function ChatInput(props: Props) {
 	return (
 		<form
 			onSubmit={handleFormSubmit}
-			className={tw`flex flex-row p-2 bg-background-0`}
+			className={tw`flex flex-row p-2 bg-midnight-0`}
 		>
 			<textarea
 				placeholder={`Chatting as ${identity}...`}

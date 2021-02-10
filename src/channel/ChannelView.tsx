@@ -72,7 +72,7 @@ function ChannelView({ channelId, ...props }: Props) {
 			/>
 
 			<div className={tw`flex flex-row flex-1 min-h-0 my-gap`}>
-				<main className={tw`relative flex-1 bg-background-1`}>
+				<main className={tw`relative flex-1 bg-midnight-1`}>
 					{messageList}
 
 					<AnimatePresence>
@@ -114,7 +114,7 @@ function ChannelView({ channelId, ...props }: Props) {
 					<Drawer side="right" onDismiss={userList.hide}>
 						<ChannelUserList
 							channel={channel}
-							className={tw`w-56 h-full bg-background-2`}
+							className={tw`w-56 h-full bg-midnight-2`}
 						/>
 					</Drawer>
 				)}

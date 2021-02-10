@@ -26,13 +26,13 @@ function CharacterMenu({
 
 	return (
 		<Popover {...props} className={tw`w-56`}>
-			<div className={tw`p-3 bg-background-0`}>
+			<div className={tw`p-3 bg-midnight-0`}>
 				<CharacterSummary name={name} />
 
 				{friendshipItems.map((item, index) => (
 					<div
 						key={index}
-						className={tw`flex flex-row items-center px-2 py-1 mt-3 text-sm bg-green-faded text-green`}
+						className={tw`flex flex-row items-center px-2 py-1 mt-3 text-sm bg-green-500 bg-opacity-20 text-green-400`}
 					>
 						<Icon which={icons.heart} className={tw`w-4 h-4 mr-1`} />
 						{item.us}
@@ -81,7 +81,7 @@ function CharacterMenu({
 					}}
 				/>
 			</div>
-			<div className={tw`p-2 bg-background-0`}>
+			<div className={tw`p-2 bg-midnight-0`}>
 				<CharacterMemoInput name={name} className={tw`block w-full`} />
 			</div>
 		</Popover>
