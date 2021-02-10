@@ -14,6 +14,7 @@
 		"format": "prettier --write ."
 	},
 	"dependencies": {
+		"@headlessui/react": "^0.3.0",
 		"@mdi/js": "^5.9.55",
 		"@seznam/compose-react-refs": "^1.0.5",
 		"fchat": "^1.4.0",
@@ -27,6 +28,7 @@
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1",
 		"react-focus-lock": "^2.5.0",
+		"react-use": "^17.1.0",
 		"react-window": "^1.8.6",
 		"resize-observer-polyfill": "^1.5.1",
 		"twind": "^0.14.6"

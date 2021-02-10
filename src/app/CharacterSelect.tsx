@@ -6,7 +6,6 @@ import Button from "../dom/Button"
 import { useRootStore } from "../root/context"
 import { anchor, select, solidButton } from "../ui/components"
 import { flexColumn } from "../ui/helpers"
-import IslandLayout from "../ui/IslandLayout"
 
 function CharacterSelect() {
 	const root = useRootStore()
@@ -19,34 +18,32 @@ function CharacterSelect() {
 	}
 
 	return (
-		<IslandLayout title="Select a Character">
-			<form
-				className={tw([flexColumn, tw`items-center p-4`])}
-				onSubmit={handleSubmit}
+		<form
+			className={tw([flexColumn, tw`items-center p-4`])}
+			onSubmit={handleSubmit}
+		>
+			<Avatar name={identity} />
+			<select
+				className={tw([select, tw`my-4`])}
+				value={identity}
+				onChange={(e) => root.appStore.setIdentity(e.target.value, account)}
 			>
-				<Avatar name={identity} />
-				<select
-					className={tw([select, tw`my-4`])}
-					value={identity}
-					onChange={(e) => root.appStore.setIdentity(e.target.value, account)}
-				>
-					{characters.map((name) => (
-						<option key={name} value={name}>
-							{name}
-						</option>
-					))}
-				</select>
-				<Button className={solidButton} type="submit">
-					Enter chat
-				</Button>
-				<Button
-					className={tw([anchor, tw`mt-4`])}
-					onClick={root.appStore.showLogin}
-				>
-					Return to Login
-				</Button>
-			</form>
-		</IslandLayout>
+				{characters.map((name) => (
+					<option key={name} value={name}>
+						{name}
+					</option>
+				))}
+			</select>
+			<Button className={solidButton} type="submit">
+				Enter chat
+			</Button>
+			<Button
+				className={tw([anchor, tw`mt-4`])}
+				onClick={root.appStore.showLogin}
+			>
+				Return to Login
+			</Button>
+		</form>
 	)
 }
 

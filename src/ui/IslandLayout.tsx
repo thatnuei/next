@@ -1,25 +1,25 @@
-import { motion } from "framer-motion"
 import * as React from "react"
 import { tw } from "twind"
+import { css } from "twind/css"
 import { ChildrenProps } from "../jsx/types"
-import { fadeAnimation, slideAnimation } from "./animation"
 import { headerText, raisedPanel, raisedPanelHeader } from "./components"
-import { centerItems, fixedCover, flexColumn } from "./helpers"
+import FadeRiseTransition from "./FadeRiseTransition"
 
 export default function IslandLayout(
-	props: ChildrenProps & { title: React.ReactNode },
+	props: ChildrenProps & { title: React.ReactNode; isVisible: boolean },
 ) {
 	return (
-		<motion.div
-			className={tw(fixedCover, flexColumn, centerItems)}
-			{...fadeAnimation}
+		<FadeRiseTransition
+			className={tw`fixed inset-0 flex flex-col items-center justify-center`}
+			isVisible={props.isVisible}
+			enter={tw(css({ transitionDelay: "300ms" }))} // wait for the previous island to disappear
 		>
-			<motion.div className={raisedPanel} {...slideAnimation}>
+			<div className={raisedPanel}>
 				<header className={raisedPanelHeader}>
 					<h1 className={headerText}>{props.title}</h1>
 				</header>
 				{props.children}
-			</motion.div>
-		</motion.div>
+			</div>
+		</FadeRiseTransition>
 	)
 }

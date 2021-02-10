@@ -1,38 +1,25 @@
-import { motion } from "framer-motion"
-import { tw } from "twind"
+import { apply, tw } from "twind"
 import { animation } from "twind/css"
-import { fadeAnimation } from "./animation"
-import { headerText2 } from "./components"
-import { centerItems, fixedCover, flexColumn } from "./helpers"
 
 type Props = { text: string }
 
-function LoadingOverlay(props: Props) {
-	const dotStyle = tw`w-4 h-4 rounded-full bg-clouds`
+function LoadingOverlay({ text }: Props) {
+	const dotStyle = apply`w-5 h-5 rounded-full bg-clouds`
 
 	return (
-		<motion.div
-			className={tw([
-				fixedCover,
-				flexColumn,
-				centerItems,
-				tw`bg-black bg-opacity-50`,
-			])}
-			{...fadeAnimation}
+		<div
+			className={tw`fixed inset-0 flex flex-col items-center justify-center text-center bg-black bg-opacity-50`}
 		>
 			<div
-				className={tw([
-					tw`grid grid-cols-2 grid-rows-2 gap-4 p-4`,
-					spinAnimation,
-				])}
+				className={tw`grid grid-cols-2 grid-rows-2 gap-4 p-6 ${spinAnimation}`}
 			>
-				<div className={tw([dotStyle, tw`bg-blue-500`])}></div>
-				<div className={dotStyle}></div>
-				<div className={dotStyle}></div>
-				<div className={tw([dotStyle, tw`bg-blue-500`])}></div>
+				<div className={tw`${dotStyle} bg-blue-500`}></div>
+				<div className={tw`${dotStyle}`}></div>
+				<div className={tw`${dotStyle}`}></div>
+				<div className={tw`${dotStyle} bg-blue-500`}></div>
 			</div>
-			<p className={headerText2}>{props.text}</p>
-		</motion.div>
+			<p className={tw`text-2xl font-condensed`}>{text}</p>
+		</div>
 	)
 }
 

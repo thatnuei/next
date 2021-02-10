@@ -7,7 +7,6 @@ import { useRootStore } from "../root/context"
 import { input, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
 import { flexColumn } from "../ui/helpers"
-import IslandLayout from "../ui/IslandLayout"
 
 export type LoginResult = {
 	account: string
@@ -43,41 +42,39 @@ export default function Login() {
 	}
 
 	return (
-		<IslandLayout title="Login">
-			<form
-				className={tw([flexColumn, tw`items-start p-4`])}
-				onSubmit={handleSubmit}
-			>
-				<FormField className={tw`mb-4`} labelText="Username">
-					<input
-						className={input}
-						type="text"
-						placeholder="awesome username"
-						value={account}
-						onChange={(e) => setAccount(e.target.value)}
-						disabled={isFormDisabled}
-					/>
-				</FormField>
+		<form
+			className={tw([flexColumn, tw`items-start p-4`])}
+			onSubmit={handleSubmit}
+		>
+			<FormField className={tw`mb-4`} labelText="Username">
+				<input
+					className={input}
+					type="text"
+					placeholder="awesome username"
+					value={account}
+					onChange={(e) => setAccount(e.target.value)}
+					disabled={isFormDisabled}
+				/>
+			</FormField>
 
-				<FormField className={tw`mb-4`} labelText="Password">
-					<input
-						className={input}
-						type="password"
-						placeholder="••••••••"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						disabled={isFormDisabled}
-					/>
-				</FormField>
+			<FormField className={tw`mb-4`} labelText="Password">
+				<input
+					className={input}
+					type="password"
+					placeholder="••••••••"
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
+					disabled={isFormDisabled}
+				/>
+			</FormField>
 
-				<Button className={solidButton} type="submit" disabled={!canSubmit}>
-					Log in
-				</Button>
+			<Button className={solidButton} type="submit" disabled={!canSubmit}>
+				Log in
+			</Button>
 
-				{state.current === "error" && (
-					<p className={tw`max-w-xs mt-4`}>{state.error}</p>
-				)}
-			</form>
-		</IslandLayout>
+			{state.current === "error" && (
+				<p className={tw`max-w-xs mt-4`}>{state.error}</p>
+			)}
+		</form>
 	)
 }
