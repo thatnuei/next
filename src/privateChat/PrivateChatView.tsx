@@ -24,8 +24,8 @@ function PrivateChatView({ partnerName, ...props }: Props) {
 	const typingStatus = useObservable(chat.typingStatus)
 
 	return (
-		<div className={tw`flex flex-col`} {...props}>
-			<div className={tw`flex flex-row items-center h-20 bg-midnight-0`}>
+		<div className={tw`flex flex-col h-full`}>
+			<div className={tw`flex flex-row items-center h-20 mb-1 bg-midnight-0`}>
 				<ChatMenuButton className={tw`ml-3`} />
 
 				<CharacterMenuTarget name={partnerName} className={tw`ml-3`}>
@@ -44,13 +44,11 @@ function PrivateChatView({ partnerName, ...props }: Props) {
 				</div>
 			</div>
 
-			<div className={tw`flex flex-col flex-1 mb-gap`}>
-				<TypingStatusDisplay
-					name={partnerName}
-					status={typingStatus}
-					className={typingStatus === "clear" ? tw`h-gap` : ""}
-				/>
-				<MessageList messages={messages} className={tw`flex-1 bg-midnight-1`} />
+			<div className={tw`flex flex-col flex-1 mb-1`}>
+				<TypingStatusDisplay name={partnerName} status={typingStatus} />
+				<div className={tw`flex-1 bg-midnight-1`}>
+					<MessageList messages={messages} />
+				</div>
 			</div>
 
 			<ChatInput

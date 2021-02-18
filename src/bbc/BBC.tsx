@@ -168,10 +168,9 @@ function BBCLink({ url, children }: PropsWithChildren<{ url: string }>) {
 
 	return (
 		<span className={tw`inline-flex items-baseline`}>
-			<Icon
-				which={icons.link}
-				className={tw`self-center inline w-4 h-4 opacity-75 mr-0.5`}
-			/>
+			<span className={tw`self-center inline opacity-75 mr-0.5`}>
+				<Icon which={icons.link} size="small" />
+			</span>
 			<ExternalLink href={url} className="group">
 				<span className={tw`underline group-hover:no-underline`}>
 					{children}
@@ -204,10 +203,12 @@ function BBCChannelLink({
 
 	return (
 		<span className={tw`inline-flex items-baseline`}>
-			<Icon
-				which={type === "public" ? icons.earth : icons.lock}
-				className={tw`self-center inline w-4 h-4 mr-1 opacity-75`}
-			/>
+			<span className={tw`self-center inline w-4 h-4 mr-1 opacity-75`}>
+				<Icon
+					which={type === "public" ? icons.earth : icons.lock}
+					size="small"
+				/>
+			</span>
 			<button
 				className="group"
 				onClick={() => root.channelStore.join(id, title)}

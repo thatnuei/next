@@ -12,7 +12,6 @@ import { useRootStore } from "../root/context"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import { fadeAnimation } from "../ui/animation"
 import Drawer from "../ui/Drawer"
-import { fixedCover } from "../ui/helpers"
 import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import NoRoomView from "./NoRoomView"
@@ -29,10 +28,14 @@ export default function Chat() {
 	const chatRoomView = useMemo(() => <ChatRoomView />, [])
 
 	return (
-		<motion.div className={tw([fixedCover, tw`flex`])} {...fadeAnimation}>
-			{!isSmallScreen && <ChatNav className={tw`mr-gap`} />}
+		<motion.div className={tw`fixed inset-0 flex`} {...fadeAnimation}>
+			{!isSmallScreen && (
+				<div className={tw`mr-1`}>
+					<ChatNav />
+				</div>
+			)}
 
-			{chatRoomView}
+			<div className={tw`flex-1`}>{chatRoomView}</div>
 
 			<AnimatePresence>
 				{isSmallScreen && isSideMenuVisible && (
@@ -84,17 +87,12 @@ function ChatRoomView() {
 	)
 
 	if (view.channelId && isChannelJoined) {
-		return <ChannelView className={tw`flex-1`} channelId={view.channelId} />
+		return <ChannelView channelId={view.channelId} />
 	}
 
 	if (view.privateChatPartner && isPrivateChatOpen) {
-		return (
-			<PrivateChatView
-				className={tw`flex-1`}
-				partnerName={view.privateChatPartner}
-			/>
-		)
+		return <PrivateChatView partnerName={view.privateChatPartner} />
 	}
 
-	return <NoRoomView className={tw`self-start`} />
+	return <NoRoomView />
 }

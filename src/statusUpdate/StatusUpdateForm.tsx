@@ -21,11 +21,8 @@ function StatusUpdateForm() {
 	}
 
 	return (
-		<form
-			className={tw`flex flex-col items-start h-full p-3`}
-			onSubmit={submit}
-		>
-			<FormField labelText="Status" className={tw`block mb-3`}>
+		<form className={tw`grid content-start h-full gap-3 p-3`} onSubmit={submit}>
+			<FormField labelText="Status">
 				<select
 					className={select}
 					value={status.type}
@@ -41,12 +38,9 @@ function StatusUpdateForm() {
 					<option value="dnd">Do Not Disturb</option>
 				</select>
 			</FormField>
-			<FormField
-				labelText="Status message (optional)"
-				className={tw`flex flex-col flex-1 mb-3`}
-			>
+			<FormField labelText="Status message (optional)">
 				<textarea
-					className={tw([input, tw`flex-1`])}
+					className={tw(input, tw`flex-1 block`)}
 					value={status.text}
 					onChange={(e) => {
 						const text = e.currentTarget.value
@@ -59,7 +53,11 @@ function StatusUpdateForm() {
 					}}
 				/>
 			</FormField>
-			<Button type="submit" className={solidButton} disabled={isSubmitting}>
+			<Button
+				type="submit"
+				className={`${solidButton} ${tw`justify-self-start`}`}
+				disabled={isSubmitting}
+			>
 				Submit
 			</Button>
 		</form>

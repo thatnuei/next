@@ -1,5 +1,6 @@
 import { useObservable } from "micro-observables"
 import { tw } from "twind"
+import { css } from "twind/css"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
 import { TagProps } from "../jsx/types"
@@ -14,13 +15,16 @@ type Props = TagProps<"div"> & { name: string }
 function CharacterSummary({ name, ...props }: Props) {
 	const char = useCharacter(name)
 	const gender = useObservable(char.gender)
-	const genderColor = { color: genderColors[gender] }
 
 	return (
 		<div {...props}>
 			<ExternalLink
 				href={getProfileUrl(name)}
-				className={tw([headerText2, genderColor, tw`leading-none`])}
+				className={tw`
+					${headerText2}
+					${css({ color: genderColors[gender] })}
+					leading-none
+				`}
 			>
 				{name}
 			</ExternalLink>
@@ -29,13 +33,13 @@ function CharacterSummary({ name, ...props }: Props) {
 				<Avatar name={name} className={tw`my-3`} />
 			</ExternalLink>
 
-			<CharacterStatusText
-				name={name}
-				className={tw(
-					tw`px-3 py-2 overflow-y-auto bg-midnight-1`,
-					{ maxHeight: 100 }, // some statuses can get really big
-				)}
-			/>
+			<div
+				className={tw`px-3 py-2 overflow-y-auto bg-midnight-1 ${css({
+					maxHeight: tw.theme("spacing.28"),
+				})}`}
+			>
+				<CharacterStatusText name={name} />
+			</div>
 		</div>
 	)
 }

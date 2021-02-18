@@ -23,16 +23,13 @@ function ChannelBrowserItem({ info, ...props }: Props) {
 	}
 
 	const containerStyle = tw(
-		tw`flex flex-row items-center px-2 py-2 transition-all`,
+		tw`flex flex-row items-center px-2 py-2 space-x-2 transition-all`,
 		isJoined ? tw`opacity-100 bg-midnight-0` : tw`opacity-50 hover:opacity-75`,
 	)
 
 	return (
 		<button className={containerStyle} onClick={handleClick} {...props}>
-			<Icon
-				which={info.type === "public" ? earth : lock}
-				className={tw`mr-2`}
-			/>
+			<Icon which={info.type === "public" ? earth : lock} />
 			<div
 				className={tw(`flex-1 overflow-hidden whitespace-nowrap`, {
 					textOverflow: "ellipsis",

@@ -99,7 +99,7 @@ function ChannelHeader({
 						{!isLargeScreen && (
 							<ChannelFilters
 								channelId={channel.id}
-								className={tw`px-3 py-2 bg-midnight-0 mb-gap`}
+								className={tw`px-3 py-2 bg-midnight-0 mb-1`}
 							/>
 						)}
 						<div className={tw`flex flex-col bg-midnight-1`}>

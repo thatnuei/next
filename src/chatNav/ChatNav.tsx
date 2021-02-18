@@ -13,7 +13,7 @@ export default function ChatNav(props: TagProps<"nav">) {
 	const root = useRootStore()
 	const identity = useObservable(root.appStore.identity)
 	return (
-		<nav className={tw`flex`} {...props}>
+		<nav className={tw`flex h-full`}>
 			<div className={tw`flex flex-col`}>
 				<NavAction
 					icon={icons.list}
@@ -40,7 +40,7 @@ export default function ChatNav(props: TagProps<"nav">) {
 			<div className={tw`flex flex-col w-56 overflow-y-auto bg-midnight-1`}>
 				<CharacterSummary
 					name={identity}
-					className={tw`p-3 bg-midnight-0 mb-gap`}
+					className={tw`p-3 mb-1 bg-midnight-0`}
 				/>
 				<div className={tw`flex-1`}>
 					<RoomTabList />

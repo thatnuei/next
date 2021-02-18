@@ -4,7 +4,6 @@ import { useObservable } from "micro-observables"
 import { useState } from "react"
 import { tw } from "twind"
 import Button from "../dom/Button"
-import { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
 import { input, solidButton } from "../ui/components"
 import { scrollVertical } from "../ui/helpers"
@@ -14,9 +13,7 @@ import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
 import { ChannelBrowserChannel } from "./ChannelBrowserStore"
 
-type Props = TagProps<"div">
-
-function ChannelBrowser(props: Props) {
+function ChannelBrowser() {
 	const root = useRootStore()
 
 	const publicChannels = useObservable(root.channelBrowserStore.publicChannels)
@@ -52,8 +49,8 @@ function ChannelBrowser(props: Props) {
 	]
 
 	return (
-		<div className={tw`flex flex-col w-full h-full`} {...props}>
-			<main
+		<div className={tw`flex flex-col w-full h-full`}>
+			<section
 				className={tw([tw`flex flex-col flex-1 bg-midnight-2`, scrollVertical])}
 			>
 				<VirtualizedList
@@ -64,9 +61,9 @@ function ChannelBrowser(props: Props) {
 						<ChannelBrowserItem key={item.id} info={item} style={style} />
 					)}
 				/>
-			</main>
+			</section>
 
-			<footer className={tw`flex flex-row p-2 bg-midnight-0`}>
+			<section className={tw`flex flex-row p-2 bg-midnight-0`}>
 				<input
 					type="text"
 					aria-label="Search"
@@ -90,7 +87,7 @@ function ChannelBrowser(props: Props) {
 				>
 					<Icon which={icons.refresh} />
 				</Button>
-			</footer>
+			</section>
 		</div>
 	)
 }

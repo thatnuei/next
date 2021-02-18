@@ -72,7 +72,7 @@ function ChannelUserList({ channel, ...props }: Props) {
 							name,
 							status,
 							order: itemTypes.indexOf(type),
-							css: getTypeCss(type),
+							className: getTypeCss(type),
 						}
 					})
 					.filter(isPresent),
@@ -82,7 +82,7 @@ function ChannelUserList({ channel, ...props }: Props) {
 	const sortedItems = sortBy(entries, ["order", (it) => it.name.toLowerCase()])
 
 	return (
-		<div className={tw`flex flex-col`} {...props}>
+		<div className={tw`flex flex-col h-full`}>
 			<div className={tw`px-3 py-2 bg-midnight-0`}>
 				Characters: {entries.length}
 			</div>
@@ -92,12 +92,13 @@ function ChannelUserList({ channel, ...props }: Props) {
 					itemSize={32}
 					getItemKey={(item) => item.name}
 					renderItem={({ item, style }) => (
-						<CharacterName
+						<div
 							role="listitem"
-							name={item.name}
 							style={style}
-							className={tw([tw`flex items-center px-2`, item.css])}
-						/>
+							className={`${tw`flex items-center px-2`} ${item.className}`}
+						>
+							<CharacterName name={item.name} />
+						</div>
 					)}
 				/>
 			</div>

@@ -1,6 +1,7 @@
 import { useObservable } from "micro-observables"
 import { memo } from "react"
-import { tw } from "twind"
+import { apply, tw } from "twind"
+import { css } from "twind/css"
 import { TagProps } from "../jsx/types"
 import { rainbowAnimation } from "../ui/helpers"
 import CharacterMenuTarget from "./CharacterMenuTarget"
@@ -17,15 +18,15 @@ function CharacterName({ name, className = "", ...props }: Props) {
 	const status = useObservable(character.status)
 
 	const statusDotStyle = tw(
-		tw`inline-block mr-1 transform scale-150`,
-		{ color: statusColors[status.type] },
+		`inline-block mr-1 transform scale-150`,
+		css({ color: statusColors[status.type] }),
 		status.type === "crown" && rainbowAnimation,
 	)
 
 	return (
 		<CharacterMenuTarget
 			name={name}
-			className={`${tw`font-bold`} ${className}`}
+			className={`${tw(apply`font-medium`)} ${className}`}
 			{...props}
 		>
 			<span className={statusDotStyle}>•</span>

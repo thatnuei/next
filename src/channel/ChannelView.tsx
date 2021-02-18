@@ -55,23 +55,18 @@ function ChannelView({ channelId, ...props }: Props) {
 			return true
 		}
 
-		return (
-			<MessageList
-				messages={messages.filter(shouldShowMessage)}
-				className={tw`w-full h-full`}
-			/>
-		)
+		return <MessageList messages={messages.filter(shouldShowMessage)} />
 	}, [actualMode, messages])
 
 	return (
-		<div className={tw`flex flex-col`} {...props}>
+		<div className={tw`flex flex-col h-full`}>
 			<ChannelHeader
 				channelId={channelId}
 				onToggleDescription={descriptionOverlay.toggle}
 				onShowUsers={userList.show}
 			/>
 
-			<div className={tw`flex flex-row flex-1 min-h-0 my-gap`}>
+			<div className={tw`flex flex-row flex-1 min-h-0 my-1`}>
 				<main className={tw`relative flex-1 bg-midnight-1`}>
 					{messageList}
 
@@ -96,10 +91,9 @@ function ChannelView({ channelId, ...props }: Props) {
 				</main>
 
 				{isLargeScreen && (
-					<ChannelUserList
-						channel={channel}
-						className={tw`w-56 min-h-0 ml-gap`}
-					/>
+					<div className={tw`w-56 min-h-0 ml-1`}>
+						<ChannelUserList channel={channel} />
+					</div>
 				)}
 			</div>
 
