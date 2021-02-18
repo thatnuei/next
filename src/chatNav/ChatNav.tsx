@@ -4,34 +4,38 @@ import { tw } from "twind"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import CharacterSummary from "../character/CharacterSummary"
 import Button from "../dom/Button"
-import { ComponentProps, TagProps } from "../jsx/types"
+import { ComponentProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
+import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import { fadedButton } from "../ui/components"
+import Dialog, { DialogButton, DialogModalPanel } from "../ui/Dialog"
 import Icon, { IconProps } from "../ui/Icon"
 import * as icons from "../ui/icons"
-import Modal, { ModalButton, ModalPanel } from "../ui/Modal.new"
 import RoomTabList from "./RoomTabList"
 
-export default function ChatNav(props: TagProps<"nav">) {
+export default function ChatNav() {
 	const root = useRootStore()
 	const identity = useObservable(root.appStore.identity)
 	return (
-		<nav className={tw`flex h-full`}>
+		<nav className={tw`flex h-full bg-midnight-2`}>
 			<div className={tw`flex flex-col`}>
-				<Modal>
-					<ModalButton>
+				<Dialog>
+					<DialogButton>
 						<NavAction icon={icons.list} title="Browse channels" />
-					</ModalButton>
-					<ModalPanel title="Channel browser">
+					</DialogButton>
+					<DialogModalPanel title="Channel Browser">
 						<ChannelBrowser />
-					</ModalPanel>
-				</Modal>
+					</DialogModalPanel>
+				</Dialog>
 
-				<NavAction
-					icon={icons.updateStatus}
-					title="Update your status"
-					onClick={root.statusUpdateStore.show}
-				/>
+				<Dialog>
+					<DialogButton>
+						<NavAction icon={icons.updateStatus} title="Update your status" />
+					</DialogButton>
+					<DialogModalPanel title="Update Status">
+						<StatusUpdateForm />
+					</DialogModalPanel>
+				</Dialog>
 
 				<NavAction
 					icon={icons.users}

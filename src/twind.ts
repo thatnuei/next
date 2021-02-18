@@ -21,6 +21,7 @@ setup({
 				condensed: `'Fira Sans Condensed', sans-serif`,
 			},
 			boxShadow: {
+				DEFAULT: "0px 2px 12px rgba(0, 0, 0, 0.5)",
 				normal: "0px 2px 12px rgba(0, 0, 0, 0.3)",
 				inner: "0px 1px 4px rgba(0, 0, 0, 0.2) inset",
 			},

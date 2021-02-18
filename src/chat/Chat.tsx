@@ -1,29 +1,18 @@
-import { AnimatePresence, motion } from "framer-motion"
+import { motion } from "framer-motion"
 import { useObservable } from "micro-observables"
 import { useMemo } from "react"
 import { tw } from "twind"
 import ChannelView from "../channel/ChannelView"
-import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import ChatNav from "../chatNav/ChatNav"
 import { useChatNavView } from "../chatNav/helpers"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { useRootStore } from "../root/context"
-import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import { fadeAnimation } from "../ui/animation"
-import Drawer from "../ui/Drawer"
-import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import NoRoomView from "./NoRoomView"
 
 export default function Chat() {
-	const root = useRootStore()
-
-	const isSideMenuVisible = useObservable(root.chatNavStore.sideMenu.isVisible)
-	const isChannelBrowserVisible = useObservable(
-		root.channelBrowserStore.isVisible,
-	)
-	const isStatusUpdateVisible = useObservable(root.statusUpdateStore.isVisible)
 	const isSmallScreen = useMediaQuery(screenQueries.small)
 	const chatRoomView = useMemo(() => <ChatRoomView />, [])
 
@@ -36,40 +25,6 @@ export default function Chat() {
 			)}
 
 			<div className={tw`flex-1`}>{chatRoomView}</div>
-
-			<AnimatePresence>
-				{isSmallScreen && isSideMenuVisible && (
-					<Drawer
-						key="sideMenu"
-						side="left"
-						onDismiss={root.chatNavStore.sideMenu.hide}
-					>
-						<ChatNav className={tw`h-full bg-midnight-2`} />
-					</Drawer>
-				)}
-
-				{isChannelBrowserVisible && (
-					<Modal
-						key="channelBrowser"
-						onDismiss={root.channelBrowserStore.hide}
-						title="Channels"
-						width={480}
-						height={720}
-						children={<ChannelBrowser />}
-					/>
-				)}
-
-				{isStatusUpdateVisible && (
-					<Modal
-						key="statusUpdate"
-						onDismiss={root.statusUpdateStore.hide}
-						title="Update Your Status"
-						width={480}
-						height={360}
-						children={<StatusUpdateForm />}
-					/>
-				)}
-			</AnimatePresence>
 		</motion.div>
 	)
 }

@@ -1,28 +1,27 @@
+import { tw } from "twind"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
-import { TagProps } from "../jsx/types"
-import { useRootStore } from "../root/context"
 import { fadedButton } from "../ui/components"
+import Dialog, { DialogButton, DialogDrawerPanel } from "../ui/Dialog"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import { screenQueries } from "../ui/screens"
+import ChatNav from "./ChatNav"
 
-type Props = TagProps<"button">
+function ChatMenuButton() {
+	const isMediumScreen = useMediaQuery(`(min-width: ${tw.theme("screens.md")})`)
 
-function ChatMenuButton(props: Props) {
-	const root = useRootStore()
-	const isSmallScreen = useMediaQuery(screenQueries.small)
-
-	return isSmallScreen ? (
-		<Button
-			title="Show side menu"
-			className={fadedButton}
-			onClick={root.chatNavStore.sideMenu.show}
-			{...props}
-		>
-			<Icon which={icons.menu} />
-		</Button>
-	) : null
+	return isMediumScreen ? null : (
+		<Dialog>
+			<DialogButton>
+				<Button title="Show side menu" className={tw`${fadedButton} block`}>
+					<Icon which={icons.menu} />
+				</Button>
+			</DialogButton>
+			<DialogDrawerPanel>
+				<ChatNav />
+			</DialogDrawerPanel>
+		</Dialog>
+	)
 }
 
 export default ChatMenuButton

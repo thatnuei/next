@@ -26,7 +26,9 @@ function PrivateChatView({ partnerName, ...props }: Props) {
 	return (
 		<div className={tw`flex flex-col h-full`}>
 			<div className={tw`flex flex-row items-center h-20 mb-1 bg-midnight-0`}>
-				<ChatMenuButton className={tw`ml-3`} />
+				<div className={tw`mr-3`}>
+					<ChatMenuButton />
+				</div>
 
 				<CharacterMenuTarget name={partnerName} className={tw`ml-3`}>
 					<Avatar name={partnerName} className={tw`w-12 h-12`} />

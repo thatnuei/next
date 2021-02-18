@@ -57,7 +57,9 @@ function ChannelHeader({
 			className={tw`flex flex-row items-center p-3 bg-midnight-0`}
 			{...props}
 		>
-			<ChatMenuButton className={tw`mr-3`} />
+			<div className={tw`mr-3`}>
+				<ChatMenuButton />
+			</div>
 
 			<Button
 				title="Description"
@@ -99,7 +101,7 @@ function ChannelHeader({
 						{!isLargeScreen && (
 							<ChannelFilters
 								channelId={channel.id}
-								className={tw`px-3 py-2 bg-midnight-0 mb-1`}
+								className={tw`px-3 py-2 mb-1 bg-midnight-0`}
 							/>
 						)}
 						<div className={tw`flex flex-col bg-midnight-1`}>

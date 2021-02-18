@@ -3,10 +3,10 @@ import { sortBy } from "lodash-es"
 import { useObservable } from "micro-observables"
 import { useState } from "react"
 import { tw } from "twind"
+import { css } from "twind/css"
 import Button from "../dom/Button"
 import { useRootStore } from "../root/context"
 import { input, solidButton } from "../ui/components"
-import { scrollVertical } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
@@ -49,9 +49,9 @@ function ChannelBrowser() {
 	]
 
 	return (
-		<div className={tw`flex flex-col w-full h-full`}>
+		<div className={tw`flex flex-col w-full h-full min-h-0`}>
 			<section
-				className={tw([tw`flex flex-col flex-1 bg-midnight-2`, scrollVertical])}
+				className={tw`bg-midnight-2 ${css({ height: "calc(100vh - 10rem)" })}`}
 			>
 				<VirtualizedList
 					items={channels}

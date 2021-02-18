@@ -3,21 +3,14 @@ import { tw } from "twind"
 
 export type IconProps = {
 	which: string
-	size?: "normal" | "small"
 }
 
-function Icon({ which, size = "normal" }: IconProps) {
+export const iconSizeClass = tw`w-6 h-6`
+
+export default function Icon({ which }: IconProps) {
 	return (
-		<svg
-			className={tw(
-				size === "normal" && "w-5 h-5",
-				size === "small" && "w-4 h-4",
-			)}
-			viewBox="0 0 24 24"
-		>
+		<svg className={iconSizeClass} viewBox="0 0 24 24">
 			<path d={which} className={tw`fill-current`} />
 		</svg>
 	)
 }
-
-export default Icon
