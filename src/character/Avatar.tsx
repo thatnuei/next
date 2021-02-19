@@ -6,14 +6,14 @@ type Props = React.ComponentPropsWithoutRef<"img"> & {
 	name: string
 }
 
-function Avatar({ name, ...props }: Props) {
+function Avatar({ name, className, ...props }: Props) {
 	return (
 		<img
 			src={getAvatarUrl(name)}
 			title={name}
 			alt=""
 			role="presentation"
-			className={tw`w-24 h-24`}
+			className={tw`w-24 h-24 ${className}`}
 			key={name}
 			{...props}
 		/>
