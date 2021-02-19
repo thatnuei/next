@@ -16,16 +16,14 @@ type Props = { name: string } & TagProps<"button">
 
 export default function CharacterMenuTarget({ name, ...props }: Props) {
 	return (
-		<>
-			<Menu>
-				<MenuButton>
-					<Button {...props} />
-				</MenuButton>
-				<MenuPanel>
-					<CharacterMenu name={name} />
-				</MenuPanel>
-			</Menu>
-		</>
+		<Menu>
+			<MenuButton>
+				<Button {...props} />
+			</MenuButton>
+			<MenuPanel>
+				<CharacterMenu name={name} />
+			</MenuPanel>
+		</Menu>
 	)
 }
 
@@ -43,16 +41,16 @@ function CharacterMenu({ name }: { name: string }) {
 
 	return (
 		<>
-			<div className={tw`p-3 bg-midnight-0`}>
+			<div className={tw`p-3 space-y-3 bg-midnight-0`}>
 				<CharacterSummary name={name} />
 
 				{friendshipItems.map((item, index) => (
 					<div
 						key={index}
-						className={tw`flex flex-row items-center px-2 py-1 mt-3 text-sm text-green-400 bg-green-500 bg-opacity-20`}
+						className={tw`flex flex-row items-center px-2 py-1 space-x-1 text-sm text-green-400 bg-green-500 bg-opacity-20`}
 					>
 						<Icon which={icons.heart} />
-						{item.us}
+						<div>{item.us}</div>
 					</div>
 				))}
 			</div>
