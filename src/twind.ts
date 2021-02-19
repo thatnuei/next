@@ -36,6 +36,7 @@ setup({
 				letterSpacing: "0.1px",
 			},
 			"button, input, textarea, select": {
+				display: "block",
 				textAlign: "left",
 				borderRadius: 0,
 				letterSpacing: "inherit",
