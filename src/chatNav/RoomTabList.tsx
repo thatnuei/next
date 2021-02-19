@@ -1,10 +1,10 @@
+import { sortBy } from "lodash-es"
 import { useObservable } from "micro-observables"
 import { tw } from "twind"
 import { ChannelModel } from "../channel/ChannelModel"
 import { useJoinedChannels } from "../channel/helpers"
 import { useIsPublicChannel } from "../channelBrowser/helpers"
 import Avatar from "../character/Avatar"
-import { compare } from "../common/compare"
 import { useOpenPrivateChats } from "../privateChat/helpers"
 import { PrivateChatModel } from "../privateChat/PrivateChatModel"
 import { useRootStore } from "../root/context"
@@ -17,10 +17,9 @@ function RoomTabList() {
 	const joinedChannels = useJoinedChannels()
 	const privateChats = useOpenPrivateChats()
 
-	const privateChatTabs = privateChats
-		.slice()
-		.sort(compare((chat) => chat.partnerName.toLowerCase()))
-		.map((chat) => <PrivateChatTab key={chat.partnerName} chat={chat} />)
+	const privateChatTabs = sortBy(privateChats, (chat) =>
+		chat.partnerName.toLowerCase(),
+	).map((chat) => <PrivateChatTab key={chat.partnerName} chat={chat} />)
 
 	const channelTabs = joinedChannels.map((channel) => (
 		<ChannelRoomTab key={channel.id} channel={channel} />
