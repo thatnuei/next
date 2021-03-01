@@ -1,12 +1,11 @@
+import "@twind/macro"
 import * as React from "react"
 import { useState } from "react"
-import { tw } from "twind"
 import { extractErrorMessage } from "../common/extractErrorMessage"
 import Button from "../dom/Button"
 import { useRootStore } from "../root/context"
 import { input, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
-import { flexColumn } from "../ui/helpers"
 
 export type LoginResult = {
 	account: string
@@ -42,11 +41,8 @@ export default function Login() {
 	}
 
 	return (
-		<form
-			className={tw([flexColumn, tw`items-start p-4`])}
-			onSubmit={handleSubmit}
-		>
-			<FormField className={tw`mb-4`} labelText="Username">
+		<form tw="flex flex-col items-start p-4 space-y-4" onSubmit={handleSubmit}>
+			<FormField labelText="Username">
 				<input
 					className={input}
 					type="text"
@@ -57,7 +53,7 @@ export default function Login() {
 				/>
 			</FormField>
 
-			<FormField className={tw`mb-4`} labelText="Password">
+			<FormField labelText="Password">
 				<input
 					className={input}
 					type="password"
@@ -72,9 +68,7 @@ export default function Login() {
 				Log in
 			</Button>
 
-			{state.current === "error" && (
-				<p className={tw`max-w-xs mt-4`}>{state.error}</p>
-			)}
+			{state.current === "error" && <p tw="max-w-xs">{state.error}</p>}
 		</form>
 	)
 }

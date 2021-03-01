@@ -1,3 +1,4 @@
+import macros from "@itsmapleleaf/vite-plugin-babel-macros"
 import reactRefresh from "@vitejs/plugin-react-refresh"
 import { defineConfig } from "vite"
 
@@ -7,7 +8,7 @@ export default defineConfig({
 		jsxFactory: `_createElement`,
 		jsxFragment: `_Fragment`,
 	},
-	plugins: [reactRefresh()],
+	plugins: [reactRefresh(), macros()],
 	build: {
 		sourcemap: true,
 	},
