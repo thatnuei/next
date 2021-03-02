@@ -14,7 +14,8 @@
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": true,
 		"resolveJsonModule": true,
-		"noFallthroughCasesInSwitch": true
+		"noFallthroughCasesInSwitch": true,
+		"types": ["@twind/macro", "jest", "node"]
 	},
 	"include": ["src"]
 }
