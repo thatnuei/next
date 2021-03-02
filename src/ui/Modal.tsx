@@ -50,9 +50,7 @@ function Modal({
 	const panelStyle = tw(
 		raisedPanel,
 		`flex flex-col w-full h-full`,
-		// @ts-expect-error
 		css({ maxWidth: props.width }),
-		// @ts-expect-error
 		css({ maxHeight: props.height }),
 	)
 

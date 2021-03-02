@@ -50,7 +50,7 @@ function RoomTab(props: RoomTabProps) {
 				title="Close"
 				onClick={props.onClose}
 			>
-				<Icon which={close} className={tw`w-5 h-5`} />
+				<Icon which={close} />
 			</Button>
 		</div>
 	)

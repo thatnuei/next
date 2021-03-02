@@ -22,13 +22,13 @@ function TypingStatusDisplay({ name, status, className, ...props }: Props) {
 		<div className={`${containerStyle} ${className}`} {...props}>
 			<div className={statusTextStyle(status === "typing")}>
 				<div className={tw`mr-1 ${bounceAnimation}`}>
-					<Icon which={pencil} size="small" />
+					<Icon which={pencil} />
 				</div>
 				<span>{name} is typing...</span>
 			</div>
 			<div className={statusTextStyle(status === "paused")}>
 				<div className={tw`mr-1`}>
-					<Icon which={pencil} size="small" />
+					<Icon which={pencil} />
 				</div>
 				<span>{name} has typed something</span>
 			</div>

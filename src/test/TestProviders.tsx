@@ -4,5 +4,5 @@ export type TestProvidersProps = ChildrenProps
 
 // TODO: allow overriding root store
 export default function TestProviders({ children }: TestProvidersProps) {
-	return children
+	return <>{children}</>
 }

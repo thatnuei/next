@@ -7,7 +7,9 @@ export function useElementSize(element: Element | undefined | null) {
 	useEffect(() => {
 		if (!element) return
 
-		const observer = new ResizeObserver(([info]) => setSize(info.contentRect))
+		const observer = new ResizeObserver(([info]: ResizeObserverEntry[]) => {
+			setSize(info.contentRect)
+		})
 		observer.observe(element)
 		return () => observer.disconnect()
 	}, [element])

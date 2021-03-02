@@ -64,11 +64,7 @@ function ChannelRoomTab({ channel }: { channel: ChannelModel }) {
 			key={channel.id}
 			title={title}
 			icon={
-				isPublic ? (
-					<Icon which={icons.earth} className={tw`w-5 h-5`} />
-				) : (
-					<Icon which={icons.lock} className={tw`w-5 h-5`} />
-				)
+				isPublic ? <Icon which={icons.earth} /> : <Icon which={icons.lock} />
 			}
 			isActive={isActive}
 			isUnread={isUnread}
