@@ -74,14 +74,14 @@ function ChannelBrowser() {
 				/>
 				<Button
 					title="Change sort mode"
-					className={tw([solidButton, tw`ml-2`])}
+					tw={`${solidButton} ml-2`}
 					onClick={cycleSortMode}
 				>
 					<Icon which={icons.sortAlphabetical} />
 				</Button>
 				<Button
 					title="Refresh"
-					className={tw([solidButton, tw`ml-2`])}
+					tw={`${solidButton} ml-2`}
 					onClick={root.channelBrowserStore.refresh}
 					disabled={isRefreshing}
 				>

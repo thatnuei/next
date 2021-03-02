@@ -10,7 +10,6 @@ import MessageList from "../message/MessageList"
 import { MessageState } from "../message/MessageState"
 import { useRootStore } from "../root/context"
 import Drawer from "../ui/Drawer"
-import { scrollVertical } from "../ui/helpers"
 import Modal from "../ui/Modal"
 import { useOverlay } from "../ui/overlay"
 import { screenQueries } from "../ui/screens"
@@ -80,8 +79,8 @@ function ChannelView({ channelId, ...props }: Props) {
 								verticalPanelAlign="top"
 								onDismiss={descriptionOverlay.hide}
 							>
-								<div className={tw([tw`w-full h-full`, scrollVertical])}>
-									<p className={tw`p-4`}>
+								<div tw="w-full h-full overflow-y-auto min-h-0">
+									<p tw="p-4">
 										<BBC text={description} />
 									</p>
 								</div>

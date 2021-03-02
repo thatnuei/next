@@ -14,9 +14,9 @@ export default function IslandLayout(
 			isVisible={props.isVisible}
 			enter={tw(css({ transitionDelay: "300ms" }))} // wait for the previous island to disappear
 		>
-			<div className={raisedPanel}>
-				<header className={raisedPanelHeader}>
-					<h1 className={headerText}>{props.title}</h1>
+			<div tw={raisedPanel}>
+				<header tw={raisedPanelHeader}>
+					<h1 tw={headerText}>{props.title}</h1>
 				</header>
 				{props.children}
 			</div>

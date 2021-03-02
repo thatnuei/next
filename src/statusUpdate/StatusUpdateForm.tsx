@@ -24,7 +24,7 @@ function StatusUpdateForm() {
 		<form className={tw`grid content-start h-full gap-3 p-3`} onSubmit={submit}>
 			<FormField labelText="Status">
 				<select
-					className={select}
+					tw={select}
 					value={status.type}
 					onChange={(e) => {
 						const type = e.target.value as CharacterStatusType
@@ -55,7 +55,7 @@ function StatusUpdateForm() {
 			</FormField>
 			<Button
 				type="submit"
-				className={`${solidButton} ${tw`justify-self-start`}`}
+				tw={`${solidButton} justify-self-start`}
 				disabled={isSubmitting}
 			>
 				Submit

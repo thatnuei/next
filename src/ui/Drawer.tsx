@@ -6,7 +6,6 @@ import Button from "../dom/Button"
 import * as icons from "../ui/icons"
 import { fadeAnimation } from "./animation"
 import { fadedButton } from "./components"
-import { fixedCover } from "./helpers"
 import Icon from "./Icon"
 import { OverlayProps } from "./overlay"
 
@@ -23,8 +22,6 @@ function Drawer({ isVisible, onDismiss, side, children }: Props) {
 			onDismiss?.()
 		}
 	}
-
-	const shadeStyle = tw(fixedCover, tw`bg-black bg-opacity-50`)
 
 	const contentContainerStyle = tw(
 		tw`absolute top-0 bottom-0 flex items-start`,
@@ -56,6 +53,7 @@ function Drawer({ isVisible, onDismiss, side, children }: Props) {
 
 	return (
 		<motion.div
+			tw="fixed inset-0 bg-black bg-opacity-50"
 			className={shadeStyle}
 			onClick={handleShadeClick}
 			{...fadeAnimation}

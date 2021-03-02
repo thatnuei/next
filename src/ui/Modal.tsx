@@ -12,7 +12,6 @@ import {
 	raisedPanel,
 	raisedPanelHeader,
 } from "./components"
-import { absoluteCover, fixedCover } from "./helpers"
 import Icon from "./Icon"
 import { close } from "./icons"
 
@@ -43,8 +42,8 @@ function Modal({
 		verticalPanelAlign === "top" && tw`items-center justify-start`,
 		verticalPanelAlign === "middle" && tw`items-center justify-center`,
 
-		fillMode === "contained" && absoluteCover,
-		fillMode === "fullscreen" && fixedCover,
+		fillMode === "contained" && `absolute inset-0`,
+		fillMode === "fullscreen" && `fixed inset-0`,
 	)
 
 	const panelStyle = tw(
@@ -69,7 +68,7 @@ function Modal({
 				<header
 					className={tw([raisedPanelHeader, tw`relative px-16 text-center`])}
 				>
-					<h1 className={headerText}>{props.title}</h1>
+					<h1 tw={headerText}>{props.title}</h1>
 					<Button className={closeButtonStyle} onClick={props.onDismiss}>
 						<Icon which={close} />
 					</Button>

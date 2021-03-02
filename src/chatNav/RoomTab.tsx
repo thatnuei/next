@@ -2,7 +2,7 @@ import * as React from "react"
 import { tw } from "twind"
 import Button from "../dom/Button"
 import { fadedButton } from "../ui/components"
-import { ellipsize, transition } from "../ui/helpers"
+import { ellipsize } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { close } from "../ui/icons"
 
@@ -27,13 +27,7 @@ function RoomTab(props: RoomTabProps) {
 	})()
 
 	return (
-		<div
-			className={tw([
-				tw`flex flex-row items-center`,
-				activeStateStyle,
-				transition,
-			])}
-		>
+		<div tw={`flex flex-row items-center transition ${activeStateStyle}`}>
 			<Button
 				className={tw([tw`flex flex-row items-center flex-1 p-2`, ellipsize])}
 				onClick={props.onClick}

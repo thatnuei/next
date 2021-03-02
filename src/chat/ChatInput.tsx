@@ -42,7 +42,7 @@ function ChatInput(props: Props) {
 				onKeyDown={handleKeyDown}
 				className={tw([input, tw`flex-1 block mr-2`])}
 			/>
-			<Button type="submit" className={solidButton}>
+			<Button type="submit" tw={solidButton}>
 				Send
 			</Button>
 		</form>

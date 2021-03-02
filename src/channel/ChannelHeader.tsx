@@ -1,12 +1,10 @@
 import { AnimatePresence } from "framer-motion"
 import { useObservable } from "micro-observables"
 import * as React from "react"
-import { tw } from "twind"
 import { useIdentity } from "../app/helpers"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
-import { TagProps } from "../jsx/types"
 import { fadedButton, headerText2 } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -23,14 +21,9 @@ type Props = {
 	channelId: string
 	onToggleDescription: () => void
 	onShowUsers: () => void
-} & TagProps<"header">
+}
 
-function ChannelHeader({
-	channelId,
-	onToggleDescription,
-	onShowUsers,
-	...props
-}: Props) {
+function ChannelHeader({ channelId, onToggleDescription, onShowUsers }: Props) {
 	const channel = useChannel(channelId)
 	const title = useObservable(channel.title)
 	const isPublic = useObservable(channel.isPublic)
@@ -42,8 +35,6 @@ function ChannelHeader({
 	const menu = usePopover()
 	const invite = useOverlay()
 
-	const shouldShowInviteOption = isPublic && ops.includes(identity)
-
 	function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
 		const target = event.currentTarget
 		menu.showAt({
@@ -53,58 +44,43 @@ function ChannelHeader({
 	}
 
 	return (
-		<header
-			className={tw`flex flex-row items-center p-3 bg-midnight-0`}
-			{...props}
-		>
-			<div className={tw`mr-3`}>
-				<ChatMenuButton />
-			</div>
+		<header tw="flex flex-row items-center p-3 space-x-3 bg-midnight-0">
+			<ChatMenuButton />
 
 			<Button
 				title="Description"
-				className={tw([fadedButton])}
+				tw={fadedButton}
 				onClick={onToggleDescription}
 			>
 				<Icon which={icons.about} />
 			</Button>
 
-			<div className={tw`w-3`} />
-
-			<h1 className={tw([headerText2, tw`flex-1`])}>{title}</h1>
+			<div tw="flex-1">
+				<h1 tw={headerText2}>{title}</h1>
+			</div>
 
 			{isLargeScreen && <ChannelFilters channelId={channel.id} />}
 
 			{!isLargeScreen && (
-				<>
-					<div className={tw`w-3`} />
-
-					<Button
-						title="User list"
-						className={fadedButton}
-						onClick={onShowUsers}
-					>
-						<Icon which={icons.users} />
-					</Button>
-				</>
+				<Button title="User list" tw={fadedButton} onClick={onShowUsers}>
+					<Icon which={icons.users} />
+				</Button>
 			)}
 
-			<div className={tw`w-3`} />
-
-			<Button title="More" className={fadedButton} onClick={showMenu}>
+			<Button title="More" tw={fadedButton} onClick={showMenu}>
 				<Icon which={icons.more} />
 			</Button>
 
 			<AnimatePresence>
 				{menu.value && (
-					<Popover {...menu.props} className={tw`w-48 bg-midnight-2`}>
+					<Popover {...menu.props} tw="w-48 bg-midnight-2">
 						{!isLargeScreen && (
 							<ChannelFilters
 								channelId={channel.id}
-								className={tw`px-3 py-2 mb-1 bg-midnight-0`}
+								tw="px-3 py-2 mb-1 bg-midnight-0"
 							/>
 						)}
-						<div className={tw`flex flex-col bg-midnight-1`}>
+						<div tw="flex flex-col bg-midnight-1">
 							<MenuItem
 								text="Copy code"
 								icon={icons.code}
@@ -123,7 +99,7 @@ function ChannelHeader({
 									menu.hide()
 								}}
 							/>
-							{shouldShowInviteOption && (
+							{isPublic && ops.includes(identity) && (
 								<MenuItem
 									text="Invite"
 									icon={icons.invite}
