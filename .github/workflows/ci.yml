@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: git submodule update --init --recursive
-      - run: yarn
-      - run: yarn run ci
+      - uses: actions/setup-node@latest
+      - run: npm i -g pnpm
+      - run: pnpm install
+      - run: pnpm run ci
