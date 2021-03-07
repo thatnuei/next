@@ -54,7 +54,6 @@ function Drawer({ isVisible, onDismiss, side, children }: Props) {
 	return (
 		<motion.div
 			tw="fixed inset-0 bg-black bg-opacity-50"
-			className={shadeStyle}
 			onClick={handleShadeClick}
 			{...fadeAnimation}
 		>
