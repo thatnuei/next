@@ -21,10 +21,10 @@ export function ContextMenuPanel({ children }: { children: ReactNode }) {
 				${css({
 					transformOrigin: "var(--radix-context-menu-content-transform-origin)",
 				})}
-				${radixTransition(
-					css({ opacity: 0, transform: `scale(0.9)` }),
-					css({ opacity: 1, transform: `scale(1.0)` }),
-				)}
+				${radixTransition({
+					start: css({ opacity: 0, transform: `scale(0.9)` }),
+					end: css({ opacity: 1, transform: `scale(1.0)` }),
+				})}
 			`}
 		>
 			{children}

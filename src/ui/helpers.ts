@@ -15,13 +15,19 @@ export const rainbowAnimation = animation(`5s infinite`, {
 	"100%": { color: "#6666ff" },
 })
 
-export function radixTransition(start: Directive<any>, end: Directive<any>) {
+export function radixTransition({
+	start,
+	end,
+}: {
+	start: Directive<any>
+	end: Directive<any>
+}) {
 	return css({
-		"&[data-state=open], [data-state=open] &": animation("0.3s", {
+		"&[data-state=open], [data-state=open] &": animation("0.2s", {
 			from: start,
 			to: end,
 		}),
-		"&[data-state=closed], [data-state=closed] &": animation("0.3s", {
+		"&[data-state=closed], [data-state=closed] &": animation("0.2s", {
 			from: end,
 			to: start,
 		}),

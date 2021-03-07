@@ -20,8 +20,7 @@ function DialogShade() {
 	return (
 		<RadixDialog.Overlay
 			className={tw`fixed inset-0 bg-black bg-opacity-75 transition-opacity ${radixTransition(
-				apply`opacity-0`,
-				apply`opacity-100`,
+				{ start: apply`opacity-0`, end: apply`opacity-100` },
 			)}`}
 		/>
 	)
@@ -40,15 +39,15 @@ export function DialogModalPanel({
 			<RadixDialog.Content
 				className={tw`
 					fixed w-full max-w-screen-sm transform -translate-x-1/2 -translate-y-1/2 shadow pointer-events-auto top-1/2 left-1/2
-					${css(radixTransition(apply`opacity-0`, apply`opacity-100`))}
+					${css(radixTransition({ start: apply`opacity-0`, end: apply`opacity-100` }))}
 				`}
 			>
 				<div
 					tw={css(
-						radixTransition(
-							css({ transform: `scale(0.95)` }),
-							css({ transform: `scale(1)` }),
-						),
+						radixTransition({
+							start: css({ transform: `scale(0.95)` }),
+							end: css({ transform: `scale(1)` }),
+						}),
 					)}
 				>
 					<h2
@@ -78,10 +77,10 @@ export function DialogDrawerPanel({ children }: { children: ReactNode }) {
 			<RadixDialog.Content
 				className={tw`
 					fixed inset-y-0 left-0 shadow bg-midnight-2 w-max
-					${radixTransition(
-						css({ opacity: 0, transform: `translateX(-100%)` }),
-						css({ opacity: 1, transform: `translateX(0)` }),
-					)}
+					${radixTransition({
+						start: css({ opacity: 0, transform: `translateX(-100%)` }),
+						end: css({ opacity: 1, transform: `translateX(0)` }),
+					})}
 				`}
 			>
 				{children}
