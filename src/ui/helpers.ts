@@ -1,3 +1,4 @@
+import type { Directive } from "twind"
 import { animation, css } from "twind/css"
 
 export const ellipsize = css({
@@ -13,3 +14,16 @@ export const rainbowAnimation = animation(`5s infinite`, {
 	"75%": { color: "#ff3399" },
 	"100%": { color: "#6666ff" },
 })
+
+export function radixTransition(start: Directive<any>, end: Directive<any>) {
+	return css({
+		"&[data-state=open], [data-state=open] &": animation("0.3s", {
+			from: start,
+			to: end,
+		}),
+		"&[data-state=closed], [data-state=closed] &": animation("0.3s", {
+			from: end,
+			to: start,
+		}),
+	})
+}

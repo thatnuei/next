@@ -1,46 +1,29 @@
-import constate from "constate"
-import { cloneElement, ReactElement, ReactNode, useMemo } from "react"
-import * as reakit from "reakit"
+import * as RadixDialog from "@radix-ui/react-dialog"
+import { Slot } from "@radix-ui/react-slot"
+import { ReactElement, ReactNode } from "react"
 import { apply, tw } from "twind"
 import { css } from "twind/css"
-import Button from "../dom/Button"
 import { fadedButton, raisedPanelHeader } from "./components"
+import { radixTransition } from "./helpers"
 import Icon from "./Icon"
 import { close } from "./icons"
 
-const [DialogProvider, useDialogContext] = constate(() => {
-	const dialog = reakit.useDialogState({ modal: true, animated: true })
-	const buttonId = useMemo(() => `dialog-button-${Math.random()}`, [])
-	return { dialog, buttonId }
-})
-
 export default function Dialog({ children }: { children: ReactNode }) {
-	return <DialogProvider>{children}</DialogProvider>
+	return <RadixDialog.Root>{children}</RadixDialog.Root>
 }
 
 export function DialogButton({ children }: { children: ReactElement }) {
-	const { dialog, buttonId } = useDialogContext()
-	return (
-		<reakit.DialogDisclosure {...dialog}>
-			{(disclosure) => cloneElement(children, { ...disclosure, id: buttonId })}
-		</reakit.DialogDisclosure>
-	)
+	return <RadixDialog.Trigger as={Slot}>{children}</RadixDialog.Trigger>
 }
 
-export function DialogShade({ children }: { children: ReactNode }) {
-	const { dialog } = useDialogContext()
+function DialogShade() {
 	return (
-		<reakit.DialogBackdrop
-			{...dialog}
-			className={tw`
-				fixed inset-0 bg-black bg-opacity-75
-				transition-opacity duration-300
-				opacity-0
-				${css({ "&[data-enter]": apply`opacity-100` })}
-			`}
-		>
-			{children}
-		</reakit.DialogBackdrop>
+		<RadixDialog.Overlay
+			className={tw`fixed inset-0 bg-black bg-opacity-75 transition-opacity ${radixTransition(
+				apply`opacity-0`,
+				apply`opacity-100`,
+			)}`}
+		/>
 	)
 }
 
@@ -51,56 +34,58 @@ export function DialogModalPanel({
 	children: ReactNode
 	title: ReactNode
 }) {
-	const { dialog, buttonId } = useDialogContext()
 	return (
-		<DialogShade>
-			<div className={tw`flex flex-col w-full h-full p-4 overflow-y-auto`}>
-				<reakit.Dialog
-					{...dialog}
-					className={tw`
-						bg-midnight-0
-						w-full max-w-screen-md m-auto shadow
-						flex flex-col
-						transition-transform duration-300
-						transform origin-top scale-95
-						${css({ "&[data-enter]": apply`scale-100` })}
-					`}
-					aria-labelledby={buttonId}
+		<>
+			<DialogShade />
+			<RadixDialog.Content
+				className={tw`
+					fixed w-full max-w-screen-sm transform -translate-x-1/2 -translate-y-1/2 shadow pointer-events-auto top-1/2 left-1/2
+					${css(radixTransition(apply`opacity-0`, apply`opacity-100`))}
+				`}
+			>
+				<div
+					tw={css(
+						radixTransition(
+							css({ transform: `scale(0.95)` }),
+							css({ transform: `scale(1)` }),
+						),
+					)}
 				>
 					<h2
-						className={tw`${raisedPanelHeader} font-condensed text-2xl relative flex`}
+						tw={[
+							raisedPanelHeader,
+							`font-condensed text-2xl text-center relative`,
+						]}
 					>
 						{title}
-						<Button
+						<RadixDialog.Close
 							className={tw`${fadedButton} absolute right-0 self-center p-3`}
-							onClick={() => dialog.hide()}
 						>
 							<Icon which={close} />
-						</Button>
+						</RadixDialog.Close>
 					</h2>
-					<div className={tw`flex-1`}>{children}</div>
-				</reakit.Dialog>
-			</div>
-		</DialogShade>
+					<div tw="flex-1">{children}</div>
+				</div>
+			</RadixDialog.Content>
+		</>
 	)
 }
 
 export function DialogDrawerPanel({ children }: { children: ReactNode }) {
-	const { dialog, buttonId } = useDialogContext()
 	return (
-		<DialogShade>
-			<reakit.Dialog
-				{...dialog}
+		<>
+			<DialogShade />
+			<RadixDialog.Content
 				className={tw`
-					bg-midnight-2 h-full w-max shadow
-					transition-transform duration-300
-					transform -translate-x-full
-					${css({ "&[data-enter]": apply`translate-x-0` })}
+					fixed inset-y-0 left-0 shadow bg-midnight-2 w-max
+					${radixTransition(
+						css({ opacity: 0, transform: `translateX(-100%)` }),
+						css({ opacity: 1, transform: `translateX(0)` }),
+					)}
 				`}
-				aria-labelledby={buttonId}
 			>
 				{children}
-			</reakit.Dialog>
-		</DialogShade>
+			</RadixDialog.Content>
+		</>
 	)
 }
