@@ -63,25 +63,25 @@ function ChannelBrowser() {
 				/>
 			</section>
 
-			<section className={tw`flex flex-row p-2 bg-midnight-0`}>
+			<section tw="flex flex-row p-2 space-x-2 bg-midnight-0">
 				<input
 					type="text"
 					aria-label="Search"
 					placeholder="Search..."
-					className={tw([input, tw`flex-1`])}
+					tw={[input, `flex-1`]}
 					value={query}
 					onChange={(event) => setQuery(event.target.value)}
 				/>
 				<Button
 					title="Change sort mode"
-					tw={`${solidButton} ml-2`}
+					tw={solidButton}
 					onClick={cycleSortMode}
 				>
 					<Icon which={icons.sortAlphabetical} />
 				</Button>
 				<Button
 					title="Refresh"
-					tw={`${solidButton} ml-2`}
+					tw={solidButton}
 					onClick={root.channelBrowserStore.refresh}
 					disabled={isRefreshing}
 				>
