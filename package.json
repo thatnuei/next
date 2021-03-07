@@ -36,10 +36,9 @@
 		"twind": "^0.15.6"
 	},
 	"devDependencies": {
-		"vite-plugin-babel-macros": "^1.0.4",
+		"@twind/vite-plugin-jsx": "^1.0.1",
 		"@testing-library/jest-dom": "^5.11.9",
 		"@testing-library/react": "^11.2.5",
-		"@twind/macro": "^0.1.2",
 		"@types/jest": "^26.0.20",
 		"@types/lodash-es": "^4.17.4",
 		"@types/node": "^14.14.31",

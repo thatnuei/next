@@ -15,7 +15,6 @@
 		"allowJs": true,
 		"resolveJsonModule": true,
 		"noFallthroughCasesInSwitch": true,
-		"types": ["@twind/macro", "jest", "node"]
-	},
-	"include": ["src"]
+		"types": ["jest", "node"]
+	}
 }
