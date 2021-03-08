@@ -1,7 +1,7 @@
 import * as RadixDialog from "@radix-ui/react-dialog"
 import { Slot } from "@radix-ui/react-slot"
 import { ReactElement, ReactNode } from "react"
-import { apply, tw } from "twind"
+import { apply } from "twind"
 import { css } from "twind/css"
 import { fadedButton, raisedPanelHeader } from "./components"
 import { radixTransition } from "./helpers"
@@ -19,9 +19,10 @@ export function DialogButton({ children }: { children: ReactElement }) {
 function DialogShade() {
 	return (
 		<RadixDialog.Overlay
-			className={tw`fixed inset-0 bg-black bg-opacity-75 transition-opacity ${radixTransition(
-				{ start: apply`opacity-0`, end: apply`opacity-100` },
-			)}`}
+			tw={[
+				`fixed inset-0 bg-black bg-opacity-75 transition-opacity`,
+				radixTransition({ start: apply`opacity-0`, end: apply`opacity-100` }),
+			]}
 		/>
 	)
 }
@@ -37,10 +38,15 @@ export function DialogModalPanel({
 		<>
 			<DialogShade />
 			<RadixDialog.Content
-				className={tw`
-					fixed w-full max-w-screen-sm transform -translate-x-1/2 -translate-y-1/2 shadow pointer-events-auto top-1/2 left-1/2
-					${css(radixTransition({ start: apply`opacity-0`, end: apply`opacity-100` }))}
-				`}
+				tw={[
+					`fixed w-full max-w-screen-sm transform -translate-x-1/2 -translate-y-1/2 shadow pointer-events-auto top-1/2 left-1/2 bg-midnight-0`,
+					css(
+						radixTransition({
+							start: apply`opacity-0`,
+							end: apply`opacity-100`,
+						}),
+					),
+				]}
 			>
 				<div
 					tw={css(
@@ -51,14 +57,11 @@ export function DialogModalPanel({
 					)}
 				>
 					<h2
-						tw={[
-							raisedPanelHeader,
-							`font-condensed text-2xl text-center relative`,
-						]}
+						tw={`${raisedPanelHeader} font-condensed text-2xl text-center relative`}
 					>
 						{title}
 						<RadixDialog.Close
-							className={tw`${fadedButton} absolute right-0 self-center p-3`}
+							tw={`${fadedButton} absolute right-0 self-center p-3`}
 						>
 							<Icon which={close} />
 						</RadixDialog.Close>
@@ -75,7 +78,7 @@ export function DialogDrawerPanel({ children }: { children: ReactNode }) {
 		<>
 			<DialogShade />
 			<RadixDialog.Content
-				className={tw`
+				tw={`
 					fixed inset-y-0 left-0 shadow bg-midnight-2 w-max
 					${radixTransition({
 						start: css({ opacity: 0, transform: `translateX(-100%)` }),

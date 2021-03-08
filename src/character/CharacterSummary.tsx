@@ -20,21 +20,19 @@ function CharacterSummary({ name, ...props }: Props) {
 		<div {...props}>
 			<ExternalLink
 				href={getProfileUrl(name)}
-				className={tw`
-					${headerText2}
-					${css({ color: genderColors[gender] })}
-					leading-none
-				`}
+				tw={`${headerText2} ${css({
+					color: genderColors[gender],
+				})} leading-none`}
 			>
 				{name}
 			</ExternalLink>
 
 			<ExternalLink href={getProfileUrl(name)}>
-				<Avatar name={name} className={tw`my-3`} />
+				<Avatar name={name} tw="my-3" />
 			</ExternalLink>
 
 			<div
-				className={tw`px-3 py-2 overflow-y-auto bg-midnight-1 ${css({
+				tw={`px-3 py-2 overflow-y-auto bg-midnight-1 ${css({
 					maxHeight: tw.theme("spacing.28"),
 				})}`}
 			>

@@ -10,7 +10,7 @@ export default function IslandLayout(
 ) {
 	return (
 		<FadeRiseTransition
-			className={tw`fixed inset-0 flex flex-col items-center justify-center`}
+			tw="fixed inset-0 flex flex-col items-center justify-center"
 			isVisible={props.isVisible}
 			enter={tw(css({ transitionDelay: "300ms" }))} // wait for the previous island to disappear
 		>
