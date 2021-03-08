@@ -1,4 +1,3 @@
-import { motion } from "framer-motion"
 import { useObservable } from "micro-observables"
 import { useMemo } from "react"
 import { tw } from "twind"
@@ -8,7 +7,6 @@ import { useChatNavView } from "../chatNav/helpers"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { useRootStore } from "../root/context"
-import { fadeAnimation } from "../ui/animation"
 import { screenQueries } from "../ui/screens"
 import NoRoomView from "./NoRoomView"
 
@@ -17,7 +15,7 @@ export default function Chat() {
 	const chatRoomView = useMemo(() => <ChatRoomView />, [])
 
 	return (
-		<motion.div className={tw`fixed inset-0 flex`} {...fadeAnimation}>
+		<div className={tw`fixed inset-0 flex`}>
 			{!isSmallScreen && (
 				<div className={tw`mr-1`}>
 					<ChatNav />
@@ -25,7 +23,7 @@ export default function Chat() {
 			)}
 
 			<div className={tw`flex-1`}>{chatRoomView}</div>
-		</motion.div>
+		</div>
 	)
 }
 
