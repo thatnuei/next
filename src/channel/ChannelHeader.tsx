@@ -1,4 +1,3 @@
-import { AnimatePresence } from "framer-motion"
 import { useObservable } from "micro-observables"
 import * as React from "react"
 import { useIdentity } from "../app/helpers"
@@ -6,12 +5,14 @@ import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { fadedButton, headerText2 } from "../ui/components"
+import Dialog, { DialogModalPanel } from "../ui/Dialog"
+import DropdownMenu, {
+	DropdownMenuButton,
+	DropdownMenuItem,
+	DropdownMenuPanel,
+} from "../ui/DropdownMenu"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import MenuItem from "../ui/MenuItem"
-import Modal from "../ui/Modal"
-import { useOverlay } from "../ui/overlay"
-import Popover, { usePopover } from "../ui/Popover"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
 import { useChannel } from "./helpers"
@@ -28,19 +29,14 @@ function ChannelHeader({ channelId, onToggleDescription, onShowUsers }: Props) {
 	const title = useObservable(channel.title)
 	const isPublic = useObservable(channel.isPublic)
 	const ops = useObservable(channel.ops)
-
 	const identity = useIdentity()
-
 	const isLargeScreen = useMediaQuery(screenQueries.large)
-	const menu = usePopover()
-	const invite = useOverlay()
+	const [inviteOpen, setInviteOpen] = React.useState(false)
 
-	function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
-		const target = event.currentTarget
-		menu.showAt({
-			x: target.offsetLeft,
-			y: target.offsetTop + target.clientHeight,
-		})
+	const copyCodeToClipboard = () => {
+		window.navigator.clipboard
+			.writeText(channel.linkCode.get())
+			.catch(console.error)
 	}
 
 	return (
@@ -67,65 +63,48 @@ function ChannelHeader({ channelId, onToggleDescription, onShowUsers }: Props) {
 				</Button>
 			)}
 
-			<Button title="More" tw={fadedButton} onClick={showMenu}>
-				<Icon which={icons.more} />
-			</Button>
-
-			<AnimatePresence>
-				{menu.value && (
-					<Popover {...menu.props} tw="w-48 bg-midnight-2">
-						{!isLargeScreen && (
-							<ChannelFilters
-								channelId={channel.id}
-								tw="px-3 py-2 mb-1 bg-midnight-0"
-							/>
-						)}
-						<div tw="flex flex-col bg-midnight-1">
-							<MenuItem
-								text="Copy code"
-								icon={icons.code}
-								onClick={() => {
-									window.navigator.clipboard
-										.writeText(channel.linkCode.get())
-										.catch(console.error)
-									menu.hide()
-								}}
-							/>
-							<MenuItem
-								text="Clear messages"
-								icon={icons.clearMessages}
-								onClick={() => {
-									channel.clearMessages()
-									menu.hide()
-								}}
-							/>
-							{isPublic && ops.includes(identity) && (
-								<MenuItem
-									text="Invite"
-									icon={icons.invite}
-									onClick={() => {
-										invite.show()
-										menu.hide()
-									}}
-								/>
-							)}
+			<DropdownMenu>
+				<DropdownMenuButton>
+					<Button title="More channel actions" tw={fadedButton}>
+						<Icon which={icons.more} />
+					</Button>
+				</DropdownMenuButton>
+				<DropdownMenuPanel>
+					{!isLargeScreen && (
+						<div tw="px-3 py-2 mb-1 bg-midnight-0">
+							<ChannelFilters channelId={channel.id} />
 						</div>
-					</Popover>
-				)}
-			</AnimatePresence>
+					)}
 
-			<AnimatePresence>
-				{invite.value && (
-					<Modal
-						onDismiss={invite.hide}
-						title={`Invite to ${title}`}
-						width={400}
-						height={700}
-					>
-						<InviteUsersForm channelId={channelId} />
-					</Modal>
-				)}
-			</AnimatePresence>
+					<div tw="flex flex-col bg-midnight-1">
+						<DropdownMenuItem icon={<Icon which={icons.code} />}>
+							<button type="button" onClick={copyCodeToClipboard}>
+								Copy code
+							</button>
+						</DropdownMenuItem>
+
+						<DropdownMenuItem icon={<Icon which={icons.clearMessages} />}>
+							<button type="button" onClick={() => channel.clearMessages()}>
+								Clear messages
+							</button>
+						</DropdownMenuItem>
+
+						{isPublic && ops.includes(identity) && (
+							<DropdownMenuItem icon={<Icon which={icons.invite} />}>
+								<button type="button" onClick={() => setInviteOpen(true)}>
+									Invite
+								</button>
+							</DropdownMenuItem>
+						)}
+					</div>
+				</DropdownMenuPanel>
+			</DropdownMenu>
+
+			<Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+				<DialogModalPanel title={`Invite to ${title}`}>
+					<InviteUsersForm channelId={channelId} />
+				</DialogModalPanel>
+			</Dialog>
 		</header>
 	)
 }

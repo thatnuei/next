@@ -1,5 +1,4 @@
 import { useObservable } from "micro-observables"
-import { tw } from "twind"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
@@ -24,31 +23,27 @@ function PrivateChatView({ partnerName, ...props }: Props) {
 	const typingStatus = useObservable(chat.typingStatus)
 
 	return (
-		<div className={tw`flex flex-col h-full`}>
-			<div className={tw`flex flex-row items-center h-20 mb-1 bg-midnight-0`}>
-				<div className={tw`mr-3`}>
-					<ChatMenuButton />
-				</div>
+		<div tw="flex flex-col h-full">
+			<div tw="flex flex-row items-center h-20 px-3 mb-1 space-x-3 bg-midnight-0">
+				<ChatMenuButton />
 
-				<CharacterMenuTarget name={partnerName} className={tw`ml-3`}>
-					<Avatar name={partnerName} className={tw`w-12 h-12`} />
+				<CharacterMenuTarget name={partnerName}>
+					<Avatar name={partnerName} tw="w-12 h-12" />
 				</CharacterMenuTarget>
 
-				<div
-					className={tw`flex flex-col self-stretch justify-center flex-1 ml-3 overflow-y-auto`}
-				>
+				<div tw="flex flex-col self-stretch justify-center flex-1 overflow-y-auto">
 					{/* need this extra container to keep the children from shrinking */}
-					<div className={tw`my-3`}>
+					<div tw="my-3">
 						<CharacterName name={partnerName} />
 						{/* the bottom margin needs to be here otherwise the scrolling flex column eats the bottom spacing */}
-						<CharacterStatusText name={partnerName} className={tw`mb-3`} />
+						<CharacterStatusText name={partnerName} tw="mb-3" />
 					</div>
 				</div>
 			</div>
 
-			<div className={tw`flex flex-col flex-1 mb-1`}>
+			<div tw="flex flex-col flex-1 mb-1">
 				<TypingStatusDisplay name={partnerName} status={typingStatus} />
-				<div className={tw`flex-1 bg-midnight-1`}>
+				<div tw="flex-1 bg-midnight-1">
 					<MessageList messages={messages} />
 				</div>
 			</div>

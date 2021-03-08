@@ -1,13 +1,11 @@
 import { useObservable } from "micro-observables"
-import { tw } from "twind"
 import Button from "../dom/Button"
-import { TagProps } from "../jsx/types"
 import { useChannel } from "./helpers"
 import { ChannelMode } from "./types"
 
 type Props = {
 	channelId: string
-} & TagProps<"div">
+}
 
 function ChannelFilters({ channelId, ...props }: Props) {
 	const channel = useChannel(channelId)
@@ -20,14 +18,11 @@ function ChannelFilters({ channelId, ...props }: Props) {
 	function renderFilterButton(mode: ChannelMode, label: string) {
 		const isSelected = selectedMode === mode
 
-		const style = tw(
-			tw`block transition-opacity whitespace-nowrap`,
-			isSelected ? tw`opacity-100` : tw`opacity-50 hover:opacity-75`,
-		)
-
 		return (
 			<Button
-				className={style}
+				tw={`block transition-opacity whitespace-nowrap ${
+					isSelected ? `opacity-100` : `opacity-50 hover:opacity-75`
+				}`}
 				onClick={() => setSelectedMode(mode)}
 				role="radio"
 				aria-checked={isSelected}
@@ -38,11 +33,11 @@ function ChannelFilters({ channelId, ...props }: Props) {
 	}
 
 	return (
-		<div className={tw`flex flex-row`} role="radiogroup" {...props}>
+		<div tw="flex flex-row" role="radiogroup" {...props}>
 			{renderFilterButton("both", "Both")}
-			<div className={tw`w-3`} />
+			<div tw="w-3" />
 			{renderFilterButton("chat", "Chat")}
-			<div className={tw`w-3`} />
+			<div tw="w-3" />
 			{renderFilterButton("ads", "Ads")}
 		</div>
 	)

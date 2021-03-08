@@ -1,14 +1,13 @@
 import { tw } from "twind"
 import BBC from "../bbc/BBC"
 import CharacterName from "../character/CharacterName"
-import { TagProps } from "../jsx/types"
 import { MessageState } from "./MessageState"
 
 type Props = {
 	message: MessageState
-} & TagProps<"div">
+}
 
-function MessageListItem({ message, ...props }: Props) {
+function MessageListItem({ message }: Props) {
 	const typeStyle = {
 		normal: undefined,
 		action: tw`italic`,
@@ -18,21 +17,17 @@ function MessageListItem({ message, ...props }: Props) {
 	}[message.type]
 
 	return (
-		<div className={tw([tw`px-3 py-1`, typeStyle])} {...props}>
-			<span
-				className={tw`inline-block float-right ml-3 text-sm not-italic opacity-50`}
-			>
+		<div tw={`${typeStyle} px-2 py-1`}>
+			<span tw="inline-block float-right text-sm not-italic opacity-50">
 				{new Date(message.timestamp).toLocaleTimeString()}
 			</span>
 
 			{message.senderName && (
-				<CharacterName
-					name={message.senderName}
-					className={tw(
-						tw`inline-block`,
-						message.type === "action" ? tw`mr-1` : tw`mr-2`,
-					)}
-				/>
+				<span
+					tw={`inline-block ${message.type === "action" ? tw`mr-1` : tw`mr-2`}`}
+				>
+					<CharacterName name={message.senderName} />
+				</span>
 			)}
 
 			<BBC text={message.text} />

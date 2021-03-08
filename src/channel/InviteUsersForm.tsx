@@ -72,7 +72,9 @@ function InviteUsersForm({ channelId }: Props) {
 
 	const renderItem = ({ item, style }: RenderItemInfo<CharacterModel>) => (
 		<div className={tw`flex flex-row items-center px-3 py-2`} style={style}>
-			<CharacterName name={item.name.get()} className={tw`flex-1`} />
+			<div tw="flex-1">
+				<CharacterName name={item.name.get()} />
+			</div>
 			<button
 				className={tw([fadedButton, tw`flex flex-row ml-2`])}
 				onClick={() => sendInvite(item.name.get())}
@@ -85,7 +87,10 @@ function InviteUsersForm({ channelId }: Props) {
 
 	return (
 		<div className={tw`flex flex-col w-full h-full`}>
-			<div className={tw`flex-1 bg-midnight-2`}>
+			<div
+				className={tw`flex-1 bg-midnight-2`}
+				style={{ height: `calc(100vh - 8rem)` }}
+			>
 				<VirtualizedList
 					items={uniqBy(characters, "name")}
 					itemSize={40}

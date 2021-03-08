@@ -1,20 +1,18 @@
 import { useCallback, useLayoutEffect, useState } from "react"
-import { tw } from "twind"
-import { TagProps } from "../jsx/types"
 import MessageListItem from "./MessageListItem"
 import { MessageState } from "./MessageState"
 
 type Props = {
 	messages: MessageState[]
-} & TagProps<"ol">
+}
 
-function MessageList({ messages, ...props }: Props) {
+function MessageList({ messages }: Props) {
 	const [container, setContainer] = useState<HTMLElement | null>()
 
 	useBottomScroll(container, messages[messages.length - 1])
 
 	return (
-		<ol className={tw`h-full overflow-y-auto`} ref={setContainer}>
+		<ol tw="h-full overflow-y-auto" ref={setContainer}>
 			{messages.map((message) => (
 				<li key={message.key}>
 					<MessageListItem message={message} />

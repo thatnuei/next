@@ -4,7 +4,6 @@ import { tw } from "twind"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
-import { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
 import ContextMenu, {
 	ContextMenuButton,
@@ -17,13 +16,13 @@ import * as icons from "../ui/icons"
 import CharacterMemoInput from "./CharacterMemoInput"
 import CharacterSummary from "./CharacterSummary"
 
-type Props = { name: string } & TagProps<"button">
+type Props = { name: string; children: React.ReactNode }
 
-export default function CharacterMenuTarget({ name, ...props }: Props) {
+export default function CharacterMenuTarget({ name, children }: Props) {
 	return (
 		<ContextMenu>
 			<ContextMenuButton>
-				<Button {...props} />
+				<ExternalLink href={getProfileUrl(name)}>{children}</ExternalLink>
 			</ContextMenuButton>
 			<ContextMenuPanel>
 				<CharacterMenu name={name} />
