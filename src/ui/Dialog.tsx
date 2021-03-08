@@ -8,8 +8,20 @@ import { radixTransition } from "./helpers"
 import Icon from "./Icon"
 import { close } from "./icons"
 
-export default function Dialog({ children }: { children: ReactNode }) {
-	return <RadixDialog.Root>{children}</RadixDialog.Root>
+export default function Dialog({
+	children,
+	open,
+	onOpenChange,
+}: {
+	children: ReactNode
+	open?: boolean
+	onOpenChange?: (open: boolean) => void
+}) {
+	return (
+		<RadixDialog.Root open={open} onOpenChange={onOpenChange}>
+			{children}
+		</RadixDialog.Root>
+	)
 }
 
 export function DialogButton({ children }: { children: ReactElement }) {
