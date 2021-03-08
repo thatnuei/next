@@ -1,14 +1,9 @@
-import * as React from "react"
-import { TagProps } from "../jsx/types"
+import { ComponentProps } from "react"
+import { autoRef } from "../react/autoRef"
 
 /** Regular DOM button with a better default type */
-function Button(
-	{ className, tw, ...props }: TagProps<"button">,
-	ref: React.Ref<HTMLButtonElement>,
-) {
-	return (
-		<button type="button" ref={ref} tw={tw} className={className} {...props} />
-	)
+function Button({ className, tw, ...props }: ComponentProps<"button">) {
+	return <button type="button" tw={tw} className={className} {...props} />
 }
 
-export default React.forwardRef(Button)
+export default autoRef(Button)
