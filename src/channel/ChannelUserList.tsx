@@ -5,12 +5,11 @@ import { CharacterStatus } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
 import { isPresent } from "../common/isPresent"
 import { ValueOf } from "../common/types"
-import { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
 import VirtualizedList from "../ui/VirtualizedList"
 import { ChannelModel } from "./ChannelModel"
 
-type Props = TagProps<"div"> & {
+type Props = {
 	channel: ChannelModel
 }
 
@@ -24,7 +23,7 @@ const itemTypes = [
 ] as const
 type ItemType = ValueOf<typeof itemTypes>
 
-function ChannelUserList({ channel, ...props }: Props) {
+function ChannelUserList({ channel }: Props) {
 	const users = useObservable(channel.users)
 	const ops = useObservable(channel.ops)
 

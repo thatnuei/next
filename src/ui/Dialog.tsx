@@ -50,23 +50,25 @@ export function DialogModalPanel({
 		<>
 			<DialogShade />
 			<RadixDialog.Content
-				tw={[
-					`fixed w-full max-w-screen-sm transform -translate-x-1/2 -translate-y-1/2 shadow pointer-events-auto top-1/2 left-1/2 bg-midnight-0`,
-					css(
-						radixTransition({
-							start: apply`opacity-0`,
-							end: apply`opacity-100`,
-						}),
-					),
-				]}
+				tw={`
+					flex flex-col p-4 
+					fixed inset-0
+					${radixTransition({ start: apply`opacity-0`, end: apply`opacity-100` })}
+				`}
+				style={{ pointerEvents: "none" }}
 			>
 				<div
-					tw={css(
-						radixTransition({
+					tw={`
+						flex flex-col
+						m-auto
+						w-full max-w-screen-sm
+						bg-midnight-0 shadow
+						pointer-events-auto
+						${radixTransition({
 							start: css({ transform: `scale(0.95)` }),
 							end: css({ transform: `scale(1)` }),
-						}),
-					)}
+						})}
+					`}
 				>
 					<h2
 						tw={`${raisedPanelHeader} font-condensed text-2xl text-center relative`}
@@ -85,15 +87,25 @@ export function DialogModalPanel({
 	)
 }
 
-export function DialogDrawerPanel({ children }: { children: ReactNode }) {
+export function DialogDrawerPanel({
+	children,
+	side,
+}: {
+	children: ReactNode
+	side: "left" | "right"
+}) {
 	return (
 		<>
 			<DialogShade />
 			<RadixDialog.Content
 				tw={`
-					fixed inset-y-0 left-0 shadow bg-midnight-2 w-max
+					fixed inset-y-0 shadow bg-midnight-2 w-max
+					${side}-0
 					${radixTransition({
-						start: css({ opacity: 0, transform: `translateX(-100%)` }),
+						start: css({
+							opacity: 0,
+							transform: `translateX(${side === "left" ? -100 : 100}%)`,
+						}),
 						end: css({ opacity: 1, transform: `translateX(0)` }),
 					})}
 				`}

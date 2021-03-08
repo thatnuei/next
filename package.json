@@ -20,10 +20,8 @@
 		"@radix-ui/react-dialog": "^0.0.8",
 		"@radix-ui/react-dropdown-menu": "^0.0.10",
 		"@radix-ui/react-slot": "^0.0.4",
-		"@seznam/compose-react-refs": "^1.0.5",
 		"fchat": "^1.4.0",
 		"focus-visible": "^5.2.0",
-		"framer-motion": "^3.10.0",
 		"fuzzysearch": "^1.0.3",
 		"idb": "^6.0.0",
 		"lodash-es": "^4.17.21",
@@ -31,7 +29,6 @@
 		"polished": "^4.1.1",
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1",
-		"react-focus-lock": "^2.5.0",
 		"react-window": "^1.8.6",
 		"resize-observer-polyfill": "^1.5.1",
 		"twind": "^0.15.10"

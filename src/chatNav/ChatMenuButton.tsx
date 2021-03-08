@@ -17,7 +17,7 @@ function ChatMenuButton() {
 					<Icon which={icons.menu} />
 				</Button>
 			</DialogButton>
-			<DialogDrawerPanel>
+			<DialogDrawerPanel side="left">
 				<ChatNav />
 			</DialogDrawerPanel>
 		</Dialog>

@@ -5,10 +5,8 @@ dependencies:
   '@radix-ui/react-dialog': 0.0.8_e342ee84aa4c58264377ee43e7695221
   '@radix-ui/react-dropdown-menu': 0.0.10_e342ee84aa4c58264377ee43e7695221
   '@radix-ui/react-slot': 0.0.4_react@17.0.1
-  '@seznam/compose-react-refs': 1.0.5
   fchat: 1.4.0
   focus-visible: 5.2.0
-  framer-motion: 3.10.0_react-dom@17.0.1+react@17.0.1
   fuzzysearch: 1.0.3
   idb: 6.0.0
   lodash-es: 4.17.21
@@ -16,7 +14,6 @@ dependencies:
   polished: 4.1.1
   react: 17.0.1
   react-dom: 17.0.1_react@17.0.1
-  react-focus-lock: 2.5.0_@types+react@17.0.3+react@17.0.1
   react-window: 1.8.6_react-dom@17.0.1+react@17.0.1
   resize-observer-polyfill: 1.5.1
   twind: 0.15.10_typescript@4.2.3
@@ -292,18 +289,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-hE+HE8rnG1Z6Wzo+MhaKE5lM5eMx71T4EHJgku2E3xIfaULhDcxiiRxUYgwX8qwP1BBSlag+TdGOt6JAidIZTA==
-  /@emotion/is-prop-valid/0.8.8:
-    dependencies:
-      '@emotion/memoize': 0.7.4
-    dev: false
-    optional: true
-    resolution:
-      integrity: sha512-u5WtneEAr5IDG2Wv65yhunPSMLIpuKsbuOktRojfrEiEvRyC85LgPMZI63cr7NUqT8ZIGdSVg8ZKGxIug4lXcA==
-  /@emotion/memoize/0.7.4:
-    dev: false
-    optional: true
-    resolution:
-      integrity: sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==
   /@eslint/eslintrc/0.4.0:
     dependencies:
       ajv: 6.12.6
@@ -670,10 +655,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-8MswNYU/AVxLZxfy2eOqna5piTR+DJoS+miRPCKTJe4MHkp4ZT7nGW/zdyS9LCXwQB8HW2htdP5vKAJYMBVD9Q==
-  /@seznam/compose-react-refs/1.0.5:
-    dev: false
-    resolution:
-      integrity: sha512-1g4QJywCPQNMW5pURqtcljjXvhyzeSSLGJOcMDFg3LCH1/g5uhFkvYUPOepCwOZxfrvR7UrWOhyBMoc5LIeMHA==
   /@testing-library/dom/7.30.0:
     dependencies:
       '@babel/code-frame': 7.12.13
@@ -1767,14 +1748,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-zAoAQiudy+r5SvnSw3KJy5os/oRJYHzrzja/tBDqrZtNhUw8bt6y8OBzMWcjWr+8liV8Eb6yOhw8WZ7VFZ5ZzA==
-  /focus-lock/0.8.1:
-    dependencies:
-      tslib: 1.14.1
-    dev: false
-    engines:
-      node: '>=10'
-    resolution:
-      integrity: sha512-/LFZOIo82WDsyyv7h7oc0MJF9ACOvDRdx9rWPZ2pgMfNWu/z8hQDBtOchuB/0BVLmuFOZjV02YwUVzNsWx/EzA==
   /focus-visible/5.2.0:
     dev: false
     resolution:
@@ -1787,27 +1760,6 @@ packages:
       node: '>=4.0'
     resolution:
       integrity: sha512-0V5l4Cizzvqt5D44aTXbFZz+FtyXV1vrDN6qrelxtfYQKW0KO0W2T/hkE8xvGa/540LkZlkaUjO4ailYTFtHVQ==
-  /framer-motion/3.10.0_react-dom@17.0.1+react@17.0.1:
-    dependencies:
-      framesync: 5.2.0
-      hey-listen: 1.0.8
-      popmotion: 9.3.1
-      react: 17.0.1
-      react-dom: 17.0.1_react@17.0.1
-      style-value-types: 4.1.1
-      tslib: 1.14.1
-    dev: false
-    optionalDependencies:
-      '@emotion/is-prop-valid': 0.8.8
-    peerDependencies:
-      react: '>=16.8 || ^17.0.0'
-      react-dom: '>=16.8 || ^17.0.0'
-    resolution:
-      integrity: sha512-i+Pp3bwMGHFZw3OnsMJGWeAxlAg6ye6Hbek3xRuoCmGjpOQrGKG7Ra249YFAk32wMSwmAbGUzxTE1fgP3ZOmnQ==
-  /framesync/5.2.0:
-    dev: false
-    resolution:
-      integrity: sha512-dcl92w5SHc0o6pRK3//VBVNvu6WkYkiXmHG6ZIXrVzmgh0aDYMDAaoA3p3LH71JIdN5qmhDcfONFA4Lmq22tNA==
   /fs.realpath/1.0.0:
     dev: true
     resolution:
@@ -1947,10 +1899,6 @@ packages:
       node: '>= 0.4.0'
     resolution:
       integrity: sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==
-  /hey-listen/1.0.8:
-    dev: false
-    resolution:
-      integrity: sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==
   /hosted-git-info/2.8.8:
     dev: true
     resolution:
@@ -2566,15 +2514,6 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-4MZTrfPMPRLD7ac8b+2JZxei58zw6N1hFkdBDERif5Tlj19y3vPoPusrLG+mJIlPTGnUlKw3+yWz0BazvMx1vg==
-  /popmotion/9.3.1:
-    dependencies:
-      framesync: 5.2.0
-      hey-listen: 1.0.8
-      style-value-types: 4.1.1
-      tslib: 1.14.1
-    dev: false
-    resolution:
-      integrity: sha512-Qozvg8rz2OGeZwWuIjqlSXqqgWto/+QL24ll8sAAc0n71KY/wvN1W4sAASxTuHv8YWdDnk9u9IdadyPo2DGvDA==
   /postcss/8.2.7:
     dependencies:
       colorette: 1.2.2
@@ -2620,6 +2559,7 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
+    dev: true
     resolution:
       integrity: sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
   /punycode/2.1.1:
@@ -2638,15 +2578,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-dB15eXv3p2jDlbOiNLyMabYg1/sXvppd8DP2J3EOCQ0AkuSXCW2tP7mnVouVLJKgUMY6yP0kcQDVpLCN13h4Xg==
-  /react-clientside-effect/1.2.5_react@17.0.1:
-    dependencies:
-      '@babel/runtime': 7.13.9
-      react: 17.0.1
-    dev: false
-    peerDependencies:
-      react: ^15.3.0 || ^16.0.0 || ^17.0.0
-    resolution:
-      integrity: sha512-2bL8qFW1TGBHozGGbVeyvnggRpMjibeZM2536AKNENLECutp2yfs44IL8Hmpn8qjFQ2K7A9PnYf3vc7aQq/cPA==
   /react-dom/17.0.1_react@17.0.1:
     dependencies:
       loose-envify: 1.4.0
@@ -2658,22 +2589,8 @@ packages:
       react: 17.0.1
     resolution:
       integrity: sha512-6eV150oJZ9U2t9svnsspTMrWNyHc6chX0KzDeAOXftRa8bNeOKTTfCJ7KorIwenkHd2xqVTBTCZd79yk/lx/Ug==
-  /react-focus-lock/2.5.0_@types+react@17.0.3+react@17.0.1:
-    dependencies:
-      '@babel/runtime': 7.13.9
-      focus-lock: 0.8.1
-      prop-types: 15.7.2
-      react: 17.0.1
-      react-clientside-effect: 1.2.5_react@17.0.1
-      use-callback-ref: 1.2.5_@types+react@17.0.3+react@17.0.1
-      use-sidecar: 1.0.4_react@17.0.1
-    dev: false
-    peerDependencies:
-      '@types/react': '*'
-      react: ^16.8.0 || ^17.0.0
-    resolution:
-      integrity: sha512-XLxj6uTXgz0US8TmqNU2jMfnXwZG0mH2r/afQqvPEaX6nyEll5LHVcEXk2XDUQ34RVeLPkO/xK5x6c/qiuSq/A==
   /react-is/16.13.1:
+    dev: true
     resolution:
       integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
   /react-is/17.0.1:
@@ -3110,13 +3027,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
-  /style-value-types/4.1.1:
-    dependencies:
-      hey-listen: 1.0.8
-      tslib: 1.14.1
-    dev: false
-    resolution:
-      integrity: sha512-cNLrl6jk+I1T18ZI2KIp/fcqKVuykcNELDrOz7y+TYZR97xmNdN0ewupURvVFnQxVrRJv98TMBq92VMsggq3kw==
   /style-vendorizer/2.0.0:
     dev: false
     resolution:
@@ -3433,7 +3343,6 @@ specifiers:
   '@radix-ui/react-dialog': ^0.0.8
   '@radix-ui/react-dropdown-menu': ^0.0.10
   '@radix-ui/react-slot': ^0.0.4
-  '@seznam/compose-react-refs': ^1.0.5
   '@testing-library/jest-dom': ^5.11.9
   '@testing-library/react': ^11.2.5
   '@twind/vite-plugin-jsx': ^2.0.3
@@ -3455,7 +3364,6 @@ specifiers:
   fake-indexeddb: ^3.1.2
   fchat: ^1.4.0
   focus-visible: ^5.2.0
-  framer-motion: ^3.10.0
   fuzzysearch: ^1.0.3
   idb: ^6.0.0
   lodash-es: ^4.17.21
@@ -3465,7 +3373,6 @@ specifiers:
   prettier: ^2.2.1
   react: ^17.0.1
   react-dom: ^17.0.1
-  react-focus-lock: ^2.5.0
   react-window: ^1.8.6
   resize-observer-polyfill: ^1.5.1
   source-map-explorer: ^2.5.2
