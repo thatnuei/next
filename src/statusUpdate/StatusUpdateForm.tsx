@@ -1,7 +1,6 @@
 import { useObservable } from "micro-observables"
 import * as React from "react"
 import { useState } from "react"
-import { tw } from "twind"
 import { CharacterStatusType } from "../character/CharacterModel"
 import { useIdentityCharacter } from "../character/helpers"
 import Button from "../dom/Button"
@@ -21,10 +20,10 @@ function StatusUpdateForm() {
 	}
 
 	return (
-		<form className={tw`grid content-start h-full gap-3 p-3`} onSubmit={submit}>
+		<form className={`grid content-start h-full gap-3 p-3`} onSubmit={submit}>
 			<FormField labelText="Status">
 				<select
-					tw={select}
+					className={select}
 					value={status.type}
 					onChange={(e) => {
 						const type = e.target.value as CharacterStatusType
@@ -40,7 +39,7 @@ function StatusUpdateForm() {
 			</FormField>
 			<FormField labelText="Status message (optional)">
 				<textarea
-					className={tw(input, tw`flex-1 block`)}
+					className={`${input} flex-1 block`}
 					value={status.text}
 					onChange={(e) => {
 						const text = e.currentTarget.value
@@ -55,7 +54,7 @@ function StatusUpdateForm() {
 			</FormField>
 			<Button
 				type="submit"
-				tw={`${solidButton} justify-self-start`}
+				className={`${solidButton} justify-self-start`}
 				disabled={isSubmitting}
 			>
 				Submit

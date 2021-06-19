@@ -1,6 +1,5 @@
 import { useObservable } from "micro-observables"
 import { forwardRef } from "react"
-import { tw } from "twind"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import CharacterSummary from "../character/CharacterSummary"
 import Button from "../dom/Button"
@@ -17,8 +16,8 @@ export default function ChatNav() {
 	const root = useRootStore()
 	const identity = useObservable(root.appStore.identity)
 	return (
-		<nav className={tw`flex h-full bg-midnight-2`}>
-			<div className={tw`flex flex-col`}>
+		<nav className={`flex h-full bg-midnight-2`}>
+			<div className={`flex flex-col`}>
 				<Dialog>
 					<DialogButton>
 						<NavAction icon={icons.list} title="Browse channels" />
@@ -44,7 +43,7 @@ export default function ChatNav() {
 
 				<NavAction icon={icons.about} title="About next" />
 
-				<div className={tw`flex-1`} />
+				<div className={`flex-1`} />
 
 				<NavAction
 					icon={icons.logout}
@@ -52,12 +51,12 @@ export default function ChatNav() {
 					onClick={root.appStore.leaveChat}
 				/>
 			</div>
-			<div className={tw`flex flex-col w-56 overflow-y-auto bg-midnight-1`}>
+			<div className={`flex flex-col w-56 overflow-y-auto bg-midnight-1`}>
 				<CharacterSummary
 					name={identity}
-					className={tw`p-3 mb-1 bg-midnight-0`}
+					className={`p-3 mb-1 bg-midnight-0`}
 				/>
-				<div className={tw`flex-1`}>
+				<div className={`flex-1`}>
 					<RoomTabList />
 				</div>
 			</div>
@@ -74,7 +73,7 @@ const NavAction = forwardRef(function NavAction(
 	ref: React.Ref<HTMLButtonElement>,
 ) {
 	return (
-		<Button className={tw`${fadedButton} block p-3`} {...props} ref={ref}>
+		<Button className={`${fadedButton} block p-3`} {...props} ref={ref}>
 			<Icon which={icon} />
 		</Button>
 	)

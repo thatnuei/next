@@ -40,10 +40,10 @@ export default function Login() {
 	}
 
 	return (
-		<form tw="flex flex-col items-start p-4 space-y-4" onSubmit={handleSubmit}>
+		<form className="flex flex-col items-start p-4 space-y-4" onSubmit={handleSubmit}>
 			<FormField labelText="Username">
 				<input
-					tw={input}
+					className={input}
 					type="text"
 					placeholder="awesome username"
 					value={account}
@@ -54,7 +54,7 @@ export default function Login() {
 
 			<FormField labelText="Password">
 				<input
-					tw={input}
+					className={input}
 					type="password"
 					placeholder="••••••••"
 					value={password}
@@ -63,11 +63,11 @@ export default function Login() {
 				/>
 			</FormField>
 
-			<Button tw={solidButton} type="submit" disabled={!canSubmit}>
+			<Button className={solidButton} type="submit" disabled={!canSubmit}>
 				Log in
 			</Button>
 
-			{state.current === "error" && <p tw="max-w-xs">{state.error}</p>}
+			{state.current === "error" && <p className="max-w-xs">{state.error}</p>}
 		</form>
 	)
 }

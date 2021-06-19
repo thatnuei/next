@@ -1,4 +1,3 @@
-import { tw } from "twind"
 import ExternalLink from "../dom/ExternalLink"
 import Icon from "./Icon"
 
@@ -7,13 +6,13 @@ type Props = {
 	text: string
 } & ({ href: string } | { onClick: () => void })
 
-const itemStyle = tw`flex flex-row p-2 transition opacity-50 hover:opacity-100`
+const itemStyle = `flex flex-row p-2 transition opacity-50 hover:opacity-100`
 
 export default function MenuItem(props: Props) {
 	const content = (
 		<>
 			<Icon which={props.icon} />
-			<span className={tw`ml-2`}>{props.text}</span>
+			<span className={`ml-2`}>{props.text}</span>
 		</>
 	)
 

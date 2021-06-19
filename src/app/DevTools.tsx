@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { tw } from "twind"
 import { useWindowEvent } from "../dom/useWindowEvent"
 
 function DevTools() {
@@ -15,7 +14,7 @@ function DevTools() {
 
 	return (
 		<div
-			className={tw`fixed top-0 left-0 right-0 p-4 bg-black bg-opacity-50 transition-all transform ${
+			className={`fixed top-0 left-0 right-0 p-4 bg-black bg-opacity-50 transition-all transform ${
 				visible
 					? `opacity-100 visible`
 					: `opacity-0 invisible -translate-y-full`

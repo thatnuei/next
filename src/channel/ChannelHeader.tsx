@@ -1,6 +1,5 @@
 import { useObservable } from "micro-observables"
 import * as React from "react"
-import { css } from "twind/css"
 import { useIdentity } from "../app/helpers"
 import BBC from "../bbc/BBC"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
@@ -46,30 +45,29 @@ function ChannelHeader({ channelId }: Props) {
 	}
 
 	return (
-		<header tw="flex flex-row items-center p-3 space-x-3 bg-midnight-0">
+		<header className="flex flex-row items-center p-3 space-x-3 bg-midnight-0">
 			<ChatMenuButton />
 
 			<Dialog>
 				<DialogButton>
-					<Button title="Description" tw={fadedButton}>
+					<Button title="Description" className={fadedButton}>
 						<Icon which={icons.about} />
 					</Button>
 				</DialogButton>
 				<DialogModalPanel title="Channel Description">
 					<div
-						tw={`w-full h-full min-h-0 overflow-y-auto ${css({
-							maxHeight: `calc(100vh - 8rem)`,
-						})}`}
+						className={`w-full h-full min-h-0 overflow-y-auto`}
+						style={{ maxHeight: `calc(100vh - 8rem)` }}
 					>
-						<p tw="p-4">
+						<p className="p-4">
 							<BBC text={description} />
 						</p>
 					</div>
 				</DialogModalPanel>
 			</Dialog>
 
-			<div tw="flex-1">
-				<h1 tw={headerText2}>{title}</h1>
+			<div className="flex-1">
+				<h1 className={headerText2}>{title}</h1>
 			</div>
 
 			{isLargeScreen && <ChannelFilters channelId={channel.id} />}
@@ -77,12 +75,12 @@ function ChannelHeader({ channelId }: Props) {
 			{!isLargeScreen && (
 				<Dialog>
 					<DialogButton>
-						<Button title="User list" tw={fadedButton}>
+						<Button title="User list" className={fadedButton}>
 							<Icon which={icons.users} />
 						</Button>
 					</DialogButton>
 					<DialogDrawerPanel side="right">
-						<div tw="w-64 h-full">
+						<div className="w-64 h-full">
 							<ChannelUserList channel={channel} />
 						</div>
 					</DialogDrawerPanel>
@@ -91,18 +89,18 @@ function ChannelHeader({ channelId }: Props) {
 
 			<DropdownMenu>
 				<DropdownMenuButton>
-					<Button title="More channel actions" tw={fadedButton}>
+					<Button title="More channel actions" className={fadedButton}>
 						<Icon which={icons.more} />
 					</Button>
 				</DropdownMenuButton>
 				<DropdownMenuPanel>
 					{!isLargeScreen && (
-						<div tw="px-3 py-2 mb-1 bg-midnight-0">
+						<div className="px-3 py-2 mb-1 bg-midnight-0">
 							<ChannelFilters channelId={channel.id} />
 						</div>
 					)}
 
-					<div tw="flex flex-col bg-midnight-1">
+					<div className="flex flex-col bg-midnight-1">
 						<DropdownMenuItem icon={<Icon which={icons.code} />}>
 							<button type="button" onClick={copyCodeToClipboard}>
 								Copy code

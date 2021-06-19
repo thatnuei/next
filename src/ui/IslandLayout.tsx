@@ -1,6 +1,4 @@
 import * as React from "react"
-import { tw } from "twind"
-import { css } from "twind/css"
 import { ChildrenProps } from "../jsx/types"
 import { headerText, raisedPanel, raisedPanelHeader } from "./components"
 import FadeRiseTransition from "./FadeRiseTransition"
@@ -10,13 +8,13 @@ export default function IslandLayout(
 ) {
 	return (
 		<FadeRiseTransition
-			tw="fixed inset-0 flex flex-col items-center justify-center"
+			className="fixed inset-0 flex flex-col items-center justify-center"
 			isVisible={props.isVisible}
-			enter={tw(css({ transitionDelay: "300ms" }))} // wait for the previous island to disappear
+			enter="transition-delay-300" // wait for the previous island to disappear
 		>
-			<div tw={raisedPanel}>
-				<header tw={raisedPanelHeader}>
-					<h1 tw={headerText}>{props.title}</h1>
+			<div className={raisedPanel}>
+				<header className={raisedPanelHeader}>
+					<h1 className={headerText}>{props.title}</h1>
 				</header>
 				{props.children}
 			</div>

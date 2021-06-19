@@ -20,7 +20,7 @@ function ChannelFilters({ channelId, ...props }: Props) {
 
 		return (
 			<Button
-				tw={`block transition-opacity whitespace-nowrap ${
+				className={`block transition-opacity whitespace-nowrap ${
 					isSelected ? `opacity-100` : `opacity-50 hover:opacity-75`
 				}`}
 				onClick={() => setSelectedMode(mode)}
@@ -33,11 +33,11 @@ function ChannelFilters({ channelId, ...props }: Props) {
 	}
 
 	return (
-		<div tw="flex flex-row" role="radiogroup" {...props}>
+		<div className="flex flex-row" role="radiogroup" {...props}>
 			{renderFilterButton("both", "Both")}
-			<div tw="w-3" />
+			<div className="w-3" />
 			{renderFilterButton("chat", "Chat")}
-			<div tw="w-3" />
+			<div className="w-3" />
 			{renderFilterButton("ads", "Ads")}
 		</div>
 	)

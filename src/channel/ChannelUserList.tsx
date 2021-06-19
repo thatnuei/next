@@ -1,6 +1,5 @@
 import { sortBy, zip } from "lodash-es"
 import { Observable, useObservable } from "micro-observables"
-import { tw } from "twind"
 import { CharacterStatus } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
 import { isPresent } from "../common/isPresent"
@@ -54,10 +53,10 @@ function ChannelUserList({ channel }: Props) {
 	}
 
 	const getTypeCss = (type: ItemType) => {
-		if (type === "admin") return tw`bg-red-500 bg-opacity-20`
-		if (type === "op") return tw`bg-yellow-500 bg-opacity-20`
-		if (type === "friend") return tw`bg-green-500 bg-opacity-20`
-		if (type === "bookmark") return tw`bg-blue-500 bg-opacity-20`
+		if (type === "admin") return `bg-red-500 bg-opacity-20`
+		if (type === "op") return `bg-yellow-500 bg-opacity-20`
+		if (type === "friend") return `bg-green-500 bg-opacity-20`
+		if (type === "bookmark") return `bg-blue-500 bg-opacity-20`
 	}
 
 	const entries = useObservable(
@@ -81,11 +80,11 @@ function ChannelUserList({ channel }: Props) {
 	const sortedItems = sortBy(entries, ["order", (it) => it.name.toLowerCase()])
 
 	return (
-		<div className={tw`flex flex-col h-full`}>
-			<div className={tw`px-3 py-2 bg-midnight-0`}>
+		<div className={`flex flex-col h-full`}>
+			<div className={`px-3 py-2 bg-midnight-0`}>
 				Characters: {entries.length}
 			</div>
-			<div className={tw`flex-1 min-h-0 bg-midnight-1`} role="list">
+			<div className={`flex-1 min-h-0 bg-midnight-1`} role="list">
 				<VirtualizedList
 					items={sortedItems}
 					itemSize={32}
@@ -94,7 +93,7 @@ function ChannelUserList({ channel }: Props) {
 						<div
 							role="listitem"
 							style={style}
-							className={`${tw`flex items-center px-2`} ${item.className}`}
+							className={`${`flex items-center px-2`} ${item.className}`}
 						>
 							<CharacterName name={item.name} />
 						</div>

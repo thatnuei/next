@@ -1,4 +1,3 @@
-import { tw } from "twind"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { fadedButton } from "../ui/components"
@@ -8,12 +7,12 @@ import * as icons from "../ui/icons"
 import ChatNav from "./ChatNav"
 
 function ChatMenuButton() {
-	const isMediumScreen = useMediaQuery(`(min-width: ${tw.theme("screens.md")})`)
+	const isMediumScreen = useMediaQuery(`(min-width: 768px)`)
 
 	return isMediumScreen ? null : (
 		<Dialog>
 			<DialogButton>
-				<Button title="Show side menu" className={tw`${fadedButton} block`}>
+				<Button title="Show side menu" className={`${fadedButton} block`}>
 					<Icon which={icons.menu} />
 				</Button>
 			</DialogButton>

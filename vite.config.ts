@@ -1,4 +1,3 @@
-import twindJsx from "@twind/vite-plugin-jsx"
 import reactRefresh from "@vitejs/plugin-react-refresh"
 import { defineConfig } from "vite"
 
@@ -8,7 +7,7 @@ export default defineConfig({
 		jsxFactory: `jsx$.createElement`,
 		jsxFragment: `jsx$.Fragment`,
 	},
-	plugins: [reactRefresh(), twindJsx()],
+	plugins: [reactRefresh()],
 	build: {
 		sourcemap: true,
 	},

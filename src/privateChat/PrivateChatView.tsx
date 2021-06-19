@@ -23,27 +23,27 @@ function PrivateChatView({ partnerName, ...props }: Props) {
 	const typingStatus = useObservable(chat.typingStatus)
 
 	return (
-		<div tw="flex flex-col h-full">
-			<div tw="flex flex-row items-center h-20 px-3 mb-1 space-x-3 bg-midnight-0">
+		<div className="flex flex-col h-full">
+			<div className="flex flex-row items-center h-20 px-3 mb-1 space-x-3 bg-midnight-0">
 				<ChatMenuButton />
 
 				<CharacterMenuTarget name={partnerName}>
-					<Avatar name={partnerName} tw="w-12 h-12" />
+					<Avatar name={partnerName} className="w-12 h-12" />
 				</CharacterMenuTarget>
 
-				<div tw="flex flex-col self-stretch justify-center flex-1 overflow-y-auto">
+				<div className="flex flex-col self-stretch justify-center flex-1 overflow-y-auto">
 					{/* need this extra container to keep the children from shrinking */}
-					<div tw="my-3">
+					<div className="my-3">
 						<CharacterName name={partnerName} />
 						{/* the bottom margin needs to be here otherwise the scrolling flex column eats the bottom spacing */}
-						<CharacterStatusText name={partnerName} tw="mb-3" />
+						<CharacterStatusText name={partnerName} className="mb-3" />
 					</div>
 				</div>
 			</div>
 
-			<div tw="flex flex-col flex-1 mb-1">
+			<div className="flex flex-col flex-1 mb-1">
 				<TypingStatusDisplay name={partnerName} status={typingStatus} />
-				<div tw="flex-1 bg-midnight-1">
+				<div className="flex-1 bg-midnight-1">
 					<MessageList messages={messages} />
 				</div>
 			</div>

@@ -16,10 +16,10 @@ function CharacterSelect() {
 	}
 
 	return (
-		<form tw="flex flex-col items-center p-4 space-y-4" onSubmit={handleSubmit}>
+		<form className="flex flex-col items-center p-4 space-y-4" onSubmit={handleSubmit}>
 			<Avatar name={identity} />
 			<select
-				tw={select}
+				className={select}
 				value={identity}
 				onChange={(e) => root.appStore.setIdentity(e.target.value, account)}
 			>
@@ -29,10 +29,10 @@ function CharacterSelect() {
 					</option>
 				))}
 			</select>
-			<Button tw={solidButton} type="submit">
+			<Button className={solidButton} type="submit">
 				Enter chat
 			</Button>
-			<Button tw={anchor} onClick={root.appStore.showLogin}>
+			<Button className={anchor} onClick={root.appStore.showLogin}>
 				Return to Login
 			</Button>
 		</form>

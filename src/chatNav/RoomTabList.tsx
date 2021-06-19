@@ -1,6 +1,5 @@
 import { sortBy } from "lodash-es"
 import { useObservable } from "micro-observables"
-import { tw } from "twind"
 import { ChannelModel } from "../channel/ChannelModel"
 import { useJoinedChannels } from "../channel/helpers"
 import { useIsPublicChannel } from "../channelBrowser/helpers"
@@ -40,7 +39,7 @@ function PrivateChatTab({ chat }: { chat: PrivateChatModel }) {
 	return (
 		<RoomTab
 			title={chat.partnerName}
-			icon={<Avatar name={chat.partnerName} className={tw`w-5 h-5`} />}
+			icon={<Avatar name={chat.partnerName} className={`w-5 h-5`} />}
 			isActive={isActive}
 			isUnread={isUnread}
 			onClick={() => root.chatNavStore.showPrivateChat(chat.partnerName)}

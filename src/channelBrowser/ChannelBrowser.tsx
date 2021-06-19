@@ -2,7 +2,6 @@ import fuzzysearch from "fuzzysearch"
 import { sortBy } from "lodash-es"
 import { useObservable } from "micro-observables"
 import { useState } from "react"
-import { tw } from "twind"
 import Button from "../dom/Button"
 import { useRootStore } from "../root/context"
 import { input, solidButton } from "../ui/components"
@@ -48,8 +47,8 @@ function ChannelBrowser() {
 	]
 
 	return (
-		<div className={tw`flex flex-col w-full h-full`}>
-			<section className={tw`flex-1 bg-midnight-2`}>
+		<div className={`flex flex-col w-full h-full`}>
+			<section className={`flex-1 bg-midnight-2`}>
 				<VirtualizedList
 					items={channels}
 					getItemKey={(channel) => channel.id}
@@ -60,25 +59,25 @@ function ChannelBrowser() {
 				/>
 			</section>
 
-			<section tw="flex flex-row p-2 space-x-2 bg-midnight-0">
+			<section className="flex flex-row p-2 space-x-2 bg-midnight-0">
 				<input
 					type="text"
 					aria-label="Search"
 					placeholder="Search..."
-					tw={[input, `flex-1`]}
+					className={[input, `flex-1`]}
 					value={query}
 					onChange={(event) => setQuery(event.target.value)}
 				/>
 				<Button
 					title="Change sort mode"
-					tw={solidButton}
+					className={solidButton}
 					onClick={cycleSortMode}
 				>
 					<Icon which={icons.sortAlphabetical} />
 				</Button>
 				<Button
 					title="Refresh"
-					tw={solidButton}
+					className={solidButton}
 					onClick={root.channelBrowserStore.refresh}
 					disabled={isRefreshing}
 				>

@@ -1,5 +1,4 @@
 import * as React from "react"
-import { tw } from "twind"
 
 type Props = {
 	labelText: string
@@ -8,8 +7,8 @@ type Props = {
 
 function FormField({ labelText, children }: Props) {
 	return (
-		<label className={tw`block w-full`}>
-			<div className={tw`mb-1`}>{labelText}</div>
+		<label className={`block w-full`}>
+			<div className={`mb-1`}>{labelText}</div>
 			{children}
 		</label>
 	)

@@ -12,7 +12,7 @@ function MessageList({ messages }: Props) {
 	useBottomScroll(container, messages[messages.length - 1])
 
 	return (
-		<ol tw="h-full overflow-y-auto" ref={setContainer}>
+		<ol className="h-full overflow-y-auto" ref={setContainer}>
 			{messages.map((message) => (
 				<li key={message.key}>
 					<MessageListItem message={message} />

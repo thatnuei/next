@@ -1,6 +1,5 @@
 import { useObservable } from "micro-observables"
 import { useMemo } from "react"
-import { tw } from "twind"
 import ChannelView from "../channel/ChannelView"
 import ChatNav from "../chatNav/ChatNav"
 import { useChatNavView } from "../chatNav/helpers"
@@ -15,14 +14,14 @@ export default function Chat() {
 	const chatRoomView = useMemo(() => <ChatRoomView />, [])
 
 	return (
-		<div className={tw`fixed inset-0 flex`}>
+		<div className={`fixed inset-0 flex`}>
 			{!isSmallScreen && (
-				<div className={tw`mr-1`}>
+				<div className={`mr-1`}>
 					<ChatNav />
 				</div>
 			)}
 
-			<div className={tw`flex-1`}>{chatRoomView}</div>
+			<div className={`flex-1`}>{chatRoomView}</div>
 		</div>
 	)
 }

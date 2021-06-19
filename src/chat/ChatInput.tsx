@@ -1,5 +1,4 @@
 import * as React from "react"
-import { tw } from "twind"
 import { useIdentity } from "../app/helpers"
 import Button from "../dom/Button"
 import { input, solidButton } from "../ui/components"
@@ -33,16 +32,16 @@ function ChatInput(props: Props) {
 	return (
 		<form
 			onSubmit={handleFormSubmit}
-			className={tw`flex flex-row p-2 bg-midnight-0`}
+			className={`flex flex-row p-2 bg-midnight-0`}
 		>
 			<textarea
 				placeholder={`Chatting as ${identity}...`}
 				value={props.value}
 				onChange={(event) => props.onChangeText(event.target.value)}
 				onKeyDown={handleKeyDown}
-				className={tw([input, tw`flex-1 block mr-2`])}
+				className={`${input} flex-1 block mr-2`}
 			/>
-			<Button type="submit" tw={solidButton}>
+			<Button type="submit" className={solidButton}>
 				Send
 			</Button>
 		</form>

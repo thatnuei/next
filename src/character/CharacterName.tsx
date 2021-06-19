@@ -1,8 +1,6 @@
+import clsx from "clsx"
 import { useObservable } from "micro-observables"
 import { memo } from "react"
-import { tw } from "twind"
-import { css } from "twind/css"
-import { rainbowAnimation } from "../ui/helpers"
 import CharacterMenuTarget from "./CharacterMenuTarget"
 import { genderColors, statusColors } from "./colors"
 import { useCharacter } from "./helpers"
@@ -16,16 +14,18 @@ function CharacterName({ name }: Props) {
 	const gender = useObservable(character.gender)
 	const status = useObservable(character.status)
 
-	const statusDotStyle = tw(
-		`inline-block mr-1 transform scale-150`,
-		css({ color: statusColors[status.type] }),
-		status.type === "crown" && rainbowAnimation,
-	)
-
 	return (
 		<CharacterMenuTarget name={name}>
-			<span className={statusDotStyle}>•</span>
-			<span tw="font-medium" style={{ color: genderColors[gender] }}>
+			<span
+				className={clsx(
+					`inline-block mr-1 transform scale-150`,
+					status.type === "crown" && "rainbow-animation",
+				)}
+				style={{ color: statusColors[status.type] }}
+			>
+				•
+			</span>
+			<span className="font-medium" style={{ color: genderColors[gender] }}>
 				{name}
 			</span>
 		</CharacterMenuTarget>

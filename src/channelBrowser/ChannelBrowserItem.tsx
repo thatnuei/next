@@ -1,5 +1,4 @@
 import { useObservable } from "micro-observables"
-import { tw } from "twind"
 import { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
@@ -22,21 +21,19 @@ function ChannelBrowserItem({ info, ...props }: Props) {
 		}
 	}
 
-	const containerStyle = tw(
-		tw`flex flex-row items-center px-2 py-2 space-x-2 transition-all`,
-		isJoined ? tw`opacity-100 bg-midnight-0` : tw`opacity-50 hover:opacity-75`,
-	)
+	const containerClass = `
+		flex flex-row items-center px-2 py-2 space-x-2 transition-all
+		${isJoined ? `opacity-100 bg-midnight-0` : `opacity-50 hover:opacity-75`}
+	`
 
 	return (
-		<button className={containerStyle} onClick={handleClick} {...props}>
+		<button className={containerClass} onClick={handleClick} {...props}>
 			<Icon which={info.type === "public" ? earth : lock} />
 			<div
-				className={tw(`flex-1 overflow-hidden whitespace-nowrap`, {
-					textOverflow: "ellipsis",
-				})}
+				className="flex-1 overflow-hidden whitespace-nowrap overflow-ellipsis"
 				dangerouslySetInnerHTML={{ __html: info.title }}
 			/>
-			<div className={tw`w-12 text-right`}>{info.userCount}</div>
+			<div className={`w-12 text-right`}>{info.userCount}</div>
 		</button>
 	)
 }

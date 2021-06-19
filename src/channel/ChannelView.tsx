@@ -1,6 +1,5 @@
 import { useObservable } from "micro-observables"
 import { useMemo } from "react"
-import { tw } from "twind"
 import ChatInput from "../chat/ChatInput"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { TagProps } from "../jsx/types"
@@ -50,14 +49,14 @@ function ChannelView({ channelId, ...props }: Props) {
 	}, [actualMode, messages])
 
 	return (
-		<div className={tw`flex flex-col h-full`}>
+		<div className={`flex flex-col h-full`}>
 			<ChannelHeader channelId={channelId} />
 
-			<div className={tw`flex flex-row flex-1 min-h-0 my-1`}>
-				<main className={tw`relative flex-1 bg-midnight-1`}>{messageList}</main>
+			<div className={`flex flex-row flex-1 min-h-0 my-1`}>
+				<main className={`relative flex-1 bg-midnight-1`}>{messageList}</main>
 
 				{isLargeScreen && (
-					<div className={tw`w-56 min-h-0 ml-1`}>
+					<div className={`w-56 min-h-0 ml-1`}>
 						<ChannelUserList channel={channel} />
 					</div>
 				)}

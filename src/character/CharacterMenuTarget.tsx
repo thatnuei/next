@@ -1,6 +1,5 @@
 import { useObservable } from "micro-observables"
 import * as React from "react"
-import { tw } from "twind"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
@@ -45,13 +44,13 @@ function CharacterMenu({ name }: { name: string }) {
 
 	return (
 		<>
-			<div className={tw`p-3 space-y-3 bg-midnight-0`}>
+			<div className={`p-3 space-y-3 bg-midnight-0`}>
 				<CharacterSummary name={name} />
 
 				{friendshipItems.map((item, index) => (
 					<div
 						key={index}
-						className={tw`flex flex-row items-center px-2 py-1 space-x-1 text-sm text-green-400 bg-green-500 bg-opacity-20`}
+						className={`flex flex-row items-center px-2 py-1 space-x-1 text-sm text-green-400 bg-green-500 bg-opacity-20`}
 					>
 						<Icon which={icons.heart} />
 						<div>{item.us}</div>
@@ -59,7 +58,7 @@ function CharacterMenu({ name }: { name: string }) {
 				))}
 			</div>
 
-			<div className={tw`flex flex-col`}>
+			<div className={`flex flex-col`}>
 				<ContextMenuItem icon={<Icon which={icons.link} />}>
 					<ExternalLink href={getProfileUrl(name)}>Profile</ExternalLink>
 				</ContextMenuItem>
@@ -105,7 +104,7 @@ function CharacterMenu({ name }: { name: string }) {
 				</ContextMenuCheckbox>
 			</div>
 
-			<div className={tw`p-2 bg-midnight-0`}>
+			<div className={`p-2 bg-midnight-0`}>
 				<CharacterMemoInput name={name} />
 			</div>
 		</>
