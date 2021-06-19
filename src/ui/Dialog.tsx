@@ -61,7 +61,7 @@ export function DialogModalPanel({
 					tw={`
 						flex flex-col
 						m-auto
-						w-full max-w-screen-sm
+						w-full h-full max-w-screen-sm
 						bg-midnight-0 shadow
 						pointer-events-auto
 						${radixTransition({
