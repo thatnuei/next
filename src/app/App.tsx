@@ -25,18 +25,15 @@ export default function App() {
 				<CharacterSelect />
 			</IslandLayout>
 
-			<FadeTransition
-				isVisible={screen === "chat" && status === "online"}
-				delayedEntry
-			>
+			<FadeTransition show={screen === "chat" && status === "online"}>
 				<Chat />
 			</FadeTransition>
 
-			<FadeTransition isVisible={status === "connecting"} delayedEntry>
+			<FadeTransition show={status === "connecting"}>
 				<LoadingOverlay text="Connecting..." />
 			</FadeTransition>
 
-			<FadeTransition isVisible={status === "identifying"} delayedEntry>
+			<FadeTransition show={status === "identifying"}>
 				<LoadingOverlay text="Identifying..." />
 			</FadeTransition>
 		</>

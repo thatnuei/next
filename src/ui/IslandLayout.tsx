@@ -9,8 +9,7 @@ export default function IslandLayout(
 	return (
 		<FadeRiseTransition
 			className="fixed inset-0 flex flex-col items-center justify-center"
-			isVisible={props.isVisible}
-			enter="transition-delay-300" // wait for the previous island to disappear
+			show={props.isVisible}
 		>
 			<div className={raisedPanel}>
 				<header className={raisedPanelHeader}>
