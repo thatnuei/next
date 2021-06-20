@@ -7,9 +7,9 @@ import { ComponentProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import { fadedButton } from "../ui/components"
-import Dialog, { DialogButton, DialogModalPanel } from "../ui/Dialog"
 import Icon, { IconProps } from "../ui/Icon"
 import * as icons from "../ui/icons"
+import Modal from "../ui/Modal"
 import RoomTabList from "./RoomTabList"
 
 export default function ChatNav() {
@@ -18,23 +18,21 @@ export default function ChatNav() {
 	return (
 		<nav className={`flex h-full bg-midnight-2`}>
 			<div className={`flex flex-col`}>
-				<Dialog>
-					<DialogButton>
-						<NavAction icon={icons.list} title="Browse channels" />
-					</DialogButton>
-					<DialogModalPanel title="Channel Browser">
-						<ChannelBrowser />
-					</DialogModalPanel>
-				</Dialog>
+				<Modal
+					title="Channel Browser"
+					trigger={<NavAction icon={icons.list} title="Browse channels" />}
+				>
+					<ChannelBrowser />
+				</Modal>
 
-				<Dialog>
-					<DialogButton>
+				<Modal
+					title="Update Status"
+					trigger={
 						<NavAction icon={icons.updateStatus} title="Update your status" />
-					</DialogButton>
-					<DialogModalPanel title="Update Status">
-						<StatusUpdateForm />
-					</DialogModalPanel>
-				</Dialog>
+					}
+				>
+					<StatusUpdateForm />
+				</Modal>
 
 				<NavAction
 					icon={icons.users}

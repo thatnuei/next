@@ -6,11 +6,7 @@ import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { fadedButton, headerText2 } from "../ui/components"
-import Dialog, {
-	DialogButton,
-	DialogDrawerPanel,
-	DialogModalPanel,
-} from "../ui/Dialog"
+import Drawer from "../ui/Drawer"
 import DropdownMenu, {
 	DropdownMenuButton,
 	DropdownMenuItem,
@@ -18,6 +14,7 @@ import DropdownMenu, {
 } from "../ui/DropdownMenu"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
+import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
 import ChannelUserList from "./ChannelUserList"
@@ -48,23 +45,20 @@ function ChannelHeader({ channelId }: Props) {
 		<header className="flex flex-row items-center p-3 space-x-3 bg-midnight-0">
 			<ChatMenuButton />
 
-			<Dialog>
-				<DialogButton>
+			<Modal
+				title="Channel Description"
+				trigger={
 					<Button title="Description" className={fadedButton}>
 						<Icon which={icons.about} />
 					</Button>
-				</DialogButton>
-				<DialogModalPanel title="Channel Description">
-					<div
-						className={`w-full h-full min-h-0 overflow-y-auto`}
-						style={{ maxHeight: `calc(100vh - 8rem)` }}
-					>
-						<p className="p-4">
-							<BBC text={description} />
-						</p>
-					</div>
-				</DialogModalPanel>
-			</Dialog>
+				}
+			>
+				<div className="w-full h-full min-h-0 overflow-y-auto">
+					<p className="p-4">
+						<BBC text={description} />
+					</p>
+				</div>
+			</Modal>
 
 			<div className="flex-1">
 				<h1 className={headerText2}>{title}</h1>
@@ -73,18 +67,18 @@ function ChannelHeader({ channelId }: Props) {
 			{isLargeScreen && <ChannelFilters channelId={channel.id} />}
 
 			{!isLargeScreen && (
-				<Dialog>
-					<DialogButton>
+				<Drawer
+					side="right"
+					trigger={
 						<Button title="User list" className={fadedButton}>
 							<Icon which={icons.users} />
 						</Button>
-					</DialogButton>
-					<DialogDrawerPanel side="right">
-						<div className="w-64 h-full">
-							<ChannelUserList channel={channel} />
-						</div>
-					</DialogDrawerPanel>
-				</Dialog>
+					}
+				>
+					<div className="w-64 h-full">
+						<ChannelUserList channel={channel} />
+					</div>
+				</Drawer>
 			)}
 
 			<DropdownMenu>
@@ -124,11 +118,13 @@ function ChannelHeader({ channelId }: Props) {
 				</DropdownMenuPanel>
 			</DropdownMenu>
 
-			<Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
-				<DialogModalPanel title={`Invite to ${title}`}>
-					<InviteUsersForm channelId={channelId} />
-				</DialogModalPanel>
-			</Dialog>
+			<Modal
+				title={`Invite to ${title}`}
+				open={inviteOpen}
+				onOpenChange={setInviteOpen}
+			>
+				<InviteUsersForm channelId={channelId} />
+			</Modal>
 		</header>
 	)
 }

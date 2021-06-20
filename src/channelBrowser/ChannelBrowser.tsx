@@ -1,3 +1,4 @@
+import clsx from "clsx"
 import fuzzysearch from "fuzzysearch"
 import { sortBy } from "lodash-es"
 import { useObservable } from "micro-observables"
@@ -48,7 +49,10 @@ function ChannelBrowser() {
 
 	return (
 		<div className={`flex flex-col w-full h-full`}>
-			<section className={`flex-1 bg-midnight-2`}>
+			<section
+				className={`bg-midnight-2`}
+				style={{ height: "calc(100vh - 10rem)" }}
+			>
 				<VirtualizedList
 					items={channels}
 					getItemKey={(channel) => channel.id}
@@ -64,7 +68,7 @@ function ChannelBrowser() {
 					type="text"
 					aria-label="Search"
 					placeholder="Search..."
-					className={[input, `flex-1`]}
+					className={clsx(input, `flex-1`)}
 					value={query}
 					onChange={(event) => setQuery(event.target.value)}
 				/>
