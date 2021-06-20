@@ -1,5 +1,6 @@
-import { Observable, observable } from "micro-observables"
-import { UserData } from "../app/UserStore"
+import type { Observable} from "micro-observables";
+import { observable } from "micro-observables"
+import type { UserData } from "../app/UserStore"
 import { concatUnique } from "../common/concatUniq"
 import { factoryFrom } from "../common/factoryFrom"
 import { memoize } from "../common/memoize"
@@ -11,7 +12,7 @@ import {
 	createSystemMessage,
 } from "../message/MessageState"
 import { createBoundCommandHandler } from "../socket/helpers"
-import { SocketHandler } from "../socket/SocketHandler"
+import type { SocketHandler } from "../socket/SocketHandler"
 import { ChannelModel } from "./ChannelModel"
 import { loadChannels, saveChannels } from "./storage"
 

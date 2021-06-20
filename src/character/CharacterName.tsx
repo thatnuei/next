@@ -5,7 +5,7 @@ import CharacterMenuTarget from "./CharacterMenuTarget"
 import { genderColors, statusColors } from "./colors"
 import { useCharacter } from "./helpers"
 
-type Props = {
+interface Props {
 	name: string
 }
 

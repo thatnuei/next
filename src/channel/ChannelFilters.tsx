@@ -1,9 +1,9 @@
 import { useObservable } from "micro-observables"
 import Button from "../dom/Button"
 import { useChannel } from "./helpers"
-import { ChannelMode } from "./types"
+import type { ChannelMode } from "./types"
 
-type Props = {
+interface Props {
 	channelId: string
 }
 

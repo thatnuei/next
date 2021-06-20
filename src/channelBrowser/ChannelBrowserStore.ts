@@ -1,9 +1,9 @@
 import { observable } from "micro-observables"
 import { delay } from "../common/delay"
 import { createBoundCommandHandler } from "../socket/helpers"
-import { SocketHandler } from "../socket/SocketHandler"
+import type { SocketHandler } from "../socket/SocketHandler"
 
-export type ChannelBrowserChannel = {
+export interface ChannelBrowserChannel {
 	id: string
 	title: string
 	type: "public" | "private"

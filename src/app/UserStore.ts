@@ -1,25 +1,25 @@
 import { observable } from "micro-observables"
 import { compare } from "../common/compare"
 import { raise } from "../common/raise"
-import { Dict } from "../common/types"
+import type { Dict } from "../common/types"
 import { fetchJson } from "../network/fetchJson"
 
-export type AuthenticateArgs = { account: string; password: string }
-type AuthenticateResponse = { ticket: string; characters: string[] }
+export interface AuthenticateArgs { account: string; password: string }
+interface AuthenticateResponse { ticket: string; characters: string[] }
 
-export type FriendsAndBookmarksResponse = {
+export interface FriendsAndBookmarksResponse {
 	bookmarklist: string[]
 	friendlist: Friendship[]
 }
 
-type Friendship = {
+interface Friendship {
 	/** Your character */
 	source: string
 	/** Their character */
 	dest: string
 }
 
-export type UserData = {
+export interface UserData {
 	account: string
 	ticket: string
 	characters: string[]

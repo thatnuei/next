@@ -6,6 +6,6 @@ export type ValueOf<T> = T extends readonly (infer V)[] ? V : T[keyof T]
 
 export type StringAutocompleteHack = string & { __autocompleteHack?: never }
 
-export type DeepReadonly<T> = T extends object
+export type DeepReadonly<T> = T extends Record<string, unknown>
 	? { readonly [K in keyof T]: DeepReadonly<T[K]> }
 	: T

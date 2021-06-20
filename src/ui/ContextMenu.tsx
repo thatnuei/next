@@ -1,6 +1,7 @@
 import * as RadixMenu from "@radix-ui/react-context-menu"
 import { Slot } from "@radix-ui/react-slot"
-import { ReactElement, ReactNode } from "react"
+import clsx from "clsx"
+import type { ReactElement, ReactNode } from "react"
 
 export default function ContextMenu({ children }: { children: ReactNode }) {
 	return <RadixMenu.Root>{children}</RadixMenu.Root>
@@ -29,7 +30,7 @@ export function ContextMenuItem({
 		<div className="relative flex transition-opacity opacity-50 hover:opacity-100 focus-within:opacity-100">
 			<RadixMenu.Item
 				as={Slot as any}
-				className={`p-2 flex-1 flex flex-row ${icon != null && `pl-10`}`}
+				className={clsx(`p-2 flex-1 flex flex-row`, icon != null && `pl-10`)}
 			>
 				{children}
 			</RadixMenu.Item>
@@ -55,7 +56,7 @@ export function ContextMenuCheckbox({
 		<div className="relative flex transition-opacity opacity-50 hover:opacity-100 focus-within:opacity-100">
 			<RadixMenu.CheckboxItem
 				as={Slot as any}
-				className={`p-2 flex-1 flex flex-row ${icon != null && `pl-10`}`}
+				className={clsx(`p-2 flex-1 flex flex-row`, icon != null && `pl-10`)}
 				checked={checked}
 				onCheckedChange={onCheckedChange}
 			>

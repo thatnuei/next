@@ -1,4 +1,4 @@
-import { ChildrenProps } from "../jsx/types"
+import type { ChildrenProps } from "../jsx/types"
 
 export type TestProvidersProps = ChildrenProps
 

@@ -9,7 +9,7 @@ const missingValue = Symbol()
  * @param hook Hook to run, returns the value passed through context
  * @param resolveMissing Use this to return a default value if the provider is missing, or throw an error
  */
-function createContextWrapper<R, I extends object>(
+function createContextWrapper<R, I extends Record<string, unknown>>(
 	hook: (init: I) => R,
 	resolveMissing: () => R = () => raise("Missing context provider"),
 ) {

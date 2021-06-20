@@ -1,6 +1,6 @@
 import * as React from "react"
 
-type ScopeProps = {
+interface ScopeProps {
 	children: () => React.ReactNode
 }
 

@@ -1,14 +1,19 @@
-import { TagProps } from "../jsx/types"
+import type { TagProps } from "../jsx/types"
 import Icon from "../ui/Icon"
 import { pencil } from "../ui/icons"
-import { TypingStatus } from "./types"
+import type { TypingStatus } from "./types"
 
 type Props = {
 	name: string
 	status: TypingStatus
 } & TagProps<"div">
 
-function TypingStatusDisplay({ name, status, className, ...props }: Props) {
+function TypingStatusDisplay({
+	name,
+	status,
+	className = "",
+	...props
+}: Props) {
 	const containerClass = `relative px-2 text-sm transition-all`
 
 	const clearClass =

@@ -6,12 +6,13 @@ import {
 	raisedPanel,
 	raisedPanelHeader,
 } from "./components"
-import DialogBase, { DialogBaseProps } from "./DialogBase"
+import type { DialogBaseProps } from "./DialogBase";
+import DialogBase from "./DialogBase"
 import FadeRiseTransition from "./FadeRiseTransition"
 import Icon from "./Icon"
 import { close } from "./icons"
 
-type Props = Omit<DialogBaseProps, "children"> & {
+interface Props extends Omit<DialogBaseProps, "children"> {
 	title: string
 	children: React.ReactNode
 }

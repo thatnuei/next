@@ -3,11 +3,12 @@ import { forwardRef } from "react"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import CharacterSummary from "../character/CharacterSummary"
 import Button from "../dom/Button"
-import { ComponentProps } from "../jsx/types"
+import type { ComponentProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
 import StatusUpdateForm from "../statusUpdate/StatusUpdateForm"
 import { fadedButton } from "../ui/components"
-import Icon, { IconProps } from "../ui/Icon"
+import type { IconProps } from "../ui/Icon";
+import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
 import RoomTabList from "./RoomTabList"
@@ -52,7 +53,7 @@ export default function ChatNav() {
 				<NavAction
 					icon={icons.logout}
 					title="Log out"
-					onClick={root.appStore.leaveChat}
+					onClick={() => root.appStore.leaveChat()}
 				/>
 			</div>
 			<div className={`flex flex-col w-56 overflow-y-auto bg-midnight-1`}>

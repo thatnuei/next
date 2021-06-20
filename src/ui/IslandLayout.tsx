@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ChildrenProps } from "../jsx/types"
+import type { ChildrenProps } from "../jsx/types"
 import { headerText, raisedPanel, raisedPanelHeader } from "./components"
 import FadeRiseTransition from "./FadeRiseTransition"
 

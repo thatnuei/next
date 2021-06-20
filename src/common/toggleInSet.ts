@@ -1,7 +1,7 @@
-type SetLike<T> = {
-	has: (item: T) => boolean
-	add: (item: T) => void
-	delete: (item: T) => void
+interface SetLike<T> {
+	has(item: T): boolean
+	add(item: T): void
+	delete(item: T): void
 }
 
 export function toggleInSet<T>(set: SetLike<T>, item: T) {

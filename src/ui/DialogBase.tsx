@@ -2,7 +2,7 @@ import { Dialog, Transition } from "@headlessui/react"
 import { Fragment, useState } from "react"
 import FadeTransition from "./FadeTransition"
 
-export type DialogBaseProps = {
+export interface DialogBaseProps {
 	open?: boolean
 	onOpenChange?: (open: boolean) => void
 	renderTrigger?: (props: { onClick: () => void }) => void

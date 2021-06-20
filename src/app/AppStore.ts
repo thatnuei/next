@@ -1,9 +1,9 @@
 import { observable } from "micro-observables"
 import { autobind } from "../common/autobind"
-import { SocketHandler } from "../socket/SocketHandler"
+import type { SocketHandler } from "../socket/SocketHandler"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
-import { AuthenticateArgs, UserStore } from "./UserStore"
+import type { AuthenticateArgs, UserStore } from "./UserStore"
 
 type AppScreen = "login" | "characterSelect" | "chat"
 

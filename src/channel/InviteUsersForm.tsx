@@ -1,15 +1,16 @@
 import { uniqBy } from "lodash-es"
 import { useObservable } from "micro-observables"
 import { useMemo } from "react"
-import { CharacterModel } from "../character/CharacterModel"
+import type { CharacterModel } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
 import { useRootStore } from "../root/context"
 import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import VirtualizedList, { RenderItemInfo } from "../ui/VirtualizedList"
+import type { RenderItemInfo } from "../ui/VirtualizedList";
+import VirtualizedList from "../ui/VirtualizedList"
 
-type Props = { channelId: string }
+interface Props { channelId: string }
 
 // need to have a list of all online character names in order to make them searchable,
 // do that later

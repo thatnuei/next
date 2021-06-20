@@ -12,4 +12,4 @@ export type ComponentProps<
 	C extends React.ComponentType
 > = React.ComponentPropsWithoutRef<C>
 
-export type ChildrenProps = { children: React.ReactNode }
+export interface ChildrenProps { children: React.ReactNode }

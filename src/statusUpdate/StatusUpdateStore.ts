@@ -1,9 +1,9 @@
 import { observable } from "micro-observables"
-import { AppStore } from "../app/AppStore"
-import { CharacterStatus } from "../character/CharacterModel"
+import type { AppStore } from "../app/AppStore"
+import type { CharacterStatus } from "../character/CharacterModel"
 import { delay } from "../common/delay"
 import { createBoundCommandHandler } from "../socket/helpers"
-import { SocketHandler } from "../socket/SocketHandler"
+import type { SocketHandler } from "../socket/SocketHandler"
 
 export class StatusUpdateStore {
 	readonly isVisible = observable(false)

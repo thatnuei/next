@@ -1,3 +1,4 @@
+import clsx from "clsx"
 import * as React from "react"
 import Button from "../dom/Button"
 import { fadedButton } from "../ui/components"
@@ -5,7 +6,7 @@ import { ellipsize } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { close } from "../ui/icons"
 
-export type RoomTabProps = {
+export interface RoomTabProps {
 	title: string
 	icon: React.ReactNode
 	isActive: boolean
@@ -21,13 +22,16 @@ function RoomTab(props: RoomTabProps) {
 
 	const activeStateStyle = (() => {
 		if (props.isActive) return `bg-midnight-0`
-		if (props.isUnread) return [inactiveHoverReveal, unreadHighlight]
+		if (props.isUnread) return clsx(inactiveHoverReveal, unreadHighlight)
 		return inactiveHoverReveal
 	})()
 
 	return (
 		<div
-			className={`flex flex-row items-center transition ${activeStateStyle}`}
+			className={clsx(
+				`flex flex-row items-center transition`,
+				activeStateStyle,
+			)}
 		>
 			<Button
 				className={`flex flex-row items-center flex-1 p-2 ${ellipsize}`}

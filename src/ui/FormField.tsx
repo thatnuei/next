@@ -1,6 +1,6 @@
 import * as React from "react"
 
-type Props = {
+interface Props {
 	labelText: string
 	children: React.ReactNode
 }

@@ -1,5 +1,5 @@
 import { openDB } from "idb"
-import { Validator } from "../validation"
+import type { Validator } from "../validation"
 
 const dbPromise = openDB("keyval-store", 1, {
 	upgrade(db) {

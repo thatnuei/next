@@ -1,6 +1,7 @@
-import { forwardRef, ReactElement } from "react"
+import type { ReactElement } from "react"
+import { forwardRef } from "react"
 
-type FunctionComponent<Props> = {
+interface FunctionComponent<Props> {
 	(props: Props): ReactElement | null
 	displayName?: string
 }

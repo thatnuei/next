@@ -1,6 +1,6 @@
 import * as React from "react"
 
-export type IconProps = {
+export interface IconProps {
 	which: string
 }
 

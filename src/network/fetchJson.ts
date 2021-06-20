@@ -1,5 +1,5 @@
 import { raise } from "../common/raise"
-import { Dict } from "../common/types"
+import type { Dict } from "../common/types"
 
 function createFormData(fields: Dict<unknown>) {
 	const body = new FormData()
@@ -9,7 +9,7 @@ function createFormData(fields: Dict<unknown>) {
 	return body
 }
 
-export type FetchJsonOptions = {
+export interface FetchJsonOptions {
 	body: Dict<unknown>
 	method: "get" | "post" | "patch" | "put" | "delete"
 }

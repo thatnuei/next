@@ -5,7 +5,7 @@ type Props = React.ComponentPropsWithoutRef<"img"> & {
 	name: string
 }
 
-function Avatar({ name, className, ...props }: Props) {
+function Avatar({ name, className = "", ...props }: Props) {
 	return (
 		<img
 			src={getAvatarUrl(name)}

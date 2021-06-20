@@ -1,4 +1,5 @@
-import { cloneElement, ReactElement } from "react"
+import type { ReactElement } from "react";
+import { cloneElement } from "react"
 
 export default function Slot({
 	element,

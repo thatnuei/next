@@ -16,7 +16,10 @@ function CharacterSelect() {
 	}
 
 	return (
-		<form className="flex flex-col items-center p-4 space-y-4" onSubmit={handleSubmit}>
+		<form
+			className="flex flex-col items-center p-4 space-y-4"
+			onSubmit={handleSubmit}
+		>
 			<Avatar name={identity} />
 			<select
 				className={select}
@@ -32,7 +35,7 @@ function CharacterSelect() {
 			<Button className={solidButton} type="submit">
 				Enter chat
 			</Button>
-			<Button className={anchor} onClick={root.appStore.showLogin}>
+			<Button className={anchor} onClick={() => root.appStore.showLogin()}>
 				Return to Login
 			</Button>
 		</form>

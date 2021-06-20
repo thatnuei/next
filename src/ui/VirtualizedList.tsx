@@ -1,8 +1,10 @@
 import * as React from "react"
-import { ComponentType, Key, useState } from "react"
-import { FixedSizeList, ListChildComponentProps } from "react-window"
+import type { ComponentType, Key} from "react";
+import { useState } from "react"
+import type { ListChildComponentProps } from "react-window";
+import { FixedSizeList } from "react-window"
 import { useElementSize } from "../dom/useElementSize"
-import { TagProps } from "../jsx/types"
+import type { TagProps } from "../jsx/types"
 
 type Props<T> = TagProps<"div"> & {
 	items: T[]
@@ -11,7 +13,7 @@ type Props<T> = TagProps<"div"> & {
 	getItemKey: (item: T) => Key
 }
 
-export type RenderItemInfo<T> = {
+export interface RenderItemInfo<T> {
 	item: T
 	style: React.CSSProperties
 }
@@ -36,8 +38,9 @@ function VirtualizedList<T>({
 				itemData={{ items, renderItem }}
 				itemKey={(index) => getItemKey(items[index])}
 				overscanCount={10}
-				children={ListItem as ComponentType<ListChildComponentProps>}
-			/>
+			>
+				{ListItem as ComponentType<ListChildComponentProps>}
+			</FixedSizeList>
 		</div>
 	)
 }

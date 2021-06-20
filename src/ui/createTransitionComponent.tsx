@@ -1,5 +1,6 @@
-import { Transition, TransitionClasses } from "@headlessui/react"
-import { ReactNode } from "react"
+import type { TransitionClasses } from "@headlessui/react";
+import { Transition } from "@headlessui/react"
+import type { ReactNode } from "react"
 
 export function createTransitionComponent({
 	enter = `transition duration-300`,

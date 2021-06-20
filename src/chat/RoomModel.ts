@@ -1,5 +1,5 @@
 import { observable } from "micro-observables"
-import { MessageState } from "../message/MessageState"
+import type { MessageState } from "../message/MessageState"
 
 const messageLimit = 300
 

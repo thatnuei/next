@@ -15,7 +15,7 @@ import * as icons from "../ui/icons"
 import CharacterMemoInput from "./CharacterMemoInput"
 import CharacterSummary from "./CharacterSummary"
 
-type Props = { name: string; children: React.ReactNode }
+interface Props { name: string; children: React.ReactNode }
 
 export default function CharacterMenuTarget({ name, children }: Props) {
 	return (

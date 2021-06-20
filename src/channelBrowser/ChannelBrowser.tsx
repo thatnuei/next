@@ -10,7 +10,7 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
-import { ChannelBrowserChannel } from "./ChannelBrowserStore"
+import type { ChannelBrowserChannel } from "./ChannelBrowserStore"
 
 function ChannelBrowser() {
 	const root = useRootStore()

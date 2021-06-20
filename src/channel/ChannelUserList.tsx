@@ -1,14 +1,14 @@
 import { sortBy, zip } from "lodash-es"
 import { Observable, useObservable } from "micro-observables"
-import { CharacterStatus } from "../character/CharacterModel"
+import type { CharacterStatus } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
 import { isPresent } from "../common/isPresent"
-import { ValueOf } from "../common/types"
+import type { ValueOf } from "../common/types"
 import { useRootStore } from "../root/context"
 import VirtualizedList from "../ui/VirtualizedList"
-import { ChannelModel } from "./ChannelModel"
+import type { ChannelModel } from "./ChannelModel"
 
-type Props = {
+interface Props {
 	channel: ChannelModel
 }
 
@@ -52,11 +52,12 @@ function ChannelUserList({ channel }: Props) {
 		return "default"
 	}
 
-	const getTypeCss = (type: ItemType) => {
+	const getTypeCss = (type: ItemType): string => {
 		if (type === "admin") return `bg-red-500 bg-opacity-20`
 		if (type === "op") return `bg-yellow-500 bg-opacity-20`
 		if (type === "friend") return `bg-green-500 bg-opacity-20`
 		if (type === "bookmark") return `bg-blue-500 bg-opacity-20`
+		return ""
 	}
 
 	const entries = useObservable(

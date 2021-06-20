@@ -1,5 +1,6 @@
 import { Observable, useObservable } from "micro-observables"
-import { CSSProperties, Fragment, memo, PropsWithChildren } from "react"
+import type { CSSProperties, PropsWithChildren } from "react";
+import { Fragment, memo } from "react"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
@@ -10,9 +11,9 @@ import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import { createBbcTree, getNodeChildrenAsText } from "./helpers"
-import { Node } from "./types"
+import type { Node } from "./types"
 
-type Props = { text: string }
+interface Props { text: string }
 
 const createBbcTreeMemoized = memoize(createBbcTree)
 

@@ -2,20 +2,19 @@ import { useObservable } from "micro-observables"
 import { useMemo } from "react"
 import ChatInput from "../chat/ChatInput"
 import { useMediaQuery } from "../dom/useMediaQuery"
-import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
-import { MessageState } from "../message/MessageState"
+import type { MessageState } from "../message/MessageState"
 import { useRootStore } from "../root/context"
 import { screenQueries } from "../ui/screens"
 import ChannelHeader from "./ChannelHeader"
 import ChannelUserList from "./ChannelUserList"
 import { useChannel } from "./helpers"
 
-type Props = {
+interface Props {
 	channelId: string
-} & TagProps<"div">
+}
 
-function ChannelView({ channelId, ...props }: Props) {
+function ChannelView({ channelId }: Props) {
 	const root = useRootStore()
 	const channel = useChannel(channelId)
 	const messages = useObservable(channel.messages)

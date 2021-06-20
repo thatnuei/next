@@ -1,4 +1,4 @@
-import { CharacterGender, CharacterStatus } from "./types"
+import type { CharacterGender, CharacterStatus } from "./types"
 
 export const genderColors: Record<CharacterGender, string> = {
 	"Male": "hsla(216, 95%, 67%, 1)",

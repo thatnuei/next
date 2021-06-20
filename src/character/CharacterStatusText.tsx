@@ -1,6 +1,6 @@
 import { useObservable } from "micro-observables"
 import BBC from "../bbc/BBC"
-import { TagProps } from "../jsx/types"
+import type { TagProps } from "../jsx/types"
 import { statusColors } from "./colors"
 import { useCharacter } from "./helpers"
 

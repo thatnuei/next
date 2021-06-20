@@ -1,5 +1,5 @@
 import ChatMenuButton from "../chatNav/ChatMenuButton"
-import { TagProps } from "../jsx/types"
+import type { TagProps } from "../jsx/types"
 import { headerText } from "../ui/components"
 
 function NoRoomView(props: TagProps<"header">) {

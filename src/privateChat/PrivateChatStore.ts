@@ -1,11 +1,12 @@
-import { observable, Observable } from "micro-observables"
+import type { Observable } from "micro-observables";
+import { observable } from "micro-observables"
 import { concatUnique } from "../common/concatUniq"
 import { factoryFrom } from "../common/factoryFrom"
 import { memoize } from "../common/memoize"
 import { without } from "../common/without"
 import { createPrivateMessage } from "../message/MessageState"
 import { createBoundCommandHandler } from "../socket/helpers"
-import { SocketHandler } from "../socket/SocketHandler"
+import type { SocketHandler } from "../socket/SocketHandler"
 import { PrivateChatModel } from "./PrivateChatModel"
 import { restorePrivateChats, savePrivateChats } from "./storage"
 

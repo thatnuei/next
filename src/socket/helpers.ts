@@ -1,5 +1,5 @@
-import * as fchat from "fchat"
-import { ValueOf } from "../common/types"
+import type * as fchat from "fchat"
+import type { ValueOf } from "../common/types"
 
 type CommandUnionFromRecord<T> = ValueOf<
 	{
@@ -20,7 +20,7 @@ export function parseServerCommand(commandString: string) {
 
 	const params =
 		commandString.length > 3
-			? (JSON.parse(commandString.slice(4)) as object)
+			? (JSON.parse(commandString.slice(4)) as unknown)
 			: undefined
 
 	return { type, params } as ServerCommand

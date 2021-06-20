@@ -1,7 +1,7 @@
 import { useObservable } from "micro-observables"
 import * as React from "react"
 import { useState } from "react"
-import { CharacterStatusType } from "../character/CharacterModel"
+import type { CharacterStatusType } from "../character/CharacterModel"
 import { useIdentityCharacter } from "../character/helpers"
 import Button from "../dom/Button"
 import { useRootStore } from "../root/context"

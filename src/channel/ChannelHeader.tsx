@@ -21,7 +21,7 @@ import ChannelUserList from "./ChannelUserList"
 import { useChannel } from "./helpers"
 import InviteUsersForm from "./InviteUsersForm"
 
-type Props = {
+interface Props {
 	channelId: string
 }
 

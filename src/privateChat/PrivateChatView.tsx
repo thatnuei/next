@@ -5,17 +5,16 @@ import CharacterName from "../character/CharacterName"
 import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
-import { TagProps } from "../jsx/types"
 import MessageList from "../message/MessageList"
 import { useRootStore } from "../root/context"
 import { usePrivateChat } from "./helpers"
 import TypingStatusDisplay from "./TypingStatusDisplay"
 
-type Props = {
+interface Props {
 	partnerName: string
-} & TagProps<"div">
+}
 
-function PrivateChatView({ partnerName, ...props }: Props) {
+function PrivateChatView({ partnerName }: Props) {
 	const root = useRootStore()
 	const chat = usePrivateChat(partnerName)
 	const messages = useObservable(chat.messages)

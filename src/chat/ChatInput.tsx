@@ -3,7 +3,7 @@ import { useIdentity } from "../app/helpers"
 import Button from "../dom/Button"
 import { input, solidButton } from "../ui/components"
 
-type Props = {
+interface Props {
 	value: string
 	onChangeText: (value: string) => void
 	onSubmit: (text: string) => void

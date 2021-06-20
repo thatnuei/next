@@ -1,7 +1,7 @@
 import { useObservable } from "micro-observables"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
-import { TagProps } from "../jsx/types"
+import type { TagProps } from "../jsx/types"
 import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
 import CharacterStatusText from "./CharacterStatusText"

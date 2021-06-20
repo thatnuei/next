@@ -1,8 +1,8 @@
 import { useCallback, useLayoutEffect, useState } from "react"
 import MessageListItem from "./MessageListItem"
-import { MessageState } from "./MessageState"
+import type { MessageState } from "./MessageState"
 
-type Props = {
+interface Props {
 	messages: MessageState[]
 }
 

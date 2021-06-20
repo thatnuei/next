@@ -1,6 +1,6 @@
 import { debounce } from "lodash-es"
 import { useEffect, useMemo, useState } from "react"
-import { TagProps } from "../jsx/types"
+import type { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
 import { input } from "../ui/components"
 

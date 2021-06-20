@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { UseStateReturn } from "./types"
+import type { UseStateReturn } from "./types"
 
 export type SwitchState = ReturnType<typeof useSwitchControlled>
 

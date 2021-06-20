@@ -8,8 +8,7 @@ export default function combineRefs<T>(
 			if (typeof ref === "function") {
 				ref(instance)
 			} else if (ref) {
-				// react types are weird and types refs that get mutated as readonly lol
-				// @ts-expect-error
+				// @ts-expect-error: react types are weird and types refs that get mutated as readonly lol
 				ref.current = instance
 			}
 		}

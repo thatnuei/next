@@ -1,7 +1,8 @@
 import clsx from "clsx"
 import { fadedButton, raisedPanel } from "./components"
 import { createTransitionComponent } from "./createTransitionComponent"
-import DialogBase, { DialogBaseProps } from "./DialogBase"
+import type { DialogBaseProps } from "./DialogBase";
+import DialogBase from "./DialogBase"
 import Icon from "./Icon"
 import { close } from "./icons"
 

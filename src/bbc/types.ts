@@ -1,11 +1,11 @@
-export type OpenTagToken = {
+export interface OpenTagToken {
 	type: "open-tag"
 	text: string
 	tag: string
 	value: string
 }
 
-export type CloseTagToken = {
+export interface CloseTagToken {
 	type: "close-tag"
 	text: string
 	tag: string
@@ -13,17 +13,17 @@ export type CloseTagToken = {
 
 export type Token = OpenTagToken | CloseTagToken | TextToken
 
-type TextToken = {
+interface TextToken {
 	type: "text"
 	text: string
 }
 
-type TextNode = {
+interface TextNode {
 	type: "text"
 	text: string
 }
 
-export type TagNode = {
+export interface TagNode {
 	type: "tag"
 	tag: string
 	value: string

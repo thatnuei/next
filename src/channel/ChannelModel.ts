@@ -1,6 +1,6 @@
 import { observable, Observable } from "micro-observables"
 import { RoomModel } from "../chat/RoomModel"
-import { ChannelMode } from "./types"
+import type { ChannelMode } from "./types"
 
 export class ChannelModel extends RoomModel {
 	readonly title = observable(this.id)

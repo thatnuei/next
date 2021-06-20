@@ -1,14 +1,14 @@
 import { observable } from "micro-observables"
-import { AppStore } from "../app/AppStore"
-import { UserStore } from "../app/UserStore"
+import type { AppStore } from "../app/AppStore"
+import type { UserStore } from "../app/UserStore"
 import { concatUnique } from "../common/concatUniq"
 import { memoize } from "../common/memoize"
 import { without } from "../common/without"
 import { createBoundCommandHandler } from "../socket/helpers"
-import { SocketHandler } from "../socket/SocketHandler"
+import type { SocketHandler } from "../socket/SocketHandler"
 import { CharacterModel } from "./CharacterModel"
 
-type Friendship = {
+interface Friendship {
 	us: string
 	them: string
 }

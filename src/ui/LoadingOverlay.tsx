@@ -1,4 +1,4 @@
-type Props = { text: string }
+interface Props { text: string }
 
 function LoadingOverlay({ text }: Props) {
 	const dotStyle = `w-5 h-5 rounded-full bg-clouds`

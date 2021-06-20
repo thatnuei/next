@@ -1,14 +1,15 @@
 import { observable } from "micro-observables"
 import { autobind } from "../common/autobind"
 import { PubSub } from "../state/pubsub"
-import {
+import type {
 	ClientCommand,
+	ServerCommand} from "./helpers";
+import {
 	createCommandString,
-	parseServerCommand,
-	ServerCommand,
+	parseServerCommand
 } from "./helpers"
 
-type ConnectOptions = {
+interface ConnectOptions {
 	account: string
 	ticket: string
 	identity: string

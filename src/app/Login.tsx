@@ -6,7 +6,7 @@ import { useRootStore } from "../root/context"
 import { input, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
 
-export type LoginResult = {
+export interface LoginResult {
 	account: string
 	ticket: string
 	characters: string[]

@@ -1,9 +1,9 @@
 import { useObservable } from "micro-observables"
-import { TagProps } from "../jsx/types"
+import type { TagProps } from "../jsx/types"
 import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
 import { earth, lock } from "../ui/icons"
-import { ChannelBrowserChannel } from "./ChannelBrowserStore"
+import type { ChannelBrowserChannel } from "./ChannelBrowserStore"
 
 type Props = TagProps<"button"> & {
 	info: ChannelBrowserChannel

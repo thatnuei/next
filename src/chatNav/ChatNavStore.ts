@@ -1,11 +1,11 @@
 import { observable } from "micro-observables"
-import { ChannelStore } from "../channel/ChannelStore"
-import { PrivateChatStore } from "../privateChat/PrivateChatStore"
+import type { ChannelStore } from "../channel/ChannelStore"
+import type { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { createBoundCommandHandler } from "../socket/helpers"
-import { SocketHandler } from "../socket/SocketHandler"
+import type { SocketHandler } from "../socket/SocketHandler"
 import { VisibleState } from "../state/VisibleState"
 
-type ChatNavView = {
+interface ChatNavView {
 	channelId?: string
 	privateChatPartner?: string
 }

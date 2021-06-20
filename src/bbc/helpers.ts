@@ -1,4 +1,4 @@
-import { CloseTagToken, Node, OpenTagToken, TagNode, Token } from "./types"
+import type { CloseTagToken, Node, OpenTagToken, TagNode, Token } from "./types"
 
 const openTagExpression = /^\[([a-z]+?)(?:=([^\]]+))?\]/i
 const closeTagExpression = /^\[\/([a-z]+?)\]/i
