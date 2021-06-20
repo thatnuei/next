@@ -11,7 +11,7 @@ import FadeRiseTransition from "./FadeRiseTransition"
 import Icon from "./Icon"
 import { close } from "./icons"
 
-type Props = Omit<DialogBaseProps, "renderContent"> & {
+type Props = Omit<DialogBaseProps, "children"> & {
 	title: string
 	children: React.ReactNode
 }
