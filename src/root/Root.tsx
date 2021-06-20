@@ -1,5 +1,5 @@
 import App from "../app/App"
-import DevTools from "../app/DevTools"
+import DevTools from "../dev/DevTools"
 
 export default function Root() {
 	return (

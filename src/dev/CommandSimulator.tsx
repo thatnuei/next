@@ -3,45 +3,37 @@ import { useState } from "react"
 import { safeJsonParse } from "../common/json"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
-import { useWindowEvent } from "../dom/useWindowEvent"
 import { useRootStore } from "../root/context"
 import type { ServerCommand } from "../socket/helpers"
-import { input, solidButton } from "../ui/components"
-import Drawer from "../ui/Drawer"
+import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
 
-export default function DevTools() {
-	const [visible, setVisible] = useState(false)
-	const toggleVisible = () => setVisible((v) => !v)
+type Preset = { name: string } & ServerCommand
 
-	useWindowEvent("keypress", (event) => {
-		if (event.code === "Backquote" && event.shiftKey) {
-			event.preventDefault()
-			toggleVisible()
-		}
-	})
+const presets: Preset[] = [
+	{
+		name: "Channel message",
+		type: "MSG",
+		params: {
+			character: "Testificate",
+			message: "test message",
+			channel: "Development",
+		},
+	},
+	{
+		name: "Server broadcast",
+		type: "BRO",
+		params: {
+			character: "Testificate",
+			message: "awesome broadcast",
+		},
+	},
+]
 
-	return (
-		<Drawer side="bottom" open={visible} onOpenChange={setVisible}>
-			<div className="w-full p-4">
-				<CommandSimulator />
-			</div>
-		</Drawer>
-	)
-}
-
-function CommandSimulator() {
+export default function CommandSimulator() {
 	const root = useRootStore()
-
-	const defaultCommand = "MSG"
-	const defaultParams =
-		'{"character":"Testificate","message":"test message","channel":"Development"}'
-
-	const [commandState, setCommand] = useState("")
-	const command = commandState || defaultCommand
-
-	const [paramsState, setParams] = useState("")
-	const params = paramsState || defaultParams
+	const [command, setCommand] = useState("")
+	const [params, setParams] = useState("")
 
 	const paramsParseResult =
 		params.length > 2 ? safeJsonParse(params) : undefined
@@ -77,20 +69,45 @@ function CommandSimulator() {
 					for a list of server commands.
 				</p>
 			</div>
+
+			<FormField labelText="Preset">
+				{/* this should probably be a dropdown, but I'm lazy */}
+				<select
+					className={select}
+					value="Choose preset"
+					onChange={(e) => {
+						const presetIndex = Number(e.currentTarget.value)
+						const preset = presets[presetIndex]
+						if (preset) {
+							setCommand(preset.type)
+							setParams(JSON.stringify(preset.params ?? {}))
+						}
+					}}
+				>
+					<option disabled>Choose preset</option>
+					{presets.map((preset, index) => (
+						<option key={preset.name} value={index}>
+							{preset.name}
+						</option>
+					))}
+				</select>
+			</FormField>
+
 			<FormField labelText="Command">
 				<input
 					className={input}
-					placeholder="MSG"
-					value={commandState}
+					placeholder="HLO"
+					value={command}
 					onChange={(e) => setCommand(e.target.value)}
 				/>
 			</FormField>
+
 			<FormField labelText="Params">
 				<textarea
 					rows={3}
 					className={clsx(input, "font-mono resize-y")}
-					placeholder='{"character":"Testificate","message":"test message","channel":"Development"}'
-					value={paramsState}
+					placeholder='{"message": "hi world"}'
+					value={params}
 					onChange={(e) => setParams(e.target.value)}
 				/>
 			</FormField>
