@@ -1,5 +1,5 @@
 import { Observable, useObservable } from "micro-observables"
-import type { CSSProperties, PropsWithChildren } from "react";
+import type { CSSProperties, PropsWithChildren } from "react"
 import { Fragment, memo } from "react"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
@@ -13,7 +13,9 @@ import * as icons from "../ui/icons"
 import { createBbcTree, getNodeChildrenAsText } from "./helpers"
 import type { Node } from "./types"
 
-interface Props { text: string }
+interface Props {
+	text: string
+}
 
 const createBbcTreeMemoized = memoize(createBbcTree)
 
@@ -61,14 +63,14 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 
 			case "sup":
 				return (
-					<span className={`text-sm align-top`}>
+					<span className={`text-xs align-top`}>
 						<BBCTree nodes={node.children} />
 					</span>
 				)
 
 			case "sub":
 				return (
-					<span className={`text-sm`}>
+					<span className={`text-xs`}>
 						<BBCTree nodes={node.children} />
 					</span>
 				)
