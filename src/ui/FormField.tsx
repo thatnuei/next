@@ -8,7 +8,7 @@ interface Props {
 function FormField({ labelText, children }: Props) {
 	return (
 		<label className={`block w-full`}>
-			<div className={`mb-1`}>{labelText}</div>
+			<div className={`mb-1 text-sm`}>{labelText}</div>
 			{children}
 		</label>
 	)
