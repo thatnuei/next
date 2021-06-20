@@ -47,11 +47,11 @@ function ChannelHeader({ channelId }: Props) {
 
 			<Modal
 				title="Channel Description"
-				trigger={
-					<Button title="Description" className={fadedButton}>
+				renderTrigger={(trigger) => (
+					<Button title="Description" className={fadedButton} {...trigger}>
 						<Icon which={icons.about} />
 					</Button>
-				}
+				)}
 			>
 				<div className="w-full h-full min-h-0 overflow-y-auto">
 					<p className="p-4">
@@ -69,11 +69,11 @@ function ChannelHeader({ channelId }: Props) {
 			{!isLargeScreen && (
 				<Drawer
 					side="right"
-					trigger={
-						<Button title="User list" className={fadedButton}>
+					renderTrigger={(trigger) => (
+						<Button title="User list" className={fadedButton} {...trigger}>
 							<Icon which={icons.users} />
 						</Button>
-					}
+					)}
 				>
 					<div className="w-64 h-full">
 						<ChannelUserList channel={channel} />

@@ -20,16 +20,22 @@ export default function ChatNav() {
 			<div className={`flex flex-col`}>
 				<Modal
 					title="Channel Browser"
-					trigger={<NavAction icon={icons.list} title="Browse channels" />}
+					renderTrigger={(trigger) => (
+						<NavAction icon={icons.list} title="Browse channels" {...trigger} />
+					)}
 				>
 					<ChannelBrowser />
 				</Modal>
 
 				<Modal
 					title="Update Status"
-					trigger={
-						<NavAction icon={icons.updateStatus} title="Update your status" />
-					}
+					renderTrigger={(trigger) => (
+						<NavAction
+							icon={icons.updateStatus}
+							title="Update your status"
+							{...trigger}
+						/>
+					)}
 				>
 					<StatusUpdateForm />
 				</Modal>

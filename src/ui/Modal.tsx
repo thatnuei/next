@@ -1,7 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react"
 import clsx from "clsx"
 import { Fragment, useState } from "react"
-import Slot from "../react/Slot"
 import {
 	fadedButton,
 	headerText,
@@ -15,10 +14,10 @@ import { close } from "./icons"
 
 type Props = {
 	title: string
-	trigger?: React.ReactElement
 	children: React.ReactNode
 	open?: boolean
 	onOpenChange?: (open: boolean) => void
+	renderTrigger?: (props: { onClick: () => void }) => void
 }
 
 export default function Modal(props: Props) {
@@ -28,10 +27,7 @@ export default function Modal(props: Props) {
 
 	return (
 		<>
-			{props.trigger ? (
-				<Slot element={props.trigger} onClick={() => setOpen(true)} />
-			) : null}
-
+			{props.renderTrigger?.({ onClick: () => setOpen(true) })}
 			<Transition.Root as={Fragment} show={open}>
 				<Dialog onClose={setOpen}>
 					<FadeTransition child>

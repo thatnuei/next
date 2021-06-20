@@ -6,21 +6,22 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import ChatNav from "./ChatNav"
 
-function ChatMenuButton() {
+export default function ChatMenuButton() {
 	const isMediumScreen = useMediaQuery(`(min-width: 768px)`)
-
 	return isMediumScreen ? null : (
 		<Drawer
 			side="left"
-			trigger={
-				<Button title="Show side menu" className={`${fadedButton} block`}>
+			renderTrigger={(props) => (
+				<Button
+					title="Show side menu"
+					className={`${fadedButton} block`}
+					{...props}
+				>
 					<Icon which={icons.menu} />
 				</Button>
-			}
+			)}
 		>
 			<ChatNav />
 		</Drawer>
 	)
 }
-
-export default ChatMenuButton

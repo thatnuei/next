@@ -1,7 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react"
 import clsx from "clsx"
 import { Fragment, useState } from "react"
-import Slot from "../react/Slot"
 import { fadedButton, raisedPanel } from "./components"
 import { createTransitionComponent } from "./createTransitionComponent"
 import FadeTransition from "./FadeTransition"
@@ -9,11 +8,11 @@ import Icon from "./Icon"
 import { close } from "./icons"
 
 type Props = {
-	trigger?: React.ReactElement
 	children: React.ReactNode
 	open?: boolean
 	side: "left" | "right"
 	onOpenChange?: (open: boolean) => void
+	renderTrigger?: (props: { onClick: () => void }) => void
 }
 
 export default function Drawer(props: Props) {
@@ -26,10 +25,7 @@ export default function Drawer(props: Props) {
 
 	return (
 		<>
-			{props.trigger ? (
-				<Slot element={props.trigger} onClick={() => setOpen(true)} />
-			) : null}
-
+			{props.renderTrigger?.({ onClick: () => setOpen(true) })}
 			<Transition.Root as={Fragment} show={open}>
 				<Dialog onClose={setOpen}>
 					<FadeTransition child>
