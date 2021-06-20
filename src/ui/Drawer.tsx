@@ -1,64 +1,48 @@
-import { Dialog, Transition } from "@headlessui/react"
 import clsx from "clsx"
-import { Fragment, useState } from "react"
 import { fadedButton, raisedPanel } from "./components"
 import { createTransitionComponent } from "./createTransitionComponent"
-import FadeTransition from "./FadeTransition"
+import DialogBase, { DialogBaseProps } from "./DialogBase"
 import Icon from "./Icon"
 import { close } from "./icons"
 
-type Props = {
+type Props = Omit<DialogBaseProps, "children"> & {
 	children: React.ReactNode
-	open?: boolean
 	side: "left" | "right"
-	onOpenChange?: (open: boolean) => void
-	renderTrigger?: (props: { onClick: () => void }) => void
 }
 
 export default function Drawer(props: Props) {
-	const [openInternal, setOpenInternal] = useState(false)
-	const open = props.open ?? openInternal
-	const setOpen = props.onOpenChange ?? setOpenInternal
-
 	const SlideTransition =
 		props.side === "left" ? SlideLeftTransition : SlideRightTransition
 
 	return (
-		<>
-			{props.renderTrigger?.({ onClick: () => setOpen(true) })}
-			<Transition.Root as={Fragment} show={open}>
-				<Dialog onClose={setOpen}>
-					<FadeTransition child>
-						<Dialog.Overlay className="fixed inset-0 bg-black/75" />
-					</FadeTransition>
-
-					<SlideTransition
-						child
+		<DialogBase {...props}>
+			{(content) => (
+				<SlideTransition
+					child
+					className={clsx(
+						"fixed inset-0 flex items-start pointer-events-none",
+						props.side === "right" && "flex-row-reverse",
+					)}
+				>
+					<div
 						className={clsx(
-							"fixed inset-0 flex items-start pointer-events-none",
-							props.side === "right" && "flex-row-reverse",
+							raisedPanel,
+							"h-full overflow-y-auto pointer-events-auto",
 						)}
 					>
-						<div
-							className={clsx(
-								raisedPanel,
-								"h-full overflow-y-auto pointer-events-auto",
-							)}
-						>
-							{props.children}
-						</div>
-						<button
-							type="button"
-							onClick={() => setOpen(false)}
-							title="Close"
-							className={clsx(fadedButton, "p-2 pointer-events-auto")}
-						>
-							<Icon which={close} />
-						</button>
-					</SlideTransition>
-				</Dialog>
-			</Transition.Root>
-		</>
+						{props.children}
+					</div>
+					<button
+						type="button"
+						onClick={() => content.setOpen(false)}
+						title="Close"
+						className={clsx(fadedButton, "p-2 pointer-events-auto")}
+					>
+						<Icon which={close} />
+					</button>
+				</SlideTransition>
+			)}
+		</DialogBase>
 	)
 }
 
