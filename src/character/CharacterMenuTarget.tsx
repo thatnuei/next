@@ -1,5 +1,6 @@
 import { useObservable } from "micro-observables"
 import * as React from "react"
+import { useChatNav } from "../chatNav/chatNavContext"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
@@ -15,7 +16,10 @@ import * as icons from "../ui/icons"
 import CharacterMemoInput from "./CharacterMemoInput"
 import CharacterSummary from "./CharacterSummary"
 
-interface Props { name: string; children: React.ReactNode }
+interface Props {
+	name: string
+	children: React.ReactNode
+}
 
 export default function CharacterMenuTarget({ name, children }: Props) {
 	return (
@@ -32,6 +36,7 @@ export default function CharacterMenuTarget({ name, children }: Props) {
 
 function CharacterMenu({ name }: { name: string }) {
 	const root = useRootStore()
+	const { showPrivateChat } = useChatNav()
 
 	const bookmarks = useObservable(root.characterStore.bookmarks)
 	const isBookmarked = bookmarks.includes(name)
@@ -64,9 +69,7 @@ function CharacterMenu({ name }: { name: string }) {
 				</ContextMenuItem>
 
 				<ContextMenuItem icon={<Icon which={icons.message} />}>
-					<Button onClick={() => root.chatNavStore.showPrivateChat(name)}>
-						Message
-					</Button>
+					<Button onClick={() => showPrivateChat(name)}>Message</Button>
 				</ContextMenuItem>
 
 				<ContextMenuCheckbox

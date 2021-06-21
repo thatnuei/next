@@ -3,7 +3,6 @@ import type { ChannelStore } from "../channel/ChannelStore"
 import type { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { createBoundCommandHandler } from "../socket/helpers"
 import type { SocketHandler } from "../socket/SocketHandler"
-import { VisibleState } from "../state/VisibleState"
 
 interface ChatNavView {
 	channelId?: string
@@ -13,8 +12,6 @@ interface ChatNavView {
 export class ChatNavStore {
 	private readonly viewMutable = observable<ChatNavView>({})
 	readonly view = this.viewMutable.readOnly()
-
-	readonly sideMenu = new VisibleState()
 
 	constructor(
 		private readonly socket: SocketHandler,

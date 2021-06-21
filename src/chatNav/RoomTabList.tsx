@@ -9,7 +9,7 @@ import type { PrivateChatModel } from "../privateChat/PrivateChatModel"
 import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import { useChatNavView } from "./helpers"
+import { useChatNav } from "./chatNavContext"
 import RoomTab from "./RoomTab"
 
 function RoomTabList() {
@@ -33,8 +33,8 @@ function PrivateChatTab({ chat }: { chat: PrivateChatModel }) {
 	const root = useRootStore()
 	const isUnread = useObservable(chat.isUnread)
 
-	const view = useChatNavView()
-	const isActive = view.privateChatPartner === chat.partnerName
+	const { view, showPrivateChat } = useChatNav()
+	const isActive = view?.privateChatPartner === chat.partnerName
 
 	return (
 		<RoomTab
@@ -42,7 +42,7 @@ function PrivateChatTab({ chat }: { chat: PrivateChatModel }) {
 			icon={<Avatar name={chat.partnerName} className={`w-5 h-5`} />}
 			isActive={isActive}
 			isUnread={isUnread}
-			onClick={() => root.chatNavStore.showPrivateChat(chat.partnerName)}
+			onClick={() => showPrivateChat(chat.partnerName)}
 			onClose={() => root.privateChatStore.close(chat.partnerName)}
 		/>
 	)
@@ -50,13 +50,13 @@ function PrivateChatTab({ chat }: { chat: PrivateChatModel }) {
 
 function ChannelRoomTab({ channel }: { channel: ChannelModel }) {
 	const root = useRootStore()
+	const { view, showChannel } = useChatNav()
 
 	const title = useObservable(channel.title)
 	const isUnread = useObservable(channel.isUnread)
 	const isPublic = useIsPublicChannel(channel.id)
 
-	const view = useChatNavView()
-	const isActive = view.channelId === channel.id
+	const isActive = view?.channelId === channel.id
 
 	return (
 		<RoomTab
@@ -67,7 +67,7 @@ function ChannelRoomTab({ channel }: { channel: ChannelModel }) {
 			}
 			isActive={isActive}
 			isUnread={isUnread}
-			onClick={() => root.chatNavStore.showChannel(channel.id)}
+			onClick={() => showChannel(channel.id)}
 			onClose={() => root.channelStore.leave(channel.id)}
 		/>
 	)

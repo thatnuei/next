@@ -49,3 +49,7 @@ export function createBoundCommandHandler<This>(
 		return handler != null
 	}
 }
+
+export function createCommandHandler(handlers: CommandHandlerMap) {
+	return createBoundCommandHandler(undefined, handlers)
+}

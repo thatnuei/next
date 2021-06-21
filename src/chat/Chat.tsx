@@ -1,8 +1,8 @@
 import { useObservable } from "micro-observables"
-import { useMemo } from "react"
+import { memo } from "react"
 import ChannelView from "../channel/ChannelView"
 import ChatNav from "../chatNav/ChatNav"
-import { useChatNavView } from "../chatNav/helpers"
+import { ChatNavProvider, useChatNav } from "../chatNav/chatNavContext"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { useRootStore } from "../root/context"
@@ -11,40 +11,41 @@ import NoRoomView from "./NoRoomView"
 
 export default function Chat() {
 	const isSmallScreen = useMediaQuery(screenQueries.small)
-	const chatRoomView = useMemo(() => <ChatRoomView />, [])
-
 	return (
 		<div className={`fixed inset-0 flex`}>
-			{!isSmallScreen && (
-				<div className={`mr-1`}>
-					<ChatNav />
+			<ChatNavProvider>
+				{!isSmallScreen && (
+					<div className={`mr-1`}>
+						<ChatNav />
+					</div>
+				)}
+				<div className={`flex-1`}>
+					<ChatRoomView />
 				</div>
-			)}
-
-			<div className={`flex-1`}>{chatRoomView}</div>
+			</ChatNavProvider>
 		</div>
 	)
 }
 
-function ChatRoomView() {
+const ChatRoomView = memo(function ChatRoomView() {
 	const root = useRootStore()
-	const view = useChatNavView()
+	const { view } = useChatNav()
 
 	const isChannelJoined = useObservable(
-		root.channelStore.isJoined(view.channelId ?? ""),
+		root.channelStore.isJoined(view?.channelId ?? ""),
 	)
 
 	const isPrivateChatOpen = useObservable(
-		root.privateChatStore.isOpen(view.privateChatPartner ?? ""),
+		root.privateChatStore.isOpen(view?.privateChatPartner ?? ""),
 	)
 
-	if (view.channelId && isChannelJoined) {
+	if (view?.channelId && isChannelJoined) {
 		return <ChannelView channelId={view.channelId} />
 	}
 
-	if (view.privateChatPartner && isPrivateChatOpen) {
+	if (view?.privateChatPartner && isPrivateChatOpen) {
 		return <PrivateChatView partnerName={view.privateChatPartner} />
 	}
 
 	return <NoRoomView />
-}
+})
