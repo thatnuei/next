@@ -23,7 +23,7 @@ function PrivateChatView({ partnerName }: Props) {
 
 	return (
 		<div className="flex flex-col h-full">
-			<div className="flex flex-row items-center h-20 px-3 mb-1 space-x-3 bg-midnight-0">
+			<div className="flex flex-row items-center h-20 px-3 mb-1 gap-3 bg-midnight-0">
 				<ChatMenuButton />
 
 				<CharacterMenuTarget name={partnerName}>

@@ -42,7 +42,7 @@ function ChannelHeader({ channelId }: Props) {
 	}
 
 	return (
-		<header className="flex flex-row items-center p-3 space-x-3 bg-midnight-0">
+		<header className="flex flex-row items-center p-3 gap-3 bg-midnight-0">
 			<ChatMenuButton />
 
 			<Modal

@@ -12,7 +12,7 @@ export default function ChatMenuButton() {
 			renderTrigger={(props) => (
 				<Button
 					title="Show side menu"
-					className={`${fadedButton} block`}
+					className={`${fadedButton} block md:hidden`}
 					{...props}
 				>
 					<Icon which={icons.menu} />
