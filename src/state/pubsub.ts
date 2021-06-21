@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { autobind } from "../common/autobind"
 
 type Listener<T> = (event: T) => void
@@ -19,4 +20,8 @@ export class PubSub<T = void> {
 	publish(event: T) {
 		this.subscribers.forEach((sub) => sub(event))
 	}
+}
+
+export function usePubSubListener<T>(pubsub: PubSub<T>, listener: Listener<T>) {
+	useEffect(() => pubsub.subscribe(listener), [listener, pubsub])
 }
