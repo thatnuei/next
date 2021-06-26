@@ -29,5 +29,11 @@ export default function App() {
 		)
 	}
 
-	return <Chat user={user} identity={identity} />
+	return (
+		<Chat
+			user={user}
+			identity={identity}
+			onLogout={() => setIdentity(undefined)}
+		/>
+	)
 }
