@@ -1,13 +1,9 @@
 import { observable } from "micro-observables"
 import { autobind } from "../common/autobind"
 import { PubSub } from "../state/pubsub"
-import type {
-	ClientCommand,
-	ServerCommand} from "./helpers";
-import {
-	createCommandString,
-	parseServerCommand
-} from "./helpers"
+import { socketUrl } from "./constants"
+import type { ClientCommand, ServerCommand } from "./helpers"
+import { createCommandString, parseServerCommand } from "./helpers"
 
 interface ConnectOptions {
 	account: string
@@ -44,7 +40,7 @@ export class SocketHandler {
 
 		this.status.set("connecting")
 
-		const socket = (this.socket = new WebSocket(`wss://chat.f-list.net/chat2`))
+		const socket = (this.socket = new WebSocket(socketUrl))
 
 		socket.onopen = () => {
 			this.status.set("identifying")
