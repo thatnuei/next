@@ -1,9 +1,10 @@
 import { observable } from "micro-observables"
 import { autobind } from "../common/autobind"
+import type { LoginCredentials } from "../flist/types"
 import type { SocketHandler } from "../socket/SocketHandler"
 import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
-import type { AuthenticateArgs, UserStore } from "./UserStore"
+import type { UserStore } from "./UserStore"
 
 type AppScreen = "login" | "characterSelect" | "chat"
 
@@ -21,7 +22,7 @@ export class AppStore {
 		autobind(this)
 	}
 
-	async submitLogin(args: AuthenticateArgs) {
+	async submitLogin(args: LoginCredentials) {
 		await this.userStore.login(args)
 
 		const { account, characters } = this.userStore.userData.get()

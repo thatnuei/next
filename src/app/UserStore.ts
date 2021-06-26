@@ -1,11 +1,8 @@
 import { observable } from "micro-observables"
 import { compare } from "../common/compare"
-import { raise } from "../common/raise"
-import type { Dict } from "../common/types"
-import { fetchJson } from "../network/fetchJson"
-
-export interface AuthenticateArgs { account: string; password: string }
-interface AuthenticateResponse { ticket: string; characters: string[] }
+import { authenticate } from "../flist/authenticate"
+import { fetchFlist } from "../flist/fetchFlist"
+import type { AuthUser, LoginCredentials } from "../flist/types"
 
 export interface FriendsAndBookmarksResponse {
 	bookmarklist: string[]
@@ -19,17 +16,12 @@ interface Friendship {
 	dest: string
 }
 
-export interface UserData {
-	account: string
-	ticket: string
-	characters: string[]
-}
-
 const ticketExpireTime = 1000 * 60 * 5
 
 export class UserStore {
-	readonly userData = observable<UserData>({
+	readonly userData = observable<AuthUser>({
 		account: "",
+		password: "",
 		ticket: "",
 		characters: [],
 	})
@@ -37,14 +29,15 @@ export class UserStore {
 	private lastTicketFetchTime = 0
 	private password = ""
 
-	login = async ({ account, password }: AuthenticateArgs) => {
-		const { ticket, characters } = await this.authenticate({
+	login = async ({ account, password }: LoginCredentials) => {
+		const { ticket, characters } = await authenticate({
 			account,
 			password,
 		})
 
 		this.userData.set({
 			account,
+			password,
 			ticket,
 			characters: characters.sort(compare((name) => name.toLowerCase())),
 		})
@@ -54,17 +47,17 @@ export class UserStore {
 
 	addBookmark = async (args: { name: string }) => {
 		const creds = await this.getFreshAuthCredentials()
-		await apiFetch(`/api/bookmark-add.php`, { ...args, ...creds })
+		await fetchFlist(`/api/bookmark-add.php`, { ...args, ...creds })
 	}
 
 	removeBookmark = async (args: { name: string }) => {
 		const creds = await this.getFreshAuthCredentials()
-		await apiFetch(`/api/bookmark-remove.php`, { ...args, ...creds })
+		await fetchFlist(`/api/bookmark-remove.php`, { ...args, ...creds })
 	}
 
 	getFriendsAndBookmarks = async () => {
 		const creds = await this.getFreshAuthCredentials()
-		return apiFetch<FriendsAndBookmarksResponse>(
+		return fetchFlist<FriendsAndBookmarksResponse>(
 			`/api/friend-bookmark-lists.php`,
 			{ ...creds, bookmarklist: true, friendlist: true },
 		)
@@ -73,7 +66,7 @@ export class UserStore {
 	getMemo = async (args: { name: string }) => {
 		const creds = await this.getFreshAuthCredentials()
 
-		const res = await apiFetch<{ note: string | null }>(
+		const res = await fetchFlist<{ note: string | null }>(
 			"/api/character-memo-get2.php",
 			{ ...creds, target: args.name },
 		)
@@ -84,18 +77,10 @@ export class UserStore {
 	setMemo = async ({ name, ...params }: { name: string; note: string }) => {
 		const creds = await this.getFreshAuthCredentials()
 
-		await apiFetch("/api/character-memo-save.php", {
+		await fetchFlist("/api/character-memo-save.php", {
 			...creds,
 			...params,
 			target_name: name,
-		})
-	}
-
-	private authenticate(args: AuthenticateArgs) {
-		return apiFetch<AuthenticateResponse>("/getApiTicket.php", {
-			...args,
-			no_friends: true,
-			no_bookmarks: true,
 		})
 	}
 
@@ -103,7 +88,7 @@ export class UserStore {
 		if (Date.now() - this.lastTicketFetchTime > ticketExpireTime) {
 			const userData = this.userData.get()
 
-			const { ticket } = await this.authenticate({
+			const { ticket } = await authenticate({
 				account: userData.account,
 				password: this.password,
 			})
@@ -114,18 +99,4 @@ export class UserStore {
 		const { account, ticket } = this.userData.get()
 		return { account, ticket }
 	}
-}
-
-async function apiFetch<T>(endpoint: string, body: Dict<unknown>): Promise<T> {
-	endpoint = endpoint.replace(/^\/+/, "")
-
-	const data = await fetchJson<T & { error?: string }>(
-		`https://www.f-list.net/json/${endpoint}`,
-		{
-			method: "post",
-			body,
-		},
-	)
-
-	return data.error ? raise(data.error) : data
 }

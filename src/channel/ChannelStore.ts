@@ -1,11 +1,11 @@
-import type { Observable} from "micro-observables";
+import type { Observable } from "micro-observables"
 import { observable } from "micro-observables"
-import type { UserData } from "../app/UserStore"
 import { concatUnique } from "../common/concatUniq"
 import { factoryFrom } from "../common/factoryFrom"
 import { memoize } from "../common/memoize"
 import { unique } from "../common/unique"
 import { without } from "../common/without"
+import type { AuthUser } from "../flist/types"
 import {
 	createAdMessage,
 	createChannelMessage,
@@ -21,7 +21,7 @@ export class ChannelStore {
 
 	constructor(
 		private readonly socket: SocketHandler,
-		private readonly userData: Observable<UserData>,
+		private readonly userData: Observable<AuthUser>,
 		private readonly identity: Observable<string>,
 	) {
 		socket.commands.subscribe(this.handleCommand)
