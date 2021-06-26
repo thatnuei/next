@@ -44,7 +44,9 @@ eslint-plugin-jsx-a11y
 		"no-undef": "off",
 		"no-unused-vars": "off",
 		"react/react-in-jsx-scope": ["off"],
-		"jsx-a11y/no-onchange": "off"
+		"jsx-a11y/no-onchange": "off",
+		"class-methods-use-this": "warn",
+		"no-useless-rename": "warn"
 	},
 	"ignorePatterns": ["**/node_modules/**", "**/dist/**", "src/generated/**"],
 	"settings": {
