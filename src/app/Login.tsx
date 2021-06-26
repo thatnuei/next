@@ -1,51 +1,42 @@
-import * as React from "react"
 import { useState } from "react"
-import { extractErrorMessage } from "../common/extractErrorMessage"
 import Button from "../dom/Button"
-import { useRootStore } from "../root/context"
+import { authenticate } from "../flist/authenticate"
+import type { AuthUser } from "../flist/types"
+import { preventDefault } from "../react/preventDefault"
+import usePromiseState from "../state/usePromiseState"
 import { input, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
 
-export interface LoginResult {
-	account: string
-	ticket: string
-	characters: string[]
-}
-
-type State =
-	| { current: "idle" }
-	| { current: "loading" }
-	| { current: "error"; error: string }
-
-export default function Login() {
-	const root = useRootStore()
-	const [state, setState] = useState<State>({ current: "idle" })
+export default function Login(props: {
+	onSuccess: (result: AuthUser) => void
+}) {
 	const [account, setAccount] = useState("")
 	const [password, setPassword] = useState("")
 
-	const canSubmit =
-		account !== "" && password !== "" && state.current !== "loading"
+	const authenticateState = usePromiseState()
 
-	const isFormDisabled = state.current === "loading"
-
-	const handleSubmit = (event: React.FormEvent) => {
-		event.preventDefault()
-
-		if (state.current === "loading") return
-		setState({ current: "loading" })
-
-		root.appStore.submitLogin({ account, password }).catch((error) => {
-			setState({ current: "error", error: extractErrorMessage(error) })
-		})
+	const submit = () => {
+		authenticateState.setPromise(
+			authenticate({ account, password }).then(props.onSuccess),
+		)
 	}
 
+	const canSubmit =
+		account !== "" && password !== "" && !authenticateState.isLoading
+
+	const isFormDisabled = authenticateState.isLoading
+
 	return (
-		<form className="flex flex-col items-start p-4 space-y-4" onSubmit={handleSubmit}>
+		<form
+			className="flex flex-col items-start p-4 space-y-4"
+			onSubmit={preventDefault(submit)}
+		>
 			<FormField labelText="Username">
 				<input
 					className={input}
 					type="text"
 					placeholder="awesome username"
+					autoComplete="username"
 					value={account}
 					onChange={(e) => setAccount(e.target.value)}
 					disabled={isFormDisabled}
@@ -57,6 +48,7 @@ export default function Login() {
 					className={input}
 					type="password"
 					placeholder="••••••••"
+					autoComplete="current-password"
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
 					disabled={isFormDisabled}
@@ -67,7 +59,9 @@ export default function Login() {
 				Log in
 			</Button>
 
-			{state.current === "error" && <p className="max-w-xs">{state.error}</p>}
+			{authenticateState.error && (
+				<p className="max-w-xs">{authenticateState.error.message}</p>
+			)}
 		</form>
 	)
 }

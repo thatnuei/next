@@ -1,32 +1,33 @@
-import { useObservable } from "micro-observables"
-import * as React from "react"
+import { useState } from "react"
 import Avatar from "../character/Avatar"
+import { compareLower } from "../common/compareLower"
 import Button from "../dom/Button"
-import { useRootStore } from "../root/context"
+import { preventDefault } from "../react/preventDefault"
 import { anchor, select, solidButton } from "../ui/components"
 
-function CharacterSelect() {
-	const root = useRootStore()
-	const { characters, account } = useObservable(root.userStore.userData)
-	const identity = useObservable(root.appStore.identity)
-
-	const handleSubmit = (event: React.FormEvent) => {
-		event.preventDefault()
-		root.appStore.enterChat()
-	}
+function CharacterSelect({
+	characters,
+	onSubmit,
+	onReturnToLogin,
+}: {
+	characters: string[]
+	onSubmit: (identity: string) => void
+	onReturnToLogin: () => void
+}) {
+	const [identity, setIdentity] = useState<string>(characters[0])
 
 	return (
 		<form
 			className="flex flex-col items-center p-4 space-y-4"
-			onSubmit={handleSubmit}
+			onSubmit={preventDefault(() => onSubmit(identity))}
 		>
 			<Avatar name={identity} />
 			<select
 				className={select}
 				value={identity}
-				onChange={(e) => root.appStore.setIdentity(e.target.value, account)}
+				onChange={(e) => setIdentity(e.target.value)}
 			>
-				{characters.map((name) => (
+				{characters.sort(compareLower).map((name) => (
 					<option key={name} value={name}>
 						{name}
 					</option>
@@ -35,7 +36,7 @@ function CharacterSelect() {
 			<Button className={solidButton} type="submit">
 				Enter chat
 			</Button>
-			<Button className={anchor} onClick={() => root.appStore.showLogin()}>
+			<Button className={anchor} onClick={onReturnToLogin}>
 				Return to Login
 			</Button>
 		</form>
