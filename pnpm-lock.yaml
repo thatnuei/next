@@ -7,6 +7,7 @@ specifiers:
   '@radix-ui/react-dialog': ^0.0.18
   '@radix-ui/react-dropdown-menu': ^0.0.21
   '@radix-ui/react-slot': ^0.0.11
+  '@reduxjs/toolkit': 1.6.0
   '@testing-library/jest-dom': ^5.14.1
   '@testing-library/react': ^11.2.7
   '@types/jest': ^26.0.23
@@ -32,6 +33,7 @@ specifiers:
   fuzzysearch: ^1.0.3
   history: 5.0.0
   idb: ^6.1.2
+  immer: 9.0.3
   lodash-es: ^4.17.21
   micro-observables: ^1.7.0
   npm-run-all: ^4.1.5
@@ -56,12 +58,14 @@ dependencies:
   '@radix-ui/react-dialog': 0.0.18_c51aefbfcc3508b40e1e448ff2a6f1de
   '@radix-ui/react-dropdown-menu': 0.0.21_c51aefbfcc3508b40e1e448ff2a6f1de
   '@radix-ui/react-slot': 0.0.11_react@18.0.0-alpha-568dc3532
+  '@reduxjs/toolkit': 1.6.0_react@18.0.0-alpha-568dc3532
   clsx: 1.1.1
   fchat: 1.4.0
   focus-visible: 5.2.0
   fuzzysearch: 1.0.3
   history: 5.0.0
   idb: 6.1.2
+  immer: 9.0.3
   lodash-es: 4.17.21
   micro-observables: 1.7.0_react@18.0.0-alpha-568dc3532
   polished: 4.1.3
@@ -798,6 +802,24 @@ packages:
     resolution: {integrity: sha512-gXw171KbjyttA7K1DRIvPguLmKsg8raitB67MIcsdZwcquy+a1O2w3xY21NIKEqGhJwqJkECPUmMJDXgMNYuAg==}
     dependencies:
       '@babel/runtime': 7.14.6
+    dev: false
+
+  /@reduxjs/toolkit/1.6.0_react@18.0.0-alpha-568dc3532:
+    resolution: {integrity: sha512-eGL50G+Vj5AG5uD0lineb6rRtbs96M8+hxbcwkHpZ8LQcmt0Bm33WyBSnj5AweLkjQ7ZP+KFRDHiLMznljRQ3A==}
+    peerDependencies:
+      react: ^16.14.0 || ^17.0.0
+      react-redux: ^7.2.1
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-redux:
+        optional: true
+    dependencies:
+      immer: 9.0.3
+      react: 18.0.0-alpha-568dc3532
+      redux: 4.1.0
+      redux-thunk: 2.3.0
+      reselect: 4.0.0
     dev: false
 
   /@testing-library/dom/7.31.2:
@@ -2118,6 +2140,10 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
+  /immer/9.0.3:
+    resolution: {integrity: sha512-mONgeNSMuyjIe0lkQPa9YhdmTv8P19IeHV0biYhcXhbd5dhdB9HSK93zBpyKjp6wersSUgT5QyU0skmejUVP2A==}
+    dev: false
+
   /import-cwd/3.0.0:
     resolution: {integrity: sha512-4pnzH16plW+hgvRECbDWpQl3cqtvSofHWh44met7ESfZ8UZOWWddm8hEyDTqREJ9RbYHY8gi8DqmaelApoOGMg==}
     engines: {node: '>=8'}
@@ -3036,6 +3062,16 @@ packages:
       postcss-value-parser: 3.3.1
     dev: true
 
+  /redux-thunk/2.3.0:
+    resolution: {integrity: sha512-km6dclyFnmcvxhAcrQV2AkZmPQjzPDjgVlQtR0EQjxZPyJ0BnMf3in1ryuR8A2qU0HldVRfxYXbFSKlI3N7Slw==}
+    dev: false
+
+  /redux/4.1.0:
+    resolution: {integrity: sha512-uI2dQN43zqLWCt6B/BMGRMY6db7TTY4qeHHfGeKb3EOhmOKjU3KdWvNLJyqaHRksv/ErdNH7cFZWg9jXtewy4g==}
+    dependencies:
+      '@babel/runtime': 7.14.6
+    dev: false
+
   /regenerator-runtime/0.13.7:
     resolution: {integrity: sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==}
 
@@ -3061,6 +3097,10 @@ packages:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /reselect/4.0.0:
+    resolution: {integrity: sha512-qUgANli03jjAyGlnbYVAV5vvnOmJnODyABz51RdBN7M4WaVu8mecZWgyQNkG8Yqe3KRGRt0l4K4B3XVEULC4CA==}
+    dev: false
 
   /resize-observer-polyfill/1.5.1:
     resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==}
