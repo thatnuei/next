@@ -85,9 +85,7 @@ export const chatStateReducer = produce(
 
 				IGN(params) {
 					if (params.action === "init" || params.action === "list") {
-						state.ignores = Object.fromEntries(
-							params.characters.map((name) => [name, true]),
-						)
+						state.ignores = truthyMap(params.characters)
 					}
 					if (params.action === "add") {
 						state.ignores[params.character] = true
