@@ -1,14 +1,25 @@
 import { useState } from "react"
 import type { AuthUser } from "../flist/types"
+import { useEffectRef } from "../react/useEffectRef"
 import { useRunnableEffect } from "../react/useRunnableEffect"
 import { socketUrl } from "../socket/constants"
-import type { ClientCommand } from "../socket/helpers"
+import type { ClientCommand, ServerCommand } from "../socket/helpers"
 import { createCommandString, parseServerCommand } from "../socket/helpers"
 
-export function useSocketConnection(user: AuthUser, identity: string) {
+export function useSocketConnection({
+	user,
+	identity,
+	onCommand,
+}: {
+	user: AuthUser
+	identity: string
+	onCommand: (command: ServerCommand) => void
+}) {
 	const [status, setStatus] = useState<
 		"offline" | "connecting" | "identifying" | "online" | "error" | "closed"
 	>("offline")
+
+	const onCommandRef = useEffectRef(onCommand)
 
 	const reconnect = useRunnableEffect(() => {
 		setStatus("connecting")
@@ -69,7 +80,7 @@ export function useSocketConnection(user: AuthUser, identity: string) {
 				console.warn("Socket error", command.params.message)
 			}
 
-			// this.commands.publish(command)
+			onCommandRef.current(command)
 		}
 
 		return () => {
@@ -79,7 +90,7 @@ export function useSocketConnection(user: AuthUser, identity: string) {
 			socket.onmessage = null
 			socket.close()
 		}
-	}, [identity, user.account, user.ticket])
+	}, [identity, onCommandRef, user.account, user.ticket])
 
 	return { status, reconnect }
 }

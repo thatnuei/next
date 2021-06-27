@@ -32,11 +32,21 @@ export function createCommandString(command: ClientCommand): string {
 		: command.type
 }
 
-type CommandHandlerMap<This = void> = {
+export type CommandHandlerMap<This = void> = {
 	[K in keyof ServerCommandRecord]?: (
 		this: This,
 		params: ServerCommandRecord[K],
 	) => void
+}
+
+export function handleServerCommand<This = undefined>(
+	command: ServerCommand,
+	handlers: CommandHandlerMap<This>,
+	thisArg?: This,
+) {
+	const handler = handlers[command.type]
+	handler?.call(thisArg as any, command.params as never) // lol
+	return handler != null
 }
 
 export function createBoundCommandHandler<This>(
@@ -44,9 +54,7 @@ export function createBoundCommandHandler<This>(
 	handlers: CommandHandlerMap<This>,
 ) {
 	return function handleCommand(command: ServerCommand) {
-		const handler = handlers[command.type]
-		handler?.call(thisArg, command.params as never) // lol
-		return handler != null
+		return handleServerCommand(command, handlers, thisArg)
 	}
 }
 

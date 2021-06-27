@@ -1,10 +1,8 @@
-export type Dict<T, K extends string | number | symbol = string> = {
-	[_ in K]?: T
+export interface Dict<T> {
+	readonly [key: string]: T
 }
 
-export type ValueOf<T> = T extends readonly (infer V)[] ? V : T[keyof T]
-
-export type StringAutocompleteHack = string & { __autocompleteHack?: never }
+export type ValueOf<T> = T extends readonly unknown[] ? T[number] : T[keyof T]
 
 export type DeepReadonly<T> = T extends Record<string, unknown>
 	? { readonly [K in keyof T]: DeepReadonly<T[K]> }

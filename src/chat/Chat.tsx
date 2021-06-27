@@ -1,3 +1,4 @@
+import { useReducer } from "react"
 import { Routes } from "react-router-dom"
 import ChatNav from "../chatNav/ChatNav"
 import { ChatNavAction } from "../chatNav/ChatNavAction"
@@ -8,6 +9,12 @@ import { solidButton } from "../ui/components"
 import * as icons from "../ui/icons"
 import LoadingOverlay from "../ui/LoadingOverlay"
 import NoRoomView from "./NoRoomView"
+import {
+	chatStateReducer,
+	getCharacter,
+	initialChatState,
+	serverCommandAction,
+} from "./state"
 import { useSocketConnection } from "./useSocketConnection"
 
 export default function Chat({
@@ -19,7 +26,15 @@ export default function Chat({
 	identity: string
 	onLogout: () => void
 }) {
-	const { status, reconnect } = useSocketConnection(user, identity)
+	const [state, dispatch] = useReducer(chatStateReducer, initialChatState)
+
+	const { status, reconnect } = useSocketConnection({
+		user,
+		identity,
+		onCommand(command) {
+			dispatch(serverCommandAction({ command, identity }))
+		},
+	})
 
 	switch (status) {
 		case "connecting":
@@ -51,7 +66,7 @@ export default function Chat({
 
 	return (
 		<div className="flex flex-row h-full gap-1">
-			<ChatNav identity={identity}>
+			<ChatNav identityCharacter={getCharacter(state, identity)}>
 				<ChatNavAction icon={icons.list} name="Browse channels" />
 				<ChatNavAction icon={icons.updateStatus} name="Update your status" />
 				<ChatNavAction

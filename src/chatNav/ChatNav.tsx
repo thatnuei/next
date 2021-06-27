@@ -1,12 +1,13 @@
 import type { ReactNode } from "react"
 import CharacterSummary from "../character/CharacterSummary"
+import type { Character } from "../chat/state"
 import RoomTabList from "./RoomTabList"
 
 export default function ChatNav({
-	identity,
+	identityCharacter,
 	children,
 }: {
-	identity: string
+	identityCharacter: Character
 	children: ReactNode
 }) {
 	return (
@@ -14,7 +15,7 @@ export default function ChatNav({
 			<div className={`flex flex-col`}>{children}</div>
 			<div className={`flex flex-col w-56 overflow-y-auto bg-midnight-1`}>
 				<CharacterSummary
-					name={identity}
+					character={identityCharacter}
 					className={`p-3 mb-1 bg-midnight-0`}
 				/>
 				<div className={`flex-1`}>

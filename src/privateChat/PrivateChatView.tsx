@@ -2,7 +2,6 @@ import { useObservable } from "micro-observables"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
-import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import MessageList from "../message/MessageList"
@@ -23,7 +22,7 @@ function PrivateChatView({ partnerName }: Props) {
 
 	return (
 		<div className="flex flex-col h-full">
-			<div className="flex flex-row items-center h-20 px-3 mb-1 gap-3 bg-midnight-0">
+			<div className="flex flex-row items-center h-20 gap-3 px-3 mb-1 bg-midnight-0">
 				<ChatMenuButton />
 
 				<CharacterMenuTarget name={partnerName}>
@@ -35,7 +34,7 @@ function PrivateChatView({ partnerName }: Props) {
 					<div className="my-3">
 						<CharacterName name={partnerName} />
 						{/* the bottom margin needs to be here otherwise the scrolling flex column eats the bottom spacing */}
-						<CharacterStatusText name={partnerName} className="mb-3" />
+						{/* <CharacterStatusText name={partnerName} className="mb-3" /> */}
 					</div>
 				</div>
 			</div>

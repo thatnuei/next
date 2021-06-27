@@ -1,26 +1,19 @@
-import { useObservable } from "micro-observables"
 import BBC from "../bbc/BBC"
-import type { TagProps } from "../jsx/types"
+import type { Character } from "../chat/state"
 import { statusColors } from "./colors"
-import { useCharacter } from "./helpers"
 
-type Props = TagProps<"p"> & {
-	name: string
-}
-
-function CharacterStatusText({ name, className = "", ...props }: Props) {
-	const character = useCharacter(name)
-	const status = useObservable(character.status)
-
+function CharacterStatusText({ character }: { character: Character }) {
 	return (
-		<p className={`${`text-sm`} ${className}`} {...props}>
+		<p className="text-sm">
 			<span
-				className={status.type === "crown" ? "rainbow-animation" : ""}
-				style={{ color: statusColors[status.type] }}
+				className={character.status === "crown" ? "rainbow-animation" : ""}
+				style={{ color: statusColors[character.status] }}
 			>
-				{status.type === "crown" ? "awesome" : status.type}
+				{character.status === "crown" ? "awesome" : character.status}
 			</span>
-			{status.text ? <BBC text={` - ${status.text}`} /> : undefined}
+			{character.statusMessage ? (
+				<BBC text={` - ${character.statusMessage}`} />
+			) : undefined}
 		</p>
 	)
 }

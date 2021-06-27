@@ -14,7 +14,6 @@ import ContextMenu, {
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import CharacterMemoInput from "./CharacterMemoInput"
-import CharacterSummary from "./CharacterSummary"
 
 interface Props {
 	name: string
@@ -50,7 +49,7 @@ function CharacterMenu({ name }: { name: string }) {
 	return (
 		<>
 			<div className={`p-3 space-y-3 bg-midnight-0`}>
-				<CharacterSummary name={name} />
+				{/* <CharacterSummary name={name} /> */}
 
 				{friendshipItems.map((item, index) => (
 					<div
