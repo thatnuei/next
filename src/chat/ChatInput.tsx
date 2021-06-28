@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useIdentity } from "../app/helpers"
+import { useIdentity } from "../chat/identityContext"
 import Button from "../dom/Button"
 import { input, solidButton } from "../ui/components"
 

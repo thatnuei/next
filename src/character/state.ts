@@ -1,4 +1,5 @@
 import { atom, atomFamily, useRecoilCallback, useRecoilValue } from "recoil"
+import { useIdentity } from "../chat/identityContext"
 import { truthyMap } from "../common/truthyMap"
 import type { TruthyMap } from "../common/types"
 import type { AuthUser } from "../flist/types"
@@ -41,9 +42,11 @@ function createCharacter(name: string): Character {
 }
 
 export function useCharacterCommandHandler() {
+	const identity = useIdentity()
+
 	return useRecoilCallback(
 		({ set }) =>
-			(command: ServerCommand, user: AuthUser, identity: string) => {
+			(command: ServerCommand, user: AuthUser) => {
 				matchCommand(command, {
 					// async IDN() {
 					//   const result = await this.userStore.getFriendsAndBookmarks()

@@ -2,14 +2,10 @@ import CharacterSummary from "../character/CharacterSummary"
 import { ChatNavAction } from "../chatNav/ChatNavAction"
 import RoomTabList from "../chatNav/RoomTabList"
 import * as icons from "../ui/icons"
+import { useIdentity } from "./identityContext"
 
-export default function ChatNav({
-	identity,
-	onLogout,
-}: {
-	identity: string
-	onLogout: () => void
-}) {
+export default function ChatNav({ onLogout }: { onLogout: () => void }) {
+	const identity = useIdentity()
 	return (
 		<nav className={`flex h-full bg-midnight-2`}>
 			<div className={`flex flex-col`}>

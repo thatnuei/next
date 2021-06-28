@@ -1,4 +1,4 @@
-import { useIdentity } from "../app/helpers"
+import { useIdentity } from "../chat/identityContext"
 import { useRootStore } from "../root/context"
 
 export function useCharacter(name: string) {

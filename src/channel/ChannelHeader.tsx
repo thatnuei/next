@@ -1,7 +1,7 @@
 import { useObservable } from "micro-observables"
 import * as React from "react"
-import { useIdentity } from "../app/helpers"
 import BBC from "../bbc/BBC"
+import { useIdentity } from "../chat/identityContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
@@ -42,7 +42,7 @@ function ChannelHeader({ channelId }: Props) {
 	}
 
 	return (
-		<header className="flex flex-row items-center p-3 gap-3 bg-midnight-0">
+		<header className="flex flex-row items-center gap-3 p-3 bg-midnight-0">
 			<ChatMenuButton />
 
 			<Modal
