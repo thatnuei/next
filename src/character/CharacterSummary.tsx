@@ -13,19 +13,19 @@ function CharacterSummary({
 	name: string
 	className?: string
 }) {
-	const character = useCharacter(name)
+	const { gender } = useCharacter(name)
 	return (
 		<div className={className}>
 			<ExternalLink
-				href={getProfileUrl(character.name)}
+				href={getProfileUrl(name)}
 				className={`${headerText2} leading-none`}
-				style={{ color: genderColors[character.gender] }}
+				style={{ color: genderColors[gender] }}
 			>
-				{character.name}
+				{name}
 			</ExternalLink>
 
-			<ExternalLink href={getProfileUrl(character.name)}>
-				<Avatar name={character.name} className="my-3" />
+			<ExternalLink href={getProfileUrl(name)}>
+				<Avatar name={name} className="my-3" />
 			</ExternalLink>
 
 			<div
