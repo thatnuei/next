@@ -1,18 +1,14 @@
 import type { ReactNode } from "react"
+import { useContext } from "react"
 import Button from "../dom/Button"
+import { ConnectContext, SocketStatusContext } from "../socket/SocketConnection"
 import { solidButton } from "../ui/components"
 import LoadingOverlay from "../ui/LoadingOverlay"
-import type { SocketConnectionStatus } from "./useSocketConnection"
 
-export default function ConnectionGuard({
-	status,
-	onRetry,
-	children,
-}: {
-	status: SocketConnectionStatus
-	onRetry: () => void
-	children: ReactNode
-}) {
+export default function ConnectionGuard({ children }: { children: ReactNode }) {
+	const status = useContext(SocketStatusContext)
+	const connect = useContext(ConnectContext)
+
 	switch (status) {
 		case "connecting":
 			return <LoadingOverlay text="Connecting..." />
@@ -24,7 +20,7 @@ export default function ConnectionGuard({
 			return (
 				<ConnectionMessage
 					message="The socket connection was closed by the server."
-					onRetry={onRetry}
+					onRetry={connect}
 				/>
 			)
 
@@ -32,7 +28,7 @@ export default function ConnectionGuard({
 			return (
 				<ConnectionMessage
 					message="An error occurred while connecting"
-					onRetry={onRetry}
+					onRetry={connect}
 				/>
 			)
 	}
@@ -43,6 +39,7 @@ export default function ConnectionGuard({
 
 	return <>{children}</>
 }
+
 function ConnectionMessage(props: { message: string; onRetry: () => void }) {
 	return (
 		<>

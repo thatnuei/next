@@ -1,6 +1,6 @@
-import { Observable, useObservable } from "micro-observables"
 import type { CSSProperties, PropsWithChildren } from "react"
 import { Fragment, memo } from "react"
+import { useChannelUserCount } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
@@ -191,15 +191,7 @@ function BBCChannelLink({
 	type: "public" | "private"
 }>) {
 	const root = useRootStore()
-
-	const channels = useObservable(
-		Observable.from(
-			root.channelBrowserStore.publicChannels,
-			root.channelBrowserStore.privateChannels,
-		).transform((lists) => lists.flat()),
-	)
-
-	const userCount = channels.find((ch) => ch.id === id)?.userCount ?? 0
+	const userCount = useChannelUserCount(id)
 
 	return (
 		<span className={`inline-flex items-baseline`}>
@@ -210,8 +202,8 @@ function BBCChannelLink({
 				className="group"
 				onClick={() => root.channelStore.join(id, title)}
 			>
-				<span className={`underline group-hover:no-underline`}>{title}</span> (
-				{userCount})
+				<span className={`underline group-hover:no-underline`}>{title}</span>{" "}
+				<span>({userCount})</span>
 			</button>
 		</span>
 	)

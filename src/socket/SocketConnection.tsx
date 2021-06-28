@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import type { ReactNode } from "react"
+import { createContext, useCallback, useEffect, useRef, useState } from "react"
+import { useIdentity } from "../chat/identityContext"
 import type { AuthUser } from "../flist/types"
 import { useEffectRef } from "../react/useEffectRef"
-import { socketUrl } from "../socket/constants"
-import type { ClientCommand, ServerCommand } from "../socket/helpers"
-import { createCommandString, parseServerCommand } from "../socket/helpers"
+import { socketUrl } from "./constants"
+import type { ClientCommand, ServerCommand } from "./helpers"
+import { createCommandString, parseServerCommand } from "./helpers"
 
 export type SocketConnectionStatus =
 	| "offline"
@@ -13,22 +15,23 @@ export type SocketConnectionStatus =
 	| "error"
 	| "closed"
 
-export function useSocketConnection({
+export function SocketConnection({
 	user,
-	identity,
 	onCommand,
+	children,
 }: {
 	user: AuthUser
-	identity: string
 	onCommand: (command: ServerCommand) => void
+	children: ReactNode
 }) {
+	const identity = useIdentity()
 	const [status, setStatus] = useState<SocketConnectionStatus>("offline")
 	const socketRef = useRef<WebSocket>()
 	const onCommandRef = useEffectRef(onCommand)
 
-	function send(command: ClientCommand) {
+	const send = useCallback((command: ClientCommand) => {
 		socketRef.current?.send(createCommandString(command))
-	}
+	}, [])
 
 	const connect = useCallback(() => {
 		if (status !== "offline" && status !== "error" && status !== "closed") {
@@ -91,7 +94,7 @@ export function useSocketConnection({
 
 			onCommandRef.current(command)
 		}
-	}, [identity, onCommandRef, status, user.account, user.ticket])
+	}, [identity, onCommandRef, send, status, user.account, user.ticket])
 
 	const disconnect = useCallback(() => {
 		const socket = socketRef.current
@@ -109,5 +112,18 @@ export function useSocketConnection({
 	useEffect(() => connect(), [connect, identity, user.account, user.ticket])
 	useEffect(() => () => disconnect(), [disconnect])
 
-	return { status, connect, disconnect }
+	return (
+		<SocketStatusContext.Provider value={status}>
+			<ConnectContext.Provider value={connect}>
+				<SendCommandContext.Provider value={send}>
+					{children}
+				</SendCommandContext.Provider>
+			</ConnectContext.Provider>
+		</SocketStatusContext.Provider>
+	)
 }
+
+export const SocketStatusContext =
+	createContext<SocketConnectionStatus>("offline")
+export const ConnectContext = createContext(() => {})
+export const SendCommandContext = createContext((command: ClientCommand) => {})

@@ -1,28 +1,33 @@
 import clsx from "clsx"
 import fuzzysearch from "fuzzysearch"
 import { sortBy } from "lodash-es"
-import { useObservable } from "micro-observables"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Button from "../dom/Button"
-import { useRootStore } from "../root/context"
 import { input, solidButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
 import type { ChannelBrowserChannel } from "./ChannelBrowserStore"
+import {
+	useChannelBrowserIsRefreshing,
+	usePrivateChannels,
+	usePublicChannels,
+	useRefreshChannelBrowser,
+} from "./state"
 
 function ChannelBrowser() {
-	const root = useRootStore()
-
-	const publicChannels = useObservable(root.channelBrowserStore.publicChannels)
-	const privateChannels = useObservable(
-		root.channelBrowserStore.privateChannels,
-	)
-	const isRefreshing = useObservable(root.channelBrowserStore.isRefreshing)
+	const publicChannels = usePublicChannels()
+	const privateChannels = usePrivateChannels()
+	const isRefreshing = useChannelBrowserIsRefreshing()
+	const refresh = useRefreshChannelBrowser()
 
 	const [query, setQuery] = useState("")
 	const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
+
+	useEffect(() => {
+		void refresh()
+	}, [refresh])
 
 	const cycleSortMode = () =>
 		setSortMode((mode) => (mode === "title" ? "userCount" : "title"))
@@ -82,7 +87,7 @@ function ChannelBrowser() {
 				<Button
 					title="Refresh"
 					className={solidButton}
-					onClick={root.channelBrowserStore.refresh}
+					onClick={refresh}
 					disabled={isRefreshing}
 				>
 					<Icon which={icons.refresh} />

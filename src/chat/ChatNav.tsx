@@ -1,9 +1,11 @@
 import { useContext } from "react"
 import { LogoutContext } from "../app/App"
+import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import CharacterSummary from "../character/CharacterSummary"
 import { ChatNavAction } from "../chatNav/ChatNavAction"
 import RoomTabList from "../chatNav/RoomTabList"
 import * as icons from "../ui/icons"
+import Modal from "../ui/Modal"
 import { useIdentity } from "./identityContext"
 
 export default function ChatNav() {
@@ -12,7 +14,15 @@ export default function ChatNav() {
 	return (
 		<nav className={`flex h-full bg-midnight-2`}>
 			<div className={`flex flex-col`}>
-				<ChatNavAction icon={icons.list} name="Browse channels" />
+				<Modal
+					title="Channel Browser"
+					renderTrigger={(t) => (
+						<ChatNavAction icon={icons.list} name="Browse channels" {...t} />
+					)}
+				>
+					<ChannelBrowser />
+				</Modal>
+
 				<ChatNavAction icon={icons.updateStatus} name="Update your status" />
 				<ChatNavAction
 					icon={icons.users}
