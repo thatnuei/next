@@ -27,7 +27,9 @@ export default function Chat({
 	return (
 		<ConnectionGuard status={status} onRetry={connect}>
 			<div className="flex flex-row h-full gap-1">
-				<ChatNav onLogout={onLogout} />
+				<div className="hidden md:block">
+					<ChatNav onLogout={onLogout} />
+				</div>
 				<div className="flex-1">
 					<ChatRoutes />
 				</div>
