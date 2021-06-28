@@ -1,17 +1,10 @@
-import { useReducer } from "react"
-import { Routes } from "react-router-dom"
-import ChatNav from "../chatNav/ChatNav"
-import { ChatNavAction } from "../chatNav/ChatNavAction"
-import Button from "../dom/Button"
+import { useEffect, useReducer } from "react"
 import type { AuthUser } from "../flist/types"
-import TypedRoute from "../routing/TypedRoute"
-import { solidButton } from "../ui/components"
-import * as icons from "../ui/icons"
-import LoadingOverlay from "../ui/LoadingOverlay"
-import NoRoomView from "./NoRoomView"
+import ChatNav from "./ChatNav"
+import ChatRoutes from "./ChatRoutes"
+import ConnectionGuard from "./ConnectionGuard"
 import {
 	chatStateReducer,
-	getCharacter,
 	initialChatState,
 	serverCommandAction,
 } from "./state"
@@ -28,82 +21,32 @@ export default function Chat({
 }) {
 	const [state, dispatch] = useReducer(chatStateReducer, initialChatState)
 
-	const { status, reconnect } = useSocketConnection({
-		user,
-		identity,
+	const { status, connect, disconnect } = useSocketConnection({
 		onCommand(command) {
-			dispatch(serverCommandAction({ command, identity }))
+			if (identity) {
+				dispatch(serverCommandAction({ command, identity }))
+			}
 		},
 	})
 
-	switch (status) {
-		case "connecting":
-			return <LoadingOverlay text="Connecting..." />
-
-		case "identifying":
-			return <LoadingOverlay text="Identifying..." />
-
-		case "closed":
-			return (
-				<ConnectionMessage
-					message="The socket connection was closed by the server."
-					onRetry={reconnect}
-				/>
-			)
-
-		case "error":
-			return (
-				<ConnectionMessage
-					message="An error occurred while connecting"
-					onRetry={reconnect}
-				/>
-			)
+	const retry = () => {
+		connect(user.account, user.ticket, identity)
 	}
 
-	if (status !== "online") {
-		return null
-	}
+	useEffect(() => {
+		connect(user.account, user.ticket, identity)
+	}, [connect, identity, user.account, user.ticket])
+
+	useEffect(() => () => disconnect(), [disconnect])
 
 	return (
-		<div className="flex flex-row h-full gap-1">
-			<ChatNav identityCharacter={getCharacter(state, identity)}>
-				<ChatNavAction icon={icons.list} name="Browse channels" />
-				<ChatNavAction icon={icons.updateStatus} name="Update your status" />
-				<ChatNavAction
-					icon={icons.users}
-					name="See online friends and bookmarks"
-				/>
-				<ChatNavAction icon={icons.about} name="About next" />
-				<div className={`flex-1`} />
-				<ChatNavAction icon={icons.logout} name="Log out" onClick={onLogout} />
-			</ChatNav>
-
-			<div className="flex-1">
-				<Routes>
-					<TypedRoute path="*" render={() => <NoRoomView />} />
-
-					<TypedRoute
-						path="channel/:channelId"
-						render={(params) => <p>channel {params.channelId}</p>}
-					/>
-
-					<TypedRoute
-						path="dm/:partnerName"
-						render={(params) => <p>private chat {params.partnerName}</p>}
-					/>
-				</Routes>
+		<ConnectionGuard status={status} onRetry={retry}>
+			<div className="flex flex-row h-full gap-1">
+				<ChatNav state={state} identity={identity} onLogout={onLogout} />
+				<div className="flex-1">
+					<ChatRoutes />
+				</div>
 			</div>
-		</div>
-	)
-}
-
-function ConnectionMessage(props: { message: string; onRetry: () => void }) {
-	return (
-		<>
-			<p>{props.message}</p>
-			<Button className={solidButton} onClick={props.onRetry}>
-				Retry
-			</Button>
-		</>
+		</ConnectionGuard>
 	)
 }
