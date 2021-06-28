@@ -29,6 +29,7 @@ export default function App() {
 		return (
 			<IslandLayout title="Select a character" isVisible>
 				<CharacterSelect
+					account={user.account}
 					characters={user.characters}
 					onReturnToLogin={() => setUser(undefined)}
 					onSubmit={setIdentity}
