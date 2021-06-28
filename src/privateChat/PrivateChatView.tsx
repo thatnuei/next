@@ -2,6 +2,7 @@ import { useObservable } from "micro-observables"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
+import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import MessageList from "../message/MessageList"
@@ -33,8 +34,9 @@ function PrivateChatView({ partnerName }: Props) {
 					{/* need this extra container to keep the children from shrinking */}
 					<div className="my-3">
 						<CharacterName name={partnerName} />
-						{/* the bottom margin needs to be here otherwise the scrolling flex column eats the bottom spacing */}
-						{/* <CharacterStatusText name={partnerName} className="mb-3" /> */}
+						<CharacterStatusText name={partnerName} />
+						{/* this spacer needs to be here, otherwise the scrolling flex column eats the bottom spacing */}
+						<div className="h-3" />
 					</div>
 				</div>
 			</div>
