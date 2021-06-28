@@ -39,14 +39,12 @@ export type CommandHandlerMap<This = void> = {
 	) => void
 }
 
-export function handleServerCommand<This = undefined>(
+export function matchCommand(
 	command: ServerCommand,
-	handlers: CommandHandlerMap<This>,
-	thisArg?: This,
+	handlers: CommandHandlerMap,
 ) {
 	const handler = handlers[command.type]
-	handler?.call(thisArg as any, command.params as never) // lol
-	return handler != null
+	handler?.(command.params as never) // lol
 }
 
 export function createBoundCommandHandler<This>(
@@ -54,7 +52,9 @@ export function createBoundCommandHandler<This>(
 	handlers: CommandHandlerMap<This>,
 ) {
 	return function handleCommand(command: ServerCommand) {
-		return handleServerCommand(command, handlers, thisArg)
+		const handler = handlers[command.type]
+		handler?.call(thisArg as any, command.params as never) // lol
+		return handler != null
 	}
 }
 

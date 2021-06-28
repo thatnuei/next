@@ -1,8 +1,9 @@
 import BBC from "../bbc/BBC"
-import type { Character } from "../chat/state"
 import { statusColors } from "./colors"
+import { useCharacter } from "./state"
 
-function CharacterStatusText({ character }: { character: Character }) {
+function CharacterStatusText({ name }: { name: string }) {
+	const character = useCharacter(name)
 	return (
 		<p className="text-sm">
 			<span

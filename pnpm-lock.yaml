@@ -45,6 +45,7 @@ specifiers:
   react-router: 6.0.0-beta.0
   react-router-dom: 6.0.0-beta.0
   react-window: ^1.8.6
+  recoil: 0.3.1
   resize-observer-polyfill: ^1.5.1
   source-map-explorer: ^2.5.2
   tailwindcss: 2.2.2
@@ -74,6 +75,7 @@ dependencies:
   react-router: 6.0.0-beta.0_18f62e0c9be73b33d1bc39fb6ab2241f
   react-router-dom: 6.0.0-beta.0_fc83a9468485ed5cad8e6a1ca5686c5e
   react-window: 1.8.6_91e8dcd89a9dd3d141cc4c990e002879
+  recoil: 0.3.1_91e8dcd89a9dd3d141cc4c990e002879
   resize-observer-polyfill: 1.5.1
 
 devDependencies:
@@ -2087,6 +2089,10 @@ packages:
       duplexer: 0.1.2
     dev: true
 
+  /hamt_plus/1.0.2:
+    resolution: {integrity: sha1-4hwlKWjH4zsg9qGwlM2FeHomVgE=}
+    dev: false
+
   /has-bigints/1.0.1:
     resolution: {integrity: sha512-LSBS2LjbNBTf6287JEbEzvJgftkF5qFkmCo9hDRpAzKhUOlJ+hx8dd4USs00SgsUNwc4617J9ki5YtEClM2ffA==}
     dev: true
@@ -3046,6 +3052,23 @@ packages:
       - core-js-bundle
       - regenerator-runtime
     dev: true
+
+  /recoil/0.3.1_91e8dcd89a9dd3d141cc4c990e002879:
+    resolution: {integrity: sha512-KNA3DRqgxX4rRC8E7fc6uIw7BACmMPuraIYy+ejhE8tsw7w32CetMm8w7AMZa34wzanKKkev3vl3H7Z4s0QSiA==}
+    peerDependencies:
+      react: '>=16.13.1'
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      hamt_plus: 1.0.2
+      react: 18.0.0-alpha-568dc3532
+      react-dom: 18.0.0-alpha-568dc3532_react@18.0.0-alpha-568dc3532
+    dev: false
 
   /redent/3.0.0:
     resolution: {integrity: sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==}

@@ -43,7 +43,7 @@ eslint-plugin-jsx-a11y
 		"@typescript-eslint/no-unused-vars": "off",
 		"react-hooks/exhaustive-deps": [
 			"warn",
-			{ "additionalHooks": "useRunnableEffect" }
+			{ "additionalHooks": "(useRunnableEffect|useRecoilCallback)" }
 		],
 		"no-undef": "off",
 		"no-unused-vars": "off",

@@ -1,18 +1,19 @@
-import type { Character } from "../chat/state"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
 import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
 import CharacterStatusText from "./CharacterStatusText"
 import { genderColors } from "./colors"
+import { useCharacter } from "./state"
 
 function CharacterSummary({
-	character,
+	name,
 	className,
 }: {
-	character: Character
+	name: string
 	className?: string
 }) {
+	const character = useCharacter(name)
 	return (
 		<div className={className}>
 			<ExternalLink
@@ -31,7 +32,7 @@ function CharacterSummary({
 				className={`px-3 py-2 overflow-y-auto bg-midnight-1`}
 				style={{ maxHeight: 300 }}
 			>
-				<CharacterStatusText character={character} />
+				<CharacterStatusText name={name} />
 			</div>
 		</div>
 	)

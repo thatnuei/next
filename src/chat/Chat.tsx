@@ -1,13 +1,8 @@
-import { useEffect, useReducer } from "react"
+import { useCharacterCommandHandler } from "../character/state"
 import type { AuthUser } from "../flist/types"
 import ChatNav from "./ChatNav"
 import ChatRoutes from "./ChatRoutes"
 import ConnectionGuard from "./ConnectionGuard"
-import {
-	chatStateReducer,
-	initialChatState,
-	serverCommandAction,
-} from "./state"
 import { useSocketConnection } from "./useSocketConnection"
 
 export default function Chat({
@@ -19,30 +14,20 @@ export default function Chat({
 	identity: string
 	onLogout: () => void
 }) {
-	const [state, dispatch] = useReducer(chatStateReducer, initialChatState)
+	const handleCharacterCommand = useCharacterCommandHandler()
 
-	const { status, connect, disconnect } = useSocketConnection({
+	const { status, connect } = useSocketConnection({
+		user,
+		identity,
 		onCommand(command) {
-			if (identity) {
-				dispatch(serverCommandAction({ command, identity }))
-			}
+			handleCharacterCommand(command, user, identity)
 		},
 	})
 
-	const retry = () => {
-		connect(user.account, user.ticket, identity)
-	}
-
-	useEffect(() => {
-		connect(user.account, user.ticket, identity)
-	}, [connect, identity, user.account, user.ticket])
-
-	useEffect(() => () => disconnect(), [disconnect])
-
 	return (
-		<ConnectionGuard status={status} onRetry={retry}>
+		<ConnectionGuard status={status} onRetry={connect}>
 			<div className="flex flex-row h-full gap-1">
-				<ChatNav state={state} identity={identity} onLogout={onLogout} />
+				<ChatNav identity={identity} onLogout={onLogout} />
 				<div className="flex-1">
 					<ChatRoutes />
 				</div>

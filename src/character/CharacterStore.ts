@@ -7,11 +7,7 @@ import { without } from "../common/without"
 import { createBoundCommandHandler } from "../socket/helpers"
 import type { SocketHandler } from "../socket/SocketHandler"
 import { CharacterModel } from "./CharacterModel"
-
-interface Friendship {
-	us: string
-	them: string
-}
+import type { Friendship } from "./types"
 
 export class CharacterStore {
 	readonly friends = observable<readonly Friendship[]>([])
