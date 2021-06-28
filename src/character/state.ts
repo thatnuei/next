@@ -1,4 +1,10 @@
-import { atom, atomFamily, useRecoilCallback, useRecoilValue } from "recoil"
+import {
+	atom,
+	atomFamily,
+	selectorFamily,
+	useRecoilCallback,
+	useRecoilValue,
+} from "recoil"
 import { useIdentity } from "../chat/identityContext"
 import { truthyMap } from "../common/truthyMap"
 import type { TruthyMap } from "../common/types"
@@ -10,6 +16,12 @@ import type { Character } from "./types"
 const characterAtom = atomFamily({
 	key: "character",
 	default: createCharacter,
+})
+
+const characterGenderSelector = selectorFamily({
+	key: "characterGender",
+	// prettier-ignore
+	get: (name: string) => ({ get }) => get(characterAtom(name)).gender,
 })
 
 const friendsAtom = atomFamily({
@@ -166,6 +178,10 @@ export function useCharacterCommandHandler() {
 
 export function useCharacter(name: string) {
 	return useRecoilValue(characterAtom(name))
+}
+
+export function useCharacterGender(name: string) {
+	return useRecoilValue(characterGenderSelector(name))
 }
 
 export function useGetCharacter() {

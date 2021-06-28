@@ -4,7 +4,7 @@ import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
 import CharacterStatusText from "./CharacterStatusText"
 import { genderColors } from "./colors"
-import { useCharacter } from "./state"
+import { useCharacterGender } from "./state"
 
 function CharacterSummary({
 	name,
@@ -13,7 +13,7 @@ function CharacterSummary({
 	name: string
 	className?: string
 }) {
-	const { gender } = useCharacter(name)
+	const gender = useCharacterGender(name)
 	return (
 		<div className={className}>
 			<ExternalLink
