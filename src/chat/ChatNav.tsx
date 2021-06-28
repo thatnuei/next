@@ -1,11 +1,14 @@
+import { useContext } from "react"
+import { LogoutContext } from "../app/App"
 import CharacterSummary from "../character/CharacterSummary"
 import { ChatNavAction } from "../chatNav/ChatNavAction"
 import RoomTabList from "../chatNav/RoomTabList"
 import * as icons from "../ui/icons"
 import { useIdentity } from "./identityContext"
 
-export default function ChatNav({ onLogout }: { onLogout: () => void }) {
+export default function ChatNav() {
 	const identity = useIdentity()
+	const logout = useContext(LogoutContext)
 	return (
 		<nav className={`flex h-full bg-midnight-2`}>
 			<div className={`flex flex-col`}>
@@ -17,7 +20,7 @@ export default function ChatNav({ onLogout }: { onLogout: () => void }) {
 				/>
 				<ChatNavAction icon={icons.about} name="About next" />
 				<div className={`flex-1`} />
-				<ChatNavAction icon={icons.logout} name="Log out" onClick={onLogout} />
+				<ChatNavAction icon={icons.logout} name="Log out" onClick={logout} />
 			</div>
 			<div className={`flex flex-col w-56 overflow-y-auto bg-midnight-1`}>
 				<CharacterSummary

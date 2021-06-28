@@ -6,13 +6,7 @@ import ConnectionGuard from "./ConnectionGuard"
 import { useIdentity } from "./identityContext"
 import { useSocketConnection } from "./useSocketConnection"
 
-export default function Chat({
-	user,
-	onLogout,
-}: {
-	user: AuthUser
-	onLogout: () => void
-}) {
+export default function Chat({ user }: { user: AuthUser }) {
 	const identity = useIdentity()
 	const handleCharacterCommand = useCharacterCommandHandler()
 
@@ -28,7 +22,7 @@ export default function Chat({
 		<ConnectionGuard status={status} onRetry={connect}>
 			<div className="flex flex-row h-full gap-1">
 				<div className="hidden md:block">
-					<ChatNav onLogout={onLogout} />
+					<ChatNav />
 				</div>
 				<div className="flex-1">
 					<ChatRoutes />

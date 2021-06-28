@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { createContext, useCallback, useState } from "react"
 import { RecoilRoot } from "recoil"
 import Chat from "../chat/Chat"
 import { IdentityProvider } from "../chat/identityContext"
@@ -7,9 +7,15 @@ import IslandLayout from "../ui/IslandLayout"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 
+export const LogoutContext = createContext(() => {})
+
 export default function App() {
 	const [user, setUser] = useState<AuthUser>()
 	const [identity, setIdentity] = useState<string>()
+
+	const logout = useCallback(() => {
+		setIdentity(undefined)
+	}, [])
 
 	if (!user) {
 		return (
@@ -34,7 +40,9 @@ export default function App() {
 	return (
 		<RecoilRoot>
 			<IdentityProvider identity={identity}>
-				<Chat user={user} onLogout={() => setIdentity(undefined)} />
+				<LogoutContext.Provider value={logout}>
+					<Chat user={user} />
+				</LogoutContext.Provider>
 			</IdentityProvider>
 		</RecoilRoot>
 	)
