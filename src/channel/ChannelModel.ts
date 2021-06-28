@@ -10,20 +10,17 @@ export class ChannelModel extends RoomModel {
 	readonly users = observable<readonly string[]>([])
 	readonly ops = observable<readonly string[]>([])
 
-	readonly actualMode = Observable.from(
-		this.mode,
-		this.selectedMode,
-	).transform(([mode, selectedMode]) => (mode === "both" ? selectedMode : mode))
+	readonly actualMode = Observable.from(this.mode, this.selectedMode).transform(
+		([mode, selectedMode]) => (mode === "both" ? selectedMode : mode),
+	)
 
 	readonly isPublic = this.title.transform((title) => title === this.id)
 
-	readonly linkCode = Observable.from(
-		this.title,
-		this.isPublic,
-	).transform(([title, isPublic]) =>
-		isPublic
-			? `[channel]${this.id}[/channel]`
-			: `[session=${this.id}]${title}[/session]`,
+	readonly linkCode = Observable.from(this.title, this.isPublic).transform(
+		([title, isPublic]) =>
+			isPublic
+				? `[channel]${this.id}[/channel]`
+				: `[session=${this.id}]${title}[/session]`,
 	)
 
 	constructor(readonly id: string) {

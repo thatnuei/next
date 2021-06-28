@@ -1,4 +1,4 @@
-import type { Observable } from "micro-observables";
+import type { Observable } from "micro-observables"
 import { observable } from "micro-observables"
 import { concatUnique } from "../common/concatUniq"
 import { factoryFrom } from "../common/factoryFrom"

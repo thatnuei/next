@@ -1,7 +1,7 @@
 import * as React from "react"
-import type { ComponentType, Key} from "react";
+import type { ComponentType, Key } from "react"
 import { useState } from "react"
-import type { ListChildComponentProps } from "react-window";
+import type { ListChildComponentProps } from "react-window"
 import { FixedSizeList } from "react-window"
 import { useElementSize } from "../dom/useElementSize"
 import type { TagProps } from "../jsx/types"

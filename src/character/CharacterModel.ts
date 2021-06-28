@@ -1,8 +1,11 @@
 import type * as fchat from "fchat"
-import type { WritableObservable } from "micro-observables";
+import type { WritableObservable } from "micro-observables"
 import { observable } from "micro-observables"
 
-export interface CharacterStatus { type: CharacterStatusType; text: string }
+export interface CharacterStatus {
+	type: CharacterStatusType
+	text: string
+}
 export type CharacterStatusType = fchat.Character.Status
 type CharacterGender = fchat.Character.Gender
 

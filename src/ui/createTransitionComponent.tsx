@@ -1,4 +1,4 @@
-import type { TransitionClasses } from "@headlessui/react";
+import type { TransitionClasses } from "@headlessui/react"
 import { Transition } from "@headlessui/react"
 import type { ReactNode } from "react"
 

@@ -6,7 +6,7 @@ import {
 	raisedPanel,
 	raisedPanelHeader,
 } from "./components"
-import type { DialogBaseProps } from "./DialogBase";
+import type { DialogBaseProps } from "./DialogBase"
 import DialogBase from "./DialogBase"
 import FadeRiseTransition from "./FadeRiseTransition"
 import Icon from "./Icon"

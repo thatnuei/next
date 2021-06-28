@@ -1,4 +1,4 @@
-import type { SwitchState} from "../react/switch";
+import type { SwitchState } from "../react/switch"
 import { useSwitch, useSwitchControlled } from "../react/switch"
 
 export interface OverlayProps {

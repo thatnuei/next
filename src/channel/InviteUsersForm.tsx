@@ -7,10 +7,12 @@ import { useRootStore } from "../root/context"
 import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import type { RenderItemInfo } from "../ui/VirtualizedList";
+import type { RenderItemInfo } from "../ui/VirtualizedList"
 import VirtualizedList from "../ui/VirtualizedList"
 
-interface Props { channelId: string }
+interface Props {
+	channelId: string
+}
 
 // need to have a list of all online character names in order to make them searchable,
 // do that later
