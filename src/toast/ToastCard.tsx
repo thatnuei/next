@@ -1,84 +1,113 @@
 import clsx from "clsx"
-import { useEffect, useState } from "react"
-import { createPortal } from "react-dom"
-import { uniqueId } from "../common/uniqueId"
+import { useEffect, useRef, useState } from "react"
+import { raise } from "../common/raise"
 import { useEffectRef } from "../react/useEffectRef"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import { useToastContext } from "./ToastProvider"
+import type { ToastOptions } from "./state"
 
-export default function ToastCard(props: {
-	type: "info" | "success" | "warning" | "error"
-	duration: number
-	children: string
-	onFinish?: () => void
-}) {
-	const [element, setElement] = useState<HTMLElement | null>()
-	const [portal, setPortal] = useState<HTMLElement>()
-	const { register, unregister } = useToastContext()
-	const [key] = useState(uniqueId)
-	const onFinishRef = useEffectRef(props.onFinish)
+interface ToastCardProps extends ToastOptions {
+	onDismissed?: () => void
+}
+
+type ToastStatus = "visible" | "dismissed"
+
+const transitionDuration = 150
+
+const keyframes = [
+	{ opacity: 0, transform: "scale(0.9)" },
+	{ opacity: 1, transform: "scale(1)" },
+]
+
+export default function ToastCard({
+	type,
+	duration,
+	content,
+	onDismissed,
+	onClick,
+}: ToastCardProps) {
+	const ref = useRef<HTMLButtonElement>(null)
+	const onDismissedRef = useEffectRef(onDismissed)
+	const [status, setStatus] = useState<ToastStatus>("visible")
 
 	useEffect(() => {
-		setPortal(register(key))
-		return () => unregister(key)
-	}, [key, register, unregister])
+		if (status === "visible") {
+			const element = ref.current ?? raise("ref not applied")
 
-	useEffect(() => {
-		if (!element) return
-
-		// we want the effect to have the same lead in / lead out time, regardless of the duration
-		// this number is the offset needed to achieve that
-		const offsetDifference = (props.duration + 300) / props.duration - 1
-
-		const animation = element.animate(
-			[
-				{ opacity: 0 },
-				{ opacity: 1, offset: offsetDifference },
-				{ opacity: 1, offset: 1 - offsetDifference },
-				{ opacity: 0 },
-			],
-			{
-				duration: props.duration,
+			const animation = element.animate(keyframes, {
+				duration: transitionDuration,
+				easing: "ease-out",
 				fill: "forwards",
-			},
-		)
+			})
 
-		animation.onfinish = () => onFinishRef.current?.()
-	}, [element, onFinishRef, props.duration])
+			const timeout = setTimeout(() => setStatus("dismissed"), duration)
+
+			return () => {
+				animation.cancel()
+				clearTimeout(timeout)
+			}
+		}
+
+		if (status === "dismissed") {
+			const element = ref.current ?? raise("ref not applied")
+
+			const animation = element.animate(keyframes, {
+				duration: transitionDuration,
+				easing: "ease-out",
+				direction: "reverse",
+				fill: "forwards",
+			})
+
+			animation.onfinish = () => {
+				onDismissedRef.current?.()
+			}
+
+			return () => {
+				animation.cancel()
+			}
+		}
+	}, [duration, onDismissedRef, status])
+
+	const handleClick = () => {
+		if (status === "visible") {
+			setStatus("dismissed")
+			onClick?.()
+		}
+	}
 
 	const typeInfo = {
 		info: {
-			className: clsx`bg-midnight-0`,
+			className: clsx`bg-midnight-0 hover:bg-midnight-1`,
 			icon: icons.about,
 		},
 		success: {
-			className: clsx`bg-green-700`,
+			className: clsx`bg-green-700 hover:bg-green-800`,
 			icon: icons.check,
 		},
 		warning: {
-			className: clsx`bg-yellow-600`,
+			className: clsx`bg-yellow-600 hover:bg-yellow-700`,
 			icon: icons.warning,
 		},
 		error: {
-			className: clsx`bg-red-800`,
+			className: clsx`bg-red-800 hover:bg-red-900`,
 			icon: icons.close,
 		},
-	}[props.type]
+	}[type]
 
-	return portal
-		? createPortal(
-				<div
-					className={clsx(
-						`flex w-64 gap-1 px-3 py-2 text-white rounded shadow-lg transition-opacity`,
-						typeInfo.className,
-					)}
-					ref={setElement}
-				>
-					<Icon which={typeInfo.icon} />
-					<span className="self-center flex-1">{props.children}</span>
-				</div>,
-				portal,
-		  )
-		: null
+	return (
+		<button
+			className={clsx(
+				`flex w-64 gap-1 p-2 text-white rounded shadow-lg transition-colors`,
+				typeInfo.className,
+				status !== "visible" && `pointer-events-none`,
+			)}
+			ref={ref}
+			onClick={handleClick}
+		>
+			<Icon which={typeInfo.icon} />
+			<span className="self-center flex-1" role="alert">
+				{content}
+			</span>
+		</button>
+	)
 }
