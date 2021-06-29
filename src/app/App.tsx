@@ -1,5 +1,4 @@
 import { createContext, useCallback, useState } from "react"
-import { RecoilRoot } from "recoil"
 import Chat from "../chat/Chat"
 import { IdentityProvider } from "../chat/identityContext"
 import type { AuthUser } from "../flist/types"
@@ -39,12 +38,10 @@ export default function App() {
 	}
 
 	return (
-		<RecoilRoot>
-			<IdentityProvider identity={identity}>
-				<LogoutContext.Provider value={logout}>
-					<Chat user={user} />
-				</LogoutContext.Provider>
-			</IdentityProvider>
-		</RecoilRoot>
+		<IdentityProvider identity={identity}>
+			<LogoutContext.Provider value={logout}>
+				<Chat user={user} />
+			</LogoutContext.Provider>
+		</IdentityProvider>
 	)
 }
