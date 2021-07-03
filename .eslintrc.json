@@ -50,7 +50,8 @@ eslint-plugin-jsx-a11y
 		"react/react-in-jsx-scope": ["off"],
 		"jsx-a11y/no-onchange": "off",
 		"class-methods-use-this": "warn",
-		"no-useless-rename": "warn"
+		"no-useless-rename": "warn",
+		"object-shorthand": "warn"
 	},
 	"ignorePatterns": ["**/node_modules/**", "**/dist/**", "src/generated/**"],
 	"settings": {
