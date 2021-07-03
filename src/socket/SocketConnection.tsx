@@ -25,7 +25,10 @@ export function SocketConnection({
 	children: ReactNode
 }) {
 	const identity = useIdentity()
+
 	const [status, setStatus] = useState<SocketConnectionStatus>("offline")
+	const statusRef = useEffectRef(status)
+
 	const socketRef = useRef<WebSocket>()
 	const onCommandRef = useEffectRef(onCommand)
 
@@ -34,6 +37,7 @@ export function SocketConnection({
 	}, [])
 
 	const connect = useCallback(() => {
+		const status = statusRef.current
 		if (status !== "offline" && status !== "error" && status !== "closed") {
 			return
 		}
@@ -94,7 +98,7 @@ export function SocketConnection({
 
 			onCommandRef.current(command)
 		}
-	}, [identity, onCommandRef, send, status, user.account, user.ticket])
+	}, [identity, onCommandRef, send, statusRef, user.account, user.ticket])
 
 	const disconnect = useCallback(() => {
 		const socket = socketRef.current
