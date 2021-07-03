@@ -1,0 +1,276 @@
+import { useCallback, useEffect } from "react"
+import {
+	atom,
+	atomFamily,
+	selector,
+	selectorFamily,
+	useRecoilCallback,
+	useRecoilValue,
+} from "recoil"
+import { characterAtom } from "../character/state"
+import type { Character } from "../character/types"
+import { useAuthUser } from "../chat/authUserContext"
+import { useIdentity } from "../chat/identityContext"
+import { truthyMap } from "../common/truthyMap"
+import type { TruthyMap } from "../common/types"
+import type { MessageState } from "../message/MessageState"
+import {
+	createAdMessage,
+	createChannelMessage,
+	createSystemMessage,
+} from "../message/MessageState"
+import type { ServerCommand } from "../socket/helpers"
+import { matchCommand } from "../socket/helpers"
+import { useSendCommand } from "../socket/SocketConnection"
+import { loadChannels, saveChannels } from "./storage"
+import type { ChannelMode } from "./types"
+
+export interface Channel {
+	id: string
+	title: string
+	description: string
+	mode: ChannelMode
+	selectedMode: ChannelMode
+	users: TruthyMap
+	ops: TruthyMap
+	isUnread: boolean
+	chatInput: string
+}
+
+function createChannel(id: string): Channel {
+	return {
+		id,
+		title: id,
+		description: "",
+		mode: "both",
+		selectedMode: "both",
+		users: {},
+		ops: {},
+		isUnread: false,
+		chatInput: "",
+	}
+}
+
+const channelAtom = atomFamily({
+	key: "channel",
+	default: createChannel,
+})
+
+// todo: represent join states instead of just booleans (?)
+const joinedChannelIdsAtom = atom<TruthyMap>({
+	key: "joinedChannelIds",
+	default: {},
+})
+
+const joinedChannelsSelector = selector({
+	key: "joinedChannels",
+	get: ({ get }) => {
+		const joinedChannelIds = get(joinedChannelIdsAtom)
+		return Object.keys(joinedChannelIds).map((id) => get(channelAtom(id)))
+	},
+})
+
+const isChannelJoinedSelector = selectorFamily({
+	key: "isChannelJoined",
+	get:
+		(id: string) =>
+		({ get }) =>
+			get(joinedChannelIdsAtom)[id] ?? false,
+})
+
+const channelMessages = atomFamily({
+	key: "channelMessages",
+	default: (channelId: string): readonly MessageState[] => [],
+})
+
+const channelCharacters = selectorFamily({
+	key: "channelCharacters",
+	get:
+		(channelId: string) =>
+		({ get }): readonly Character[] => {
+			const users = get(channelAtom(channelId)).users
+			return Object.keys(users).map((name) => get(characterAtom(name)))
+		},
+})
+
+export function useChannel(id: string) {
+	return useRecoilValue(channelAtom(id))
+}
+
+export function useJoinedChannels() {
+	return useRecoilValue(joinedChannelsSelector)
+}
+
+export function useIsChannelJoined(id: string) {
+	return useRecoilValue(isChannelJoinedSelector(id))
+}
+
+export function useChannelMessages(id: string) {
+	return useRecoilValue(channelMessages(id))
+}
+
+export function useChannelCharacters(id: string) {
+	return useRecoilValue(channelCharacters(id))
+}
+
+export function useActualChannelMode(id: string) {
+	const channel = useChannel(id)
+	return channel.mode === "both" ? channel.selectedMode : channel.mode
+}
+
+export function useChannelActions() {
+	const send = useSendCommand()
+
+	const updateChannel = useRecoilCallback(
+		({ set }) =>
+			(id: string, properties: Partial<Channel>) => {
+				set(channelAtom(id), (prev) => ({ ...prev, ...properties }))
+			},
+	)
+
+	const join = useCallback(
+		(id: string, title?: string) => {
+			send({
+				type: "JCH",
+				params: { channel: id },
+			})
+
+			if (title) {
+				updateChannel(id, { title })
+			}
+		},
+		[send, updateChannel],
+	)
+
+	const leave = useCallback(
+		(id: string) => {
+			send({
+				type: "LCH",
+				params: {
+					channel: id,
+				},
+			})
+		},
+		[send],
+	)
+
+	const sendMessage = useCallback(
+		(id: string, message: string) => {
+			send({
+				type: "MSG",
+				params: {
+					channel: id,
+					message,
+				},
+			})
+		},
+		[send],
+	)
+
+	const clearMessages = useRecoilCallback(
+		({ set }) =>
+			(id: string) =>
+				set(channelMessages(id), []),
+		[],
+	)
+
+	return {
+		join,
+		leave,
+		sendMessage,
+		updateChannel,
+		clearMessages,
+	}
+}
+
+export function useChannelCommandHandler() {
+	const identity = useIdentity()
+	const { account } = useAuthUser()
+	const actions = useChannelActions()
+
+	const joinedChannelIds = useRecoilValue(joinedChannelIdsAtom)
+	useEffect(() => {
+		saveChannels(Object.keys(joinedChannelIds), account, identity)
+	}, [account, identity, joinedChannelIds])
+
+	return useRecoilCallback(({ set }) => (command: ServerCommand) => {
+		matchCommand(command, {
+			async IDN() {
+				set(joinedChannelIdsAtom, {})
+
+				const channelIds = await loadChannels(account, identity)
+				for (const id of channelIds) {
+					actions.join(id)
+				}
+			},
+
+			JCH({ channel: id, character: { identity: name }, title }) {
+				if (name === identity) {
+					set(joinedChannelIdsAtom, (prev) => ({ ...prev, [id]: true }))
+				}
+
+				set(channelAtom(id), (prev) => ({
+					...prev,
+					title,
+					users: { ...prev.users, [name]: true },
+				}))
+			},
+
+			LCH({ channel: id, character }) {
+				if (character === identity) {
+					set(joinedChannelIdsAtom, (prev) => ({ ...prev, [id]: false }))
+				}
+
+				set(channelAtom(id), (prev) => ({
+					...prev,
+					users: { ...prev.users, [character]: false },
+				}))
+			},
+
+			ICH({ channel: id, users, mode }) {
+				set(channelAtom(id), (prev) => ({
+					...prev,
+					mode,
+					users: truthyMap(users.map((user) => user.identity)),
+				}))
+			},
+
+			CDS({ channel: id, description }) {
+				set(channelAtom(id), (prev) => ({
+					...prev,
+					description,
+				}))
+			},
+
+			COL({ channel: id, oplist }) {
+				set(channelAtom(id), (prev) => ({
+					...prev,
+					ops: truthyMap(oplist),
+				}))
+			},
+
+			MSG({ channel: id, message, character }) {
+				set(channelMessages(id), (prev) => [
+					...prev,
+					createChannelMessage(character, message),
+				])
+			},
+
+			LRP({ channel: id, character, message }) {
+				set(channelMessages(id), (prev) => [
+					...prev,
+					createAdMessage(character, message),
+				])
+			},
+
+			RLL(params) {
+				if ("channel" in params) {
+					set(channelMessages(params.channel), (prev) => [
+						...prev,
+						createSystemMessage(params.message),
+					])
+				}
+			},
+		})
+	})
+}

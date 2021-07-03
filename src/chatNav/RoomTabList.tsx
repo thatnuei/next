@@ -1,7 +1,8 @@
 import { sortBy } from "lodash-es"
 import { useObservable } from "micro-observables"
-import type { ChannelModel } from "../channel/ChannelModel"
-import { useJoinedChannels } from "../channel/helpers"
+import { useMatch, useNavigate } from "react-router-dom"
+import type { Channel } from "../channel/state"
+import { useChannelActions, useJoinedChannels } from "../channel/state"
 import { useIsPublicChannel } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import { useOpenPrivateChats } from "../privateChat/helpers"
@@ -48,27 +49,23 @@ function PrivateChatTab({ chat }: { chat: PrivateChatModel }) {
 	)
 }
 
-function ChannelRoomTab({ channel }: { channel: ChannelModel }) {
-	const root = useRootStore()
-	const { view, showChannel } = useChatNav()
-
-	const title = useObservable(channel.title)
-	const isUnread = useObservable(channel.isUnread)
+function ChannelRoomTab({ channel }: { channel: Channel }) {
 	const isPublic = useIsPublicChannel(channel.id)
-
-	const isActive = view?.channelId === channel.id
+	const match = useMatch("channel/:channelId")
+	const navigate = useNavigate()
+	const { leave } = useChannelActions()
 
 	return (
 		<RoomTab
 			key={channel.id}
-			title={title}
+			title={channel.title}
 			icon={
 				isPublic ? <Icon which={icons.earth} /> : <Icon which={icons.lock} />
 			}
-			isActive={isActive}
-			isUnread={isUnread}
-			onClick={() => showChannel(channel.id)}
-			onClose={() => root.channelStore.leave(channel.id)}
+			isActive={match?.params.channelId === channel.id}
+			isUnread={channel.isUnread}
+			onClick={() => navigate(`channel/${channel.id}`)}
+			onClose={() => leave(channel.id)}
 		/>
 	)
 }

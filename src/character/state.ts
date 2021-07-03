@@ -24,17 +24,9 @@ function createCharacter(name: string): Character {
 	}
 }
 
-const characterAtom = atomFamily({
+export const characterAtom = atomFamily({
 	key: "character",
 	default: createCharacter,
-})
-
-const characterListSelector = selectorFamily({
-	key: "characterList",
-	get:
-		(names: readonly string[]) =>
-		({ get }): readonly Character[] =>
-			names.map(characterAtom).map(get),
 })
 
 const characterGenderSelector = selectorFamily({
@@ -87,10 +79,6 @@ const likedCharactersSelector = selectorFamily({
 
 export function useCharacter(name: string) {
 	return useRecoilValue(characterAtom(name))
-}
-
-export function useCharacterList(names: readonly string[]) {
-	return useRecoilValue(characterListSelector(names))
 }
 
 export function useCharacterGender(name: string) {

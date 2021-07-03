@@ -1,34 +1,35 @@
-import { useObservable } from "micro-observables"
 import { useMemo } from "react"
 import ChatInput from "../chat/ChatInput"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import MessageList from "../message/MessageList"
 import type { MessageState } from "../message/MessageState"
-import { useRootStore } from "../root/context"
 import { screenQueries } from "../ui/screens"
 import ChannelHeader from "./ChannelHeader"
 import ChannelUserList from "./ChannelUserList"
-import { useChannel } from "./helpers"
+import {
+	useActualChannelMode,
+	useChannel,
+	useChannelActions,
+	useChannelMessages,
+} from "./state"
 
 interface Props {
 	channelId: string
 }
 
 function ChannelView({ channelId }: Props) {
-	const root = useRootStore()
 	const channel = useChannel(channelId)
-	const messages = useObservable(channel.messages)
-	const chatInput = useObservable(channel.chatInput)
-	const actualMode = useObservable(channel.actualMode)
-
+	const messages = useChannelMessages(channelId)
+	const actualMode = useActualChannelMode(channelId)
+	const { sendMessage, updateChannel } = useChannelActions()
 	const isLargeScreen = useMediaQuery(screenQueries.large)
 
 	function updateChatInput(chatInput: string) {
-		channel.chatInput.set(chatInput)
+		updateChannel(channelId, { chatInput })
 	}
 
 	function submitChatInput(text: string) {
-		root.channelStore.sendMessage(channelId, text)
+		sendMessage(channelId, text)
 	}
 
 	const messageList = useMemo(() => {
@@ -62,7 +63,7 @@ function ChannelView({ channelId }: Props) {
 			</div>
 
 			<ChatInput
-				value={chatInput}
+				value={channel.chatInput}
 				onChangeText={updateChatInput}
 				onSubmit={submitChatInput}
 			/>

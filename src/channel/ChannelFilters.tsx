@@ -1,6 +1,5 @@
-import { useObservable } from "micro-observables"
 import Button from "../dom/Button"
-import { useChannel } from "./helpers"
+import { useChannel, useChannelActions } from "./state"
 import type { ChannelMode } from "./types"
 
 interface Props {
@@ -9,14 +8,14 @@ interface Props {
 
 function ChannelFilters({ channelId, ...props }: Props) {
 	const channel = useChannel(channelId)
-	const selectedMode = useObservable(channel.selectedMode)
+	const { updateChannel } = useChannelActions()
 
 	function setSelectedMode(mode: ChannelMode) {
-		channel.selectedMode.set(mode)
+		updateChannel(channelId, { selectedMode: mode })
 	}
 
 	function renderFilterButton(mode: ChannelMode, label: string) {
-		const isSelected = selectedMode === mode
+		const isSelected = channel.selectedMode === mode
 
 		return (
 			<Button
@@ -33,11 +32,9 @@ function ChannelFilters({ channelId, ...props }: Props) {
 	}
 
 	return (
-		<div className="flex flex-row" role="radiogroup" {...props}>
+		<div className="flex flex-row gap-3" role="radiogroup" {...props}>
 			{renderFilterButton("both", "Both")}
-			<div className="w-3" />
 			{renderFilterButton("chat", "Chat")}
-			<div className="w-3" />
 			{renderFilterButton("ads", "Ads")}
 		</div>
 	)

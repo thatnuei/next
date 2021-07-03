@@ -2,6 +2,7 @@ import { createContext, useCallback, useState } from "react"
 import { AuthUserProvider } from "../chat/authUserContext"
 import Chat from "../chat/Chat"
 import { IdentityProvider } from "../chat/identityContext"
+import { ChatNavProvider } from "../chatNav/chatNavContext"
 import type { AuthUser } from "../flist/types"
 import IslandLayout from "../ui/IslandLayout"
 import CharacterSelect from "./CharacterSelect"
@@ -42,7 +43,9 @@ export default function App() {
 		<IdentityProvider identity={identity}>
 			<LogoutContext.Provider value={logout}>
 				<AuthUserProvider user={user}>
-					<Chat />
+					<ChatNavProvider>
+						<Chat />
+					</ChatNavProvider>
 				</AuthUserProvider>
 			</LogoutContext.Provider>
 		</IdentityProvider>

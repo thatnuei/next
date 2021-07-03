@@ -1,5 +1,6 @@
 import type { CSSProperties, PropsWithChildren } from "react"
 import { Fragment, memo } from "react"
+import { useChannelActions } from "../channel/state"
 import { useChannelUserCount } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
@@ -7,7 +8,6 @@ import CharacterName from "../character/CharacterName"
 import { memoize } from "../common/memoize"
 import ExternalLink from "../dom/ExternalLink"
 import { getIconUrl } from "../flist/helpers"
-import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import { createBbcTree, getNodeChildrenAsText } from "./helpers"
@@ -190,18 +190,15 @@ function BBCChannelLink({
 	title: string
 	type: "public" | "private"
 }>) {
-	const root = useRootStore()
 	const userCount = useChannelUserCount(id)
+	const { join } = useChannelActions()
 
 	return (
 		<span className={`inline-flex items-baseline`}>
 			<span className={`self-center inline w-4 h-4 mr-1 opacity-75`}>
 				<Icon which={type === "public" ? icons.earth : icons.lock} />
 			</span>
-			<button
-				className="group"
-				onClick={() => root.channelStore.join(id, title)}
-			>
+			<button className="group" onClick={() => join(id, title)}>
 				<span className={`underline group-hover:no-underline`}>{title}</span>{" "}
 				<span>({userCount})</span>
 			</button>

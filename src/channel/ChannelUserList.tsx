@@ -1,14 +1,14 @@
 import { sortBy } from "lodash-es"
-import { useObservable } from "micro-observables"
 import CharacterName from "../character/CharacterName"
-import { useCharacterList, useGetCharacterRoles } from "../character/state"
+import { useGetCharacterRoles } from "../character/state"
 import type { CharacterStatus } from "../character/types"
 import type { ValueOf } from "../common/types"
 import VirtualizedList from "../ui/VirtualizedList"
-import type { ChannelModel } from "./ChannelModel"
+import type { Channel } from "./state"
+import { useChannelCharacters } from "./state"
 
 interface Props {
-	channel: ChannelModel
+	channel: Channel
 }
 
 const itemTypes = [
@@ -22,16 +22,13 @@ const itemTypes = [
 type ItemType = ValueOf<typeof itemTypes>
 
 function ChannelUserList({ channel }: Props) {
-	const users = useObservable(channel.users)
-	const ops = useObservable(channel.ops)
-
-	const characters = useCharacterList(users)
+	const characters = useChannelCharacters(channel.id)
 	const getRoles = useGetCharacterRoles()
 
 	const getItemType = (name: string, status: CharacterStatus): ItemType => {
 		const roles = getRoles(name)
 		if (roles.isAdmin) return "admin"
-		if (ops.includes(name)) return "op"
+		if (channel.ops[name]) return "op"
 		if (roles.isBookmarked) return "bookmark"
 		if (roles.isFriend) return "friend"
 		if (status === "looking") return "looking"

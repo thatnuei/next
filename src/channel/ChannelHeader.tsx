@@ -1,10 +1,10 @@
-import { useObservable } from "micro-observables"
 import * as React from "react"
 import BBC from "../bbc/BBC"
 import { useIdentity } from "../chat/identityContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
+import { useShowToast } from "../toast/state"
 import { fadedButton, headerText2 } from "../ui/components"
 import Drawer from "../ui/Drawer"
 import DropdownMenu, {
@@ -18,8 +18,8 @@ import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
 import ChannelUserList from "./ChannelUserList"
-import { useChannel } from "./helpers"
 import InviteUsersForm from "./InviteUsersForm"
+import { useChannel, useChannelActions } from "./state"
 
 interface Props {
 	channelId: string
@@ -27,18 +27,26 @@ interface Props {
 
 function ChannelHeader({ channelId }: Props) {
 	const channel = useChannel(channelId)
-	const title = useObservable(channel.title)
-	const isPublic = useObservable(channel.isPublic)
-	const ops = useObservable(channel.ops)
-	const description = useObservable(channel.description)
 	const identity = useIdentity()
 	const isLargeScreen = useMediaQuery(screenQueries.large)
 	const [inviteOpen, setInviteOpen] = React.useState(false)
+	const showToast = useShowToast()
+	const { clearMessages } = useChannelActions()
+
+	const isPublic = channel.id === channel.title
+
+	const linkCode = isPublic
+		? `[channel]${channelId}[/channel]`
+		: `[session=${channelId}]${channel.title}[/session]`
 
 	const copyCodeToClipboard = () => {
-		window.navigator.clipboard
-			.writeText(channel.linkCode.get())
-			.catch(console.error)
+		window.navigator.clipboard.writeText(linkCode).catch(() => {
+			showToast({
+				content: "Copy to clipboard failed",
+				type: "error",
+				duration: 3000,
+			})
+		})
 	}
 
 	return (
@@ -55,13 +63,13 @@ function ChannelHeader({ channelId }: Props) {
 			>
 				<div className="w-full h-full min-h-0 overflow-y-auto">
 					<p className="p-4">
-						<BBC text={description} />
+						<BBC text={channel.description} />
 					</p>
 				</div>
 			</Modal>
 
 			<div className="flex-1">
-				<h1 className={headerText2}>{title}</h1>
+				<h1 className={headerText2}>{channel.title}</h1>
 			</div>
 
 			{isLargeScreen && <ChannelFilters channelId={channel.id} />}
@@ -102,12 +110,12 @@ function ChannelHeader({ channelId }: Props) {
 						</DropdownMenuItem>
 
 						<DropdownMenuItem icon={<Icon which={icons.clearMessages} />}>
-							<button type="button" onClick={() => channel.clearMessages()}>
+							<button type="button" onClick={() => clearMessages(channelId)}>
 								Clear messages
 							</button>
 						</DropdownMenuItem>
 
-						{isPublic && ops.includes(identity) && (
+						{isPublic && channel.ops[identity] && (
 							<DropdownMenuItem icon={<Icon which={icons.invite} />}>
 								<button type="button" onClick={() => setInviteOpen(true)}>
 									Invite
@@ -119,7 +127,7 @@ function ChannelHeader({ channelId }: Props) {
 			</DropdownMenu>
 
 			<Modal
-				title={`Invite to ${title}`}
+				title={`Invite to ${channel.title}`}
 				open={inviteOpen}
 				onOpenChange={setInviteOpen}
 			>

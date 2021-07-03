@@ -1,23 +1,22 @@
-import { useObservable } from "micro-observables"
+import { useChannelActions, useIsChannelJoined } from "../channel/state"
 import type { TagProps } from "../jsx/types"
-import { useRootStore } from "../root/context"
 import Icon from "../ui/Icon"
 import { earth, lock } from "../ui/icons"
-import type { ChannelBrowserChannel } from "./ChannelBrowserStore"
+import type { ChannelBrowserChannel } from "./state"
 
 type Props = TagProps<"button"> & {
 	info: ChannelBrowserChannel
 }
 
 function ChannelBrowserItem({ info, ...props }: Props) {
-	const root = useRootStore()
-	const isJoined = useObservable(root.channelStore.isJoined(info.id))
+	const isJoined = useIsChannelJoined(info.id)
+	const { join, leave } = useChannelActions()
 
 	const handleClick = () => {
 		if (isJoined) {
-			root.channelStore.leave(info.id)
+			leave(info.id)
 		} else {
-			root.channelStore.join(info.id, info.title)
+			join(info.id, info.title)
 		}
 	}
 

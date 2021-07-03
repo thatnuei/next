@@ -6,6 +6,7 @@ import {
 	useContext,
 	useState,
 } from "react"
+import { useChannelActions } from "../channel/state"
 import { raise } from "../common/raise"
 import { useRootStore } from "../root/context"
 import { createCommandHandler } from "../socket/helpers"
@@ -25,15 +26,16 @@ const Context = createContext<{
 export function ChatNavProvider({ children }: { children: ReactNode }) {
 	const root = useRootStore()
 	const [view, setView] = useState<ChatNavView>()
+	const { updateChannel } = useChannelActions()
 
 	const showChannel = useCallback(
 		(channelId: string) => {
-			root.channelStore.getChannel(channelId).isUnread.set(false)
+			updateChannel(channelId, { isUnread: false })
 			startTransition(() => {
 				setView({ channelId })
 			})
 		},
-		[root.channelStore],
+		[updateChannel],
 	)
 
 	const showPrivateChat = useCallback(
@@ -53,7 +55,7 @@ export function ChatNavProvider({ children }: { children: ReactNode }) {
 		createCommandHandler({
 			MSG({ channel: channelId }) {
 				if (view?.channelId !== channelId) {
-					root.channelStore.getChannel(channelId).isUnread.set(true)
+					updateChannel(channelId, { isUnread: true })
 				}
 			},
 			PRI({ character }) {

@@ -1,3 +1,4 @@
+import { useChannelCommandHandler } from "../channel/state"
 import { useChannelBrowserCommandHandler } from "../channelBrowser/state"
 import { useCharacterCommandHandler } from "../character/state"
 import type { ServerCommand } from "../socket/helpers"
@@ -9,10 +10,12 @@ import ConnectionGuard from "./ConnectionGuard"
 export default function Chat() {
 	const handleCharacterCommand = useCharacterCommandHandler()
 	const handleChannelBrowserCommand = useChannelBrowserCommandHandler()
+	const handleChannelCommand = useChannelCommandHandler()
 
 	const handleCommand = (command: ServerCommand) => {
 		handleCharacterCommand(command)
 		handleChannelBrowserCommand(command)
+		handleChannelCommand(command)
 	}
 
 	return (

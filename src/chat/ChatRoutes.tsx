@@ -1,4 +1,5 @@
 import { Routes } from "react-router-dom"
+import ChannelView from "../channel/ChannelView"
 import TypedRoute from "../routing/TypedRoute"
 import NoRoomView from "./NoRoomView"
 
@@ -9,7 +10,7 @@ export default function ChatRoutes() {
 
 			<TypedRoute
 				path="channel/:channelId"
-				render={(params) => <p>channel {params.channelId}</p>}
+				render={(params) => <ChannelView {...params} />}
 			/>
 
 			<TypedRoute
