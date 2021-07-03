@@ -1,27 +1,24 @@
 import clsx from "clsx"
-import { useObservable } from "micro-observables"
 import { memo } from "react"
 import CharacterMenuTarget from "./CharacterMenuTarget"
 import { genderColors, statusColors } from "./colors"
-import { useCharacter } from "./helpers"
+import { useCharacter } from "./state"
 
 interface Props {
 	name: string
 }
 
 function CharacterName({ name }: Props) {
-	const character = useCharacter(name)
-	const gender = useObservable(character.gender)
-	const status = useObservable(character.status)
+	const { gender, status } = useCharacter(name)
 
 	return (
 		<CharacterMenuTarget name={name}>
 			<span
 				className={clsx(
 					`inline-block mr-1 transform scale-150`,
-					status.type === "crown" && "rainbow-animation",
+					status === "crown" && "rainbow-animation",
 				)}
-				style={{ color: statusColors[status.type] }}
+				style={{ color: statusColors[status] }}
 			>
 				•
 			</span>

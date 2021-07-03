@@ -1,4 +1,5 @@
 import { createContext, useCallback, useState } from "react"
+import { AuthUserProvider } from "../chat/authUserContext"
 import Chat from "../chat/Chat"
 import { IdentityProvider } from "../chat/identityContext"
 import type { AuthUser } from "../flist/types"
@@ -40,7 +41,9 @@ export default function App() {
 	return (
 		<IdentityProvider identity={identity}>
 			<LogoutContext.Provider value={logout}>
-				<Chat user={user} />
+				<AuthUserProvider user={user}>
+					<Chat />
+				</AuthUserProvider>
 			</LogoutContext.Provider>
 		</IdentityProvider>
 	)

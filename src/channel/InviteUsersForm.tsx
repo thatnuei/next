@@ -1,9 +1,8 @@
 import { uniqBy } from "lodash-es"
-import { useObservable } from "micro-observables"
-import { useMemo } from "react"
-import type { CharacterModel } from "../character/CharacterModel"
 import CharacterName from "../character/CharacterName"
-import { useRootStore } from "../root/context"
+import { useLikedCharacters } from "../character/state"
+import type { Character } from "../character/types"
+import { useSendCommand } from "../socket/SocketConnection"
 import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -17,69 +16,25 @@ interface Props {
 // need to have a list of all online character names in order to make them searchable,
 // do that later
 function InviteUsersForm({ channelId }: Props) {
-	const root = useRootStore()
-
-	// const [searchInput, setSearchInput] = useState("")
-
-	const friends = useObservable(root.characterStore.friends)
-	const bookmarks = useObservable(root.characterStore.bookmarks)
-
-	const characterNames = useMemo(
-		() => [...friends.map((it) => it.them), ...bookmarks],
-		[bookmarks, friends],
-	)
-
-	// TODO: needs to be a proper observation
-	const characters = characterNames.map(root.characterStore.getCharacter)
-
-	// const matchesQuery = (it: CharacterState) =>
-	//   fuzzysearch(searchInput.toLowerCase(), it.name.toLowerCase())
-
-	// const getGroupOrder = (it: CharacterState) => {
-	//   if (isFriend(friends)(it.name)) return 1
-	//   if (bookmarks.includes(it.name)) return 2
-	//   return 3
-	// }
-
-	// const users = (() => {
-	//   const searchQuery = searchInput.toLowerCase().trim()
-
-	//   if (!searchQuery) {
-	//     const friendNames = sortBy(
-	//       toLower,
-	//       friends.map((it) => it.them),
-	//     )
-
-	//     const bookmarkNames = sortBy(toLower, bookmarks)
-
-	//     return [...friendNames, ...bookmarkNames]
-	//       .map(state.characters.get)
-	//       .filter((char) => char.status !== "offline")
-	//       .filter(matchesQuery)
-	//   }
-
-	//   return sortBy(
-	//     [getGroupOrder, (it) => it.name.toLowerCase()],
-	//     [...state.characters.values()].filter(matchesQuery),
-	//   )
-	// })()
+	const send = useSendCommand()
+	const characters = useLikedCharacters()
 
 	const sendInvite = (name: string) => {
 		// untested lol!
-		root.socket.send({
+		send({
 			type: "CIU",
 			params: { channel: channelId, character: name },
 		})
 	}
 
-	const renderItem = ({ item, style }: RenderItemInfo<CharacterModel>) => (
+	const renderItem = ({ item, style }: RenderItemInfo<Character>) => (
 		<div className={`flex flex-row items-center px-3 py-2`} style={style}>
 			<div className="flex-1">
-				<CharacterName name={item.name.get()} />
+				<CharacterName name={item.name} />
 			</div>
 			<button
 				className={`${fadedButton} flex flex-row ml-2`}
-				onClick={() => sendInvite(item.name.get())}
+				onClick={() => sendInvite(item.name)}
 			>
 				<Icon which={icons.invite} />
 				<span className={`ml-2`}>Invite</span>
@@ -96,7 +51,7 @@ function InviteUsersForm({ channelId }: Props) {
 				<VirtualizedList
 					items={uniqBy(characters, "name")}
 					itemSize={40}
-					getItemKey={(it) => it.name.get()}
+					getItemKey={(it) => it.name}
 					renderItem={renderItem}
 				/>
 			</div>

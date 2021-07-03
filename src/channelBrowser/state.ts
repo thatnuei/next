@@ -1,4 +1,4 @@
-import { useCallback, useContext } from "react"
+import { useCallback } from "react"
 import {
 	atom,
 	selectorFamily,
@@ -9,7 +9,7 @@ import {
 import { delay } from "../common/delay"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
-import { SendCommandContext } from "../socket/SocketConnection"
+import { useSendCommand } from "../socket/SocketConnection"
 
 export interface ChannelBrowserChannel {
 	id: string
@@ -85,7 +85,7 @@ export function useChannelBrowserCommandHandler() {
 }
 
 export function useRefreshChannelBrowser() {
-	const send = useContext(SendCommandContext)
+	const send = useSendCommand()
 
 	return useRecoilCallback(
 		({ snapshot, set }) =>

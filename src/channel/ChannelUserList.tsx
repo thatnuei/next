@@ -1,10 +1,9 @@
-import { sortBy, zip } from "lodash-es"
-import { Observable, useObservable } from "micro-observables"
-import type { CharacterStatus } from "../character/CharacterModel"
+import { sortBy } from "lodash-es"
+import { useObservable } from "micro-observables"
 import CharacterName from "../character/CharacterName"
-import { isPresent } from "../common/isPresent"
+import { useCharacterList, useGetCharacterRoles } from "../character/state"
+import type { CharacterStatus } from "../character/types"
 import type { ValueOf } from "../common/types"
-import { useRootStore } from "../root/context"
 import VirtualizedList from "../ui/VirtualizedList"
 import type { ChannelModel } from "./ChannelModel"
 
@@ -26,29 +25,16 @@ function ChannelUserList({ channel }: Props) {
 	const users = useObservable(channel.users)
 	const ops = useObservable(channel.ops)
 
-	const root = useRootStore()
-	const admins = useObservable(root.characterStore.admins)
-	const bookmarks = useObservable(root.characterStore.bookmarks)
-	const friends = useObservable(root.characterStore.friends)
-
-	const isFriend = (name: string) => friends.some((f) => f.them === name)
-
-	// technically we already have the name and don't need to observe it,
-	// but it's probably slightly more correct? leaving this for now
-	const namesObservable = Observable.merge(
-		users.map(root.characterStore.getCharacter).map((char) => char.name),
-	)
-
-	const statusesObservable = Observable.merge(
-		users.map(root.characterStore.getCharacter).map((char) => char.status),
-	)
+	const characters = useCharacterList(users)
+	const getRoles = useGetCharacterRoles()
 
 	const getItemType = (name: string, status: CharacterStatus): ItemType => {
-		if (admins.includes(name)) return "admin"
+		const roles = getRoles(name)
+		if (roles.isAdmin) return "admin"
 		if (ops.includes(name)) return "op"
-		if (isFriend(name)) return "friend"
-		if (bookmarks.includes(name)) return "bookmark"
-		if (status.type === "looking") return "looking"
+		if (roles.isBookmarked) return "bookmark"
+		if (roles.isFriend) return "friend"
+		if (status === "looking") return "looking"
 		return "default"
 	}
 
@@ -60,23 +46,12 @@ function ChannelUserList({ channel }: Props) {
 		return ""
 	}
 
-	const entries = useObservable(
-		Observable.from(namesObservable, statusesObservable).transform(
-			([names, statuses]) =>
-				zip(names, statuses)
-					.map(([name, status]) => {
-						if (!name || !status) return undefined
-						const type = getItemType(name, status)
-						return {
-							name,
-							status,
-							order: itemTypes.indexOf(type),
-							className: getTypeCss(type),
-						}
-					})
-					.filter(isPresent),
-		),
-	)
+	const entries = characters.map(({ name, status }) => ({
+		name,
+		status,
+		type: getItemType(name, status),
+		className: getTypeCss(getItemType(name, status)),
+	}))
 
 	const sortedItems = sortBy(entries, ["order", (it) => it.name.toLowerCase()])
 

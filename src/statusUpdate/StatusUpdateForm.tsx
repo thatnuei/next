@@ -1,8 +1,9 @@
 import { useObservable } from "micro-observables"
 import * as React from "react"
 import { useState } from "react"
-import type { CharacterStatusType } from "../character/CharacterModel"
-import { useIdentityCharacter } from "../character/helpers"
+import { useCharacter } from "../character/state"
+import type { CharacterStatus } from "../character/types"
+import { useIdentity } from "../chat/identityContext"
 import Button from "../dom/Button"
 import { useRootStore } from "../root/context"
 import { input, select, solidButton } from "../ui/components"
@@ -10,8 +11,14 @@ import FormField from "../ui/FormField"
 
 function StatusUpdateForm() {
 	const root = useRootStore()
-	const identityCharacter = useIdentityCharacter()
-	const [status, setStatus] = useState(identityCharacter.status.get())
+
+	const identityCharacter = useCharacter(useIdentity())
+
+	const [status, setStatus] = useState({
+		type: identityCharacter.status,
+		text: identityCharacter.statusMessage,
+	})
+
 	const isSubmitting = useObservable(root.statusUpdateStore.isSubmitting)
 
 	const submit = (e?: React.SyntheticEvent) => {
@@ -26,7 +33,7 @@ function StatusUpdateForm() {
 					className={select}
 					value={status.type}
 					onChange={(e) => {
-						const type = e.target.value as CharacterStatusType
+						const type = e.target.value as CharacterStatus
 						setStatus((prev) => ({ ...prev, type }))
 					}}
 				>

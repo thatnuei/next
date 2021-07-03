@@ -1,7 +1,14 @@
 import type { ReactNode } from "react"
-import { createContext, useCallback, useEffect, useRef, useState } from "react"
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from "react"
+import { useAuthUser } from "../chat/authUserContext"
 import { useIdentity } from "../chat/identityContext"
-import type { AuthUser } from "../flist/types"
 import { useEffectRef } from "../react/useEffectRef"
 import { socketUrl } from "./constants"
 import type { ClientCommand, ServerCommand } from "./helpers"
@@ -16,15 +23,14 @@ export type SocketConnectionStatus =
 	| "closed"
 
 export function SocketConnection({
-	user,
 	onCommand,
 	children,
 }: {
-	user: AuthUser
 	onCommand: (command: ServerCommand) => void
 	children: ReactNode
 }) {
 	const identity = useIdentity()
+	const user = useAuthUser()
 
 	const [status, setStatus] = useState<SocketConnectionStatus>("offline")
 	const statusRef = useEffectRef(status)
@@ -130,4 +136,8 @@ export function SocketConnection({
 export const SocketStatusContext =
 	createContext<SocketConnectionStatus>("offline")
 export const ConnectContext = createContext(() => {})
-export const SendCommandContext = createContext((command: ClientCommand) => {})
+const SendCommandContext = createContext((command: ClientCommand) => {})
+
+export function useSendCommand() {
+	return useContext(SendCommandContext)
+}

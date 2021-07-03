@@ -1,4 +1,3 @@
-import { useObservable } from "micro-observables"
 import * as React from "react"
 import { useChatNav } from "../chatNav/chatNavContext"
 import Button from "../dom/Button"
@@ -15,6 +14,7 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import CharacterMemoInput from "./CharacterMemoInput"
 import CharacterSummary from "./CharacterSummary"
+import { useCharacterRoles } from "./state"
 
 interface Props {
 	name: string
@@ -37,22 +37,14 @@ export default function CharacterMenuTarget({ name, children }: Props) {
 function CharacterMenu({ name }: { name: string }) {
 	const root = useRootStore()
 	const { showPrivateChat } = useChatNav()
-
-	const bookmarks = useObservable(root.characterStore.bookmarks)
-	const isBookmarked = bookmarks.includes(name)
-
-	const friends = useObservable(root.characterStore.friends)
-	const friendshipItems = friends.filter((it) => it.them === name)
-
-	const ignored = useObservable(root.characterStore.ignored)
-	const isIgnored = ignored.includes(name)
+	const { friendships, isBookmarked, isIgnored } = useCharacterRoles(name)
 
 	return (
 		<>
 			<div className={`p-3 space-y-3 bg-midnight-0`}>
 				<CharacterSummary name={name} />
 
-				{friendshipItems.map((item, index) => (
+				{friendships.map((item, index) => (
 					<div
 						key={index}
 						className={`flex flex-row items-center px-2 py-1 space-x-1 text-sm text-green-400 bg-green-500 bg-opacity-20`}

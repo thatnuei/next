@@ -1,6 +1,6 @@
 import { observable } from "micro-observables"
 import type { AppStore } from "../app/AppStore"
-import type { CharacterStatus } from "../character/CharacterModel"
+import type { CharacterStatus } from "../character/types"
 import { delay } from "../common/delay"
 import { createBoundCommandHandler } from "../socket/helpers"
 import type { SocketHandler } from "../socket/SocketHandler"
@@ -20,7 +20,7 @@ export class StatusUpdateStore {
 	show = () => this.isVisible.set(true)
 	hide = () => this.isVisible.set(false)
 
-	submit = async (status: CharacterStatus) => {
+	submit = async (status: { type: CharacterStatus; text: string }) => {
 		if (this.isSubmitting.get()) return
 
 		this.socket.send({
