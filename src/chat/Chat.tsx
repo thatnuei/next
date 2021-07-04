@@ -3,7 +3,6 @@ import { useChannelCommandHandler } from "../channel/state"
 import { useChannelBrowserCommandHandler } from "../channelBrowser/state"
 import { useCharacterCommandHandler } from "../character/state"
 import { ChatNavProvider } from "../chatNav/chatNavContext"
-import { useEffectRef } from "../react/useEffectRef"
 import type { ServerCommand } from "../socket/helpers"
 import { SocketConnection, useSocketActions } from "../socket/SocketConnection"
 import ChatNav from "./ChatNav"
@@ -31,18 +30,18 @@ export default function Chat() {
 }
 
 function CommandHandlers() {
+	const { addListener } = useSocketActions()
 	const handleCharacterCommand = useCharacterCommandHandler()
 	const handleChannelBrowserCommand = useChannelBrowserCommandHandler()
 	const handleChannelCommand = useChannelCommandHandler()
-	const { addListener } = useSocketActions()
 
-	const listener = useEffectRef((command: ServerCommand) => {
-		handleCharacterCommand(command)
-		handleChannelBrowserCommand(command)
-		handleChannelCommand(command)
-	})
-
-	useEffect(() => addListener(listener.current), [addListener, listener])
+	useEffect(() =>
+		addListener((command: ServerCommand) => {
+			handleCharacterCommand(command)
+			handleChannelBrowserCommand(command)
+			handleChannelCommand(command)
+		}),
+	)
 
 	return null
 }
