@@ -1,4 +1,3 @@
-import { raise } from "../common/raise"
 import type { CloseTagToken, Node, OpenTagToken, TagNode, Token } from "./types"
 
 const openTagExpression = /^\[([a-z]+?)(?:=([^\]]+))?\]/i
@@ -69,10 +68,9 @@ export function parse(tokens: Token[]): Node[] {
 	let position = 0
 
 	function walk(): Node {
-		let token =
-			tokens[position] ?? raise("BBC parsing error: no node at position")
+		let token = tokens[position]
 
-		if (token.type === "open-tag") {
+		if (token?.type === "open-tag") {
 			const node: TagNode = {
 				type: "tag",
 				tag: token.tag,
@@ -82,8 +80,7 @@ export function parse(tokens: Token[]): Node[] {
 
 			// skip the open tag token
 			position += 1
-			token =
-				tokens[position] ?? raise("BBC parsing error: no node at position")
+			token = tokens[position]
 
 			const isCorrespondingCloseTag = () =>
 				token?.type === "close-tag" && token.tag === node.tag
@@ -92,8 +89,7 @@ export function parse(tokens: Token[]): Node[] {
 
 			while (!isCorrespondingCloseTag() && !isEndOfTokens()) {
 				node.children.push(walk())
-				token =
-					tokens[position] ?? raise("BBC parsing error: no node at position")
+				token = tokens[position]
 			}
 
 			// skip the close tag, or if we're at the end,
@@ -107,7 +103,7 @@ export function parse(tokens: Token[]): Node[] {
 		// or somehow invalid, so we'll just treat it as a text node in any case
 		position += 1
 
-		return { type: "text", text: token.text }
+		return { type: "text", text: token?.text ?? "" }
 	}
 
 	const tree: Node[] = []
