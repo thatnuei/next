@@ -21,7 +21,7 @@ import {
 } from "../message/MessageState"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
-import { useSendCommand } from "../socket/SocketConnection"
+import { useSocketActions } from "../socket/SocketConnection"
 import { loadChannels, saveChannels } from "./storage"
 import type { ChannelMode } from "./types"
 
@@ -123,7 +123,7 @@ export function useActualChannelMode(id: string) {
 }
 
 export function useChannelActions() {
-	const send = useSendCommand()
+	const { send } = useSocketActions()
 
 	const updateChannel = useRecoilCallback(
 		({ set }) =>

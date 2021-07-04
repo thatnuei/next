@@ -2,7 +2,7 @@ import { uniqBy } from "lodash-es"
 import CharacterName from "../character/CharacterName"
 import { useLikedCharacters } from "../character/state"
 import type { Character } from "../character/types"
-import { useSendCommand } from "../socket/SocketConnection"
+import { useSocketActions } from "../socket/SocketConnection"
 import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -16,7 +16,7 @@ interface Props {
 // need to have a list of all online character names in order to make them searchable,
 // do that later
 function InviteUsersForm({ channelId }: Props) {
-	const send = useSendCommand()
+	const { send } = useSocketActions()
 	const characters = useLikedCharacters()
 
 	const sendInvite = (name: string) => {

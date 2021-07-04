@@ -9,7 +9,7 @@ import {
 import { delay } from "../common/delay"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
-import { useSendCommand } from "../socket/SocketConnection"
+import { useSocketActions } from "../socket/SocketConnection"
 
 export interface ChannelBrowserChannel {
 	id: string
@@ -85,7 +85,7 @@ export function useChannelBrowserCommandHandler() {
 }
 
 export function useRefreshChannelBrowser() {
-	const send = useSendCommand()
+	const { send } = useSocketActions()
 
 	return useRecoilCallback(
 		({ snapshot, set }) =>

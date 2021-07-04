@@ -4,11 +4,13 @@ import {
 	useCallback,
 	useContext,
 	useEffect,
+	useMemo,
 	useRef,
 	useState,
 } from "react"
 import { useAuthUser } from "../chat/authUserContext"
 import { useIdentity } from "../chat/identityContext"
+import { raise } from "../common/raise"
 import { useEffectRef } from "../react/useEffectRef"
 import { socketUrl } from "./constants"
 import type { ClientCommand, ServerCommand } from "./helpers"
@@ -22,13 +24,20 @@ export type SocketConnectionStatus =
 	| "error"
 	| "closed"
 
-export function SocketConnection({
-	onCommand,
-	children,
-}: {
-	onCommand: (command: ServerCommand) => void
-	children: ReactNode
-}) {
+type CommandListener = (command: ServerCommand) => void
+
+interface SocketActions {
+	connect: () => void
+	disconnect: () => void
+	send: (command: ClientCommand) => void
+	addListener: (listener: CommandListener) => void
+}
+
+export const ActionsContext = createContext<SocketActions>()
+export const SocketStatusContext =
+	createContext<SocketConnectionStatus>("offline")
+
+export function SocketConnection({ children }: { children: ReactNode }) {
 	const identity = useIdentity()
 	const user = useAuthUser()
 
@@ -36,7 +45,7 @@ export function SocketConnection({
 	const statusRef = useEffectRef(status)
 
 	const socketRef = useRef<WebSocket>()
-	const onCommandRef = useEffectRef(onCommand)
+	const listeners = useRef(new Set<CommandListener>())
 
 	const send = useCallback((command: ClientCommand) => {
 		socketRef.current?.send(createCommandString(command))
@@ -102,9 +111,9 @@ export function SocketConnection({
 				console.warn("Socket error", command.params.message)
 			}
 
-			onCommandRef.current(command)
+			listeners.current.forEach((listener) => listener(command))
 		}
-	}, [identity, onCommandRef, send, statusRef, user.account, user.ticket])
+	}, [identity, send, statusRef, user.account, user.ticket])
 
 	const disconnect = useCallback(() => {
 		const socket = socketRef.current
@@ -119,25 +128,35 @@ export function SocketConnection({
 		socket.close()
 	}, [])
 
+	const addListener = useCallback((listener: CommandListener) => {
+		listeners.current.add(listener)
+		return () => {
+			listeners.current.delete(listener)
+		}
+	}, [])
+
 	useEffect(() => connect(), [connect, identity, user.account, user.ticket])
 	useEffect(() => () => disconnect(), [disconnect])
 
+	const actions = useMemo(
+		() => ({
+			addListener,
+			connect,
+			disconnect,
+			send,
+		}),
+		[addListener, connect, disconnect, send],
+	)
+
 	return (
 		<SocketStatusContext.Provider value={status}>
-			<ConnectContext.Provider value={connect}>
-				<SendCommandContext.Provider value={send}>
-					{children}
-				</SendCommandContext.Provider>
-			</ConnectContext.Provider>
+			<ActionsContext.Provider value={actions}>
+				{children}
+			</ActionsContext.Provider>
 		</SocketStatusContext.Provider>
 	)
 }
 
-export const SocketStatusContext =
-	createContext<SocketConnectionStatus>("offline")
-export const ConnectContext = createContext(() => {})
-const SendCommandContext = createContext((command: ClientCommand) => {})
-
-export function useSendCommand() {
-	return useContext(SendCommandContext)
+export function useSocketActions() {
+	return useContext(ActionsContext) ?? raise("ActionsContext not found")
 }

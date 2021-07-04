@@ -1,13 +1,16 @@
 import type { ReactNode } from "react"
 import { useContext } from "react"
 import Button from "../dom/Button"
-import { ConnectContext, SocketStatusContext } from "../socket/SocketConnection"
+import {
+	SocketStatusContext,
+	useSocketActions,
+} from "../socket/SocketConnection"
 import { solidButton } from "../ui/components"
 import LoadingOverlay from "../ui/LoadingOverlay"
 
 export default function ConnectionGuard({ children }: { children: ReactNode }) {
 	const status = useContext(SocketStatusContext)
-	const connect = useContext(ConnectContext)
+	const { connect } = useSocketActions()
 
 	switch (status) {
 		case "connecting":
