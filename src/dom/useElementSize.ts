@@ -8,7 +8,7 @@ export function useElementSize(element: Element | undefined | null) {
 		if (!element) return
 
 		const observer = new ResizeObserver(([info]: ResizeObserverEntry[]) => {
-			setSize(info.contentRect)
+			if (info) setSize(info.contentRect)
 		})
 		observer.observe(element)
 		return () => observer.disconnect()

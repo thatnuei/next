@@ -19,7 +19,7 @@ export default function ChatMenuButton() {
 				</Button>
 			)}
 		>
-			<ChatNav onLogout={() => {}} />
+			<ChatNav />
 		</Drawer>
 	)
 }

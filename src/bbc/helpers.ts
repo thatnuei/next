@@ -1,3 +1,4 @@
+import { raise } from "../common/raise"
 import type { CloseTagToken, Node, OpenTagToken, TagNode, Token } from "./types"
 
 const openTagExpression = /^\[([a-z]+?)(?:=([^\]]+))?\]/i
@@ -13,7 +14,7 @@ function captureOpenTag(
 ): OpenTagToken | undefined {
 	const openTagMatch = matchAt(bbcString, openTagExpression, position)
 	if (openTagMatch) {
-		const [text, tag, value = ""] = openTagMatch
+		const [text = "", tag = "", value = ""] = openTagMatch
 		return { type: "open-tag", text, tag: tag.toLowerCase(), value }
 	}
 }
@@ -24,7 +25,7 @@ function captureCloseTag(
 ): CloseTagToken | undefined {
 	const closeTagMatch = matchAt(bbcString, closeTagExpression, position)
 	if (closeTagMatch) {
-		const [text, tag] = closeTagMatch
+		const [text = "", tag = ""] = closeTagMatch
 		return { type: "close-tag", text, tag: tag.toLowerCase() }
 	}
 }
@@ -68,7 +69,8 @@ export function parse(tokens: Token[]): Node[] {
 	let position = 0
 
 	function walk(): Node {
-		let token = tokens[position]
+		let token =
+			tokens[position] ?? raise("BBC parsing error: no node at position")
 
 		if (token.type === "open-tag") {
 			const node: TagNode = {
@@ -80,7 +82,8 @@ export function parse(tokens: Token[]): Node[] {
 
 			// skip the open tag token
 			position += 1
-			token = tokens[position]
+			token =
+				tokens[position] ?? raise("BBC parsing error: no node at position")
 
 			const isCorrespondingCloseTag = () =>
 				token?.type === "close-tag" && token.tag === node.tag
@@ -89,7 +92,8 @@ export function parse(tokens: Token[]): Node[] {
 
 			while (!isCorrespondingCloseTag() && !isEndOfTokens()) {
 				node.children.push(walk())
-				token = tokens[position]
+				token =
+					tokens[position] ?? raise("BBC parsing error: no node at position")
 			}
 
 			// skip the close tag, or if we're at the end,

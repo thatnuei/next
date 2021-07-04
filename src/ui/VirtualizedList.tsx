@@ -1,5 +1,5 @@
-import * as React from "react"
 import type { ComponentType, Key } from "react"
+import * as React from "react"
 import { useState } from "react"
 import type { ListChildComponentProps } from "react-window"
 import { FixedSizeList } from "react-window"
@@ -36,7 +36,10 @@ function VirtualizedList<T>({
 				itemCount={items.length}
 				itemSize={itemSize}
 				itemData={{ items, renderItem }}
-				itemKey={(index) => getItemKey(items[index])}
+				itemKey={(index) => {
+					const item = items[index]
+					return item ? getItemKey(item) : index
+				}}
 				overscanCount={10}
 			>
 				{ListItem as ComponentType<ListChildComponentProps>}
@@ -56,5 +59,5 @@ function ListItem<T>({
 	style: React.CSSProperties
 	data: { items: T[]; renderItem: (info: RenderItemInfo<T>) => void }
 }) {
-	return data.renderItem({ item: data.items[index], style })
+	return data.renderItem({ item: data.items[index] as T, style })
 }

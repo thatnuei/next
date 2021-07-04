@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react"
+import { useCallback } from "react"
 import {
 	atom,
 	atomFamily,
@@ -97,6 +97,10 @@ export function useChannel(id: string) {
 	return useRecoilValue(channelAtom(id))
 }
 
+export function useJoinedChannelIds() {
+	return useRecoilValue(joinedChannelIdsAtom)
+}
+
 export function useJoinedChannels() {
 	return useRecoilValue(joinedChannelsSelector)
 }
@@ -189,9 +193,6 @@ export function useChannelCommandHandler() {
 	const actions = useChannelActions()
 
 	const joinedChannelIds = useRecoilValue(joinedChannelIdsAtom)
-	useEffect(() => {
-		saveChannels(Object.keys(joinedChannelIds), account, identity)
-	}, [account, identity, joinedChannelIds])
 
 	return useRecoilCallback(({ set }) => (command: ServerCommand) => {
 		matchCommand(command, {
@@ -214,17 +215,33 @@ export function useChannelCommandHandler() {
 					title,
 					users: { ...prev.users, [name]: true },
 				}))
+
+				saveChannels(
+					Object.entries(joinedChannelIds)
+						.filter(([, joined]) => joined)
+						.map(([id]) => id),
+					account,
+					identity,
+				)
 			},
 
 			LCH({ channel: id, character }) {
 				if (character === identity) {
-					set(joinedChannelIdsAtom, (prev) => ({ ...prev, [id]: false }))
+					set(joinedChannelIdsAtom, ({ [id]: _, ...rest }) => rest)
 				}
 
 				set(channelAtom(id), (prev) => ({
 					...prev,
 					users: { ...prev.users, [character]: false },
 				}))
+
+				saveChannels(
+					Object.entries(joinedChannelIds)
+						.filter(([, joined]) => joined)
+						.map(([id]) => id),
+					account,
+					identity,
+				)
 			},
 
 			ICH({ channel: id, users, mode }) {

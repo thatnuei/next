@@ -34,7 +34,7 @@ test("tokenizing everything", () => {
 
 test("open tag value", () => {
 	const token = bbc.tokenize(`[url=my.website]google[/url]`)[0]
-	expect(token.type === "open-tag" && token.value).toBe("my.website")
+	expect(token?.type === "open-tag" && token.value).toBe("my.website")
 })
 
 test("text nodes", () => {

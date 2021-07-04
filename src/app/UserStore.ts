@@ -23,7 +23,7 @@ export class UserStore {
 		account: "",
 		password: "",
 		ticket: "",
-		characters: [],
+		characters: [""],
 	})
 
 	private lastTicketFetchTime = 0

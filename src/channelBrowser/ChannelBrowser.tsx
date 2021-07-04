@@ -8,7 +8,7 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
-import type { ChannelBrowserChannel } from "./ChannelBrowserStore"
+import type { ChannelBrowserChannel } from "./state"
 import {
 	useChannelBrowserIsRefreshing,
 	usePrivateChannels,
