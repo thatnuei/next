@@ -5,6 +5,7 @@ import { raise } from "../common/raise"
 import { authenticate } from "../flist/authenticate"
 import { fetchFlist } from "../flist/fetchFlist"
 import type { AuthUser, LoginCredentials } from "../flist/types"
+import { useEffectRef } from "../react/useEffectRef"
 
 const ticketExpireTime = 1000 * 60 * 5
 
@@ -20,7 +21,9 @@ function useAuthUserProvider() {
 		setUser(undefined)
 	}, [])
 
+	const userRef = useEffectRef(user)
 	const getFreshAuthCredentials = useCallback(async () => {
+		const user = userRef.current
 		if (!user) raise("Not logged in")
 
 		if (Date.now() - lastTicketFetchTime.current > ticketExpireTime) {
@@ -31,7 +34,7 @@ function useAuthUserProvider() {
 		}
 
 		return pick(user, ["account", "ticket"])
-	}, [user])
+	}, [userRef])
 
 	const addBookmark = useCallback(
 		async (args: { name: string }) => {
@@ -83,6 +86,7 @@ function useAuthUserProvider() {
 
 	return {
 		user,
+		getFreshAuthCredentials,
 		login,
 		logout,
 		addBookmark,
