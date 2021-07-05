@@ -14,7 +14,11 @@ import { close } from "./icons"
 
 interface Props extends Omit<DialogBaseProps, "children"> {
 	title: string
-	children: React.ReactNode
+	children: React.ReactNode | ((props: ChildrenProps) => React.ReactNode)
+}
+
+interface ChildrenProps {
+	close: () => void
 }
 
 export default function Modal(props: Props) {
@@ -42,7 +46,9 @@ export default function Modal(props: Props) {
 								<Icon which={close} />
 							</button>
 						</div>
-						{props.children}
+						{typeof props.children === "function"
+							? props.children({ close: () => content.setOpen(false) })
+							: props.children}
 					</FadeRiseTransition>
 				</div>
 			)}
