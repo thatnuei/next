@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState } from "react"
+import { useLayoutEffect, useRef } from "react"
 import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
 
@@ -6,13 +6,37 @@ interface Props {
 	messages: MessageState[]
 }
 
-function MessageList({ messages }: Props) {
-	const [container, setContainer] = useState<HTMLElement | null>()
+const bottomScrollThreshold = 20
 
-	useBottomScroll(container, messages[messages.length - 1])
+function MessageList({ messages }: Props) {
+	const containerRef = useRef<HTMLOListElement | null>(null)
+
+	const isBottomScrolled = () => {
+		const container = containerRef.current
+		if (!container) return false
+
+		return (
+			container.scrollTop >=
+			container.scrollHeight - container.clientHeight - bottomScrollThreshold
+		)
+	}
+
+	const scrollToBottom = () => {
+		const container = containerRef.current
+		if (!container) return
+		container.scrollTop = container.scrollHeight - container.clientHeight
+	}
+
+	// check here, so that we get the bottom-scrolled state _before_ it changes from dom updates
+	const wasScrolledToBottom = isBottomScrolled()
+	useLayoutEffect(() => {
+		if (wasScrolledToBottom) scrollToBottom()
+	}, [wasScrolledToBottom, messages])
+
+	useLayoutEffect(scrollToBottom, [])
 
 	return (
-		<ol className="h-full overflow-y-auto" ref={setContainer}>
+		<ol className="h-full overflow-y-auto" ref={containerRef}>
 			{messages.map((message) => (
 				<li key={message.key}>
 					<MessageListItem message={message} />
@@ -23,23 +47,3 @@ function MessageList({ messages }: Props) {
 }
 
 export default MessageList
-
-function useBottomScroll(
-	container: HTMLElement | null | undefined,
-	watchedValue: unknown,
-) {
-	const wasScrolledToBottom =
-		container &&
-		container.scrollHeight >= container.scrollHeight - container.clientHeight
-
-	const scrollToBottom = useCallback(() => {
-		if (!container) return
-		container.scrollTop = container.scrollHeight
-	}, [container])
-
-	useLayoutEffect(() => {
-		if (wasScrolledToBottom) scrollToBottom()
-	}, [scrollToBottom, wasScrolledToBottom, watchedValue])
-
-	useLayoutEffect(scrollToBottom, [scrollToBottom])
-}
