@@ -250,6 +250,18 @@ export function useChannelCommandHandler() {
 					)
 				},
 
+				FLN({ character }) {
+					// normally we'd want to clear _all_ channels,
+					// but we're fine with just clearing the joined channels.
+					// for unjoined channels, we get an ICH of all the users anyway on join
+					for (const id of Object.keys(get(joinedChannelIdsAtom))) {
+						set(channelAtom(id), (prev) => ({
+							...prev,
+							users: omit(prev.users, [character]),
+						}))
+					}
+				},
+
 				ICH({ channel: id, users, mode }) {
 					set(channelAtom(id), (prev) => ({
 						...prev,
