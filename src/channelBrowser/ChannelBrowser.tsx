@@ -3,6 +3,7 @@ import fuzzysearch from "fuzzysearch"
 import { sortBy } from "lodash-es"
 import { useEffect, useState } from "react"
 import Button from "../dom/Button"
+import { useEffectRef } from "../react/useEffectRef"
 import { input, solidButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -25,9 +26,9 @@ function ChannelBrowser() {
 	const [query, setQuery] = useState("")
 	const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
 
-	useEffect(() => {
-		void refresh()
-	}, [refresh])
+	// only want to call this on mount
+	const refreshRef = useEffectRef(refresh)
+	useEffect(() => void refreshRef.current(), [refreshRef])
 
 	const cycleSortMode = () =>
 		setSortMode((mode) => (mode === "title" ? "userCount" : "title"))
