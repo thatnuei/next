@@ -3,7 +3,6 @@ import { useState } from "react"
 import { safeJsonParse } from "../common/json"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
-import { useRootStore } from "../root/context"
 import type { ServerCommand } from "../socket/helpers"
 import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
@@ -31,7 +30,6 @@ const presets: Preset[] = [
 ]
 
 export default function CommandSimulator() {
-	const root = useRootStore()
 	const [command, setCommand] = useState("")
 	const [params, setParams] = useState("")
 
@@ -42,10 +40,11 @@ export default function CommandSimulator() {
 		event.preventDefault()
 
 		if (paramsParseResult?.result) {
-			root.socket.commands.publish({
-				type: command,
-				params: paramsParseResult.result,
-			} as ServerCommand)
+			// todo fixme
+			// root.socket.commands.publish({
+			// 	type: command,
+			// 	params: paramsParseResult.result,
+			// } as ServerCommand)
 		}
 	}
 
