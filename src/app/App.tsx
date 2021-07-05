@@ -6,7 +6,7 @@ import IslandLayout from "../ui/IslandLayout"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 
-export const LogoutContext = createContext(() => {})
+export const ChatLogoutContext = createContext(() => {})
 
 export default function App() {
 	const { user, logout } = useAuthUserContext()

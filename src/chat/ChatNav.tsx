@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { LogoutContext } from "../app/App"
+import { ChatLogoutContext } from "../app/App"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import CharacterSummary from "../character/CharacterSummary"
 import { ChatNavAction } from "../chatNav/ChatNavAction"
@@ -11,7 +11,7 @@ import StatusUpdateForm from "./StatusUpdateForm"
 
 export default function ChatNav() {
 	const identity = useIdentity()
-	const logout = useContext(LogoutContext)
+	const logout = useContext(ChatLogoutContext)
 	return (
 		<nav className={`flex h-full bg-midnight-2`}>
 			<div className={`flex flex-col`}>
