@@ -160,3 +160,8 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 export function useSocketActions() {
 	return useContext(ActionsContext) ?? raise("ActionsContext not found")
 }
+
+export function useSocketListener(listener: CommandListener) {
+	const { addListener } = useSocketActions()
+	return useEffect(() => addListener(listener))
+}
