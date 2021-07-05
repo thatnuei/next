@@ -1,3 +1,5 @@
+import clsx from "clsx"
+
 const activePress = `active:transform active:translate-y-0.5 active:transition-none`
 
 const fadedWhenDisabled = `disabled:opacity-50 disabled:pointer-events-none`
@@ -14,7 +16,7 @@ export const fadedButton = `
 	${activePress}
 `
 
-export const input = `
+export const input = clsx`
 	${baseControlStyle}
 	w-full shadow-inner resize-none
 	focus:bg-midnight-2 focus:outline-none
