@@ -21,6 +21,8 @@ import {
 	createChannelMessage,
 	createSystemMessage,
 } from "../message/MessageState"
+import type { RoomKey } from "../room/state"
+import { roomMessagesAtom } from "../room/state"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions } from "../socket/SocketConnection"
@@ -30,15 +32,15 @@ import type { ChannelMode } from "./types"
 const maxMessageCount = 500
 
 export interface Channel {
-	id: string
-	title: string
-	description: string
-	mode: ChannelMode
-	selectedMode: ChannelMode
-	users: TruthyMap
-	ops: TruthyMap
-	isUnread: boolean
-	chatInput: string
+	readonly id: string
+	readonly title: string
+	readonly description: string
+	readonly mode: ChannelMode
+	readonly selectedMode: ChannelMode
+	readonly users: TruthyMap
+	readonly ops: TruthyMap
+	readonly isUnread: boolean
+	readonly chatInput: string
 }
 
 function createChannel(id: string): Channel {
@@ -54,6 +56,8 @@ function createChannel(id: string): Channel {
 		chatInput: "",
 	}
 }
+
+const channelRoomKey = (channelId: string) => `channel:${channelId}` as RoomKey
 
 const channelAtom = atomFamily({
 	key: "channel",
@@ -80,11 +84,6 @@ const isChannelJoinedSelector = selectorFamily({
 		(id: string) =>
 		({ get }) =>
 			get(joinedChannelIdsAtom)[id] ?? false,
-})
-
-const channelMessages = atomFamily({
-	key: "channelMessages",
-	default: (channelId: string): readonly MessageState[] => [],
 })
 
 const channelCharacters = selectorFamily({
@@ -117,7 +116,7 @@ export function useIsChannelJoined(id: string) {
 }
 
 export function useChannelMessages(id: string) {
-	return useRecoilValue(channelMessages(id))
+	return useRecoilValue(roomMessagesAtom(channelRoomKey(id)))
 }
 
 export function useChannelCharacters(id: string) {
@@ -181,7 +180,7 @@ export function useChannelActions() {
 	const clearMessages = useRecoilCallback(
 		({ set }) =>
 			(id: string) =>
-				set(channelMessages(id), []),
+				set(roomMessagesAtom(channelRoomKey(id)), []),
 		[],
 	)
 
@@ -204,7 +203,7 @@ export function useChannelCommandHandler() {
 		function addMessage(id: string, message: MessageState) {
 			// we don't want to keep too many messages in memory
 			// logs should make up for this
-			set(channelMessages(id), (prev) =>
+			set(roomMessagesAtom(channelRoomKey(id)), (prev) =>
 				[...prev, message].slice(-maxMessageCount),
 			)
 		}
