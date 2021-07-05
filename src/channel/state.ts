@@ -109,14 +109,30 @@ export function useActualChannelMode(id: string) {
 	return channel.mode === "both" ? channel.selectedMode : channel.mode
 }
 
+function useAddMessage() {
+	return jotaiUtils.useAtomCallback(
+		useCallback(
+			(get, set, { id, message }: { id: string; message: MessageState }) => {
+				set(roomMessagesAtom(channelRoomKey(id)), (prev) =>
+					[...prev, message].slice(-maxMessageCount),
+				)
+			},
+			[],
+		),
+	)
+}
+
 export function useChannelActions() {
 	const { send } = useSocketActions()
+	const identity = useIdentity()
 
 	const updateChannel = jotaiUtils.useAtomCallback(
 		useCallback((get, set, properties: Partial<Channel> & { id: string }) => {
 			set(channelAtom(properties.id), (prev) => ({ ...prev, ...properties }))
 		}, []),
 	)
+
+	const addMessage = useAddMessage()
 
 	const join = useCallback(
 		(id: string, title?: string) => {
@@ -145,16 +161,15 @@ export function useChannelActions() {
 	)
 
 	const sendMessage = useCallback(
-		(id: string, message: string) => {
-			send({
-				type: "MSG",
-				params: {
-					channel: id,
-					message,
-				},
+		({ id, message }: { id: string; message: string }) => {
+			send({ type: "MSG", params: { channel: id, message } })
+
+			addMessage({
+				id,
+				message: createChannelMessage(identity, message),
 			})
 		},
-		[send],
+		[addMessage, identity, send],
 	)
 
 	const clearMessages = jotaiUtils.useAtomCallback(
@@ -176,17 +191,10 @@ export function useChannelCommandHandler() {
 	const identity = useIdentity()
 	const { account } = useAuthUser()
 	const actions = useChannelActions()
+	const addMessage = useAddMessage()
 
 	const handler = useCallback(
 		(get: jotai.Getter, set: jotai.Setter, command: ServerCommand) => {
-			function addMessage(id: string, message: MessageState) {
-				// we don't want to keep too many messages in memory
-				// logs should make up for this
-				set(roomMessagesAtom(channelRoomKey(id)), (prev) =>
-					[...prev, message].slice(-maxMessageCount),
-				)
-			}
-
 			matchCommand(command, {
 				async IDN() {
 					set(joinedChannelIdsAtom, {})
@@ -265,21 +273,27 @@ export function useChannelCommandHandler() {
 				},
 
 				MSG({ channel: id, message, character }) {
-					addMessage(id, createChannelMessage(character, message))
+					void addMessage({
+						id,
+						message: createChannelMessage(character, message),
+					})
 				},
 
 				LRP({ channel: id, character, message }) {
-					addMessage(id, createAdMessage(character, message))
+					void addMessage({ id, message: createAdMessage(character, message) })
 				},
 
 				RLL(params) {
 					if ("channel" in params) {
-						addMessage(params.channel, createSystemMessage(params.message))
+						void addMessage({
+							id: params.channel,
+							message: createSystemMessage(params.message),
+						})
 					}
 				},
 			})
 		},
-		[account, actions, identity],
+		[account, actions, addMessage, identity],
 	)
 
 	return jotaiUtils.useAtomCallback(handler)

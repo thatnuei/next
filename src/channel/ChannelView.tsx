@@ -28,8 +28,8 @@ function ChannelView({ channelId }: Props) {
 		void updateChannel({ id: channelId, chatInput })
 	}
 
-	function submitChatInput(text: string) {
-		sendMessage(channelId, text)
+	function submitChatInput(message: string) {
+		void sendMessage({ id: channelId, message })
 	}
 
 	const messageList = useMemo(() => {
