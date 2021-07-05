@@ -1,4 +1,3 @@
-import { useObservable } from "micro-observables"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
@@ -6,8 +5,12 @@ import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import MessageList from "../message/MessageList"
-import { useRootStore } from "../root/context"
-import { usePrivateChat } from "./helpers"
+import {
+	usePrivateChatActions,
+	usePrivateChatInput,
+	usePrivateChatMessages,
+	usePrivateChatTypingStatus,
+} from "./state"
 import TypingStatusDisplay from "./TypingStatusDisplay"
 
 interface Props {
@@ -15,11 +18,10 @@ interface Props {
 }
 
 function PrivateChatView({ partnerName }: Props) {
-	const root = useRootStore()
-	const chat = usePrivateChat(partnerName)
-	const messages = useObservable(chat.messages)
-	const chatInput = useObservable(chat.chatInput)
-	const typingStatus = useObservable(chat.typingStatus)
+	const messages = usePrivateChatMessages(partnerName)
+	const chatInput = usePrivateChatInput(partnerName)
+	const typingStatus = usePrivateChatTypingStatus(partnerName)
+	const actions = usePrivateChatActions()
 
 	return (
 		<div className="flex flex-col h-full">
@@ -50,10 +52,12 @@ function PrivateChatView({ partnerName }: Props) {
 
 			<ChatInput
 				value={chatInput}
-				onChangeText={(text) => chat.chatInput.set(text)}
-				onSubmit={(text) => {
-					chat.chatInput.set("")
-					root.privateChatStore.sendMessage(partnerName, text)
+				onChangeText={(input) =>
+					actions.setPrivateChatInput({ partnerName, input })
+				}
+				onSubmit={(message) => {
+					actions.sendMessage({ partnerName, message })
+					actions.setPrivateChatInput({ partnerName, input: "" })
 				}}
 			/>
 		</div>

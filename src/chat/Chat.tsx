@@ -3,6 +3,7 @@ import { useChannelCommandHandler } from "../channel/state"
 import { useChannelBrowserCommandHandler } from "../channelBrowser/state"
 import { useCharacterCommandHandler } from "../character/state"
 import { ChatNavProvider } from "../chatNav/chatNavContext"
+import { usePrivateChatCommandHandler } from "../privateChat/state"
 import type { ServerCommand } from "../socket/helpers"
 import { SocketConnection, useSocketActions } from "../socket/SocketConnection"
 import { useShowToast } from "../toast/state"
@@ -36,6 +37,7 @@ function CommandHandlers() {
 	const handleChannelBrowserCommand = useChannelBrowserCommandHandler()
 	const handleChannelCommand = useChannelCommandHandler()
 	const showToast = useShowToast()
+	usePrivateChatCommandHandler()
 
 	useEffect(() =>
 		addListener((command: ServerCommand) => {

@@ -1,50 +1,48 @@
 import { sortBy } from "lodash-es"
-import { useObservable } from "micro-observables"
 import { useMatch, useNavigate } from "react-router-dom"
 import type { Channel } from "../channel/state"
 import { useChannelActions, useJoinedChannels } from "../channel/state"
 import { useIsPublicChannel } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
-import { useOpenPrivateChats } from "../privateChat/helpers"
-import type { PrivateChatModel } from "../privateChat/PrivateChatModel"
-import { useRootStore } from "../root/context"
+import {
+	useOpenChatNames,
+	usePrivateChatActions,
+	usePrivateChatIsUnread,
+} from "../privateChat/state"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import { useChatNav } from "./chatNavContext"
 import RoomTab from "./RoomTab"
 
-function RoomTabList() {
+export default function RoomTabList() {
 	const joinedChannels = useJoinedChannels()
-	const privateChats = useOpenPrivateChats()
+	const privateChats = useOpenChatNames()
 
-	const privateChatTabs = sortBy(privateChats, (chat) =>
-		chat.partnerName.toLowerCase(),
-	).map((chat) => <PrivateChatTab key={chat.partnerName} chat={chat} />)
-
-	const channelTabs = joinedChannels.map((channel) => (
-		<ChannelRoomTab key={channel.id} channel={channel} />
-	))
-
-	return <>{[privateChatTabs, channelTabs]}</>
+	return (
+		<>
+			{sortBy(privateChats, (name) => name.toLowerCase()).map((name) => (
+				<PrivateChatTab key={name} partnerName={name} />
+			))}
+			{sortBy(joinedChannels, (ch) => ch.title.toLowerCase()).map((channel) => (
+				<ChannelRoomTab key={channel.id} channel={channel} />
+			))}
+		</>
+	)
 }
 
-export default RoomTabList
-
-function PrivateChatTab({ chat }: { chat: PrivateChatModel }) {
-	const root = useRootStore()
-	const isUnread = useObservable(chat.isUnread)
-
-	const { view, showPrivateChat } = useChatNav()
-	const isActive = view?.privateChatPartner === chat.partnerName
+function PrivateChatTab({ partnerName }: { partnerName: string }) {
+	const match = useMatch("private-chat/:partnerName")
+	const navigate = useNavigate()
+	const isUnread = usePrivateChatIsUnread(partnerName)
+	const { closePrivateChat } = usePrivateChatActions()
 
 	return (
 		<RoomTab
-			title={chat.partnerName}
-			icon={<Avatar name={chat.partnerName} className={`w-5 h-5`} />}
-			isActive={isActive}
+			title={partnerName}
+			icon={<Avatar name={partnerName} className={`w-6 h-6`} />}
+			isActive={match?.params.partnerName === partnerName}
 			isUnread={isUnread}
-			onClick={() => showPrivateChat(chat.partnerName)}
-			onClose={() => root.privateChatStore.close(chat.partnerName)}
+			onClick={() => navigate(`private-chat/${partnerName}`)}
+			onClose={() => closePrivateChat(partnerName)}
 		/>
 	)
 }

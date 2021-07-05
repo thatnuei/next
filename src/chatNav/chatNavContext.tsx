@@ -8,9 +8,9 @@ import {
 } from "react"
 import { useChannelActions } from "../channel/state"
 import { raise } from "../common/raise"
-import { useRootStore } from "../root/context"
+import { usePrivateChatActions } from "../privateChat/state"
 import { createCommandHandler } from "../socket/helpers"
-import { usePubSubListener } from "../state/pubsub"
+import { useSocketListener } from "../socket/SocketConnection"
 
 interface ChatNavView {
 	channelId?: string
@@ -24,9 +24,9 @@ const Context = createContext<{
 }>()
 
 export function ChatNavProvider({ children }: { children: ReactNode }) {
-	const root = useRootStore()
 	const [view, setView] = useState<ChatNavView>()
 	const { updateChannel } = useChannelActions()
+	const { openPrivateChat, setPrivateChatIsUnread } = usePrivateChatActions()
 
 	const showChannel = useCallback(
 		(channelId: string) => {
@@ -40,28 +40,27 @@ export function ChatNavProvider({ children }: { children: ReactNode }) {
 	)
 
 	const showPrivateChat = useCallback(
-		(privateChatPartner: string) => {
-			root.privateChatStore.getChat(privateChatPartner).isUnread.set(false)
-			root.privateChatStore.open(privateChatPartner)
+		(partnerName: string) => {
+			setPrivateChatIsUnread({ partnerName, isUnread: false })
+			openPrivateChat(partnerName)
 
 			startTransition(() => {
-				setView({ privateChatPartner })
+				setView({ privateChatPartner: partnerName })
 			})
 		},
-		[root.privateChatStore],
+		[openPrivateChat, setPrivateChatIsUnread],
 	)
 
-	usePubSubListener(
-		root.socket.commands,
+	useSocketListener(
 		createCommandHandler({
 			MSG({ channel: channelId }) {
 				if (view?.channelId !== channelId) {
-					void updateChannel({ id: channelId, isUnread: true })
+					updateChannel({ id: channelId, isUnread: true })
 				}
 			},
 			PRI({ character }) {
 				if (view?.privateChatPartner !== character) {
-					root.privateChatStore.getChat(character).isUnread.set(true)
+					setPrivateChatIsUnread({ partnerName: character, isUnread: true })
 				}
 			},
 		}),
