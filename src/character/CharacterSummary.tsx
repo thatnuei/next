@@ -24,8 +24,8 @@ function CharacterSummary({
 				{name}
 			</ExternalLink>
 
-			<ExternalLink href={getProfileUrl(name)}>
-				<Avatar name={name} className="my-3" />
+			<ExternalLink href={getProfileUrl(name)} className="my-3">
+				<Avatar name={name} />
 			</ExternalLink>
 
 			<div

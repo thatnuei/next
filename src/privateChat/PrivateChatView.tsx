@@ -5,10 +5,10 @@ import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import MessageList from "../message/MessageList"
+import { useRoomActions, useRoomState } from "../room/state"
 import {
+	getPrivateChatRoomKey,
 	usePrivateChatActions,
-	usePrivateChatInput,
-	usePrivateChatMessages,
 	usePrivateChatTypingStatus,
 } from "./state"
 import TypingStatusDisplay from "./TypingStatusDisplay"
@@ -18,10 +18,10 @@ interface Props {
 }
 
 function PrivateChatView({ partnerName }: Props) {
-	const messages = usePrivateChatMessages(partnerName)
-	const chatInput = usePrivateChatInput(partnerName)
+	const { messages, input } = useRoomState(getPrivateChatRoomKey(partnerName))
+	const { setInput } = useRoomActions()
 	const typingStatus = usePrivateChatTypingStatus(partnerName)
-	const actions = usePrivateChatActions()
+	const { sendMessage } = usePrivateChatActions()
 
 	return (
 		<div className="flex flex-col h-full">
@@ -29,7 +29,7 @@ function PrivateChatView({ partnerName }: Props) {
 				<ChatMenuButton />
 
 				<CharacterMenuTarget name={partnerName}>
-					<Avatar name={partnerName} className="w-12 h-12" />
+					<Avatar name={partnerName} size={12} />
 				</CharacterMenuTarget>
 
 				<div className="flex flex-col self-stretch justify-center flex-1 overflow-y-auto">
@@ -51,13 +51,13 @@ function PrivateChatView({ partnerName }: Props) {
 			</div>
 
 			<ChatInput
-				value={chatInput}
+				value={input}
 				onChangeText={(input) =>
-					actions.setPrivateChatInput({ partnerName, input })
+					setInput(getPrivateChatRoomKey(partnerName), input)
 				}
 				onSubmit={(message) => {
-					actions.sendMessage({ partnerName, message })
-					actions.setPrivateChatInput({ partnerName, input: "" })
+					sendMessage({ partnerName, message })
+					setInput(getPrivateChatRoomKey(partnerName), "")
 				}}
 			/>
 		</div>

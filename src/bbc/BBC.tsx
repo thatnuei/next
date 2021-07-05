@@ -93,7 +93,7 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 				const characterName = getNodeChildrenAsText(node)
 				return (
 					<CharacterMenuTarget name={characterName}>
-						<Avatar name={characterName} className={`inline w-10 h-10`} />
+						<Avatar name={characterName} size={10} inline />
 					</CharacterMenuTarget>
 				)
 			}
