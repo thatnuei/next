@@ -21,7 +21,7 @@ import {
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
-import { restorePrivateChats } from "./storage"
+import { restorePrivateChats, savePrivateChats } from "./storage"
 import type { TypingStatus } from "./types"
 
 export const getPrivateChatRoomKey = (partnerName: string) =>
@@ -69,18 +69,34 @@ export function usePrivateChatInput(partnerName: string) {
 }
 
 export function usePrivateChatActions() {
-	const setOpenChatNames = useUpdateAtom(openChatNamesAtom)
 	const { send } = useSocketActions()
 	const identity = useIdentity()
 	const addPrivateMessage = useAddPrivateMessage()
 
-	function openPrivateChat(partnerName: string) {
-		setOpenChatNames((prev): TruthyMap => ({ ...prev, [partnerName]: true }))
-	}
+	const setPrivateChatNames = useAtomCallback(
+		useCallback(
+			(get, set, getNewChats: (prev: TruthyMap) => TruthyMap) => {
+				const chats = get(openChatNamesAtom)
+				set(openChatNamesAtom, getNewChats(chats))
+				savePrivateChats(identity, Object.keys(getNewChats(chats)))
+			},
+			[identity],
+		),
+	)
 
-	function closePrivateChat(partnerName: string) {
-		setOpenChatNames((prev): TruthyMap => omit(prev, [partnerName]))
-	}
+	const openPrivateChat = useCallback(
+		(partnerName: string) => {
+			setPrivateChatNames((prev) => ({ ...prev, [partnerName]: true }))
+		},
+		[setPrivateChatNames],
+	)
+
+	const closePrivateChat = useCallback(
+		(partnerName: string) => {
+			setPrivateChatNames((prev) => omit(prev, [partnerName]))
+		},
+		[setPrivateChatNames],
+	)
 
 	const sendMessage = useCallback(
 		(args: { partnerName: string; message: string }) => {
