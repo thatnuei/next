@@ -25,6 +25,8 @@ import { useSocketActions } from "../socket/SocketConnection"
 import { loadChannels, saveChannels } from "./storage"
 import type { ChannelMode } from "./types"
 
+const maxMessageCount = 500
+
 export interface Channel {
 	id: string
 	title: string
@@ -191,10 +193,17 @@ export function useChannelCommandHandler() {
 	const identity = useIdentity()
 	const { account } = useAuthUser()
 	const actions = useChannelActions()
-
 	const joinedChannelIds = useRecoilValue(joinedChannelIdsAtom)
 
 	return useRecoilCallback(({ set }) => (command: ServerCommand) => {
+		function addMessage(id: string, message: MessageState) {
+			// we don't want to keep too many messages in memory
+			// logs should make up for this
+			set(channelMessages(id), (prev) =>
+				[...prev, message].slice(-maxMessageCount),
+			)
+		}
+
 		matchCommand(command, {
 			async IDN() {
 				set(joinedChannelIdsAtom, {})
@@ -267,25 +276,16 @@ export function useChannelCommandHandler() {
 			},
 
 			MSG({ channel: id, message, character }) {
-				set(channelMessages(id), (prev) => [
-					...prev,
-					createChannelMessage(character, message),
-				])
+				addMessage(id, createChannelMessage(character, message))
 			},
 
 			LRP({ channel: id, character, message }) {
-				set(channelMessages(id), (prev) => [
-					...prev,
-					createAdMessage(character, message),
-				])
+				addMessage(id, createAdMessage(character, message))
 			},
 
 			RLL(params) {
 				if ("channel" in params) {
-					set(channelMessages(params.channel), (prev) => [
-						...prev,
-						createSystemMessage(params.message),
-					])
+					addMessage(params.channel, createSystemMessage(params.message))
 				}
 			},
 		})
