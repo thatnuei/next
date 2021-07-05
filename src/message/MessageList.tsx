@@ -3,7 +3,7 @@ import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
 
 interface Props {
-	messages: MessageState[]
+	messages: readonly MessageState[]
 }
 
 const bottomScrollThreshold = 20
