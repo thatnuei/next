@@ -5,6 +5,7 @@ import { useCharacterCommandHandler } from "../character/state"
 import { ChatNavProvider } from "../chatNav/chatNavContext"
 import type { ServerCommand } from "../socket/helpers"
 import { SocketConnection, useSocketActions } from "../socket/SocketConnection"
+import { useShowToast } from "../toast/state"
 import ChatNav from "./ChatNav"
 import ChatRoutes from "./ChatRoutes"
 import ConnectionGuard from "./ConnectionGuard"
@@ -34,12 +35,21 @@ function CommandHandlers() {
 	const handleCharacterCommand = useCharacterCommandHandler()
 	const handleChannelBrowserCommand = useChannelBrowserCommandHandler()
 	const handleChannelCommand = useChannelCommandHandler()
+	const showToast = useShowToast()
 
 	useEffect(() =>
 		addListener((command: ServerCommand) => {
 			void handleCharacterCommand(command)
 			handleChannelBrowserCommand(command)
 			void handleChannelCommand(command)
+
+			if (command.type === "ERR") {
+				showToast({
+					type: "error",
+					content: command.params.message,
+					duration: 5000,
+				})
+			}
 		}),
 	)
 
