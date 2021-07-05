@@ -1,4 +1,5 @@
 import { atom, useAtom } from "jotai"
+import { useUpdateAtom } from "jotai/utils"
 import type { ReactNode } from "react"
 import { useCallback } from "react"
 import { uniqueId } from "../common/uniqueId"
@@ -21,7 +22,7 @@ export function useToastInstances() {
 }
 
 export function useShowToast() {
-	const [, setToasts] = useAtom(toastListAtom)
+	const setToasts = useUpdateAtom(toastListAtom)
 
 	return useCallback(
 		(options: ToastOptions) => {
@@ -32,7 +33,7 @@ export function useShowToast() {
 }
 
 export function useRemoveToast() {
-	const [, setToasts] = useAtom(toastListAtom)
+	const setToasts = useUpdateAtom(toastListAtom)
 
 	return useCallback(
 		(key: string) => {
