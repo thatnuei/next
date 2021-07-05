@@ -10,7 +10,7 @@ import { useAuthUser } from "../chat/authUserContext"
 import { useIdentity } from "../chat/identityContext"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
-import type { TruthyMap } from "../common/types"
+import type { Dict, Mutable, TruthyMap } from "../common/types"
 import { unique } from "../common/unique"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
@@ -25,9 +25,17 @@ function createCharacter(name: string): Character {
 	}
 }
 
-export const characterAtom = atomFamily({
+export const charactersAtom = atom<Dict<Character>>({
+	key: "characters",
+	default: {},
+})
+
+export const characterSelector = selectorFamily({
 	key: "character",
-	default: createCharacter,
+	get:
+		(name: string) =>
+		({ get }): Character =>
+			get(charactersAtom)[name] ?? createCharacter(name),
 })
 
 const characterGenderSelector = selectorFamily({
@@ -35,7 +43,7 @@ const characterGenderSelector = selectorFamily({
 	get:
 		(name: string) =>
 		({ get }) =>
-			get(characterAtom(name)).gender,
+			get(characterSelector(name)).gender,
 })
 
 const friendshipsAtom = atomFamily({
@@ -66,20 +74,20 @@ const likedCharactersSelector = selectorFamily({
 		({ get }): readonly Character[] => {
 			const friendships = get(friendshipsAtom(account))
 			const friendCharacters = unique(friendships.map(({ them }) => them))
-				.map(characterAtom)
+				.map(characterSelector)
 				.map(get)
 
 			const bookmarks = get(bookmarksAtom(account))
 			const bookmarkCharacters = Object.entries(bookmarks)
 				.filter(([, value]) => value)
-				.map(([name]) => get(characterAtom(name)))
+				.map(([name]) => get(characterSelector(name)))
 
 			return [...friendCharacters, ...bookmarkCharacters]
 		},
 })
 
 export function useCharacter(name: string) {
-	return useRecoilValue(characterAtom(name))
+	return useRecoilValue(characterSelector(name))
 }
 
 export function useCharacterGender(name: string) {
@@ -159,43 +167,44 @@ export function useCharacterCommandHandler() {
 			},
 
 			LIS({ characters }) {
+				const newCharacters: Mutable<Dict<Character>> = {}
 				for (const [name, gender, status, statusMessage] of characters) {
-					set(characterAtom(name), {
-						name,
-						gender,
-						status,
-						statusMessage,
-					})
+					newCharacters[name] = { name, gender, status, statusMessage }
 				}
+				set(charactersAtom, (prev) => ({ ...prev, ...newCharacters }))
 			},
 
 			NLN({ identity: name, gender, status }) {
-				set(characterAtom(name), {
-					name,
-					gender,
-					status,
-					statusMessage: "",
-				})
+				set(charactersAtom, (prev) => ({
+					...prev,
+					[name]: { name, gender, status, statusMessage: "" },
+				}))
 			},
 
 			FLN({ character: name }) {
 				set(
-					characterAtom(name),
-					(char): Character => ({
-						...char,
-						status: "offline",
-						statusMessage: "",
+					charactersAtom,
+					(prev): Dict<Character> => ({
+						...prev,
+						[name]: {
+							...(prev[name] ?? createCharacter(name)),
+							status: "offline",
+							statusMessage: "",
+						},
 					}),
 				)
 			},
 
 			STA({ character: name, status, statusmsg }) {
 				set(
-					characterAtom(name),
-					(char): Character => ({
-						...char,
-						status,
-						statusMessage: statusmsg,
+					charactersAtom,
+					(prev): Dict<Character> => ({
+						...prev,
+						[name]: {
+							...(prev[name] ?? createCharacter(name)),
+							status,
+							statusMessage: statusmsg,
+						},
 					}),
 				)
 			},

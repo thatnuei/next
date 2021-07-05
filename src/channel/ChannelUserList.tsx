@@ -1,4 +1,5 @@
 import { sortBy } from "lodash-es"
+import { memo } from "react"
 import CharacterName from "../character/CharacterName"
 import { useGetCharacterRoles } from "../character/state"
 import type { CharacterStatus } from "../character/types"
@@ -23,9 +24,10 @@ type ItemType = ValueOf<typeof itemTypes>
 function ChannelUserList({ channelId }: Props) {
 	const channel = useChannel(channelId)
 	const characters = useChannelCharacters(channelId)
+
 	const getRoles = useGetCharacterRoles()
 
-	const getItemType = (name: string, status: CharacterStatus): ItemType => {
+	const getType = (name: string, status: CharacterStatus): ItemType => {
 		const roles = getRoles(name)
 		if (roles.isAdmin) return "admin"
 		if (channel.ops[name]) return "op"
@@ -35,7 +37,7 @@ function ChannelUserList({ channelId }: Props) {
 		return "default"
 	}
 
-	const getTypeCss = (type: ItemType): string => {
+	const getTypeClassName = (type: ItemType): string => {
 		if (type === "admin") return `bg-red-500 bg-opacity-20`
 		if (type === "op") return `bg-yellow-500 bg-opacity-20`
 		if (type === "friend") return `bg-green-500 bg-opacity-20`
@@ -43,19 +45,15 @@ function ChannelUserList({ channelId }: Props) {
 		return ""
 	}
 
-	const entries = characters.map(({ name, status }) => ({
-		name,
-		status,
-		type: getItemType(name, status),
-		className: getTypeCss(getItemType(name, status)),
-	}))
-
-	const sortedItems = sortBy(entries, ["order", (it) => it.name.toLowerCase()])
+	const sortedItems = sortBy(characters, [
+		(it) => itemTypes.indexOf(getType(it.name, it.status)),
+		(it) => it.name.toLowerCase(),
+	])
 
 	return (
 		<div className={`flex flex-col h-full`}>
 			<div className={`px-3 py-2 bg-midnight-0`}>
-				Characters: {entries.length}
+				Characters: {characters.length}
 			</div>
 			<div className={`flex-1 min-h-0 bg-midnight-1`} role="list">
 				<VirtualizedList
@@ -66,7 +64,9 @@ function ChannelUserList({ channelId }: Props) {
 						<div
 							role="listitem"
 							style={style}
-							className={`${`flex items-center px-2`} ${item.className}`}
+							className={`flex items-center px-2 ${getTypeClassName(
+								getType(item.name, item.status),
+							)}`}
 						>
 							<CharacterName name={item.name} />
 						</div>
@@ -77,4 +77,4 @@ function ChannelUserList({ channelId }: Props) {
 	)
 }
 
-export default ChannelUserList
+export default memo(ChannelUserList)

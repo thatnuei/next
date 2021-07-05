@@ -7,10 +7,11 @@ import {
 	useRecoilCallback,
 	useRecoilValue,
 } from "recoil"
-import { characterAtom } from "../character/state"
+import { charactersAtom } from "../character/state"
 import type { Character } from "../character/types"
 import { useAuthUser } from "../chat/authUserContext"
 import { useIdentity } from "../chat/identityContext"
+import { isPresent } from "../common/isPresent"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
 import type { TruthyMap } from "../common/types"
@@ -92,7 +93,10 @@ const channelCharacters = selectorFamily({
 		(channelId: string) =>
 		({ get }): readonly Character[] => {
 			const users = get(channelAtom(channelId)).users
-			return Object.keys(users).map((name) => get(characterAtom(name)))
+			const characters = get(charactersAtom)
+			return Object.keys(users)
+				.map((name) => characters[name])
+				.filter(isPresent)
 		},
 })
 
