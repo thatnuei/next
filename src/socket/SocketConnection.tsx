@@ -8,10 +8,11 @@ import {
 	useRef,
 	useState,
 } from "react"
-import { useAuthUser } from "../chat/authUserContext"
+import { useAuthUser, useAuthUserContext } from "../chat/authUserContext"
 import { useIdentity } from "../chat/identityContext"
 import { raise } from "../common/raise"
 import { useEffectRef } from "../react/useEffectRef"
+import { useShowToast } from "../toast/state"
 import { socketUrl } from "./constants"
 import type { ClientCommand, ServerCommand } from "./helpers"
 import { createCommandString, parseServerCommand } from "./helpers"
@@ -40,6 +41,8 @@ export const SocketStatusContext =
 export function SocketConnection({ children }: { children: ReactNode }) {
 	const identity = useIdentity()
 	const user = useAuthUser()
+	const { getFreshAuthCredentials } = useAuthUserContext()
+	const showToast = useShowToast()
 
 	const [status, setStatus] = useState<SocketConnectionStatus>("offline")
 	const statusRef = useEffectRef(status)
@@ -61,19 +64,29 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 
 		const socket = (socketRef.current = new WebSocket(socketUrl))
 
-		socket.onopen = () => {
-			setStatus("identifying")
+		socket.onopen = async () => {
+			const creds = await getFreshAuthCredentials().catch(() => undefined)
+			if (!creds) {
+				setStatus("error")
+				showToast({
+					type: "error",
+					content: "Failed to fetch auth credentials",
+					duration: 5000,
+				})
+				return
+			}
+
 			send({
 				type: "IDN",
 				params: {
-					account: user.account,
-					ticket: user.ticket,
+					...creds,
 					character: identity,
 					cname: "next",
 					cversion: "0.0.0",
 					method: "ticket",
 				},
 			})
+			setStatus("identifying")
 		}
 
 		socket.onclose = () => {
@@ -113,7 +126,7 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 
 			listeners.current.forEach((listener) => listener(command))
 		}
-	}, [identity, send, statusRef, user.account, user.ticket])
+	}, [getFreshAuthCredentials, identity, send, showToast, statusRef])
 
 	const disconnect = useCallback(() => {
 		const socket = socketRef.current
