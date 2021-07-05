@@ -8,7 +8,7 @@ import { useCharacterGender } from "./state"
 
 function CharacterSummary({
 	name,
-	className,
+	className = "",
 }: {
 	name: string
 	className?: string

@@ -18,7 +18,7 @@ interface ChatNavView {
 }
 
 const Context = createContext<{
-	view?: ChatNavView
+	view?: ChatNavView | undefined
 	showChannel: (channelId: string) => void
 	showPrivateChat: (privateChatPartner: string) => void
 }>()

@@ -77,7 +77,7 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 
 			case "color":
 				return (
-					<span style={colorStyles[node.value]}>
+					<span style={colorStyles[node.value] ?? {}}>
 						<BBCTree nodes={node.children} />
 					</span>
 				)

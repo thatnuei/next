@@ -24,7 +24,7 @@ export class SocketHandler {
 	status = observable<SocketStatus>("idle")
 	commands = new PubSub<ServerCommand>()
 
-	private socket?: WebSocket
+	private socket: WebSocket | undefined = undefined
 
 	constructor() {
 		autobind(this)

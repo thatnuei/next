@@ -8,6 +8,7 @@ import {
 } from "recoil"
 import { useAuthUser } from "../chat/authUserContext"
 import { useIdentity } from "../chat/identityContext"
+import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
 import type { TruthyMap } from "../common/types"
 import { unique } from "../common/unique"
@@ -140,16 +141,16 @@ export function useCharacterCommandHandler() {
 					set(ignoredUsers, truthyMap(params.characters))
 				}
 				if (params.action === "add") {
-					set(ignoredUsers, (prev) => ({
-						...prev,
-						[params.character]: true,
-					}))
+					set(
+						ignoredUsers,
+						(prev): TruthyMap => ({
+							...prev,
+							[params.character]: true,
+						}),
+					)
 				}
 				if (params.action === "delete") {
-					set(ignoredUsers, (prev) => ({
-						...prev,
-						[params.character]: undefined,
-					}))
+					set(ignoredUsers, (prev) => omit(prev, [params.character]))
 				}
 			},
 
@@ -201,18 +202,18 @@ export function useCharacterCommandHandler() {
 
 			RTB(params) {
 				if (params.type === "trackadd") {
-					set(bookmarksAtom(user.account), (prev) => ({
-						...prev,
-						[params.name]: true,
-					}))
+					set(
+						bookmarksAtom(user.account),
+						(prev): TruthyMap => ({
+							...prev,
+							[params.name]: true,
+						}),
+					)
 					// show toast
 				}
 
 				if (params.type === "trackrem") {
-					set(bookmarksAtom(user.account), (prev) => ({
-						...prev,
-						[params.name]: undefined,
-					}))
+					set(bookmarksAtom(user.account), (prev) => omit(prev, [params.name]))
 					// show toast
 				}
 

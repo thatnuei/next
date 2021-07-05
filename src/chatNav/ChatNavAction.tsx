@@ -14,7 +14,7 @@ export function ChatNavAction({ name, icon, onClick }: ChatNavActionProps) {
 		<Button
 			className={`${fadedButton} block p-3`}
 			title={name}
-			onClick={onClick}
+			onClick={() => onClick?.()}
 		>
 			<Icon which={icon} />
 		</Button>

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 
 type PromiseState<T> =
-	| { status: "idle"; value?: T; error?: undefined }
-	| { status: "pending"; value?: T; error?: undefined }
+	| { status: "idle"; value?: T | undefined; error?: undefined }
+	| { status: "pending"; value?: T | undefined; error?: undefined }
 	| { status: "resolved"; value: T; error?: undefined }
-	| { status: "rejected"; value?: T; error: Error }
+	| { status: "rejected"; value?: T | undefined; error: Error }
 
 export default function usePromise<T>(promise: Promise<T> | undefined) {
 	const [state, setState] = useState<PromiseState<T>>({ status: "idle" })

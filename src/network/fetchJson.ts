@@ -16,8 +16,8 @@ export interface FetchJsonOptions {
 
 export async function fetchJson<T>(url: string, options?: FetchJsonOptions) {
 	const res = await fetch(url, {
-		method: options?.method,
-		body: options?.body && createFormData(options.body),
+		method: options?.method || "get",
+		body: options?.body ? createFormData(options.body) : null,
 	})
 
 	return res.ok ? (res.json() as Promise<T>) : raise(res.statusText)

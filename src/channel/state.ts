@@ -11,6 +11,7 @@ import { characterAtom } from "../character/state"
 import type { Character } from "../character/types"
 import { useAuthUser } from "../chat/authUserContext"
 import { useIdentity } from "../chat/identityContext"
+import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
 import type { TruthyMap } from "../common/types"
 import type { MessageState } from "../message/MessageState"
@@ -216,14 +217,20 @@ export function useChannelCommandHandler() {
 
 			JCH({ channel: id, character: { identity: name }, title }) {
 				if (name === identity) {
-					set(joinedChannelIdsAtom, (prev) => ({ ...prev, [id]: true }))
+					set(
+						joinedChannelIdsAtom,
+						(prev): TruthyMap => ({ ...prev, [id]: true }),
+					)
 				}
 
-				set(channelAtom(id), (prev) => ({
-					...prev,
-					title,
-					users: { ...prev.users, [name]: true },
-				}))
+				set(
+					channelAtom(id),
+					(prev): Channel => ({
+						...prev,
+						title,
+						users: { ...prev.users, [name]: true },
+					}),
+				)
 
 				saveChannels(
 					Object.entries(joinedChannelIds)
@@ -236,12 +243,12 @@ export function useChannelCommandHandler() {
 
 			LCH({ channel: id, character }) {
 				if (character === identity) {
-					set(joinedChannelIdsAtom, ({ [id]: _, ...rest }) => rest)
+					set(joinedChannelIdsAtom, (prev) => omit(prev, [id]))
 				}
 
 				set(channelAtom(id), (prev) => ({
 					...prev,
-					users: { ...prev.users, [character]: false },
+					users: omit(prev.users, [character]),
 				}))
 
 				saveChannels(
