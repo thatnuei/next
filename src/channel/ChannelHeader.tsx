@@ -84,7 +84,7 @@ function ChannelHeader({ channelId }: Props) {
 					)}
 				>
 					<div className="w-64 h-full">
-						<ChannelUserList channel={channel} />
+						<ChannelUserList channelId={channelId} />
 					</div>
 				</Drawer>
 			)}

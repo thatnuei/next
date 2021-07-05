@@ -52,12 +52,12 @@ function ChannelView({ channelId }: Props) {
 		<div className={`flex flex-col h-full`}>
 			<ChannelHeader channelId={channelId} />
 
-			<div className={`flex flex-row flex-1 min-h-0 my-1`}>
+			<div className={`flex flex-1 min-h-0 my-1`}>
 				<main className={`relative flex-1 bg-midnight-1`}>{messageList}</main>
 
 				{isLargeScreen && (
 					<div className={`w-56 min-h-0 ml-1`}>
-						<ChannelUserList channel={channel} />
+						<ChannelUserList channelId={channelId} />
 					</div>
 				)}
 			</div>

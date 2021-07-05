@@ -4,11 +4,10 @@ import { useGetCharacterRoles } from "../character/state"
 import type { CharacterStatus } from "../character/types"
 import type { ValueOf } from "../common/types"
 import VirtualizedList from "../ui/VirtualizedList"
-import type { Channel } from "./state"
-import { useChannelCharacters } from "./state"
+import { useChannel, useChannelCharacters } from "./state"
 
 interface Props {
-	channel: Channel
+	channelId: string
 }
 
 const itemTypes = [
@@ -21,8 +20,9 @@ const itemTypes = [
 ] as const
 type ItemType = ValueOf<typeof itemTypes>
 
-function ChannelUserList({ channel }: Props) {
-	const characters = useChannelCharacters(channel.id)
+function ChannelUserList({ channelId }: Props) {
+	const channel = useChannel(channelId)
+	const characters = useChannelCharacters(channelId)
 	const getRoles = useGetCharacterRoles()
 
 	const getItemType = (name: string, status: CharacterStatus): ItemType => {
