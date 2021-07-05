@@ -43,7 +43,7 @@ function createChannel(id: string): Channel {
 		title: id,
 		description: "",
 		mode: "both",
-		selectedMode: "both",
+		selectedMode: "chat",
 		users: {},
 		ops: {},
 		isUnread: false,
