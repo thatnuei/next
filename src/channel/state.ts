@@ -1,12 +1,6 @@
+import * as jotai from "jotai"
+import * as jotaiUtils from "jotai/utils"
 import { useCallback } from "react"
-import {
-	atom,
-	atomFamily,
-	selector,
-	selectorFamily,
-	useRecoilCallback,
-	useRecoilValue,
-} from "recoil"
 import { charactersAtom } from "../character/state"
 import type { Character } from "../character/types"
 import { useAuthUser } from "../chat/authUserContext"
@@ -59,68 +53,55 @@ function createChannel(id: string): Channel {
 
 const channelRoomKey = (channelId: string) => `channel:${channelId}` as RoomKey
 
-const channelAtom = atomFamily({
-	key: "channel",
-	default: createChannel,
+const channelAtom = jotaiUtils.atomFamily((id: string) => {
+	return jotai.atom<Channel>(createChannel(id))
 })
 
 // todo: represent join states instead of just booleans (?)
-const joinedChannelIdsAtom = atom<TruthyMap>({
-	key: "joinedChannelIds",
-	default: {},
+const joinedChannelIdsAtom = jotai.atom<TruthyMap>({})
+
+const joinedChannelsAtom = jotai.atom((get): readonly Channel[] => {
+	const joinedChannelIds = get(joinedChannelIdsAtom)
+	return Object.keys(joinedChannelIds).map((id) => get(channelAtom(id)))
 })
 
-const joinedChannelsSelector = selector({
-	key: "joinedChannels",
-	get: ({ get }) => {
-		const joinedChannelIds = get(joinedChannelIdsAtom)
-		return Object.keys(joinedChannelIds).map((id) => get(channelAtom(id)))
-	},
-})
+const isChannelJoinedAtom = jotaiUtils.atomFamily((id: string) =>
+	jotai.atom((get) => get(joinedChannelIdsAtom)[id] ?? false),
+)
 
-const isChannelJoinedSelector = selectorFamily({
-	key: "isChannelJoined",
-	get:
-		(id: string) =>
-		({ get }) =>
-			get(joinedChannelIdsAtom)[id] ?? false,
-})
+const channelCharacters = jotaiUtils.atomFamily((channelId: string) => {
+	return jotai.atom((get): readonly Character[] => {
+		const channelUsers = get(channelAtom(channelId)).users
+		const characters = get(charactersAtom)
 
-const channelCharacters = selectorFamily({
-	key: "channelCharacters",
-	get:
-		(channelId: string) =>
-		({ get }): readonly Character[] => {
-			const users = get(channelAtom(channelId)).users
-			const characters = get(charactersAtom)
-			return Object.keys(users)
-				.map((name) => characters[name])
-				.filter(isPresent)
-		},
+		return Object.keys(channelUsers)
+			.map((userId) => characters[userId])
+			.filter(isPresent)
+	})
 })
 
 export function useChannel(id: string) {
-	return useRecoilValue(channelAtom(id))
+	return jotai.useAtom(channelAtom(id))[0]
 }
 
 export function useJoinedChannelIds() {
-	return useRecoilValue(joinedChannelIdsAtom)
+	return jotai.useAtom(joinedChannelIdsAtom)[0]
 }
 
 export function useJoinedChannels() {
-	return useRecoilValue(joinedChannelsSelector)
+	return jotai.useAtom(joinedChannelsAtom)[0]
 }
 
 export function useIsChannelJoined(id: string) {
-	return useRecoilValue(isChannelJoinedSelector(id))
+	return jotai.useAtom(isChannelJoinedAtom(id))[0]
 }
 
 export function useChannelMessages(id: string) {
-	return useRecoilValue(roomMessagesAtom(channelRoomKey(id)))
+	return jotai.useAtom(roomMessagesAtom(channelRoomKey(id)))[0]
 }
 
 export function useChannelCharacters(id: string) {
-	return useRecoilValue(channelCharacters(id))
+	return jotai.useAtom(channelCharacters(id))[0]
 }
 
 export function useActualChannelMode(id: string) {
@@ -131,11 +112,10 @@ export function useActualChannelMode(id: string) {
 export function useChannelActions() {
 	const { send } = useSocketActions()
 
-	const updateChannel = useRecoilCallback(
-		({ set }) =>
-			(id: string, properties: Partial<Channel>) => {
-				set(channelAtom(id), (prev) => ({ ...prev, ...properties }))
-			},
+	const updateChannel = jotaiUtils.useAtomCallback(
+		useCallback((get, set, properties: Partial<Channel> & { id: string }) => {
+			set(channelAtom(properties.id), (prev) => ({ ...prev, ...properties }))
+		}, []),
 	)
 
 	const join = useCallback(
@@ -146,7 +126,7 @@ export function useChannelActions() {
 			})
 
 			if (title) {
-				updateChannel(id, { title })
+				void updateChannel({ id, title })
 			}
 		},
 		[send, updateChannel],
@@ -177,11 +157,10 @@ export function useChannelActions() {
 		[send],
 	)
 
-	const clearMessages = useRecoilCallback(
-		({ set }) =>
-			(id: string) =>
-				set(roomMessagesAtom(channelRoomKey(id)), []),
-		[],
+	const clearMessages = jotaiUtils.useAtomCallback(
+		useCallback((get, set, channelId: string) => {
+			set(roomMessagesAtom(channelRoomKey(channelId)), [])
+		}, []),
 	)
 
 	return {
@@ -197,107 +176,111 @@ export function useChannelCommandHandler() {
 	const identity = useIdentity()
 	const { account } = useAuthUser()
 	const actions = useChannelActions()
-	const joinedChannelIds = useRecoilValue(joinedChannelIdsAtom)
 
-	return useRecoilCallback(({ set }) => (command: ServerCommand) => {
-		function addMessage(id: string, message: MessageState) {
-			// we don't want to keep too many messages in memory
-			// logs should make up for this
-			set(roomMessagesAtom(channelRoomKey(id)), (prev) =>
-				[...prev, message].slice(-maxMessageCount),
-			)
-		}
+	const handler = useCallback(
+		(get: jotai.Getter, set: jotai.Setter, command: ServerCommand) => {
+			function addMessage(id: string, message: MessageState) {
+				// we don't want to keep too many messages in memory
+				// logs should make up for this
+				set(roomMessagesAtom(channelRoomKey(id)), (prev) =>
+					[...prev, message].slice(-maxMessageCount),
+				)
+			}
 
-		matchCommand(command, {
-			async IDN() {
-				set(joinedChannelIdsAtom, {})
+			matchCommand(command, {
+				async IDN() {
+					set(joinedChannelIdsAtom, {})
 
-				const channelIds = await loadChannels(account, identity)
-				for (const id of channelIds) {
-					actions.join(id)
-				}
-			},
+					const channelIds = await loadChannels(account, identity)
+					for (const id of channelIds) {
+						actions.join(id)
+					}
+				},
 
-			JCH({ channel: id, character: { identity: name }, title }) {
-				if (name === identity) {
+				JCH({ channel: id, character: { identity: name }, title }) {
+					if (name === identity) {
+						set(
+							joinedChannelIdsAtom,
+							(prev): TruthyMap => ({ ...prev, [id]: true }),
+						)
+					}
+
 					set(
-						joinedChannelIdsAtom,
-						(prev): TruthyMap => ({ ...prev, [id]: true }),
+						channelAtom(id),
+						(prev): Channel => ({
+							...prev,
+							title,
+							users: { ...prev.users, [name]: true },
+						}),
 					)
-				}
 
-				set(
-					channelAtom(id),
-					(prev): Channel => ({
+					saveChannels(
+						Object.entries(get(joinedChannelIdsAtom))
+							.filter(([, joined]) => joined)
+							.map(([id]) => id),
+						account,
+						identity,
+					)
+				},
+
+				LCH({ channel: id, character }) {
+					if (character === identity) {
+						set(joinedChannelIdsAtom, (prev) => omit(prev, [id]))
+					}
+
+					set(channelAtom(id), (prev) => ({
 						...prev,
-						title,
-						users: { ...prev.users, [name]: true },
-					}),
-				)
+						users: omit(prev.users, [character]),
+					}))
 
-				saveChannels(
-					Object.entries(joinedChannelIds)
-						.filter(([, joined]) => joined)
-						.map(([id]) => id),
-					account,
-					identity,
-				)
-			},
+					saveChannels(
+						Object.entries(get(joinedChannelIdsAtom))
+							.filter(([, joined]) => joined)
+							.map(([id]) => id),
+						account,
+						identity,
+					)
+				},
 
-			LCH({ channel: id, character }) {
-				if (character === identity) {
-					set(joinedChannelIdsAtom, (prev) => omit(prev, [id]))
-				}
+				ICH({ channel: id, users, mode }) {
+					set(channelAtom(id), (prev) => ({
+						...prev,
+						mode,
+						users: truthyMap(users.map((user) => user.identity)),
+					}))
+				},
 
-				set(channelAtom(id), (prev) => ({
-					...prev,
-					users: omit(prev.users, [character]),
-				}))
+				CDS({ channel: id, description }) {
+					set(channelAtom(id), (prev) => ({
+						...prev,
+						description,
+					}))
+				},
 
-				saveChannels(
-					Object.entries(joinedChannelIds)
-						.filter(([, joined]) => joined)
-						.map(([id]) => id),
-					account,
-					identity,
-				)
-			},
+				COL({ channel: id, oplist }) {
+					set(channelAtom(id), (prev) => ({
+						...prev,
+						ops: truthyMap(oplist),
+					}))
+				},
 
-			ICH({ channel: id, users, mode }) {
-				set(channelAtom(id), (prev) => ({
-					...prev,
-					mode,
-					users: truthyMap(users.map((user) => user.identity)),
-				}))
-			},
+				MSG({ channel: id, message, character }) {
+					addMessage(id, createChannelMessage(character, message))
+				},
 
-			CDS({ channel: id, description }) {
-				set(channelAtom(id), (prev) => ({
-					...prev,
-					description,
-				}))
-			},
+				LRP({ channel: id, character, message }) {
+					addMessage(id, createAdMessage(character, message))
+				},
 
-			COL({ channel: id, oplist }) {
-				set(channelAtom(id), (prev) => ({
-					...prev,
-					ops: truthyMap(oplist),
-				}))
-			},
+				RLL(params) {
+					if ("channel" in params) {
+						addMessage(params.channel, createSystemMessage(params.message))
+					}
+				},
+			})
+		},
+		[account, actions, identity],
+	)
 
-			MSG({ channel: id, message, character }) {
-				addMessage(id, createChannelMessage(character, message))
-			},
-
-			LRP({ channel: id, character, message }) {
-				addMessage(id, createAdMessage(character, message))
-			},
-
-			RLL(params) {
-				if ("channel" in params) {
-					addMessage(params.channel, createSystemMessage(params.message))
-				}
-			},
-		})
-	})
+	return jotaiUtils.useAtomCallback(handler)
 }

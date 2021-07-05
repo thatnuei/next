@@ -25,7 +25,7 @@ function ChannelView({ channelId }: Props) {
 	const isLargeScreen = useMediaQuery(screenQueries.large)
 
 	function updateChatInput(chatInput: string) {
-		updateChannel(channelId, { chatInput })
+		void updateChannel({ id: channelId, chatInput })
 	}
 
 	function submitChatInput(text: string) {

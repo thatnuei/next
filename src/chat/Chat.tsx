@@ -37,9 +37,9 @@ function CommandHandlers() {
 
 	useEffect(() =>
 		addListener((command: ServerCommand) => {
-			handleCharacterCommand(command)
+			void handleCharacterCommand(command)
 			handleChannelBrowserCommand(command)
-			handleChannelCommand(command)
+			void handleChannelCommand(command)
 		}),
 	)
 

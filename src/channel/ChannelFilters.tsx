@@ -11,7 +11,7 @@ function ChannelFilters({ channelId, ...props }: Props) {
 	const { updateChannel } = useChannelActions()
 
 	function setSelectedMode(mode: ChannelMode) {
-		updateChannel(channelId, { selectedMode: mode })
+		void updateChannel({ id: channelId, selectedMode: mode })
 	}
 
 	function renderFilterButton(mode: ChannelMode, label: string) {

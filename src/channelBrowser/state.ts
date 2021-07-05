@@ -1,11 +1,6 @@
+import { atom, useAtom } from "jotai"
+import { atomFamily, useUpdateAtom } from "jotai/utils"
 import { useCallback } from "react"
-import {
-	atom,
-	selectorFamily,
-	useRecoilCallback,
-	useRecoilValue,
-	useSetRecoilState,
-} from "recoil"
 import { delay } from "../common/delay"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
@@ -18,42 +13,61 @@ export interface ChannelBrowserChannel {
 	userCount: number
 }
 
-const publicChannelsAtom = atom<ChannelBrowserChannel[]>({
-	key: "channelBrowser:publicChannels",
-	default: [],
-})
+const publicChannelsAtom = atom<ChannelBrowserChannel[]>([])
+const privateChannelsAtom = atom<ChannelBrowserChannel[]>([])
+const isRefreshingAtom = atom(false)
 
-const privateChannelsAtom = atom<ChannelBrowserChannel[]>({
-	key: "channelBrowser:privateChannels",
-	default: [],
-})
+const isPublicAtom = atomFamily((channelId: string) =>
+	atom((get) => get(publicChannelsAtom).some((ch) => ch.id === channelId)),
+)
 
-const isRefreshingAtom = atom({
-	key: "channelBrowser:isRefreshing",
-	default: false,
-})
+const userCountAtom = atomFamily((channelId: string) =>
+	atom((get) => {
+		const channels = [...get(publicChannelsAtom), ...get(privateChannelsAtom)]
+		return channels.find((ch) => ch.id === channelId)?.userCount ?? 0
+	}),
+)
 
-const isPublicSelector = selectorFamily({
-	key: "channelBrowser:isPublic",
-	get:
-		(channelId: string) =>
-		({ get }): boolean =>
-			get(publicChannelsAtom).some((ch) => ch.id === channelId),
-})
+export function useRefreshChannelBrowser() {
+	const { send } = useSocketActions()
+	const [isRefreshing, setIsRefreshing] = useAtom(isRefreshingAtom)
 
-const userCountSelector = selectorFamily({
-	key: "channelBrowser:userCount",
-	get:
-		(channelId: string) =>
-		({ get }): number => {
-			const channels = [...get(publicChannelsAtom), ...get(privateChannelsAtom)]
-			return channels.find((ch) => ch.id === channelId)?.userCount ?? 0
-		},
-})
+	return useCallback(async () => {
+		if (isRefreshing) return
+
+		send({ type: "CHA" })
+		send({ type: "ORS" })
+
+		// the server has a 7 second timeout on refreshes
+		setIsRefreshing(true)
+		await delay(7000)
+		setIsRefreshing(false)
+	}, [isRefreshing, send, setIsRefreshing])
+}
+
+export function usePublicChannels() {
+	return useAtom(publicChannelsAtom)[0]
+}
+
+export function usePrivateChannels() {
+	return useAtom(privateChannelsAtom)[0]
+}
+
+export function useChannelBrowserIsRefreshing() {
+	return useAtom(isRefreshingAtom)[0]
+}
+
+export function useIsPublicChannel(channelId: string) {
+	return useAtom(isPublicAtom(channelId))[0]
+}
+
+export function useChannelUserCount(channelId: string) {
+	return useAtom(userCountAtom(channelId))[0]
+}
 
 export function useChannelBrowserCommandHandler() {
-	const setPublicChannels = useSetRecoilState(publicChannelsAtom)
-	const setPrivateChannels = useSetRecoilState(privateChannelsAtom)
+	const setPublicChannels = useUpdateAtom(publicChannelsAtom)
+	const setPrivateChannels = useUpdateAtom(privateChannelsAtom)
 
 	return useCallback(
 		(command: ServerCommand) => {
@@ -82,45 +96,4 @@ export function useChannelBrowserCommandHandler() {
 		},
 		[setPrivateChannels, setPublicChannels],
 	)
-}
-
-export function useRefreshChannelBrowser() {
-	const { send } = useSocketActions()
-
-	return useRecoilCallback(
-		({ snapshot, set }) =>
-			async () => {
-				const isRefreshing = snapshot.getLoadable(isRefreshingAtom).valueMaybe()
-				if (isRefreshing) return
-
-				send({ type: "CHA" })
-				send({ type: "ORS" })
-
-				// the server has a 7 second timeout on refreshes
-				set(isRefreshingAtom, true)
-				await delay(7000)
-				set(isRefreshingAtom, false)
-			},
-		[send],
-	)
-}
-
-export function usePublicChannels() {
-	return useRecoilValue(publicChannelsAtom)
-}
-
-export function usePrivateChannels() {
-	return useRecoilValue(privateChannelsAtom)
-}
-
-export function useChannelBrowserIsRefreshing() {
-	return useRecoilValue(isRefreshingAtom)
-}
-
-export function useIsPublicChannel(channelId: string) {
-	return useRecoilValue(isPublicSelector(channelId))
-}
-
-export function useChannelUserCount(channelId: string) {
-	return useRecoilValue(userCountSelector(channelId))
 }

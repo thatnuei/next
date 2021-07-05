@@ -1,6 +1,6 @@
+import { atom, useAtom } from "jotai"
 import type { ReactNode } from "react"
 import { useCallback } from "react"
-import { atom, useRecoilValue, useSetRecoilState } from "recoil"
 import { uniqueId } from "../common/uniqueId"
 
 export interface ToastOptions {
@@ -14,17 +14,14 @@ export interface ToastInstance extends ToastOptions {
 	key: string
 }
 
-const toastListAtom = atom<ToastInstance[]>({
-	key: "toastList",
-	default: [],
-})
+const toastListAtom = atom<ToastInstance[]>([])
 
 export function useToastInstances() {
-	return useRecoilValue(toastListAtom)
+	return useAtom(toastListAtom)[0]
 }
 
 export function useShowToast() {
-	const setToasts = useSetRecoilState(toastListAtom)
+	const [, setToasts] = useAtom(toastListAtom)
 
 	return useCallback(
 		(options: ToastOptions) => {
@@ -35,7 +32,7 @@ export function useShowToast() {
 }
 
 export function useRemoveToast() {
-	const setToasts = useSetRecoilState(toastListAtom)
+	const [, setToasts] = useAtom(toastListAtom)
 
 	return useCallback(
 		(key: string) => {

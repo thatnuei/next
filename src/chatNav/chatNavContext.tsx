@@ -30,7 +30,8 @@ export function ChatNavProvider({ children }: { children: ReactNode }) {
 
 	const showChannel = useCallback(
 		(channelId: string) => {
-			updateChannel(channelId, { isUnread: false })
+			void updateChannel({ id: channelId, isUnread: false })
+
 			startTransition(() => {
 				setView({ channelId })
 			})
@@ -55,7 +56,7 @@ export function ChatNavProvider({ children }: { children: ReactNode }) {
 		createCommandHandler({
 			MSG({ channel: channelId }) {
 				if (view?.channelId !== channelId) {
-					updateChannel(channelId, { isUnread: true })
+					void updateChannel({ id: channelId, isUnread: true })
 				}
 			},
 			PRI({ character }) {
