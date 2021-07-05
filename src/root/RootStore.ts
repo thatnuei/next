@@ -2,7 +2,6 @@ import { AppStore } from "../app/AppStore"
 import { UserStore } from "../app/UserStore"
 import { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { SocketHandler } from "../socket/SocketHandler"
-import { StatusUpdateStore } from "../statusUpdate/StatusUpdateStore"
 
 export class RootStore {
 	readonly socket = new SocketHandler()
@@ -12,5 +11,4 @@ export class RootStore {
 		this.socket,
 		this.appStore.identity,
 	)
-	readonly statusUpdateStore = new StatusUpdateStore(this.socket, this.appStore)
 }

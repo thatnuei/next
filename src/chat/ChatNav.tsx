@@ -7,6 +7,7 @@ import RoomTabList from "../chatNav/RoomTabList"
 import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
 import { useIdentity } from "./identityContext"
+import StatusUpdateForm from "./StatusUpdateForm"
 
 export default function ChatNav() {
 	const identity = useIdentity()
@@ -23,7 +24,19 @@ export default function ChatNav() {
 					<ChannelBrowser />
 				</Modal>
 
-				<ChatNavAction icon={icons.updateStatus} name="Update your status" />
+				<Modal
+					title="Status update"
+					renderTrigger={(t) => (
+						<ChatNavAction
+							icon={icons.updateStatus}
+							name="Update your status"
+							{...t}
+						/>
+					)}
+				>
+					{({ close }) => <StatusUpdateForm onSuccess={close} />}
+				</Modal>
+
 				<ChatNavAction
 					icon={icons.users}
 					name="See online friends and bookmarks"

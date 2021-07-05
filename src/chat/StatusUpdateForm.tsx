@@ -1,29 +1,45 @@
-import { useObservable } from "micro-observables"
+import { atom, useAtom } from "jotai"
 import * as React from "react"
 import { useState } from "react"
 import { useCharacter } from "../character/state"
 import type { CharacterStatus } from "../character/types"
-import { useIdentity } from "../chat/identityContext"
 import Button from "../dom/Button"
-import { useRootStore } from "../root/context"
+import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
 import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
+import { useIdentity } from "./identityContext"
 
-function StatusUpdateForm() {
-	const root = useRootStore()
+const isSubmittingAtom = atom(false)
 
-	const identityCharacter = useCharacter(useIdentity())
+function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
+	const character = useCharacter(useIdentity())
+	const [status, setStatus] = useState(character.status)
+	const [statusMessage, setStatusMessage] = useState(character.statusMessage)
+	const [isSubmitting, setIsSubmitting] = useAtom(isSubmittingAtom)
+	const { send } = useSocketActions()
+	const identity = useIdentity()
 
-	const [status, setStatus] = useState({
-		type: identityCharacter.status,
-		text: identityCharacter.statusMessage,
+	useSocketListener((command) => {
+		if (command.type === "STA" && command.params.character === identity) {
+			onSuccess()
+		}
 	})
-
-	const isSubmitting = useObservable(root.statusUpdateStore.isSubmitting)
 
 	const submit = (e?: React.SyntheticEvent) => {
 		e?.preventDefault()
-		root.statusUpdateStore.submit(status).catch(console.error)
+
+		if (isSubmitting) return
+
+		// submission has a timeout
+		setIsSubmitting(true)
+		setTimeout(() => {
+			setIsSubmitting(false)
+		}, 7000)
+
+		send({
+			type: "STA",
+			params: { status, statusmsg: statusMessage },
+		})
 	}
 
 	return (
@@ -31,11 +47,8 @@ function StatusUpdateForm() {
 			<FormField labelText="Status">
 				<select
 					className={select}
-					value={status.type}
-					onChange={(e) => {
-						const type = e.target.value as CharacterStatus
-						setStatus((prev) => ({ ...prev, type }))
-					}}
+					value={status}
+					onChange={(e) => setStatus(e.target.value as CharacterStatus)}
 				>
 					<option value="online">Online</option>
 					<option value="looking">Looking</option>
@@ -47,11 +60,9 @@ function StatusUpdateForm() {
 			<FormField labelText="Status message (optional)">
 				<textarea
 					className={`${input} flex-1 block`}
-					value={status.text}
-					onChange={(e) => {
-						const text = e.currentTarget.value
-						setStatus((prev) => ({ ...prev, text }))
-					}}
+					value={statusMessage}
+					placeholder="Hey! How's it goin'?"
+					onChange={(e) => setStatusMessage(e.target.value)}
 					onKeyPress={(event) => {
 						if (event.key === "\n" && (event.ctrlKey || event.shiftKey)) {
 							submit()
