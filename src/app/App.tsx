@@ -1,8 +1,7 @@
 import { createContext, useCallback, useState } from "react"
-import { AuthUserProvider } from "../chat/authUserContext"
+import { useAuthUserContext } from "../chat/authUserContext"
 import Chat from "../chat/Chat"
 import { IdentityProvider } from "../chat/identityContext"
-import type { AuthUser } from "../flist/types"
 import IslandLayout from "../ui/IslandLayout"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
@@ -10,17 +9,17 @@ import Login from "./Login"
 export const LogoutContext = createContext(() => {})
 
 export default function App() {
-	const [user, setUser] = useState<AuthUser>()
+	const { user, logout } = useAuthUserContext()
 	const [identity, setIdentity] = useState<string>()
 
-	const logout = useCallback(() => {
+	const showCharacterSelect = useCallback(() => {
 		setIdentity(undefined)
 	}, [])
 
 	if (!user) {
 		return (
 			<IslandLayout title="Login" isVisible>
-				<Login onSuccess={setUser} />
+				<Login />
 			</IslandLayout>
 		)
 	}
@@ -31,7 +30,7 @@ export default function App() {
 				<CharacterSelect
 					account={user.account}
 					characters={user.characters}
-					onReturnToLogin={() => setUser(undefined)}
+					onReturnToLogin={logout}
 					onSubmit={setIdentity}
 				/>
 			</IslandLayout>
@@ -40,11 +39,9 @@ export default function App() {
 
 	return (
 		<IdentityProvider identity={identity}>
-			<LogoutContext.Provider value={logout}>
-				<AuthUserProvider user={user}>
-					<Chat />
-				</AuthUserProvider>
-			</LogoutContext.Provider>
+			<ChatLogoutContext.Provider value={showCharacterSelect}>
+				<Chat />
+			</ChatLogoutContext.Provider>
 		</IdentityProvider>
 	)
 }

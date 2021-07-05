@@ -1,9 +1,10 @@
 import * as React from "react"
+import { useAuthUserContext } from "../chat/authUserContext"
 import { useChatNav } from "../chatNav/chatNavContext"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
-import { useRootStore } from "../root/context"
+import { useSocketActions } from "../socket/SocketConnection"
 import ContextMenu, {
 	ContextMenuButton,
 	ContextMenuCheckbox,
@@ -35,9 +36,10 @@ export default function CharacterMenuTarget({ name, children }: Props) {
 }
 
 function CharacterMenu({ name }: { name: string }) {
-	const root = useRootStore()
 	const { showPrivateChat } = useChatNav()
 	const { friendships, isBookmarked, isIgnored } = useCharacterRoles(name)
+	const { send } = useSocketActions()
+	const { addBookmark, removeBookmark } = useAuthUserContext()
 
 	return (
 		<>
@@ -73,9 +75,9 @@ function CharacterMenu({ name }: { name: string }) {
 					checked={isBookmarked}
 					onCheckedChange={(shouldBookmark) => {
 						if (shouldBookmark) {
-							root.userStore.addBookmark({ name }).catch(console.error) // show error toast
+							addBookmark({ name }).catch(console.error) // show error toast
 						} else {
-							root.userStore.removeBookmark({ name }).catch(console.error) // show error toast
+							removeBookmark({ name }).catch(console.error) // show error toast
 						}
 					}}
 				>
@@ -86,7 +88,7 @@ function CharacterMenu({ name }: { name: string }) {
 					icon={<Icon which={isIgnored ? icons.ignore : icons.ignoreHollow} />}
 					checked={isIgnored}
 					onCheckedChange={(shouldIgnore) => {
-						root.socket.send({
+						send({
 							type: "IGN",
 							params: {
 								action: shouldIgnore ? "add" : "delete",

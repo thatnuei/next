@@ -1,7 +1,7 @@
 import { debounce } from "lodash-es"
 import { useEffect, useMemo, useState } from "react"
+import { useAuthUserContext } from "../chat/authUserContext"
 import type { TagProps } from "../jsx/types"
-import { useRootStore } from "../root/context"
 import { input } from "../ui/components"
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 } & TagProps<"textarea">
 
 export default function CharacterMemoInput({ name, ...props }: Props) {
-	const root = useRootStore()
+	const { getMemo, setMemo } = useAuthUserContext()
 
 	type State =
 		| { status: "loading" }
@@ -23,8 +23,7 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
 
 		let cancelled = false
 
-		root.userStore
-			.getMemo({ name })
+		getMemo({ name })
 			.then((memo): State => ({ status: "editing", memo }))
 			.catch((): State => ({ status: "error" }))
 			.then((state) => {
@@ -36,14 +35,14 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
 		return () => {
 			cancelled = true
 		}
-	}, [name, root.userStore])
+	}, [getMemo, name])
 
 	const saveMemoDebounced = useMemo(() => {
-		const setMemo = (memo: string) => {
-			root.userStore.setMemo({ name, note: memo }).catch(console.warn)
+		const saveMemo = (memo: string) => {
+			setMemo({ name, note: memo }).catch(console.warn)
 		}
-		return debounce(setMemo, 800)
-	}, [name, root.userStore])
+		return debounce(saveMemo, 800)
+	}, [name, setMemo])
 
 	function handleChange(memo: string) {
 		if (state.status === "editing") {

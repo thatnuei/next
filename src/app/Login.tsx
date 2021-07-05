@@ -1,24 +1,20 @@
 import { useState } from "react"
+import { useAuthUserContext } from "../chat/authUserContext"
 import Button from "../dom/Button"
-import { authenticate } from "../flist/authenticate"
-import type { AuthUser } from "../flist/types"
 import { preventDefault } from "../react/preventDefault"
 import usePromiseState from "../state/usePromiseState"
 import { input, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
 
-export default function Login(props: {
-	onSuccess: (result: AuthUser) => void
-}) {
+export default function Login() {
+	const { login } = useAuthUserContext()
 	const [account, setAccount] = useState("")
 	const [password, setPassword] = useState("")
 
 	const authenticateState = usePromiseState()
 
 	const submit = () => {
-		authenticateState.setPromise(
-			authenticate({ account, password }).then(props.onSuccess),
-		)
+		authenticateState.setPromise(login({ account, password }))
 	}
 
 	const canSubmit =
