@@ -4,6 +4,7 @@ import { useIdentity } from "../chat/identityContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
+import { useRoomActions } from "../room/state"
 import { useShowToast } from "../toast/state"
 import { fadedButton, headerText2 } from "../ui/components"
 import Drawer from "../ui/Drawer"
@@ -19,7 +20,7 @@ import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
 import ChannelUserList from "./ChannelUserList"
 import InviteUsersForm from "./InviteUsersForm"
-import { useChannel, useChannelActions } from "./state"
+import { channelRoomKey, useChannel } from "./state"
 
 interface Props {
 	channelId: string
@@ -31,7 +32,7 @@ function ChannelHeader({ channelId }: Props) {
 	const isLargeScreen = useMediaQuery(screenQueries.large)
 	const [inviteOpen, setInviteOpen] = React.useState(false)
 	const showToast = useShowToast()
-	const { clearMessages } = useChannelActions()
+	const { clearMessages } = useRoomActions()
 
 	const isPublic = channel.id === channel.title
 
@@ -110,7 +111,10 @@ function ChannelHeader({ channelId }: Props) {
 						</DropdownMenuItem>
 
 						<DropdownMenuItem icon={<Icon which={icons.clearMessages} />}>
-							<button type="button" onClick={() => clearMessages(channelId)}>
+							<button
+								type="button"
+								onClick={() => clearMessages(channelRoomKey(channel.id))}
+							>
 								Clear messages
 							</button>
 						</DropdownMenuItem>

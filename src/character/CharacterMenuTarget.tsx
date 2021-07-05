@@ -1,6 +1,6 @@
 import * as React from "react"
+import { useNavigate } from "react-router-dom"
 import { useAuthUserContext } from "../chat/authUserContext"
-import { useChatNav } from "../chatNav/chatNavContext"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
@@ -36,7 +36,7 @@ export default function CharacterMenuTarget({ name, children }: Props) {
 }
 
 function CharacterMenu({ name }: { name: string }) {
-	const { showPrivateChat } = useChatNav()
+	const navigate = useNavigate()
 	const { friendships, isBookmarked, isIgnored } = useCharacterRoles(name)
 	const { send } = useSocketActions()
 	const { addBookmark, removeBookmark } = useAuthUserContext()
@@ -63,7 +63,9 @@ function CharacterMenu({ name }: { name: string }) {
 				</ContextMenuItem>
 
 				<ContextMenuItem icon={<Icon which={icons.message} />}>
-					<Button onClick={() => showPrivateChat(name)}>Message</Button>
+					<Button onClick={() => navigate(`private-chat/${name}`)}>
+						Message
+					</Button>
 				</ContextMenuItem>
 
 				<ContextMenuCheckbox

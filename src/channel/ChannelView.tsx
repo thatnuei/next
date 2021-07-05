@@ -3,14 +3,15 @@ import ChatInput from "../chat/ChatInput"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import MessageList from "../message/MessageList"
 import type { MessageState } from "../message/MessageState"
+import { useRoomState } from "../room/state"
 import { screenQueries } from "../ui/screens"
 import ChannelHeader from "./ChannelHeader"
 import ChannelUserList from "./ChannelUserList"
 import {
+	channelRoomKey,
 	useActualChannelMode,
 	useChannel,
 	useChannelActions,
-	useChannelMessages,
 } from "./state"
 
 interface Props {
@@ -19,7 +20,7 @@ interface Props {
 
 function ChannelView({ channelId }: Props) {
 	const channel = useChannel(channelId)
-	const messages = useChannelMessages(channelId)
+	const { messages } = useRoomState(channelRoomKey(channelId))
 	const actualMode = useActualChannelMode(channelId)
 	const { sendMessage, updateChannel } = useChannelActions()
 	const isLargeScreen = useMediaQuery(screenQueries.large)

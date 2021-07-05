@@ -10,14 +10,8 @@ import { useIdentity } from "../chat/identityContext"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
 import type { TruthyMap } from "../common/types"
-import type { MessageState } from "../message/MessageState"
 import { createPrivateMessage } from "../message/MessageState"
-import type { RoomKey } from "../room/state"
-import {
-	roomChatInputAtom,
-	roomIsUnreadAtom,
-	roomMessagesAtom,
-} from "../room/state"
+import { roomKey, useRoomActions } from "../room/state"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
@@ -25,7 +19,7 @@ import { restorePrivateChats, savePrivateChats } from "./storage"
 import type { TypingStatus } from "./types"
 
 export const getPrivateChatRoomKey = (partnerName: string) =>
-	`privateChat:${partnerName}` as RoomKey
+	roomKey(`privateChat:${partnerName}`)
 
 const openChatNamesAtom = atom<TruthyMap>({})
 
@@ -33,45 +27,19 @@ const privateChatTypingStatusAtom = atomFamily((partnerName: string) =>
 	atom<TypingStatus>("clear"),
 )
 
-function useAddPrivateMessage() {
-	return useAtomCallback(
-		useCallback(
-			(get, set, args: { partnerName: string; message: MessageState }) => {
-				set(
-					roomMessagesAtom(getPrivateChatRoomKey(args.partnerName)),
-					(prev) => [...prev, args.message],
-				)
-			},
-			[],
-		),
-	)
-}
-
 export function useOpenChatNames() {
 	const openChatNames = useAtomValue(openChatNamesAtom)
 	return useMemo(() => Object.keys(openChatNames), [openChatNames])
-}
-
-export function usePrivateChatMessages(partnerName: string) {
-	return useAtomValue(roomMessagesAtom(getPrivateChatRoomKey(partnerName)))
-}
-
-export function usePrivateChatIsUnread(partnerName: string) {
-	return useAtomValue(roomIsUnreadAtom(getPrivateChatRoomKey(partnerName)))
 }
 
 export function usePrivateChatTypingStatus(partnerName: string) {
 	return useAtomValue(privateChatTypingStatusAtom(partnerName))
 }
 
-export function usePrivateChatInput(partnerName: string) {
-	return useAtomValue(roomChatInputAtom(getPrivateChatRoomKey(partnerName)))
-}
-
 export function usePrivateChatActions() {
 	const { send } = useSocketActions()
 	const identity = useIdentity()
-	const addPrivateMessage = useAddPrivateMessage()
+	const { addMessage } = useRoomActions()
 
 	const setPrivateChatNames = useAtomCallback(
 		useCallback(
@@ -108,49 +76,26 @@ export function usePrivateChatActions() {
 				},
 			})
 
-			addPrivateMessage({
-				partnerName: args.partnerName,
-				message: createPrivateMessage(identity, args.message),
-			})
-		},
-		[addPrivateMessage, identity, send],
-	)
-
-	const setPrivateChatIsUnread = useAtomCallback(
-		useCallback(
-			(get, set, args: { partnerName: string; isUnread: boolean }) => {
-				set(
-					roomIsUnreadAtom(getPrivateChatRoomKey(args.partnerName)),
-					args.isUnread,
-				)
-			},
-			[],
-		),
-	)
-
-	const setPrivateChatInput = useAtomCallback(
-		useCallback((get, set, args: { partnerName: string; input: string }) => {
-			set(
-				roomChatInputAtom(getPrivateChatRoomKey(args.partnerName)),
-				args.input,
+			addMessage(
+				getPrivateChatRoomKey(args.partnerName),
+				createPrivateMessage(identity, args.message),
 			)
-		}, []),
+		},
+		[addMessage, identity, send],
 	)
 
 	return {
 		openPrivateChat,
 		closePrivateChat,
 		sendMessage,
-		addPrivateMessage,
-		setPrivateChatIsUnread,
-		setPrivateChatInput,
 	}
 }
 
 export function usePrivateChatCommandHandler() {
 	const identity = useIdentity()
 	const setOpenChatNames = useUpdateAtom(openChatNamesAtom)
-	const { addPrivateMessage, openPrivateChat } = usePrivateChatActions()
+	const { openPrivateChat } = usePrivateChatActions()
+	const { addMessage } = useRoomActions()
 
 	useSocketListener(
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -165,10 +110,10 @@ export function usePrivateChatCommandHandler() {
 
 						PRI({ character, message }) {
 							openPrivateChat(character)
-							addPrivateMessage({
-								partnerName: character,
-								message: createPrivateMessage(character, message),
-							})
+							addMessage(
+								getPrivateChatRoomKey(character),
+								createPrivateMessage(character, message),
+							)
 						},
 
 						TPN({ character, status }) {
@@ -176,7 +121,7 @@ export function usePrivateChatCommandHandler() {
 						},
 					})
 				},
-				[addPrivateMessage, identity, openPrivateChat, setOpenChatNames],
+				[addMessage, identity, openPrivateChat, setOpenChatNames],
 			),
 		),
 	)

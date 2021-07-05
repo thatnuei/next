@@ -9,21 +9,17 @@ import { isPresent } from "../common/isPresent"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
 import type { TruthyMap } from "../common/types"
-import type { MessageState } from "../message/MessageState"
 import {
 	createAdMessage,
 	createChannelMessage,
 	createSystemMessage,
 } from "../message/MessageState"
-import type { RoomKey } from "../room/state"
-import { roomMessagesAtom } from "../room/state"
+import { roomKey, useRoomActions } from "../room/state"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions } from "../socket/SocketConnection"
 import { loadChannels, saveChannels } from "./storage"
 import type { ChannelMode } from "./types"
-
-const maxMessageCount = 500
 
 export interface Channel {
 	readonly id: string
@@ -51,7 +47,8 @@ function createChannel(id: string): Channel {
 	}
 }
 
-const channelRoomKey = (channelId: string) => `channel:${channelId}` as RoomKey
+export const channelRoomKey = (channelId: string) =>
+	roomKey(`channel:${channelId}`)
 
 const channelAtom = jotaiUtils.atomFamily((id: string) => {
 	return jotai.atom<Channel>(createChannel(id))
@@ -96,10 +93,6 @@ export function useIsChannelJoined(id: string) {
 	return jotai.useAtom(isChannelJoinedAtom(id))[0]
 }
 
-export function useChannelMessages(id: string) {
-	return jotai.useAtom(roomMessagesAtom(channelRoomKey(id)))[0]
-}
-
 export function useChannelCharacters(id: string) {
 	return jotai.useAtom(channelCharacters(id))[0]
 }
@@ -107,19 +100,6 @@ export function useChannelCharacters(id: string) {
 export function useActualChannelMode(id: string) {
 	const channel = useChannel(id)
 	return channel.mode === "both" ? channel.selectedMode : channel.mode
-}
-
-function useAddMessage() {
-	return jotaiUtils.useAtomCallback(
-		useCallback(
-			(get, set, { id, message }: { id: string; message: MessageState }) => {
-				set(roomMessagesAtom(channelRoomKey(id)), (prev) =>
-					[...prev, message].slice(-maxMessageCount),
-				)
-			},
-			[],
-		),
-	)
 }
 
 export function useChannelActions() {
@@ -132,7 +112,7 @@ export function useChannelActions() {
 		}, []),
 	)
 
-	const addMessage = useAddMessage()
+	const { addMessage } = useRoomActions()
 
 	const join = useCallback(
 		(id: string, title?: string) => {
@@ -163,19 +143,9 @@ export function useChannelActions() {
 	const sendMessage = useCallback(
 		({ id, message }: { id: string; message: string }) => {
 			send({ type: "MSG", params: { channel: id, message } })
-
-			addMessage({
-				id,
-				message: createChannelMessage(identity, message),
-			})
+			addMessage(channelRoomKey(id), createChannelMessage(identity, message))
 		},
 		[addMessage, identity, send],
-	)
-
-	const clearMessages = jotaiUtils.useAtomCallback(
-		useCallback((get, set, channelId: string) => {
-			set(roomMessagesAtom(channelRoomKey(channelId)), [])
-		}, []),
 	)
 
 	return {
@@ -183,7 +153,6 @@ export function useChannelActions() {
 		leave,
 		sendMessage,
 		updateChannel,
-		clearMessages,
 	}
 }
 
@@ -191,7 +160,7 @@ export function useChannelCommandHandler() {
 	const identity = useIdentity()
 	const { account } = useAuthUser()
 	const actions = useChannelActions()
-	const addMessage = useAddMessage()
+	const { addMessage } = useRoomActions()
 
 	const handler = useCallback(
 		(get: jotai.Getter, set: jotai.Setter, command: ServerCommand) => {
@@ -285,22 +254,22 @@ export function useChannelCommandHandler() {
 				},
 
 				MSG({ channel: id, message, character }) {
-					void addMessage({
-						id,
-						message: createChannelMessage(character, message),
-					})
+					addMessage(
+						channelRoomKey(id),
+						createChannelMessage(character, message),
+					)
 				},
 
 				LRP({ channel: id, character, message }) {
-					void addMessage({ id, message: createAdMessage(character, message) })
+					addMessage(channelRoomKey(id), createAdMessage(character, message))
 				},
 
 				RLL(params) {
 					if ("channel" in params) {
-						void addMessage({
-							id: params.channel,
-							message: createSystemMessage(params.message),
-						})
+						addMessage(
+							channelRoomKey(params.channel),
+							createSystemMessage(params.message),
+						)
 					}
 				},
 			})
