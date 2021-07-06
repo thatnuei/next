@@ -1,10 +1,12 @@
-import { createContext, useCallback, useState } from "react"
+import { createContext, lazy, Suspense, useCallback, useState } from "react"
 import { useAuthUserContext } from "../chat/authUserContext"
-import Chat from "../chat/Chat"
 import { IdentityProvider } from "../chat/identityContext"
 import IslandLayout from "../ui/IslandLayout"
+import LoadingOverlay from "../ui/LoadingOverlay"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
+
+const Chat = lazy(() => import("../chat/Chat"))
 
 export const ChatLogoutContext = createContext(() => {})
 
@@ -40,7 +42,9 @@ export default function App() {
 	return (
 		<IdentityProvider identity={identity}>
 			<ChatLogoutContext.Provider value={showCharacterSelect}>
-				<Chat />
+				<Suspense fallback={<LoadingOverlay text="Loading..." />}>
+					<Chat />
+				</Suspense>
 			</ChatLogoutContext.Provider>
 		</IdentityProvider>
 	)
