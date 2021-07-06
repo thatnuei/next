@@ -42,7 +42,7 @@ function PrivateChatTab({ partnerName }: { partnerName: string }) {
 			icon={<Avatar name={partnerName} size={6} />}
 			isActive={match?.params.partnerName === partnerName}
 			isUnread={isUnread}
-			onClick={() => navigate(`private-chat/${partnerName}`)}
+			onClick={() => navigate(`/private-chat/${partnerName}`)}
 			onClose={() => closePrivateChat(partnerName)}
 		/>
 	)
@@ -63,7 +63,7 @@ function ChannelRoomTab({ channel }: { channel: Channel }) {
 			}
 			isActive={match?.params.channelId === channel.id}
 			isUnread={channel.isUnread}
-			onClick={() => navigate(`channel/${channel.id}`)}
+			onClick={() => navigate(`/channel/${channel.id}`)}
 			onClose={() => leave(channel.id)}
 		/>
 	)
