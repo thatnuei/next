@@ -28,7 +28,7 @@ function useAuthUserProvider() {
 
 		if (Date.now() - lastTicketFetchTime.current > ticketExpireTime) {
 			lastTicketFetchTime.current = Date.now()
-			const newUser = await authenticate(user)
+			const newUser = await authenticate(pick(user, ["account", "password"]))
 			setUser(newUser)
 			return pick(newUser, ["account", "ticket"])
 		}
