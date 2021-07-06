@@ -4,6 +4,7 @@ import { useAuthUserContext } from "../chat/authUserContext"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
+import { usePrivateChatActions } from "../privateChat/state"
 import { useSocketActions } from "../socket/SocketConnection"
 import ContextMenu, {
 	ContextMenuButton,
@@ -40,6 +41,7 @@ function CharacterMenu({ name }: { name: string }) {
 	const { friendships, isBookmarked, isIgnored } = useCharacterRoles(name)
 	const { send } = useSocketActions()
 	const { addBookmark, removeBookmark } = useAuthUserContext()
+	const { openPrivateChat } = usePrivateChatActions()
 
 	return (
 		<>
@@ -63,7 +65,12 @@ function CharacterMenu({ name }: { name: string }) {
 				</ContextMenuItem>
 
 				<ContextMenuItem icon={<Icon which={icons.message} />}>
-					<Button onClick={() => navigate(`private-chat/${name}`)}>
+					<Button
+						onClick={() => {
+							navigate(`/private-chat/${name}`)
+							openPrivateChat(name)
+						}}
+					>
 						Message
 					</Button>
 				</ContextMenuItem>
