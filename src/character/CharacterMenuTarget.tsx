@@ -45,7 +45,7 @@ function CharacterMenu({ name }: { name: string }) {
 
 	return (
 		<>
-			<div className={`p-3 space-y-3 bg-midnight-0`}>
+			<div className={`p-2 space-y-3 bg-midnight-0`}>
 				<CharacterSummary name={name} />
 
 				{friendships.map((item, index) => (

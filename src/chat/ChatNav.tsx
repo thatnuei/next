@@ -46,10 +46,9 @@ export default function ChatNav() {
 				<ChatNavAction icon={icons.logout} name="Log out" onClick={logout} />
 			</div>
 			<div className={`flex flex-col w-56 overflow-y-auto bg-midnight-1`}>
-				<CharacterSummary
-					name={identity}
-					className={`p-3 mb-1 bg-midnight-0`}
-				/>
+				<div className={`p-2 mb-1 bg-midnight-0`}>
+					<CharacterSummary name={identity} />
+				</div>
 				<div className={`flex-1`}>
 					<RoomTabList />
 				</div>

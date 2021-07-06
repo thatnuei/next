@@ -6,16 +6,10 @@ import CharacterStatusText from "./CharacterStatusText"
 import { genderColors } from "./colors"
 import { useCharacterGender } from "./state"
 
-function CharacterSummary({
-	name,
-	className = "",
-}: {
-	name: string
-	className?: string
-}) {
+function CharacterSummary({ name }: { name: string }) {
 	const gender = useCharacterGender(name)
 	return (
-		<div className={className}>
+		<div className="grid gap-2">
 			<ExternalLink
 				href={getProfileUrl(name)}
 				className={`${headerText2} leading-none`}
@@ -24,7 +18,7 @@ function CharacterSummary({
 				{name}
 			</ExternalLink>
 
-			<ExternalLink href={getProfileUrl(name)} className="my-3">
+			<ExternalLink href={getProfileUrl(name)}>
 				<Avatar name={name} />
 			</ExternalLink>
 
