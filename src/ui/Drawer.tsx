@@ -6,7 +6,7 @@ import DialogBase from "./DialogBase"
 import Icon from "./Icon"
 import { close } from "./icons"
 
-type Props = Omit<DialogBaseProps, "children"> & {
+interface Props extends Omit<DialogBaseProps, "children"> {
 	children: React.ReactNode
 	side: "left" | "right" | "top" | "bottom"
 }
