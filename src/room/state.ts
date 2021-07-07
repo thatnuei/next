@@ -37,46 +37,40 @@ export function useRoomState(key: RoomKey): RoomState {
 export function useRoomActions() {
 	const setRooms = useUpdateAtom(roomsAtom)
 
-	const updateRoom = (
-		key: RoomKey,
-		mutate: (room: Draft<RoomState>) => void,
-	) => {
-		setRooms(
-			produce((rooms) => {
-				const room = (rooms[key] ??= createRoomState() as Draft<RoomState>)
-				mutate(room)
-			}),
-		)
-	}
+	return useMemo(() => {
+		const updateRoom = (
+			key: RoomKey,
+			mutate: (room: Draft<RoomState>) => void,
+		) => {
+			setRooms(
+				produce((rooms) => {
+					const room = (rooms[key] ??= createRoomState() as Draft<RoomState>)
+					mutate(room)
+				}),
+			)
+		}
 
-	const addMessage = (key: RoomKey, message: MessageState) => {
-		updateRoom(key, (room) => {
-			room.messages = [...room.messages, message].slice(-maxMessageCount)
-		})
-	}
-
-	const clearMessages = (key: RoomKey) => {
-		updateRoom(key, (room) => {
-			room.messages = []
-		})
-	}
-
-	const setInput = (key: RoomKey, input: string) => {
-		updateRoom(key, (room) => {
-			room.input = input
-		})
-	}
-
-	const setUnread = (key: RoomKey, isUnread: boolean) => {
-		updateRoom(key, (room) => {
-			room.isUnread = isUnread
-		})
-	}
-
-	return {
-		addMessage,
-		clearMessages,
-		setInput,
-		setUnread,
-	}
+		return {
+			addMessage(key: RoomKey, message: MessageState) {
+				updateRoom(key, (room) => {
+					room.messages = [...room.messages, message].slice(-maxMessageCount)
+				})
+			},
+			clearMessages(key: RoomKey) {
+				updateRoom(key, (room) => {
+					room.messages = []
+				})
+			},
+			setInput(key: RoomKey, input: string) {
+				updateRoom(key, (room) => {
+					room.input = input
+				})
+			},
+			setUnread(key: RoomKey, isUnread: boolean) {
+				updateRoom(key, (room) => {
+					room.isUnread = isUnread
+				})
+			},
+		}
+	}, [setRooms])
 }

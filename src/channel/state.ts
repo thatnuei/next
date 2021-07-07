@@ -17,7 +17,7 @@ import {
 import { roomKey, useRoomActions } from "../room/state"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
-import { useSocketActions } from "../socket/SocketConnection"
+import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
 import { loadChannels, saveChannels } from "./storage"
 import type { ChannelMode } from "./types"
 
@@ -122,7 +122,7 @@ export function useChannelActions() {
 			})
 
 			if (title) {
-				void updateChannel({ id, title })
+				updateChannel({ id, title })
 			}
 		},
 		[send, updateChannel],
@@ -156,10 +156,10 @@ export function useChannelActions() {
 	}
 }
 
-export function useChannelCommandHandler() {
+export function useChannelCommandListener() {
 	const identity = useIdentity()
 	const { account } = useAuthUser()
-	const actions = useChannelActions()
+	const { join } = useChannelActions()
 	const { addMessage } = useRoomActions()
 
 	const handler = useCallback(
@@ -170,7 +170,7 @@ export function useChannelCommandHandler() {
 
 					const channelIds = await loadChannels(account, identity)
 					for (const id of channelIds) {
-						actions.join(id)
+						join(id)
 					}
 				},
 
@@ -274,8 +274,8 @@ export function useChannelCommandHandler() {
 				},
 			})
 		},
-		[account, actions, addMessage, identity],
+		[account, addMessage, identity, join],
 	)
 
-	return jotaiUtils.useAtomCallback(handler)
+	useSocketListener(jotaiUtils.useAtomCallback(handler))
 }

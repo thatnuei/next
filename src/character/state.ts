@@ -9,6 +9,7 @@ import type { Dict, Mutable, TruthyMap } from "../common/types"
 import { unique } from "../common/unique"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
+import { useSocketListener } from "../socket/SocketConnection"
 import type { Character, CharacterGender, Friendship } from "./types"
 
 function createCharacter(name: string): Character {
@@ -101,130 +102,132 @@ export function useLikedCharacters(): readonly Character[] {
 	return jotai.useAtom(likedCharactersSelector(useAuthUser().account))[0]
 }
 
-export function useCharacterCommandHandler() {
+export function useCharacterCommandListener() {
 	const user = useAuthUser()
 	const identity = useIdentity()
 
-	return jotaiUtils.useAtomCallback(
-		useCallback(
-			(get, set, command: ServerCommand) => {
-				matchCommand(command, {
-					// async IDN() {
-					//   const result = await this.userStore.getFriendsAndBookmarks()
+	useSocketListener(
+		jotaiUtils.useAtomCallback(
+			useCallback(
+				(get, set, command: ServerCommand) => {
+					matchCommand(command, {
+						// async IDN() {
+						//   const result = await this.userStore.getFriendsAndBookmarks()
 
-					//   const friends = result.friendlist.map((entry) => ({
-					//     us: entry.source,
-					//     them: entry.dest,
-					//   }))
+						//   const friends = result.friendlist.map((entry) => ({
+						//     us: entry.source,
+						//     them: entry.dest,
+						//   }))
 
-					//   this.bookmarks.set(result.bookmarklist)
-					//   this.friends.set(friends)
-					// },
+						//   this.bookmarks.set(result.bookmarklist)
+						//   this.friends.set(friends)
+						// },
 
-					IGN(params) {
-						const ignoredUsers = ignoredUsersAtom(user.account)
+						IGN(params) {
+							const ignoredUsers = ignoredUsersAtom(user.account)
 
-						if (params.action === "init" || params.action === "list") {
-							set(ignoredUsers, truthyMap(params.characters))
-						}
-						if (params.action === "add") {
+							if (params.action === "init" || params.action === "list") {
+								set(ignoredUsers, truthyMap(params.characters))
+							}
+							if (params.action === "add") {
+								set(
+									ignoredUsers,
+									(prev): TruthyMap => ({
+										...prev,
+										[params.character]: true,
+									}),
+								)
+							}
+							if (params.action === "delete") {
+								set(ignoredUsers, (prev) => omit(prev, [params.character]))
+							}
+						},
+
+						ADL({ ops }) {
+							set(adminsAtom, truthyMap(ops))
+						},
+
+						LIS({ characters }) {
+							const newCharacters: Mutable<Dict<Character>> = {}
+							for (const [name, gender, status, statusMessage] of characters) {
+								newCharacters[name] = { name, gender, status, statusMessage }
+							}
+							set(charactersAtom, (prev) => ({ ...prev, ...newCharacters }))
+						},
+
+						NLN({ identity: name, gender, status }) {
+							set(charactersAtom, (prev) => ({
+								...prev,
+								[name]: { name, gender, status, statusMessage: "" },
+							}))
+						},
+
+						FLN({ character: name }) {
 							set(
-								ignoredUsers,
-								(prev): TruthyMap => ({
+								charactersAtom,
+								(prev): Dict<Character> => ({
 									...prev,
-									[params.character]: true,
+									[name]: {
+										...(prev[name] ?? createCharacter(name)),
+										status: "offline",
+										statusMessage: "",
+									},
 								}),
 							)
-						}
-						if (params.action === "delete") {
-							set(ignoredUsers, (prev) => omit(prev, [params.character]))
-						}
-					},
+						},
 
-					ADL({ ops }) {
-						set(adminsAtom, truthyMap(ops))
-					},
-
-					LIS({ characters }) {
-						const newCharacters: Mutable<Dict<Character>> = {}
-						for (const [name, gender, status, statusMessage] of characters) {
-							newCharacters[name] = { name, gender, status, statusMessage }
-						}
-						set(charactersAtom, (prev) => ({ ...prev, ...newCharacters }))
-					},
-
-					NLN({ identity: name, gender, status }) {
-						set(charactersAtom, (prev) => ({
-							...prev,
-							[name]: { name, gender, status, statusMessage: "" },
-						}))
-					},
-
-					FLN({ character: name }) {
-						set(
-							charactersAtom,
-							(prev): Dict<Character> => ({
-								...prev,
-								[name]: {
-									...(prev[name] ?? createCharacter(name)),
-									status: "offline",
-									statusMessage: "",
-								},
-							}),
-						)
-					},
-
-					STA({ character: name, status, statusmsg }) {
-						set(
-							charactersAtom,
-							(prev): Dict<Character> => ({
-								...prev,
-								[name]: {
-									...(prev[name] ?? createCharacter(name)),
-									status,
-									statusMessage: statusmsg,
-								},
-							}),
-						)
-					},
-
-					RTB(params) {
-						if (params.type === "trackadd") {
+						STA({ character: name, status, statusmsg }) {
 							set(
-								bookmarksAtom(user.account),
-								(prev): TruthyMap => ({
+								charactersAtom,
+								(prev): Dict<Character> => ({
 									...prev,
-									[params.name]: true,
+									[name]: {
+										...(prev[name] ?? createCharacter(name)),
+										status,
+										statusMessage: statusmsg,
+									},
 								}),
 							)
-							// show toast
-						}
+						},
 
-						if (params.type === "trackrem") {
-							set(bookmarksAtom(user.account), (prev) =>
-								omit(prev, [params.name]),
-							)
-							// show toast
-						}
+						RTB(params) {
+							if (params.type === "trackadd") {
+								set(
+									bookmarksAtom(user.account),
+									(prev): TruthyMap => ({
+										...prev,
+										[params.name]: true,
+									}),
+								)
+								// show toast
+							}
 
-						if (params.type === "friendadd") {
-							set(friendshipsAtom(identity), (prev) => [
-								...prev,
-								{ us: identity, them: params.name },
-							])
-							// show toast
-						}
+							if (params.type === "trackrem") {
+								set(bookmarksAtom(user.account), (prev) =>
+									omit(prev, [params.name]),
+								)
+								// show toast
+							}
 
-						if (params.type === "friendremove") {
-							set(friendshipsAtom(identity), (prev) => {
-								return prev.filter((entry) => entry.them !== params.name)
-							})
-							// show toast
-						}
-					},
-				})
-			},
-			[identity, user.account],
+							if (params.type === "friendadd") {
+								set(friendshipsAtom(identity), (prev) => [
+									...prev,
+									{ us: identity, them: params.name },
+								])
+								// show toast
+							}
+
+							if (params.type === "friendremove") {
+								set(friendshipsAtom(identity), (prev) => {
+									return prev.filter((entry) => entry.them !== params.name)
+								})
+								// show toast
+							}
+						},
+					})
+				},
+				[identity, user.account],
+			),
 		),
 	)
 }

@@ -4,7 +4,7 @@ import { useCallback } from "react"
 import { delay } from "../common/delay"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
-import { useSocketActions } from "../socket/SocketConnection"
+import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
 
 export interface ChannelBrowserChannel {
 	id: string
@@ -65,35 +65,32 @@ export function useChannelUserCount(channelId: string) {
 	return useAtom(userCountAtom(channelId))[0]
 }
 
-export function useChannelBrowserCommandHandler() {
+export function useChannelBrowserCommandListener() {
 	const setPublicChannels = useUpdateAtom(publicChannelsAtom)
 	const setPrivateChannels = useUpdateAtom(privateChannelsAtom)
 
-	return useCallback(
-		(command: ServerCommand) => {
-			matchCommand(command, {
-				CHA({ channels }) {
-					setPublicChannels(
-						channels.map((it) => ({
-							id: it.name,
-							title: it.name,
-							userCount: it.characters,
-							type: "public",
-						})),
-					)
-				},
-				ORS({ channels }) {
-					setPrivateChannels(
-						channels.map((it) => ({
-							id: it.name,
-							title: it.title,
-							userCount: it.characters,
-							type: "private",
-						})),
-					)
-				},
-			})
-		},
-		[setPrivateChannels, setPublicChannels],
-	)
+	useSocketListener((command: ServerCommand) => {
+		matchCommand(command, {
+			CHA({ channels }) {
+				setPublicChannels(
+					channels.map((it) => ({
+						id: it.name,
+						title: it.name,
+						userCount: it.characters,
+						type: "public",
+					})),
+				)
+			},
+			ORS({ channels }) {
+				setPrivateChannels(
+					channels.map((it) => ({
+						id: it.name,
+						title: it.title,
+						userCount: it.characters,
+						type: "private",
+					})),
+				)
+			},
+		})
+	})
 }

@@ -1,10 +1,8 @@
-import { useEffect } from "react"
-import { useChannelCommandHandler } from "../channel/state"
-import { useChannelBrowserCommandHandler } from "../channelBrowser/state"
-import { useCharacterCommandHandler } from "../character/state"
+import { useChannelCommandListener } from "../channel/state"
+import { useChannelBrowserCommandListener } from "../channelBrowser/state"
+import { useCharacterCommandListener } from "../character/state"
 import { usePrivateChatCommandHandler } from "../privateChat/state"
-import type { ServerCommand } from "../socket/helpers"
-import { SocketConnection, useSocketActions } from "../socket/SocketConnection"
+import { SocketConnection, useSocketListener } from "../socket/SocketConnection"
 import { useShowToast } from "../toast/state"
 import ChatNav from "./ChatNav"
 import ChatRoutes from "./ChatRoutes"
@@ -29,28 +27,22 @@ export default function Chat() {
 }
 
 function CommandHandlers() {
-	const { addListener } = useSocketActions()
-	const handleCharacterCommand = useCharacterCommandHandler()
-	const handleChannelBrowserCommand = useChannelBrowserCommandHandler()
-	const handleChannelCommand = useChannelCommandHandler()
 	const showToast = useShowToast()
+
+	useCharacterCommandListener()
+	useChannelBrowserCommandListener()
+	useChannelCommandListener()
 	usePrivateChatCommandHandler()
 
-	useEffect(() =>
-		addListener((command: ServerCommand) => {
-			void handleCharacterCommand(command)
-			handleChannelBrowserCommand(command)
-			void handleChannelCommand(command)
-
-			if (command.type === "ERR") {
-				showToast({
-					type: "error",
-					content: command.params.message,
-					duration: 5000,
-				})
-			}
-		}),
-	)
+	useSocketListener((command) => {
+		if (command.type === "ERR") {
+			showToast({
+				type: "error",
+				content: command.params.message,
+				duration: 5000,
+			})
+		}
+	})
 
 	return null
 }
