@@ -17,15 +17,15 @@ export default function ChatNav() {
 			<div className={`flex flex-col`}>
 				<Modal
 					title="Channel Browser"
+					renderContent={() => <ChannelBrowser />}
 					renderTrigger={(t) => (
 						<ChatNavAction icon={icons.list} name="Browse channels" {...t} />
 					)}
-				>
-					<ChannelBrowser />
-				</Modal>
+				/>
 
 				<Modal
 					title="Status update"
+					renderContent={({ close }) => <StatusUpdateForm onSuccess={close} />}
 					renderTrigger={(t) => (
 						<ChatNavAction
 							icon={icons.updateStatus}
@@ -33,9 +33,7 @@ export default function ChatNav() {
 							{...t}
 						/>
 					)}
-				>
-					{({ close }) => <StatusUpdateForm onSuccess={close} />}
-				</Modal>
+				/>
 
 				<ChatNavAction
 					icon={icons.users}
