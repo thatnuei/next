@@ -1,6 +1,8 @@
 import type { TagProps } from "../jsx/types"
 
-type Props = { onChangeText?: (text: string) => void } & TagProps<"input">
+interface Props extends TagProps<"input"> {
+	onChangeText?: (text: string) => void
+}
 
 function TextInput({ onChange, onChangeText, ...props }: Props) {
 	return (

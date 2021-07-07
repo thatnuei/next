@@ -11,6 +11,7 @@ import {
 import { useAuthUser, useAuthUserContext } from "../chat/authUserContext"
 import { useIdentity } from "../chat/identityContext"
 import { raise } from "../common/raise"
+import { toError } from "../common/toError"
 import { useEffectRef } from "../react/useEffectRef"
 import { useShowToast } from "../toast/state"
 import { socketUrl } from "./constants"
@@ -65,12 +66,12 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 		const socket = (socketRef.current = new WebSocket(socketUrl))
 
 		socket.onopen = async () => {
-			const creds = await getFreshAuthCredentials().catch(() => undefined)
-			if (!creds) {
+			const creds = await getFreshAuthCredentials().catch(toError)
+			if (creds instanceof Error) {
 				setStatus("error")
 				showToast({
 					type: "error",
-					content: "Failed to fetch auth credentials",
+					content: creds.message,
 					duration: 5000,
 				})
 				return

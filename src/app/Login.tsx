@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useAuthUserContext } from "../chat/authUserContext"
 import Button from "../dom/Button"
+import TextInput from "../dom/TextInput"
 import { preventDefault } from "../react/preventDefault"
 import usePromiseState from "../state/usePromiseState"
 import { input, solidButton } from "../ui/components"
@@ -14,6 +15,7 @@ export default function Login() {
 	const authenticateState = usePromiseState()
 
 	const submit = () => {
+		if (authenticateState.isLoading) return
 		authenticateState.setPromise(login({ account, password }))
 	}
 
@@ -28,25 +30,25 @@ export default function Login() {
 			onSubmit={preventDefault(submit)}
 		>
 			<FormField labelText="Username">
-				<input
+				<TextInput
 					className={input}
 					type="text"
 					placeholder="awesome username"
 					autoComplete="username"
 					value={account}
-					onChange={(e) => setAccount(e.target.value)}
+					onChangeText={setAccount}
 					disabled={isFormDisabled}
 				/>
 			</FormField>
 
 			<FormField labelText="Password">
-				<input
+				<TextInput
 					className={input}
 					type="password"
 					placeholder="••••••••"
 					autoComplete="current-password"
 					value={password}
-					onChange={(e) => setPassword(e.target.value)}
+					onChangeText={setPassword}
 					disabled={isFormDisabled}
 				/>
 			</FormField>

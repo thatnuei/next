@@ -23,14 +23,12 @@ function useAuthUserProvider() {
 
 	const userRef = useEffectRef(user)
 	const getFreshAuthCredentials = useCallback(async () => {
-		const user = userRef.current
-		if (!user) raise("Not logged in")
+		let user = userRef.current ?? raise("Not logged in")
 
 		if (Date.now() - lastTicketFetchTime.current > ticketExpireTime) {
 			lastTicketFetchTime.current = Date.now()
-			const newUser = await authenticate(pick(user, ["account", "password"]))
-			setUser(newUser)
-			return pick(newUser, ["account", "ticket"])
+			user = await authenticate(pick(user, ["account", "password"]))
+			setUser(user)
 		}
 
 		return pick(user, ["account", "ticket"])
