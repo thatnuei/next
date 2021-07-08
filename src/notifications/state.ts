@@ -33,6 +33,9 @@ const notificationListAtom = atomWithStorage<readonly Notification[]>(
 
 const toastListAtom = atom<readonly NotificationToast[]>([])
 
+// juuust in case
+const maxNotifications = 1000
+
 export function useNotificationList(): readonly Notification[] {
 	return useAtomValue(notificationListAtom)
 }
@@ -61,7 +64,9 @@ export function useNotificationActions() {
 			}
 
 			if (save) {
-				setNotifications((notifications) => [notification, ...notifications])
+				setNotifications((notifications) =>
+					[notification, ...notifications].slice(0, maxNotifications),
+				)
 			}
 
 			if (showToast) {
