@@ -68,9 +68,15 @@ export function useChannelUserCount(channelId: string) {
 export function useChannelBrowserCommandListener() {
 	const setPublicChannels = useUpdateAtom(publicChannelsAtom)
 	const setPrivateChannels = useUpdateAtom(privateChannelsAtom)
+	const refresh = useRefreshChannelBrowser()
 
 	useSocketListener((command: ServerCommand) => {
 		matchCommand(command, {
+			IDN() {
+				// perform a refresh so user counts are up to date
+				refresh()
+			},
+
 			CHA({ channels }) {
 				setPublicChannels(
 					channels.map((it) => ({
@@ -81,6 +87,7 @@ export function useChannelBrowserCommandListener() {
 					})),
 				)
 			},
+
 			ORS({ channels }) {
 				setPrivateChannels(
 					channels.map((it) => ({
