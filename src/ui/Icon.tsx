@@ -1,10 +1,19 @@
 export interface IconProps {
 	which: string
+	size?: keyof typeof sizeClasses
 }
 
-export default function Icon({ which }: IconProps) {
+const sizeClasses = {
+	6: `w-6 h-6`,
+	8: `w-8 h-8`,
+	10: `w-10 h-10`,
+	12: `w-12 h-12`,
+	16: `w-16 h-16`,
+}
+
+export default function Icon({ which, size = 6 }: IconProps) {
 	return (
-		<svg className="w-6 h-6" viewBox="0 0 24 24">
+		<svg className={sizeClasses[size]} viewBox="0 0 24 24">
 			<path d={which} className="fill-current" />
 		</svg>
 	)
