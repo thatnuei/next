@@ -4,8 +4,8 @@ import { useIdentity } from "../chat/identityContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
+import { useNotificationActions } from "../notifications/state"
 import { useRoomActions } from "../room/state"
-import { useShowToast } from "../toast/state"
 import { fadedButton, headerText2 } from "../ui/components"
 import Drawer from "../ui/Drawer"
 import DropdownMenu, {
@@ -31,7 +31,7 @@ function ChannelHeader({ channelId }: Props) {
 	const identity = useIdentity()
 	const isLargeScreen = useMediaQuery(screenQueries.large)
 	const [inviteOpen, setInviteOpen] = React.useState(false)
-	const showToast = useShowToast()
+	const { addNotification } = useNotificationActions()
 	const { clearMessages } = useRoomActions()
 
 	const isPublic = channel.id === channel.title
@@ -41,13 +41,25 @@ function ChannelHeader({ channelId }: Props) {
 		: `[session=${channelId}]${channel.title}[/session]`
 
 	const copyCodeToClipboard = () => {
-		window.navigator.clipboard.writeText(linkCode).catch(() => {
-			showToast({
-				content: "Copy to clipboard failed",
-				type: "error",
-				duration: 3000,
-			})
-		})
+		window.navigator.clipboard.writeText(linkCode).then(
+			() => {
+				addNotification({
+					type: "info",
+					message: "Copied code to clipboard!",
+					showToast: true,
+					save: false,
+				})
+			},
+			() => {
+				addNotification({
+					type: "error",
+					message:
+						"Copy to clipboard failed. Check your browser settings and make sure clipboard settings are allowed.",
+					showToast: true,
+					save: false,
+				})
+			},
+		)
 	}
 
 	return (

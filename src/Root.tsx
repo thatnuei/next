@@ -6,7 +6,7 @@ import { BrowserRouter } from "react-router-dom"
 import App from "./app/App"
 import { AuthUserProvider } from "./chat/authUserContext"
 import { toError } from "./common/toError"
-import ToastListOverlay from "./toast/ToastListOverlay"
+import NotificationToastOverlay from "./notifications/NotificationToastOverlay"
 import { raisedPanel, solidButton } from "./ui/components"
 
 export default function Root() {
@@ -16,7 +16,7 @@ export default function Root() {
 				<AuthUserProvider>
 					<ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
 						<App />
-						<ToastListOverlay />
+						<NotificationToastOverlay />
 					</ErrorBoundary>
 				</AuthUserProvider>
 			</JotaiProvider>

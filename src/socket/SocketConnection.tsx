@@ -12,8 +12,8 @@ import { useAuthUser, useAuthUserContext } from "../chat/authUserContext"
 import { useIdentity } from "../chat/identityContext"
 import { raise } from "../common/raise"
 import { toError } from "../common/toError"
+import { useNotificationActions } from "../notifications/state"
 import { useEffectRef } from "../react/useEffectRef"
-import { useShowToast } from "../toast/state"
 import { socketUrl } from "./constants"
 import type { ClientCommand, ServerCommand } from "./helpers"
 import { createCommandString, parseServerCommand } from "./helpers"
@@ -44,7 +44,7 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 	const identity = useIdentity()
 	const user = useAuthUser()
 	const { getFreshAuthCredentials } = useAuthUserContext()
-	const showToast = useShowToast()
+	const { addNotification } = useNotificationActions()
 
 	const [status, setStatus] = useState<SocketConnectionStatus>("offline")
 	const statusRef = useEffectRef(status)
@@ -78,13 +78,14 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 		const socket = (socketRef.current = new WebSocket(socketUrl))
 
 		socket.onopen = async () => {
-			const creds = await getFreshAuthCredentials().catch(toError)
-			if (creds instanceof Error) {
+			const result = await getFreshAuthCredentials().catch(toError)
+			if (result instanceof Error) {
 				setStatus("error")
-				showToast({
+				addNotification({
 					type: "error",
-					content: creds.message,
-					duration: 5000,
+					message: result.message,
+					showToast: true,
+					save: false,
 				})
 				return
 			}
@@ -92,7 +93,7 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 			send({
 				type: "IDN",
 				params: {
-					...creds,
+					...result,
 					character: identity,
 					cname: "next",
 					cversion: "0.0.0",
@@ -144,7 +145,7 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 		getFreshAuthCredentials,
 		identity,
 		send,
-		showToast,
+		addNotification,
 		statusRef,
 	])
 
