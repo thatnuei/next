@@ -26,12 +26,14 @@ export default function Modal(props: Props) {
 	return (
 		<DialogBase {...props}>
 			{(content) => (
-				<div className="fixed inset-0 flex flex-col p-4 pointer-events-none">
-					<FadeRiseTransition
-						child
+				<FadeRiseTransition
+					child
+					className="fixed inset-0 flex flex-col p-4 pointer-events-none"
+				>
+					<div
 						className={clsx(
 							raisedPanel,
-							"m-auto w-full max-w-xl pointer-events-auto",
+							"w-full max-w-xl h-[fit-content] max-h-full m-auto flex flex-col pointer-events-auto",
 						)}
 					>
 						<div className={clsx(raisedPanelHeader, "relative")}>
@@ -47,10 +49,12 @@ export default function Modal(props: Props) {
 								<Icon which={close} />
 							</button>
 						</div>
-						{props.renderContent?.({ close: () => content.setOpen(false) })}
-						{props.children}
-					</FadeRiseTransition>
-				</div>
+						<div className="flex-1 min-h-0 overflow-y-auto">
+							{props.renderContent?.({ close: () => content.setOpen(false) })}
+							{props.children}
+						</div>
+					</div>
+				</FadeRiseTransition>
 			)}
 		</DialogBase>
 	)
