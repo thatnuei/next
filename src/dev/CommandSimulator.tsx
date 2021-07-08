@@ -1,5 +1,6 @@
 import clsx from "clsx"
-import { useState } from "react"
+import { useAtom } from "jotai"
+import { atomWithStorage } from "jotai/utils"
 import { safeJsonParse } from "../common/json"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
@@ -31,9 +32,12 @@ const presets: Preset[] = [
 	},
 ]
 
+const commandAtom = atomWithStorage("CommandSimulator:command", "")
+const paramsAtom = atomWithStorage("CommandSimulator:params", "")
+
 export default function CommandSimulator() {
-	const [command, setCommand] = useState("")
-	const [params, setParams] = useState("")
+	const [command, setCommand] = useAtom(commandAtom)
+	const [params, setParams] = useAtom(paramsAtom)
 	const { callListeners } = useSocketActions()
 
 	const paramsParseResult =
