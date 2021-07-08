@@ -6,7 +6,6 @@ import { BrowserRouter } from "react-router-dom"
 import App from "./app/App"
 import { AuthUserProvider } from "./chat/authUserContext"
 import { toError } from "./common/toError"
-import DevTools from "./dev/DevTools"
 import ToastListOverlay from "./toast/ToastListOverlay"
 import { raisedPanel, solidButton } from "./ui/components"
 
@@ -17,7 +16,6 @@ export default function Root() {
 				<AuthUserProvider>
 					<ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
 						<App />
-						{process.env.NODE_ENV === "development" && <DevTools />}
 						<ToastListOverlay />
 					</ErrorBoundary>
 				</AuthUserProvider>

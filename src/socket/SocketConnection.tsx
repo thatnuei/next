@@ -33,6 +33,7 @@ interface SocketActions {
 	disconnect: () => void
 	send: (command: ClientCommand) => void
 	addListener: (listener: CommandListener) => void
+	callListeners: (command: ServerCommand) => void
 }
 
 export const ActionsContext = createContext<SocketActions>()
@@ -53,6 +54,17 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 
 	const send = useCallback((command: ClientCommand) => {
 		socketRef.current?.send(createCommandString(command))
+	}, [])
+
+	const addListener = useCallback((listener: CommandListener) => {
+		listeners.current.add(listener)
+		return () => {
+			listeners.current.delete(listener)
+		}
+	}, [])
+
+	const callListeners = useCallback((command: ServerCommand) => {
+		listeners.current.forEach((listener) => listener(command))
 	}, [])
 
 	const connect = useCallback(() => {
@@ -125,9 +137,16 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 				console.warn("Socket error", command.params.message)
 			}
 
-			listeners.current.forEach((listener) => listener(command))
+			callListeners(command)
 		}
-	}, [getFreshAuthCredentials, identity, send, showToast, statusRef])
+	}, [
+		callListeners,
+		getFreshAuthCredentials,
+		identity,
+		send,
+		showToast,
+		statusRef,
+	])
 
 	const disconnect = useCallback(() => {
 		const socket = socketRef.current
@@ -142,13 +161,6 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 		socket.close()
 	}, [])
 
-	const addListener = useCallback((listener: CommandListener) => {
-		listeners.current.add(listener)
-		return () => {
-			listeners.current.delete(listener)
-		}
-	}, [])
-
 	useEffect(() => connect(), [connect, identity, user.account, user.ticket])
 	useEffect(() => () => disconnect(), [disconnect])
 
@@ -158,8 +170,9 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 			connect,
 			disconnect,
 			send,
+			callListeners,
 		}),
-		[addListener, connect, disconnect, send],
+		[addListener, callListeners, connect, disconnect, send],
 	)
 
 	return (

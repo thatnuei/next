@@ -4,6 +4,7 @@ import { safeJsonParse } from "../common/json"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import type { ServerCommand } from "../socket/helpers"
+import { useSocketActions } from "../socket/SocketConnection"
 import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
 
@@ -23,8 +24,9 @@ const presets: Preset[] = [
 		name: "Server broadcast",
 		type: "BRO",
 		params: {
-			character: "Testificate",
-			message: "awesome broadcast",
+			character: "Johnathan One",
+			message:
+				"Greetings! We have an update for everyone in regard to F-List 2.0! Checkout this [url=https://www.f-list.net/newspost/349/]newspost[/url] for new info on the gender systems that are in testing now!",
 		},
 	},
 ]
@@ -32,6 +34,7 @@ const presets: Preset[] = [
 export default function CommandSimulator() {
 	const [command, setCommand] = useState("")
 	const [params, setParams] = useState("")
+	const { callListeners } = useSocketActions()
 
 	const paramsParseResult =
 		params.length > 2 ? safeJsonParse(params) : undefined
@@ -40,11 +43,10 @@ export default function CommandSimulator() {
 		event.preventDefault()
 
 		if (paramsParseResult?.result) {
-			// todo fixme
-			// root.socket.commands.publish({
-			// 	type: command,
-			// 	params: paramsParseResult.result,
-			// } as ServerCommand)
+			callListeners({
+				type: command,
+				params: paramsParseResult.result,
+			} as ServerCommand)
 		}
 	}
 

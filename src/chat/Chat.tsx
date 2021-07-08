@@ -1,3 +1,4 @@
+import DevTools from "../dev/DevTools"
 import { SocketConnection } from "../socket/SocketConnection"
 import ChatCommandHandlers from "./ChatCommandHandlers"
 import ChatNav from "./ChatNav"
@@ -18,6 +19,7 @@ export default function Chat() {
 					</div>
 				</div>
 			</ConnectionGuard>
+			{process.env.NODE_ENV === "development" && <DevTools />}
 		</SocketConnection>
 	)
 }
