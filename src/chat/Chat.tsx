@@ -1,9 +1,5 @@
-import { useChannelCommandListener } from "../channel/state"
-import { useChannelBrowserCommandListener } from "../channelBrowser/state"
-import { useCharacterCommandListener } from "../character/state"
-import { usePrivateChatCommandHandler } from "../privateChat/state"
-import { SocketConnection, useSocketListener } from "../socket/SocketConnection"
-import { useShowToast } from "../toast/state"
+import { SocketConnection } from "../socket/SocketConnection"
+import ChatCommandHandlers from "./ChatCommandHandlers"
 import ChatNav from "./ChatNav"
 import ChatRoutes from "./ChatRoutes"
 import ConnectionGuard from "./ConnectionGuard"
@@ -11,7 +7,7 @@ import ConnectionGuard from "./ConnectionGuard"
 export default function Chat() {
 	return (
 		<SocketConnection>
-			<CommandHandlers />
+			<ChatCommandHandlers />
 			<ConnectionGuard>
 				<div className="flex flex-row h-full gap-1">
 					<div className="hidden md:block">
@@ -24,25 +20,4 @@ export default function Chat() {
 			</ConnectionGuard>
 		</SocketConnection>
 	)
-}
-
-function CommandHandlers() {
-	const showToast = useShowToast()
-
-	useCharacterCommandListener()
-	useChannelBrowserCommandListener()
-	useChannelCommandListener()
-	usePrivateChatCommandHandler()
-
-	useSocketListener((command) => {
-		if (command.type === "ERR") {
-			showToast({
-				type: "error",
-				content: command.params.message,
-				duration: 5000,
-			})
-		}
-	})
-
-	return null
 }
