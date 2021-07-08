@@ -1,5 +1,4 @@
-import { atom } from "jotai"
-import { useAtomValue, useUpdateAtom } from "jotai/utils"
+import { atomWithStorage, useAtomValue, useUpdateAtom } from "jotai/utils"
 import { useMemo } from "react"
 import { uniqueId } from "../common/uniqueId"
 import { matchCommand } from "../socket/helpers"
@@ -10,10 +9,12 @@ export interface Notification {
 	type: "broadcast"
 	message: string
 	actorName: string | undefined
-	action?: () => void
 }
 
-const notificationListAtom = atom<readonly Notification[]>([])
+const notificationListAtom = atomWithStorage<readonly Notification[]>(
+	"notifications",
+	[],
+)
 
 export function useNotificationList(): readonly Notification[] {
 	return useAtomValue(notificationListAtom)
