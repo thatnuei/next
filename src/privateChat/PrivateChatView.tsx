@@ -35,7 +35,7 @@ function PrivateChatView({ partnerName }: Props) {
 				<div className="flex flex-col self-stretch justify-center flex-1 overflow-y-auto">
 					{/* need this extra container to keep the children from shrinking */}
 					<div className="my-3">
-						<CharacterName name={partnerName} />
+						<CharacterName name={partnerName} statusDot="hidden" />
 						<CharacterStatusText name={partnerName} />
 						{/* this spacer needs to be here, otherwise the scrolling flex column eats the bottom spacing */}
 						<div className="h-3" />
