@@ -4,6 +4,7 @@ import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import CharacterSummary from "../character/CharacterSummary"
 import { ChatNavAction } from "../chatNav/ChatNavAction"
 import RoomTabList from "../chatNav/RoomTabList"
+import NotificationList from "../notifications/NotificationList"
 import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
 import { useIdentity } from "./identityContext"
@@ -32,6 +33,14 @@ export default function ChatNav() {
 							name="Update your status"
 							{...t}
 						/>
+					)}
+				/>
+
+				<Modal
+					title="Notifications"
+					renderContent={() => <NotificationList />}
+					renderTrigger={(t) => (
+						<ChatNavAction icon={icons.bell} name="Notifications" {...t} />
 					)}
 				/>
 

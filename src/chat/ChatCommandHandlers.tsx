@@ -1,6 +1,7 @@
 import { useChannelCommandListener } from "../channel/state"
 import { useChannelBrowserCommandListener } from "../channelBrowser/state"
 import { useCharacterCommandListener } from "../character/state"
+import { useNotificationCommandListener } from "../notifications/state"
 import { usePrivateChatCommandHandler } from "../privateChat/state"
 import { useSocketListener } from "../socket/SocketConnection"
 import { useShowToast } from "../toast/state"
@@ -12,6 +13,7 @@ export default function ChatCommandHandlers() {
 	useChannelBrowserCommandListener()
 	useChannelCommandListener()
 	usePrivateChatCommandHandler()
+	useNotificationCommandListener()
 
 	useSocketListener((command) => {
 		if (command.type === "ERR") {

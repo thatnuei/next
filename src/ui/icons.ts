@@ -36,3 +36,4 @@ export const list = mdi.mdiViewList
 export const clearMessages = mdi.mdiTextBoxMinusOutline
 export const invite = mdi.mdiAccountPlus
 export const check = mdi.mdiCheckCircle
+export const bell = mdi.mdiBell
