@@ -23,20 +23,20 @@ export function useNotificationList(): readonly Notification[] {
 export function useNotificationActions() {
 	const setNotifications = useUpdateAtom(notificationListAtom)
 
-	return useMemo(() => {
-		function addNotification(notification: Omit<Notification, "id">) {
-			setNotifications((list) => [{ ...notification, id: uniqueId() }, ...list])
-		}
-
-		function removeNotification(id: string) {
-			setNotifications((list) => list.filter((n) => n.id !== id))
-		}
-
-		return {
-			addNotification,
-			removeNotification,
-		}
-	}, [setNotifications])
+	return useMemo(
+		() => ({
+			addNotification(notification: Omit<Notification, "id">) {
+				setNotifications((list) => [
+					{ ...notification, id: uniqueId() },
+					...list,
+				])
+			},
+			removeNotification(id: string) {
+				setNotifications((list) => list.filter((n) => n.id !== id))
+			},
+		}),
+		[setNotifications],
+	)
 }
 
 export function useNotificationCommandListener() {
