@@ -3,7 +3,6 @@ import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
 import { statusColors } from "../character/colors"
 import Timestamp from "../dom/Timestamp"
-import { usePrivateChatActions } from "../privateChat/state"
 import Icon from "../ui/Icon"
 import { about } from "../ui/icons"
 import type { Notification } from "./state"
@@ -15,8 +14,6 @@ export default function NotificationCard({
 	notification: Notification
 	timestamp?: number
 }) {
-	const privateChatActions = usePrivateChatActions()
-
 	switch (notification.type) {
 		case "info":
 		case "error":
