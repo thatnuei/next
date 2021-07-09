@@ -1,21 +1,17 @@
-import type { ReactNode } from "react"
-import { createContext, useContext } from "react"
+import { atom, useAtom } from "jotai"
+import { useAtomValue } from "jotai/utils"
 import { raise } from "../common/raise"
 
-const Context = createContext<string>()
+const identityAtom = atom<string | undefined>(undefined)
 
-interface IdentityProviderProps {
-	identity: string
-	children: ReactNode
-}
-
-export function IdentityProvider({
-	identity,
-	children,
-}: IdentityProviderProps) {
-	return <Context.Provider value={identity}>{children}</Context.Provider>
+export function useOptionalIdentity() {
+	return useAtomValue(identityAtom)
 }
 
 export function useIdentity() {
-	return useContext(Context) ?? raise("IdentityProvider not found")
+	return useAtomValue(identityAtom) ?? raise("identity not set")
+}
+
+export function useIdentityState() {
+	return useAtom(identityAtom)
 }

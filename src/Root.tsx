@@ -7,20 +7,23 @@ import { AuthUserProvider } from "./chat/authUserContext"
 import { toError } from "./common/toError"
 import NotificationToastOverlay from "./notifications/NotificationToastOverlay"
 import { RouteProvider } from "./router"
+import { SocketConnection } from "./socket/SocketConnection"
 import { raisedPanel, solidButton } from "./ui/components"
 
 export default function Root() {
 	return (
-		<RouteProvider>
-			<JotaiProvider>
-				<AuthUserProvider>
-					<ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
-						<App />
-						<NotificationToastOverlay />
-					</ErrorBoundary>
-				</AuthUserProvider>
-			</JotaiProvider>
-		</RouteProvider>
+		<ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
+			<RouteProvider>
+				<JotaiProvider>
+					<AuthUserProvider>
+						<SocketConnection>
+							<App />
+							<NotificationToastOverlay />
+						</SocketConnection>
+					</AuthUserProvider>
+				</JotaiProvider>
+			</RouteProvider>
+		</ErrorBoundary>
 	)
 }
 

@@ -8,8 +8,7 @@ import {
 	useRef,
 	useState,
 } from "react"
-import { useAuthUser, useAuthUserContext } from "../chat/authUserContext"
-import { useIdentity } from "../chat/identityContext"
+import { useAuthUserContext } from "../chat/authUserContext"
 import { raise } from "../common/raise"
 import { toError } from "../common/toError"
 import { useNotificationActions } from "../notifications/state"
@@ -29,7 +28,7 @@ export type SocketConnectionStatus =
 type CommandListener = (command: ServerCommand) => void
 
 interface SocketActions {
-	connect: () => void
+	connect: (identity: string) => void
 	disconnect: () => void
 	send: (command: ClientCommand) => void
 	addListener: (listener: CommandListener) => void
@@ -41,8 +40,6 @@ export const SocketStatusContext =
 	createContext<SocketConnectionStatus>("offline")
 
 export function SocketConnection({ children }: { children: ReactNode }) {
-	const identity = useIdentity()
-	const user = useAuthUser()
 	const { getFreshAuthCredentials } = useAuthUserContext()
 	const { addNotification } = useNotificationActions()
 
@@ -67,87 +64,83 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 		listeners.current.forEach((listener) => listener(command))
 	}, [])
 
-	const connect = useCallback(() => {
-		const status = statusRef.current
-		if (status !== "offline" && status !== "error" && status !== "closed") {
-			return
-		}
+	const connect = useCallback(
+		(identity: string) => {
+			const status = statusRef.current
+			if (status !== "offline" && status !== "error" && status !== "closed") {
+				return
+			}
 
-		setStatus("connecting")
+			setStatus("connecting")
 
-		const socket = (socketRef.current = new WebSocket(socketUrl))
+			const socket = (socketRef.current = new WebSocket(socketUrl))
 
-		socket.onopen = async () => {
-			const result = await getFreshAuthCredentials().catch(toError)
-			if (result instanceof Error) {
-				setStatus("error")
-				addNotification({
-					type: "error",
-					message: result.message,
-					showToast: true,
-					save: false,
+			socket.onopen = async () => {
+				const result = await getFreshAuthCredentials().catch(toError)
+				if (result instanceof Error) {
+					setStatus("error")
+					addNotification({
+						type: "error",
+						message: result.message,
+						showToast: true,
+						save: false,
+					})
+					return
+				}
+
+				send({
+					type: "IDN",
+					params: {
+						...result,
+						character: identity,
+						cname: "next",
+						cversion: "0.0.0",
+						method: "ticket",
+					},
 				})
-				return
+				setStatus("identifying")
 			}
 
-			send({
-				type: "IDN",
-				params: {
-					...result,
-					character: identity,
-					cname: "next",
-					cversion: "0.0.0",
-					method: "ticket",
-				},
-			})
-			setStatus("identifying")
-		}
-
-		socket.onclose = () => {
-			setStatus("closed")
-		}
-
-		socket.onerror = () => {
-			setStatus("error")
-		}
-
-		socket.onmessage = ({ data }) => {
-			const command = parseServerCommand(data)
-
-			if (command.type === "PIN") {
-				send({ type: "PIN" })
-				return
+			socket.onclose = () => {
+				setStatus("closed")
 			}
 
-			if (command.type === "HLO") {
-				console.info(command.params.message)
-				return
+			socket.onerror = () => {
+				setStatus("error")
 			}
 
-			if (command.type === "CON") {
-				console.info(`There are ${command.params.count} users in chat`)
-				return
-			}
+			socket.onmessage = ({ data }) => {
+				const command = parseServerCommand(data)
 
-			if (command.type === "IDN") {
-				setStatus("online")
-			}
+				if (command.type === "PIN") {
+					send({ type: "PIN" })
+					return
+				}
 
-			if (command.type === "ERR") {
-				// TODO: show toast
-				console.warn("Socket error", command.params.message)
-			}
+				if (command.type === "HLO") {
+					console.info(command.params.message)
+					return
+				}
 
-			callListeners(command)
-		}
-	}, [
-		callListeners,
-		getFreshAuthCredentials,
-		identity,
-		send,
-		addNotification,
-		statusRef,
-	])
+				if (command.type === "CON") {
+					console.info(`There are ${command.params.count} users in chat`)
+					return
+				}
+
+				if (command.type === "IDN") {
+					setStatus("online")
+				}
+
+				if (command.type === "ERR") {
+					// TODO: show toast
+					console.warn("Socket error", command.params.message)
+				}
+
+				callListeners(command)
+			}
+		},
+		[callListeners, getFreshAuthCredentials, send, addNotification, statusRef],
+	)
 
 	const disconnect = useCallback(() => {
 		const socket = socketRef.current
@@ -161,9 +154,6 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 		socket.onmessage = null
 		socket.close()
 	}, [])
-
-	useEffect(() => connect(), [connect, identity, user.account, user.ticket])
-	useEffect(() => () => disconnect(), [disconnect])
 
 	const actions = useMemo(
 		() => ({

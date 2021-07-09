@@ -6,7 +6,7 @@ import {
 	useUpdateAtom,
 } from "jotai/utils"
 import { useCallback, useMemo } from "react"
-import { useIdentity } from "../chat/identityContext"
+import { useIdentity, useOptionalIdentity } from "../chat/identityContext"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
 import type { TruthyMap } from "../common/types"
@@ -38,15 +38,17 @@ export function usePrivateChatTypingStatus(partnerName: string) {
 
 export function usePrivateChatActions() {
 	const { send } = useSocketActions()
-	const identity = useIdentity()
+	const identity = useOptionalIdentity()
 	const { addMessage } = useRoomActions()
 
 	const setPrivateChatNames = useAtomCallback(
 		useCallback(
 			(get, set, getNewChats: (prev: TruthyMap) => TruthyMap) => {
-				const chats = get(openChatNamesAtom)
-				set(openChatNamesAtom, getNewChats(chats))
-				savePrivateChats(identity, Object.keys(getNewChats(chats)))
+				if (identity) {
+					const chats = get(openChatNamesAtom)
+					set(openChatNamesAtom, getNewChats(chats))
+					savePrivateChats(identity, Object.keys(getNewChats(chats)))
+				}
 			},
 			[identity],
 		),
@@ -68,6 +70,8 @@ export function usePrivateChatActions() {
 
 	const sendMessage = useCallback(
 		(args: { partnerName: string; message: string }) => {
+			if (!identity) return
+
 			send({
 				type: "PRI",
 				params: {

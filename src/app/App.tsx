@@ -1,6 +1,7 @@
-import { createContext, lazy, Suspense, useCallback, useState } from "react"
+import { createContext, lazy, Suspense, useCallback } from "react"
 import { useAuthUserContext } from "../chat/authUserContext"
-import { IdentityProvider } from "../chat/identityContext"
+import { useIdentityState } from "../chat/identityContext"
+import { useSocketActions } from "../socket/SocketConnection"
 import IslandLayout from "../ui/IslandLayout"
 import LoadingOverlay from "../ui/LoadingOverlay"
 import CharacterSelect from "./CharacterSelect"
@@ -12,11 +13,20 @@ export const ChatLogoutContext = createContext(() => {})
 
 export default function App() {
 	const { user, logout } = useAuthUserContext()
-	const [identity, setIdentity] = useState<string>()
+	const [identity, setIdentity] = useIdentityState()
+	const { connect } = useSocketActions()
 
 	const showCharacterSelect = useCallback(() => {
 		setIdentity(undefined)
-	}, [])
+	}, [setIdentity])
+
+	const enterChat = useCallback(
+		(identity: string) => {
+			setIdentity(identity)
+			connect(identity)
+		},
+		[connect, setIdentity],
+	)
 
 	if (!user) {
 		return (
@@ -33,19 +43,17 @@ export default function App() {
 					account={user.account}
 					characters={user.characters}
 					onReturnToLogin={logout}
-					onSubmit={setIdentity}
+					onSubmit={enterChat}
 				/>
 			</IslandLayout>
 		)
 	}
 
 	return (
-		<IdentityProvider identity={identity}>
-			<ChatLogoutContext.Provider value={showCharacterSelect}>
-				<Suspense fallback={<LoadingOverlay text="Loading..." />}>
-					<Chat />
-				</Suspense>
-			</ChatLogoutContext.Provider>
-		</IdentityProvider>
+		<ChatLogoutContext.Provider value={showCharacterSelect}>
+			<Suspense fallback={<LoadingOverlay text="Loading..." />}>
+				<Chat />
+			</Suspense>
+		</ChatLogoutContext.Provider>
 	)
 }

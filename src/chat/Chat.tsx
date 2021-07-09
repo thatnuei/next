@@ -1,5 +1,4 @@
 import DevTools from "../dev/DevTools"
-import { SocketConnection } from "../socket/SocketConnection"
 import ChatCommandHandlers from "./ChatCommandHandlers"
 import ChatNav from "./ChatNav"
 import ChatRoutes from "./ChatRoutes"
@@ -7,7 +6,7 @@ import ConnectionGuard from "./ConnectionGuard"
 
 export default function Chat() {
 	return (
-		<SocketConnection>
+		<>
 			<ChatCommandHandlers />
 			<ConnectionGuard>
 				<div className="flex flex-row h-full gap-1">
@@ -20,6 +19,6 @@ export default function Chat() {
 				</div>
 			</ConnectionGuard>
 			{import.meta.env.DEV && <DevTools />}
-		</SocketConnection>
+		</>
 	)
 }
