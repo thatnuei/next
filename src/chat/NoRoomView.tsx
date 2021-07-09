@@ -1,13 +1,10 @@
-import ChatMenuButton from "../chatNav/ChatMenuButton"
-import type { TagProps } from "../jsx/types"
-import { headerText } from "../ui/components"
+import { ScreenHeader } from "../ui/ScreenHeader"
 
-function NoRoomView(props: TagProps<"header">) {
+function NoRoomView() {
 	return (
-		<header className={`flex flex-row items-center p-3 gap-3`} {...props}>
-			<ChatMenuButton />
-			<h1 className={`${headerText} opacity-50`}>next</h1>
-		</header>
+		<ScreenHeader>
+			<span className="opacity-50">next</span>
+		</ScreenHeader>
 	)
 }
 
