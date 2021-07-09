@@ -16,7 +16,8 @@
 		"resolveJsonModule": true,
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedIndexedAccess": true,
-		"exactOptionalPropertyTypes": true
+		"exactOptionalPropertyTypes": true,
+		"types": ["vite/client", "jest"]
 	},
 	"exclude": ["node_modules", "dist"]
 }
