@@ -7,6 +7,16 @@ import { fetchFlist } from "../flist/fetchFlist"
 import type { AuthUser, LoginCredentials } from "../flist/types"
 import { useEffectRef } from "../react/useEffectRef"
 
+interface FriendsAndBookmarksResponse {
+	readonly friendlist: ReadonlyArray<{
+		/** our character */
+		source: string
+		/** their character */
+		dest: string
+	}>
+	readonly bookmarklist: readonly string[]
+}
+
 const ticketExpireTime = 1000 * 60 * 5
 
 function useAuthUserProvider() {
@@ -50,13 +60,17 @@ function useAuthUserProvider() {
 		[getFreshAuthCredentials],
 	)
 
-	const getFriendsAndBookmarks = useCallback(
-		async (args: { name: string }) => {
-			const creds = await getFreshAuthCredentials()
-			await fetchFlist(`/api/bookmark-remove.php`, { ...args, ...creds })
-		},
-		[getFreshAuthCredentials],
-	)
+	const getFriendsAndBookmarks = useCallback(async () => {
+		const creds = await getFreshAuthCredentials()
+		return fetchFlist<FriendsAndBookmarksResponse>(
+			`/api/friend-bookmark-lists.php`,
+			{
+				...creds,
+				friendlist: "true",
+				bookmarklist: "true",
+			},
+		)
+	}, [getFreshAuthCredentials])
 
 	const getMemo = useCallback(
 		async (args: { name: string }) => {

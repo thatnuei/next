@@ -1,7 +1,7 @@
 import * as jotai from "jotai"
 import * as jotaiUtils from "jotai/utils"
 import { useCallback } from "react"
-import { useAuthUser } from "../chat/authUserContext"
+import { useAuthUser, useAuthUserContext } from "../chat/authUserContext"
 import { useIdentity } from "../chat/identityContext"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
@@ -105,23 +105,24 @@ export function useLikedCharacters(): readonly Character[] {
 export function useCharacterCommandListener() {
 	const user = useAuthUser()
 	const identity = useIdentity()
+	const { getFriendsAndBookmarks } = useAuthUserContext()
 
 	useSocketListener(
 		jotaiUtils.useAtomCallback(
 			useCallback(
 				(get, set, command: ServerCommand) => {
 					matchCommand(command, {
-						// async IDN() {
-						//   const result = await this.userStore.getFriendsAndBookmarks()
+						async IDN() {
+							const result = await getFriendsAndBookmarks()
 
-						//   const friends = result.friendlist.map((entry) => ({
-						//     us: entry.source,
-						//     them: entry.dest,
-						//   }))
+							const friends = result.friendlist.map((entry) => ({
+								us: entry.source,
+								them: entry.dest,
+							}))
 
-						//   this.bookmarks.set(result.bookmarklist)
-						//   this.friends.set(friends)
-						// },
+							set(friendshipsAtom(user.account), friends)
+							set(bookmarksAtom(user.account), truthyMap(result.bookmarklist))
+						},
 
 						IGN(params) {
 							const ignoredUsers = ignoredUsersAtom(user.account)
