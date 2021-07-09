@@ -1,13 +1,22 @@
+import clsx from "clsx"
 import { fadedButton } from "../ui/components"
 
 export interface ChatNavActionProps {
 	name: string
 	icon: React.ReactNode
+	active?: boolean
 }
 
-export default function ChatNavAction({ name, icon }: ChatNavActionProps) {
+export default function ChatNavAction({
+	name,
+	icon,
+	active,
+}: ChatNavActionProps) {
 	return (
-		<div title={name} className={`${fadedButton} block p-3`}>
+		<div
+			title={name}
+			className={clsx(fadedButton, `block p-3`, active && `bg-midnight-0`)}
+		>
 			{icon}
 		</div>
 	)
