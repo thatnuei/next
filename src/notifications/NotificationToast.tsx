@@ -76,7 +76,7 @@ export default function NotificationToast({
 	// }
 
 	return (
-		<div ref={ref} className="max-w-lg shadow-md">
+		<div ref={ref} className="max-w-lg shadow-md bg-midnight-0">
 			{children}
 		</div>
 	)
