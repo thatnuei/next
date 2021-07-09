@@ -15,8 +15,7 @@
 		"lib": ["dom", "dom.iterable", "es2020"],
 		"resolveJsonModule": true,
 		"noFallthroughCasesInSwitch": true,
-		"noUncheckedIndexedAccess": true,
-		"types": ["vite/client", "jest"]
+		"noUncheckedIndexedAccess": true
 	},
 	"exclude": ["node_modules", "dist"]
 }
