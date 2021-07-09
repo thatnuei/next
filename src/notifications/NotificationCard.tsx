@@ -1,6 +1,7 @@
 import BBC from "../bbc/BBC"
 import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
+import { statusColors } from "../character/colors"
 import Icon from "../ui/Icon"
 import { about } from "../ui/icons"
 import type { Notification } from "./state"
@@ -10,28 +11,74 @@ export default function NotificationCard({
 }: {
 	notification: Notification
 }) {
+	switch (notification.type) {
+		case "info":
+		case "error":
+			return <NotificationCardBase message={notification.message} />
+
+		case "broadcast":
+			return (
+				<NotificationCardBase
+					message={notification.message}
+					avatarName={notification.actorName}
+					header={
+						notification.actorName ? (
+							<>
+								Broadcast from{" "}
+								<strong className="font-medium opacity-100">
+									<CharacterName
+										name={notification.actorName}
+										statusDot="hidden"
+									/>
+								</strong>
+							</>
+						) : (
+							"Broadcast"
+						)
+					}
+				/>
+			)
+
+		case "status":
+			return (
+				<NotificationCardBase avatarName={notification.name}>
+					<CharacterName name={notification.name} statusDot="hidden" /> is now{" "}
+					<span style={{ color: statusColors[notification.status] }}>
+						{notification.status}
+					</span>
+					{notification.message ? (
+						<>
+							: <BBC text={notification.message} />
+						</>
+					) : null}
+				</NotificationCardBase>
+			)
+	}
+}
+
+function NotificationCardBase({
+	avatarName,
+	header,
+	message,
+	children,
+}: {
+	avatarName?: string
+	header?: React.ReactNode
+	message?: string
+	children?: React.ReactNode
+}) {
 	return (
-		<div className="flex w-full gap-3 p-3 bg-midnight-0">
-			{notification.actorName ? (
-				<Avatar name={notification.actorName} size={10} />
+		<div className="flex w-full gap-3 p-3 ">
+			{avatarName ? (
+				<Avatar name={avatarName} size={8} />
 			) : (
-				<div className="grid w-10 h-10 place-content-center">
-					<Icon which={about} size={8} />
-				</div>
+				<Icon which={about} size={8} />
 			)}
 			<div className="flex flex-col self-center flex-1 gap-1">
-				{notification.type === "broadcast" && notification.actorName ? (
-					<h2 className="text-xs">
-						Broadcast from{" "}
-						<strong className="font-medium opacity-100">
-							<CharacterName name={notification.actorName} statusDot="hidden" />
-						</strong>
-					</h2>
-				) : notification.type === "broadcast" ? (
-					<h2 className="text-xs">Broadcast</h2>
-				) : null}
+				{header ? <h2 className="text-xs">{header}</h2> : null}
 				<p className="flex-1 leading-snug">
-					<BBC text={notification.message} />
+					{message ? <BBC text={message} /> : null}
+					{children}
 				</p>
 			</div>
 		</div>

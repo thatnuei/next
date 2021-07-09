@@ -1,21 +1,22 @@
 import { atom } from "jotai"
 import { atomWithStorage, useAtomValue, useUpdateAtom } from "jotai/utils"
 import { useMemo } from "react"
+import { useLikedCharacters } from "../character/state"
+import type { CharacterStatus } from "../character/types"
 import { uniqueId } from "../common/uniqueId"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
 
-interface NotificationBase {
-	type: "error" | "info" | "broadcast"
-	message: string
-	actorName?: string | undefined
-}
+type NotificationBase =
+	| { type: "error" | "info"; message: string }
+	| { type: "broadcast"; message: string; actorName?: string }
+	| { type: "status"; name: string; status: CharacterStatus; message: string }
 
-export interface Notification extends NotificationBase {
+export type Notification = NotificationBase & {
 	id: string
 }
 
-interface NotificationOptions extends NotificationBase {
+type NotificationOptions = NotificationBase & {
 	save?: boolean
 	showToast?: boolean
 }
@@ -50,17 +51,13 @@ export function useNotificationActions() {
 
 	return useMemo(() => {
 		const addNotification = ({
-			type,
-			message,
-			actorName,
 			save = true,
 			showToast = false,
+			...notificationProperties
 		}: NotificationOptions): Notification => {
 			const notification: Notification = {
 				id: uniqueId(),
-				type,
-				message,
-				actorName,
+				...notificationProperties,
 			}
 
 			if (save) {
@@ -93,6 +90,7 @@ export function useNotificationActions() {
 
 export function useNotificationCommandListener() {
 	const actions = useNotificationActions()
+	const likedCharacters = useLikedCharacters()
 
 	useSocketListener((command) => {
 		matchCommand(command, {
@@ -112,6 +110,17 @@ export function useNotificationCommandListener() {
 					save: false,
 					showToast: true,
 				})
+			},
+
+			STA({ character, status, statusmsg }) {
+				if (likedCharacters.some((char) => char.name === character)) {
+					actions.addNotification({
+						type: "status",
+						name: character,
+						status,
+						message: statusmsg,
+					})
+				}
 			},
 		})
 	})
