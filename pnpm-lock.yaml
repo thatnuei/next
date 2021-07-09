@@ -24,6 +24,7 @@ specifiers:
   focus-visible: ^5.2.0
   fuzzysearch: ^1.0.3
   history: 5.0.0
+  husky: ^6.0.0
   idb: ^6.1.2
   immer: 9.0.5
   jotai: 1.1.2
@@ -80,6 +81,7 @@ devDependencies:
   eslint-plugin-jsx-a11y: 6.4.1_eslint@7.30.0
   eslint-plugin-react: 7.24.0_eslint@7.30.0
   eslint-plugin-react-hooks: 4.2.0_eslint@7.30.0
+  husky: 6.0.0
   npm-run-all: 4.1.5
   postcss: 8.3.5
   prettier: 2.3.2
@@ -1928,6 +1930,11 @@ packages:
   /html-tags/3.1.0:
     resolution: {integrity: sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==}
     engines: {node: '>=8'}
+    dev: true
+
+  /husky/6.0.0:
+    resolution: {integrity: sha512-SQS2gDTB7tBN486QSoKPKQItZw97BMOd+Kdb6ghfpBc0yXyzrddI0oDV5MkDAbuB4X2mO3/nj60TRMcYxwzZeQ==}
+    hasBin: true
     dev: true
 
   /idb/6.1.2:
