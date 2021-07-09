@@ -30,7 +30,7 @@ export default function NotificationCard({
 				) : notification.type === "broadcast" ? (
 					<h2 className="text-xs">Broadcast</h2>
 				) : null}
-				<p className="flex-1">
+				<p className="flex-1 leading-snug">
 					<BBC text={notification.message} />
 				</p>
 			</div>
