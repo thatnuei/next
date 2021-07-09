@@ -11,7 +11,7 @@ export default function NotificationToastOverlay() {
 		<Portal>
 			<ul className="fixed inset-0 z-10 flex flex-col items-end justify-end gap-4 p-4 pointer-events-none">
 				{toasts.map((toast) => (
-					<li key={toast.id}>
+					<li key={toast.id} className="pointer-events-auto">
 						<NotificationToast
 							onDismissed={() => actions.removeToast(toast.id)}
 						>
