@@ -7,10 +7,12 @@ import {
 } from "../socket/SocketConnection"
 import { solidButton } from "../ui/components"
 import LoadingOverlay from "../ui/LoadingOverlay"
+import { useIdentity } from "./identityContext"
 
 export default function ConnectionGuard({ children }: { children: ReactNode }) {
 	const status = useContext(SocketStatusContext)
 	const { connect } = useSocketActions()
+	const identity = useIdentity()
 
 	switch (status) {
 		case "connecting":
@@ -23,7 +25,7 @@ export default function ConnectionGuard({ children }: { children: ReactNode }) {
 			return (
 				<ConnectionMessage
 					message="The socket connection was closed by the server."
-					onRetry={connect}
+					onRetry={() => connect(identity)}
 				/>
 			)
 
@@ -31,7 +33,7 @@ export default function ConnectionGuard({ children }: { children: ReactNode }) {
 			return (
 				<ConnectionMessage
 					message="An error occurred while connecting"
-					onRetry={connect}
+					onRetry={() => connect(identity)}
 				/>
 			)
 	}
