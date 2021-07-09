@@ -14,6 +14,7 @@ type NotificationBase =
 
 export type Notification = NotificationBase & {
 	id: string
+	timestamp: number
 }
 
 type NotificationOptions = NotificationBase & {
@@ -28,7 +29,7 @@ interface NotificationToast {
 }
 
 const notificationListAtom = atomWithStorage<readonly Notification[]>(
-	"notifications",
+	"notifications-v2",
 	[],
 )
 
@@ -57,6 +58,7 @@ export function useNotificationActions() {
 		}: NotificationOptions): Notification => {
 			const notification: Notification = {
 				id: uniqueId(),
+				timestamp: Date.now(),
 				...notificationProperties,
 			}
 
