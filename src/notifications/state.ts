@@ -124,6 +124,17 @@ export function useNotificationCommandListener() {
 					})
 				}
 			},
+
+			FLN({ character }) {
+				if (likedCharacters.some((char) => char.name === character)) {
+					actions.addNotification({
+						type: "status",
+						name: character,
+						status: "offline",
+						message: "",
+					})
+				}
+			},
 		})
 	})
 }
