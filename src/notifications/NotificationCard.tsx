@@ -57,7 +57,7 @@ export default function NotificationCard({
 			return (
 				<NotificationCardBase
 					avatarName={notification.name}
-					timestamp={notification.timestamp}
+					timestamp={timestamp}
 				>
 					<CharacterName name={notification.name} statusDot="hidden" /> is now{" "}
 					<span style={{ color: statusColors[notification.status] }}>
@@ -68,19 +68,6 @@ export default function NotificationCard({
 							: <BBC text={notification.message} />
 						</>
 					) : null}
-					<Button
-						className={clsx(
-							fadedButton,
-							"flex items-center gap-1 text-sm mt-1",
-						)}
-						onClick={() => {
-							routes.privateChat({ partnerName: notification.name }).push()
-							privateChatActions.openPrivateChat(notification.name)
-						}}
-					>
-						<Icon which={message} size={4} />
-						<span>Send message</span>
-					</Button>
 				</NotificationCardBase>
 			)
 	}
