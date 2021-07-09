@@ -81,10 +81,6 @@ export function useChannel(id: string) {
 	return jotai.useAtom(channelAtom(id))[0]
 }
 
-export function useJoinedChannelIds() {
-	return jotai.useAtom(joinedChannelIdsAtom)[0]
-}
-
 export function useJoinedChannels() {
 	return jotai.useAtom(joinedChannelsAtom)[0]
 }
