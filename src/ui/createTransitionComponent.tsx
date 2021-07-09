@@ -32,10 +32,8 @@ export function createTransitionComponent({
 		}
 
 		return child ? (
-			// @ts-expect-error: fix this later
 			<Transition.Child {...props}>{children}</Transition.Child>
 		) : (
-			// @ts-expect-error: fix this later
 			<Transition show={show ?? false} {...props}>
 				{children}
 			</Transition>
