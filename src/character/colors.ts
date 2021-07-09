@@ -18,6 +18,6 @@ export const statusColors: Record<CharacterStatus, string> = {
 	away: "rgb(255, 241, 118)",
 	dnd: "rgb(198, 103, 93)",
 	idle: "rgb(171, 124, 255)",
-	offline: "rgba(214, 214, 214, 0.4)",
+	offline: "rgba(214, 214, 214, 0.7)",
 	crown: "white", // TODO
 }
