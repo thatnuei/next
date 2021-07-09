@@ -1,10 +1,15 @@
+import clsx from "clsx"
 import BBC from "../bbc/BBC"
 import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
 import { statusColors } from "../character/colors"
+import Button from "../dom/Button"
 import Timestamp from "../dom/Timestamp"
+import { usePrivateChatActions } from "../privateChat/state"
+import { routes } from "../router"
+import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
-import { about } from "../ui/icons"
+import { about, message } from "../ui/icons"
 import type { Notification } from "./state"
 
 export default function NotificationCard({
@@ -12,6 +17,8 @@ export default function NotificationCard({
 }: {
 	notification: Notification
 }) {
+	const privateChatActions = usePrivateChatActions()
+
 	switch (notification.type) {
 		case "info":
 		case "error":
@@ -61,6 +68,19 @@ export default function NotificationCard({
 							: <BBC text={notification.message} />
 						</>
 					) : null}
+					<Button
+						className={clsx(
+							fadedButton,
+							"flex items-center gap-1 text-sm mt-1",
+						)}
+						onClick={() => {
+							routes.privateChat({ partnerName: notification.name }).push()
+							privateChatActions.openPrivateChat(notification.name)
+						}}
+					>
+						<Icon which={message} size={4} />
+						<span>Send message</span>
+					</Button>
 				</NotificationCardBase>
 			)
 	}
