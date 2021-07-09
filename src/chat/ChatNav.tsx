@@ -5,7 +5,7 @@ import CharacterSummary from "../character/CharacterSummary"
 import ChatNavAction from "../chatNav/ChatNavAction"
 import ChatNavActionButton from "../chatNav/ChatNavActionButton"
 import RoomTabList from "../chatNav/RoomTabList"
-import NotificationList from "../notifications/NotificationList"
+import { routes, useRoute } from "../router"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
@@ -15,6 +15,8 @@ import StatusUpdateForm from "./StatusUpdateForm"
 export default function ChatNav() {
 	const identity = useIdentity()
 	const logout = useContext(ChatLogoutContext)
+	const route = useRoute()
+
 	return (
 		<nav className={`flex h-full bg-midnight-2`}>
 			<div className={`flex flex-col`}>
@@ -42,6 +44,13 @@ export default function ChatNav() {
 					)}
 				/>
 
+				<a {...routes.notifications().link}>
+					<ChatNavAction
+						icon={<Icon which={icons.bell} />}
+						name="Notifications"
+						active={route.name === "notifications"}
+					/>
+				</a>
 
 				<ChatNavActionButton
 					icon={<Icon which={icons.users} />}

@@ -7,7 +7,7 @@ export default function NotificationList() {
 	return (
 		<div className="bg-midnight-2">
 			{notifications.length > 0 ? (
-				<ul className="flex flex-col gap-2 p-2">
+				<ul className="flex flex-col gap-1">
 					{notifications.map((notification) => (
 						<li key={notification.id}>
 							<NotificationCard notification={notification} />
