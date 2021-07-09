@@ -19,7 +19,7 @@ export default function Chat() {
 					</div>
 				</div>
 			</ConnectionGuard>
-			{process.env.NODE_ENV === "development" && <DevTools />}
+			{import.meta.env.DEV && <DevTools />}
 		</SocketConnection>
 	)
 }
