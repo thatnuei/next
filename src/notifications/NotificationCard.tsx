@@ -19,7 +19,7 @@ export default function NotificationCard({
 					<Icon which={about} size={8} />
 				</div>
 			)}
-			<div className="flex flex-col self-center flex-1 gap-2">
+			<div className="flex flex-col self-center flex-1 gap-1">
 				{notification.type === "broadcast" && notification.actorName ? (
 					<h2 className="text-xs">
 						Broadcast from{" "}
