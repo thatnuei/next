@@ -1,22 +1,14 @@
-import Button from "../dom/Button"
 import { fadedButton } from "../ui/components"
-import type { IconProps } from "../ui/Icon"
-import Icon from "../ui/Icon"
 
-interface ChatNavActionProps {
+export interface ChatNavActionProps {
 	name: string
-	icon: IconProps["which"]
-	onClick?: () => void
+	icon: React.ReactNode
 }
 
-export function ChatNavAction({ name, icon, onClick }: ChatNavActionProps) {
+export default function ChatNavAction({ name, icon }: ChatNavActionProps) {
 	return (
-		<Button
-			className={`${fadedButton} block p-3`}
-			title={name}
-			onClick={() => onClick?.()}
-		>
-			<Icon which={icon} />
-		</Button>
+		<div title={name} className={`${fadedButton} block p-3`}>
+			{icon}
+		</div>
 	)
 }
