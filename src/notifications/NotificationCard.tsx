@@ -1,21 +1,19 @@
-import clsx from "clsx"
 import BBC from "../bbc/BBC"
 import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
 import { statusColors } from "../character/colors"
-import Button from "../dom/Button"
 import Timestamp from "../dom/Timestamp"
 import { usePrivateChatActions } from "../privateChat/state"
-import { routes } from "../router"
-import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
-import { about, message } from "../ui/icons"
+import { about } from "../ui/icons"
 import type { Notification } from "./state"
 
 export default function NotificationCard({
 	notification,
+	timestamp,
 }: {
 	notification: Notification
+	timestamp?: number
 }) {
 	const privateChatActions = usePrivateChatActions()
 
@@ -25,7 +23,7 @@ export default function NotificationCard({
 			return (
 				<NotificationCardBase
 					message={notification.message}
-					timestamp={notification.timestamp}
+					timestamp={timestamp}
 				/>
 			)
 
@@ -34,7 +32,7 @@ export default function NotificationCard({
 				<NotificationCardBase
 					message={notification.message}
 					avatarName={notification.actorName}
-					timestamp={notification.timestamp}
+					timestamp={timestamp}
 					header={
 						notification.actorName ? (
 							<>
@@ -84,7 +82,7 @@ function NotificationCardBase({
 	header?: React.ReactNode
 	message?: string
 	children?: React.ReactNode
-	timestamp: number
+	timestamp?: number
 }) {
 	return (
 		<div className="flex w-full gap-3 p-3 ">
@@ -94,15 +92,17 @@ function NotificationCardBase({
 				<Icon which={about} size={8} />
 			)}
 			<div className="self-center flex-1 ">
-				<Timestamp className="float-right text-xs italic opacity-75">
-					{timestamp}
-				</Timestamp>
-				<div className="flex flex-col gap-1">
+				<div className="flex flex-col gap-2">
 					{header ? <h2 className="text-xs">{header}</h2> : null}
 					<p className="flex-1 leading-snug">
 						{message ? <BBC text={message} /> : null}
 						{children}
 					</p>
+					{timestamp ? (
+						<Timestamp className="float-right text-xs italic opacity-75">
+							{timestamp}
+						</Timestamp>
+					) : null}
 				</div>
 			</div>
 		</div>

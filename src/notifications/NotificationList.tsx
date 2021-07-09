@@ -8,7 +8,10 @@ export default function NotificationList() {
 		<ul className="flex flex-col gap-1 ">
 			{notifications.map((notification) => (
 				<li key={notification.id} className="bg-midnight-1">
-					<NotificationCard notification={notification} />
+					<NotificationCard
+						notification={notification}
+						timestamp={notification.timestamp}
+					/>
 				</li>
 			))}
 		</ul>
