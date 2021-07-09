@@ -1,5 +1,6 @@
 import BBC from "../bbc/BBC"
 import CharacterName from "../character/CharacterName"
+import Timestamp from "../dom/Timestamp"
 import type { MessageState } from "./MessageState"
 
 interface Props {
@@ -17,9 +18,9 @@ function MessageListItem({ message }: Props) {
 
 	return (
 		<div className={`${typeStyle ?? ""} px-2 py-1`}>
-			<span className="inline-block float-right ml-2 text-sm not-italic opacity-50">
-				{new Date(message.timestamp).toLocaleTimeString()}
-			</span>
+			<Timestamp className="inline-block float-right ml-2 text-sm not-italic opacity-50">
+				{message.timestamp}
+			</Timestamp>
 
 			{message.senderName && (
 				<span
