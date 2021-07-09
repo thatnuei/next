@@ -1,5 +1,4 @@
 import { sortBy } from "lodash-es"
-import { useMatch, useNavigate } from "react-router-dom"
 import type { Channel } from "../channel/state"
 import { useChannelActions, useJoinedChannels } from "../channel/state"
 import { useIsPublicChannel } from "../channelBrowser/state"
@@ -10,6 +9,7 @@ import {
 	usePrivateChatActions,
 } from "../privateChat/state"
 import { useRoomState } from "../room/state"
+import { routes, useRoute } from "../router"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import RoomTab from "./RoomTab"
@@ -31,8 +31,7 @@ export default function RoomTabList() {
 }
 
 function PrivateChatTab({ partnerName }: { partnerName: string }) {
-	const match = useMatch("private-chat/:partnerName")
-	const navigate = useNavigate()
+	const route = useRoute()
 	const { isUnread } = useRoomState(getPrivateChatRoomKey(partnerName))
 	const { closePrivateChat } = usePrivateChatActions()
 
@@ -40,18 +39,19 @@ function PrivateChatTab({ partnerName }: { partnerName: string }) {
 		<RoomTab
 			title={partnerName}
 			icon={<Avatar name={partnerName} size={6} />}
-			isActive={match?.params.partnerName === partnerName}
+			isActive={
+				route.name === "privateChat" && route.params.partnerName === partnerName
+			}
 			isUnread={isUnread}
-			onClick={() => navigate(`/private-chat/${partnerName}`)}
+			onClick={() => routes.privateChat({ partnerName }).push()}
 			onClose={() => closePrivateChat(partnerName)}
 		/>
 	)
 }
 
 function ChannelRoomTab({ channel }: { channel: Channel }) {
+	const route = useRoute()
 	const isPublic = useIsPublicChannel(channel.id)
-	const match = useMatch("channel/:channelId")
-	const navigate = useNavigate()
 	const { leave } = useChannelActions()
 
 	return (
@@ -61,9 +61,11 @@ function ChannelRoomTab({ channel }: { channel: Channel }) {
 			icon={
 				isPublic ? <Icon which={icons.earth} /> : <Icon which={icons.lock} />
 			}
-			isActive={match?.params.channelId === channel.id}
+			isActive={
+				route.name === "channel" && route.params.channelId === channel.id
+			}
 			isUnread={channel.isUnread}
-			onClick={() => navigate(`/channel/${channel.id}`)}
+			onClick={() => routes.channel({ channelId: channel.id }).push()}
 			onClose={() => leave(channel.id)}
 		/>
 	)

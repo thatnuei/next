@@ -1,23 +1,15 @@
-import { Routes } from "react-router-dom"
 import ChannelView from "../channel/ChannelView"
 import PrivateChatView from "../privateChat/PrivateChatView"
-import TypedRoute from "../routing/TypedRoute"
+import { useRoute } from "../router"
 import NoRoomView from "./NoRoomView"
 
 export default function ChatRoutes() {
+	const route = useRoute()
 	return (
-		<Routes>
-			<TypedRoute path="*" render={() => <NoRoomView />} />
-
-			<TypedRoute
-				path="channel/:channelId"
-				render={(params) => <ChannelView {...params} />}
-			/>
-
-			<TypedRoute
-				path="private-chat/:partnerName"
-				render={(params) => <PrivateChatView {...params} />}
-			/>
-		</Routes>
+		<>
+			{route.name === "home" && <NoRoomView />}
+			{route.name === "channel" && <ChannelView {...route.params} />}
+			{route.name === "privateChat" && <PrivateChatView {...route.params} />}
+		</>
 	)
 }

@@ -1,10 +1,10 @@
 import * as React from "react"
-import { useNavigate } from "react-router-dom"
 import { useAuthUserContext } from "../chat/authUserContext"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
 import { usePrivateChatActions } from "../privateChat/state"
+import { routes } from "../router"
 import { useSocketActions } from "../socket/SocketConnection"
 import ContextMenu, {
 	ContextMenuButton,
@@ -37,7 +37,6 @@ export default function CharacterMenuTarget({ name, children }: Props) {
 }
 
 function CharacterMenu({ name }: { name: string }) {
-	const navigate = useNavigate()
 	const { friendships, isBookmarked, isIgnored } = useCharacterRoles(name)
 	const { send } = useSocketActions()
 	const { addBookmark, removeBookmark } = useAuthUserContext()
@@ -67,7 +66,7 @@ function CharacterMenu({ name }: { name: string }) {
 				<ContextMenuItem icon={<Icon which={icons.message} />}>
 					<Button
 						onClick={() => {
-							navigate(`/private-chat/${name}`)
+							routes.privateChat({ partnerName: name }).push()
 							openPrivateChat(name)
 						}}
 					>

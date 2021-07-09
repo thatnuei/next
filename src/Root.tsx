@@ -2,16 +2,16 @@ import clsx from "clsx"
 import { Provider as JotaiProvider } from "jotai"
 import type { FallbackProps } from "react-error-boundary"
 import { ErrorBoundary } from "react-error-boundary"
-import { BrowserRouter } from "react-router-dom"
 import App from "./app/App"
 import { AuthUserProvider } from "./chat/authUserContext"
 import { toError } from "./common/toError"
 import NotificationToastOverlay from "./notifications/NotificationToastOverlay"
+import { RouteProvider } from "./router"
 import { raisedPanel, solidButton } from "./ui/components"
 
 export default function Root() {
 	return (
-		<BrowserRouter>
+		<RouteProvider>
 			<JotaiProvider>
 				<AuthUserProvider>
 					<ErrorBoundary FallbackComponent={ErrorBoundaryFallback}>
@@ -20,7 +20,7 @@ export default function Root() {
 					</ErrorBoundary>
 				</AuthUserProvider>
 			</JotaiProvider>
-		</BrowserRouter>
+		</RouteProvider>
 	)
 }
 
