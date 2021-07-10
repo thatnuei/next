@@ -1,10 +1,10 @@
 import * as React from "react"
 import BBC from "../bbc/BBC"
+import { useIsPublicChannel } from "../channelBrowser/state"
 import { useIdentity } from "../chat/identityContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
-import { useNotificationActions } from "../notifications/state"
 import { useRoomActions } from "../room/state"
 import { fadedButton, headerText2 } from "../ui/components"
 import Drawer from "../ui/Drawer"
@@ -19,6 +19,7 @@ import Modal from "../ui/Modal"
 import { screenQueries } from "../ui/screens"
 import ChannelFilters from "./ChannelFilters"
 import ChannelUserList from "./ChannelUserList"
+import CopyChannelCodeButton from "./CopyChannelCodeButton"
 import InviteUsersForm from "./InviteUsersForm"
 import { channelRoomKey, useChannel } from "./state"
 
@@ -31,36 +32,8 @@ function ChannelHeader({ channelId }: Props) {
 	const identity = useIdentity()
 	const isLargeScreen = useMediaQuery(screenQueries.large)
 	const [inviteOpen, setInviteOpen] = React.useState(false)
-	const { addNotification } = useNotificationActions()
+	const isPublic = useIsPublicChannel(channelId)
 	const { clearMessages } = useRoomActions()
-
-	const isPublic = channel.id === channel.title
-
-	const linkCode = isPublic
-		? `[channel]${channelId}[/channel]`
-		: `[session=${channelId}]${channel.title}[/session]`
-
-	const copyCodeToClipboard = () => {
-		window.navigator.clipboard.writeText(linkCode).then(
-			() => {
-				addNotification({
-					type: "info",
-					message: "Copied code to clipboard!",
-					showToast: true,
-					save: false,
-				})
-			},
-			() => {
-				addNotification({
-					type: "error",
-					message:
-						"Copy to clipboard failed. Check your browser settings and make sure clipboard settings are allowed.",
-					showToast: true,
-					save: false,
-				})
-			},
-		)
-	}
 
 	return (
 		<header className="flex flex-row items-center gap-3 p-3 bg-midnight-0">
@@ -117,9 +90,7 @@ function ChannelHeader({ channelId }: Props) {
 
 					<div className="flex flex-col bg-midnight-1">
 						<DropdownMenuItem icon={<Icon which={icons.code} />}>
-							<button type="button" onClick={copyCodeToClipboard}>
-								Copy code
-							</button>
+							<CopyChannelCodeButton channelId={channelId} />
 						</DropdownMenuItem>
 
 						<DropdownMenuItem icon={<Icon which={icons.clearMessages} />}>
