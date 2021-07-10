@@ -60,7 +60,7 @@ const likedCharactersSelector = jotaiUtils.atomFamily((account: string) => {
 			.filter(([, value]) => value)
 			.map(([name]) => get(characterAtom(name)))
 
-		return [...friendCharacters, ...bookmarkCharacters]
+		return unique([...friendCharacters, ...bookmarkCharacters], (c) => c.name)
 	})
 })
 
