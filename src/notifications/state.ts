@@ -26,6 +26,7 @@ type NotificationOptions = NotificationBase & {
 	readonly save?: boolean
 	readonly showToast?: boolean
 	readonly toastDuration?: number
+	readonly incrementUnread?: boolean
 }
 
 interface NotificationToast {
@@ -71,6 +72,7 @@ export function useNotificationActions() {
 			save = true,
 			showToast = false,
 			toastDuration = 10000,
+			incrementUnread = true,
 			...notificationProperties
 		}: NotificationOptions): Notification => {
 			const notification: Notification = {
@@ -83,7 +85,9 @@ export function useNotificationActions() {
 				setNotifications((notifications) =>
 					[notification, ...notifications].slice(0, maxNotifications),
 				)
-				setUnreadNotificationCount((count) => count + 1)
+				if (incrementUnread) {
+					setUnreadNotificationCount((count) => count + 1)
+				}
 			}
 
 			if (showToast) {
