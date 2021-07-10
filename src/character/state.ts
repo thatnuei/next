@@ -1,8 +1,8 @@
 import * as jotai from "jotai"
 import * as jotaiUtils from "jotai/utils"
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
 import { useAuthUser, useAuthUserContext } from "../chat/authUserContext"
-import { useIdentity } from "../chat/identityContext"
+import { useIdentity, useOptionalIdentity } from "../chat/identityContext"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
 import type { Dict, Mutable, TruthyMap } from "../common/types"
@@ -48,22 +48,6 @@ const ignoredUsersAtom = jotaiUtils.atomFamily((account: string) =>
 
 const adminsAtom = jotai.atom<TruthyMap>({})
 
-const likedCharactersSelector = jotaiUtils.atomFamily((account: string) => {
-	return jotai.atom((get): readonly Character[] => {
-		const friendships = get(friendshipsAtom(account))
-		const friendCharacters = unique(friendships.map(({ them }) => them)).map(
-			(name) => get(characterAtom(name)),
-		)
-
-		const bookmarks = get(bookmarksAtom(account))
-		const bookmarkCharacters = Object.entries(bookmarks)
-			.filter(([, value]) => value)
-			.map(([name]) => get(characterAtom(name)))
-
-		return unique([...friendCharacters, ...bookmarkCharacters], (c) => c.name)
-	})
-})
-
 export function useCharacter(name: string): Character {
 	return jotai.useAtom(characterAtom(name))[0]
 }
@@ -98,7 +82,29 @@ export function useCharacterRoles(name: string) {
 
 // liked characters are the list of bookmarks and friends
 export function useLikedCharacters(): readonly Character[] {
-	return jotai.useAtom(likedCharactersSelector(useAuthUser().account))[0]
+	const user = useAuthUser()
+	const identity = useOptionalIdentity()
+
+	const atom = useMemo(
+		() =>
+			jotai.atom((get): readonly Character[] => {
+				const friendships = get(friendshipsAtom(user.account))
+				const bookmarks = get(bookmarksAtom(user.account))
+
+				const names = [
+					...Object.keys(bookmarks),
+					...friendships.map(({ them }) => them),
+					...user.characters, // including self characters can be helpful for testing
+				]
+
+				return unique(names)
+					.filter((name) => name !== identity)
+					.map((name) => get(characterAtom(name)))
+			}),
+		[identity, user.account, user.characters],
+	)
+
+	return jotaiUtils.useAtomValue(atom)
 }
 
 export function useCharacterCommandListener() {
