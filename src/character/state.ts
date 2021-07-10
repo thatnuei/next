@@ -16,7 +16,7 @@ function createCharacter(name: string): Character {
 	return {
 		name,
 		gender: "None",
-		status: "online",
+		status: "offline",
 		statusMessage: "",
 	}
 }
