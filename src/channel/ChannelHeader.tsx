@@ -1,7 +1,6 @@
 import * as React from "react"
 import BBC from "../bbc/BBC"
 import { useIsPublicChannel } from "../channelBrowser/state"
-import { useIdentity } from "../chat/identityContext"
 import ChatMenuButton from "../chatNav/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
@@ -29,7 +28,6 @@ interface Props {
 
 function ChannelHeader({ channelId }: Props) {
 	const channel = useChannel(channelId)
-	const identity = useIdentity()
 	const isLargeScreen = useMediaQuery(screenQueries.large)
 	const [inviteOpen, setInviteOpen] = React.useState(false)
 	const isPublic = useIsPublicChannel(channelId)
