@@ -73,10 +73,9 @@ export function useCharacterGender(name: string): CharacterGender {
 }
 
 export function useGetCharacterRoles() {
-	const identity = useIdentity()
 	const { account } = useAuthUser()
 
-	const [friendships] = jotai.useAtom(friendshipsAtom(identity))
+	const [friendships] = jotai.useAtom(friendshipsAtom(account))
 	const [bookmarks] = jotai.useAtom(bookmarksAtom(account))
 	const [ignoredUsers] = jotai.useAtom(ignoredUsersAtom(account))
 	const [admins] = jotai.useAtom(adminsAtom)
