@@ -54,6 +54,7 @@ export function useNotificationActions() {
 		const addNotification = ({
 			save = true,
 			showToast = false,
+			toastDuration = 10000,
 			...notificationProperties
 		}: NotificationOptions): Notification => {
 			const notification: Notification = {
@@ -69,7 +70,11 @@ export function useNotificationActions() {
 			}
 
 			if (showToast) {
-				const toast: NotificationToast = { id: uniqueId(), notification }
+				const toast: NotificationToast = {
+					id: uniqueId(),
+					notification,
+					duration: toastDuration,
+				}
 				setToasts((toasts) => [...toasts, toast])
 			}
 

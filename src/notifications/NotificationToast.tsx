@@ -5,6 +5,7 @@ import { useEffectRef } from "../react/useEffectRef"
 
 interface ToastCardProps {
 	children: ReactNode
+	duration: number
 	onDismissed?: () => void
 }
 
@@ -17,10 +18,9 @@ const keyframes = [
 	{ opacity: 1, transform: "scale(1)" },
 ]
 
-const duration = 10000
-
 export default function NotificationToast({
 	children,
+	duration,
 	onDismissed,
 }: ToastCardProps) {
 	const ref = useRef<HTMLDivElement>(null)
@@ -66,7 +66,7 @@ export default function NotificationToast({
 				animation.cancel()
 			}
 		}
-	}, [onDismissedRef, status])
+	}, [duration, onDismissedRef, status])
 
 	// const handleClick = () => {
 	// 	if (status === "visible") {

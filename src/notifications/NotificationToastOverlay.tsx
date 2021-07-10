@@ -13,6 +13,7 @@ export default function NotificationToastOverlay() {
 				{toasts.map((toast) => (
 					<li key={toast.id} className="pointer-events-auto">
 						<NotificationToast
+							duration={toast.duration}
 							onDismissed={() => actions.removeToast(toast.id)}
 						>
 							<NotificationCard notification={toast.notification} />
