@@ -6,14 +6,16 @@ import Icon from "../ui/Icon"
 import { clearMessages } from "../ui/icons"
 import { ScreenHeader } from "../ui/ScreenHeader"
 import NotificationList from "./NotificationList"
-import { useNotificationActions } from "./state"
+import { useNotificationActions, useUnreadNotificationCount } from "./state"
 
 export default function NotificationListScreen() {
 	const actions = useNotificationActions()
+	const count = useUnreadNotificationCount()
 
 	useEffect(() => {
 		actions.markAsRead()
-	}, [actions])
+		// adding count as a dep should mark read even after the count goes up
+	}, [actions, count])
 
 	return (
 		<div className="flex flex-col h-full gap-1">
