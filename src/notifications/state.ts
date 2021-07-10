@@ -159,6 +159,17 @@ export function useNotificationCommandListener() {
 				}
 			},
 
+			NLN({ identity }) {
+				if (likedCharacters.some((char) => char.name === identity)) {
+					actions.addNotification({
+						type: "status",
+						name: identity,
+						status: "online",
+						message: "",
+					})
+				}
+			},
+
 			FLN({ character }) {
 				if (likedCharacters.some((char) => char.name === character)) {
 					actions.addNotification({
