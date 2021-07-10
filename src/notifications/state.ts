@@ -13,19 +13,21 @@ type NotificationBase =
 	| { type: "status"; name: string; status: CharacterStatus; message: string }
 
 export type Notification = NotificationBase & {
-	id: string
-	timestamp: number
+	readonly id: string
+	readonly timestamp: number
 }
 
 type NotificationOptions = NotificationBase & {
-	save?: boolean
-	showToast?: boolean
+	readonly save?: boolean
+	readonly showToast?: boolean
+	readonly toastDuration?: number
 }
 
 interface NotificationToast {
-	id: string
-	notification: Notification
-	onClick?: () => void
+	readonly id: string
+	readonly notification: Notification
+	readonly duration: number
+	readonly onClick?: () => void
 }
 
 const notificationListAtom = atomWithStorage<readonly Notification[]>(
