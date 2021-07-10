@@ -17,7 +17,6 @@ import StatusUpdateForm from "./StatusUpdateForm"
 export default function ChatNav() {
 	const identity = useIdentity()
 	const logout = useContext(ChatLogoutContext)
-	const route = useRoute()
 
 	return (
 		<nav className={`flex h-full bg-midnight-2`}>
