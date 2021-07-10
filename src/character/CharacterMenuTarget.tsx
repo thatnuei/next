@@ -47,15 +47,17 @@ function CharacterMenu({ name }: { name: string }) {
 			<div className={`p-2 space-y-3 bg-midnight-0`}>
 				<CharacterSummary name={name} />
 
-				{friendships.map((item, index) => (
-					<div
-						key={index}
-						className={`flex flex-row items-center px-2 py-1 space-x-1 text-sm text-green-400 bg-green-500 bg-opacity-20`}
-					>
-						<Icon which={icons.heart} />
-						<div>{item.us}</div>
-					</div>
-				))}
+				{friendships
+					.filter(({ them }) => them === name)
+					.map((item, index) => (
+						<div
+							key={index}
+							className={`flex flex-row items-center px-2 py-1 space-x-1 text-sm text-green-400 bg-green-500 bg-opacity-20`}
+						>
+							<Icon which={icons.heart} />
+							<div>{item.us}</div>
+						</div>
+					))}
 			</div>
 
 			<div className={`flex flex-col`}>
