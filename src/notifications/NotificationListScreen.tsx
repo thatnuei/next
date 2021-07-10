@@ -1,4 +1,5 @@
 import clsx from "clsx"
+import { useEffect } from "react"
 import Button from "../dom/Button"
 import { fadedButton, headerText } from "../ui/components"
 import Icon from "../ui/Icon"
@@ -9,6 +10,11 @@ import { useNotificationActions } from "./state"
 
 export default function NotificationListScreen() {
 	const actions = useNotificationActions()
+
+	useEffect(() => {
+		actions.markAsRead()
+	}, [actions])
+
 	return (
 		<div className="flex flex-col h-full gap-1">
 			<div className="bg-midnight-0">

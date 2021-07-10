@@ -7,6 +7,10 @@ import { uniqueId } from "../common/uniqueId"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
 
+/// constants
+const maxNotifications = 1000
+
+/// types
 type NotificationBase =
 	| { type: "error" | "info"; message: string }
 	| { type: "broadcast"; message: string; actorName?: string }
@@ -31,6 +35,7 @@ interface NotificationToast {
 	readonly onClick?: () => void
 }
 
+/// atoms
 const notificationListAtom = atomWithStorage<readonly Notification[]>(
 	"notifications-v2",
 	[],
@@ -38,9 +43,12 @@ const notificationListAtom = atomWithStorage<readonly Notification[]>(
 
 const toastListAtom = atom<readonly NotificationToast[]>([])
 
-// juuust in case
-const maxNotifications = 1000
+const unreadNotificationCountAtom = atomWithStorage(
+	"unread-notification-count",
+	0,
+)
 
+/// hooks
 export function useNotificationList(): readonly Notification[] {
 	return useAtomValue(notificationListAtom)
 }
@@ -49,9 +57,14 @@ export function useNotificationToastList(): readonly NotificationToast[] {
 	return useAtomValue(toastListAtom)
 }
 
+export function useUnreadNotificationCount(): number {
+	return useAtomValue(unreadNotificationCountAtom)
+}
+
 export function useNotificationActions() {
 	const setNotifications = useUpdateAtom(notificationListAtom)
 	const setToasts = useUpdateAtom(toastListAtom)
+	const setUnreadNotificationCount = useUpdateAtom(unreadNotificationCountAtom)
 
 	return useMemo(() => {
 		const addNotification = ({
@@ -70,6 +83,7 @@ export function useNotificationActions() {
 				setNotifications((notifications) =>
 					[notification, ...notifications].slice(0, maxNotifications),
 				)
+				setUnreadNotificationCount((count) => count + 1)
 			}
 
 			if (showToast) {
@@ -98,8 +112,12 @@ export function useNotificationActions() {
 			clearNotifications() {
 				setNotifications([])
 			},
+
+			markAsRead() {
+				setUnreadNotificationCount(0)
+			},
 		}
-	}, [setNotifications, setToasts])
+	}, [setNotifications, setToasts, setUnreadNotificationCount])
 }
 
 export function useNotificationCommandListener() {
