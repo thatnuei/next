@@ -36,19 +36,21 @@ export default autoRef(function CopyChannelCodeButton({
 						addNotification({
 							type: "info",
 							message: "Copied code to clipboard!",
-							showToast: true,
 							save: false,
+							showToast: true,
 							toastDuration: 3000,
+							incrementUnread: false,
 						})
 					})
 					.catch(() => {
 						addNotification({
 							type: "error",
 							message:
-								"Copy to clipboard failed. Check your browser settings and make sure clipboard settings are allowed.",
-							showToast: true,
+								"Copy to clipboard failed. Check your browser settings and make sure clipboard permissions are enabled.",
 							save: false,
-							toastDuration: 5000,
+							showToast: true,
+							toastDuration: 6000,
+							incrementUnread: false,
 						})
 					})
 
