@@ -11,6 +11,7 @@ type NotificationBase =
 	| { type: "error" | "info"; message: string }
 	| { type: "broadcast"; message: string; actorName?: string }
 	| { type: "status"; name: string; status: CharacterStatus; message: string }
+	| { type: "invite"; channelId: string; title: string; sender: string }
 
 export type Notification = NotificationBase & {
 	readonly id: string
@@ -145,6 +146,16 @@ export function useNotificationCommandListener() {
 						message: "",
 					})
 				}
+			},
+
+			CIU({ name: channelId, title, sender }) {
+				actions.addNotification({
+					type: "invite",
+					channelId,
+					title,
+					sender,
+					showToast: true,
+				})
 			},
 		})
 	})

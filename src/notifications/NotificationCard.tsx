@@ -1,4 +1,5 @@
 import BBC from "../bbc/BBC"
+import BBCChannelLink from "../bbc/BBCChannelLink"
 import Avatar from "../character/Avatar"
 import CharacterName from "../character/CharacterName"
 import { statusColors } from "../character/colors"
@@ -65,6 +66,25 @@ export default function NotificationCard({
 					) : null}
 				</NotificationCardBase>
 			)
+
+		case "invite":
+			return (
+				<NotificationCardBase
+					avatarName={notification.sender}
+					timestamp={timestamp}
+				>
+					<CharacterName name={notification.sender} statusDot="hidden" /> has
+					invited you to{" "}
+					<BBCChannelLink
+						id={notification.channelId}
+						title={notification.title}
+						type={notification.title === notification.id ? "public" : "private"}
+					/>
+				</NotificationCardBase>
+			)
+
+		default:
+			return null
 	}
 }
 
