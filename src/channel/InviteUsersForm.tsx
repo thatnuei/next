@@ -1,4 +1,3 @@
-import { uniqBy } from "lodash-es"
 import CharacterName from "../character/CharacterName"
 import { useLikedCharacters } from "../character/state"
 import type { Character } from "../character/types"
@@ -20,7 +19,6 @@ function InviteUsersForm({ channelId }: Props) {
 	const characters = useLikedCharacters()
 
 	const sendInvite = (name: string) => {
-		// untested lol!
 		send({
 			type: "CIU",
 			params: { channel: channelId, character: name },
@@ -43,13 +41,10 @@ function InviteUsersForm({ channelId }: Props) {
 	)
 
 	return (
-		<div className={`flex flex-col w-full h-full`}>
-			<div
-				className={`flex-1 bg-midnight-2`}
-				style={{ height: `calc(100vh - 8rem)` }}
-			>
+		<div>
+			<div className={`bg-midnight-2`} style={{ height: `calc(100vh - 8rem)` }}>
 				<VirtualizedList
-					items={uniqBy(characters, "name")}
+					items={characters.filter((c) => c.status === "online")}
 					itemSize={40}
 					getItemKey={(it) => it.name}
 					renderItem={renderItem}
