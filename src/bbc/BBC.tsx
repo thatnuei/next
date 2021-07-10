@@ -1,7 +1,5 @@
 import type { CSSProperties, PropsWithChildren } from "react"
 import { Fragment, memo } from "react"
-import { useChannelActions } from "../channel/state"
-import { useChannelUserCount } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
@@ -10,6 +8,7 @@ import ExternalLink from "../dom/ExternalLink"
 import { getIconUrl } from "../flist/helpers"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
+import BBCChannelLink from "./BBCChannelLink"
 import { createBbcTree, getNodeChildrenAsText } from "./helpers"
 import type { Node } from "./types"
 
@@ -177,31 +176,6 @@ function BBCLink({ url, children }: PropsWithChildren<{ url: string }>) {
 				<span className={`underline group-hover:no-underline`}>{children}</span>
 				{domain && <span className={`ml-1 text-sm`}>[{domain}] </span>}
 			</ExternalLink>
-		</span>
-	)
-}
-
-function BBCChannelLink({
-	id,
-	title,
-	type,
-}: PropsWithChildren<{
-	id: string
-	title: string
-	type: "public" | "private"
-}>) {
-	const userCount = useChannelUserCount(id)
-	const { join } = useChannelActions()
-
-	return (
-		<span className={`inline-flex items-baseline`}>
-			<span className={`self-center inline w-4 h-4 mr-1 opacity-75`}>
-				<Icon which={type === "public" ? icons.earth : icons.lock} />
-			</span>
-			<button className="group" onClick={() => join(id, title)}>
-				<span className={`underline group-hover:no-underline`}>{title}</span>{" "}
-				<span>({userCount})</span>
-			</button>
 		</span>
 	)
 }
