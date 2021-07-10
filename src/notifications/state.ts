@@ -93,6 +93,10 @@ export function useNotificationActions() {
 			removeToast(id: string) {
 				setToasts((toasts) => toasts.filter((t) => t.id !== id))
 			},
+
+			clearNotifications() {
+				setNotifications([])
+			},
 		}
 	}, [setNotifications, setToasts])
 }
