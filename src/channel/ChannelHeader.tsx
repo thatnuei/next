@@ -102,7 +102,7 @@ function ChannelHeader({ channelId }: Props) {
 							</button>
 						</DropdownMenuItem>
 
-						{!isPublic && channel.ops[identity] && (
+						{!isPublic && (
 							<DropdownMenuItem icon={<Icon which={icons.invite} />}>
 								<button type="button" onClick={() => setInviteOpen(true)}>
 									Invite
