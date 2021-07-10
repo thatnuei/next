@@ -1,9 +1,11 @@
+import clsx from "clsx"
+import { headerText } from "../ui/components"
 import { ScreenHeader } from "../ui/ScreenHeader"
 
 function NoRoomView() {
 	return (
 		<ScreenHeader>
-			<span className="opacity-50">next</span>
+			<h1 className={clsx(headerText, "opacity-50")}>next</h1>
 		</ScreenHeader>
 	)
 }
