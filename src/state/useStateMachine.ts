@@ -7,29 +7,25 @@ interface ObjectWithType {
 
 type UnionMemberWithType<Union, Type> = Extract<Union, { readonly type: Type }>
 
-type StateMap<
-	State extends ObjectWithType,
-	Event extends ObjectWithType,
-	Effect extends ObjectWithType,
-> = {
-	[StateType in State["type"]]?: {
-		onEnter?: (state: UnionMemberWithType<State, StateType>) => Effect[]
-		on?: {
-			[EventType in Event["type"]]?: {
-				state?: (event: UnionMemberWithType<Event, EventType>) => State
-				effects?: (event: UnionMemberWithType<Event, EventType>) => Effect[]
-			}
-		}
-	}
-}
-
 interface StateMachineConfig<
 	State extends ObjectWithType,
 	Event extends ObjectWithType,
 	Effect extends ObjectWithType,
 > {
 	initialState: State
-	states: StateMap<State, Event, Effect>
+
+	states: {
+		[StateType in State["type"]]?: {
+			onEnter?: (state: UnionMemberWithType<State, StateType>) => Effect[]
+			on?: {
+				[EventType in Event["type"]]?: {
+					state?: (event: UnionMemberWithType<Event, EventType>) => State
+					effects?: (event: UnionMemberWithType<Event, EventType>) => Effect[]
+				}
+			}
+		}
+	}
+
 	effects?: {
 		[ActionType in Effect["type"]]: (
 			action: UnionMemberWithType<Effect, ActionType>,
