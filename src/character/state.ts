@@ -232,7 +232,7 @@ export function useCharacterCommandListener() {
 						},
 					})
 				},
-				[identity, user.account],
+				[getFriendsAndBookmarks, identity, user.account],
 			),
 		),
 	)
