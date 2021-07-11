@@ -1,4 +1,6 @@
-export default function LoadingOverlay({ text }: { text: string }) {
+import type { ReactNode } from "react"
+
+export default function LoadingOverlay({ children }: { children: ReactNode }) {
 	const dotStyle = `w-5 h-5 rounded-full`
 	return (
 		<div
@@ -10,7 +12,11 @@ export default function LoadingOverlay({ text }: { text: string }) {
 				<div className={`${dotStyle} bg-clouds`}></div>
 				<div className={`${dotStyle} bg-blue-500`}></div>
 			</div>
-			<p className={`text-2xl font-condensed`}>{text}</p>
+			<div className="flex flex-col items-center gap-4">{children}</div>
 		</div>
 	)
+}
+
+export function LoadingOverlayText({ children }: { children: ReactNode }) {
+	return <p className={`text-2xl font-condensed`}>{children}</p>
 }

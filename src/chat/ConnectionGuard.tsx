@@ -6,7 +6,7 @@ import {
 	useSocketActions,
 } from "../socket/SocketConnection"
 import { solidButton } from "../ui/components"
-import LoadingOverlay from "../ui/LoadingOverlay"
+import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
 import { useIdentity } from "./identityContext"
 
 export default function ConnectionGuard({ children }: { children: ReactNode }) {
@@ -16,10 +16,18 @@ export default function ConnectionGuard({ children }: { children: ReactNode }) {
 
 	switch (status) {
 		case "connecting":
-			return <LoadingOverlay text="Connecting..." />
+			return (
+				<LoadingOverlay>
+					<LoadingOverlayText>Connecting...</LoadingOverlayText>
+				</LoadingOverlay>
+			)
 
 		case "identifying":
-			return <LoadingOverlay text="Identifying..." />
+			return (
+				<LoadingOverlay>
+					<LoadingOverlayText>Identifying...</LoadingOverlayText>
+				</LoadingOverlay>
+			)
 
 		case "closed":
 			return (

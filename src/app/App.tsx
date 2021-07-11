@@ -3,7 +3,7 @@ import { useAuthUserContext } from "../chat/authUserContext"
 import { useIdentityState } from "../chat/identityContext"
 import { useSocketActions } from "../socket/SocketConnection"
 import IslandLayout from "../ui/IslandLayout"
-import LoadingOverlay from "../ui/LoadingOverlay"
+import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 
@@ -52,7 +52,13 @@ export default function App() {
 
 	return (
 		<ChatLogoutContext.Provider value={showCharacterSelect}>
-			<Suspense fallback={<LoadingOverlay text="Loading..." />}>
+			<Suspense
+				fallback={
+					<LoadingOverlay>
+						<LoadingOverlayText>Loading...</LoadingOverlayText>
+					</LoadingOverlay>
+				}
+			>
 				<Chat />
 			</Suspense>
 		</ChatLogoutContext.Provider>
