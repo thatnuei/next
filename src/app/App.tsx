@@ -14,11 +14,12 @@ export const ChatLogoutContext = createContext(() => {})
 export default function App() {
 	const { user, logout } = useAuthUserContext()
 	const [identity, setIdentity] = useIdentityState()
-	const { connect } = useSocketActions()
+	const { connect, disconnect } = useSocketActions()
 
 	const showCharacterSelect = useCallback(() => {
+		disconnect()
 		setIdentity(undefined)
-	}, [setIdentity])
+	}, [disconnect, setIdentity])
 
 	const enterChat = useCallback(
 		(identity: string) => {
