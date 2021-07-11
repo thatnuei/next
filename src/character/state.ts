@@ -1,15 +1,20 @@
 import * as jotai from "jotai"
 import * as jotaiUtils from "jotai/utils"
 import { useCallback, useMemo } from "react"
-import { useAuthUser, useAuthUserContext } from "../chat/authUserContext"
-import { useIdentity, useOptionalIdentity } from "../chat/identityContext"
 import { omit } from "../common/omit"
+import { raise } from "../common/raise"
 import { truthyMap } from "../common/truthyMap"
 import type { Dict, Mutable, TruthyMap } from "../common/types"
 import { unique } from "../common/unique"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
+import {
+	useAccount,
+	useIdentity,
+	useUserActions,
+	useUserCharacters,
+} from "../user"
 import type { Character, CharacterGender, Friendship } from "./types"
 
 function createCharacter(name: string): Character {
@@ -23,7 +28,7 @@ function createCharacter(name: string): Character {
 
 export const charactersAtom = jotai.atom<Dict<Character>>({})
 
-export const characterAtom = jotaiUtils.atomFamily((name: string) =>
+const characterAtom = jotaiUtils.atomFamily((name: string) =>
 	jotai.atom((get) => get(charactersAtom)[name] ?? createCharacter(name)),
 )
 
@@ -57,8 +62,7 @@ export function useCharacterGender(name: string): CharacterGender {
 }
 
 export function useGetCharacterRoles() {
-	const { account } = useAuthUser()
-
+	const account = useAccount() ?? raise("Not logged in")
 	const [friendships] = jotai.useAtom(friendshipsAtom(account))
 	const [bookmarks] = jotai.useAtom(bookmarksAtom(account))
 	const [ignoredUsers] = jotai.useAtom(ignoredUsersAtom(account))
@@ -82,40 +86,45 @@ export function useCharacterRoles(name: string) {
 
 // liked characters are the list of bookmarks and friends
 export function useLikedCharacters(): readonly Character[] {
-	const user = useAuthUser()
-	const identity = useOptionalIdentity()
+	const account = useAccount()
+	const characters = useUserCharacters()
+	const identity = useIdentity()
 
 	const atom = useMemo(
 		() =>
 			jotai.atom((get): readonly Character[] => {
-				const friendships = get(friendshipsAtom(user.account))
-				const bookmarks = get(bookmarksAtom(user.account))
+				const friendships = account ? get(friendshipsAtom(account)) : []
+				const bookmarks = account ? get(bookmarksAtom(account)) : []
 
 				const names = [
 					...Object.keys(bookmarks),
 					...friendships.map(({ them }) => them),
-					...user.characters, // including self characters can be helpful for testing
+					...characters, // including self characters can be helpful for testing
 				]
 
 				return unique(names)
 					.filter((name) => name !== identity)
 					.map((name) => get(characterAtom(name)))
 			}),
-		[identity, user.account, user.characters],
+		[identity, account, characters],
 	)
 
 	return jotaiUtils.useAtomValue(atom)
 }
 
 export function useCharacterCommandListener() {
-	const user = useAuthUser()
+	const account = useAccount()
 	const identity = useIdentity()
-	const { getFriendsAndBookmarks } = useAuthUserContext()
+	const { getFriendsAndBookmarks } = useUserActions()
 
 	useSocketListener(
 		jotaiUtils.useAtomCallback(
 			useCallback(
 				(get, set, command: ServerCommand) => {
+					if (!account || !identity) {
+						return
+					}
+
 					matchCommand(command, {
 						async IDN() {
 							const result = await getFriendsAndBookmarks()
@@ -125,12 +134,12 @@ export function useCharacterCommandListener() {
 								them: entry.dest,
 							}))
 
-							set(friendshipsAtom(user.account), friends)
-							set(bookmarksAtom(user.account), truthyMap(result.bookmarklist))
+							set(friendshipsAtom(account), friends)
+							set(bookmarksAtom(account), truthyMap(result.bookmarklist))
 						},
 
 						IGN(params) {
-							const ignoredUsers = ignoredUsersAtom(user.account)
+							const ignoredUsers = ignoredUsersAtom(account)
 
 							if (params.action === "init" || params.action === "list") {
 								set(ignoredUsers, truthyMap(params.characters))
@@ -199,7 +208,7 @@ export function useCharacterCommandListener() {
 						RTB(params) {
 							if (params.type === "trackadd") {
 								set(
-									bookmarksAtom(user.account),
+									bookmarksAtom(account),
 									(prev): TruthyMap => ({
 										...prev,
 										[params.name]: true,
@@ -209,9 +218,7 @@ export function useCharacterCommandListener() {
 							}
 
 							if (params.type === "trackrem") {
-								set(bookmarksAtom(user.account), (prev) =>
-									omit(prev, [params.name]),
-								)
+								set(bookmarksAtom(account), (prev) => omit(prev, [params.name]))
 								// show toast
 							}
 
@@ -232,7 +239,7 @@ export function useCharacterCommandListener() {
 						},
 					})
 				},
-				[getFriendsAndBookmarks, identity, user.account],
+				[getFriendsAndBookmarks, identity, account],
 			),
 		),
 	)

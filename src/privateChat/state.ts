@@ -6,7 +6,6 @@ import {
 	useUpdateAtom,
 } from "jotai/utils"
 import { useCallback, useMemo } from "react"
-import { useIdentity, useOptionalIdentity } from "../chat/identityContext"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
 import type { TruthyMap } from "../common/types"
@@ -15,6 +14,7 @@ import { roomKey, useRoomActions } from "../room/state"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
+import { useIdentity } from "../user"
 import { restorePrivateChats, savePrivateChats } from "./storage"
 import type { TypingStatus } from "./types"
 
@@ -38,7 +38,7 @@ export function usePrivateChatTypingStatus(partnerName: string) {
 
 export function usePrivateChatActions() {
 	const { send } = useSocketActions()
-	const identity = useOptionalIdentity()
+	const identity = useIdentity()
 	const { addMessage } = useRoomActions()
 
 	const setPrivateChatNames = useAtomCallback(
@@ -108,6 +108,7 @@ export function usePrivateChatCommandHandler() {
 				(get, set, command: ServerCommand) => {
 					matchCommand(command, {
 						async IDN() {
+							if (!identity) return
 							const names = await restorePrivateChats(identity).catch(() => [])
 							setOpenChatNames(truthyMap(names))
 						},

@@ -7,11 +7,11 @@ import {
 	useMemo,
 	useRef,
 } from "react"
-import { useAuthUserContext } from "../chat/authUserContext"
 import { raise } from "../common/raise"
 import { toError } from "../common/toError"
 import { useNotificationActions } from "../notifications/state"
 import { useStateMachine } from "../state/useStateMachine"
+import { useUserActions } from "../user"
 import { socketUrl } from "./constants"
 import type { ClientCommand, ServerCommand } from "./helpers"
 import { createCommandString, parseServerCommand } from "./helpers"
@@ -81,7 +81,7 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 	const listeners = useRef(new Set<CommandListener>())
 	const shouldReconnect = useRef(false)
 
-	const { getFreshAuthCredentials } = useAuthUserContext()
+	const { getFreshAuthCredentials } = useUserActions()
 	const { addNotification } = useNotificationActions()
 
 	const send = useCallback((command: ClientCommand) => {

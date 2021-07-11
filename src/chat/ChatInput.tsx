@@ -1,7 +1,7 @@
 import * as React from "react"
-import { useIdentity } from "../chat/identityContext"
 import Button from "../dom/Button"
 import { input, solidButton } from "../ui/components"
+import { useIdentity } from "../user"
 
 interface Props {
 	value: string
@@ -35,7 +35,7 @@ function ChatInput(props: Props) {
 			className={`flex flex-row p-2 bg-midnight-0`}
 		>
 			<textarea
-				placeholder={`Chatting as ${identity}...`}
+				placeholder={`Chatting as ${identity || ""}...`}
 				value={props.value}
 				onChange={(event) => props.onChangeText(event.target.value)}
 				onKeyDown={handleKeyDown}

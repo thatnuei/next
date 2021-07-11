@@ -9,8 +9,8 @@ type CommandUnionFromRecord<T> = ValueOf<
 	}
 >
 
-export type ClientCommandRecord = fchat.Connection.ClientCommands
-export type ServerCommandRecord = fchat.Connection.ServerCommands
+type ClientCommandRecord = fchat.Connection.ClientCommands
+type ServerCommandRecord = fchat.Connection.ServerCommands
 
 export type ClientCommand = CommandUnionFromRecord<ClientCommandRecord>
 export type ServerCommand = CommandUnionFromRecord<ServerCommandRecord>
@@ -45,19 +45,4 @@ export function matchCommand(
 ) {
 	const handler = handlers[command.type]
 	handler?.(command.params as never) // lol
-}
-
-export function createBoundCommandHandler<This>(
-	thisArg: This,
-	handlers: CommandHandlerMap<This>,
-) {
-	return function handleCommand(command: ServerCommand) {
-		const handler = handlers[command.type]
-		handler?.call(thisArg as any, command.params as never) // lol
-		return handler != null
-	}
-}
-
-export function createCommandHandler(handlers: CommandHandlerMap) {
-	return createBoundCommandHandler(undefined, handlers)
 }

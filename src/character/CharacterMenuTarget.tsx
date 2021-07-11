@@ -1,5 +1,4 @@
 import * as React from "react"
-import { useAuthUserContext } from "../chat/authUserContext"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
@@ -14,6 +13,7 @@ import ContextMenu, {
 } from "../ui/ContextMenu"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
+import { useUserActions } from "../user"
 import CharacterMemoInput from "./CharacterMemoInput"
 import CharacterSummary from "./CharacterSummary"
 import { useCharacterRoles } from "./state"
@@ -39,7 +39,7 @@ export default function CharacterMenuTarget({ name, children }: Props) {
 function CharacterMenu({ name }: { name: string }) {
 	const { friendships, isBookmarked, isIgnored } = useCharacterRoles(name)
 	const { send } = useSocketActions()
-	const { addBookmark, removeBookmark } = useAuthUserContext()
+	const { addBookmark, removeBookmark } = useUserActions()
 	const { openPrivateChat } = usePrivateChatActions()
 
 	return (

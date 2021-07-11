@@ -3,21 +3,22 @@ import * as React from "react"
 import { useState } from "react"
 import { useCharacter } from "../character/state"
 import type { CharacterStatus } from "../character/types"
+import { raise } from "../common/raise"
 import Button from "../dom/Button"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
 import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
-import { useIdentity } from "./identityContext"
+import { useIdentity } from "../user"
 
 const isSubmittingAtom = atom(false)
 
 function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
-	const character = useCharacter(useIdentity())
+	const identity = useIdentity() ?? raise("Identity not set")
+	const character = useCharacter(identity)
 	const [status, setStatus] = useState(character.status)
 	const [statusMessage, setStatusMessage] = useState(character.statusMessage)
 	const [isSubmitting, setIsSubmitting] = useAtom(isSubmittingAtom)
 	const { send } = useSocketActions()
-	const identity = useIdentity()
 
 	useSocketListener((command) => {
 		if (command.type === "STA" && command.params.character === identity) {

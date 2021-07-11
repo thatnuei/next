@@ -1,16 +1,11 @@
 import type { ReactNode } from "react"
-import { useContext } from "react"
-import { ChatLogoutContext } from "../app/App"
-import Button from "../dom/Button"
+import { routes } from "../router"
 import { useSocketStatus } from "../socket/SocketConnection"
 import { solidButton } from "../ui/components"
 import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
-import { useAuthUserContext } from "./authUserContext"
 
 export default function ConnectionGuard({ children }: { children: ReactNode }) {
 	const status = useSocketStatus()
-	const authUserActions = useAuthUserContext()
-	const chatLogout = useContext(ChatLogoutContext)
 
 	switch (status) {
 		case "connecting":
@@ -31,15 +26,9 @@ export default function ConnectionGuard({ children }: { children: ReactNode }) {
 		case "closed":
 			return (
 				<ConnectionMessage message="The connection was closed by the server.">
-					<Button
-						className={solidButton}
-						onClick={() => {
-							authUserActions.logout()
-							chatLogout()
-						}}
-					>
+					<a {...routes.login().link} className={solidButton}>
 						Return to login
-					</Button>
+					</a>
 				</ConnectionMessage>
 			)
 	}

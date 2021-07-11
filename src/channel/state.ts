@@ -3,8 +3,6 @@ import * as jotaiUtils from "jotai/utils"
 import { useCallback } from "react"
 import { charactersAtom } from "../character/state"
 import type { Character } from "../character/types"
-import { useAuthUser } from "../chat/authUserContext"
-import { useIdentity } from "../chat/identityContext"
 import { isPresent } from "../common/isPresent"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
@@ -18,6 +16,7 @@ import { roomKey, useRoomActions } from "../room/state"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
+import { useAccount, useIdentity } from "../user"
 import { loadChannels, saveChannels } from "./storage"
 import type { ChannelMode } from "./types"
 
@@ -138,6 +137,7 @@ export function useChannelActions() {
 
 	const sendMessage = useCallback(
 		({ id, message }: { id: string; message: string }) => {
+			if (!identity) return
 			send({ type: "MSG", params: { channel: id, message } })
 			addMessage(channelRoomKey(id), createChannelMessage(identity, message))
 		},
@@ -154,7 +154,7 @@ export function useChannelActions() {
 
 export function useChannelCommandListener() {
 	const identity = useIdentity()
-	const { account } = useAuthUser()
+	const account = useAccount()
 	const { join } = useChannelActions()
 	const { addMessage } = useRoomActions()
 
@@ -164,9 +164,11 @@ export function useChannelCommandListener() {
 				async IDN() {
 					set(joinedChannelIdsAtom, {})
 
-					const channelIds = await loadChannels(account, identity)
-					for (const id of channelIds) {
-						join(id)
+					if (account && identity) {
+						const channelIds = await loadChannels(account, identity)
+						for (const id of channelIds) {
+							join(id)
+						}
 					}
 				},
 
@@ -187,13 +189,15 @@ export function useChannelCommandListener() {
 						}),
 					)
 
-					saveChannels(
-						Object.entries(get(joinedChannelIdsAtom))
-							.filter(([, joined]) => joined)
-							.map(([id]) => id),
-						account,
-						identity,
-					)
+					if (account && identity) {
+						saveChannels(
+							Object.entries(get(joinedChannelIdsAtom))
+								.filter(([, joined]) => joined)
+								.map(([id]) => id),
+							account,
+							identity,
+						)
+					}
 				},
 
 				LCH({ channel: id, character }) {
@@ -206,13 +210,15 @@ export function useChannelCommandListener() {
 						users: omit(prev.users, [character]),
 					}))
 
-					saveChannels(
-						Object.entries(get(joinedChannelIdsAtom))
-							.filter(([, joined]) => joined)
-							.map(([id]) => id),
-						account,
-						identity,
-					)
+					if (account && identity) {
+						saveChannels(
+							Object.entries(get(joinedChannelIdsAtom))
+								.filter(([, joined]) => joined)
+								.map(([id]) => id),
+							account,
+							identity,
+						)
+					}
 				},
 
 				FLN({ character }) {

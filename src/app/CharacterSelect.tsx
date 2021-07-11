@@ -4,22 +4,22 @@ import { compareLower } from "../common/compareLower"
 import type { NonEmptyArray } from "../common/types"
 import Button from "../dom/Button"
 import { preventDefault } from "../react/preventDefault"
+import { routes } from "../router"
 import { anchor, select, solidButton } from "../ui/components"
+import { useUserActions } from "../user"
 
 function CharacterSelect({
 	account,
 	characters,
-	onSubmit,
-	onReturnToLogin,
 }: {
 	account: string
 	characters: NonEmptyArray<string>
-	onSubmit: (identity: string) => void
-	onReturnToLogin: () => void
 }) {
+	const userActions = useUserActions()
+
 	const lastIdentityKey = `lastIdentity:${account}`
 
-	const [identity, setIdentity] = useState(
+	const [identity, setIdentity] = useState<string>(
 		() => localStorage.getItem(lastIdentityKey) || characters[0],
 	)
 
@@ -27,10 +27,19 @@ function CharacterSelect({
 		localStorage.setItem(lastIdentityKey, identity)
 	})
 
+	function enterChat() {
+		userActions.setIdentity(identity)
+		routes.chat().push()
+	}
+
+	function returnToLogin() {
+		routes.login().push()
+	}
+
 	return (
 		<form
 			className="flex flex-col items-center p-4 space-y-4"
-			onSubmit={preventDefault(() => onSubmit(identity))}
+			onSubmit={preventDefault(enterChat)}
 		>
 			<Avatar name={identity} />
 			<select
@@ -47,7 +56,7 @@ function CharacterSelect({
 			<Button className={solidButton} type="submit">
 				Enter chat
 			</Button>
-			<Button className={anchor} onClick={onReturnToLogin}>
+			<Button className={anchor} onClick={returnToLogin}>
 				Return to Login
 			</Button>
 		</form>

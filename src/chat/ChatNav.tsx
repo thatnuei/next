@@ -1,19 +1,18 @@
-import { useContext } from "react"
-import { ChatLogoutContext } from "../app/App"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import CharacterSummary from "../character/CharacterSummary"
+import ChatNavAction from "../chatNav/ChatNavAction"
 import ChatNavActionButton from "../chatNav/ChatNavActionButton"
 import RoomTabList from "../chatNav/RoomTabList"
 import NotificationListLink from "../notifications/NotificationListLink"
+import { routes } from "../router"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
-import { useIdentity } from "./identityContext"
+import { useIdentity } from "../user"
 import StatusUpdateForm from "./StatusUpdateForm"
 
 export default function ChatNav() {
 	const identity = useIdentity()
-	const logout = useContext(ChatLogoutContext)
 
 	return (
 		<nav className={`flex h-full bg-midnight-2`}>
@@ -48,20 +47,25 @@ export default function ChatNav() {
 					icon={<Icon which={icons.users} />}
 					name="See online friends and bookmarks"
 				/>
+
 				<ChatNavActionButton
 					icon={<Icon which={icons.about} />}
 					name="About next"
 				/>
+
 				<div className={`flex-1`} />
-				<ChatNavActionButton
-					icon={<Icon which={icons.logout} />}
-					name="Log out"
-					onClick={logout}
-				/>
+
+				<a {...routes.login().link}>
+					<ChatNavAction icon={<Icon which={icons.logout} />} name="Log out" />
+				</a>
 			</div>
 			<div className={`flex flex-col w-56 overflow-y-auto bg-midnight-1`}>
 				<div className={`p-2 mb-1 bg-midnight-0`}>
-					<CharacterSummary name={identity} />
+					{identity ? (
+						<CharacterSummary name={identity} />
+					) : (
+						<p>Not logged in</p>
+					)}
 				</div>
 				<div className={`flex-1`}>
 					<RoomTabList />

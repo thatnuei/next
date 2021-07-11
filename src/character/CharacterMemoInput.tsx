@@ -1,15 +1,15 @@
 import { debounce } from "lodash-es"
 import { useEffect, useMemo, useState } from "react"
-import { useAuthUserContext } from "../chat/authUserContext"
 import type { TagProps } from "../jsx/types"
 import { input } from "../ui/components"
+import { useUserActions } from "../user"
 
 type Props = {
 	name: string
 } & TagProps<"textarea">
 
 export default function CharacterMemoInput({ name, ...props }: Props) {
-	const { getMemo, setMemo } = useAuthUserContext()
+	const { getMemo, setMemo } = useUserActions()
 
 	type State =
 		| { status: "loading" }
