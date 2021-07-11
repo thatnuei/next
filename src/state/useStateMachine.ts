@@ -1,55 +1,46 @@
 import { useEffect, useReducer } from "react"
 import { useEffectRef } from "../react/useEffectRef"
 
-interface StateMachineEvent {
-	type: string
+interface ObjectWithType {
+	readonly type: string
 }
 
-interface StateMachineEffect {
-	type: string
-}
+type UnionMemberWithType<Union, Type> = Extract<Union, { readonly type: Type }>
 
-type EventWithType<Event extends StateMachineEvent, Type> = Extract<
-	Event,
-	{ type: Type }
->
-
-type EffectWithType<Effect extends StateMachineEffect, Type> = Extract<
-	Effect,
-	{ type: Type }
->
-
-type TransitionMap<
-	State extends PropertyKey,
-	Event extends StateMachineEvent,
-	Effect extends StateMachineEffect,
+type StateMap<
+	State extends ObjectWithType,
+	Event extends ObjectWithType,
+	Effect extends ObjectWithType,
 > = {
-	[_ in State]?: {
-		[EventType in Event["type"]]?: {
-			state: State
-			effects?: (event: EventWithType<Event, EventType>) => Effect[]
+	[StateType in State["type"]]?: {
+		onEnter?: (state: UnionMemberWithType<State, StateType>) => Effect[]
+		on?: {
+			[EventType in Event["type"]]?: {
+				state?: (event: UnionMemberWithType<Event, EventType>) => State
+				effects?: (event: UnionMemberWithType<Event, EventType>) => Effect[]
+			}
 		}
 	}
 }
 
 interface StateMachineConfig<
-	State extends PropertyKey,
-	Event extends StateMachineEvent,
-	Effect extends StateMachineEffect,
+	State extends ObjectWithType,
+	Event extends ObjectWithType,
+	Effect extends ObjectWithType,
 > {
-	initialStatus: State
-	transitions: TransitionMap<State, Event, Effect>
+	initialState: State
+	states: StateMap<State, Event, Effect>
 	effects?: {
 		[ActionType in Effect["type"]]: (
-			action: EffectWithType<Effect, ActionType>,
+			action: UnionMemberWithType<Effect, ActionType>,
 		) => void
 	}
 }
 
 export function useStateMachine<
-	State extends PropertyKey,
-	Event extends StateMachineEvent,
-	Effect extends StateMachineEffect,
+	State extends ObjectWithType,
+	Event extends ObjectWithType,
+	Effect extends ObjectWithType,
 >(config: StateMachineConfig<State, Event, Effect>) {
 	interface Machine {
 		state: State
@@ -57,19 +48,29 @@ export function useStateMachine<
 	}
 
 	function reducer(state: Machine, event: Event): Machine {
-		const transition =
-			config.transitions?.[state.state]?.[event.type as Event["type"]]
+		const stateConfig = config.states?.[state.state.type as State["type"]]
+		if (!stateConfig) return state
 
-		if (!transition) return state
+		const eventTransition = stateConfig?.on?.[event.type as Event["type"]]
+
+		const transitionState =
+			eventTransition?.state?.(event as never) ?? state.state
+
+		const transitionEffects = eventTransition?.effects?.(event as never) ?? []
+
+		const enterEffects =
+			config.states?.[transitionState.type as State["type"]]?.onEnter?.(
+				transitionState as never,
+			) ?? []
 
 		return {
-			state: transition.state,
-			effects: transition.effects?.(event as never) || [],
+			state: transitionState,
+			effects: [...enterEffects, ...transitionEffects],
 		}
 	}
 
 	const [state, dispatch] = useReducer(reducer, {
-		state: config.initialStatus,
+		state: config.initialState,
 		effects: [],
 	})
 
