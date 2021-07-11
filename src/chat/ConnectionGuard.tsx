@@ -1,21 +1,20 @@
 import type { ReactNode } from "react"
 import { useContext } from "react"
+import { ChatLogoutContext } from "../app/App"
 import Button from "../dom/Button"
-import {
-	SocketStatusContext,
-	useSocketActions,
-} from "../socket/SocketConnection"
+import { useSocketStatus } from "../socket/SocketConnection"
 import { solidButton } from "../ui/components"
 import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
-import { useIdentity } from "./identityContext"
+import { useAuthUserContext } from "./authUserContext"
 
 export default function ConnectionGuard({ children }: { children: ReactNode }) {
-	const status = useContext(SocketStatusContext)
-	const { connect } = useSocketActions()
-	const identity = useIdentity()
+	const status = useSocketStatus()
+	const authUserActions = useAuthUserContext()
+	const chatLogout = useContext(ChatLogoutContext)
 
 	switch (status) {
 		case "connecting":
+		case "willReconnect":
 			return (
 				<LoadingOverlay>
 					<LoadingOverlayText>Connecting...</LoadingOverlayText>
@@ -31,18 +30,17 @@ export default function ConnectionGuard({ children }: { children: ReactNode }) {
 
 		case "closed":
 			return (
-				<ConnectionMessage
-					message="The socket connection was closed by the server."
-					onRetry={() => connect(identity)}
-				/>
-			)
-
-		case "error":
-			return (
-				<ConnectionMessage
-					message="An error occurred while connecting"
-					onRetry={() => connect(identity)}
-				/>
+				<ConnectionMessage message="The connection was closed by the server.">
+					<Button
+						className={solidButton}
+						onClick={() => {
+							authUserActions.logout()
+							chatLogout()
+						}}
+					>
+						Return to login
+					</Button>
+				</ConnectionMessage>
 			)
 	}
 
@@ -53,13 +51,11 @@ export default function ConnectionGuard({ children }: { children: ReactNode }) {
 	return <>{children}</>
 }
 
-function ConnectionMessage(props: { message: string; onRetry: () => void }) {
+function ConnectionMessage(props: { message: string; children?: ReactNode }) {
 	return (
 		<>
 			<p>{props.message}</p>
-			<Button className={solidButton} onClick={props.onRetry}>
-				Retry
-			</Button>
+			{props.children}
 		</>
 	)
 }

@@ -16,25 +16,37 @@ import { socketUrl } from "./constants"
 import type { ClientCommand, ServerCommand } from "./helpers"
 import { createCommandString, parseServerCommand } from "./helpers"
 
-type SocketMachineStatus =
-	| "offline"
-	| "connecting"
-	| "identifying"
-	| "online"
-	| "error"
-	| "closed"
+type SocketMachineState =
+	| { type: "offline" }
+	| { type: "connecting"; identity: string }
+	| { type: "identifying" }
+	| { type: "online" }
+	| { type: "willReconnect"; identity: string }
+	| { type: "closed" }
 
 type SocketMachineEvent =
+	// connection initiated by the user, or by a reconnection event
 	| { type: "connectStart"; identity: string }
+
+	// failed to connect, can only happen during connection
+	| { type: "connectError"; identity: string }
+
+	// successfully connected, starting identification
 	| { type: "identifyStart" }
+
+	// successfully identified
 	| { type: "identifySuccess" }
-	| { type: "identifyError" }
-	| { type: "networkError" }
-	| { type: "socketClosed" }
+
+	// connection was closed by the server due to an error,
+	// or the network went down
+	| { type: "socketClosed"; identity: string }
+
+	// connection was closed by the user
 	| { type: "manualDisconnect" }
 
 type SocketMachineAction =
 	| { type: "createSocket"; identity: string }
+	| { type: "connectDelayed"; identity: string }
 	| { type: "closeSocket" }
 
 type CommandListener = (command: ServerCommand) => void
@@ -47,12 +59,27 @@ interface SocketActions {
 	callListeners: (command: ServerCommand) => void
 }
 
-export const ActionsContext = createContext<SocketActions>()
-export const SocketStatusContext = createContext<SocketMachineStatus>("offline")
+const ActionsContext = createContext<SocketActions>()
+
+const SocketStatusContext = createContext<SocketMachineState>({
+	type: "offline",
+})
+
+// https://toys.in.newtsin.space/api-docs/#server-closes-connection-after-issuing-an-err-protocol-command
+const errorCodesToAvoidReconnection: ReadonlySet<number> = new Set([
+	2, // server is full
+	9, // banned
+	30, // too many connections
+	31, // logging in with same character from another location
+	33, // invalid auth method
+	39, // timed out
+	40, /// kicked
+])
 
 export function SocketConnection({ children }: { children: ReactNode }) {
 	const socketRef = useRef<WebSocket>()
 	const listeners = useRef(new Set<CommandListener>())
+	const shouldReconnect = useRef(false)
 
 	const { getFreshAuthCredentials } = useAuthUserContext()
 	const { addNotification } = useNotificationActions()
@@ -72,61 +99,97 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 		listeners.current.forEach((listener) => listener(command))
 	}, [])
 
-	const [status, statusDispatch] = useStateMachine<
-		SocketMachineStatus,
+	const [state, dispatch] = useStateMachine<
+		SocketMachineState,
 		SocketMachineEvent,
 		SocketMachineAction
 	>({
-		initialStatus: "offline",
+		initialState: { type: "offline" },
 
-		transitions: {
+		states: {
 			offline: {
-				connectStart: {
-					state: "connecting",
-					effects: (event) => [
-						{ type: "createSocket", identity: event.identity },
-					],
+				on: {
+					connectStart: {
+						state: ({ identity }) => ({ type: "connecting", identity }),
+					},
 				},
 			},
 			connecting: {
-				networkError: { state: "error" },
-				identifyStart: { state: "identifying" },
-				manualDisconnect: {
-					state: "offline",
-					effects: () => [{ type: "closeSocket" }],
+				onEnter: ({ identity }) => [{ type: "createSocket", identity }],
+				on: {
+					connectError: {
+						state: ({ identity }) => ({ type: "willReconnect", identity }),
+					},
+					identifyStart: {
+						state: () => ({ type: "identifying" }),
+					},
+					manualDisconnect: {
+						state: () => ({ type: "closed" }),
+						effects: () => [{ type: "closeSocket" }],
+					},
 				},
 			},
 			identifying: {
-				identifyError: { state: "error" },
-				identifySuccess: { state: "online" },
-				manualDisconnect: {
-					state: "offline",
-					effects: () => [{ type: "closeSocket" }],
+				on: {
+					identifySuccess: {
+						state: () => ({ type: "online" }),
+					},
+					manualDisconnect: {
+						state: () => ({ type: "closed" }),
+						effects: () => [{ type: "closeSocket" }],
+					},
+					socketClosed: {
+						state: () => ({ type: "closed" }),
+					},
 				},
 			},
 			online: {
-				socketClosed: { state: "closed" },
-				manualDisconnect: {
-					state: "offline",
-					effects: () => [{ type: "closeSocket" }],
+				on: {
+					socketClosed: {
+						state: ({ identity }) =>
+							shouldReconnect.current
+								? { type: "willReconnect", identity }
+								: { type: "closed" },
+					},
+					manualDisconnect: {
+						state: () => ({ type: "closed" }),
+						effects: () => [{ type: "closeSocket" }],
+					},
 				},
 			},
-			error: {
-				connectStart: { state: "connecting" },
-			},
 			closed: {
-				connectStart: { state: "connecting" },
+				on: {
+					connectStart: {
+						state: ({ identity }) => ({ type: "connecting", identity }),
+					},
+				},
+			},
+			willReconnect: {
+				onEnter: ({ identity }) => [{ type: "connectDelayed", identity }],
+				on: {
+					connectStart: {
+						state: ({ identity }) => ({ type: "connecting", identity }),
+					},
+				},
 			},
 		},
 
 		effects: {
+			connectDelayed: ({ identity }) => {
+				setTimeout(() => {
+					dispatch({ type: "connectStart", identity })
+				}, 5000)
+			},
+
 			createSocket: ({ identity }) => {
+				shouldReconnect.current = true
+
 				const socket = (socketRef.current = new WebSocket(socketUrl))
 
 				socket.onopen = async () => {
 					const result = await getFreshAuthCredentials().catch(toError)
 					if (result instanceof Error) {
-						statusDispatch({ type: "networkError" })
+						dispatch({ type: "connectError", identity })
 
 						// todo: move this to an action?
 						addNotification({
@@ -148,15 +211,15 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 							method: "ticket",
 						},
 					})
-					statusDispatch({ type: "identifyStart" })
+					dispatch({ type: "identifyStart" })
 				}
 
 				socket.onclose = () => {
-					statusDispatch({ type: "socketClosed" })
+					dispatch({ type: "socketClosed", identity })
 				}
 
 				socket.onerror = () => {
-					statusDispatch({ type: "networkError" })
+					dispatch({ type: "connectError", identity })
 				}
 
 				socket.onmessage = ({ data }) => {
@@ -178,12 +241,14 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 					}
 
 					if (command.type === "IDN") {
-						statusDispatch({ type: "identifySuccess" })
+						dispatch({ type: "identifySuccess" })
 					}
 
-					if (command.type === "ERR") {
-						// TODO: show toast
-						console.warn("Socket error", command.params.message)
+					if (
+						command.type === "ERR" &&
+						errorCodesToAvoidReconnection.has(command.params.number)
+					) {
+						shouldReconnect.current = false
 					}
 
 					callListeners(command)
@@ -205,14 +270,14 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 
 	const connect = useCallback(
 		(identity: string) => {
-			statusDispatch({ type: "connectStart", identity })
+			dispatch({ type: "connectStart", identity })
 		},
-		[statusDispatch],
+		[dispatch],
 	)
 
 	const disconnect = useCallback(() => {
-		statusDispatch({ type: "manualDisconnect" })
-	}, [statusDispatch])
+		dispatch({ type: "manualDisconnect" })
+	}, [dispatch])
 
 	const actions = useMemo(
 		() => ({
@@ -226,12 +291,16 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 	)
 
 	return (
-		<SocketStatusContext.Provider value={status.state}>
+		<SocketStatusContext.Provider value={state.state}>
 			<ActionsContext.Provider value={actions}>
 				{children}
 			</ActionsContext.Provider>
 		</SocketStatusContext.Provider>
 	)
+}
+
+export function useSocketStatus() {
+	return useContext(SocketStatusContext).type
 }
 
 export function useSocketActions() {
