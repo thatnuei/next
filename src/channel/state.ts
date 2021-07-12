@@ -138,6 +138,31 @@ export function useChannelActions() {
 	const sendMessage = useCallback(
 		({ id, message }: { id: string; message: string }) => {
 			if (!identity) return
+
+			const rollPrefix = "/roll"
+			if (message.startsWith(rollPrefix)) {
+				send({
+					type: "RLL",
+					params: {
+						channel: id,
+						dice: message.slice(rollPrefix.length).trim() || "1d20",
+					},
+				})
+				return
+			}
+
+			const bottlePrefix = "/bottle"
+			if (message.startsWith(bottlePrefix)) {
+				send({
+					type: "RLL",
+					params: {
+						channel: id,
+						dice: "bottle",
+					},
+				})
+				return
+			}
+
 			send({ type: "MSG", params: { channel: id, message } })
 			addMessage(channelRoomKey(id), createChannelMessage(identity, message))
 		},

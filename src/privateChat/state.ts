@@ -9,7 +9,10 @@ import { useCallback, useMemo } from "react"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
 import type { TruthyMap } from "../common/types"
-import { createPrivateMessage } from "../message/MessageState"
+import {
+	createPrivateMessage,
+	createSystemMessage,
+} from "../message/MessageState"
 import { roomKey, useRoomActions } from "../room/state"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
@@ -72,6 +75,30 @@ export function usePrivateChatActions() {
 		(args: { partnerName: string; message: string }) => {
 			if (!identity) return
 
+			const rollPrefix = "/roll"
+			if (args.message.startsWith(rollPrefix)) {
+				send({
+					type: "RLL",
+					params: {
+						recipient: args.partnerName,
+						dice: args.message.slice(rollPrefix.length).trim() || "1d20",
+					},
+				})
+				return
+			}
+
+			const bottlePrefix = "/bottle"
+			if (args.message.startsWith(bottlePrefix)) {
+				send({
+					type: "RLL",
+					params: {
+						recipient: args.partnerName,
+						dice: "bottle",
+					},
+				})
+				return
+			}
+
 			send({
 				type: "PRI",
 				params: {
@@ -123,6 +150,20 @@ export function usePrivateChatCommandHandler() {
 
 						TPN({ character, status }) {
 							set(privateChatTypingStatusAtom(character), status)
+						},
+
+						RLL(params) {
+							if ("recipient" in params) {
+								const partnerName =
+									params.character === identity
+										? params.recipient
+										: params.character
+								openPrivateChat(partnerName)
+								addMessage(
+									getPrivateChatRoomKey(partnerName),
+									createSystemMessage(params.message),
+								)
+							}
 						},
 					})
 				},
