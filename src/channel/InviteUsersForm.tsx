@@ -1,6 +1,7 @@
 import CharacterName from "../character/CharacterName"
 import { useLikedCharacters } from "../character/state"
 import type { Character } from "../character/types"
+import { useNotificationActions } from "../notifications/state"
 import { useSocketActions } from "../socket/SocketConnection"
 import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
@@ -17,11 +18,21 @@ interface Props {
 function InviteUsersForm({ channelId }: Props) {
 	const { send } = useSocketActions()
 	const characters = useLikedCharacters()
+	const notificationActions = useNotificationActions()
 
 	const sendInvite = (name: string) => {
 		send({
 			type: "CIU",
 			params: { channel: channelId, character: name },
+		})
+
+		notificationActions.addNotification({
+			type: "info",
+			message: `Sent an invitation to ${name}`,
+			save: false,
+			showToast: true,
+			toastDuration: 5000,
+			incrementUnread: false,
 		})
 	}
 
@@ -41,7 +52,7 @@ function InviteUsersForm({ channelId }: Props) {
 	)
 
 	return (
-		<div>
+		<>
 			<div className={`bg-midnight-2`} style={{ height: `calc(100vh - 8rem)` }}>
 				<VirtualizedList
 					items={characters.filter((c) => c.status === "online")}
@@ -59,7 +70,7 @@ function InviteUsersForm({ channelId }: Props) {
           placeholder="Search..."
         />
       </div> */}
-		</div>
+		</>
 	)
 }
 
