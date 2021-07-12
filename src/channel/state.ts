@@ -269,7 +269,8 @@ export function useChannelCommandListener() {
 				RLL(params) {
 					if ("channel" in params) {
 						addMessage(
-							channelRoomKey(params.channel),
+							// bottle messages have a lowercased channel id
+							channelRoomKey(params.channel.replace("adh", "ADH")),
 							createSystemMessage(params.message),
 						)
 					}
