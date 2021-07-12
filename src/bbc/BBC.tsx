@@ -111,7 +111,7 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 
 			case "user": {
 				const name = getNodeChildrenAsText(node)
-				return <CharacterName name={name} />
+				return <CharacterName name={name} statusDot="hidden" />
 			}
 
 			case "channel": {
