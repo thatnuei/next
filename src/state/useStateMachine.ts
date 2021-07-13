@@ -33,17 +33,20 @@ interface StateMachineConfig<
 	}
 }
 
-export function useStateMachine<
+interface Machine<State extends ObjectWithType, Effect extends ObjectWithType> {
+	state: State
+	effects?: Effect[]
+}
+
+function createStateMachineReducer<
 	State extends ObjectWithType,
 	Event extends ObjectWithType,
 	Effect extends ObjectWithType,
 >(config: StateMachineConfig<State, Event, Effect>) {
-	interface Machine {
-		state: State
-		effects?: Effect[]
-	}
-
-	function reducer(state: Machine, event: Event): Machine {
+	return function reducer(
+		state: Machine<State, Effect>,
+		event: Event,
+	): Machine<State, Effect> {
 		const stateConfig = config.states?.[state.state.type as State["type"]]
 		if (!stateConfig) return state
 
@@ -64,8 +67,14 @@ export function useStateMachine<
 			effects: [...enterEffects, ...transitionEffects],
 		}
 	}
+}
 
-	const [state, dispatch] = useReducer(reducer, {
+export function useStateMachine<
+	State extends ObjectWithType,
+	Event extends ObjectWithType,
+	Effect extends ObjectWithType,
+>(config: StateMachineConfig<State, Event, Effect>) {
+	const [state, dispatch] = useReducer(createStateMachineReducer(config), {
 		state: config.initialState,
 		effects: [],
 	})
