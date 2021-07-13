@@ -1,4 +1,4 @@
-import ChatNavAction from "../chatNav/ChatNavAction"
+import ChatNavAction from "../chat/ChatNavAction"
 import { routes, useRoute } from "../router"
 import BellBadgeIcon from "../ui/BellBadgeIcon"
 import Icon from "../ui/Icon"
