@@ -1,6 +1,8 @@
 import * as jotai from "jotai"
 import * as jotaiUtils from "jotai/utils"
+import { matchSorter } from "match-sorter"
 import { useCallback, useMemo } from "react"
+import { isPresent } from "../common/isPresent"
 import { omit } from "../common/omit"
 import { raise } from "../common/raise"
 import { truthyMap } from "../common/truthyMap"
@@ -59,6 +61,63 @@ export function useCharacter(name: string): Character {
 
 export function useCharacterGender(name: string): CharacterGender {
 	return jotai.useAtom(characterGenderAtom(name))[0]
+}
+
+export function useFriendCharacters(): readonly Character[] {
+	const account = useAccount() ?? raise("not logged in")
+
+	return jotaiUtils.useAtomValue(
+		useMemo(() => {
+			return jotai.atom((get) => {
+				const friends = get(friendshipsAtom(account))
+				const characters = get(charactersAtom)
+				return unique(
+					friends
+						.map(({ them }) => characters[them])
+						.filter(isPresent)
+						.filter((character) => character.status !== "offline"),
+				)
+			})
+		}, [account]),
+	)
+}
+
+export function useBookmarkCharacters(): readonly Character[] {
+	const account = useAccount() ?? raise("not logged in")
+
+	return jotaiUtils.useAtomValue(
+		useMemo(() => {
+			return jotai.atom((get) => {
+				const bookmarks = get(bookmarksAtom(account))
+				const characters = get(charactersAtom)
+				return unique(
+					Object.keys(bookmarks)
+						.map((name) => characters[name])
+						.filter(isPresent)
+						.filter((character) => character.status !== "offline"),
+				)
+			})
+		}, [account]),
+	)
+}
+
+export function useSearchedCharacters(queryAtom: jotai.Atom<string>) {
+	return jotaiUtils.useAtomValue(
+		useMemo(() => {
+			return jotai.atom<readonly Character[]>((get) => {
+				const query = get(queryAtom).trim().toLowerCase()
+				if (!query) return []
+
+				const characters = Object.values(get(charactersAtom)).filter(
+					(character) => character.status !== "offline",
+				)
+
+				return matchSorter(characters, query, {
+					keys: ["name", "gender", "status"],
+				})
+			})
+		}, [queryAtom]),
+	)
 }
 
 export function useGetCharacterRoles() {

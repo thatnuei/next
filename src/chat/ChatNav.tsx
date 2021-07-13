@@ -1,5 +1,6 @@
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import CharacterSummary from "../character/CharacterSummary"
+import OnlineUsers from "../character/OnlineUsers"
 import ChatNavAction from "../chat/ChatNavAction"
 import ChatNavActionButton from "../chat/ChatNavActionButton"
 import RoomTabList from "../chat/RoomTabList"
@@ -43,9 +44,20 @@ export default function ChatNav() {
 
 				<NotificationListLink />
 
-				<ChatNavActionButton
-					icon={<Icon which={icons.users} />}
-					name="See online friends and bookmarks"
+				<Modal
+					title="Online Users"
+					renderTrigger={(t) => (
+						<ChatNavActionButton
+							icon={<Icon which={icons.users} />}
+							name="Online Users"
+							{...t}
+						/>
+					)}
+					renderContent={() => (
+						<div className="h-[calc(100vh-8rem)]">
+							<OnlineUsers />
+						</div>
+					)}
 				/>
 
 				<ChatNavActionButton
