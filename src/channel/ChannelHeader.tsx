@@ -1,7 +1,7 @@
 import * as React from "react"
 import BBC from "../bbc/BBC"
 import { useIsPublicChannel } from "../channelBrowser/state"
-import ChatMenuButton from "../chatNav/ChatMenuButton"
+import ChatMenuButton from "../chat/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { useRoomActions } from "../room/state"

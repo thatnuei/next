@@ -1,4 +1,4 @@
-import ChatMenuButton from "../chatNav/ChatMenuButton"
+import ChatMenuButton from "../chat/ChatMenuButton"
 
 export function ScreenHeader({ children }: { children: React.ReactNode }) {
 	return (

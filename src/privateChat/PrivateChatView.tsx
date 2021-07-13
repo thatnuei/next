@@ -3,7 +3,7 @@ import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
-import ChatMenuButton from "../chatNav/ChatMenuButton"
+import ChatMenuButton from "../chat/ChatMenuButton"
 import MessageList from "../message/MessageList"
 import { useRoomActions, useRoomState } from "../room/state"
 import {
