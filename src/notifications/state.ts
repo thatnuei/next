@@ -6,6 +6,7 @@ import type { CharacterStatus } from "../character/types"
 import { uniqueId } from "../common/uniqueId"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
+import { useUserCharacters } from "../user"
 
 /// constants
 const maxNotifications = 1000
@@ -127,6 +128,7 @@ export function useNotificationActions() {
 export function useNotificationCommandListener() {
 	const actions = useNotificationActions()
 	const likedCharacters = useLikedCharacters()
+	const userCharacters = useUserCharacters()
 
 	useSocketListener((command) => {
 		matchCommand(command, {
@@ -148,35 +150,38 @@ export function useNotificationCommandListener() {
 				})
 			},
 
-			STA({ character, status, statusmsg }) {
-				if (likedCharacters.some((char) => char.name === character)) {
+			STA({ character: name, status, statusmsg }) {
+				if (likedCharacters.some((char) => char.name === name)) {
 					actions.addNotification({
 						type: "status",
-						name: character,
+						name,
 						status,
 						message: statusmsg,
+						incrementUnread: !userCharacters.includes(name),
 					})
 				}
 			},
 
-			NLN({ identity }) {
-				if (likedCharacters.some((char) => char.name === identity)) {
+			NLN({ identity: name }) {
+				if (likedCharacters.some((char) => char.name === name)) {
 					actions.addNotification({
 						type: "status",
-						name: identity,
+						name,
 						status: "online",
 						message: "",
+						incrementUnread: !userCharacters.includes(name),
 					})
 				}
 			},
 
-			FLN({ character }) {
-				if (likedCharacters.some((char) => char.name === character)) {
+			FLN({ character: name }) {
+				if (likedCharacters.some((char) => char.name === name)) {
 					actions.addNotification({
 						type: "status",
-						name: character,
+						name,
 						status: "offline",
 						message: "",
+						incrementUnread: !userCharacters.includes(name),
 					})
 				}
 			},
