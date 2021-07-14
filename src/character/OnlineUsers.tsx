@@ -1,5 +1,8 @@
 import clsx from "clsx"
 import { atom, useAtom } from "jotai"
+import { sortBy } from "lodash-es"
+import type { ReactNode } from "react"
+import { useDeferredValue } from "react"
 import TextInput from "../dom/TextInput"
 import { input } from "../ui/components"
 import Icon from "../ui/Icon"
@@ -16,6 +19,8 @@ import type { Character } from "./types"
 interface ListItem {
 	type: "friend" | "bookmark" | "searched"
 	character: Character
+	containerClassName?: string
+	icon?: ReactNode
 }
 
 const searchAtom = atom("")
@@ -27,16 +32,41 @@ export default function OnlineUsers() {
 	const [search, setSearch] = useAtom(searchAtom)
 	const searchedCharacters = useSearchedCharacters(searchAtom)
 
-	const listItems: ListItem[] = search.trim()
-		? searchedCharacters.map((character) => ({ type: "searched", character }))
-		: [
-				...friends.map(
-					(character): ListItem => ({ type: "friend", character }),
-				),
-				...bookmarks.map(
-					(character): ListItem => ({ type: "bookmark", character }),
-				),
-		  ]
+	const sortByName = (characters: readonly Character[]) =>
+		sortBy(characters, (character) => character.name.toLowerCase())
+
+	const getFriendItems = (): ListItem[] =>
+		sortByName(friends).map((character) => ({
+			character,
+			type: "friend",
+			containerClassName: "bg-green-400/10",
+			icon: (
+				<span className="text-green-300 opacity-50">
+					<Icon which={heart} />
+				</span>
+			),
+		}))
+
+	const getBookmarkItems = (): ListItem[] =>
+		sortByName(bookmarks).map((character) => ({
+			character,
+			type: "bookmark",
+			containerClassName: "bg-blue-400/10",
+			icon: (
+				<span className="text-blue-300 opacity-50">
+					<Icon which={bookmark} />
+				</span>
+			),
+		}))
+
+	const listItems: ListItem[] = useDeferredValue(
+		search.trim()
+			? searchedCharacters.map((character) => ({
+					type: "searched",
+					character,
+			  }))
+			: [...getFriendItems(), ...getBookmarkItems()],
+	)
 
 	return (
 		<div className="flex flex-col h-full bg-midnight-2">
@@ -50,31 +80,19 @@ export default function OnlineUsers() {
 							style={style}
 							className={clsx(
 								"flex items-center px-2 justify-between",
-								item.type === "friend" && "bg-green-400/10",
-								item.type === "bookmark" && "bg-blue-400/10",
+								item.containerClassName,
 							)}
 						>
 							<CharacterName name={item.character.name} />
-							{item.type === "friend" && (
-								<span className="text-green-300 opacity-50">
-									<Icon which={heart} />
-								</span>
-							)}
-							{item.type === "bookmark" && (
-								<span className="text-blue-300 opacity-50">
-									<Icon which={bookmark} />
-								</span>
-							)}
+							{item.icon}
 						</div>
 					)}
 				/>
 			</section>
 
-			{search.trim() ? (
-				<p className="p-2 text-sm italic text-center opacity-50">
-					{listItems.length || "No"} result(s)
-				</p>
-			) : null}
+			<p className="p-2 text-sm italic text-center opacity-50">
+				{listItems.length || "No"} result(s)
+			</p>
 
 			<section className="flex flex-row p-2 space-x-2 bg-midnight-0">
 				<TextInput
