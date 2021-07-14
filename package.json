@@ -6,7 +6,7 @@
 		"dev": "vite",
 		"build": "vite build",
 		"test": "jest",
-		"serve": "vite preview",
+		"serve": "vite preview --port 3000",
 		"lint": "eslint . --ext .js,.ts,.tsx",
 		"typecheck": "tsc --noEmit",
 		"analyze": "source-map-explorer dist/**/*.js",
