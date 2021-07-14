@@ -9,14 +9,14 @@ import { getIconUrl } from "../flist/helpers"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import BBCChannelLink from "./BBCChannelLink"
-import { createBbcTree, getNodeChildrenAsText } from "./helpers"
+import { getNodeChildrenAsText, interpret } from "./interpreter"
 import type { Node } from "./types"
 
 interface Props {
 	text: string
 }
 
-const createBbcTreeMemoized = memoize(createBbcTree)
+const createBbcTreeMemoized = memoize(interpret)
 
 function BBC({ text }: Props) {
 	const nodes = createBbcTreeMemoized(text)

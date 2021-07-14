@@ -1,4 +1,4 @@
-import * as bbc from "./helpers"
+import * as bbc from "./interpreter"
 
 test("tokenizing open tags", () => {
 	expect(bbc.tokenize(`[b]`)).toEqual([
@@ -38,7 +38,7 @@ test("open tag value", () => {
 })
 
 test("text nodes", () => {
-	expect(bbc.createBbcTree(`hello world`)).toEqual([
+	expect(bbc.interpret(`hello world`)).toEqual([
 		{ type: "text", text: "hello world" },
 	])
 })
@@ -46,7 +46,7 @@ test("text nodes", () => {
 test("tag nodes", () => {
 	const input = `[b]hello[/b]`
 
-	expect(bbc.createBbcTree(input)).toEqual([
+	expect(bbc.interpret(input)).toEqual([
 		{
 			type: "tag",
 			tag: "b",
@@ -59,7 +59,7 @@ test("tag nodes", () => {
 test("empty tag nodes", () => {
 	const input = `[b][/b]`
 
-	expect(bbc.createBbcTree(input)).toEqual([
+	expect(bbc.interpret(input)).toEqual([
 		{
 			type: "tag",
 			tag: "b",
@@ -72,7 +72,7 @@ test("empty tag nodes", () => {
 test("nested tag nodes", () => {
 	const input = `[b]hello [i]world[/i] foobar[/b]`
 
-	expect(bbc.createBbcTree(input)).toEqual([
+	expect(bbc.interpret(input)).toEqual([
 		{
 			type: "tag",
 			tag: "b",
@@ -94,7 +94,7 @@ test("nested tag nodes", () => {
 test("unended tag nodes", () => {
 	const input = `[b]hello [i]world`
 
-	expect(bbc.createBbcTree(input)).toEqual([
+	expect(bbc.interpret(input)).toEqual([
 		{
 			type: "tag",
 			tag: "b",
@@ -115,7 +115,7 @@ test("unended tag nodes", () => {
 test("no error on mixed tags", () => {
 	const input = `[b]hello [i]world[/b] test[/i]`
 
-	expect(bbc.createBbcTree(input)).toEqual([
+	expect(bbc.interpret(input)).toEqual([
 		{
 			type: "tag",
 			tag: "b",

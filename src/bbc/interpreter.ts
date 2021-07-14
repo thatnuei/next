@@ -115,7 +115,7 @@ export function parse(tokens: Token[]): Node[] {
 	return tree
 }
 
-export function createBbcTree(bbcText: string) {
+export function interpret(bbcText: string) {
 	return parse(tokenize(bbcText))
 }
 
