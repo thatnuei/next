@@ -52,6 +52,7 @@ function PrivateChatView({ partnerName }: Props) {
 
 			<ChatInput
 				value={input}
+				maxLength={50000}
 				onChangeText={(input) =>
 					setInput(getPrivateChatRoomKey(partnerName), input)
 				}

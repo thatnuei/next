@@ -6,6 +6,7 @@ import { useIdentity } from "../user"
 
 interface Props {
 	value: string
+	maxLength?: number
 	onChangeText: (value: string) => void
 	onSubmit: (text: string) => void
 }
@@ -40,6 +41,7 @@ function ChatInput(props: Props) {
 					placeholder={`Chatting as ${identity || ""}...`}
 					value={props.value}
 					onChangeText={props.onChangeText}
+					maxLength={props.maxLength}
 					onKeyDown={handleKeyDown}
 				/>
 			</div>

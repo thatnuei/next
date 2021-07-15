@@ -67,6 +67,7 @@ function ChannelView({ channelId }: Props) {
 				value={channel.chatInput}
 				onChangeText={updateChatInput}
 				onSubmit={submitChatInput}
+				maxLength={4096}
 			/>
 		</div>
 	)

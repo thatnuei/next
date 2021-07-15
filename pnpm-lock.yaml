@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@headlessui/react': ^1.3.0
   '@mdi/js': ^5.9.55
+  '@popperjs/core': 2.9.2
   '@radix-ui/react-context-menu': ^0.0.23
   '@radix-ui/react-dropdown-menu': ^0.0.22
   '@radix-ui/react-slot': ^0.0.12
@@ -51,6 +52,7 @@ specifiers:
 dependencies:
   '@headlessui/react': 1.3.0_99a5b08213840631d1fe42c974a0200d
   '@mdi/js': 5.9.55
+  '@popperjs/core': 2.9.2
   '@radix-ui/react-context-menu': 0.0.23_02f3aa4655153eed075ec62dd3a1dc64
   '@radix-ui/react-dropdown-menu': 0.0.22_02f3aa4655153eed075ec62dd3a1dc64
   '@radix-ui/react-slot': 0.0.12_2809a9cb067487d57565c7f65c527eaf
@@ -845,6 +847,10 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.11.0
     dev: true
+
+  /@popperjs/core/2.9.2:
+    resolution: {integrity: sha512-VZMYa7+fXHdwIq1TDhSXoVmSPEGM/aa+6Aiq3nVVJ9bXr24zScr+NlKFKC3iPljA7ho/GAZr+d2jOf5GIRC30Q==}
+    dev: false
 
   /@radix-ui/popper/0.0.10:
     resolution: {integrity: sha512-YFKuPqQPKscreQid7NuB4it3PMzSwGg03vgrud6sVliHkI43QNAOHyrHyMNo015jg6QK5GVDn+7J2W5uygqSGA==}

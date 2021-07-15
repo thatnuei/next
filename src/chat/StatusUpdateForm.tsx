@@ -63,6 +63,7 @@ function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
 				<BBCTextArea
 					value={statusMessage}
 					onChangeText={setStatusMessage}
+					maxLength={255}
 					placeholder="Hey! How's it goin'?"
 					onKeyPress={(event) => {
 						if (event.key === "\n" && (event.ctrlKey || event.shiftKey)) {
