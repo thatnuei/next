@@ -1,12 +1,13 @@
 import { atom, useAtom } from "jotai"
 import * as React from "react"
 import { useState } from "react"
+import BBCTextArea from "../bbc/BBCInput"
 import { useCharacter } from "../character/state"
 import type { CharacterStatus } from "../character/types"
 import { raise } from "../common/raise"
 import Button from "../dom/Button"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
-import { input, select, solidButton } from "../ui/components"
+import { select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
 import { useIdentity } from "../user"
 
@@ -59,11 +60,10 @@ function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
 				</select>
 			</FormField>
 			<FormField labelText="Status message (optional)">
-				<textarea
-					className={`${input} flex-1 block`}
+				<BBCTextArea
 					value={statusMessage}
+					onChangeText={setStatusMessage}
 					placeholder="Hey! How's it goin'?"
-					onChange={(e) => setStatusMessage(e.target.value)}
 					onKeyPress={(event) => {
 						if (event.key === "\n" && (event.ctrlKey || event.shiftKey)) {
 							submit()

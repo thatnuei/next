@@ -1,6 +1,7 @@
 import * as React from "react"
+import BBCTextArea from "../bbc/BBCInput"
 import Button from "../dom/Button"
-import { input, solidButton } from "../ui/components"
+import { solidButton } from "../ui/components"
 import { useIdentity } from "../user"
 
 interface Props {
@@ -34,13 +35,14 @@ function ChatInput(props: Props) {
 			onSubmit={handleFormSubmit}
 			className={`flex flex-row p-2 bg-midnight-0`}
 		>
-			<textarea
-				placeholder={`Chatting as ${identity || ""}...`}
-				value={props.value}
-				onChange={(event) => props.onChangeText(event.target.value)}
-				onKeyDown={handleKeyDown}
-				className={`${input} flex-1 block mr-2`}
-			/>
+			<div className="flex-1 block mr-2">
+				<BBCTextArea
+					placeholder={`Chatting as ${identity || ""}...`}
+					value={props.value}
+					onChangeText={props.onChangeText}
+					onKeyDown={handleKeyDown}
+				/>
+			</div>
 			<Button type="submit" className={solidButton}>
 				Send
 			</Button>
