@@ -2,6 +2,7 @@ import { Portal } from "@headlessui/react"
 import type { Instance as PopperInstance } from "@popperjs/core"
 import { createPopperLite } from "@popperjs/core"
 import clsx from "clsx"
+import type { SyntheticEvent } from "react"
 import { useEffect, useRef, useState } from "react"
 import { useElementSize } from "../dom/useElementSize"
 import type { TagProps } from "../jsx/types"
@@ -16,6 +17,9 @@ interface BBCTextAreaProps extends Omit<TagProps<"textarea">, "className"> {
 
 export default function BBCTextArea({
 	maxLength,
+	onFocus,
+	onBlur,
+	onKeyDown,
 	onChange,
 	onChangeText,
 	...props
@@ -49,21 +53,70 @@ export default function BBCTextArea({
 		popperRef.current?.update()
 	})
 
+	function runBBCodeShortcut(
+		event: SyntheticEvent<HTMLTextAreaElement>,
+		tag: string,
+	): void {
+		event.preventDefault()
+
+		const target = event.currentTarget
+		const { selectionStart, selectionEnd, value } = target
+
+		const tagStart = `[${tag}]`
+		const tagEnd = `[/${tag}]`
+
+		const newText =
+			value.slice(0, selectionStart) +
+			tagStart +
+			value.slice(selectionStart, selectionEnd) +
+			tagEnd +
+			value.slice(selectionEnd)
+
+		onChangeText(newText)
+
+		// need to wait for a re-render before setting the selection
+		requestAnimationFrame(() => {
+			target.setSelectionRange(
+				selectionStart,
+				selectionEnd + tagStart.length + tagEnd.length,
+			)
+		})
+	}
+
 	return (
 		<div className="relative flex flex-col-reverse">
 			<textarea
 				className={clsx(input, "peer")}
 				rows={3}
-				onChange={(e) => {
-					onChange?.(e)
-					onChangeText(e.target.value)
-				}}
 				ref={setTextArea}
-				onFocus={() => {
-					setTextAreaFocused(true)
+				onChange={(event) => {
+					onChangeText(event.target.value)
+					onChange?.(event)
 				}}
-				onBlur={() => {
+				onFocus={(event) => {
+					setTextAreaFocused(true)
+					onFocus?.(event)
+				}}
+				onBlur={(event) => {
 					setTextAreaFocused(false)
+					onBlur?.(event)
+				}}
+				onKeyDown={(event) => {
+					onKeyDown?.(event)
+					if (event.ctrlKey) {
+						if (event.code === "KeyB") runBBCodeShortcut(event, "b")
+						if (event.code === "KeyI") runBBCodeShortcut(event, "i")
+						if (event.code === "KeyU") runBBCodeShortcut(event, "u")
+						if (event.code === "KeyS") runBBCodeShortcut(event, "s")
+						if (event.code === "KeyD") runBBCodeShortcut(event, "color")
+						if (event.code === "ArrowUp") runBBCodeShortcut(event, "sup")
+						if (event.code === "ArrowDown") runBBCodeShortcut(event, "sub")
+						if (event.code === "KeyL") runBBCodeShortcut(event, "url")
+						if (event.code === "KeyR") runBBCodeShortcut(event, "user")
+						if (event.code === "KeyO") runBBCodeShortcut(event, "icon")
+						if (event.code === "KeyE") runBBCodeShortcut(event, "eicon")
+						if (event.code === "KeyK") runBBCodeShortcut(event, "spoiler")
+					}
 				}}
 				{...props}
 			/>
