@@ -1,22 +1,26 @@
-import { useLayoutEffect, useState } from "react"
-import type * as React from "react"
+import type { ReactNode } from "react"
+import { useLayoutEffect, useRef } from "react"
 import ReactDOM from "react-dom"
 
 interface Props {
-	children: React.ReactNode
+	children: ReactNode
 }
 
 function Portal(props: Props) {
-	const [container, setContainer] = useState<HTMLElement>()
+	const containerRef = useRef<HTMLDivElement>()
 
-	useLayoutEffect(() => {
-		const el = document.createElement("div")
-		document.body.append(el)
-		setContainer(el)
-		return () => el.remove()
-	}, [])
+	if (!containerRef.current && typeof window !== "undefined") {
+		containerRef.current = document.createElement("div")
+		document.body.appendChild(containerRef.current)
+	}
 
-	return container ? ReactDOM.createPortal(props.children, container) : null
+	useLayoutEffect(() => () => containerRef.current?.remove(), [])
+
+	return containerRef.current ? (
+		ReactDOM.createPortal(props.children, containerRef.current)
+	) : (
+		<>{props.children}</>
+	)
 }
 
 export default Portal
