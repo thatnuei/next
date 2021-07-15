@@ -3,6 +3,11 @@ module.exports = {
 	purge: ["./index.html", "./src/**/*.{ts,tsx}"],
 	darkMode: false, // or 'media' or 'class'
 	theme: {
+		boxShadow: {
+			DEFAULT: "0px 2px 8px rgba(0, 0, 0, 0.4)",
+			normal: "0px 2px 12px rgba(0, 0, 0, 0.3)",
+			inner: "0px 1px 4px rgba(0, 0, 0, 0.2) inset",
+		},
 		extend: {
 			colors: {
 				// https://flatuicolors.com/palette/defo
@@ -19,10 +24,6 @@ module.exports = {
 			fontFamily: {
 				sans: `'Fira Sans', sans-serif`,
 				condensed: `'Fira Sans Condensed', sans-serif`,
-			},
-			boxShadow: {
-				normal: "0px 2px 12px rgba(0, 0, 0, 0.3)",
-				inner: "0px 1px 4px rgba(0, 0, 0, 0.2) inset",
 			},
 		},
 	},
