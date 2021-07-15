@@ -1,13 +1,15 @@
 import { Portal } from "@headlessui/react"
-import type { Instance as PopperInstance } from "@popperjs/core"
-import { createPopperLite } from "@popperjs/core"
 import clsx from "clsx"
 import type { SyntheticEvent } from "react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useElementSize } from "../dom/useElementSize"
 import type { TagProps } from "../jsx/types"
+import combineRefs from "../react/combineRefs"
 import { input } from "../ui/components"
+import usePopper from "../ui/usePopper"
 import BBC from "./BBC"
+import KeyboardShortcutsPopoverButton from "./KeyboardShortcutsPopoverButton"
+import { shortcuts } from "./shortcuts"
 
 interface BBCTextAreaProps extends Omit<TagProps<"textarea">, "className"> {
 	maxLength?: number
@@ -32,25 +34,7 @@ export default function BBCTextArea({
 	const textAreaRect = useElementSize(textArea)
 	const [textAreaFocused, setTextAreaFocused] = useState(false)
 
-	const [preview, setPreview] = useState<HTMLElement | null>()
-
-	const popperRef = useRef<PopperInstance>()
-
-	useEffect(() => {
-		if (!textArea || !preview) return
-
-		const popper = (popperRef.current = createPopperLite(textArea, preview, {
-			placement: "top-start",
-		}))
-
-		return () => {
-			popper.destroy()
-		}
-	}, [preview, textArea])
-
-	useEffect(() => {
-		popperRef.current?.update()
-	})
+	const popper = usePopper()
 
 	function runBBCodeShortcut(
 		event: SyntheticEvent<HTMLTextAreaElement>,
@@ -87,7 +71,7 @@ export default function BBCTextArea({
 			<textarea
 				className={clsx(input, "peer")}
 				rows={3}
-				ref={setTextArea}
+				ref={combineRefs<HTMLElement>(setTextArea, popper.referenceRef)}
 				onChange={(event) => {
 					onChangeText(event.target.value)
 					onChange?.(event)
@@ -102,19 +86,12 @@ export default function BBCTextArea({
 				}}
 				onKeyDown={(event) => {
 					onKeyDown?.(event)
+
 					if (event.ctrlKey) {
-						if (event.code === "KeyB") runBBCodeShortcut(event, "b")
-						if (event.code === "KeyI") runBBCodeShortcut(event, "i")
-						if (event.code === "KeyU") runBBCodeShortcut(event, "u")
-						if (event.code === "KeyS") runBBCodeShortcut(event, "s")
-						if (event.code === "KeyD") runBBCodeShortcut(event, "color")
-						if (event.code === "ArrowUp") runBBCodeShortcut(event, "sup")
-						if (event.code === "ArrowDown") runBBCodeShortcut(event, "sub")
-						if (event.code === "KeyL") runBBCodeShortcut(event, "url")
-						if (event.code === "KeyR") runBBCodeShortcut(event, "user")
-						if (event.code === "KeyO") runBBCodeShortcut(event, "icon")
-						if (event.code === "KeyE") runBBCodeShortcut(event, "eicon")
-						if (event.code === "KeyK") runBBCodeShortcut(event, "spoiler")
+						const shortcut = shortcuts.find((s) => s.key === event.code)
+						if (shortcut?.type === "bbcode") {
+							runBBCodeShortcut(event, shortcut.tag)
+						}
 					}
 				}}
 				{...props}
@@ -126,8 +103,12 @@ export default function BBCTextArea({
 				</p>
 			)}
 
+			<div className="absolute top-0 right-0 p-1">
+				<KeyboardShortcutsPopoverButton />
+			</div>
+
 			<Portal>
-				<div ref={setPreview}>
+				<div ref={popper.popperRef}>
 					<div
 						className={clsx(
 							"pb-2",
