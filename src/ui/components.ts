@@ -27,7 +27,7 @@ export const input = clsx`
 export const select = `${baseControlStyle} ${activePress} w-full transition`
 
 export const headerText = `text-3xl font-light font-condensed`
-export const headerText2 = `text-xl font-light font-condensed`
+export const headerText2 = `text-2xl font-light font-condensed`
 
 export const raisedPanel = `shadow-normal bg-midnight-0`
 
