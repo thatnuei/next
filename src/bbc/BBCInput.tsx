@@ -41,7 +41,6 @@ export default function BBCTextArea({
 
 		const popper = (popperRef.current = createPopperLite(textArea, preview, {
 			placement: "top-start",
-			modifiers: [{ name: "offset", options: { offset: [10, 20] } }],
 		}))
 
 		return () => {
