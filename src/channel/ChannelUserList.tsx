@@ -31,8 +31,8 @@ function ChannelUserList({ channelId }: Props) {
 		const roles = getRoles(name)
 		if (roles.isAdmin) return "admin"
 		if (channel.ops[name]) return "op"
-		if (roles.isBookmarked) return "bookmark"
 		if (roles.isFriend) return "friend"
+		if (roles.isBookmarked) return "bookmark"
 		if (status === "looking") return "looking"
 		return "default"
 	}
