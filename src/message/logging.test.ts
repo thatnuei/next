@@ -1,61 +1,43 @@
 import { range } from "../common/range"
+import type { ChatLoggerRoom } from "./logging"
 import { ChatLogger } from "./logging"
 import { createChannelMessage } from "./MessageState"
 
 describe("ChatLogger", () => {
-	test("adding messages", async () => {
-		const logger = ChatLogger.create({
-			roomIdPrefix: "test",
-		})
-
-		const roomId = "adding-messages"
-
-		expect(await logger.getMessages(roomId, 100)).toHaveLength(0)
+	loggerTest("adding messages", async (room) => {
+		expect(await room.getMessages(100)).toHaveLength(0)
 
 		const message = createChannelMessage("Testificate", "hello world")
-		await logger.addMessage(roomId, "Test Room", message)
+		await room.addMessage("Test Room", message)
 
-		expect(await logger.getMessages(roomId, 100)).toMatchObject([message])
+		expect(await room.getMessages(100)).toMatchObject([message])
 	})
 
-	test("limits", async () => {
-		const logger = ChatLogger.create({
-			roomIdPrefix: "test",
-		})
-
-		const roomId = "limits"
-
-		logger.addMessage(
-			roomId,
+	loggerTest("limits", async (room) => {
+		room.addMessage(
 			"Test Room",
 			createChannelMessage("Testificate", "hello world"),
 		)
 
-		expect(await logger.getMessages(roomId, 10)).toHaveLength(1)
+		expect(await room.getMessages(10)).toHaveLength(1)
 
 		await Promise.all(
 			range(100).map(() =>
-				logger.addMessage(
-					roomId,
+				room.addMessage(
 					"Test Room",
 					createChannelMessage("Testificate", "hello world"),
 				),
 			),
 		)
 
-		expect(await logger.getMessages(roomId, 10)).toHaveLength(10)
-		expect(await logger.getMessages(roomId, 50)).toHaveLength(50)
-		expect(await logger.getMessages(roomId, 120)).toHaveLength(101)
+		expect(await room.getMessages(10)).toHaveLength(10)
+		expect(await room.getMessages(50)).toHaveLength(50)
+		expect(await room.getMessages(120)).toHaveLength(101)
 	})
 
-	test("fetching messages starting with the newest", async () => {
-		async function runTest(index: number) {
-			const logger = ChatLogger.create({
-				roomIdPrefix: "test",
-			})
-
-			const roomId = `fetching-messages-starting-with-the-newest-${index}`
-
+	loggerTest(
+		`fetching messages starting with the newest`,
+		async (room) => {
 			const messages = [
 				createChannelMessage("Testificate", "first"),
 				createChannelMessage("Testificate", "second"),
@@ -63,15 +45,25 @@ describe("ChatLogger", () => {
 			]
 
 			for (const message of messages) {
-				await logger.addMessage(roomId, "Test Room", message)
+				await room.addMessage("Test Room", message)
 			}
 
-			expect(await logger.getMessages(roomId, 10)).toMatchObject(messages)
-		}
+			expect(await room.getMessages(10)).toMatchObject(messages)
+		},
+		20,
+	)
+})
 
-		// run multiple times for determinism
-		for (let i = 0; i < 20; i++) {
-			await runTest(i)
+function loggerTest(
+	description: string,
+	fn: (room: ChatLoggerRoom) => void,
+	repeatCount = 1, // run some tests multiple times for determinism
+) {
+	const logger = ChatLogger.create("test")
+	test(description, () => {
+		for (let i = 0; i < repeatCount; i++) {
+			const room = logger.getRoom(`${description} (${i})`)
+			fn(room)
 		}
 	})
-})
+}

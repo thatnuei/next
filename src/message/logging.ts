@@ -34,26 +34,30 @@ function openChatLogsDb() {
 	})
 }
 
-interface ChatLoggerOptions {
-	roomIdPrefix: string
+export class ChatLogger {
+	private readonly roomIdPrefix: string
+
+	constructor(roomIdPrefix: string) {
+		this.roomIdPrefix = roomIdPrefix
+	}
+
+	static create(...args: ConstructorParameters<typeof ChatLogger>) {
+		return new ChatLogger(...args)
+	}
+
+	getRoom(roomId: string): ChatLoggerRoom {
+		return new ChatLoggerRoom(`${this.roomIdPrefix}:${roomId}`)
+	}
 }
 
-export class ChatLogger {
-	private readonly options: ChatLoggerOptions
+export class ChatLoggerRoom {
+	private readonly roomId: string
 
-	private constructor(options: ChatLoggerOptions) {
-		this.options = options
+	constructor(roomId: string) {
+		this.roomId = roomId
 	}
 
-	static create(options: ChatLoggerOptions) {
-		return new ChatLogger(options)
-	}
-
-	private getPrefixedId(roomId: string) {
-		return `${this.options.roomIdPrefix}:${roomId}`
-	}
-
-	async addMessage(roomId: string, roomName: string, message: MessageState) {
+	async addMessage(roomName: string, message: MessageState) {
 		const db = await openChatLogsDb()
 
 		const transaction = db.transaction(["rooms", "messages"], "readwrite")
@@ -61,29 +65,34 @@ export class ChatLogger {
 		const messagesStore = transaction.objectStore("messages")
 
 		roomsStore.put({
-			id: this.getPrefixedId(roomId),
+			id: this.roomId,
 			name: roomName,
 		})
 
 		messagesStore.add({
 			...message,
-			roomId: this.getPrefixedId(roomId),
+			roomId: this.roomId,
 		})
 
 		await transaction.done
 	}
 
-	private async *iterateMessages(
-		roomId: string,
-		limit: number,
-	): AsyncGenerator<MessageState> {
+	async getMessages(limit: number): Promise<MessageState[]> {
+		const messages = []
+		for await (const message of this.iterateMessages(limit)) {
+			messages.push(message)
+		}
+		return messages
+	}
+
+	private async *iterateMessages(limit: number): AsyncGenerator<MessageState> {
 		const db = await openChatLogsDb()
 
 		const transaction = db.transaction("messages", "readonly")
 
 		let cursor = await transaction.store
 			.index("roomId")
-			.openCursor(IDBKeyRange.only(this.getPrefixedId(roomId)), "next")
+			.openCursor(IDBKeyRange.only(this.roomId), "next")
 
 		for (let i = 0; i < limit && cursor != null; i++) {
 			yield cursor.value
@@ -91,13 +100,5 @@ export class ChatLogger {
 		}
 
 		await transaction.done
-	}
-
-	async getMessages(roomId: string, limit: number): Promise<MessageState[]> {
-		const messages = []
-		for await (const message of this.iterateMessages(roomId, limit)) {
-			messages.push(message)
-		}
-		return messages
 	}
 }
