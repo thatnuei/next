@@ -7,10 +7,10 @@
 		"build": "vite build",
 		"test": "jest",
 		"serve": "vite preview --port 3000",
-		"lint": "eslint . --ext .js,.ts,.tsx",
-		"typecheck": "tsc --noEmit",
+		"lint": "eslint . --ext .js,.ts,.tsx  && echo ✔ No linter errors!",
+		"typecheck": "tsc --noEmit && echo ✔ No type errors!",
 		"analyze": "source-map-explorer dist/**/*.js",
-		"ci": "npm-run-all --parallel --print-label --continue-on-error build test typecheck",
+		"ci": "npm-run-all --parallel --print-label --continue-on-error build test lint typecheck",
 		"format": "prettier --write .",
 		"prepare": "husky install"
 	},
