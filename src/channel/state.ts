@@ -7,6 +7,8 @@ import { isPresent } from "../common/isPresent"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
 import type { TruthyMap } from "../common/types"
+import { useChatLogger } from "../logging/context"
+import type { MessageState } from "../message/MessageState"
 import {
 	createAdMessage,
 	createChannelMessage,
@@ -100,14 +102,22 @@ export function useActualChannelMode(id: string) {
 export function useChannelActions() {
 	const { send } = useSocketActions()
 	const identity = useIdentity()
+	const logger = useChatLogger()
+	const { addMessage } = useRoomActions()
+
+	const addChannelMessage = useCallback(
+		(channelId: string, message: MessageState) => {
+			addMessage(channelRoomKey(channelId), message)
+			logger.addMessage(`channel:${channelId}`, message)
+		},
+		[addMessage, logger],
+	)
 
 	const updateChannel = jotaiUtils.useAtomCallback(
 		useCallback((get, set, properties: Partial<Channel> & { id: string }) => {
 			set(channelAtom(properties.id), (prev) => ({ ...prev, ...properties }))
 		}, []),
 	)
-
-	const { addMessage } = useRoomActions()
 
 	const join = useCallback(
 		(id: string, title?: string) => {
@@ -164,9 +174,9 @@ export function useChannelActions() {
 			}
 
 			send({ type: "MSG", params: { channel: id, message } })
-			addMessage(channelRoomKey(id), createChannelMessage(identity, message))
+			addChannelMessage(id, createChannelMessage(identity, message))
 		},
-		[addMessage, identity, send],
+		[addChannelMessage, identity, send],
 	)
 
 	return {
@@ -174,14 +184,15 @@ export function useChannelActions() {
 		leave,
 		sendMessage,
 		updateChannel,
+		addChannelMessage,
 	}
 }
 
 export function useChannelCommandListener() {
 	const identity = useIdentity()
 	const account = useAccount()
-	const { join } = useChannelActions()
-	const { addMessage } = useRoomActions()
+	const { join, addChannelMessage } = useChannelActions()
+	const logger = useChatLogger()
 
 	const handler = useCallback(
 		(get: jotai.Getter, set: jotai.Setter, command: ServerCommand) => {
@@ -213,6 +224,8 @@ export function useChannelCommandListener() {
 							users: { ...prev.users, [name]: true },
 						}),
 					)
+
+					logger.setRoomName(`channel:${id}`, title)
 
 					if (account && identity) {
 						saveChannels(
@@ -281,28 +294,25 @@ export function useChannelCommandListener() {
 				},
 
 				MSG({ channel: id, message, character }) {
-					addMessage(
-						channelRoomKey(id),
-						createChannelMessage(character, message),
-					)
+					addChannelMessage(id, createChannelMessage(character, message))
 				},
 
 				LRP({ channel: id, character, message }) {
-					addMessage(channelRoomKey(id), createAdMessage(character, message))
+					addChannelMessage(id, createAdMessage(character, message))
 				},
 
 				RLL(params) {
 					if ("channel" in params) {
-						addMessage(
+						addChannelMessage(
 							// bottle messages have a lowercased channel id
-							channelRoomKey(params.channel.replace("adh", "ADH")),
+							params.channel.replace("adh", "ADH"),
 							createSystemMessage(params.message),
 						)
 					}
 				},
 			})
 		},
-		[account, addMessage, identity, join],
+		[account, addChannelMessage, identity, join, logger],
 	)
 
 	useSocketListener(jotaiUtils.useAtomCallback(handler))
