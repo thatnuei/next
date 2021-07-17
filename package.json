@@ -6,6 +6,7 @@
 		"dev": "vite",
 		"build": "vite build",
 		"test": "jest",
+		"test-watch": "pnpm test -- --watch",
 		"serve": "vite preview --port 3000",
 		"lint": "eslint . --ext .js,.ts,.tsx  && echo ✔ No linter errors!",
 		"typecheck": "tsc --noEmit && echo ✔ No type errors!",
