@@ -1,12 +1,10 @@
+import { uniqueId } from "../common/uniqueId"
+
 export type MessageState = ReturnType<typeof createMessageState>
 export type MessageType = "normal" | "action" | "lfrp" | "warning" | "system"
 
 const actionRegex = /^\s*\/me\s*/
 const warningRegex = /^\s*\/warn\s*/
-
-function generateMessageKey() {
-	return String(Math.random())
-}
 
 export function createMessageState(args: {
 	text: string
@@ -17,7 +15,7 @@ export function createMessageState(args: {
 }) {
 	return {
 		...args,
-		key: args.key || generateMessageKey(),
+		key: args.key || uniqueId(),
 		timestamp: args.timestamp || Date.now(),
 	}
 }
