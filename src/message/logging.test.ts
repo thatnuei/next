@@ -1,10 +1,16 @@
 import { range } from "../common/range"
 import type { ChatLoggerRoom } from "./logging"
-import { ChatLogger } from "./logging"
+import { ChatLogger, openChatLogsDb } from "./logging"
 import { createChannelMessage } from "./MessageState"
 
+beforeEach(async () => {
+	const db = await openChatLogsDb()
+	await db.clear("messages")
+	await db.clear("rooms")
+})
+
 describe("ChatLogger", () => {
-	loggerTest("adding messages", async (room) => {
+	roomTest("adding messages", async (room) => {
 		expect(await room.getMessages(100)).toHaveLength(0)
 
 		const message = createChannelMessage("Testificate", "hello world")
@@ -13,7 +19,7 @@ describe("ChatLogger", () => {
 		expect(await room.getMessages(100)).toMatchObject([message])
 	})
 
-	loggerTest("limits", async (room) => {
+	roomTest("limits", async (room) => {
 		room.addMessage(
 			"Test Room",
 			createChannelMessage("Testificate", "hello world"),
@@ -35,7 +41,7 @@ describe("ChatLogger", () => {
 		expect(await room.getMessages(120)).toHaveLength(101)
 	})
 
-	loggerTest(
+	roomTest(
 		`fetching messages starting with the newest`,
 		async (room) => {
 			const messages = [
@@ -50,20 +56,42 @@ describe("ChatLogger", () => {
 
 			expect(await room.getMessages(10)).toMatchObject(messages)
 		},
-		20,
+		10,
 	)
+
+	test("get all rooms", async () => {
+		const logger = ChatLogger.create("test")
+		expect(await logger.getAllRooms()).toHaveLength(0)
+
+		const room1 = await logger.getRoom("room1", "first")
+		await room1.addMessage(
+			"first",
+			createChannelMessage("Testificate", "hello world"),
+		)
+
+		const room2 = await logger.getRoom("room2", "second")
+		await room2.addMessage(
+			"first",
+			createChannelMessage("Testificate", "hello world"),
+		)
+
+		expect(await logger.getAllRooms()).toMatchObject([
+			logger.getRoom("room1", "first"),
+			logger.getRoom("room2", "second"),
+		])
+	})
 })
 
-function loggerTest(
+function roomTest(
 	description: string,
-	fn: (room: ChatLoggerRoom) => void,
+	fn: (room: ChatLoggerRoom) => void | Promise<unknown>,
 	repeatCount = 1, // run some tests multiple times for determinism
 ) {
 	const logger = ChatLogger.create("test")
-	test(description, () => {
-		for (let i = 0; i < repeatCount; i++) {
-			const room = logger.getRoom(`${description} (${i})`)
-			fn(room)
-		}
-	})
+	for (let i = 0; i < repeatCount; i++) {
+		test(`${description}${repeatCount > 1 ? ` (${i + 1})` : ""}`, async () => {
+			const room = await logger.getRoom(`${description} (${i})`, "Test Room")
+			await fn(room)
+		})
+	}
 }

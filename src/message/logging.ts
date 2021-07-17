@@ -21,7 +21,7 @@ interface ChatLogDBSchema extends DBSchema {
 	}
 }
 
-function openChatLogsDb() {
+export function openChatLogsDb() {
 	return openDB<ChatLogDBSchema>("chat-logs", 1, {
 		upgrade(db) {
 			db.createObjectStore("rooms", { keyPath: "id" })
@@ -45,16 +45,34 @@ export class ChatLogger {
 		return new ChatLogger(...args)
 	}
 
-	getRoom(roomId: string): ChatLoggerRoom {
-		return new ChatLoggerRoom(`${this.roomIdPrefix}:${roomId}`)
+	async getRoom(roomId: string, roomName: string): Promise<ChatLoggerRoom> {
+		const prefixedId = `${this.roomIdPrefix}:${roomId}`
+
+		const db = await openChatLogsDb()
+
+		const room = (await db.get("rooms", prefixedId)) ?? {
+			id: prefixedId,
+			name: roomName,
+		}
+
+		return new ChatLoggerRoom(room.id, room.name)
+	}
+
+	// eslint-disable-next-line class-methods-use-this
+	async getAllRooms(): Promise<ChatLoggerRoom[]> {
+		const db = await openChatLogsDb()
+		const rooms = await db.getAll("rooms")
+		return rooms.map(({ id, name }) => new ChatLoggerRoom(id, name))
 	}
 }
 
 export class ChatLoggerRoom {
-	private readonly roomId: string
+	readonly roomId: string
+	readonly roomName: string
 
-	constructor(roomId: string) {
+	constructor(roomId: string, roomName: string) {
 		this.roomId = roomId
+		this.roomName = roomName
 	}
 
 	async addMessage(roomName: string, message: MessageState) {
@@ -79,13 +97,7 @@ export class ChatLoggerRoom {
 
 	async getMessages(limit: number): Promise<MessageState[]> {
 		const messages = []
-		for await (const message of this.iterateMessages(limit)) {
-			messages.push(message)
-		}
-		return messages
-	}
 
-	private async *iterateMessages(limit: number): AsyncGenerator<MessageState> {
 		const db = await openChatLogsDb()
 
 		const transaction = db.transaction("messages", "readonly")
@@ -95,10 +107,12 @@ export class ChatLoggerRoom {
 			.openCursor(IDBKeyRange.only(this.roomId), "next")
 
 		for (let i = 0; i < limit && cursor != null; i++) {
-			yield cursor.value
+			messages.push(cursor.value)
 			cursor = await cursor.continue()
 		}
 
 		await transaction.done
+
+		return messages
 	}
 }
