@@ -41,28 +41,22 @@ export class ChatLogger {
 		this.roomIdPrefix = roomIdPrefix
 	}
 
-	static create(...args: ConstructorParameters<typeof ChatLogger>) {
+	static withRoomPrefix(...args: ConstructorParameters<typeof ChatLogger>) {
 		return new ChatLogger(...args)
 	}
 
-	async getRoom(roomId: string, roomName: string): Promise<ChatLoggerRoom> {
+	async getRoom(roomId: string): Promise<ChatLoggerRoom> {
 		const prefixedId = `${this.roomIdPrefix}:${roomId}`
 
 		const db = await openChatLogsDb()
 
-		const room = (await db.get("rooms", prefixedId)) ?? {
-			id: prefixedId,
-			name: roomName,
+		let room = await db.get("rooms", prefixedId)
+		if (!room) {
+			room = { id: prefixedId, name: roomId }
+			await db.add("rooms", room)
 		}
 
 		return new ChatLoggerRoom(room.id, room.name)
-	}
-
-	// eslint-disable-next-line class-methods-use-this
-	async getAllRooms(): Promise<ChatLoggerRoom[]> {
-		const db = await openChatLogsDb()
-		const rooms = await db.getAll("rooms")
-		return rooms.map(({ id, name }) => new ChatLoggerRoom(id, name))
 	}
 }
 
@@ -75,44 +69,45 @@ export class ChatLoggerRoom {
 		this.roomName = roomName
 	}
 
-	async addMessage(roomName: string, message: MessageState) {
+	static async getAll(): Promise<ChatLoggerRoom[]> {
 		const db = await openChatLogsDb()
-
-		const transaction = db.transaction(["rooms", "messages"], "readwrite")
-		const roomsStore = transaction.objectStore("rooms")
-		const messagesStore = transaction.objectStore("messages")
-
-		roomsStore.put({
-			id: this.roomId,
-			name: roomName,
-		})
-
-		messagesStore.add({
-			...message,
-			roomId: this.roomId,
-		})
-
-		await transaction.done
+		const rooms = await db.getAll("rooms")
+		return rooms.map(({ id, name }) => new ChatLoggerRoom(id, name))
 	}
 
-	async getMessages(limit: number): Promise<MessageState[]> {
-		const messages = []
+	/**
+	 * Updates the room name and returns an updated room
+	 * @example
+	 * const room = await logger.getRoom("roomId")
+	 * const updatedRoom = await room.updateName("newName")
+	 * // updatedRoom.roomName === "newName"
+	 * // updatedRoom.roomId === "roomId"
+	 */
+	async setName(name: string): Promise<ChatLoggerRoom> {
+		const db = await openChatLogsDb()
+		await db.put("rooms", { id: this.roomId, name })
+		return new ChatLoggerRoom(this.roomId, name)
+	}
 
+	async addMessage(message: MessageState) {
+		const db = await openChatLogsDb()
+		await db.add("messages", { ...message, roomId: this.roomId })
+	}
+
+	async getMessages(limit = Infinity): Promise<MessageState[]> {
 		const db = await openChatLogsDb()
 
 		const transaction = db.transaction("messages", "readonly")
 
 		let cursor = await transaction.store
 			.index("roomId")
-			.openCursor(IDBKeyRange.only(this.roomId), "next")
+			.openCursor(IDBKeyRange.only(this.roomId), "prev")
 
+		const messages = []
 		for (let i = 0; i < limit && cursor != null; i++) {
 			messages.push(cursor.value)
 			cursor = await cursor.continue()
 		}
-
-		await transaction.done
-
-		return messages
+		return messages.reverse()
 	}
 }
