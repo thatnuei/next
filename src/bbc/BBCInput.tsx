@@ -108,15 +108,15 @@ export default function BBCTextArea({
 			</div>
 
 			<Portal>
-				<div ref={popper.popperRef}>
+				<div ref={popper.popperRef} className="pointer-events-none">
 					<div
 						className={clsx(
-							"pb-2",
+							"pb-2 pointer-events-auto",
 							"transition-all",
 							// checking for both to make the preview disappear immediately when cleared
 							props.value && previewValue && textAreaFocused
 								? "visible opacity-100"
-								: "invisible opacity-0",
+								: "invisible opacity-0 -translate-y-2",
 						)}
 					>
 						<div
