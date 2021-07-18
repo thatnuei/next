@@ -29,7 +29,6 @@ specifiers:
   fuzzysearch: ^1.0.3
   husky: ^7.0.1
   idb: ^6.1.2
-  immer: 9.0.5
   jest: 27.0.6
   jotai: 1.2.1
   lodash-es: ^4.17.21
@@ -61,8 +60,7 @@ dependencies:
   focus-visible: 5.2.0
   fuzzysearch: 1.0.3
   idb: 6.1.2
-  immer: 9.0.5
-  jotai: 1.2.1_a0056b2bcc8be9d265f984e3ed729d69
+  jotai: 1.2.1_2809a9cb067487d57565c7f65c527eaf
   lodash-es: 4.17.21
   match-sorter: 6.3.0
   nanoid: 3.1.23
@@ -3126,10 +3124,6 @@ packages:
     engines: {node: '>= 4'}
     dev: true
 
-  /immer/9.0.5:
-    resolution: {integrity: sha512-2WuIehr2y4lmYz9gaQzetPR2ECniCifk4ORaQbU3g5EalLt+0IVTosEPJ5BoYl/75ky2mivzdRzV8wWgQGOSYQ==}
-    dev: false
-
   /import-fresh/3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -4017,7 +4011,7 @@ packages:
     hasBin: true
     dev: true
 
-  /jotai/1.2.1_a0056b2bcc8be9d265f984e3ed729d69:
+  /jotai/1.2.1_2809a9cb067487d57565c7f65c527eaf:
     resolution: {integrity: sha512-OdkFSLoAHTAe1KWndMRMKdr/fqNan4SKAg0UDp1j6Mo2RebAy3NEDGAUCWVX9dfmvSRMz+4mkzAxfi1Z4dy56w==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -4045,7 +4039,6 @@ packages:
       xstate:
         optional: true
     dependencies:
-      immer: 9.0.5
       react: 18.0.0-alpha-ed6c091fe-20210701
     dev: false
 
