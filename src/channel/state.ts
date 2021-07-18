@@ -1,5 +1,5 @@
 import { produce } from "immer"
-import { atom } from "jotai"
+import { atom, useAtom } from "jotai"
 import { selectAtom, useAtomValue, useUpdateAtom } from "jotai/utils"
 import { useCallback, useMemo } from "react"
 import { characterAtom } from "../character/state"
@@ -26,7 +26,7 @@ import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
 import { useAccount, useIdentity } from "../user"
-import { loadChannels } from "./storage"
+import { loadChannels, saveChannels } from "./storage"
 import type { ChannelMode } from "./types"
 
 type ChannelJoinState = "joining" | "joined" | "leaving" | "left"
@@ -208,11 +208,21 @@ export function useChannelCommandListener() {
 	const identity = useIdentity()
 	const account = useAccount()
 	const logger = useChatLogger()
-	const updateChannelDict = useUpdateAtom(channelDictAtom)
+	const [channelDict, updateChannelDict] = useAtom(channelDictAtom)
 	const updateAtom = useUpdateAtomFn()
 	const joinChannel = useJoinChannel()
 
 	useSocketListener((command: ServerCommand) => {
+		const saveJoinedChannels = () => {
+			if (!account || !identity) return
+
+			const channels = Object.values(channelDict)
+				.filter(isChannelJoined)
+				.map((ch) => ch.id)
+
+			saveChannels(channels, account, identity)
+		}
+
 		matchCommand(command, {
 			async IDN() {
 				if (account && identity) {
@@ -231,6 +241,10 @@ export function useChannelCommandListener() {
 					users: { ...channel.users, [name]: true },
 				}))
 				logger.setRoomName(`channel:${id}`, title)
+
+				if (name === identity) {
+					saveJoinedChannels()
+				}
 			},
 
 			LCH({ channel: id, character }) {
@@ -240,15 +254,9 @@ export function useChannelCommandListener() {
 					users: omit(channel.users, [character]),
 				}))
 
-				// if (account && identity) {
-				// 	saveChannels(
-				// 		Object.entries(get(joinedChannelIdsAtom))
-				// 			.filter(([, joined]) => joined)
-				// 			.map(([id]) => id),
-				// 		account,
-				// 		identity,
-				// 	)
-				// }
+				if (character === identity) {
+					saveJoinedChannels()
+				}
 			},
 
 			FLN({ character }) {
