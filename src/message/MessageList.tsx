@@ -40,10 +40,10 @@ function MessageList({ messages, isStale }: Props) {
 	return (
 		<ol
 			className={clsx(
-				"h-full overflow-y-auto transition-opacity",
+				"h-full overflow-y-auto transition-opacity transform translate-z-0",
 				isStale && `opacity-50`,
 			)}
-			style={{ transitionDelay: isStale ? "0.3s" : "0" }}
+			style={{ transitionDelay: isStale ? "0.5s" : "0s" }}
 			ref={containerRef}
 		>
 			{messages.map((message) => (
