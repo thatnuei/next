@@ -10,5 +10,5 @@ export interface ChatLogger {
 	getAllRooms(): Promise<LoggerRoom[]>
 	setRoomName(roomId: string, name: string): Promise<void>
 	addMessage(roomId: string, message: MessageState): Promise<void>
-	getMessages(roomId: string, limit?: number): Promise<MessageState[]>
+	getMessages(roomId: string, limit: number): Promise<MessageState[]>
 }

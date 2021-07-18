@@ -61,7 +61,7 @@ export function createWebChatLogger(): ChatLogger {
 			await db.put("messages", { ...message, roomId })
 		},
 
-		getMessages: async (roomId, limit = Infinity) => {
+		getMessages: async (roomId, limit) => {
 			const db = await openChatLogsDb()
 
 			const transaction = db.transaction("messages", "readonly")
