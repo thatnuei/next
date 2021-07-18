@@ -19,7 +19,7 @@ function ChannelView({ channelId }: Props) {
 	const isLargeScreen = useMediaQuery(screenQueries.large)
 
 	const messages = useMemo(() => {
-		return channel.messages.filter((message: MessageState) => {
+		const shouldShowMessage = (message: MessageState) => {
 			if (actualMode === "ads") {
 				return message.type !== "normal" && message.type !== "action"
 			}
@@ -27,8 +27,12 @@ function ChannelView({ channelId }: Props) {
 				return message.type !== "lfrp"
 			}
 			return true
-		})
-	}, [actualMode, channel.messages])
+		}
+
+		return [...channel.previousMessages, ...channel.messages].filter(
+			shouldShowMessage,
+		)
+	}, [actualMode, channel.messages, channel.previousMessages])
 
 	const deferredMessages = useDeferredValue(messages)
 

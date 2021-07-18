@@ -1,7 +1,7 @@
 import { atom, useAtom } from "jotai"
 import { selectAtom, useAtomValue, useUpdateAtom } from "jotai/utils"
 import { mapValues } from "lodash-es"
-import { useCallback, useMemo } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import { characterAtom } from "../character/state"
 import type { Character } from "../character/types"
 import { omit } from "../common/omit"
@@ -40,6 +40,7 @@ export interface Channel extends RoomState {
 	readonly users: TruthyMap
 	readonly ops: TruthyMap
 	readonly joinState: ChannelJoinState
+	readonly previousMessages: readonly MessageState[]
 }
 
 function createChannel(id: string): Channel {
@@ -52,6 +53,7 @@ function createChannel(id: string): Channel {
 		users: {},
 		ops: {},
 		joinState: "left",
+		previousMessages: [],
 		...createRoomState(),
 	}
 }
@@ -212,17 +214,17 @@ export function useChannelCommandListener() {
 	const updateAtom = useUpdateAtomFn()
 	const joinChannel = useJoinChannel()
 
+	useEffect(() => {
+		if (!account || !identity) return
+
+		const channels = Object.values(channelDict)
+			.filter(isChannelJoined)
+			.map((ch) => ch.id)
+
+		saveChannels(channels, account, identity)
+	}, [account, channelDict, identity])
+
 	useSocketListener((command: ServerCommand) => {
-		const saveJoinedChannels = () => {
-			if (!account || !identity) return
-
-			const channels = Object.values(channelDict)
-				.filter(isChannelJoined)
-				.map((ch) => ch.id)
-
-			saveChannels(channels, account, identity)
-		}
-
 		matchCommand(command, {
 			async IDN() {
 				if (account && identity) {
@@ -236,14 +238,20 @@ export function useChannelCommandListener() {
 			JCH({ channel: id, character: { identity: name }, title }) {
 				updateAtom(channelAtom(id), (channel) => ({
 					...channel,
-					joinState: "joined",
 					title,
 					users: { ...channel.users, [name]: true },
+					joinState: "joined",
 				}))
+
 				logger.setRoomName(`channel:${id}`, title)
 
 				if (name === identity) {
-					saveJoinedChannels()
+					logger.getMessages(`channel:${id}`, 30).then((messages) => {
+						updateAtom(channelAtom(id), (channel) => ({
+							...channel,
+							previousMessages: messages,
+						}))
+					})
 				}
 			},
 
@@ -253,10 +261,6 @@ export function useChannelCommandListener() {
 					joinState: character === identity ? "left" : channel.joinState,
 					users: omit(channel.users, [character]),
 				}))
-
-				if (character === identity) {
-					saveJoinedChannels()
-				}
 			},
 
 			FLN({ character }) {
