@@ -9,10 +9,10 @@ import { useCharacterGender } from "./state"
 function CharacterSummary({ name }: { name: string }) {
 	const gender = useCharacterGender(name)
 	return (
-		<div className="grid gap-2">
+		<div className="grid gap-3">
 			<ExternalLink
 				href={getProfileUrl(name)}
-				className={`${headerText2} leading-none`}
+				className={headerText2}
 				style={{ color: genderColors[gender] }}
 			>
 				{name}
