@@ -42,7 +42,7 @@ describe("ChatLogger - web", () => {
 			expect(await logger.getMessages(roomId, 10)).toHaveLength(10)
 			expect(await logger.getMessages(roomId, 50)).toHaveLength(50)
 			expect(await logger.getMessages(roomId, 120)).toHaveLength(101)
-			expect(await logger.getMessages(roomId)).toHaveLength(101)
+			expect(await logger.getMessages(roomId, Infinity)).toHaveLength(101)
 		},
 		3,
 	)
