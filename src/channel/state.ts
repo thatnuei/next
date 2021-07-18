@@ -1,6 +1,6 @@
-import { produce } from "immer"
 import { atom, useAtom } from "jotai"
 import { selectAtom, useAtomValue, useUpdateAtom } from "jotai/utils"
+import { mapValues } from "lodash-es"
 import { useCallback, useMemo } from "react"
 import { characterAtom } from "../character/state"
 import type { Character } from "../character/types"
@@ -260,12 +260,11 @@ export function useChannelCommandListener() {
 			},
 
 			FLN({ character }) {
-				updateChannelDict(
-					produce((draft) => {
-						for (const channel of Object.values(draft)) {
-							delete channel.users[character]
-						}
-					}),
+				updateChannelDict((channels) =>
+					mapValues(channels, (channel) => ({
+						...channel,
+						users: omit(channel.users, [character]),
+					})),
 				)
 			},
 
