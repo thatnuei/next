@@ -15,18 +15,8 @@ interface Props {
 function ChannelView({ channelId }: Props) {
 	const channel = useChannel(channelId)
 	const actualMode = useActualChannelMode(channelId)
-	const { sendMessage, updateChannel } = useChannelActions()
+	const actions = useChannelActions(channelId)
 	const isLargeScreen = useMediaQuery(screenQueries.large)
-
-	function updateChatInput(chatInput: string) {
-		updateChannel(channelId, (channel) => {
-			channel.input = chatInput
-		})
-	}
-
-	function submitChatInput(message: string) {
-		sendMessage({ id: channelId, message })
-	}
 
 	const messageList = useMemo(() => {
 		function shouldShowMessage(message: MessageState) {
@@ -60,8 +50,8 @@ function ChannelView({ channelId }: Props) {
 
 			<ChatInput
 				value={channel.input}
-				onChangeText={updateChatInput}
-				onSubmit={submitChatInput}
+				onChangeText={actions.setInput}
+				onSubmit={actions.sendMessage}
 				maxLength={4096}
 			/>
 		</div>

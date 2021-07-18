@@ -51,7 +51,7 @@ function PrivateChatTab({ partnerName }: { partnerName: string }) {
 function ChannelRoomTab({ channel }: { channel: Channel }) {
 	const route = useRoute()
 	const isPublic = useIsPublicChannel(channel.id)
-	const { leave } = useChannelActions()
+	const { leave } = useChannelActions(channel.id)
 
 	return (
 		<RoomTab
@@ -65,7 +65,7 @@ function ChannelRoomTab({ channel }: { channel: Channel }) {
 			}
 			isUnread={channel.isUnread}
 			onClick={() => routes.channel({ channelId: channel.id }).push()}
-			onClose={() => leave(channel.id)}
+			onClose={() => leave()}
 		/>
 	)
 }

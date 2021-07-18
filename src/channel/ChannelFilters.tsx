@@ -10,15 +10,11 @@ interface Props {
 
 function ChannelFilters({ channelId, ...props }: Props) {
 	const { mode, selectedMode } = useChannel(channelId)
-	const { updateChannel } = useChannelActions()
+	const actions = useChannelActions(channelId)
 
 	function buttonProps(mode: ChannelMode) {
 		return {
-			onClick: () => {
-				updateChannel(channelId, (channel) => {
-					channel.mode = mode
-				})
-			},
+			onClick: () => actions.setSelectedMode(mode),
 			active: selectedMode === mode,
 		}
 	}

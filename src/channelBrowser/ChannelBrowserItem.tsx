@@ -10,13 +10,13 @@ type Props = TagProps<"button"> & {
 
 function ChannelBrowserItem({ info, ...props }: Props) {
 	const isJoined = useIsChannelJoined(info.id)
-	const { join, leave } = useChannelActions()
+	const { join, leave } = useChannelActions(info.id)
 
 	const handleClick = () => {
 		if (isJoined) {
-			leave(info.id)
+			leave()
 		} else {
-			join(info.id, info.title)
+			join(info.title)
 		}
 	}
 

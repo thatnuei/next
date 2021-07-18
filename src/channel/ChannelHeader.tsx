@@ -30,7 +30,7 @@ function ChannelHeader({ channelId }: Props) {
 	const isLargeScreen = useMediaQuery(screenQueries.large)
 	const [inviteOpen, setInviteOpen] = React.useState(false)
 	const isPublic = useIsPublicChannel(channelId)
-	const { clearChannelMessages } = useChannelActions()
+	const actions = useChannelActions(channelId)
 
 	return (
 		<header className="flex flex-row items-center gap-3 p-3 bg-midnight-0">
@@ -91,10 +91,7 @@ function ChannelHeader({ channelId }: Props) {
 						</DropdownMenuItem>
 
 						<DropdownMenuItem icon={<Icon which={icons.clearMessages} />}>
-							<button
-								type="button"
-								onClick={() => clearChannelMessages(channelId)}
-							>
+							<button type="button" onClick={() => actions.clearMessages()}>
 								Clear messages
 							</button>
 						</DropdownMenuItem>

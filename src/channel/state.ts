@@ -1,10 +1,10 @@
-import type { Draft } from "immer"
 import { produce } from "immer"
 import { atom } from "jotai"
 import { selectAtom, useAtomValue, useUpdateAtom } from "jotai/utils"
 import { useCallback, useMemo } from "react"
 import { characterAtom } from "../character/state"
 import type { Character } from "../character/types"
+import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
 import type { Dict, TruthyMap } from "../common/types"
 import { dictionaryAtomFamily } from "../jotai/dictionaryAtomFamily"
@@ -95,63 +95,57 @@ export function useActualChannelMode(id: string) {
 	return channel.mode === "both" ? channel.selectedMode : channel.mode
 }
 
-export function useChannelActions() {
+export function useJoinChannel() {
+	const { send } = useSocketActions()
+	const updateAtom = useUpdateAtomFn()
+
+	return useCallback(
+		(id: string, title?: string) => {
+			send({
+				type: "JCH",
+				params: { channel: id },
+			})
+			updateAtom(channelAtom(id), (channel) => ({
+				...channel,
+				joinState: "joining",
+				title: title || channel.title,
+			}))
+		},
+		[send, updateAtom],
+	)
+}
+
+export function useChannelActions(id: string) {
 	const { send } = useSocketActions()
 	const identity = useIdentity()
 	const logger = useChatLogger()
-	const updateAtom = useUpdateAtomFn()
-
-	const updateChannel = useCallback(
-		(id: string, mutate: (channel: Draft<Channel>) => void) => {
-			updateAtom(
-				channelAtom(id),
-				produce((draft) => {
-					mutate(draft)
-				}),
-			)
-		},
-		[updateAtom],
-	)
-
-	const addChannelMessage = useCallback(
-		(channelId: string, message: MessageState) => {
-			updateAtom(channelAtom(channelId), (channel) =>
-				addRoomMessage(channel, message),
-			)
-			logger.addMessage(`channel:${channelId}`, message)
-		},
-		[logger, updateAtom],
-	)
-
-	const clearChannelMessages = useCallback(
-		(channelId: string) => {
-			updateAtom(channelAtom(channelId), (channel) =>
-				clearRoomMessages(channel),
-			)
-		},
-		[updateAtom],
-	)
+	const updateChannel = useUpdateAtom(channelAtom(id))
+	const joinChannel = useJoinChannel()
 
 	const join = useCallback(
-		(id: string, title?: string) => {
-			send({ type: "JCH", params: { channel: id } })
-
-			if (title) {
-				updateChannel(id, (channel) => (channel.title = title))
-			}
-		},
-		[send, updateChannel],
+		(title?: string) => joinChannel(id, title),
+		[id, joinChannel],
 	)
 
-	const leave = useCallback(
-		(id: string) => {
-			send({ type: "LCH", params: { channel: id } })
+	const leave = useCallback(() => {
+		send({ type: "LCH", params: { channel: id } })
+		updateChannel((channel) => ({ ...channel, joinState: "leaving" }))
+	}, [id, send, updateChannel])
+
+	const addMessage = useCallback(
+		(message: MessageState) => {
+			updateChannel((channel) => addRoomMessage(channel, message))
+			logger.addMessage(`channel:${id}`, message)
 		},
-		[send],
+		[id, logger, updateChannel],
 	)
+
+	const clearMessages = useCallback(() => {
+		updateChannel(clearRoomMessages)
+	}, [updateChannel])
 
 	const sendMessage = useCallback(
-		({ id, message }: { id: string; message: string }) => {
+		(message: string) => {
 			if (!identity) return
 
 			const rollPrefix = "/roll"
@@ -179,9 +173,23 @@ export function useChannelActions() {
 			}
 
 			send({ type: "MSG", params: { channel: id, message } })
-			addChannelMessage(id, createChannelMessage(identity, message))
+			addMessage(createChannelMessage(identity, message))
 		},
-		[addChannelMessage, identity, send],
+		[addMessage, id, identity, send],
+	)
+
+	const setSelectedMode = useCallback(
+		(selectedMode: ChannelMode) => {
+			updateChannel((channel) => ({ ...channel, selectedMode }))
+		},
+		[updateChannel],
+	)
+
+	const setInput = useCallback(
+		(input: string) => {
+			updateChannel((channel) => ({ ...channel, input }))
+		},
+		[updateChannel],
 	)
 
 	return {
@@ -189,17 +197,20 @@ export function useChannelActions() {
 		leave,
 		sendMessage,
 		updateChannel,
-		addChannelMessage,
-		clearChannelMessages,
+		addMessage,
+		clearMessages,
+		setSelectedMode,
+		setInput,
 	}
 }
 
 export function useChannelCommandListener() {
 	const identity = useIdentity()
 	const account = useAccount()
-	const { join, addChannelMessage, updateChannel } = useChannelActions()
 	const logger = useChatLogger()
 	const updateChannelDict = useUpdateAtom(channelDictAtom)
+	const updateAtom = useUpdateAtomFn()
+	const joinChannel = useJoinChannel()
 
 	useSocketListener((command: ServerCommand) => {
 		matchCommand(command, {
@@ -207,29 +218,27 @@ export function useChannelCommandListener() {
 				if (account && identity) {
 					const channelIds = await loadChannels(account, identity)
 					for (const id of channelIds) {
-						join(id)
+						joinChannel(id)
 					}
 				}
 			},
 
 			JCH({ channel: id, character: { identity: name }, title }) {
-				updateChannel(id, (channel) => {
-					channel.title = title
-					channel.users[name] = true
-					if (name === identity) {
-						channel.joinState = "joined"
-					}
-				})
+				updateAtom(channelAtom(id), (channel) => ({
+					...channel,
+					joinState: "joined",
+					title,
+					users: { ...channel.users, [name]: true },
+				}))
 				logger.setRoomName(`channel:${id}`, title)
 			},
 
 			LCH({ channel: id, character }) {
-				updateChannel(id, (channel) => {
-					delete channel.users[character]
-					if (character === identity) {
-						channel.joinState = "left"
-					}
-				})
+				updateAtom(channelAtom(id), (channel) => ({
+					...channel,
+					joinState: character === identity ? "left" : channel.joinState,
+					users: omit(channel.users, [character]),
+				}))
 
 				// if (account && identity) {
 				// 	saveChannels(
@@ -253,38 +262,45 @@ export function useChannelCommandListener() {
 			},
 
 			ICH({ channel: id, users, mode }) {
-				updateChannel(id, (channel) => {
-					channel.users = truthyMap(users.map((user) => user.identity))
-					channel.mode = mode
-				})
+				updateAtom(channelAtom(id), (channel) => ({
+					...channel,
+					mode,
+					users: truthyMap(users.map((user) => user.identity)),
+				}))
 			},
 
 			CDS({ channel: id, description }) {
-				updateChannel(id, (channel) => {
-					channel.description = description
-				})
+				updateAtom(channelAtom(id), (channel) => ({
+					...channel,
+					description,
+				}))
 			},
 
 			COL({ channel: id, oplist }) {
-				updateChannel(id, (channel) => {
-					channel.ops = truthyMap(oplist)
-				})
+				updateAtom(channelAtom(id), (channel) => ({
+					...channel,
+					ops: truthyMap(oplist),
+				}))
 			},
 
 			MSG({ channel: id, message, character }) {
-				addChannelMessage(id, createChannelMessage(character, message))
+				updateAtom(channelAtom(id), (channel) =>
+					addRoomMessage(channel, createChannelMessage(character, message)),
+				)
 			},
 
 			LRP({ channel: id, character, message }) {
-				addChannelMessage(id, createAdMessage(character, message))
+				updateAtom(channelAtom(id), (channel) =>
+					addRoomMessage(channel, createAdMessage(character, message)),
+				)
 			},
 
 			RLL(params) {
 				if ("channel" in params) {
-					addChannelMessage(
-						// bottle messages have a lowercased channel id
-						params.channel.replace("adh", "ADH"),
-						createSystemMessage(params.message),
+					// bottle messages have a lowercased channel id
+					const id = params.channel.replace("adh", "ADH")
+					updateAtom(channelAtom(id), (channel) =>
+						addRoomMessage(channel, createSystemMessage(params.message)),
 					)
 				}
 			},

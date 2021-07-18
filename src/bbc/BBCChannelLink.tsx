@@ -14,14 +14,14 @@ export default function BBCChannelLink({
 	type: "public" | "private"
 }>) {
 	const userCount = useChannelUserCount(id)
-	const { join } = useChannelActions()
+	const { join } = useChannelActions(id)
 
 	return (
 		<span className={`inline-flex items-baseline`}>
 			<span className={`self-center inline w-4 h-4 mr-1 opacity-75`}>
 				<Icon which={type === "public" ? icons.earth : icons.lock} />
 			</span>
-			<button className="group" onClick={() => join(id, title)}>
+			<button className="group" onClick={() => join(title)}>
 				<span className={`underline group-hover:no-underline`}>{title}</span>{" "}
 				<span>({userCount})</span>
 			</button>
