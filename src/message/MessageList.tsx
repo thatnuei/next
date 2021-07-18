@@ -1,14 +1,16 @@
-import { useLayoutEffect, useRef } from "react"
+import clsx from "clsx"
+import { memo, useLayoutEffect, useRef } from "react"
 import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
 
 interface Props {
 	messages: readonly MessageState[]
+	isStale?: boolean
 }
 
 const bottomScrollThreshold = 20
 
-function MessageList({ messages }: Props) {
+function MessageList({ messages, isStale }: Props) {
 	const containerRef = useRef<HTMLOListElement | null>(null)
 
 	const isBottomScrolled = () => {
@@ -36,7 +38,14 @@ function MessageList({ messages }: Props) {
 	useLayoutEffect(scrollToBottom, [])
 
 	return (
-		<ol className="h-full overflow-y-auto" ref={containerRef}>
+		<ol
+			className={clsx(
+				"h-full overflow-y-auto transition-opacity",
+				isStale && `opacity-50`,
+			)}
+			style={{ transitionDelay: isStale ? "0.3s" : "0" }}
+			ref={containerRef}
+		>
 			{messages.map((message) => (
 				<li key={message.key}>
 					<MessageListItem message={message} />
@@ -46,4 +55,4 @@ function MessageList({ messages }: Props) {
 	)
 }
 
-export default MessageList
+export default memo(MessageList)

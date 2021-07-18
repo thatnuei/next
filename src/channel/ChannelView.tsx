@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useDeferredValue, useMemo } from "react"
 import ChatInput from "../chat/ChatInput"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import MessageList from "../message/MessageList"
@@ -18,28 +18,31 @@ function ChannelView({ channelId }: Props) {
 	const actions = useChannelActions(channelId)
 	const isLargeScreen = useMediaQuery(screenQueries.large)
 
-	const messageList = useMemo(() => {
-		function shouldShowMessage(message: MessageState) {
+	const messages = useMemo(() => {
+		return channel.messages.filter((message: MessageState) => {
 			if (actualMode === "ads") {
 				return message.type !== "normal" && message.type !== "action"
 			}
-
 			if (actualMode === "chat") {
 				return message.type !== "lfrp"
 			}
-
 			return true
-		}
-
-		return <MessageList messages={channel.messages.filter(shouldShowMessage)} />
+		})
 	}, [actualMode, channel.messages])
+
+	const deferredMessages = useDeferredValue(messages)
 
 	return (
 		<div className={`flex flex-col h-full`}>
 			<ChannelHeader channelId={channelId} />
 
 			<div className={`flex flex-1 min-h-0 my-1`}>
-				<main className={`relative flex-1 bg-midnight-1`}>{messageList}</main>
+				<main className={`relative flex-1 bg-midnight-1`}>
+					<MessageList
+						messages={deferredMessages}
+						isStale={deferredMessages !== messages}
+					/>
+				</main>
 
 				{isLargeScreen && (
 					<div className={`w-56 min-h-0 ml-1`}>
