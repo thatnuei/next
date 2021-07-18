@@ -1,12 +1,14 @@
-import * as jotai from "jotai"
-import * as jotaiUtils from "jotai/utils"
-import { useCallback } from "react"
-import { charactersAtom } from "../character/state"
+import type { Draft } from "immer"
+import { produce } from "immer"
+import { atom } from "jotai"
+import { selectAtom, useAtomValue, useUpdateAtom } from "jotai/utils"
+import { useCallback, useMemo } from "react"
+import { characterAtom } from "../character/state"
 import type { Character } from "../character/types"
-import { isPresent } from "../common/isPresent"
-import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
-import type { TruthyMap } from "../common/types"
+import type { Dict, TruthyMap } from "../common/types"
+import { dictionaryAtomFamily } from "../jotai/dictionaryAtomFamily"
+import { useUpdateAtomFn } from "../jotai/useUpdateAtomFn"
 import { useChatLogger } from "../logging/context"
 import type { MessageState } from "../message/MessageState"
 import {
@@ -14,15 +16,22 @@ import {
 	createChannelMessage,
 	createSystemMessage,
 } from "../message/MessageState"
-import { roomKey, useRoomActions } from "../room/state"
+import type { RoomState } from "../room/state"
+import {
+	addRoomMessage,
+	clearRoomMessages,
+	createRoomState,
+} from "../room/state"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
 import { useAccount, useIdentity } from "../user"
-import { loadChannels, saveChannels } from "./storage"
+import { loadChannels } from "./storage"
 import type { ChannelMode } from "./types"
 
-export interface Channel {
+type ChannelJoinState = "joining" | "joined" | "leaving" | "left"
+
+export interface Channel extends RoomState {
 	readonly id: string
 	readonly title: string
 	readonly description: string
@@ -30,8 +39,7 @@ export interface Channel {
 	readonly selectedMode: ChannelMode
 	readonly users: TruthyMap
 	readonly ops: TruthyMap
-	readonly isUnread: boolean
-	readonly chatInput: string
+	readonly joinState: ChannelJoinState
 }
 
 function createChannel(id: string): Channel {
@@ -43,55 +51,43 @@ function createChannel(id: string): Channel {
 		selectedMode: "chat",
 		users: {},
 		ops: {},
-		isUnread: false,
-		chatInput: "",
+		joinState: "left",
+		...createRoomState(),
 	}
 }
 
-export const channelRoomKey = (channelId: string) =>
-	roomKey(`channel:${channelId}`)
+const channelDictAtom = atom<Dict<Channel>>({})
 
-const channelAtom = jotaiUtils.atomFamily((id: string) => {
-	return jotai.atom<Channel>(createChannel(id))
-})
+const channelAtom = dictionaryAtomFamily(channelDictAtom, createChannel)
 
-// todo: represent join states instead of just booleans (?)
-const joinedChannelIdsAtom = jotai.atom<TruthyMap>({})
+const isChannelJoined = (channel: Channel) => channel.joinState !== "left"
 
-const joinedChannelsAtom = jotai.atom((get): readonly Channel[] => {
-	const joinedChannelIds = get(joinedChannelIdsAtom)
-	return Object.keys(joinedChannelIds).map((id) => get(channelAtom(id)))
-})
-
-const isChannelJoinedAtom = jotaiUtils.atomFamily((id: string) =>
-	jotai.atom((get) => get(joinedChannelIdsAtom)[id] ?? false),
-)
-
-const channelCharacters = jotaiUtils.atomFamily((channelId: string) => {
-	return jotai.atom((get): readonly Character[] => {
-		const channelUsers = get(channelAtom(channelId)).users
-		const characters = get(charactersAtom)
-
-		return Object.keys(channelUsers)
-			.map((userId) => characters[userId])
-			.filter(isPresent)
-	})
-})
-
-export function useChannel(id: string) {
-	return jotai.useAtom(channelAtom(id))[0]
+export function useChannel(id: string): Channel {
+	return useAtomValue(channelAtom(id))
 }
 
-export function useJoinedChannels() {
-	return jotai.useAtom(joinedChannelsAtom)[0]
+export function useJoinedChannels(): readonly Channel[] {
+	const channels = Object.values(useAtomValue(channelDictAtom))
+	return useMemo(() => channels.filter(isChannelJoined), [channels])
 }
 
 export function useIsChannelJoined(id: string) {
-	return jotai.useAtom(isChannelJoinedAtom(id))[0]
+	return useAtomValue(selectAtom(channelAtom(id), isChannelJoined))
 }
 
-export function useChannelCharacters(id: string) {
-	return jotai.useAtom(channelCharacters(id))[0]
+export function useChannelCharacters(id: string): readonly Character[] {
+	const channelUsersAtom = useMemo(() => {
+		return selectAtom(channelAtom(id), (channel) => channel.users)
+	}, [id])
+
+	const channelCharactersAtom = useMemo(() => {
+		return atom((get) => {
+			const channelUsers = get(channelUsersAtom)
+			return Object.keys(channelUsers).map((name) => get(characterAtom(name)))
+		})
+	}, [channelUsersAtom])
+
+	return useAtomValue(channelCharactersAtom)
 }
 
 export function useActualChannelMode(id: string) {
@@ -103,31 +99,45 @@ export function useChannelActions() {
 	const { send } = useSocketActions()
 	const identity = useIdentity()
 	const logger = useChatLogger()
-	const { addMessage } = useRoomActions()
+	const updateAtom = useUpdateAtomFn()
+
+	const updateChannel = useCallback(
+		(id: string, mutate: (channel: Draft<Channel>) => void) => {
+			updateAtom(
+				channelAtom(id),
+				produce((draft) => {
+					mutate(draft)
+				}),
+			)
+		},
+		[updateAtom],
+	)
 
 	const addChannelMessage = useCallback(
 		(channelId: string, message: MessageState) => {
-			addMessage(channelRoomKey(channelId), message)
+			updateAtom(channelAtom(channelId), (channel) =>
+				addRoomMessage(channel, message),
+			)
 			logger.addMessage(`channel:${channelId}`, message)
 		},
-		[addMessage, logger],
+		[logger, updateAtom],
 	)
 
-	const updateChannel = jotaiUtils.useAtomCallback(
-		useCallback((get, set, properties: Partial<Channel> & { id: string }) => {
-			set(channelAtom(properties.id), (prev) => ({ ...prev, ...properties }))
-		}, []),
+	const clearChannelMessages = useCallback(
+		(channelId: string) => {
+			updateAtom(channelAtom(channelId), (channel) =>
+				clearRoomMessages(channel),
+			)
+		},
+		[updateAtom],
 	)
 
 	const join = useCallback(
 		(id: string, title?: string) => {
-			send({
-				type: "JCH",
-				params: { channel: id },
-			})
+			send({ type: "JCH", params: { channel: id } })
 
 			if (title) {
-				updateChannel({ id, title })
+				updateChannel(id, (channel) => (channel.title = title))
 			}
 		},
 		[send, updateChannel],
@@ -135,12 +145,7 @@ export function useChannelActions() {
 
 	const leave = useCallback(
 		(id: string) => {
-			send({
-				type: "LCH",
-				params: {
-					channel: id,
-				},
-			})
+			send({ type: "LCH", params: { channel: id } })
 		},
 		[send],
 	)
@@ -185,135 +190,104 @@ export function useChannelActions() {
 		sendMessage,
 		updateChannel,
 		addChannelMessage,
+		clearChannelMessages,
 	}
 }
 
 export function useChannelCommandListener() {
 	const identity = useIdentity()
 	const account = useAccount()
-	const { join, addChannelMessage } = useChannelActions()
+	const { join, addChannelMessage, updateChannel } = useChannelActions()
 	const logger = useChatLogger()
+	const updateChannelDict = useUpdateAtom(channelDictAtom)
 
-	const handler = useCallback(
-		(get: jotai.Getter, set: jotai.Setter, command: ServerCommand) => {
-			matchCommand(command, {
-				async IDN() {
-					set(joinedChannelIdsAtom, {})
-
-					if (account && identity) {
-						const channelIds = await loadChannels(account, identity)
-						for (const id of channelIds) {
-							join(id)
-						}
+	useSocketListener((command: ServerCommand) => {
+		matchCommand(command, {
+			async IDN() {
+				if (account && identity) {
+					const channelIds = await loadChannels(account, identity)
+					for (const id of channelIds) {
+						join(id)
 					}
-				},
+				}
+			},
 
-				JCH({ channel: id, character: { identity: name }, title }) {
+			JCH({ channel: id, character: { identity: name }, title }) {
+				updateChannel(id, (channel) => {
+					channel.title = title
+					channel.users[name] = true
 					if (name === identity) {
-						set(
-							joinedChannelIdsAtom,
-							(prev): TruthyMap => ({ ...prev, [id]: true }),
-						)
+						channel.joinState = "joined"
 					}
+				})
+				logger.setRoomName(`channel:${id}`, title)
+			},
 
-					set(
-						channelAtom(id),
-						(prev): Channel => ({
-							...prev,
-							title,
-							users: { ...prev.users, [name]: true },
-						}),
-					)
-
-					logger.setRoomName(`channel:${id}`, title)
-
-					if (account && identity) {
-						saveChannels(
-							Object.entries(get(joinedChannelIdsAtom))
-								.filter(([, joined]) => joined)
-								.map(([id]) => id),
-							account,
-							identity,
-						)
-					}
-				},
-
-				LCH({ channel: id, character }) {
+			LCH({ channel: id, character }) {
+				updateChannel(id, (channel) => {
+					delete channel.users[character]
 					if (character === identity) {
-						set(joinedChannelIdsAtom, (prev) => omit(prev, [id]))
+						channel.joinState = "left"
 					}
+				})
 
-					set(channelAtom(id), (prev) => ({
-						...prev,
-						users: omit(prev.users, [character]),
-					}))
+				// if (account && identity) {
+				// 	saveChannels(
+				// 		Object.entries(get(joinedChannelIdsAtom))
+				// 			.filter(([, joined]) => joined)
+				// 			.map(([id]) => id),
+				// 		account,
+				// 		identity,
+				// 	)
+				// }
+			},
 
-					if (account && identity) {
-						saveChannels(
-							Object.entries(get(joinedChannelIdsAtom))
-								.filter(([, joined]) => joined)
-								.map(([id]) => id),
-							account,
-							identity,
-						)
-					}
-				},
+			FLN({ character }) {
+				updateChannelDict(
+					produce((draft) => {
+						for (const channel of Object.values(draft)) {
+							delete channel.users[character]
+						}
+					}),
+				)
+			},
 
-				FLN({ character }) {
-					// normally we'd want to clear _all_ channels,
-					// but we're fine with just clearing the joined channels.
-					// for unjoined channels, we get an ICH of all the users anyway on join
-					for (const id of Object.keys(get(joinedChannelIdsAtom))) {
-						set(channelAtom(id), (prev) => ({
-							...prev,
-							users: omit(prev.users, [character]),
-						}))
-					}
-				},
+			ICH({ channel: id, users, mode }) {
+				updateChannel(id, (channel) => {
+					channel.users = truthyMap(users.map((user) => user.identity))
+					channel.mode = mode
+				})
+			},
 
-				ICH({ channel: id, users, mode }) {
-					set(channelAtom(id), (prev) => ({
-						...prev,
-						mode,
-						users: truthyMap(users.map((user) => user.identity)),
-					}))
-				},
+			CDS({ channel: id, description }) {
+				updateChannel(id, (channel) => {
+					channel.description = description
+				})
+			},
 
-				CDS({ channel: id, description }) {
-					set(channelAtom(id), (prev) => ({
-						...prev,
-						description,
-					}))
-				},
+			COL({ channel: id, oplist }) {
+				updateChannel(id, (channel) => {
+					channel.ops = truthyMap(oplist)
+				})
+			},
 
-				COL({ channel: id, oplist }) {
-					set(channelAtom(id), (prev) => ({
-						...prev,
-						ops: truthyMap(oplist),
-					}))
-				},
+			MSG({ channel: id, message, character }) {
+				addChannelMessage(id, createChannelMessage(character, message))
+			},
 
-				MSG({ channel: id, message, character }) {
-					addChannelMessage(id, createChannelMessage(character, message))
-				},
+			LRP({ channel: id, character, message }) {
+				addChannelMessage(id, createAdMessage(character, message))
+			},
 
-				LRP({ channel: id, character, message }) {
-					addChannelMessage(id, createAdMessage(character, message))
-				},
-
-				RLL(params) {
-					if ("channel" in params) {
-						addChannelMessage(
-							// bottle messages have a lowercased channel id
-							params.channel.replace("adh", "ADH"),
-							createSystemMessage(params.message),
-						)
-					}
-				},
-			})
-		},
-		[account, addChannelMessage, identity, join, logger],
-	)
-
-	useSocketListener(jotaiUtils.useAtomCallback(handler))
+			RLL(params) {
+				if ("channel" in params) {
+					addChannelMessage(
+						// bottle messages have a lowercased channel id
+						params.channel.replace("adh", "ADH"),
+						createSystemMessage(params.message),
+					)
+				}
+			},
+		})
+	})
 }

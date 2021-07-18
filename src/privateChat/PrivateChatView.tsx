@@ -5,12 +5,7 @@ import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
 import ChatMenuButton from "../chat/ChatMenuButton"
 import MessageList from "../message/MessageList"
-import { useRoomActions, useRoomState } from "../room/state"
-import {
-	getPrivateChatRoomKey,
-	usePrivateChatActions,
-	usePrivateChatTypingStatus,
-} from "./state"
+import { usePrivateChat, usePrivateChatActions } from "./state"
 import TypingStatusDisplay from "./TypingStatusDisplay"
 
 interface Props {
@@ -18,10 +13,8 @@ interface Props {
 }
 
 function PrivateChatView({ partnerName }: Props) {
-	const { messages, input } = useRoomState(getPrivateChatRoomKey(partnerName))
-	const { setInput } = useRoomActions()
-	const typingStatus = usePrivateChatTypingStatus(partnerName)
-	const { sendMessage } = usePrivateChatActions()
+	const { messages, input, typingStatus } = usePrivateChat(partnerName)
+	const { sendMessage, setInput } = usePrivateChatActions()
 
 	return (
 		<div className="flex flex-col h-full">
@@ -53,12 +46,10 @@ function PrivateChatView({ partnerName }: Props) {
 			<ChatInput
 				value={input}
 				maxLength={50000}
-				onChangeText={(input) =>
-					setInput(getPrivateChatRoomKey(partnerName), input)
-				}
+				onChangeText={(input) => setInput(partnerName, input)}
 				onSubmit={(message) => {
 					sendMessage({ partnerName, message })
-					setInput(getPrivateChatRoomKey(partnerName), "")
+					setInput(partnerName, "")
 				}}
 			/>
 		</div>

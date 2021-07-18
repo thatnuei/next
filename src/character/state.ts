@@ -8,6 +8,7 @@ import { raise } from "../common/raise"
 import { truthyMap } from "../common/truthyMap"
 import type { Dict, Mutable, TruthyMap } from "../common/types"
 import { unique } from "../common/unique"
+import { dictionaryAtomFamily } from "../jotai/dictionaryAtomFamily"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
@@ -28,10 +29,11 @@ function createCharacter(name: string): Character {
 	}
 }
 
-export const charactersAtom = jotai.atom<Dict<Character>>({})
+export const characterDictAtom = jotai.atom<Dict<Character>>({})
 
-const characterAtom = jotaiUtils.atomFamily((name: string) =>
-	jotai.atom((get) => get(charactersAtom)[name] ?? createCharacter(name)),
+export const characterAtom = dictionaryAtomFamily(
+	characterDictAtom,
+	createCharacter,
 )
 
 const characterGenderAtom = jotaiUtils.atomFamily((name: string) => {
@@ -70,7 +72,7 @@ export function useFriendCharacters(): readonly Character[] {
 		useMemo(() => {
 			return jotai.atom((get) => {
 				const friends = get(friendshipsAtom(account))
-				const characters = get(charactersAtom)
+				const characters = get(characterDictAtom)
 				return unique(
 					friends
 						.map(({ them }) => characters[them])
@@ -89,7 +91,7 @@ export function useBookmarkCharacters(): readonly Character[] {
 		useMemo(() => {
 			return jotai.atom((get) => {
 				const bookmarks = get(bookmarksAtom(account))
-				const characters = get(charactersAtom)
+				const characters = get(characterDictAtom)
 				return unique(
 					Object.keys(bookmarks)
 						.map((name) => characters[name])
@@ -108,7 +110,7 @@ export function useSearchedCharacters(queryAtom: jotai.Atom<string>) {
 				const query = get(queryAtom).trim().toLowerCase()
 				if (!query) return []
 
-				const characters = Object.values(get(charactersAtom)).filter(
+				const characters = Object.values(get(characterDictAtom)).filter(
 					(character) => character.status !== "offline",
 				)
 
@@ -226,11 +228,11 @@ export function useCharacterCommandListener() {
 							for (const [name, gender, status, statusMessage] of characters) {
 								newCharacters[name] = { name, gender, status, statusMessage }
 							}
-							set(charactersAtom, (prev) => ({ ...prev, ...newCharacters }))
+							set(characterDictAtom, (prev) => ({ ...prev, ...newCharacters }))
 						},
 
 						NLN({ identity: name, gender, status }) {
-							set(charactersAtom, (prev) => ({
+							set(characterDictAtom, (prev) => ({
 								...prev,
 								[name]: { name, gender, status, statusMessage: "" },
 							}))
@@ -238,7 +240,7 @@ export function useCharacterCommandListener() {
 
 						FLN({ character: name }) {
 							set(
-								charactersAtom,
+								characterDictAtom,
 								(prev): Dict<Character> => ({
 									...prev,
 									[name]: {
@@ -252,7 +254,7 @@ export function useCharacterCommandListener() {
 
 						STA({ character: name, status, statusmsg }) {
 							set(
-								charactersAtom,
+								characterDictAtom,
 								(prev): Dict<Character> => ({
 									...prev,
 									[name]: {

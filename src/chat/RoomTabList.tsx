@@ -4,11 +4,10 @@ import { useChannelActions, useJoinedChannels } from "../channel/state"
 import { useIsPublicChannel } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import {
-	getPrivateChatRoomKey,
 	useOpenChatNames,
+	usePrivateChat,
 	usePrivateChatActions,
 } from "../privateChat/state"
-import { useRoomState } from "../room/state"
 import { routes, useRoute } from "../router"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -32,7 +31,7 @@ export default function RoomTabList() {
 
 function PrivateChatTab({ partnerName }: { partnerName: string }) {
 	const route = useRoute()
-	const { isUnread } = useRoomState(getPrivateChatRoomKey(partnerName))
+	const privateChat = usePrivateChat(partnerName)
 	const { closePrivateChat } = usePrivateChatActions()
 
 	return (
@@ -42,7 +41,7 @@ function PrivateChatTab({ partnerName }: { partnerName: string }) {
 			isActive={
 				route.name === "privateChat" && route.params.partnerName === partnerName
 			}
-			isUnread={isUnread}
+			isUnread={privateChat.isUnread}
 			onClick={() => routes.privateChat({ partnerName }).push()}
 			onClose={() => closePrivateChat(partnerName)}
 		/>

@@ -14,7 +14,11 @@ function ChannelFilters({ channelId, ...props }: Props) {
 
 	function buttonProps(mode: ChannelMode) {
 		return {
-			onClick: () => updateChannel({ id: channelId, selectedMode: mode }),
+			onClick: () => {
+				updateChannel(channelId, (channel) => {
+					channel.mode = mode
+				})
+			},
 			active: selectedMode === mode,
 		}
 	}

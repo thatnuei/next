@@ -3,16 +3,10 @@ import ChatInput from "../chat/ChatInput"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import MessageList from "../message/MessageList"
 import type { MessageState } from "../message/MessageState"
-import { useRoomState } from "../room/state"
 import { screenQueries } from "../ui/screens"
 import ChannelHeader from "./ChannelHeader"
 import ChannelUserList from "./ChannelUserList"
-import {
-	channelRoomKey,
-	useActualChannelMode,
-	useChannel,
-	useChannelActions,
-} from "./state"
+import { useActualChannelMode, useChannel, useChannelActions } from "./state"
 
 interface Props {
 	channelId: string
@@ -20,17 +14,18 @@ interface Props {
 
 function ChannelView({ channelId }: Props) {
 	const channel = useChannel(channelId)
-	const { messages } = useRoomState(channelRoomKey(channelId))
 	const actualMode = useActualChannelMode(channelId)
 	const { sendMessage, updateChannel } = useChannelActions()
 	const isLargeScreen = useMediaQuery(screenQueries.large)
 
 	function updateChatInput(chatInput: string) {
-		void updateChannel({ id: channelId, chatInput })
+		updateChannel(channelId, (channel) => {
+			channel.input = chatInput
+		})
 	}
 
 	function submitChatInput(message: string) {
-		void sendMessage({ id: channelId, message })
+		sendMessage({ id: channelId, message })
 	}
 
 	const messageList = useMemo(() => {
@@ -46,8 +41,8 @@ function ChannelView({ channelId }: Props) {
 			return true
 		}
 
-		return <MessageList messages={messages.filter(shouldShowMessage)} />
-	}, [actualMode, messages])
+		return <MessageList messages={channel.messages.filter(shouldShowMessage)} />
+	}, [actualMode, channel.messages])
 
 	return (
 		<div className={`flex flex-col h-full`}>
@@ -64,7 +59,7 @@ function ChannelView({ channelId }: Props) {
 			</div>
 
 			<ChatInput
-				value={channel.chatInput}
+				value={channel.input}
 				onChangeText={updateChatInput}
 				onSubmit={submitChatInput}
 				maxLength={4096}

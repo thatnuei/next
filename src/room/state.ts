@@ -1,19 +1,14 @@
-import type { Draft } from "immer"
-import produce from "immer"
-import { atom } from "jotai"
-import { useAtomValue, useUpdateAtom } from "jotai/utils"
-import { useMemo } from "react"
-import type { Dict } from "../common/types"
 import type { MessageState } from "../message/MessageState"
 
-// room state
 export interface RoomState {
 	readonly messages: readonly MessageState[]
 	readonly input: string
 	readonly isUnread: boolean
 }
 
-function createRoomState(): RoomState {
+const maxMessageCount = 500
+
+export function createRoomState(): RoomState {
 	return {
 		messages: [],
 		input: "",
@@ -21,56 +16,31 @@ function createRoomState(): RoomState {
 	}
 }
 
-type RoomKey = string & { __isRoomKey: never }
-export const roomKey = (key: string) => key as RoomKey
+export const addRoomMessage = <T extends RoomState>(
+	room: T,
+	message: MessageState,
+): T => ({
+	...room,
+	messages: [...room.messages, message].slice(-maxMessageCount),
+})
 
-const maxMessageCount = 500
+export const clearRoomMessages = <T extends RoomState>(room: T): T => ({
+	...room,
+	messages: [],
+})
 
-const roomsAtom = atom<Dict<RoomState>>({})
+export const setRoomInput = <T extends RoomState>(
+	room: T,
+	input: string,
+): T => ({
+	...room,
+	input,
+})
 
-export function useRoomState(key: RoomKey): RoomState {
-	const rooms = useAtomValue(roomsAtom)
-	const fallbackRoom = useMemo(() => createRoomState(), [])
-	return rooms[key] ?? fallbackRoom
-}
-
-export function useRoomActions() {
-	const setRooms = useUpdateAtom(roomsAtom)
-
-	return useMemo(() => {
-		const updateRoom = (
-			key: RoomKey,
-			mutate: (room: Draft<RoomState>) => void,
-		) => {
-			setRooms(
-				produce((rooms) => {
-					const room = (rooms[key] ??= createRoomState() as Draft<RoomState>)
-					mutate(room)
-				}),
-			)
-		}
-
-		return {
-			addMessage(key: RoomKey, message: MessageState) {
-				updateRoom(key, (room) => {
-					room.messages = [...room.messages, message].slice(-maxMessageCount)
-				})
-			},
-			clearMessages(key: RoomKey) {
-				updateRoom(key, (room) => {
-					room.messages = []
-				})
-			},
-			setInput(key: RoomKey, input: string) {
-				updateRoom(key, (room) => {
-					room.input = input
-				})
-			},
-			setUnread(key: RoomKey, isUnread: boolean) {
-				updateRoom(key, (room) => {
-					room.isUnread = isUnread
-				})
-			},
-		}
-	}, [setRooms])
-}
+export const setRoomUnread = <T extends RoomState>(
+	room: T,
+	isUnread: boolean,
+): T => ({
+	...room,
+	isUnread,
+})

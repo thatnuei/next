@@ -1,48 +1,56 @@
 import { atom } from "jotai"
-import {
-	atomFamily,
-	useAtomCallback,
-	useAtomValue,
-	useUpdateAtom,
-} from "jotai/utils"
+import { useAtomCallback, useAtomValue, useUpdateAtom } from "jotai/utils"
 import { useCallback, useMemo } from "react"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
-import type { TruthyMap } from "../common/types"
+import type { Dict, TruthyMap } from "../common/types"
+import { dictionaryAtomFamily } from "../jotai/dictionaryAtomFamily"
+import { useUpdateAtomFn } from "../jotai/useUpdateAtomFn"
 import {
 	createPrivateMessage,
 	createSystemMessage,
 } from "../message/MessageState"
-import { roomKey, useRoomActions } from "../room/state"
-import type { ServerCommand } from "../socket/helpers"
+import type { RoomState } from "../room/state"
+import { addRoomMessage } from "../room/state"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
 import { useIdentity } from "../user"
 import { restorePrivateChats, savePrivateChats } from "./storage"
 import type { TypingStatus } from "./types"
 
-export const getPrivateChatRoomKey = (partnerName: string) =>
-	roomKey(`privateChat:${partnerName}`)
+interface PrivateChat extends RoomState {
+	readonly partnerName: string
+	readonly typingStatus: TypingStatus
+}
+
+const privateChatDictAtom = atom<Dict<PrivateChat>>({})
+
+const privateChatAtom = dictionaryAtomFamily(
+	privateChatDictAtom,
+	(partnerName: string): PrivateChat => ({
+		partnerName,
+		input: "",
+		messages: [],
+		isUnread: false,
+		typingStatus: "clear",
+	}),
+)
 
 const openChatNamesAtom = atom<TruthyMap>({})
-
-const privateChatTypingStatusAtom = atomFamily((partnerName: string) =>
-	atom<TypingStatus>("clear"),
-)
 
 export function useOpenChatNames() {
 	const openChatNames = useAtomValue(openChatNamesAtom)
 	return useMemo(() => Object.keys(openChatNames), [openChatNames])
 }
 
-export function usePrivateChatTypingStatus(partnerName: string) {
-	return useAtomValue(privateChatTypingStatusAtom(partnerName))
+export function usePrivateChat(partnerName: string): PrivateChat {
+	return useAtomValue(privateChatAtom(partnerName))
 }
 
 export function usePrivateChatActions() {
 	const { send } = useSocketActions()
 	const identity = useIdentity()
-	const { addMessage } = useRoomActions()
+	const updateAtom = useUpdateAtomFn()
 
 	const setPrivateChatNames = useAtomCallback(
 		useCallback(
@@ -107,18 +115,28 @@ export function usePrivateChatActions() {
 				},
 			})
 
-			addMessage(
-				getPrivateChatRoomKey(args.partnerName),
-				createPrivateMessage(identity, args.message),
+			updateAtom(privateChatAtom(args.partnerName), (prev) =>
+				addRoomMessage(prev, createPrivateMessage(identity, args.message)),
 			)
 		},
-		[addMessage, identity, send],
+		[identity, send, updateAtom],
+	)
+
+	const setInput = useCallback(
+		(partnerName: string, input: string) => {
+			updateAtom(privateChatAtom(partnerName), (prev) => ({
+				...prev,
+				input,
+			}))
+		},
+		[updateAtom],
 	)
 
 	return {
 		openPrivateChat,
 		closePrivateChat,
 		sendMessage,
+		setInput,
 	}
 }
 
@@ -126,49 +144,41 @@ export function usePrivateChatCommandHandler() {
 	const identity = useIdentity()
 	const setOpenChatNames = useUpdateAtom(openChatNamesAtom)
 	const { openPrivateChat } = usePrivateChatActions()
-	const { addMessage } = useRoomActions()
+	const updateAtom = useUpdateAtomFn()
 
-	useSocketListener(
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises
-		useAtomCallback(
-			useCallback(
-				(get, set, command: ServerCommand) => {
-					matchCommand(command, {
-						async IDN() {
-							if (!identity) return
-							const names = await restorePrivateChats(identity).catch(() => [])
-							setOpenChatNames(truthyMap(names))
-						},
+	useSocketListener((command) => {
+		matchCommand(command, {
+			async IDN() {
+				if (!identity) return
+				const names = await restorePrivateChats(identity).catch(() => [])
+				setOpenChatNames(truthyMap(names))
+			},
 
-						PRI({ character, message }) {
-							openPrivateChat(character)
-							addMessage(
-								getPrivateChatRoomKey(character),
-								createPrivateMessage(character, message),
-							)
-						},
+			PRI({ character, message }) {
+				openPrivateChat(character)
+				updateAtom(privateChatAtom(character), (prev) =>
+					addRoomMessage(prev, createPrivateMessage(character, message)),
+				)
+			},
 
-						TPN({ character, status }) {
-							set(privateChatTypingStatusAtom(character), status)
-						},
+			TPN({ character, status }) {
+				updateAtom(privateChatAtom(character), (prev) => ({
+					...prev,
+					typingStatus: status,
+				}))
+			},
 
-						RLL(params) {
-							if ("recipient" in params) {
-								const partnerName =
-									params.character === identity
-										? params.recipient
-										: params.character
-								openPrivateChat(partnerName)
-								addMessage(
-									getPrivateChatRoomKey(partnerName),
-									createSystemMessage(params.message),
-								)
-							}
-						},
-					})
-				},
-				[addMessage, identity, openPrivateChat, setOpenChatNames],
-			),
-		),
-	)
+			RLL(params) {
+				if ("recipient" in params) {
+					const partnerName =
+						params.character === identity ? params.recipient : params.character
+					openPrivateChat(partnerName)
+
+					updateAtom(privateChatAtom(partnerName), (prev) =>
+						addRoomMessage(prev, createSystemMessage(params.message)),
+					)
+				}
+			},
+		})
+	})
 }
