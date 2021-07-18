@@ -1,6 +1,11 @@
-module.exports = {
-	mode: "jit",
-	purge: ["./index.html", "./src/**/*.{ts,tsx}"],
+import { defineConfig } from "windicss/helpers"
+
+export default defineConfig({
+	extract: {
+		// accepts globs and file paths relative to project root
+		include: ["index.html", "src/**/*.{ts,tsx}"],
+		exclude: ["node_modules/**/*", ".git/**/*"],
+	},
 	darkMode: false, // or 'media' or 'class'
 	theme: {
 		boxShadow: {
@@ -28,4 +33,4 @@ module.exports = {
 		},
 	},
 	plugins: [],
-}
+})
