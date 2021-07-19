@@ -72,7 +72,5 @@ function KeyboardKey({ children }: { children: React.ReactNode }) {
  * Convert a keyboard event code to a human readable key
  */
 function toReadableKey(code: string): string {
-	if (code.startsWith("Key")) return code.slice(3)
-	if (code.startsWith("Arrow")) return code.slice(5)
-	return code
+	return code.replace(/^(Key|Arrow)/, "")
 }
