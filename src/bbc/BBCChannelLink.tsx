@@ -22,7 +22,10 @@ export default function BBCChannelLink({
 				<Icon which={type === "public" ? icons.earth : icons.lock} />
 			</span>
 			<button className="group" onClick={() => join(title)}>
-				<span className={`underline group-hover:no-underline`}>{title}</span>{" "}
+				<span
+					className={`underline group-hover:no-underline`}
+					dangerouslySetInnerHTML={{ __html: title }}
+				/>{" "}
 				<span>({userCount})</span>
 			</button>
 		</span>
