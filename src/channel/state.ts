@@ -1,7 +1,7 @@
 import { atom, useAtom } from "jotai"
 import { selectAtom, useAtomValue, useUpdateAtom } from "jotai/utils"
 import { mapValues } from "lodash-es"
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { characterAtom } from "../character/state"
 import type { Character } from "../character/types"
 import { omit } from "../common/omit"
@@ -213,8 +213,10 @@ export function useChannelCommandListener() {
 	const [channelDict, updateChannelDict] = useAtom(channelDictAtom)
 	const updateAtom = useUpdateAtomFn()
 	const joinChannel = useJoinChannel()
+	const [channelsLoaded, setChannelsLoaded] = useState(false)
 
 	useEffect(() => {
+		if (!channelsLoaded) return
 		if (!account || !identity) return
 
 		const channels = Object.values(channelDict)
@@ -222,7 +224,7 @@ export function useChannelCommandListener() {
 			.map((ch) => ch.id)
 
 		saveChannels(channels, account, identity)
-	}, [account, channelDict, identity])
+	}, [account, channelDict, channelsLoaded, identity])
 
 	useSocketListener((command: ServerCommand) => {
 		matchCommand(command, {
@@ -233,6 +235,7 @@ export function useChannelCommandListener() {
 						joinChannel(id)
 					}
 				}
+				setChannelsLoaded(true)
 			},
 
 			JCH({ channel: id, character: { identity: name }, title }) {
