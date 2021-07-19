@@ -65,7 +65,7 @@ function Shortcut(props: { keyboardKey: string; tag: string }) {
 }
 
 function KeyboardKey({ children }: { children: React.ReactNode }) {
-	return <span className="px-1 py-0.5 rounded bg-black/50">{children}</span>
+	return <code className="px-1 py-0.5 rounded bg-black/50">{children}</code>
 }
 
 /**
