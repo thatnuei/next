@@ -1,6 +1,4 @@
-import { Provider as JotaiProvider } from "jotai"
 import { lazy, Suspense, useEffect } from "react"
-import { chatScope } from "../chat/constants"
 import { isNonEmptyArray } from "../common/isNonEmptyArray"
 import { chatRouteGroup, routes, useRoute } from "../router"
 import IslandLayout from "../ui/IslandLayout"
@@ -42,11 +40,9 @@ export default function AppRoutes() {
 			)}
 
 			{chatRouteGroup.has(route) && (
-				<JotaiProvider scope={chatScope}>
-					<Suspense fallback={<ChatFallback />}>
-						{account ? <Chat /> : <LoginRequiredMessage />}
-					</Suspense>
-				</JotaiProvider>
+				<Suspense fallback={<ChatFallback />}>
+					{account ? <Chat /> : <LoginRequiredMessage />}
+				</Suspense>
 			)}
 		</>
 	)

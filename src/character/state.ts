@@ -3,7 +3,6 @@ import { atom, useAtom } from "jotai"
 import { atomFamily, useAtomValue, useUpdateAtom } from "jotai/utils"
 import { matchSorter } from "match-sorter"
 import { useCallback, useMemo } from "react"
-import { chatScope } from "../chat/constants"
 import { isPresent } from "../common/isPresent"
 import { omit } from "../common/omit"
 import { raise } from "../common/raise"
@@ -19,7 +18,6 @@ import { useIdentity, useUserActions, useUserCharacters } from "../user"
 import type { Character, CharacterGender, Friendship } from "./types"
 
 const characterDictAtom = atom<Dict<Character>>({})
-characterDictAtom.scope = chatScope
 
 export const characterAtom = dictionaryAtomFamily(
 	characterDictAtom,
@@ -34,16 +32,9 @@ const characterGenderAtom = atomFamily((name: string) => {
 })
 
 const friendshipsAtom = atom<readonly Friendship[]>([])
-friendshipsAtom.scope = chatScope
-
 const bookmarksAtom = atom<TruthyMap>({})
-bookmarksAtom.scope = chatScope
-
 const ignoredUsersAtom = atom<TruthyMap>({})
-ignoredUsersAtom.scope = chatScope
-
 const adminsAtom = atom<TruthyMap>({})
-adminsAtom.scope = chatScope
 
 function createCharacter(name: string): Character {
 	return {
