@@ -1,3 +1,4 @@
+import { useMemo } from "react"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
@@ -13,8 +14,13 @@ interface Props {
 }
 
 function PrivateChatView({ partnerName }: Props) {
-	const { messages, input, typingStatus } = usePrivateChat(partnerName)
+	const { input, typingStatus, ...chat } = usePrivateChat(partnerName)
 	const privateChatActions = usePrivateChatActions(partnerName)
+
+	const messages = useMemo(
+		() => [...chat.previousMessages, ...chat.messages],
+		[chat.previousMessages, chat.messages],
+	)
 
 	return (
 		<div className="flex flex-col h-full">
