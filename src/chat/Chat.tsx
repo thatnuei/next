@@ -39,7 +39,7 @@ export default function Chat() {
 					</div>
 					<div
 						className={clsx(
-							"flex-1",
+							"flex-1 min-w-0",
 							route !== deferredRoute && "transition-opacity opacity-50",
 						)}
 						style={{ transitionDelay: route !== deferredRoute ? "0.3s" : "0" }}
