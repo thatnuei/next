@@ -1,3 +1,4 @@
+import EmptyState from "../ui/EmptyState"
 import NotificationCard from "./NotificationCard"
 import { useNotificationList } from "./state"
 
@@ -16,8 +17,6 @@ export default function NotificationList() {
 			))}
 		</ul>
 	) : (
-		<p className="p-8 text-xl italic text-center opacity-50 font-condensed">
-			Nothing here!
-		</p>
+		<EmptyState />
 	)
 }
