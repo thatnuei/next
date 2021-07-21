@@ -14,7 +14,7 @@ interface Props {
 
 function PrivateChatView({ partnerName }: Props) {
 	const { messages, input, typingStatus } = usePrivateChat(partnerName)
-	const { sendMessage, setInput } = usePrivateChatActions()
+	const privateChatActions = usePrivateChatActions(partnerName)
 
 	return (
 		<div className="flex flex-col h-full">
@@ -46,10 +46,10 @@ function PrivateChatView({ partnerName }: Props) {
 			<ChatInput
 				value={input}
 				maxLength={50000}
-				onChangeText={(input) => setInput(partnerName, input)}
+				onChangeText={privateChatActions.setInput}
 				onSubmit={(message) => {
-					sendMessage({ partnerName, message })
-					setInput(partnerName, "")
+					privateChatActions.sendMessage(message)
+					privateChatActions.setInput("")
 				}}
 			/>
 		</div>

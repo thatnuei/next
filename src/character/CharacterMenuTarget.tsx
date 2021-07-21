@@ -40,7 +40,7 @@ function CharacterMenu({ name }: { name: string }) {
 	const { friendships, isBookmarked, isIgnored } = useCharacterRoles(name)
 	const { send } = useSocketActions()
 	const { addBookmark, removeBookmark } = useUserActions()
-	const { openPrivateChat } = usePrivateChatActions()
+	const privateChatActions = usePrivateChatActions(name)
 
 	return (
 		<>
@@ -69,7 +69,7 @@ function CharacterMenu({ name }: { name: string }) {
 					<Button
 						onClick={() => {
 							routes.privateChat({ partnerName: name }).push()
-							openPrivateChat(name)
+							privateChatActions.open()
 						}}
 					>
 						Message

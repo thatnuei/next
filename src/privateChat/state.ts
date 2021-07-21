@@ -1,7 +1,8 @@
 import { atom } from "jotai"
-import { useAtomCallback, useAtomValue, useUpdateAtom } from "jotai/utils"
-import { useCallback, useMemo } from "react"
+import { useAtomValue, useUpdateAtom } from "jotai/utils"
+import { useMemo } from "react"
 import { omit } from "../common/omit"
+import { raise } from "../common/raise"
 import { truthyMap } from "../common/truthyMap"
 import type { Dict, TruthyMap } from "../common/types"
 import { dictionaryAtomFamily } from "../jotai/dictionaryAtomFamily"
@@ -15,7 +16,7 @@ import { addRoomMessage } from "../room/state"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
 import { useIdentity } from "../user"
-import { restorePrivateChats, savePrivateChats } from "./storage"
+import { restorePrivateChats } from "./storage"
 import type { TypingStatus } from "./types"
 
 interface PrivateChat extends RoomState {
@@ -47,103 +48,70 @@ export function usePrivateChat(partnerName: string): PrivateChat {
 	return useAtomValue(privateChatAtom(partnerName))
 }
 
-export function usePrivateChatActions() {
+export function usePrivateChatActions(partnerName: string) {
 	const { send } = useSocketActions()
-	const identity = useIdentity()
-	const updateAtom = useUpdateAtomFn()
+	const identity = useIdentity() ?? raise("not logged in")
+	const setOpenChatNames = useUpdateAtom(openChatNamesAtom)
+	const setPrivateChat = useUpdateAtom(privateChatAtom(partnerName))
 
-	const setPrivateChatNames = useAtomCallback(
-		useCallback(
-			(get, set, getNewChats: (prev: TruthyMap) => TruthyMap) => {
-				if (identity) {
-					const chats = get(openChatNamesAtom)
-					set(openChatNamesAtom, getNewChats(chats))
-					savePrivateChats(identity, Object.keys(getNewChats(chats)))
-				}
+	return useMemo(
+		() => ({
+			open() {
+				setOpenChatNames((prev) => ({ ...prev, [partnerName]: true }))
 			},
-			[identity],
-		),
-	)
+			close() {
+				setOpenChatNames((prev) => omit(prev, [partnerName]))
+			},
+			sendMessage(message: string) {
+				if (!identity) return
 
-	const openPrivateChat = useCallback(
-		(partnerName: string) => {
-			setPrivateChatNames((prev) => ({ ...prev, [partnerName]: true }))
-		},
-		[setPrivateChatNames],
-	)
+				const rollPrefix = "/roll"
+				if (message.startsWith(rollPrefix)) {
+					send({
+						type: "RLL",
+						params: {
+							recipient: partnerName,
+							dice: message.slice(rollPrefix.length).trim() || "1d20",
+						},
+					})
+					return
+				}
 
-	const closePrivateChat = useCallback(
-		(partnerName: string) => {
-			setPrivateChatNames((prev) => omit(prev, [partnerName]))
-		},
-		[setPrivateChatNames],
-	)
+				const bottlePrefix = "/bottle"
+				if (message.startsWith(bottlePrefix)) {
+					send({
+						type: "RLL",
+						params: {
+							recipient: partnerName,
+							dice: "bottle",
+						},
+					})
+					return
+				}
 
-	const sendMessage = useCallback(
-		(args: { partnerName: string; message: string }) => {
-			if (!identity) return
-
-			const rollPrefix = "/roll"
-			if (args.message.startsWith(rollPrefix)) {
 				send({
-					type: "RLL",
+					type: "PRI",
 					params: {
-						recipient: args.partnerName,
-						dice: args.message.slice(rollPrefix.length).trim() || "1d20",
+						recipient: partnerName,
+						message,
 					},
 				})
-				return
-			}
 
-			const bottlePrefix = "/bottle"
-			if (args.message.startsWith(bottlePrefix)) {
-				send({
-					type: "RLL",
-					params: {
-						recipient: args.partnerName,
-						dice: "bottle",
-					},
-				})
-				return
-			}
-
-			send({
-				type: "PRI",
-				params: {
-					recipient: args.partnerName,
-					message: args.message,
-				},
-			})
-
-			updateAtom(privateChatAtom(args.partnerName), (prev) =>
-				addRoomMessage(prev, createPrivateMessage(identity, args.message)),
-			)
-		},
-		[identity, send, updateAtom],
+				setPrivateChat((prev) =>
+					addRoomMessage(prev, createPrivateMessage(identity, message)),
+				)
+			},
+			setInput(input: string) {
+				setPrivateChat((chat) => ({ ...chat, input }))
+			},
+		}),
+		[setOpenChatNames, partnerName, identity, send, setPrivateChat],
 	)
-
-	const setInput = useCallback(
-		(partnerName: string, input: string) => {
-			updateAtom(privateChatAtom(partnerName), (prev) => ({
-				...prev,
-				input,
-			}))
-		},
-		[updateAtom],
-	)
-
-	return {
-		openPrivateChat,
-		closePrivateChat,
-		sendMessage,
-		setInput,
-	}
 }
 
 export function usePrivateChatCommandHandler() {
 	const identity = useIdentity()
 	const setOpenChatNames = useUpdateAtom(openChatNamesAtom)
-	const { openPrivateChat } = usePrivateChatActions()
 	const updateAtom = useUpdateAtomFn()
 
 	useSocketListener((command) => {
@@ -155,7 +123,7 @@ export function usePrivateChatCommandHandler() {
 			},
 
 			PRI({ character, message }) {
-				openPrivateChat(character)
+				setOpenChatNames((prev) => ({ ...prev, [character]: true }))
 				updateAtom(privateChatAtom(character), (prev) =>
 					addRoomMessage(prev, createPrivateMessage(character, message)),
 				)
@@ -172,7 +140,8 @@ export function usePrivateChatCommandHandler() {
 				if ("recipient" in params) {
 					const partnerName =
 						params.character === identity ? params.recipient : params.character
-					openPrivateChat(partnerName)
+
+					setOpenChatNames((prev) => ({ ...prev, [partnerName]: true }))
 
 					updateAtom(privateChatAtom(partnerName), (prev) =>
 						addRoomMessage(prev, createSystemMessage(params.message)),

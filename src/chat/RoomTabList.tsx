@@ -32,7 +32,7 @@ export default function RoomTabList() {
 function PrivateChatTab({ partnerName }: { partnerName: string }) {
 	const route = useRoute()
 	const privateChat = usePrivateChat(partnerName)
-	const { closePrivateChat } = usePrivateChatActions()
+	const privateChatActions = usePrivateChatActions(partnerName)
 
 	return (
 		<RoomTab
@@ -43,7 +43,7 @@ function PrivateChatTab({ partnerName }: { partnerName: string }) {
 			}
 			isUnread={privateChat.isUnread}
 			onClick={() => routes.privateChat({ partnerName }).push()}
-			onClose={() => closePrivateChat(partnerName)}
+			onClose={() => privateChatActions.close()}
 		/>
 	)
 }
