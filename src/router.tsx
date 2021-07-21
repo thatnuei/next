@@ -1,5 +1,7 @@
 import { createGroup, createRouter, defineRoute, param } from "type-route"
 
+export type Route = ReturnType<typeof useRoute>
+
 const chat = defineRoute(`/chat`)
 
 export const { RouteProvider, useRoute, routes } = createRouter({
