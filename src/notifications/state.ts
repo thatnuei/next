@@ -111,6 +111,7 @@ export function useNotificationActions() {
 				setNotifications((notifications) =>
 					[notification, ...notifications].slice(0, maxNotifications),
 				)
+				logger.setRoomName("notifications", "Notifications")
 				logger.addMessage(
 					"notifications",
 					createSystemMessage(getNotificationMessage(notification)),

@@ -84,6 +84,11 @@ function useOpenPrivateChat() {
 			setOpenChatNames((names) => ({ ...names, [partnerName]: true }))
 
 			if (identity) {
+				logger.setRoomName(
+					getLoggerRoomId(identity, partnerName),
+					`${partnerName} (on ${identity})`,
+				)
+
 				logger
 					.getMessages(getLoggerRoomId(identity, partnerName), 30)
 					.then((messages) => {
