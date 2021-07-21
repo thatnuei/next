@@ -2,6 +2,7 @@ import clsx from "clsx"
 import { useDeferredValue, useEffect } from "react"
 import ChannelView from "../channel/ChannelView"
 import DevTools from "../dev/DevTools"
+import ChatLogBrowser from "../logging/ChatLogBrowser"
 import NotificationListScreen from "../notifications/NotificationListScreen"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import type { Route } from "../router"
@@ -59,6 +60,7 @@ function ChatRoutes({ route }: { route: Route }) {
 			{route.name === "channel" && <ChannelView {...route.params} />}
 			{route.name === "privateChat" && <PrivateChatView {...route.params} />}
 			{route.name === "notifications" && <NotificationListScreen />}
+			{route.name === "logs" && <ChatLogBrowser />}
 			{route.name === "chat" && <NoRoomView />}
 		</>
 	)

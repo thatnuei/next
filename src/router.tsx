@@ -20,6 +20,7 @@ export const { RouteProvider, useRoute, routes } = createRouter({
 		{ notificationId: param.query.optional.string },
 		() => `/notifications`,
 	),
+	logs: chat.extend("/logs"),
 })
 
 export const chatRouteGroup = createGroup([
@@ -27,4 +28,5 @@ export const chatRouteGroup = createGroup([
 	routes.channel,
 	routes.privateChat,
 	routes.notifications,
+	routes.logs,
 ])

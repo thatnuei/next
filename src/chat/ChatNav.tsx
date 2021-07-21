@@ -5,15 +5,17 @@ import ChatNavAction from "../chat/ChatNavAction"
 import ChatNavActionButton from "../chat/ChatNavActionButton"
 import RoomTabList from "../chat/RoomTabList"
 import NotificationListLink from "../notifications/NotificationListLink"
-import { routes } from "../router"
+import { routes, useRoute } from "../router"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
+import LogsIcon from "../ui/LogsIcon"
 import Modal from "../ui/Modal"
 import { useIdentity } from "../user"
 import StatusUpdateForm from "./StatusUpdateForm"
 
 export default function ChatNav() {
 	const identity = useIdentity()
+	const route = useRoute()
 
 	return (
 		<nav className={`flex h-full bg-midnight-2`}>
@@ -31,20 +33,6 @@ export default function ChatNav() {
 				/>
 
 				<Modal
-					title="Status update"
-					renderContent={({ close }) => <StatusUpdateForm onSuccess={close} />}
-					renderTrigger={(t) => (
-						<ChatNavActionButton
-							icon={<Icon which={icons.updateStatus} />}
-							name="Update your status"
-							{...t}
-						/>
-					)}
-				/>
-
-				<NotificationListLink />
-
-				<Modal
 					title="Online Users"
 					renderTrigger={(t) => (
 						<ChatNavActionButton
@@ -59,6 +47,28 @@ export default function ChatNav() {
 						</div>
 					)}
 				/>
+
+				<Modal
+					title="Status update"
+					renderContent={({ close }) => <StatusUpdateForm onSuccess={close} />}
+					renderTrigger={(t) => (
+						<ChatNavActionButton
+							icon={<Icon which={icons.updateStatus} />}
+							name="Update your status"
+							{...t}
+						/>
+					)}
+				/>
+
+				<NotificationListLink />
+
+				<a {...routes.logs().link}>
+					<ChatNavAction
+						icon={<LogsIcon />}
+						name="Logs"
+						active={route.name === "logs"}
+					/>
+				</a>
 
 				<ChatNavActionButton
 					icon={<Icon which={icons.about} />}
