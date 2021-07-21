@@ -1,9 +1,11 @@
 import { atom } from "jotai"
-import { atomWithStorage, useAtomValue, useUpdateAtom } from "jotai/utils"
+import { useAtomValue, useUpdateAtom } from "jotai/utils"
 import { useMemo } from "react"
 import { useLikedCharacters } from "../character/state"
 import type { CharacterStatus } from "../character/types"
 import { uniqueId } from "../common/uniqueId"
+import { useChatLogger } from "../logging/context"
+import { createSystemMessage } from "../message/MessageState"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
 import { useUserCharacters } from "../user"
@@ -38,17 +40,39 @@ interface NotificationToast {
 }
 
 /// atoms
-const notificationListAtom = atomWithStorage<readonly Notification[]>(
-	"notifications-v2",
-	[],
-)
-
+const notificationListAtom = atom<readonly Notification[]>([])
 const toastListAtom = atom<readonly NotificationToast[]>([])
+const unreadNotificationCountAtom = atom(0)
 
-const unreadNotificationCountAtom = atomWithStorage(
-	"unread-notification-count",
-	0,
-)
+// helper functions
+function getNotificationMessage(notification: Notification) {
+	if (notification.type === "broadcast") {
+		const senderPrefix = notification.actorName
+			? `${notification.actorName}: `
+			: ""
+
+		return `${senderPrefix}${notification.message}`
+	}
+
+	if (notification.type === "status") {
+		const statusMessageSuffix = notification.message
+			? `: ${notification.message}`
+			: ""
+
+		return `${notification.name} is now ${notification.status}${statusMessageSuffix}`
+	}
+
+	if (notification.type === "invite") {
+		const bbcLink =
+			notification.channelId === notification.title
+				? `[channel]${notification.channelId}[/channel]`
+				: `[session=${notification.channelId}]${notification.title}[/session]`
+
+		return `${notification.sender} has invited you to ${bbcLink}`
+	}
+
+	return notification.message
+}
 
 /// hooks
 export function useNotificationList(): readonly Notification[] {
@@ -67,6 +91,7 @@ export function useNotificationActions() {
 	const setNotifications = useUpdateAtom(notificationListAtom)
 	const setToasts = useUpdateAtom(toastListAtom)
 	const setUnreadNotificationCount = useUpdateAtom(unreadNotificationCountAtom)
+	const logger = useChatLogger()
 
 	return useMemo(() => {
 		const addNotification = ({
@@ -85,6 +110,10 @@ export function useNotificationActions() {
 			if (save) {
 				setNotifications((notifications) =>
 					[notification, ...notifications].slice(0, maxNotifications),
+				)
+				logger.addMessage(
+					"notifications",
+					createSystemMessage(getNotificationMessage(notification)),
 				)
 				if (incrementUnread) {
 					setUnreadNotificationCount((count) => count + 1)
