@@ -6,7 +6,7 @@ type PromiseState<T> =
 	| { status: "resolved"; value: T; error?: undefined }
 	| { status: "rejected"; value?: T | undefined; error: Error }
 
-export default function usePromise<T>(promise: Promise<T> | undefined) {
+export default function usePromise<T>(promise: T | Promise<T> | undefined) {
 	const [state, setState] = useState<PromiseState<T>>({ status: "idle" })
 
 	useEffect(() => {
@@ -19,7 +19,7 @@ export default function usePromise<T>(promise: Promise<T> | undefined) {
 
 		setState((state) => ({ status: "pending", value: state.value }))
 
-		promise
+		Promise.resolve(promise)
 			.then((value) => {
 				if (cancelled) return
 				setState({ status: "resolved", value })
