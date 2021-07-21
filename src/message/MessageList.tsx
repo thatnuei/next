@@ -1,5 +1,11 @@
 import clsx from "clsx"
-import { memo, useDeferredValue, useLayoutEffect, useRef } from "react"
+import {
+	memo,
+	useCallback,
+	useDeferredValue,
+	useLayoutEffect,
+	useState,
+} from "react"
 import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
 
@@ -12,7 +18,7 @@ const bottomScrollThreshold = 20
 export default memo(function MessageList({ messages }: Props) {
 	const deferredMessages = useDeferredValue(messages)
 	const isStale = deferredMessages !== messages
-	const containerRef = useBottomScroll(messages)
+	const containerRef = useBottomScroll(deferredMessages)
 
 	return (
 		<ol
@@ -32,31 +38,29 @@ export default memo(function MessageList({ messages }: Props) {
 	)
 })
 
-function useBottomScroll(messages: readonly MessageState[]) {
-	const containerRef = useRef<HTMLOListElement | null>(null)
+function useBottomScroll(observedValue: unknown) {
+	const [container, containerRef] = useState<Element | null>()
 
 	const isBottomScrolled = () => {
-		const container = containerRef.current
 		if (!container) return false
-
 		return (
 			container.scrollTop >=
 			container.scrollHeight - container.clientHeight - bottomScrollThreshold
 		)
 	}
 
-	const scrollToBottom = () => {
-		const container = containerRef.current
+	const scrollToBottom = useCallback(() => {
 		if (!container) return
 		container.scrollTop = container.scrollHeight - container.clientHeight
-	}
+	}, [container])
 
 	// check here, so that we get the bottom-scrolled state _before_ it changes from dom updates
 	const wasScrolledToBottom = isBottomScrolled()
 	useLayoutEffect(() => {
 		if (wasScrolledToBottom) scrollToBottom()
-	}, [wasScrolledToBottom, messages])
+	}, [wasScrolledToBottom, observedValue, scrollToBottom])
 
-	useLayoutEffect(scrollToBottom, [])
+	useLayoutEffect(scrollToBottom, [scrollToBottom])
+
 	return containerRef
 }
