@@ -9,6 +9,7 @@ import { truthyMap } from "../common/truthyMap"
 import type { Dict, TruthyMap } from "../common/types"
 import { dictionaryAtomFamily } from "../jotai/dictionaryAtomFamily"
 import { useUpdateAtomFn } from "../jotai/useUpdateAtomFn"
+import { useUpdateDictAtom } from "../jotai/useUpdateDictAtom"
 import { useChatLogger } from "../logging/context"
 import type { MessageState } from "../message/MessageState"
 import {
@@ -117,12 +118,24 @@ export function useJoinChannel() {
 	)
 }
 
+function useAddChannelMessage() {
+	const updateChannels = useUpdateDictAtom(channelDictAtom, createChannel)
+	const logger = useChatLogger()
+	return useCallback(
+		(id: string, message: MessageState) => {
+			updateChannels(id, (channel) => addRoomMessage(channel, message))
+			logger.addMessage(`channel:${id}`, message)
+		},
+		[updateChannels, logger],
+	)
+}
+
 export function useChannelActions(id: string) {
 	const { send } = useSocketActions()
 	const identity = useIdentity()
-	const logger = useChatLogger()
 	const updateChannel = useUpdateAtom(channelAtom(id))
 	const joinChannel = useJoinChannel()
+	const addChannelMessage = useAddChannelMessage()
 
 	const join = useCallback(
 		(title?: string) => joinChannel(id, title),
@@ -136,10 +149,9 @@ export function useChannelActions(id: string) {
 
 	const addMessage = useCallback(
 		(message: MessageState) => {
-			updateChannel((channel) => addRoomMessage(channel, message))
-			logger.addMessage(`channel:${id}`, message)
+			addChannelMessage(id, message)
 		},
-		[id, logger, updateChannel],
+		[addChannelMessage, id],
 	)
 
 	const clearMessages = useCallback(() => {
@@ -214,6 +226,7 @@ export function useChannelCommandListener() {
 	const updateAtom = useUpdateAtomFn()
 	const joinChannel = useJoinChannel()
 	const [channelsLoaded, setChannelsLoaded] = useState(false)
+	const addChannelMessage = useAddChannelMessage()
 
 	useEffect(() => {
 		if (!channelsLoaded) return
@@ -298,24 +311,18 @@ export function useChannelCommandListener() {
 			},
 
 			MSG({ channel: id, message, character }) {
-				updateAtom(channelAtom(id), (channel) =>
-					addRoomMessage(channel, createChannelMessage(character, message)),
-				)
+				addChannelMessage(id, createChannelMessage(character, message))
 			},
 
 			LRP({ channel: id, character, message }) {
-				updateAtom(channelAtom(id), (channel) =>
-					addRoomMessage(channel, createAdMessage(character, message)),
-				)
+				addChannelMessage(id, createAdMessage(character, message))
 			},
 
 			RLL(params) {
 				if ("channel" in params) {
 					// bottle messages have a lowercased channel id
 					const id = params.channel.replace("adh", "ADH")
-					updateAtom(channelAtom(id), (channel) =>
-						addRoomMessage(channel, createSystemMessage(params.message)),
-					)
+					addChannelMessage(id, createSystemMessage(params.message))
 				}
 			},
 		})
