@@ -1,16 +1,38 @@
 import clsx from "clsx"
-import { memo, useLayoutEffect, useRef } from "react"
+import { memo, useDeferredValue, useLayoutEffect, useRef } from "react"
 import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
 
 interface Props {
 	messages: readonly MessageState[]
-	isStale?: boolean
 }
 
 const bottomScrollThreshold = 20
 
-function MessageList({ messages, isStale }: Props) {
+export default memo(function MessageList({ messages }: Props) {
+	const deferredMessages = useDeferredValue(messages)
+	const isStale = deferredMessages !== messages
+	const containerRef = useBottomScroll(messages)
+
+	return (
+		<ol
+			className={clsx(
+				"h-full overflow-y-auto transition-opacity transform translate-z-0",
+				isStale && `opacity-50`,
+			)}
+			style={{ transitionDelay: isStale ? "0.5s" : "0s" }}
+			ref={containerRef}
+		>
+			{deferredMessages.map((message) => (
+				<li key={message.key}>
+					<MessageListItem message={message} />
+				</li>
+			))}
+		</ol>
+	)
+})
+
+function useBottomScroll(messages: readonly MessageState[]) {
 	const containerRef = useRef<HTMLOListElement | null>(null)
 
 	const isBottomScrolled = () => {
@@ -36,23 +58,5 @@ function MessageList({ messages, isStale }: Props) {
 	}, [wasScrolledToBottom, messages])
 
 	useLayoutEffect(scrollToBottom, [])
-
-	return (
-		<ol
-			className={clsx(
-				"h-full overflow-y-auto transition-opacity transform translate-z-0",
-				isStale && `opacity-50`,
-			)}
-			style={{ transitionDelay: isStale ? "0.5s" : "0s" }}
-			ref={containerRef}
-		>
-			{messages.map((message) => (
-				<li key={message.key}>
-					<MessageListItem message={message} />
-				</li>
-			))}
-		</ol>
-	)
+	return containerRef
 }
-
-export default memo(MessageList)
