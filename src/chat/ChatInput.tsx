@@ -1,6 +1,7 @@
 import * as React from "react"
 import BBCTextArea from "../bbc/BBCInput"
 import Button from "../dom/Button"
+import { useNotificationActions } from "../notifications/state"
 import { solidButton } from "../ui/components"
 import { useIdentity } from "../user"
 
@@ -13,10 +14,22 @@ interface Props {
 
 function ChatInput(props: Props) {
 	const identity = useIdentity()
+	const notificationActions = useNotificationActions()
 
 	function submit() {
-		props.onSubmit(props.value)
-		props.onChangeText("")
+		const valueTrimmed = props.value.trim()
+		const maxLength = props.maxLength ?? Infinity
+		if (valueTrimmed.length <= maxLength) {
+			props.onSubmit(valueTrimmed)
+			props.onChangeText("")
+		} else {
+			notificationActions.addNotification({
+				type: "error",
+				message: `Your message is too long! Shorten it to ${maxLength} characters or less.`,
+				save: false,
+				showToast: true,
+			})
+		}
 	}
 
 	function handleKeyDown(event: React.KeyboardEvent) {

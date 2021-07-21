@@ -30,6 +30,9 @@ export default function BBCTextArea({
 	// so it changes less often to reduce distraction
 	const previewValue = useDebouncedValue(props.value, 500)
 
+	const valueTrimmed = props.value.trim()
+	const valueLength = valueTrimmed.length
+
 	const [textArea, setTextArea] = useState<Element | null>()
 	const textAreaRect = useElementSize(textArea)
 	const [textAreaFocused, setTextAreaFocused] = useState(false)
@@ -98,8 +101,13 @@ export default function BBCTextArea({
 			/>
 
 			{maxLength != null && (
-				<p className="absolute bottom-0 right-0 p-1.5 text-xs leading-none opacity-60 pointer-events-none">
-					{props.value.trim().length} / {maxLength}
+				<p
+					className={clsx(
+						"absolute bottom-0 right-0 p-1.5 text-xs leading-none opacity-60 pointer-events-none",
+						valueLength > (maxLength ?? Infinity) ? "text-red-500" : "",
+					)}
+				>
+					{valueLength} / {maxLength}
 				</p>
 			)}
 
