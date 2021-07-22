@@ -4,6 +4,7 @@ import { chatRouteGroup, routes, useRoute } from "../router"
 import IslandLayout from "../ui/IslandLayout"
 import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
 import { useAccount, useUserCharacters } from "../user"
+import AppInfo from "./AppInfo"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
 import LoginRequiredMessage from "./LoginRequiredMessage"
@@ -22,7 +23,7 @@ export default function AppRoutes() {
 	return (
 		<>
 			{route.name === "login" && (
-				<IslandLayout title="Login" isVisible>
+				<IslandLayout title="Login" isVisible footer={<AppInfo />}>
 					<Login />
 				</IslandLayout>
 			)}
