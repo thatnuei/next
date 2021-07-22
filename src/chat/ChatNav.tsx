@@ -1,3 +1,4 @@
+import AppInfo from "../app/AppInfo"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import CharacterSummary from "../character/CharacterSummary"
 import OnlineUsers from "../character/OnlineUsers"
@@ -70,9 +71,20 @@ export default function ChatNav() {
 					/>
 				</a>
 
-				<ChatNavActionButton
-					icon={<Icon which={icons.about} />}
-					name="About next"
+				<Modal
+					title="About next"
+					renderTrigger={(t) => (
+						<ChatNavActionButton
+							icon={<Icon which={icons.about} />}
+							name="About next"
+							{...t}
+						/>
+					)}
+					renderContent={() => (
+						<div className="p-4">
+							<AppInfo />
+						</div>
+					)}
 				/>
 
 				<div className={`flex-1`} />
