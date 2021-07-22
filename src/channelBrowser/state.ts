@@ -65,6 +65,19 @@ export function useChannelUserCount(channelId: string) {
 	return useAtom(userCountAtom(channelId))[0]
 }
 
+export function useGetChannelLink() {
+	const privateChannels = usePrivateChannels()
+	return useCallback(
+		(channelId: string) => {
+			const privateChannel = privateChannels.find((ch) => ch.id === channelId)
+			return privateChannel
+				? `[session=${channelId}]${privateChannel.title}[/session]`
+				: `[channel]${channelId}[/channel]`
+		},
+		[privateChannels],
+	)
+}
+
 export function useChannelBrowserCommandListener() {
 	const setPublicChannels = useUpdateAtom(publicChannelsAtom)
 	const setPrivateChannels = useUpdateAtom(privateChannelsAtom)

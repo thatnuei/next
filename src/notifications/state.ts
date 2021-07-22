@@ -152,7 +152,7 @@ export function useNotificationActions() {
 				setUnreadNotificationCount(0)
 			},
 		}
-	}, [setNotifications, setToasts, setUnreadNotificationCount])
+	}, [logger, setNotifications, setToasts, setUnreadNotificationCount])
 }
 
 export function useNotificationCommandListener() {
@@ -224,6 +224,11 @@ export function useNotificationCommandListener() {
 					sender,
 					showToast: true,
 				})
+			},
+
+			SYS({ message }) {
+				// we don't actually need to notify for these, so just log for now
+				console.info(message)
 			},
 		})
 	})

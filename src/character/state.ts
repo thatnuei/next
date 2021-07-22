@@ -264,6 +264,14 @@ export function useCharacterCommandListener() {
 					// show toast
 				}
 			},
+
+			AOP({ character }) {
+				setAdmins((admins) => ({ ...admins, [character]: true }))
+			},
+
+			DOP({ character }) {
+				setAdmins((admins) => omit(admins, [character]))
+			},
 		})
 	})
 }

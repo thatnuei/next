@@ -303,6 +303,13 @@ export function useChannelCommandListener() {
 				}))
 			},
 
+			RMO({ channel: id, mode }) {
+				updateAtom(channelAtom(id), (channel) => ({
+					...channel,
+					mode,
+				}))
+			},
+
 			COL({ channel: id, oplist }) {
 				updateAtom(channelAtom(id), (channel) => ({
 					...channel,
@@ -324,6 +331,88 @@ export function useChannelCommandListener() {
 					const id = params.channel.replace("adh", "ADH")
 					addChannelMessage(id, createSystemMessage(params.message))
 				}
+			},
+
+			CBU({ character, channel, operator }) {
+				updateAtom(channelAtom(channel), (channel) => ({
+					...channel,
+					users: omit(channel.users, [character]),
+				}))
+
+				updateAtom(channelAtom(channel), (channel) =>
+					addRoomMessage(
+						channel,
+						createSystemMessage(
+							`[user]${character}[/user] has been banned by [user]${operator}[/user]`,
+						),
+					),
+				)
+			},
+
+			CKU({ character, channel, operator }) {
+				updateAtom(channelAtom(channel), (channel) => ({
+					...channel,
+					users: omit(channel.users, [character]),
+				}))
+
+				updateAtom(channelAtom(channel), (channel) =>
+					addRoomMessage(
+						channel,
+						createSystemMessage(
+							`[user]${character}[/user] has been kicked by [user]${operator}[/user]`,
+						),
+					),
+				)
+			},
+
+			COA({ character, channel }) {
+				updateAtom(channelAtom(channel), (channel) => ({
+					...channel,
+					ops: { ...channel.ops, [character]: true },
+				}))
+				updateAtom(channelAtom(channel), (channel) =>
+					addRoomMessage(
+						channel,
+						createSystemMessage(
+							`[user]${character}[/user] is now a channel moderator`,
+						),
+					),
+				)
+			},
+
+			COR({ character, channel }) {
+				updateAtom(channelAtom(channel), (channel) => ({
+					...channel,
+					ops: omit(channel.ops, [character]),
+				}))
+				updateAtom(channelAtom(channel), (channel) =>
+					addRoomMessage(
+						channel,
+						createSystemMessage(
+							`[user]${character}[/user] is no longer a channel moderator`,
+						),
+					),
+				)
+			},
+
+			CSO({ character, channel }) {
+				updateAtom(channelAtom(channel), (channel) =>
+					addRoomMessage(
+						channel,
+						createSystemMessage(`[user]${character}[/user] is now the owner`),
+					),
+				)
+			},
+
+			CTU({ character, channel, operator, length }) {
+				updateAtom(channelAtom(channel), (channel) =>
+					addRoomMessage(
+						channel,
+						createSystemMessage(
+							`[user]${character}[/user] has been timed out by [user]${operator}[/user] for ${length} minutes`,
+						),
+					),
+				)
 			},
 		})
 	})
