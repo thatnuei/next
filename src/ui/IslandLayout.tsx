@@ -4,7 +4,11 @@ import { headerText, raisedPanel, raisedPanelHeader } from "./components"
 import FadeRiseTransition from "./FadeRiseTransition"
 
 export default function IslandLayout(
-	props: ChildrenProps & { title: React.ReactNode; isVisible: boolean },
+	props: ChildrenProps & {
+		title: React.ReactNode
+		isVisible: boolean
+		footer?: React.ReactNode
+	},
 ) {
 	return (
 		<FadeRiseTransition
@@ -17,6 +21,7 @@ export default function IslandLayout(
 				</header>
 				{props.children}
 			</div>
+			<div className="max-w-sm px-4 mt-4 text-center">{props.footer}</div>
 		</FadeRiseTransition>
 	)
 }
