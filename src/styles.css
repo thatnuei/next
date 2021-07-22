@@ -144,3 +144,21 @@ select {
 .spin-animation {
 	animation: spin 3.7s infinite;
 }
+
+.prose {
+	display: flow-root;
+}
+
+.prose > * + * {
+	margin-top: 1rem;
+}
+
+.prose a {
+	text-decoration: underline;
+	transition: 0.3s;
+}
+
+.prose a:hover,
+.prose a:focus {
+	color: theme("colors.blue.400");
+}
