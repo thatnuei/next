@@ -6,6 +6,7 @@ import { raise } from "./common/raise"
 import { authenticate } from "./flist/authenticate"
 import { fetchFlist } from "./flist/fetchFlist"
 import type { AuthUser, LoginCredentials } from "./flist/types"
+import { routes } from "./router"
 
 interface FriendsAndBookmarksResponse {
 	readonly friendlist: ReadonlyArray<{
@@ -66,6 +67,14 @@ export function useUserActions() {
 
 			async submitLogin(creds: LoginCredentials) {
 				await login(creds)
+			},
+
+			logout() {
+				setIdentityAtom(undefined)
+				setAccount(undefined)
+				setUserCharacters([])
+				user = undefined
+				routes.login().push()
 			},
 
 			setIdentity(identity: string) {

@@ -5,18 +5,20 @@ import OnlineUsers from "../character/OnlineUsers"
 import ChatNavAction from "../chat/ChatNavAction"
 import ChatNavActionButton from "../chat/ChatNavActionButton"
 import RoomTabList from "../chat/RoomTabList"
+import Button from "../dom/Button"
 import NotificationListLink from "../notifications/NotificationListLink"
 import { routes, useRoute } from "../router"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import LogsIcon from "../ui/LogsIcon"
 import Modal from "../ui/Modal"
-import { useIdentity } from "../user"
+import { useIdentity, useUserActions } from "../user"
 import StatusUpdateForm from "./StatusUpdateForm"
 
 export default function ChatNav() {
 	const identity = useIdentity()
 	const route = useRoute()
+	const userActions = useUserActions()
 
 	return (
 		<nav className={`flex h-full bg-midnight-2`}>
@@ -89,9 +91,9 @@ export default function ChatNav() {
 
 				<div className={`flex-1`} />
 
-				<a {...routes.login().link}>
+				<Button onClick={userActions.logout}>
 					<ChatNavAction icon={<Icon which={icons.logout} />} name="Log out" />
-				</a>
+				</Button>
 			</div>
 			<div className={`flex flex-col w-56 overflow-y-auto bg-midnight-1`}>
 				<div className={`p-2 mb-1 bg-midnight-0`}>
