@@ -3,6 +3,7 @@ import { Provider as JotaiProvider } from "jotai"
 import type { FallbackProps } from "react-error-boundary"
 import { ErrorBoundary } from "react-error-boundary"
 import AppRoutes from "./app/AppRoutes"
+import AppTitle from "./app/AppTitle"
 import { toError } from "./common/toError"
 import NotificationToastOverlay from "./notifications/NotificationToastOverlay"
 import { RouteProvider } from "./router"
@@ -15,6 +16,7 @@ export default function Root() {
 			<RouteProvider>
 				<JotaiProvider>
 					<SocketConnection>
+						<AppTitle />
 						<AppRoutes />
 						<NotificationToastOverlay />
 					</SocketConnection>

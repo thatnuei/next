@@ -2,6 +2,7 @@
 
 ## 0.0.3
 
+- show the current identity + unreads in the app title
 - add changelog link to app info
 - fix issue where some fullscreen island layouts couldn't scroll (e.g. login screen)
 - moved the text wall on login to a click dialog
