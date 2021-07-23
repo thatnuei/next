@@ -2,6 +2,7 @@
 import reactRefresh from "@vitejs/plugin-react-refresh"
 import { defineConfig } from "vite"
 import windi from "vite-plugin-windicss"
+import pkg from "./package.json"
 
 export default defineConfig({
 	esbuild: {
@@ -13,4 +14,11 @@ export default defineConfig({
 	build: {
 		sourcemap: true,
 	},
+	define: {
+		APP_VERSION: JSON.stringify(pkg.version),
+	},
 })
+
+declare global {
+	const APP_VERSION: string
+}

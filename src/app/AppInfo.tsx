@@ -5,16 +5,15 @@ import { headerText2 } from "../ui/components"
 export default function AppInfo() {
 	return (
 		<div className="prose">
-			<h2 className={clsx(headerText2, "opacity-75")}>
-				next: a custom F-Chat client
-			</h2>
+			<h2 className={clsx(headerText2, "opacity-75")}>next v{APP_VERSION}</h2>
 			<p>
-				next is{" "}
+				next is an{" "}
 				<ExternalLink href="https://github.com/thatnuei/next">
 					open source
-				</ExternalLink>
-				. Your F-List account and password is only used to interact with the
-				F-List servers, and is not stored or saved anywhere else.
+				</ExternalLink>{" "}
+				custom F-Chat client. Your F-List account and password is only used to
+				interact with the F-List servers, and is not stored or saved anywhere
+				else.
 			</p>
 			<p>
 				If you&apos;re still not comfortable putting your credentials here, then
