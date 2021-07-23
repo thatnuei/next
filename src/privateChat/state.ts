@@ -112,6 +112,11 @@ export function usePrivateChat(partnerName: string): PrivateChat {
 	return useAtomValue(privateChatAtom(partnerName))
 }
 
+export function useOpenPrivateChats(): readonly PrivateChat[] {
+	const openPrivateChats = useAtomValue(privateChatDictAtom)
+	return useMemo(() => Object.values(openPrivateChats), [openPrivateChats])
+}
+
 export function usePrivateChatActions(partnerName: string) {
 	const { send } = useSocketActions()
 	const identity = useIdentity() ?? raise("not logged in")
