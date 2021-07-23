@@ -1,5 +1,9 @@
 # changelog
 
+## 0.0.3
+
+- add changelog link to app info
+
 ## 0.0.2
 
 - rooms now highlight green on new messages

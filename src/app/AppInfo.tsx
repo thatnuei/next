@@ -7,6 +7,11 @@ export default function AppInfo() {
 		<div className="prose">
 			<h2 className={clsx(headerText2, "opacity-75")}>next v{APP_VERSION}</h2>
 			<p>
+				<ExternalLink href="https://github.com/thatnuei/next#changelog">
+					View Changelog
+				</ExternalLink>
+			</p>
+			<p>
 				next is an{" "}
 				<ExternalLink href="https://github.com/thatnuei/next">
 					open source
