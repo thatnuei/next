@@ -190,7 +190,7 @@ export function usePrivateChatCommandHandler() {
 	const addPrivateChatMessage = useAddPrivateChatMessage()
 	const openPrivateChat = useOpenPrivateChat()
 	const partnerNames = useAtomValue(openChatNamesAtom)
-
+	const setPrivateChatDict = useUpdateAtom(privateChatDictAtom)
 	const [isRestored, setIsRestored] = useState(false)
 
 	useEffect(() => {
@@ -201,6 +201,8 @@ export function usePrivateChatCommandHandler() {
 	useSocketListener((command) => {
 		matchCommand(command, {
 			async IDN() {
+				setPrivateChatDict({})
+
 				if (!identity) return
 				const names = await restorePrivateChats(identity).catch(() => [])
 				for (const name of names) {

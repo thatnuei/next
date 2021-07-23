@@ -222,7 +222,7 @@ export function useChannelCommandListener() {
 	const identity = useIdentity()
 	const account = useAccount()
 	const logger = useChatLogger()
-	const [channelDict, updateChannelDict] = useAtom(channelDictAtom)
+	const [channelDict, setChannelDict] = useAtom(channelDictAtom)
 	const updateAtom = useUpdateAtomFn()
 	const joinChannel = useJoinChannel()
 	const [channelsLoaded, setChannelsLoaded] = useState(false)
@@ -242,6 +242,8 @@ export function useChannelCommandListener() {
 	useSocketListener((command: ServerCommand) => {
 		matchCommand(command, {
 			async IDN() {
+				setChannelDict({})
+
 				if (account && identity) {
 					const channelIds = await loadChannels(account, identity)
 					for (const id of channelIds) {
@@ -280,7 +282,7 @@ export function useChannelCommandListener() {
 			},
 
 			FLN({ character }) {
-				updateChannelDict((channels) =>
+				setChannelDict((channels) =>
 					mapValues(channels, (channel) => ({
 						...channel,
 						users: omit(channel.users, [character]),
