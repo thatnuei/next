@@ -3,6 +3,7 @@
 ## 0.0.3
 
 - add changelog link to app info
+- fix issue where some fullscreen island layouts couldn't scroll (e.g. login screen)
 
 ## 0.0.2
 
