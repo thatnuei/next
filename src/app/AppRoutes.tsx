@@ -3,6 +3,7 @@ import { isNonEmptyArray } from "../common/isNonEmptyArray"
 import { chatRouteGroup, routes, useRoute } from "../router"
 import IslandLayout from "../ui/IslandLayout"
 import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
+import Modal from "../ui/Modal"
 import { useAccount, useUserCharacters } from "../user"
 import AppInfo from "./AppInfo"
 import CharacterSelect from "./CharacterSelect"
@@ -23,7 +24,7 @@ export default function AppRoutes() {
 	return (
 		<>
 			{route.name === "login" && (
-				<IslandLayout title="Login" isVisible footer={<AppInfo />}>
+				<IslandLayout title="Login" isVisible header={<AppInfoModalButton />}>
 					<Login />
 				</IslandLayout>
 			)}
@@ -54,5 +55,24 @@ function ChatFallback() {
 		<LoadingOverlay>
 			<LoadingOverlayText>Loading...</LoadingOverlayText>
 		</LoadingOverlay>
+	)
+}
+
+function AppInfoModalButton() {
+	return (
+		<Modal
+			title="About next"
+			renderTrigger={(t) => (
+				<button className="text-center" {...t}>
+					<AppInfo.Heading />
+					<p className="opacity-75">click for more info</p>
+				</button>
+			)}
+			renderContent={() => (
+				<div className="p-4">
+					<AppInfo />
+				</div>
+			)}
+		/>
 	)
 }
