@@ -5,7 +5,7 @@ import { headerText2 } from "../ui/components"
 export default function AppInfo() {
 	return (
 		<div className="prose">
-			<h2 className={clsx(headerText2, "opacity-75")}>next v{APP_VERSION}</h2>
+			<AppInfo.Heading />
 			<p>
 				<ExternalLink href="https://github.com/thatnuei/next#changelog">
 					View Changelog
@@ -33,5 +33,11 @@ export default function AppInfo() {
 				on F-List.
 			</p>
 		</div>
+	)
+}
+
+AppInfo.Heading = function AppInfoTitle() {
+	return (
+		<h2 className={clsx(headerText2, "opacity-75")}>next v{APP_VERSION}</h2>
 	)
 }
