@@ -19,3 +19,5 @@ export type Mutable<T> = T extends Record<string, unknown>
 	: T extends readonly [...infer V]
 	? V
 	: T
+
+export type Falsy = false | 0 | "" | null | undefined
