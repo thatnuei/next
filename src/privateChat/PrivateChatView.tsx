@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
@@ -21,6 +21,10 @@ function PrivateChatView({ partnerName }: Props) {
 		() => [...chat.previousMessages, ...chat.messages],
 		[chat.previousMessages, chat.messages],
 	)
+
+	useEffect(() => {
+		if (chat.isUnread) privateChatActions.markRead()
+	}, [chat.isUnread, privateChatActions])
 
 	return (
 		<div className="flex flex-col h-full">

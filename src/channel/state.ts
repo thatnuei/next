@@ -22,6 +22,7 @@ import {
 	addRoomMessage,
 	clearRoomMessages,
 	createRoomState,
+	setRoomUnread,
 } from "../room/state"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
@@ -137,85 +138,67 @@ export function useChannelActions(id: string) {
 	const joinChannel = useJoinChannel()
 	const addChannelMessage = useAddChannelMessage()
 
-	const join = useCallback(
-		(title?: string) => joinChannel(id, title),
-		[id, joinChannel],
-	)
+	return useMemo(() => {
+		return {
+			join: (title?: string) => joinChannel(id, title),
 
-	const leave = useCallback(() => {
-		send({ type: "LCH", params: { channel: id } })
-		updateChannel((channel) => ({ ...channel, joinState: "leaving" }))
-	}, [id, send, updateChannel])
+			leave: () => {
+				send({ type: "LCH", params: { channel: id } })
+				updateChannel((channel) => ({ ...channel, joinState: "leaving" }))
+			},
 
-	const addMessage = useCallback(
-		(message: MessageState) => {
-			addChannelMessage(id, message)
-		},
-		[addChannelMessage, id],
-	)
+			addMessage: (message: MessageState) => {
+				addChannelMessage(id, message)
+			},
 
-	const clearMessages = useCallback(() => {
-		updateChannel(clearRoomMessages)
-	}, [updateChannel])
+			clearMessages: () => {
+				updateChannel(clearRoomMessages)
+			},
 
-	const sendMessage = useCallback(
-		(message: string) => {
-			if (!identity) return
+			sendMessage: (message: string) => {
+				if (!identity) return
 
-			const rollPrefix = "/roll"
-			if (message.startsWith(rollPrefix)) {
-				send({
-					type: "RLL",
-					params: {
-						channel: id,
-						dice: message.slice(rollPrefix.length).trim() || "1d20",
-					},
-				})
-				return
-			}
+				const rollPrefix = "/roll"
+				if (message.startsWith(rollPrefix)) {
+					send({
+						type: "RLL",
+						params: {
+							channel: id,
+							dice: message.slice(rollPrefix.length).trim() || "1d20",
+						},
+					})
+					return
+				}
 
-			const bottlePrefix = "/bottle"
-			if (message.startsWith(bottlePrefix)) {
-				send({
-					type: "RLL",
-					params: {
-						channel: id,
-						dice: "bottle",
-					},
-				})
-				return
-			}
+				const bottlePrefix = "/bottle"
+				if (message.startsWith(bottlePrefix)) {
+					send({
+						type: "RLL",
+						params: {
+							channel: id,
+							dice: "bottle",
+						},
+					})
+					return
+				}
 
-			send({ type: "MSG", params: { channel: id, message } })
-			addMessage(createChannelMessage(identity, message))
-		},
-		[addMessage, id, identity, send],
-	)
+				send({ type: "MSG", params: { channel: id, message } })
+				addChannelMessage(id, createChannelMessage(identity, message))
+			},
 
-	const setSelectedMode = useCallback(
-		(selectedMode: ChannelMode) => {
-			updateChannel((channel) => ({ ...channel, selectedMode }))
-		},
-		[updateChannel],
-	)
+			setSelectedMode: (selectedMode: ChannelMode) => {
+				updateChannel((channel) => ({ ...channel, selectedMode }))
+			},
 
-	const setInput = useCallback(
-		(input: string) => {
-			updateChannel((channel) => ({ ...channel, input }))
-		},
-		[updateChannel],
-	)
+			setInput: (input: string) => {
+				updateChannel((channel) => ({ ...channel, input }))
+			},
 
-	return {
-		join,
-		leave,
-		sendMessage,
-		updateChannel,
-		addMessage,
-		clearMessages,
-		setSelectedMode,
-		setInput,
-	}
+			markRead: () => {
+				updateChannel((channel) => setRoomUnread(channel, false))
+			},
+		}
+	}, [addChannelMessage, id, identity, joinChannel, send, updateChannel])
 }
 
 export function useChannelCommandListener() {
@@ -321,6 +304,7 @@ export function useChannelCommandListener() {
 
 			MSG({ channel: id, message, character }) {
 				addChannelMessage(id, createChannelMessage(character, message))
+				updateAtom(channelAtom(id), (channel) => setRoomUnread(channel, true))
 			},
 
 			LRP({ channel: id, character, message }) {

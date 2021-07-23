@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import ChatInput from "../chat/ChatInput"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import MessageList from "../message/MessageList"
@@ -33,6 +33,10 @@ function ChannelView({ channelId }: Props) {
 			shouldShowMessage,
 		)
 	}, [actualMode, channel.messages, channel.previousMessages])
+
+	useEffect(() => {
+		if (channel.isUnread) actions.markRead()
+	}, [actions, channel.isUnread])
 
 	return (
 		<div className={`flex flex-col h-full`}>

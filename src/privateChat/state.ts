@@ -14,7 +14,7 @@ import {
 	createSystemMessage,
 } from "../message/MessageState"
 import type { RoomState } from "../room/state"
-import { addRoomMessage, createRoomState } from "../room/state"
+import { addRoomMessage, createRoomState, setRoomUnread } from "../room/state"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
 import { useIdentity } from "../user"
@@ -171,6 +171,9 @@ export function usePrivateChatActions(partnerName: string) {
 			setInput(input: string) {
 				setPrivateChat((chat) => ({ ...chat, input }))
 			},
+			markRead() {
+				setPrivateChat((chat) => setRoomUnread(chat, false))
+			},
 		}),
 		[
 			openPrivateChat,
@@ -216,6 +219,9 @@ export function usePrivateChatCommandHandler() {
 				addPrivateChatMessage(
 					character,
 					createPrivateMessage(character, message),
+				)
+				updateAtom(privateChatAtom(character), (chat) =>
+					setRoomUnread(chat, true),
 				)
 			},
 
