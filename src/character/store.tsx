@@ -1,7 +1,6 @@
 import { matchSorter } from "match-sorter"
 import { useCallback, useMemo } from "react"
 import { proxy, useSnapshot } from "valtio"
-import { isPresent } from "../common/isPresent"
 import { truthyMap } from "../common/truthyMap"
 import type { Dict, TruthyMap } from "../common/types"
 import { unique } from "../common/unique"
@@ -38,6 +37,14 @@ export function createCharacterStore({
 		admins: {} as TruthyMap,
 	})
 
+	const getPresentCharacters = (
+		characters: Dict<Character>,
+		names: string[],
+	): Character[] =>
+		names
+			.map((name) => characters[name])
+			.filter((it): it is Character => it?.status !== "offline")
+
 	function useGetCharacterRoles() {
 		const { admins, bookmarks, friendships, ignoredUsers } = useSnapshot(state)
 
@@ -54,18 +61,18 @@ export function createCharacterStore({
 
 	function useFriendCharacters(): Character[] {
 		const snapshot = useSnapshot(state)
-		return snapshot.friendships
-			.map(({ them }) => snapshot.characters[them])
-			.filter(isPresent)
-			.filter((char) => char.status !== "offline")
+		return getPresentCharacters(
+			snapshot.characters,
+			snapshot.friendships.map(({ them }) => them),
+		)
 	}
 
 	function useBookmarkCharacters(): Character[] {
 		const snapshot = useSnapshot(state)
-		return Object.keys(snapshot.bookmarks)
-			.map((key) => snapshot.characters[key])
-			.filter(isPresent)
-			.filter((char) => char.status !== "offline")
+		return getPresentCharacters(
+			snapshot.characters,
+			Object.keys(snapshot.bookmarks),
+		)
 	}
 
 	return {
@@ -86,11 +93,10 @@ export function createCharacterStore({
 				...user.characters,
 			]
 
-			return unique(names)
-				.filter((names) => names !== identity)
-				.map((name) => characters[name])
-				.filter(isPresent)
-				.filter((char) => char.status !== "offline")
+			return getPresentCharacters(
+				characters,
+				unique(names).filter((names) => names !== identity),
+			)
 		},
 
 		useSearchedCharacters(query: string): Character[] {
