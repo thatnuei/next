@@ -5,6 +5,7 @@ import { isPresent } from "../common/isPresent"
 import { truthyMap } from "../common/truthyMap"
 import type { Dict, TruthyMap } from "../common/types"
 import { unique } from "../common/unique"
+import type { AuthUser } from "../flist/types"
 import { createSimpleContext } from "../react/createSimpleContext"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
@@ -22,11 +23,11 @@ function createCharacter(name: string): Character {
 
 export function createCharacterStore({
 	identity,
-	userCharacters,
+	user,
 	getFriendsAndBookmarks,
 }: {
 	identity: string
-	userCharacters: string[]
+	user: AuthUser
 	getFriendsAndBookmarks: () => Promise<FriendsAndBookmarksResponse>
 }) {
 	const state = proxy({
@@ -82,7 +83,7 @@ export function createCharacterStore({
 			const names = [
 				...friendships.map(({ them }) => them),
 				...Object.keys(bookmarks),
-				...userCharacters,
+				...user.characters,
 			]
 
 			return unique(names)

@@ -1,33 +1,28 @@
 import { useState } from "react"
 import Button from "../dom/Button"
 import TextInput from "../dom/TextInput"
+import { authenticate } from "../flist/authenticate"
+import type { AuthUser } from "../flist/types"
 import { preventDefault } from "../react/preventDefault"
-import { routes } from "../router"
 import usePromiseState from "../state/usePromiseState"
 import { input, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
-import { useUserActions } from "../user"
 
-export default function Login() {
-	const actions = useUserActions()
+export default function Login({
+	onSuccess,
+}: {
+	onSuccess: (user: AuthUser) => void
+}) {
 	const [account, setAccount] = useState("")
 	const [password, setPassword] = useState("")
-
-	const authenticateState = usePromiseState()
+	const state = usePromiseState()
+	const canSubmit = account !== "" && password !== "" && !state.isLoading
+	const isFormDisabled = state.isLoading
 
 	const submit = () => {
-		if (authenticateState.isLoading) return
-		authenticateState.setPromise(
-			actions.submitLogin({ account, password }).then(() => {
-				routes.characterSelect().push()
-			}),
-		)
+		if (state.isLoading) return
+		state.setPromise(authenticate({ account, password }).then(onSuccess))
 	}
-
-	const canSubmit =
-		account !== "" && password !== "" && !authenticateState.isLoading
-
-	const isFormDisabled = authenticateState.isLoading
 
 	return (
 		<form
@@ -62,9 +57,7 @@ export default function Login() {
 				Log in
 			</Button>
 
-			{authenticateState.error && (
-				<p className="max-w-xs">{authenticateState.error.message}</p>
-			)}
+			{state.error && <p className="max-w-xs">{state.error.message}</p>}
 		</form>
 	)
 }
