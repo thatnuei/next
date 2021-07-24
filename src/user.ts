@@ -8,7 +8,7 @@ import { fetchFlist } from "./flist/fetchFlist"
 import type { AuthUser, LoginCredentials } from "./flist/types"
 import { routes } from "./router"
 
-interface FriendsAndBookmarksResponse {
+export interface FriendsAndBookmarksResponse {
 	readonly friendlist: ReadonlyArray<{
 		/** our character */
 		source: string
