@@ -1,9 +1,9 @@
 import { lazy, Suspense, useState } from "react"
-import { CharacterStoreProvider } from "../character/store"
 import type { AuthUser } from "../flist/types"
 import IslandLayout from "../ui/IslandLayout"
 import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
 import Modal from "../ui/Modal"
+import AppErrorBoundary from "./AppErrorBoundary"
 import AppInfo from "./AppInfo"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
@@ -42,18 +42,11 @@ export default function App() {
 			)}
 
 			{view.name === "chat" && (
-				<CharacterStoreProvider
-					user={view.user}
-					identity={view.identity}
-					// temporary
-					getFriendsAndBookmarks={() =>
-						Promise.resolve({ bookmarklist: [], friendlist: [] })
-					}
-				>
+				<AppErrorBoundary>
 					<Suspense fallback={<ChatFallback />}>
-						<Chat />
+						<Chat {...view} />
 					</Suspense>
-				</CharacterStoreProvider>
+				</AppErrorBoundary>
 			)}
 		</>
 	)
