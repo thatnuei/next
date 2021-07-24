@@ -1,20 +1,7 @@
-import type { ReactNode } from "react"
-import {
-	createContext,
-	useCallback,
-	useContext,
-	useEffect,
-	useMemo,
-	useRef,
-} from "react"
-import { raise } from "../common/raise"
 import { toError } from "../common/toError"
-import { useNotificationActions } from "../notifications/state"
-import { useStateMachine } from "../state/stateMachine"
-import { useUserActions } from "../user"
+import { createStateMachineInstance } from "../state/stateMachine"
 import { socketUrl } from "./constants"
 import type { ClientCommand, ServerCommand } from "./helpers"
-import { createCommandString, parseServerCommand } from "./helpers"
 
 type SocketMachineState =
 	| { type: "offline" }
@@ -59,47 +46,12 @@ interface SocketActions {
 	callListeners: (command: ServerCommand) => void
 }
 
-const ActionsContext = createContext<SocketActions>()
+export function createSocketStore() {
+	let socket: WebSocket | undefined
+	const listeners = new Set()
+	let shouldReconnect = false
 
-const SocketStatusContext = createContext<SocketMachineState>({
-	type: "offline",
-})
-
-// https://toys.in.newtsin.space/api-docs/#server-closes-connection-after-issuing-an-err-protocol-command
-const errorCodesToAvoidReconnection: ReadonlySet<number> = new Set([
-	2, // server is full
-	9, // banned
-	30, // too many connections
-	31, // logging in with same character from another location
-	33, // invalid auth method
-	39, // timed out
-	40, /// kicked
-])
-
-export function SocketConnection({ children }: { children: ReactNode }) {
-	const socketRef = useRef<WebSocket>()
-	const listeners = useRef(new Set<CommandListener>())
-	const shouldReconnect = useRef(false)
-
-	const { getFreshAuthCredentials } = useUserActions()
-	const { addNotification } = useNotificationActions()
-
-	const send = useCallback((command: ClientCommand) => {
-		socketRef.current?.send(createCommandString(command))
-	}, [])
-
-	const addListener = useCallback((listener: CommandListener) => {
-		listeners.current.add(listener)
-		return () => {
-			listeners.current.delete(listener)
-		}
-	}, [])
-
-	const callListeners = useCallback((command: ServerCommand) => {
-		listeners.current.forEach((listener) => listener(command))
-	}, [])
-
-	const [state, dispatch] = useStateMachine<
+	const machine = createStateMachineInstance<
 		SocketMachineState,
 		SocketMachineEvent,
 		SocketMachineAction
@@ -177,14 +129,13 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 		effects: {
 			connectDelayed: ({ identity }) => {
 				setTimeout(() => {
-					dispatch({ type: "connectStart", identity })
+					machine.dispatch({ type: "connectStart", identity })
 				}, 5000)
 			},
 
 			createSocket: ({ identity }) => {
-				shouldReconnect.current = true
-
-				const socket = (socketRef.current = new WebSocket(socketUrl))
+				shouldReconnect = true
+				socket = new WebSocket(socketUrl)
 
 				socket.onopen = async () => {
 					const result = await getFreshAuthCredentials().catch(toError)
@@ -256,9 +207,9 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 			},
 
 			closeSocket: () => {
-				const socket = socketRef.current
+				const socket = socket
 				if (!socket) return
-				socketRef.current = undefined
+				socket = undefined
 				socket.onopen = null
 				socket.onclose = null
 				socket.onerror = null
@@ -267,47 +218,4 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 			},
 		},
 	})
-
-	const connect = useCallback(
-		(identity: string) => {
-			dispatch({ type: "connectStart", identity })
-		},
-		[dispatch],
-	)
-
-	const disconnect = useCallback(() => {
-		dispatch({ type: "manualDisconnect" })
-	}, [dispatch])
-
-	const actions = useMemo(
-		() => ({
-			addListener,
-			connect,
-			disconnect,
-			send,
-			callListeners,
-		}),
-		[addListener, callListeners, connect, disconnect, send],
-	)
-
-	return (
-		<SocketStatusContext.Provider value={state}>
-			<ActionsContext.Provider value={actions}>
-				{children}
-			</ActionsContext.Provider>
-		</SocketStatusContext.Provider>
-	)
-}
-
-export function useSocketStatus() {
-	return useContext(SocketStatusContext).type
-}
-
-export function useSocketActions() {
-	return useContext(ActionsContext) ?? raise("ActionsContext not found")
-}
-
-export function useSocketListener(listener: CommandListener) {
-	const { addListener } = useSocketActions()
-	return useEffect(() => addListener(listener))
 }

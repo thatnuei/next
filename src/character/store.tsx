@@ -6,8 +6,8 @@ import type { Dict, TruthyMap } from "../common/types"
 import { unique } from "../common/unique"
 import type { AuthUser } from "../flist/types"
 import { createSimpleContext } from "../react/createSimpleContext"
-import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
+import { useSocketListener } from "../socket/SocketConnection"
 import type { FriendsAndBookmarksResponse } from "../user/types"
 import type { Character, Friendship } from "./types"
 
@@ -122,85 +122,87 @@ export function createCharacterStore({
 			return getRoles(name)
 		},
 
-		handleSocketCommand(command: ServerCommand) {
-			matchCommand(command, {
-				async IDN() {
-					const result = await getFriendsAndBookmarks()
+		useCommandListener() {
+			useSocketListener((command) => {
+				matchCommand(command, {
+					async IDN() {
+						const result = await getFriendsAndBookmarks()
 
-					state.friendships = result.friendlist.map((entry) => ({
-						us: entry.source,
-						them: entry.dest,
-					}))
+						state.friendships = result.friendlist.map((entry) => ({
+							us: entry.source,
+							them: entry.dest,
+						}))
 
-					state.bookmarks = truthyMap(result.bookmarklist)
-				},
+						state.bookmarks = truthyMap(result.bookmarklist)
+					},
 
-				IGN(params) {
-					if (params.action === "init" || params.action === "list") {
-						state.ignoredUsers = truthyMap(params.characters)
-					}
-					if (params.action === "add") {
-						state.ignoredUsers[params.character] = true
-					}
-					if (params.action === "delete") {
-						delete state.ignoredUsers[params.character]
-					}
-				},
+					IGN(params) {
+						if (params.action === "init" || params.action === "list") {
+							state.ignoredUsers = truthyMap(params.characters)
+						}
+						if (params.action === "add") {
+							state.ignoredUsers[params.character] = true
+						}
+						if (params.action === "delete") {
+							delete state.ignoredUsers[params.character]
+						}
+					},
 
-				LIS({ characters }) {
-					for (const [name, gender, status, statusMessage] of characters) {
-						state.characters[name] = { name, gender, status, statusMessage }
-					}
-				},
+					LIS({ characters }) {
+						for (const [name, gender, status, statusMessage] of characters) {
+							state.characters[name] = { name, gender, status, statusMessage }
+						}
+					},
 
-				NLN({ identity: name, gender, status }) {
-					state.characters[name] = { name, gender, status, statusMessage: "" }
-				},
+					NLN({ identity: name, gender, status }) {
+						state.characters[name] = { name, gender, status, statusMessage: "" }
+					},
 
-				FLN({ character: name }) {
-					const char = (state.characters[name] ??= createCharacter(name))
-					char.status = "offline"
-					char.statusMessage = ""
-				},
+					FLN({ character: name }) {
+						const char = (state.characters[name] ??= createCharacter(name))
+						char.status = "offline"
+						char.statusMessage = ""
+					},
 
-				STA({ character: name, status, statusmsg }) {
-					const char = (state.characters[name] ??= createCharacter(name))
-					char.status = status
-					char.statusMessage = statusmsg
-				},
+					STA({ character: name, status, statusmsg }) {
+						const char = (state.characters[name] ??= createCharacter(name))
+						char.status = status
+						char.statusMessage = statusmsg
+					},
 
-				RTB(params) {
-					if (params.type === "trackadd") {
-						state.bookmarks[params.name] = true
-					}
+					RTB(params) {
+						if (params.type === "trackadd") {
+							state.bookmarks[params.name] = true
+						}
 
-					if (params.type === "trackrem") {
-						delete state.bookmarks[params.name]
-					}
+						if (params.type === "trackrem") {
+							delete state.bookmarks[params.name]
+						}
 
-					if (params.type === "friendadd") {
-						state.friendships.push({
-							us: identity,
-							them: params.name,
-						})
-						// show notification
-					}
+						if (params.type === "friendadd") {
+							state.friendships.push({
+								us: identity,
+								them: params.name,
+							})
+							// show notification
+						}
 
-					if (params.type === "friendremove") {
-						state.friendships = state.friendships.filter(
-							(f) => f.them !== params.name,
-						)
-						// show toast
-					}
-				},
+						if (params.type === "friendremove") {
+							state.friendships = state.friendships.filter(
+								(f) => f.them !== params.name,
+							)
+							// show toast
+						}
+					},
 
-				AOP({ character }) {
-					state.admins[character] = true
-				},
+					AOP({ character }) {
+						state.admins[character] = true
+					},
 
-				DOP({ character }) {
-					delete state.admins[character]
-				},
+					DOP({ character }) {
+						delete state.admins[character]
+					},
+				})
 			})
 		},
 	}
