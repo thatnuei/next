@@ -44,6 +44,8 @@ specifiers:
   source-map-explorer: ^2.5.2
   type-route: 0.6.0
   typescript: ~4.4.0-beta
+  use-memo-value: 1.0.1
+  valtio: 1.0.7
   vite: 2.4.3
   vite-plugin-windicss: 1.2.5
   windicss: 3.1.5
@@ -60,7 +62,7 @@ dependencies:
   focus-visible: 5.2.0
   fuzzysearch: 1.0.3
   idb: 6.1.2
-  jotai: 1.2.2_2809a9cb067487d57565c7f65c527eaf
+  jotai: 1.2.2_917d7e597b83289d397d8ce2b7ff576a
   lodash-es: 4.17.21
   match-sorter: 6.3.0
   nanoid: 3.1.23
@@ -70,6 +72,8 @@ dependencies:
   react-window: 1.8.6_99a5b08213840631d1fe42c974a0200d
   resize-observer-polyfill: 1.5.1
   type-route: 0.6.0
+  use-memo-value: 1.0.1_2809a9cb067487d57565c7f65c527eaf
+  valtio: 1.0.7_2809a9cb067487d57565c7f65c527eaf
 
 devDependencies:
   '@types/jest': 26.0.24
@@ -3985,7 +3989,7 @@ packages:
     hasBin: true
     dev: true
 
-  /jotai/1.2.2_2809a9cb067487d57565c7f65c527eaf:
+  /jotai/1.2.2_917d7e597b83289d397d8ce2b7ff576a:
     resolution: {integrity: sha512-iqkkUdWsH2Mk4HY1biba/8kA77+8liVBy8E0d8Nce29qow4h9mzdDhpTasAruuFYPycw6JvfZgL5RB0JJuIZjw==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -4014,6 +4018,7 @@ packages:
         optional: true
     dependencies:
       react: 18.0.0-alpha-ed6c091fe-20210701
+      valtio: 1.0.7_2809a9cb067487d57565c7f65c527eaf
     dev: false
 
   /js-tokens/4.0.0:
@@ -4755,6 +4760,10 @@ packages:
       react-is: 16.13.1
     dev: true
 
+  /proxy-compare/2.0.1:
+    resolution: {integrity: sha512-uXj3TtWdR1S2SNwJKbgJB+1FJm9HM3sFzlVc8W6PZvU6ogt9mlkb1WwZQpuKFLkDS6LKY4+FBE18K6ZArphnHA==}
+    dev: false
+
   /psl/1.8.0:
     resolution: {integrity: sha512-RIdOzyoavK+hA18OGGWDqUTsCLhtA7IcZ/6NCs4fFJaHBDab+pDDmDIByWFRQJq2Cd7r1OoQxBGKOaztq+hjIQ==}
     dev: true
@@ -5121,6 +5130,10 @@ packages:
   /setimmediate/1.0.5:
     resolution: {integrity: sha1-KQy7Iy4waULX1+qbg3Mqt4VvgoU=}
     dev: true
+
+  /shallowequal/1.1.0:
+    resolution: {integrity: sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==}
+    dev: false
 
   /shebang-command/1.2.0:
     resolution: {integrity: sha1-RKrGW2lbAzmJaMOfNj/uXer98eo=}
@@ -5680,6 +5693,15 @@ packages:
       react: 18.0.0-alpha-ed6c091fe-20210701
     dev: false
 
+  /use-memo-value/1.0.1_2809a9cb067487d57565c7f65c527eaf:
+    resolution: {integrity: sha512-1DqRcvh5XguuuO8QXw9KeAp7MDUKrLPrCv3+GawjFqxjwRJN9FjzayW0Z3RBvWi826l5mim8ov+kCFSTs70svg==}
+    peerDependencies:
+      react: ^16.8.0
+    dependencies:
+      react: 18.0.0-alpha-ed6c091fe-20210701
+      shallowequal: 1.1.0
+    dev: false
+
   /use-sidecar/1.0.5_2809a9cb067487d57565c7f65c527eaf:
     resolution: {integrity: sha512-k9jnrjYNwN6xYLj1iaGhonDghfvmeTmYjAiGvOr7clwKfPjMXJf4/HOr7oT5tJwYafgp2tG2l3eZEOfoELiMcA==}
     engines: {node: '>=8.5.0'}
@@ -5715,6 +5737,27 @@ packages:
       spdx-correct: 3.1.1
       spdx-expression-parse: 3.0.1
     dev: true
+
+  /valtio/1.0.7_2809a9cb067487d57565c7f65c527eaf:
+    resolution: {integrity: sha512-zaaM+QiE6P0pBllFIyDnbjaRILEYsy1YYJf6F1D8dsADKxL2r+Fb3SupM8SHQn2tNx4cbSTu9aarOaoiH+X1dg==}
+    peerDependencies:
+      '@babel/helper-module-imports': '>=7.12'
+      '@babel/types': '>=7.13'
+      babel-plugin-macros: '>=3.0'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@babel/helper-module-imports':
+        optional: true
+      '@babel/types':
+        optional: true
+      babel-plugin-macros:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      proxy-compare: 2.0.1
+      react: 18.0.0-alpha-ed6c091fe-20210701
+    dev: false
 
   /vite-plugin-windicss/1.2.5_vite@2.4.3:
     resolution: {integrity: sha512-6z2XXQpV0WhSEoyWim4gaWyxrBhszhbufjQ3oiyJbtENoft90trJtnWYvPHXaTB0sspy1LIfSSQquru8N7KZJQ==}
