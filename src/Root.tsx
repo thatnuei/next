@@ -2,7 +2,7 @@ import clsx from "clsx"
 import { Provider as JotaiProvider } from "jotai"
 import type { FallbackProps } from "react-error-boundary"
 import { ErrorBoundary } from "react-error-boundary"
-import AppRoutes from "./app/AppRoutes"
+import App from "./app/App"
 import AppTitle from "./app/AppTitle"
 import { toError } from "./common/toError"
 import NotificationToastOverlay from "./notifications/NotificationToastOverlay"
@@ -17,7 +17,7 @@ export default function Root() {
 				<JotaiProvider>
 					<SocketConnection>
 						<AppTitle />
-						<AppRoutes />
+						<App />
 						<NotificationToastOverlay />
 					</SocketConnection>
 				</JotaiProvider>

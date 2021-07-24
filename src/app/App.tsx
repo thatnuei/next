@@ -1,10 +1,16 @@
 import { lazy, Suspense, useEffect } from "react"
+import { CharacterStoreProvider } from "../character/store"
 import { isNonEmptyArray } from "../common/isNonEmptyArray"
 import { chatRouteGroup, routes, useRoute } from "../router"
 import IslandLayout from "../ui/IslandLayout"
 import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
 import Modal from "../ui/Modal"
-import { useAccount, useUserCharacters } from "../user"
+import {
+	useAccount,
+	useIdentity,
+	useUserActions,
+	useUserCharacters,
+} from "../user"
 import AppInfo from "./AppInfo"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
@@ -12,10 +18,12 @@ import LoginRequiredMessage from "./LoginRequiredMessage"
 
 const Chat = lazy(() => import("../chat/Chat"))
 
-export default function AppRoutes() {
+export default function App() {
 	const route = useRoute()
 	const account = useAccount()
+	const identity = useIdentity()
 	const characters = useUserCharacters()
+	const userActions = useUserActions()
 
 	useEffect(() => {
 		if (route.name === false) routes.login().replace()
@@ -43,7 +51,17 @@ export default function AppRoutes() {
 
 			{chatRouteGroup.has(route) && (
 				<Suspense fallback={<ChatFallback />}>
-					{account ? <Chat /> : <LoginRequiredMessage />}
+					{account && identity && isNonEmptyArray(characters) ? (
+						<CharacterStoreProvider
+							identity={identity}
+							userCharacters={characters}
+							getFriendsAndBookmarks={userActions.getFriendsAndBookmarks}
+						>
+							<Chat />
+						</CharacterStoreProvider>
+					) : (
+						<LoginRequiredMessage />
+					)}
 				</Suspense>
 			)}
 		</>
