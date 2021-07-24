@@ -9,8 +9,8 @@ export interface Friendship {
 }
 
 export interface Character {
-	readonly name: string
-	readonly gender: CharacterGender
-	readonly status: CharacterStatus
-	readonly statusMessage: string
+	name: string
+	gender: CharacterGender
+	status: CharacterStatus
+	statusMessage: string
 }
