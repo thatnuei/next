@@ -9,7 +9,7 @@ import type { AuthUser } from "../flist/types"
 import { createSimpleContext } from "../react/createSimpleContext"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
-import type { FriendsAndBookmarksResponse } from "../user"
+import type { FriendsAndBookmarksResponse } from "../user/types"
 import type { Character, Friendship } from "./types"
 
 function createCharacter(name: string): Character {

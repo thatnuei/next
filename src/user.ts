@@ -6,17 +6,7 @@ import { raise } from "./common/raise"
 import { authenticate } from "./flist/authenticate"
 import { fetchFlist } from "./flist/fetchFlist"
 import type { AuthUser, LoginCredentials } from "./flist/types"
-import { routes } from "./router"
-
-export interface FriendsAndBookmarksResponse {
-	readonly friendlist: ReadonlyArray<{
-		/** our character */
-		source: string
-		/** their character */
-		dest: string
-	}>
-	readonly bookmarklist: readonly string[]
-}
+import type { FriendsAndBookmarksResponse } from "./user/types"
 
 let user: AuthUser | undefined
 
@@ -74,7 +64,6 @@ export function useUserActions() {
 				setAccount(undefined)
 				setUserCharacters([])
 				user = undefined
-				routes.login().push()
 			},
 
 			setIdentity(identity: string) {
