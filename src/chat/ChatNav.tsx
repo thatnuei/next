@@ -8,6 +8,7 @@ import RoomTabList from "../chat/RoomTabList"
 import Button from "../dom/Button"
 import NotificationListLink from "../notifications/NotificationListLink"
 import { routes, useRoute } from "../router"
+import SettingsScreen from "../settings/SettingsScreen"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import LogsIcon from "../ui/LogsIcon"
@@ -72,6 +73,22 @@ export default function ChatNav() {
 						active={route.name === "logs"}
 					/>
 				</a>
+
+				<Modal
+					title="Settings"
+					renderTrigger={(t) => (
+						<ChatNavActionButton
+							icon={<Icon which={icons.settings} />}
+							name="Settings"
+							{...t}
+						/>
+					)}
+					renderContent={() => (
+						<div className="p-4">
+							<SettingsScreen />
+						</div>
+					)}
+				/>
 
 				<Modal
 					title="About next"

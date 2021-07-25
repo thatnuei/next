@@ -17,6 +17,7 @@ Currently it's a **heavy** work in progress; there will probably be bugs and som
 
 ## 0.0.4
 
+- added desktop notifications for private chats! to activate them, hit the settings icon on the left
 - fixed messages appearing twice in PMs
 - fixed scrolling issues on private chat view
 
