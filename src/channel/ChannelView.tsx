@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react"
 import ChatInput from "../chat/ChatInput"
+import { useDocumentVisible } from "../dom/useDocumentVisible"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import MessageList from "../message/MessageList"
 import type { MessageState } from "../message/MessageState"
@@ -34,9 +35,10 @@ function ChannelView({ channelId }: Props) {
 		)
 	}, [actualMode, channel.messages, channel.previousMessages])
 
+	const isDocumentVisible = useDocumentVisible()
 	useEffect(() => {
-		if (channel.isUnread) actions.markRead()
-	}, [actions, channel.isUnread])
+		if (channel.isUnread && isDocumentVisible) actions.markRead()
+	}, [actions, channel.isUnread, isDocumentVisible])
 
 	return (
 		<div className={`flex flex-col h-full`}>

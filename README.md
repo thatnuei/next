@@ -15,6 +15,10 @@ Currently it's a **heavy** work in progress; there will probably be bugs and som
 
 # changelog
 
+## 0.0.6
+
+- improved notification behavior when the window isn't visible
+
 ## 0.0.5
 
 - fix format for generated private channel bbc links

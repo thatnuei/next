@@ -5,6 +5,7 @@ import CharacterName from "../character/CharacterName"
 import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
 import ChatMenuButton from "../chat/ChatMenuButton"
+import { useDocumentVisible } from "../dom/useDocumentVisible"
 import MessageList from "../message/MessageList"
 import { usePrivateChat, usePrivateChatActions } from "./state"
 import TypingStatusDisplay from "./TypingStatusDisplay"
@@ -22,9 +23,10 @@ function PrivateChatView({ partnerName }: Props) {
 		[chat.previousMessages, chat.messages],
 	)
 
+	const isDocumentVisible = useDocumentVisible()
 	useEffect(() => {
-		if (chat.isUnread) privateChatActions.markRead()
-	}, [chat.isUnread, privateChatActions])
+		if (chat.isUnread && isDocumentVisible) privateChatActions.markRead()
+	}, [chat.isUnread, isDocumentVisible, privateChatActions])
 
 	return (
 		<div className="flex flex-col h-full">
