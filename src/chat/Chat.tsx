@@ -1,4 +1,5 @@
 import clsx from "clsx"
+import type { ReactNode } from "react"
 import { useDeferredValue, useEffect } from "react"
 import ChannelView from "../channel/ChannelView"
 import DevTools from "../dev/DevTools"
@@ -38,19 +39,35 @@ export default function Chat() {
 					<div className="hidden md:block">
 						<ChatNav />
 					</div>
-					<div
-						className={clsx(
-							"flex-1 min-w-0",
-							route !== deferredRoute && "transition-opacity opacity-50",
-						)}
-						style={{ transitionDelay: route !== deferredRoute ? "0.3s" : "0" }}
+					<StalenessState
+						className="flex-1 min-w-0 overflow-y-auto"
+						isStale={route !== deferredRoute}
 					>
 						<ChatRoutes route={deferredRoute} />
-					</div>
+					</StalenessState>
 				</div>
 			</ConnectionGuard>
 			{import.meta.env.DEV && <DevTools />}
 		</>
+	)
+}
+
+function StalenessState({
+	className,
+	isStale,
+	children,
+}: {
+	isStale: boolean
+	className: string
+	children: ReactNode
+}) {
+	return (
+		<div
+			className={clsx(className, isStale && "transition-opacity opacity-50")}
+			style={{ transitionDelay: isStale ? "0.3s" : "0" }}
+		>
+			{children}
+		</div>
 	)
 }
 
