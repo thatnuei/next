@@ -18,6 +18,7 @@ Currently it's a **heavy** work in progress; there will probably be bugs and som
 ## 0.0.4
 
 - fixed messages appearing twice in PMs
+- fixed scrolling issues on private chat view
 
 ## 0.0.3
 

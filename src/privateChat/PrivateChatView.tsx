@@ -46,9 +46,10 @@ function PrivateChatView({ partnerName }: Props) {
 				</div>
 			</div>
 
-			<div className="flex flex-col flex-1 mb-1">
+			{/* min height 0 needed on both places here to not overstretch the parent */}
+			<div className="flex flex-col flex-1 mb-1 min-h-0">
 				<TypingStatusDisplay name={partnerName} status={typingStatus} />
-				<div className="bg-midnight-1 flex-1">
+				<div className="bg-midnight-1 flex-1 min-h-0">
 					<MessageList messages={messages} />
 				</div>
 			</div>
