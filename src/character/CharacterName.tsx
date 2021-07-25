@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import { memo } from "react"
+import { observer } from "mobx-react-lite"
 import CharacterMenuTarget from "./CharacterMenuTarget"
 import { genderColors, statusColors } from "./colors"
 import { useCharacter } from "./state"
@@ -32,4 +32,4 @@ function CharacterName({ name, statusDot = "visible" }: Props) {
 	)
 }
 
-export default memo(CharacterName)
+export default observer(CharacterName)

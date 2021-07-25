@@ -1,8 +1,9 @@
 import { sortBy } from "lodash-es"
-import { observer } from "mobx-react-lite"
+import { action } from "mobx"
+import { Observer, observer } from "mobx-react-lite"
 import CharacterName from "../character/CharacterName"
 import { useGetCharacterRoles } from "../character/state"
-import type { CharacterStatus } from "../character/types"
+import type { Character, CharacterStatus } from "../character/types"
 import type { ValueOf } from "../common/types"
 import VirtualizedList from "../ui/VirtualizedList"
 import { useChannel, useChannelCharacters } from "./state"
@@ -59,17 +60,21 @@ function ChannelUserList({ channelId }: Props) {
 				<VirtualizedList
 					items={sortedItems}
 					itemSize={32}
-					getItemKey={(item) => item.name}
+					getItemKey={action((item: Character) => item.name)}
 					renderItem={({ item, style }) => (
-						<div
-							role="listitem"
-							style={style}
-							className={`flex items-center px-2 ${getTypeClassName(
-								getType(item.name, item.status),
-							)}`}
-						>
-							<CharacterName name={item.name} />
-						</div>
+						<Observer>
+							{() => (
+								<div
+									role="listitem"
+									style={style}
+									className={`flex items-center px-2 ${getTypeClassName(
+										getType(item.name, item.status),
+									)}`}
+								>
+									<CharacterName name={item.name} />
+								</div>
+							)}
+						</Observer>
 					)}
 				/>
 			</div>

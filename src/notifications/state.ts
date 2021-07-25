@@ -1,5 +1,6 @@
 import { atom } from "jotai"
 import { useAtomValue, useUpdateAtom } from "jotai/utils"
+import { action } from "mobx"
 import { useMemo } from "react"
 import { useLikedCharacters } from "../character/state"
 import type { CharacterStatus } from "../character/types"
@@ -168,73 +169,75 @@ export function useNotificationCommandListener() {
 	const actions = useNotificationActions()
 	const likedCharacters = useLikedCharacters()
 
-	useSocketListener((command) => {
-		matchCommand(command, {
-			BRO({ message, character }) {
-				actions.addNotification({
-					type: "broadcast",
-					message,
-					actorName: character,
-					showToast: true,
-				})
-			},
-
-			ERR({ message }) {
-				actions.addNotification({
-					type: "error",
-					message,
-					save: false,
-					showToast: true,
-				})
-			},
-
-			STA({ character: name, status, statusmsg }) {
-				if (likedCharacters.some((char) => char.name === name)) {
+	useSocketListener(
+		action(function handleNotificationCommand(command) {
+			matchCommand(command, {
+				BRO({ message, character }) {
 					actions.addNotification({
-						type: "status",
-						name,
-						status,
-						message: statusmsg,
+						type: "broadcast",
+						message,
+						actorName: character,
+						showToast: true,
 					})
-				}
-			},
+				},
 
-			NLN({ identity: name }) {
-				if (likedCharacters.some((char) => char.name === name)) {
+				ERR({ message }) {
 					actions.addNotification({
-						type: "status",
-						name,
-						status: "online",
-						message: "",
+						type: "error",
+						message,
+						save: false,
+						showToast: true,
 					})
-				}
-			},
+				},
 
-			FLN({ character: name }) {
-				if (likedCharacters.some((char) => char.name === name)) {
+				STA({ character: name, status, statusmsg }) {
+					if (likedCharacters.some((char) => char.name === name)) {
+						actions.addNotification({
+							type: "status",
+							name,
+							status,
+							message: statusmsg,
+						})
+					}
+				},
+
+				NLN({ identity: name }) {
+					if (likedCharacters.some((char) => char.name === name)) {
+						actions.addNotification({
+							type: "status",
+							name,
+							status: "online",
+							message: "",
+						})
+					}
+				},
+
+				FLN({ character: name }) {
+					if (likedCharacters.some((char) => char.name === name)) {
+						actions.addNotification({
+							type: "status",
+							name,
+							status: "offline",
+							message: "",
+						})
+					}
+				},
+
+				CIU({ name: channelId, title, sender }) {
 					actions.addNotification({
-						type: "status",
-						name,
-						status: "offline",
-						message: "",
+						type: "invite",
+						channelId,
+						title,
+						sender,
+						showToast: true,
 					})
-				}
-			},
+				},
 
-			CIU({ name: channelId, title, sender }) {
-				actions.addNotification({
-					type: "invite",
-					channelId,
-					title,
-					sender,
-					showToast: true,
-				})
-			},
-
-			SYS({ message }) {
-				// we don't actually need to notify for these, so just log for now
-				console.info(message)
-			},
-		})
-	})
+				SYS({ message }) {
+					// we don't actually need to notify for these, so just log for now
+					console.info(message)
+				},
+			})
+		}),
+	)
 }

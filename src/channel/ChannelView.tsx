@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import { useEffect, useMemo } from "react"
 import ChatInput from "../chat/ChatInput"
 import { useDocumentVisible } from "../dom/useDocumentVisible"
@@ -66,4 +67,4 @@ function ChannelView({ channelId }: Props) {
 	)
 }
 
-export default ChannelView
+export default observer(ChannelView)

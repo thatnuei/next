@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import BBC from "../bbc/BBC"
 import { statusColors } from "./colors"
 import { useCharacter } from "./state"
@@ -19,4 +20,4 @@ function CharacterStatusText({ name }: { name: string }) {
 	)
 }
 
-export default CharacterStatusText
+export default observer(CharacterStatusText)
