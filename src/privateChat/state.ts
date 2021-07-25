@@ -24,7 +24,7 @@ import type { TypingStatus } from "./types"
 interface PrivateChat extends RoomState {
 	readonly partnerName: string
 	readonly typingStatus: TypingStatus
-	readonly previousMessages: readonly MessageState[]
+	readonly previousMessages?: readonly MessageState[]
 }
 
 const privateChatDictAtom = atom<Dict<PrivateChat>>({})
@@ -41,7 +41,6 @@ function createPrivateChat(partnerName: string): PrivateChat {
 		...createRoomState(),
 		partnerName,
 		typingStatus: "clear",
-		previousMessages: [],
 	}
 }
 
@@ -94,7 +93,7 @@ function useOpenPrivateChat() {
 					.then((messages) => {
 						updatePrivateChatDict(partnerName, (chat) => ({
 							...chat,
-							previousMessages: messages,
+							previousMessages: chat.previousMessages ?? messages,
 						}))
 					})
 			}

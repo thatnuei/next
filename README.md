@@ -15,6 +15,10 @@ Currently it's a **heavy** work in progress; there will probably be bugs and som
 
 # changelog
 
+## 0.0.4
+
+- fixed messages appearing twice in PMs
+
 ## 0.0.3
 
 - show your current character name + unread count in the app title

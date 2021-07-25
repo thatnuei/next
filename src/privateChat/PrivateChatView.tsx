@@ -18,7 +18,7 @@ function PrivateChatView({ partnerName }: Props) {
 	const privateChatActions = usePrivateChatActions(partnerName)
 
 	const messages = useMemo(
-		() => [...chat.previousMessages, ...chat.messages],
+		() => [...(chat.previousMessages ?? []), ...chat.messages],
 		[chat.previousMessages, chat.messages],
 	)
 
@@ -28,14 +28,14 @@ function PrivateChatView({ partnerName }: Props) {
 
 	return (
 		<div className="flex flex-col h-full">
-			<div className="flex flex-row items-center h-20 gap-3 px-3 mb-1 bg-midnight-0">
+			<div className="flex flex-row bg-midnight-0 h-20 mb-1 px-3 gap-3 items-center">
 				<ChatMenuButton />
 
 				<CharacterMenuTarget name={partnerName}>
 					<Avatar name={partnerName} size={12} />
 				</CharacterMenuTarget>
 
-				<div className="flex flex-col self-stretch justify-center flex-1 overflow-y-auto">
+				<div className="flex flex-col flex-1 self-stretch justify-center overflow-y-auto">
 					{/* need this extra container to keep the children from shrinking */}
 					<div className="my-3">
 						<CharacterName name={partnerName} statusDot="hidden" />
@@ -48,7 +48,7 @@ function PrivateChatView({ partnerName }: Props) {
 
 			<div className="flex flex-col flex-1 mb-1">
 				<TypingStatusDisplay name={partnerName} status={typingStatus} />
-				<div className="flex-1 bg-midnight-1">
+				<div className="bg-midnight-1 flex-1">
 					<MessageList messages={messages} />
 				</div>
 			</div>
