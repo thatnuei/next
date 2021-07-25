@@ -1,9 +1,9 @@
 export interface Dict<T> {
-	readonly [key: string]: T
+	[key: string]: T
 }
 
 export interface TruthyMap {
-	readonly [key: string]: true
+	[key: string]: true
 }
 
 export type ValueOf<T> = T extends readonly unknown[] ? T[number] : T[keyof T]
