@@ -1,9 +1,8 @@
 import type { Ref } from ".pnpm/@types+react@17.0.14/node_modules/@types/react"
-import { useIsPublicChannel } from "../channelBrowser/state"
+import { useGetChannelLink } from "../channelBrowser/state"
 import Button from "../dom/Button"
 import { useNotificationActions } from "../notifications/state"
 import { autoRef } from "../react/autoRef"
-import { useChannel } from "./state"
 
 export default autoRef(function CopyChannelCodeButton({
 	channelId,
@@ -16,9 +15,8 @@ export default autoRef(function CopyChannelCodeButton({
 	onClick?: () => void
 	ref: Ref<HTMLButtonElement>
 }) {
-	const channel = useChannel(channelId)
-	const isPublic = useIsPublicChannel(channelId)
 	const { addNotification } = useNotificationActions()
+	const getChannelLink = useGetChannelLink()
 
 	return (
 		<Button
@@ -26,12 +24,8 @@ export default autoRef(function CopyChannelCodeButton({
 			className={className}
 			ref={ref}
 			onClick={() => {
-				const linkCode = isPublic
-					? `[channel]${channelId}[/channel]`
-					: `[session=${channelId}]${channel.title}[/session]`
-
 				window.navigator.clipboard
-					.writeText(linkCode)
+					.writeText(getChannelLink(channelId))
 					.then(() => {
 						addNotification({
 							type: "info",

@@ -71,7 +71,7 @@ export function useGetChannelLink() {
 		(channelId: string) => {
 			const privateChannel = privateChannels.find((ch) => ch.id === channelId)
 			return privateChannel
-				? `[session=${channelId}]${privateChannel.title}[/session]`
+				? `[session=${privateChannel.title}]${channelId}[/session]`
 				: `[channel]${channelId}[/channel]`
 		},
 		[privateChannels],

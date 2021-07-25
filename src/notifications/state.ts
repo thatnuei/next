@@ -69,7 +69,7 @@ function getNotificationMessage(notification: Notification) {
 		const bbcLink =
 			notification.channelId === notification.title
 				? `[channel]${notification.channelId}[/channel]`
-				: `[session=${notification.channelId}]${notification.title}[/session]`
+				: `[session=${notification.title}]${notification.channelId}[/session]`
 
 		return `${notification.sender} has invited you to ${bbcLink}`
 	}

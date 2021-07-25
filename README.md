@@ -15,6 +15,10 @@ Currently it's a **heavy** work in progress; there will probably be bugs and som
 
 # changelog
 
+## 0.0.5
+
+- fix format for generated private chat bbc links
+
 ## 0.0.4
 
 - added desktop notifications for private chats! to activate them, hit the settings icon on the left
