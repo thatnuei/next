@@ -17,7 +17,7 @@ Currently it's a **heavy** work in progress; there will probably be bugs and som
 
 ## 0.0.5
 
-- fix format for generated private chat bbc links
+- fix format for generated private channel bbc links
 
 ## 0.0.4
 
