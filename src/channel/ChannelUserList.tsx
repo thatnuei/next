@@ -1,5 +1,5 @@
 import { sortBy } from "lodash-es"
-import { memo } from "react"
+import { observer } from "mobx-react-lite"
 import CharacterName from "../character/CharacterName"
 import { useGetCharacterRoles } from "../character/state"
 import type { CharacterStatus } from "../character/types"
@@ -77,4 +77,4 @@ function ChannelUserList({ channelId }: Props) {
 	)
 }
 
-export default memo(ChannelUserList)
+export default observer(ChannelUserList)

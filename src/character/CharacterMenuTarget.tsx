@@ -16,7 +16,7 @@ import * as icons from "../ui/icons"
 import { useUserActions } from "../user"
 import CharacterMemoInput from "./CharacterMemoInput"
 import CharacterSummary from "./CharacterSummary"
-import { useCharacterRoles } from "./state"
+import { useCharacterRoles, useFriendships } from "./state"
 
 interface Props {
 	name: string
@@ -37,7 +37,8 @@ export default function CharacterMenuTarget({ name, children }: Props) {
 }
 
 function CharacterMenu({ name }: { name: string }) {
-	const { friendships, isBookmarked, isIgnored } = useCharacterRoles(name)
+	const { isBookmarked, isIgnored } = useCharacterRoles(name)
+	const friendships = useFriendships()
 	const { send } = useSocketActions()
 	const { addBookmark, removeBookmark } = useUserActions()
 	const privateChatActions = usePrivateChatActions(name)

@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import CharacterName from "../character/CharacterName"
 import { useLikedCharacters, useUserCharacters } from "../character/state"
 import type { Character } from "../character/types"
@@ -76,4 +77,4 @@ function InviteUsersForm({ channelId }: Props) {
 	)
 }
 
-export default InviteUsersForm
+export default observer(InviteUsersForm)

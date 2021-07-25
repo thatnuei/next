@@ -1,19 +1,20 @@
+import { observer } from "mobx-react-lite"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
 import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
 import CharacterStatusText from "./CharacterStatusText"
 import { genderColors } from "./colors"
-import { useCharacterGender } from "./state"
+import { useCharacter } from "./state"
 
 function CharacterSummary({ name }: { name: string }) {
-	const gender = useCharacterGender(name)
+	const char = useCharacter(name)
 	return (
 		<div className="grid gap-3">
 			<ExternalLink
 				href={getProfileUrl(name)}
 				className={headerText2}
-				style={{ color: genderColors[gender] }}
+				style={{ color: genderColors[char.gender] }}
 			>
 				{name}
 			</ExternalLink>
@@ -32,4 +33,4 @@ function CharacterSummary({ name }: { name: string }) {
 	)
 }
 
-export default CharacterSummary
+export default observer(CharacterSummary)

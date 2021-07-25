@@ -2,7 +2,7 @@ import { atom, useAtom } from "jotai"
 import { selectAtom, useAtomValue, useUpdateAtom } from "jotai/utils"
 import { mapValues } from "lodash-es"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { characterAtom } from "../character/state"
+import { usePresentCharacters } from "../character/state"
 import type { Character } from "../character/types"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
@@ -80,18 +80,13 @@ export function useIsChannelJoined(id: string) {
 }
 
 export function useChannelCharacters(id: string): readonly Character[] {
-	const channelUsersAtom = useMemo(() => {
-		return selectAtom(channelAtom(id), (channel) => channel.users)
-	}, [id])
+	const channelUsers = useAtomValue(
+		useMemo(() => {
+			return selectAtom(channelAtom(id), (channel) => channel.users)
+		}, [id]),
+	)
 
-	const channelCharactersAtom = useMemo(() => {
-		return atom((get) => {
-			const channelUsers = get(channelUsersAtom)
-			return Object.keys(channelUsers).map((name) => get(characterAtom(name)))
-		})
-	}, [channelUsersAtom])
-
-	return useAtomValue(channelCharactersAtom)
+	return usePresentCharacters(Object.keys(channelUsers))
 }
 
 export function useActualChannelMode(id: string) {

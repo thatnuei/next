@@ -1,40 +1,26 @@
-import type { Atom } from "jotai"
-import { atom, useAtom } from "jotai"
-import { atomFamily, useAtomValue, useUpdateAtom } from "jotai/utils"
 import { matchSorter } from "match-sorter"
-import { useCallback, useMemo } from "react"
-import { isPresent } from "../common/isPresent"
-import { omit } from "../common/omit"
+import { observable } from "mobx"
+import { useCallback } from "react"
 import { raise } from "../common/raise"
 import { truthyMap } from "../common/truthyMap"
-import type { Dict, Mutable, TruthyMap } from "../common/types"
+import type { Dict, TruthyMap } from "../common/types"
 import { unique } from "../common/unique"
-import { dictionaryAtomFamily } from "../jotai/dictionaryAtomFamily"
-import { useUpdateDictAtom } from "../jotai/useUpdateDictAtom"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
 import { useIdentity, useUserActions, useUserCharacterNames } from "../user"
-import type { Character, CharacterGender, Friendship } from "./types"
+import type { Character, Friendship } from "./types"
 
-const characterDictAtom = atom<Dict<Character>>({})
+const store = observable({
+	characters: {} as Dict<Character>,
+	friendships: [] as Friendship[],
+	bookmarks: {} as TruthyMap,
+	ignoredUsers: {} as TruthyMap,
+	admins: {} as TruthyMap,
 
-export const characterAtom = dictionaryAtomFamily(
-	characterDictAtom,
-	createCharacter,
-)
-
-const characterGenderAtom = atomFamily((name: string) => {
-	return atom((get) => {
-		const character = get(characterAtom(name))
-		return character.gender
-	})
+	getCharacter: (name: string) =>
+		(store.characters[name] ??= createCharacter(name)),
 })
-
-const friendshipsAtom = atom<readonly Friendship[]>([])
-const bookmarksAtom = atom<TruthyMap>({})
-const ignoredUsersAtom = atom<TruthyMap>({})
-const adminsAtom = atom<TruthyMap>({})
 
 function createCharacter(name: string): Character {
 	return {
@@ -45,82 +31,50 @@ function createCharacter(name: string): Character {
 	}
 }
 
-export function useCharacter(name: string): Character {
-	return useAtom(characterAtom(name))[0]
+export function usePresentCharacters(names: string[]) {
+	return names
+		.map(store.getCharacter)
+		.filter((char) => char.status !== "offline")
 }
 
-export function useCharacterGender(name: string): CharacterGender {
-	return useAtom(characterGenderAtom(name))[0]
+export function useCharacter(name: string): Character {
+	return store.getCharacter(name)
+}
+
+export function useFriendships(): Friendship[] {
+	return store.friendships
 }
 
 export function useFriendCharacters(): readonly Character[] {
-	return useAtomValue(
-		useMemo(() => {
-			return atom((get) => {
-				const friends = get(friendshipsAtom)
-				const characters = get(characterDictAtom)
-				return unique(
-					friends
-						.map(({ them }) => characters[them])
-						.filter(isPresent)
-						.filter((character) => character.status !== "offline"),
-				)
-			})
-		}, []),
-	)
+	return usePresentCharacters(store.friendships.map((f) => f.them))
 }
 
 export function useBookmarkCharacters(): readonly Character[] {
-	return useAtomValue(
-		useMemo(() => {
-			return atom((get) => {
-				const bookmarks = get(bookmarksAtom)
-				const characters = get(characterDictAtom)
-				return unique(
-					Object.keys(bookmarks)
-						.map((name) => characters[name])
-						.filter(isPresent)
-						.filter((character) => character.status !== "offline"),
-				)
-			})
-		}, []),
-	)
+	return usePresentCharacters(Object.keys(store.bookmarks))
 }
 
-export function useSearchedCharacters(queryAtom: Atom<string>) {
-	return useAtomValue(
-		useMemo(() => {
-			return atom<readonly Character[]>((get) => {
-				const query = get(queryAtom).trim().toLowerCase()
-				if (!query) return []
+export function useSearchedCharacters(query: string) {
+	const characters = Object.values(store.characters)
+	const queryTrimmed = query.trim()
 
-				const characters = Object.values(get(characterDictAtom)).filter(
-					(character) => character.status !== "offline",
-				)
+	if (!queryTrimmed) {
+		return []
+	}
 
-				return matchSorter(characters, query, {
-					keys: ["name", "gender", "status"],
-				})
-			})
-		}, [queryAtom]),
-	)
+	return matchSorter(characters, queryTrimmed, {
+		keys: ["name", "gender", "status"],
+	})
 }
 
 export function useGetCharacterRoles() {
-	const [friendships] = useAtom(friendshipsAtom)
-	const [bookmarks] = useAtom(bookmarksAtom)
-	const [ignoredUsers] = useAtom(ignoredUsersAtom)
-	const [admins] = useAtom(adminsAtom)
-
 	return useCallback(
 		(name: string) => ({
-			friendships,
-			isFriend: friendships.some(({ them }) => them === name),
-			isBookmarked: bookmarks[name] ?? false,
-			isIgnored: ignoredUsers[name] ?? false,
-			isAdmin: admins[name] ?? false,
+			isFriend: store.friendships.some(({ them }) => them === name),
+			isBookmarked: store.bookmarks[name] ?? false,
+			isIgnored: store.ignoredUsers[name] ?? false,
+			isAdmin: store.admins[name] ?? false,
 		}),
-		[admins, bookmarks, friendships, ignoredUsers],
+		[],
 	)
 }
 
@@ -133,52 +87,22 @@ export function useCharacterRoles(name: string) {
 export function useLikedCharacters(): readonly Character[] {
 	const identity = useIdentity()
 
-	const likedCharactersAtom = useMemo(
-		() =>
-			atom((get): readonly Character[] => {
-				const friendships = get(friendshipsAtom)
-				const bookmarks = get(bookmarksAtom)
+	const names = [
+		...Object.keys(store.bookmarks),
+		...store.friendships.map(({ them }) => them),
+	]
 
-				const names = [
-					...Object.keys(bookmarks),
-					...friendships.map(({ them }) => them),
-				]
-
-				return unique(names)
-					.filter((name) => name !== identity)
-					.map((name) => get(characterAtom(name)))
-			}),
-		[identity],
-	)
-
-	return useAtomValue(likedCharactersAtom)
+	return usePresentCharacters(unique(names).filter((name) => name !== identity))
 }
 
 export function useUserCharacters() {
 	const names = useUserCharacterNames()
 	const identity = useIdentity()
-	return useAtomValue(
-		useMemo(() => {
-			return atom((get) => {
-				return names
-					.map((name) => get(characterAtom(name)))
-					.filter((char) => char.status !== "offline" && char.name !== identity)
-			})
-		}, [identity, names]),
-	)
+	return names.map(store.getCharacter).filter((char) => char.name !== identity)
 }
 
 export function useCharacterCommandListener() {
 	const identity = useIdentity()
-	const setCharacterDict = useUpdateAtom(characterDictAtom)
-	const updateCharacterDict = useUpdateDictAtom(
-		characterDictAtom,
-		createCharacter,
-	)
-	const setFriendships = useUpdateAtom(friendshipsAtom)
-	const setBookmarks = useUpdateAtom(bookmarksAtom)
-	const setIgnoredUsers = useUpdateAtom(ignoredUsersAtom)
-	const setAdmins = useUpdateAtom(adminsAtom)
 	const { getFriendsAndBookmarks } = useUserActions()
 
 	useSocketListener((command: ServerCommand) => {
@@ -186,103 +110,85 @@ export function useCharacterCommandListener() {
 			async IDN() {
 				const result = await getFriendsAndBookmarks()
 
-				const friends = result.friendlist.map((entry) => ({
+				store.friendships = result.friendlist.map((entry) => ({
 					us: entry.source,
 					them: entry.dest,
 				}))
 
-				setFriendships(friends)
-				setBookmarks(truthyMap(result.bookmarklist))
+				store.bookmarks = truthyMap(result.bookmarklist)
 			},
 
 			IGN(params) {
 				if (params.action === "init" || params.action === "list") {
-					setIgnoredUsers(truthyMap(params.characters))
+					store.ignoredUsers = truthyMap(params.characters)
 				}
 				if (params.action === "add") {
-					setIgnoredUsers((prev) => ({
-						...prev,
-						[params.character]: true,
-					}))
+					store.ignoredUsers[params.character] = true
 				}
 				if (params.action === "delete") {
-					setIgnoredUsers((prev) => omit(prev, [params.character]))
+					delete store.ignoredUsers[params.character]
 				}
 			},
 
 			ADL({ ops }) {
-				setAdmins(truthyMap(ops))
+				store.admins = truthyMap(ops)
+			},
+
+			AOP({ character }) {
+				store.admins[character] = true
+			},
+
+			DOP({ character }) {
+				delete store.admins[character]
 			},
 
 			LIS({ characters }) {
-				const newCharacters: Mutable<Dict<Character>> = {}
 				for (const [name, gender, status, statusMessage] of characters) {
-					newCharacters[name] = { name, gender, status, statusMessage }
+					store.characters[name] = { name, gender, status, statusMessage }
 				}
-				setCharacterDict((prev) => ({ ...prev, ...newCharacters }))
 			},
 
 			NLN({ identity: name, gender, status }) {
-				updateCharacterDict(name, () => ({
-					name,
-					gender,
-					status,
-					statusMessage: "",
-				}))
+				store.characters[name] = { name, gender, status, statusMessage: "" }
 			},
 
 			FLN({ character: name }) {
-				updateCharacterDict(name, (prev) => ({
-					...prev,
-					status: "offline",
-					statusMessage: "",
-				}))
+				const char = store.getCharacter(name)
+				char.status = "offline"
+				char.statusMessage = ""
 			},
 
 			STA({ character: name, status, statusmsg }) {
-				updateCharacterDict(name, (prev) => ({
-					...prev,
-					status,
-					statusMessage: statusmsg,
-				}))
+				const char = store.getCharacter(name)
+				char.status = status
+				char.statusMessage = statusmsg
 			},
 
 			RTB(params) {
 				if (params.type === "trackadd") {
-					setBookmarks((prev) => ({
-						...prev,
-						[params.name]: true,
-					}))
+					store.bookmarks[params.name] = true
 					// show toast
 				}
 
 				if (params.type === "trackrem") {
-					setBookmarks((prev) => omit(prev, [params.name]))
+					delete store.bookmarks[params.name]
 					// show toast
 				}
 
 				if (params.type === "friendadd") {
-					setFriendships((prev) => [
-						...prev,
-						{ us: identity ?? raise("not logged in"), them: params.name },
-					])
+					store.friendships.push({
+						us: identity ?? raise("not logged in"),
+						them: params.name,
+					})
 					// show toast
 				}
 
 				if (params.type === "friendremove") {
-					setFriendships((prev) => {
-						return prev.filter((entry) => entry.them !== params.name)
-					})
+					store.friendships = store.friendships.filter(
+						(f) => f.them !== params.name,
+					)
 					// show toast
 				}
-			},
-
-			AOP({ character }) {
-				setAdmins((admins) => ({ ...admins, [character]: true }))
-			},
-
-			DOP({ character }) {
-				setAdmins((admins) => omit(admins, [character]))
 			},
 		})
 	})
