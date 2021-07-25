@@ -31,6 +31,8 @@
 		"jotai": "1.2.2",
 		"lodash-es": "^4.17.21",
 		"match-sorter": "6.3.0",
+		"mobx": "6.3.2",
+		"mobx-react-lite": "3.2.0",
 		"nanoid": "3.1.23",
 		"react": "^18.0.0-alpha-ed6c091fe-20210701",
 		"react-dom": "^18.0.0-alpha-ed6c091fe-20210701",
