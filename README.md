@@ -1,3 +1,5 @@
+# next
+
 **next** (lowercase n!) is made of specific features and changes I've personally wanted in an F-Chat client. It's my dream client, more or less.
 
 Just a taste of what's added or changed:
@@ -11,4 +13,7 @@ Just a taste of what's added or changed:
 
 Don't like any of this? Keep using the 3.0 client c:
 
-Currently it's a **heavy** work in progress; there will probably be bugs and some missing features. Test at your own risk, but bug reports are appriciated!
+Currently it's a **heavy** work in progress; there will probably be bugs and some missing features. Test at your own risk. If you have suggestions or bug reports, send a note to [next-dev](https://www.f-list.net/c/next-dev/) on F-List.
+
+- [Changelog](./CHANGELOG.md)
+- [Trello](https://trello.com/b/Ju08Edyn/next)
