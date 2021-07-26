@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.10
+
+- made bbc bold text less bold
+- moved message timestamps back to the left
+
 ## 0.0.9
 
 - fix some potential funkyness when switching between channels and private chats, e.g. animations and scrollbars
