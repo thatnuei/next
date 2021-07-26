@@ -13,8 +13,9 @@ export default function NotificationListScreen() {
 	const count = useUnreadNotificationCount()
 
 	useEffect(() => {
-		actions.markAsRead()
-		// adding count as a dep should mark read even after the count goes up
+		if (count > 0) {
+			actions.markAsRead()
+		}
 	}, [actions, count])
 
 	return (
