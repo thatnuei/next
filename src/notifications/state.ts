@@ -6,7 +6,7 @@ import type { CharacterStatus } from "../character/types"
 import { uniqueId } from "../common/uniqueId"
 import { useChatLogger } from "../logging/context"
 import { createSystemMessage } from "../message/MessageState"
-import { routes, useRoute } from "../router"
+import { useRoute } from "../router"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
 import { useUserCharacters } from "../user"
@@ -20,7 +20,6 @@ type NotificationBase =
 	| { type: "broadcast"; message: string; actorName?: string }
 	| { type: "status"; name: string; status: CharacterStatus; message: string }
 	| { type: "invite"; channelId: string; title: string; sender: string }
-	| { type: "privateMessage"; message: string; senderName: string }
 
 export type Notification = NotificationBase & {
 	readonly id: string
@@ -32,7 +31,6 @@ type NotificationOptions = NotificationBase & {
 	readonly showToast?: boolean
 	readonly toastDuration?: number
 	readonly incrementUnread?: boolean
-	readonly showSystemNotification?: boolean
 }
 
 interface NotificationToast {
@@ -102,7 +100,6 @@ export function useNotificationActions() {
 			showToast = false,
 			toastDuration = 10000,
 			incrementUnread = true,
-			showSystemNotification = false,
 			...notificationProperties
 		}: NotificationOptions): Notification => {
 			const notification: Notification = {
@@ -132,23 +129,6 @@ export function useNotificationActions() {
 					duration: toastDuration,
 				}
 				setToasts((toasts) => [...toasts, toast])
-			}
-
-			if (showSystemNotification) {
-				if (window.Notification.permission === "granted") {
-					// TODO: strip BBCode from this
-					const note = new window.Notification(
-						getNotificationMessage(notification),
-					)
-					note.onclick = () => {
-						if (notification.type === "privateMessage") {
-							window.focus()
-							routes
-								.privateChat({ partnerName: notification.senderName })
-								.push()
-						}
-					}
-				}
 			}
 
 			return notification
@@ -236,22 +216,6 @@ export function useNotificationCommandListener() {
 						incrementUnread: !userCharacters.includes(name),
 					})
 				}
-			},
-
-			PRI({ character, message }) {
-				const isPrivateChatRoute =
-					route.name === "privateChat" && route.params.partnerName === character
-
-				if (!isPrivateChatRoute) return
-				if (document.hasFocus()) return
-
-				actions.addNotification({
-					type: "info",
-					message: `Message from ${character}: ${message}`,
-					save: false,
-					incrementUnread: false,
-					showSystemNotification: true,
-				})
 			},
 
 			CIU({ name: channelId, title, sender }) {

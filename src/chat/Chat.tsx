@@ -5,6 +5,7 @@ import ChannelView from "../channel/ChannelView"
 import DevTools from "../dev/DevTools"
 import ChatLogBrowser from "../logging/ChatLogBrowser"
 import NotificationListScreen from "../notifications/NotificationListScreen"
+import SystemNotificationsHandler from "../notifications/SystemNotificationsHandler"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import type { Route } from "../router"
 import { useRoute } from "../router"
@@ -33,7 +34,6 @@ export default function Chat() {
 
 	return (
 		<>
-			<ChatCommandHandlers />
 			<ConnectionGuard>
 				<div className="flex flex-row h-full gap-1">
 					<div className="hidden md:block">
@@ -47,6 +47,8 @@ export default function Chat() {
 					</StalenessState>
 				</div>
 			</ConnectionGuard>
+			<ChatCommandHandlers />
+			<SystemNotificationsHandler />
 			{import.meta.env.DEV && <DevTools />}
 		</>
 	)
