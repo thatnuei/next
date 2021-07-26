@@ -14,7 +14,7 @@ import { useUpdateDictAtom } from "../jotai/useUpdateDictAtom"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
-import { useIdentity, useUserActions, useUserCharacters } from "../user"
+import { useIdentity, useUserActions } from "../user"
 import type { Character, CharacterGender, Friendship } from "./types"
 
 const characterDictAtom = atom<Dict<Character>>({})
@@ -131,7 +131,6 @@ export function useCharacterRoles(name: string) {
 
 // liked characters are the list of bookmarks and friends
 export function useLikedCharacters(): readonly Character[] {
-	const characters = useUserCharacters()
 	const identity = useIdentity()
 
 	const likedCharactersAtom = useMemo(
@@ -143,14 +142,13 @@ export function useLikedCharacters(): readonly Character[] {
 				const names = [
 					...Object.keys(bookmarks),
 					...friendships.map(({ them }) => them),
-					...characters, // including self characters can be helpful for testing
 				]
 
 				return unique(names)
 					.filter((name) => name !== identity)
 					.map((name) => get(characterAtom(name)))
 			}),
-		[identity, characters],
+		[identity],
 	)
 
 	return useAtomValue(likedCharactersAtom)
