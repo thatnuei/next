@@ -1,5 +1,5 @@
 import CharacterName from "../character/CharacterName"
-import { useLikedCharacters } from "../character/state"
+import { useLikedCharacters, useUserCharacters } from "../character/state"
 import type { Character } from "../character/types"
 import { useNotificationActions } from "../notifications/state"
 import { useSocketActions } from "../socket/SocketConnection"
@@ -17,7 +17,8 @@ interface Props {
 // do that later
 function InviteUsersForm({ channelId }: Props) {
 	const { send } = useSocketActions()
-	const characters = useLikedCharacters()
+	const likedCharacters = useLikedCharacters()
+	const userCharacters = useUserCharacters()
 	const notificationActions = useNotificationActions()
 
 	const sendInvite = (name: string) => {
@@ -54,7 +55,9 @@ function InviteUsersForm({ channelId }: Props) {
 		<>
 			<div className={`bg-midnight-2`} style={{ height: `calc(100vh - 8rem)` }}>
 				<VirtualizedList
-					items={characters.filter((c) => c.status === "online")}
+					items={[...likedCharacters, ...userCharacters].filter(
+						(c) => c.status !== "offline",
+					)}
 					itemSize={40}
 					getItemKey={(it) => it.name}
 					renderItem={renderItem}

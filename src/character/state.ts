@@ -14,7 +14,7 @@ import { useUpdateDictAtom } from "../jotai/useUpdateDictAtom"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
-import { useIdentity, useUserActions } from "../user"
+import { useIdentity, useUserActions, useUserCharacterNames } from "../user"
 import type { Character, CharacterGender, Friendship } from "./types"
 
 const characterDictAtom = atom<Dict<Character>>({})
@@ -152,6 +152,19 @@ export function useLikedCharacters(): readonly Character[] {
 	)
 
 	return useAtomValue(likedCharactersAtom)
+}
+
+export function useUserCharacters() {
+	const names = useUserCharacterNames()
+	return useAtomValue(
+		useMemo(() => {
+			return atom((get) => {
+				return names
+					.map((name) => get(characterAtom(name)))
+					.filter((char) => char.status !== "offline")
+			})
+		}, [names]),
+	)
 }
 
 export function useCharacterCommandListener() {
