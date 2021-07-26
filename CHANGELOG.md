@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.9
+
+- fix some potential funkyness when switching between channels and private chats, e.g. animations and scrollbars
+- tweak to message notification text
+
 ## 0.0.8
 
 - bug fix: always show system notes when tabbed out
