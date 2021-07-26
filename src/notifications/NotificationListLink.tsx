@@ -3,10 +3,11 @@ import { routes, useRoute } from "../router"
 import BellBadgeIcon from "../ui/BellBadgeIcon"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
+import { useHasUnreadNotifications } from "./state"
 
 export default function NotificationListLink() {
 	const route = useRoute()
-	const hasUnreadNotifications = false
+	const hasUnreadNotifications = useHasUnreadNotifications()
 
 	return (
 		<a {...routes.notifications().link}>

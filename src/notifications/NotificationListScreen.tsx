@@ -12,7 +12,10 @@ export default function NotificationListScreen() {
 	const actions = useNotificationActions()
 
 	useEffect(() => {
-		actions.markNotificationsRead()
+		actions.markNotificationsReading()
+		return () => {
+			actions.markNotificationsRead()
+		}
 	}, [actions])
 
 	return (

@@ -22,6 +22,7 @@ type NotificationBase =
 export type Notification = NotificationBase & {
 	readonly id: string
 	readonly timestamp: number
+	readonly readStatus: "unread" | "reading" | "read"
 }
 
 type NotificationOptions = NotificationBase & {
@@ -40,6 +41,11 @@ interface NotificationToast {
 /// atoms
 const notificationListAtom = atom<readonly Notification[]>([])
 const toastListAtom = atom<readonly NotificationToast[]>([])
+
+const hasUnreadNotificationsAtom = atom((get) => {
+	const notifications = get(notificationListAtom)
+	return notifications.some(({ readStatus }) => readStatus === "unread")
+})
 
 // helper functions
 function getNotificationMessage(notification: Notification) {
@@ -80,6 +86,10 @@ export function useNotificationToastList(): readonly NotificationToast[] {
 	return useAtomValue(toastListAtom)
 }
 
+export function useHasUnreadNotifications(): boolean {
+	return useAtomValue(hasUnreadNotificationsAtom)
+}
+
 export function useNotificationActions() {
 	const setNotifications = useUpdateAtom(notificationListAtom)
 	const setToasts = useUpdateAtom(toastListAtom)
@@ -95,6 +105,7 @@ export function useNotificationActions() {
 			const notification: Notification = {
 				id: uniqueId(),
 				timestamp: Date.now(),
+				readStatus: "unread",
 				...notificationProperties,
 			}
 
@@ -136,8 +147,18 @@ export function useNotificationActions() {
 				setNotifications([])
 			},
 
+			markNotificationsReading() {
+				setNotifications((notifications) =>
+					notifications.map((n) =>
+						n.readStatus === "unread" ? { ...n, readStatus: "reading" } : n,
+					),
+				)
+			},
+
 			markNotificationsRead() {
-				// TODO
+				setNotifications((notifications) =>
+					notifications.map((n) => ({ ...n, readStatus: "read" })),
+				)
 			},
 		}
 	}, [logger, setNotifications, setToasts])
