@@ -35,7 +35,7 @@ export function useAccount(): string | undefined {
 	return useAtomValue(accountAtom)
 }
 
-export function useUserCharacters(): readonly string[] {
+export function useUserCharacterNames(): readonly string[] {
 	return useAtomValue(userCharactersAtom)
 }
 

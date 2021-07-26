@@ -4,7 +4,7 @@ import { chatRouteGroup, routes, useRoute } from "../router"
 import IslandLayout from "../ui/IslandLayout"
 import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
 import Modal from "../ui/Modal"
-import { useAccount, useUserCharacters } from "../user"
+import { useAccount, useUserCharacterNames } from "../user"
 import AppInfo from "./AppInfo"
 import CharacterSelect from "./CharacterSelect"
 import Login from "./Login"
@@ -15,7 +15,7 @@ const Chat = lazy(() => import("../chat/Chat"))
 export default function AppRoutes() {
 	const route = useRoute()
 	const account = useAccount()
-	const characters = useUserCharacters()
+	const characters = useUserCharacterNames()
 
 	useEffect(() => {
 		if (route.name === false) routes.login().replace()
