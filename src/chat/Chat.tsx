@@ -76,8 +76,12 @@ function StalenessState({
 function ChatRoutes({ route }: { route: Route }) {
 	return (
 		<>
-			{route.name === "channel" && <ChannelView {...route.params} />}
-			{route.name === "privateChat" && <PrivateChatView {...route.params} />}
+			{route.name === "channel" && (
+				<ChannelView key={route.params.channelId} {...route.params} />
+			)}
+			{route.name === "privateChat" && (
+				<PrivateChatView key={route.params.partnerName} {...route.params} />
+			)}
 			{route.name === "notifications" && <NotificationListScreen />}
 			{route.name === "logs" && <ChatLogBrowser />}
 			{route.name === "chat" && <NoRoomView />}
