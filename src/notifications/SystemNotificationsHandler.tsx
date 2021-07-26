@@ -10,8 +10,7 @@ export default function SystemNotificationsHandler() {
 			const isPrivateChatRoute =
 				route.name === "privateChat" && route.params.partnerName === character
 
-			if (isPrivateChatRoute) return
-			if (document.hasFocus()) return
+			if (isPrivateChatRoute && document.hasFocus()) return
 
 			const note = new window.Notification(`${character} sent you a message`, {
 				body: message,
