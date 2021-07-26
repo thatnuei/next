@@ -156,14 +156,15 @@ export function useLikedCharacters(): readonly Character[] {
 
 export function useUserCharacters() {
 	const names = useUserCharacterNames()
+	const identity = useIdentity()
 	return useAtomValue(
 		useMemo(() => {
 			return atom((get) => {
 				return names
 					.map((name) => get(characterAtom(name)))
-					.filter((char) => char.status !== "offline")
+					.filter((char) => char.status !== "offline" && char.name !== identity)
 			})
-		}, [names]),
+		}, [identity, names]),
 	)
 }
 
