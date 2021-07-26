@@ -34,7 +34,7 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 		switch (node.tag) {
 			case "b":
 				return (
-					<strong className={`font-bold`}>
+					<strong className={`font-medium`}>
 						<BBCTree nodes={node.children} />
 					</strong>
 				)
