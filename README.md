@@ -15,6 +15,12 @@ Currently it's a **heavy** work in progress; there will probably be bugs and som
 
 # changelog
 
+## 0.0.7
+
+- fixed a logic error for system notifications, where they wouldn't show in cases that they should have
+- new unread notifications will be highlighted when viewing the notifications list
+- fine-tuned which notifications count in the app title (for now, just invites and broadcasts)
+
 ## 0.0.6
 
 - improved notification behavior when the window isn't visible
