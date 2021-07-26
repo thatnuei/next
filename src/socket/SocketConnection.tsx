@@ -13,8 +13,12 @@ import { useNotificationActions } from "../notifications/state"
 import { useStateMachine } from "../state/useStateMachine"
 import { useUserActions } from "../user"
 import { socketUrl } from "./constants"
-import type { ClientCommand, ServerCommand } from "./helpers"
-import { createCommandString, parseServerCommand } from "./helpers"
+import type { ClientCommand, CommandHandlerMap, ServerCommand } from "./helpers"
+import {
+	createCommandString,
+	matchCommand,
+	parseServerCommand,
+} from "./helpers"
 
 type SocketMachineState =
 	| { type: "offline" }
@@ -310,4 +314,10 @@ export function useSocketActions() {
 export function useSocketListener(listener: CommandListener) {
 	const { addListener } = useSocketActions()
 	return useEffect(() => addListener(listener))
+}
+
+export function useSocketCommandMatch(handlers: CommandHandlerMap) {
+	useSocketListener((command) => {
+		matchCommand(command, handlers)
+	})
 }
