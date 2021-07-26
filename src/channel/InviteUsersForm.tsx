@@ -32,7 +32,6 @@ function InviteUsersForm({ channelId }: Props) {
 			save: false,
 			showToast: true,
 			toastDuration: 5000,
-			incrementUnread: false,
 		})
 	}
 

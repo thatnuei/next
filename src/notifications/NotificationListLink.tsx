@@ -3,17 +3,16 @@ import { routes, useRoute } from "../router"
 import BellBadgeIcon from "../ui/BellBadgeIcon"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import { useUnreadNotificationCount } from "./state"
 
 export default function NotificationListLink() {
 	const route = useRoute()
-	const count = useUnreadNotificationCount()
+	const hasUnreadNotifications = false
 
 	return (
 		<a {...routes.notifications().link}>
 			<ChatNavAction
 				icon={
-					count > 0 ? (
+					hasUnreadNotifications ? (
 						<BellBadgeIcon className="text-blue-400" />
 					) : (
 						<Icon which={icons.bell} />

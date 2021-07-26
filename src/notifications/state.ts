@@ -6,10 +6,8 @@ import type { CharacterStatus } from "../character/types"
 import { uniqueId } from "../common/uniqueId"
 import { useChatLogger } from "../logging/context"
 import { createSystemMessage } from "../message/MessageState"
-import { useRoute } from "../router"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
-import { useUserCharacters } from "../user"
 
 /// constants
 const maxNotifications = 1000
@@ -30,7 +28,6 @@ type NotificationOptions = NotificationBase & {
 	readonly save?: boolean
 	readonly showToast?: boolean
 	readonly toastDuration?: number
-	readonly incrementUnread?: boolean
 }
 
 interface NotificationToast {
@@ -43,7 +40,6 @@ interface NotificationToast {
 /// atoms
 const notificationListAtom = atom<readonly Notification[]>([])
 const toastListAtom = atom<readonly NotificationToast[]>([])
-const unreadNotificationCountAtom = atom(0)
 
 // helper functions
 function getNotificationMessage(notification: Notification) {
@@ -84,14 +80,9 @@ export function useNotificationToastList(): readonly NotificationToast[] {
 	return useAtomValue(toastListAtom)
 }
 
-export function useUnreadNotificationCount(): number {
-	return useAtomValue(unreadNotificationCountAtom)
-}
-
 export function useNotificationActions() {
 	const setNotifications = useUpdateAtom(notificationListAtom)
 	const setToasts = useUpdateAtom(toastListAtom)
-	const setUnreadNotificationCount = useUpdateAtom(unreadNotificationCountAtom)
 	const logger = useChatLogger()
 
 	return useMemo(() => {
@@ -99,7 +90,6 @@ export function useNotificationActions() {
 			save = true,
 			showToast = false,
 			toastDuration = 10000,
-			incrementUnread = true,
 			...notificationProperties
 		}: NotificationOptions): Notification => {
 			const notification: Notification = {
@@ -117,9 +107,6 @@ export function useNotificationActions() {
 					"notifications",
 					createSystemMessage(getNotificationMessage(notification)),
 				)
-				if (incrementUnread) {
-					setUnreadNotificationCount((count) => count + 1)
-				}
 			}
 
 			if (showToast) {
@@ -149,18 +136,16 @@ export function useNotificationActions() {
 				setNotifications([])
 			},
 
-			markAsRead() {
-				setUnreadNotificationCount(0)
+			markNotificationsRead() {
+				// TODO
 			},
 		}
-	}, [logger, setNotifications, setToasts, setUnreadNotificationCount])
+	}, [logger, setNotifications, setToasts])
 }
 
 export function useNotificationCommandListener() {
 	const actions = useNotificationActions()
 	const likedCharacters = useLikedCharacters()
-	const userCharacters = useUserCharacters()
-	const route = useRoute()
 
 	useSocketListener((command) => {
 		matchCommand(command, {
@@ -189,7 +174,6 @@ export function useNotificationCommandListener() {
 						name,
 						status,
 						message: statusmsg,
-						incrementUnread: !userCharacters.includes(name),
 					})
 				}
 			},
@@ -201,7 +185,6 @@ export function useNotificationCommandListener() {
 						name,
 						status: "online",
 						message: "",
-						incrementUnread: !userCharacters.includes(name),
 					})
 				}
 			},
@@ -213,7 +196,6 @@ export function useNotificationCommandListener() {
 						name,
 						status: "offline",
 						message: "",
-						incrementUnread: !userCharacters.includes(name),
 					})
 				}
 			},

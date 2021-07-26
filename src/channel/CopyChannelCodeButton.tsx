@@ -33,7 +33,6 @@ export default autoRef(function CopyChannelCodeButton({
 							save: false,
 							showToast: true,
 							toastDuration: 3000,
-							incrementUnread: false,
 						})
 					})
 					.catch(() => {
@@ -44,7 +43,6 @@ export default autoRef(function CopyChannelCodeButton({
 							save: false,
 							showToast: true,
 							toastDuration: 6000,
-							incrementUnread: false,
 						})
 					})
 
