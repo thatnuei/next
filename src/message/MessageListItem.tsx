@@ -1,3 +1,4 @@
+import clsx from "clsx"
 import BBC from "../bbc/BBC"
 import CharacterName from "../character/CharacterName"
 import Timestamp from "../dom/Timestamp"
@@ -17,11 +18,10 @@ function MessageListItem({ message }: Props) {
 	}[message.type]
 
 	return (
-		<div className={`${typeStyle ?? ""} px-2 py-1`}>
-			<Timestamp className="inline-block float-right ml-2 text-sm not-italic opacity-50">
+		<div className={clsx(typeStyle, "px-2 py-1")}>
+			<Timestamp className="text-sm mr-2 opacity-50 not-italic inline-block">
 				{message.timestamp}
 			</Timestamp>
-
 			{message.senderName && (
 				<span
 					className={`inline-block ${
@@ -31,7 +31,6 @@ function MessageListItem({ message }: Props) {
 					<CharacterName name={message.senderName} />
 				</span>
 			)}
-
 			<BBC text={message.text} />
 		</div>
 	)
