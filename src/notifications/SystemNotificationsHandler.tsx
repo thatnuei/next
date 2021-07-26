@@ -12,7 +12,7 @@ export default function SystemNotificationsHandler() {
 
 			if (isPrivateChatRoute && document.hasFocus()) return
 
-			const note = new window.Notification(`${character} sent you a message`, {
+			const note = new window.Notification(`New message from ${character}`, {
 				body: message,
 				icon: getAvatarUrl(character),
 			})
