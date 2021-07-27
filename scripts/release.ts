@@ -80,6 +80,10 @@ async function main() {
 		"utf8",
 	)
 
+	// format
+	console.info("Formatting files...")
+	await execa("pnpm", ["run", "format"])
+
 	// commit and tag
 	await git.add(["package.json", "CHANGELOG.md"])
 	await git.commit(`v${newVersion}`)
