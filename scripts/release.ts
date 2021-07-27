@@ -13,6 +13,24 @@ async function main() {
 		await execa("pnpm", ["run", "ci"], { stdio: "inherit" })
 	}
 
+	// get new version
+	const { newVersion } = (await prompts({
+		type: "text",
+		name: "newVersion",
+		message: `New version:`,
+		initial: semver.inc(pkg.version, "patch") ?? undefined,
+		validate: (value: string) => {
+			const version = semver.valid(value)
+			if (!version) {
+				return `Invalid version: ${value}`
+			}
+			if (semver.lte(version, pkg.version)) {
+				return `Version must be greater than the current version (${pkg.version})`
+			}
+			return true
+		},
+	})) as { newVersion: string }
+
 	// check if there are any unstashed files
 	const status = await git.status()
 	let stash: string | undefined
@@ -31,24 +49,6 @@ async function main() {
 			return
 		}
 	}
-
-	// get new version
-	const { newVersion } = (await prompts({
-		type: "text",
-		name: "newVersion",
-		message: `New version:`,
-		initial: semver.inc(pkg.version, "patch") ?? undefined,
-		validate: (value: string) => {
-			const version = semver.valid(value)
-			if (!version) {
-				return `Invalid version: ${value}`
-			}
-			if (semver.lte(version, pkg.version)) {
-				return `Version must be greater than the current version (${pkg.version})`
-			}
-			return true
-		},
-	})) as { newVersion: string }
 
 	// update changelog with messages up until the previous version tag
 	const log = await git.log({ from: `v${pkg.version}`, to: "HEAD" })
