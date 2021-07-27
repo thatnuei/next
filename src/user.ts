@@ -127,5 +127,5 @@ export function useUserActions() {
 				})
 			},
 		}
-	}, [setAccount, setIdentityAtom, setUserCharacters])
+	}, [identityRef, setAccount, setIdentityAtom, setUserCharacters])
 }
