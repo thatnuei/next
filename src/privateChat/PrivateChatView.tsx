@@ -7,6 +7,7 @@ import ChatInput from "../chat/ChatInput"
 import ChatMenuButton from "../chat/ChatMenuButton"
 import { useDocumentVisible } from "../dom/useDocumentVisible"
 import MessageList from "../message/MessageList"
+import { useSocketActions } from "../socket/SocketConnection"
 import { usePrivateChat, usePrivateChatActions } from "./state"
 import TypingStatusDisplay from "./TypingStatusDisplay"
 
@@ -17,6 +18,7 @@ interface Props {
 function PrivateChatView({ partnerName }: Props) {
 	const { input, typingStatus, ...chat } = usePrivateChat(partnerName)
 	const privateChatActions = usePrivateChatActions(partnerName)
+	const socketActions = useSocketActions()
 
 	const messages = useMemo(
 		() => [...(chat.previousMessages ?? []), ...chat.messages],
@@ -63,6 +65,15 @@ function PrivateChatView({ partnerName }: Props) {
 				onSubmit={(message) => {
 					privateChatActions.sendMessage(message)
 					privateChatActions.setInput("")
+				}}
+				onTypingStatusChange={(status) => {
+					socketActions.send({
+						type: "TPN",
+						params: {
+							character: partnerName,
+							status,
+						},
+					})
 				}}
 			/>
 		</div>
