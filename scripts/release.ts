@@ -49,7 +49,7 @@ async function main() {
 	})) as { newVersion: string }
 
 	// update changelog with messages up until the previous version tag
-	const log = await git.log({ from: pkg.version, to: "HEAD" })
+	const log = await git.log({ from: `v${pkg.version}`, to: "HEAD" })
 	const messages = log.all
 		.slice()
 		.reverse()
