@@ -1,6 +1,9 @@
+import clsx from "clsx"
+
 export interface IconProps {
 	which: string
 	size?: keyof typeof sizeClasses
+	inline?: boolean
 }
 
 const sizeClasses = {
@@ -12,9 +15,12 @@ const sizeClasses = {
 	16: `w-16 h-16`,
 }
 
-export default function Icon({ which, size = 6 }: IconProps) {
+export default function Icon({ which, size = 6, inline }: IconProps) {
 	return (
-		<svg className={sizeClasses[size]} viewBox="0 0 24 24">
+		<svg
+			className={clsx(sizeClasses[size], inline && "inline align-text-top")}
+			viewBox="0 0 24 24"
+		>
 			<path d={which} className="fill-current" />
 		</svg>
 	)
