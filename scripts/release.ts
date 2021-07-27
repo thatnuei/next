@@ -1,5 +1,6 @@
 import execa from "execa"
 import fs from "fs/promises"
+import ora from "ora"
 import prompts from "prompts"
 import * as semver from "semver"
 import SimpleGit from "simple-git"
@@ -7,10 +8,25 @@ import pkg from "../package.json"
 
 const git = SimpleGit()
 
+async function withSpinner<T>(
+	message: string,
+	block: () => Promise<T>,
+): Promise<T> {
+	const spinner = ora(message)
+	spinner.start()
+	const result = await block()
+	spinner.stop()
+	return result
+}
+
 async function main() {
 	// ci sanity check
 	if (!process.argv.includes("--skip-ci")) {
-		await execa("pnpm", ["run", "ci"], { stdio: "inherit" })
+		await withSpinner("Running CI checks...", async () => {
+			const { stdout, stderr } = await execa("pnpm", ["run", "ci"])
+			if (stdout) console.log(stdout)
+			if (stderr) console.error(stderr)
+		})
 	}
 
 	// get new version
@@ -31,7 +47,6 @@ async function main() {
 		},
 	})) as { newVersion: string }
 
-	// check if there are any unstashed files
 	const status = await git.status()
 	let stash: string | undefined
 
@@ -50,57 +65,58 @@ async function main() {
 		}
 	}
 
-	// update changelog with messages up until the previous version tag
-	const log = await git.log({ from: `v${pkg.version}`, to: "HEAD" })
-	const messages = log.all
-		.slice()
-		.reverse()
-		.map((commit) => `- ${commit.message}`)
-		.join("\n")
+	await withSpinner("Updating changelog with commits...", async () => {
+		const log = await git.log({ from: `v${pkg.version}`, to: "HEAD" })
+		const messages = log.all
+			.slice()
+			.reverse()
+			.map((commit) => `- ${commit.message}`)
+			.join("\n")
 
-	const changelogContent = await fs.readFile("./CHANGELOG.md", "utf8")
-	await fs.writeFile(
-		"./CHANGELOG.md",
-		changelogContent.replace(
-			"<!--new-version-->",
-			`<!--new-version-->\n\n## ${newVersion}\n\n${messages}`,
-		),
-	)
-
-	// open the changelog in the editor for tweaks if necessary
-	console.log("Waiting for changelog updates...")
-	await execa(process.env.EDITOR || "code", ["--wait", "CHANGELOG.md"], {
-		stdio: "inherit",
+		const changelogContent = await fs.readFile("./CHANGELOG.md", "utf8")
+		await fs.writeFile(
+			"./CHANGELOG.md",
+			changelogContent.replace(
+				"<!--new-version-->",
+				`<!--new-version-->\n\n## ${newVersion}\n\n${messages}`,
+			),
+		)
 	})
 
-	// update version
-	await fs.writeFile(
-		"./package.json",
-		JSON.stringify({ ...pkg, version: newVersion }, null, 2),
-		"utf8",
-	)
+	await withSpinner("Waiting for changelog updates...", async () => {
+		await execa(process.env.EDITOR || "code", ["--wait", "CHANGELOG.md"], {
+			stdio: "inherit",
+		})
+	})
 
-	// format
-	console.info("Formatting files...")
-	await execa("pnpm", ["run", "format"])
+	await withSpinner("Updating package.json...", async () => {
+		await fs.writeFile(
+			"./package.json",
+			JSON.stringify({ ...pkg, version: newVersion }, null, 2),
+			"utf8",
+		)
+	})
 
-	// commit and tag
-	await git.add(["package.json", "CHANGELOG.md"])
-	await git.commit(`v${newVersion}`)
-	await git.tag([`v${newVersion}`])
+	await withSpinner("Formatting code...", async () => {
+		await execa("pnpm", ["run", "format"])
+	})
 
-	// switch to main branch
-	await git.checkout("main")
+	await withSpinner("Committing and tagging...", async () => {
+		await git.add(["package.json", "CHANGELOG.md"])
+		await git.commit(`v${newVersion}`)
+		await git.tag([`v${newVersion}`])
+	})
 
-	// merge from dev
-	await git.merge(["dev"])
+	await withSpinner("Merging and pushing from main...", async () => {
+		await git.checkout("main")
 
-	// push
-	await git.push("origin", "main")
-	await git.push("origin", "main", ["--tags"])
+		await git.merge(["dev"])
 
-	// switch back to dev
-	await git.checkout("dev")
+		await git.push("origin", "main")
+		await git.push("origin", "main", ["--tags"])
+
+		await git.checkout("dev")
+	})
 
 	// pop stash if we had one
 	if (stash) {
