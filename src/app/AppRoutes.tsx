@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect } from "react"
+import AppErrorBoundary from "../AppErrorBoundary"
 import { isNonEmptyArray } from "../common/isNonEmptyArray"
 import { chatRouteGroup, routes, useRoute } from "../router"
 import IslandLayout from "../ui/IslandLayout"
@@ -42,9 +43,11 @@ export default function AppRoutes() {
 			)}
 
 			{chatRouteGroup.has(route) && (
-				<Suspense fallback={<ChatFallback />}>
-					{account ? <Chat /> : <LoginRequiredMessage />}
-				</Suspense>
+				<AppErrorBoundary>
+					<Suspense fallback={<ChatFallback />}>
+						{account ? <Chat /> : <LoginRequiredMessage />}
+					</Suspense>
+				</AppErrorBoundary>
 			)}
 		</>
 	)
