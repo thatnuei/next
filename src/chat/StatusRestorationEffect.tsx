@@ -1,0 +1,41 @@
+import type { CharacterStatus } from "../character/types"
+import {
+	useSocketActions,
+	useSocketCommandMatch,
+} from "../socket/SocketConnection"
+import { keyValueStore } from "../storage/keyValueStore"
+import { useIdentity } from "../user"
+
+export default function StatusRestorationEffect() {
+	const identity = useIdentity()
+	const socketActions = useSocketActions()
+
+	useSocketCommandMatch({
+		STA({ character, status, statusmsg }) {
+			if (character === identity) {
+				keyValueStore.set(`status:${identity}`, { status, statusmsg })
+			}
+		},
+
+		async IDN({ character: identity }) {
+			const savedStatus = (await keyValueStore.get(`status:${identity}`)) as
+				| Record<string, unknown>
+				| undefined
+
+			if (
+				typeof savedStatus?.status === "string" &&
+				typeof savedStatus?.statusmsg === "string"
+			) {
+				socketActions.send({
+					type: "STA",
+					params: {
+						status: savedStatus.status as CharacterStatus,
+						statusmsg: savedStatus.statusmsg,
+					},
+				})
+			}
+		},
+	})
+
+	return null
+}

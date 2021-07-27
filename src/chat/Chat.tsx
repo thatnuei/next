@@ -15,6 +15,7 @@ import ChatCommandHandlers from "./ChatCommandHandlers"
 import ChatNav from "./ChatNav"
 import ConnectionGuard from "./ConnectionGuard"
 import NoRoomView from "./NoRoomView"
+import StatusRestorationEffect from "./StatusRestorationEffect"
 
 export default function Chat() {
 	const { connect, disconnect } = useSocketActions()
@@ -49,6 +50,7 @@ export default function Chat() {
 			</ConnectionGuard>
 			<ChatCommandHandlers />
 			<SystemNotificationsHandler />
+			<StatusRestorationEffect />
 			{import.meta.env.DEV && <DevTools />}
 		</>
 	)
