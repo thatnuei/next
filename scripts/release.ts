@@ -9,7 +9,9 @@ const git = SimpleGit()
 
 async function main() {
 	// ci sanity check
-	await execa("pnpm", ["run", "ci"], { stdio: "inherit" })
+	if (!process.argv.includes("--skip-ci")) {
+		await execa("pnpm", ["run", "ci"], { stdio: "inherit" })
+	}
 
 	// check if there are any unstashed files
 	const status = await git.status()
