@@ -2,6 +2,10 @@
 
 <!--new-version-->
 
+## 0.0.13
+
+- show seconds on message timestamps
+
 ## 0.0.12
 
 - restore last set status when logging in, with info on how it works
