@@ -9,7 +9,7 @@ const git = SimpleGit()
 
 async function main() {
 	// ci sanity check
-	await execa("pnpm", ["run", "ci"])
+	await execa("pnpm", ["run", "ci"], { stdio: "inherit" })
 
 	// check if there are any unstashed files
 	const status = await git.status()
@@ -25,6 +25,8 @@ async function main() {
 
 		if (stashingFiles) {
 			stash = await git.stash()
+		} else {
+			return
 		}
 	}
 
@@ -65,7 +67,7 @@ async function main() {
 
 	// open the changelog in the editor for tweaks if necessary
 	console.log("Waiting for changelog updates...")
-	await execa("vscode", ["--wait", "CHANGELOG.md"])
+	await execa("vscode", ["--wait", "CHANGELOG.md"], { stdio: "inherit" })
 
 	// update version
 	await fs.writeFile(
