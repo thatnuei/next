@@ -26,6 +26,20 @@ async function withSpinner<T>(
 }
 
 async function main() {
+	const status = await git.status()
+
+	if (status.current !== "dev") {
+		console.error("Switch to the dev branch before continuing")
+		return
+	}
+
+	if (status.files.length > 0) {
+		console.log(
+			"Found unchanged files! Commit or stash them before continuing.",
+		)
+		return
+	}
+
 	// ci sanity check
 	if (!process.argv.includes("--skip-ci")) {
 		await withSpinner("Running CI checks...", async () => {
@@ -52,24 +66,6 @@ async function main() {
 			return true
 		},
 	})) as { newVersion: string }
-
-	const status = await git.status()
-	let stash: string | undefined
-
-	if (status.files.length > 0) {
-		const { stashingFiles } = (await prompts({
-			type: "confirm",
-			name: "stashingFiles",
-			message: `You have ${status.files.length} changed files. Do you want to stash them?`,
-			initial: true,
-		})) as { stashingFiles: boolean }
-
-		if (stashingFiles) {
-			stash = await git.stash()
-		} else {
-			return
-		}
-	}
 
 	await withSpinner("Updating changelog with commits...", async () => {
 		const log = await git.log({ from: `v${pkg.version}`, to: "HEAD" })
@@ -124,15 +120,13 @@ async function main() {
 		await git.checkout("dev")
 	})
 
-	// pop stash if we had one
-	if (stash) {
-		await git.stash(["pop", stash])
-	}
-
 	console.log("released! yay ✨")
 }
 
-main().catch((error) => {
-	console.error(String(error))
+main().catch((maybeError) => {
+	const error =
+		maybeError instanceof Error ? maybeError : new Error(String(maybeError))
+
+	console.error(error.message)
 	process.exit(1)
 })
