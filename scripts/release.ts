@@ -67,7 +67,9 @@ async function main() {
 
 	// open the changelog in the editor for tweaks if necessary
 	console.log("Waiting for changelog updates...")
-	await execa("vscode", ["--wait", "CHANGELOG.md"], { stdio: "inherit" })
+	await execa(process.env.EDITOR || "code", ["--wait", "CHANGELOG.md"], {
+		stdio: "inherit",
+	})
 
 	// update version
 	await fs.writeFile(
