@@ -80,10 +80,10 @@ async function main() {
 		"utf8",
 	)
 
-	// add git tag
-	await git.tag([`v${newVersion}`])
+	// commit and tag
 	await git.add(["package.json", "CHANGELOG.md"])
 	await git.commit(`v${newVersion}`)
+	await git.tag([`v${newVersion}`])
 
 	// switch to main branch
 	await git.checkout("main")
