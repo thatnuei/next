@@ -2,6 +2,10 @@
 
 <!--new-version-->
 
+## 0.0.14
+
+- fix changelog link in app info
+
 ## 0.0.13
 
 - show seconds on message timestamps
