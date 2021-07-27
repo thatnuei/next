@@ -9,6 +9,8 @@ import Button from "../dom/Button"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
 import { select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
+import Icon from "../ui/Icon"
+import { about } from "../ui/icons"
 import { useIdentity } from "../user"
 
 const isSubmittingAtom = atom(false)
@@ -79,6 +81,18 @@ function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
 			>
 				Submit
 			</Button>
+
+			<div className="text-sm prose">
+				<p>
+					<Icon which={about} size={4} inline /> Your status will be restored
+					the next time you log in, in case of disconnect, closing the window,
+					etc.
+				</p>
+				<p>
+					If you log out manually (click the logout button on the bottom left),
+					your status will be cleared for the next time you log in.
+				</p>
+			</div>
 		</form>
 	)
 }
