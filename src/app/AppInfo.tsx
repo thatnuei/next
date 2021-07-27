@@ -7,7 +7,7 @@ export default function AppInfo() {
 		<div className="prose">
 			<AppInfo.Heading />
 			<p>
-				<ExternalLink href="https://github.com/thatnuei/next/CHANGELOG.md">
+				<ExternalLink href="https://github.com/thatnuei/next/blob/main/CHANGELOG.md">
 					View Changelog
 				</ExternalLink>
 			</p>
