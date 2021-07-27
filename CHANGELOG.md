@@ -2,6 +2,12 @@
 
 <!--new-version-->
 
+## 0.0.11
+
+- send your typing status in private chats
+- removed notifications for status updates of your own characters
+- (internal) add release script to make new releases easier
+
 ## 0.0.10
 
 - made bbc bold text less bold
