@@ -1,4 +1,4 @@
-import type { Ref } from ".pnpm/@types+react@17.0.14/node_modules/@types/react"
+import type { Ref } from "react"
 import { useGetChannelLink } from "../channelBrowser/state"
 import Button from "../dom/Button"
 import { useNotificationActions } from "../notifications/state"
