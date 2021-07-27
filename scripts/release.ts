@@ -12,11 +12,17 @@ async function withSpinner<T>(
 	message: string,
 	block: () => Promise<T>,
 ): Promise<T> {
-	const spinner = ora(message)
+	const spinner = ora({ text: message })
 	spinner.start()
-	const result = await block()
-	spinner.stop()
-	return result
+
+	try {
+		const result = await block()
+		spinner.succeed()
+		return result
+	} catch (error) {
+		spinner.fail()
+		throw error
+	}
 }
 
 async function main() {
