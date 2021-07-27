@@ -102,6 +102,8 @@ async function main() {
 	if (stash) {
 		await git.stash(["pop", stash])
 	}
+
+	console.log("released! yay ✨")
 }
 
 main().catch((error) => {
