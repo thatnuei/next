@@ -2,10 +2,12 @@ import { atom } from "jotai"
 import { useAtomValue, useUpdateAtom } from "jotai/utils"
 import { pick } from "lodash-es"
 import { useMemo } from "react"
+import { clearStoredStatus } from "./chat/StatusRestorationEffect"
 import { raise } from "./common/raise"
 import { authenticate } from "./flist/authenticate"
 import { fetchFlist } from "./flist/fetchFlist"
 import type { AuthUser, LoginCredentials } from "./flist/types"
+import { useEffectRef } from "./react/useEffectRef"
 import { routes } from "./router"
 
 interface FriendsAndBookmarksResponse {
@@ -43,6 +45,7 @@ export function useUserActions() {
 	const setIdentityAtom = useUpdateAtom(identityAtom)
 	const setUserCharacters = useUpdateAtom(userCharactersAtom)
 	const setAccount = useUpdateAtom(accountAtom)
+	const identityRef = useEffectRef(useIdentity())
 
 	return useMemo(() => {
 		async function login(creds: LoginCredentials) {
@@ -70,6 +73,9 @@ export function useUserActions() {
 			},
 
 			logout() {
+				if (identityRef.current) {
+					clearStoredStatus(identityRef.current)
+				}
 				setIdentityAtom(undefined)
 				setAccount(undefined)
 				setUserCharacters([])

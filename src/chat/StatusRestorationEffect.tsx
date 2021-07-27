@@ -6,6 +6,10 @@ import {
 import { keyValueStore } from "../storage/keyValueStore"
 import { useIdentity } from "../user"
 
+export function clearStoredStatus(identity: string) {
+	keyValueStore.delete(`status:${identity}`)
+}
+
 export default function StatusRestorationEffect() {
 	const identity = useIdentity()
 	const socketActions = useSocketActions()
