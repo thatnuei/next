@@ -2,6 +2,11 @@
 
 <!--new-version-->
 
+## 0.0.12
+
+- restore last set status when logging in, with info on how it works
+- errors in chat should be less... destructive?
+
 ## 0.0.11
 
 - send your typing status in private chats
