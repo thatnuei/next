@@ -16,7 +16,7 @@ export default function Timestamp({
 			className={className}
 		>
 			{date
-				.toLocaleString(undefined, { timeStyle: "short" })
+				.toLocaleString(undefined, { timeStyle: "medium" })
 				.toLocaleLowerCase()}
 		</time>
 	)
