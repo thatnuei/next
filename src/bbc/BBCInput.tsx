@@ -1,15 +1,17 @@
 import { Portal } from "@headlessui/react"
 import clsx from "clsx"
-import type { SyntheticEvent } from "react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import { isUrl } from "../common/isUrl"
 import { useElementSize } from "../dom/useElementSize"
 import type { TagProps } from "../jsx/types"
 import combineRefs from "../react/combineRefs"
+import { useDebouncedValue } from "../state/useDebouncedValue"
 import { input } from "../ui/components"
 import usePopper from "../ui/usePopper"
+import { applyBBCodeShortcut } from "./applyBBCodeShortcut"
 import BBC from "./BBC"
+import { insertBBCForPastedUrl } from "./insertBBCForPastedUrl"
 import KeyboardShortcutsPopoverButton from "./KeyboardShortcutsPopoverButton"
-import type { BBCodeShortcut } from "./shortcuts"
 import { shortcuts } from "./shortcuts"
 
 interface BBCTextAreaProps extends Omit<TagProps<"textarea">, "className"> {
@@ -64,8 +66,16 @@ export default function BBCTextArea({
 					if (event.ctrlKey) {
 						const shortcut = shortcuts.find((s) => s.key === event.code)
 						if (shortcut?.type === "bbcode") {
-							onChangeText(applyBBCodeShortcut(event, shortcut))
+							event.preventDefault()
+							onChangeText(applyBBCodeShortcut(event.currentTarget, shortcut))
 						}
+					}
+				}}
+				onPaste={(event) => {
+					const text = event.clipboardData.getData("text/plain")
+					if (isUrl(text)) {
+						event.preventDefault()
+						onChangeText(insertBBCForPastedUrl(event.currentTarget, text))
 					}
 				}}
 				{...props}
@@ -110,54 +120,4 @@ export default function BBCTextArea({
 			</Portal>
 		</div>
 	)
-}
-
-function useDebouncedValue<T>(value: T, duration = 500): T {
-	const [currentValue, setCurrentValue] = useState(value)
-
-	useEffect(() => {
-		const timeout = setTimeout(() => {
-			setCurrentValue(value)
-		}, duration)
-		return () => clearTimeout(timeout)
-	}, [duration, value])
-
-	return currentValue
-}
-
-function applyBBCodeShortcut(
-	event: SyntheticEvent<HTMLTextAreaElement>,
-	shortcut: BBCodeShortcut,
-): string {
-	event.preventDefault()
-
-	const target = event.currentTarget
-	const { selectionStart, selectionEnd, value } = target
-
-	const tagStart = shortcut.hasValue
-		? `[${shortcut.tag}=]`
-		: `[${shortcut.tag}]`
-	const tagEnd = `[/${shortcut.tag}]`
-
-	const newText =
-		value.slice(0, selectionStart) +
-		tagStart +
-		value.slice(selectionStart, selectionEnd) +
-		tagEnd +
-		value.slice(selectionEnd)
-
-	// need to wait for a re-render before setting the selection
-	requestAnimationFrame(() => {
-		if (shortcut.hasValue) {
-			const position = selectionStart + tagStart.length - 1
-			target.setSelectionRange(position, position)
-		} else {
-			target.setSelectionRange(
-				selectionStart + tagStart.length,
-				selectionEnd + tagStart.length,
-			)
-		}
-	})
-
-	return newText
 }
