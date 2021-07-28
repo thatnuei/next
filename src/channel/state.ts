@@ -42,7 +42,6 @@ export interface Channel extends RoomState {
 	readonly users: TruthyMap
 	readonly ops: TruthyMap
 	readonly joinState: ChannelJoinState
-	readonly previousMessages: readonly MessageState[]
 }
 
 function createChannel(id: string): Channel {
@@ -55,7 +54,6 @@ function createChannel(id: string): Channel {
 		users: {},
 		ops: {},
 		joinState: "left",
-		previousMessages: [],
 		...createRoomState(),
 	}
 }
@@ -244,15 +242,20 @@ export function useChannelCommandListener() {
 					joinState: "joined",
 				}))
 
-				logger.setRoomName(`channel:${id}`, title)
-
 				if (name === identity) {
-					logger.getMessages(`channel:${id}`, 30).then((messages) => {
-						updateAtom(channelAtom(id), (channel) => ({
-							...channel,
-							previousMessages: messages,
-						}))
-					})
+					logger.setRoomName(
+						`channel:${id}:${identity}`,
+						`${title} (on ${identity})`,
+					)
+
+					logger
+						.getMessages(`channel:${id}:${identity}`, 30)
+						.then((messages) => {
+							updateAtom(channelAtom(id), (channel) => ({
+								...channel,
+								messages,
+							}))
+						})
 				}
 			},
 

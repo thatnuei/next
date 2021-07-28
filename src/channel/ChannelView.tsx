@@ -30,10 +30,8 @@ function ChannelView({ channelId }: Props) {
 			return true
 		}
 
-		return [...channel.previousMessages, ...channel.messages].filter(
-			shouldShowMessage,
-		)
-	}, [actualMode, channel.messages, channel.previousMessages])
+		return channel.messages.filter(shouldShowMessage)
+	}, [actualMode, channel.messages])
 
 	const isDocumentVisible = useDocumentVisible()
 	useEffect(() => {
