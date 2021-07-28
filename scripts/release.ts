@@ -43,9 +43,9 @@ async function main() {
 	// ci sanity check
 	if (!process.argv.includes("--skip-ci")) {
 		await withSpinner("Running CI checks...", async () => {
-			const { stdout, stderr } = await execa("pnpm", ["run", "ci"])
-			if (stdout) console.log(stdout)
+			const { stderr } = await execa("pnpm", ["run", "ci"])
 			if (stderr) console.error(stderr)
+			throw new Error("CI checks failed")
 		})
 	}
 
