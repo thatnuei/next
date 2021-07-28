@@ -25,7 +25,7 @@ export default function ChatLogBrowser() {
 		usePromise(
 			useMemo(() => {
 				if (selectedRoomId) {
-					return logger.getMessages(selectedRoomId, Infinity)
+					return logger.getMessages(selectedRoomId, 400)
 				}
 				return []
 			}, [logger, selectedRoomId]),
@@ -43,7 +43,7 @@ export default function ChatLogBrowser() {
 	}
 
 	return (
-		<div className="flex flex-col gap-1 h-full relative">
+		<div className="flex flex-col h-full gap-1 relative">
 			<div className="bg-midnight-0">
 				<ScreenHeader>
 					<h1 className={headerText}>Logs</h1>
