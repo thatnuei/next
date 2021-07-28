@@ -1,5 +1,12 @@
 import clsx from "clsx"
-import { memo, useDeferredValue, useEffect, useRef, useState } from "react"
+import {
+	memo,
+	useCallback,
+	useDeferredValue,
+	useEffect,
+	useRef,
+	useState,
+} from "react"
 import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
 
@@ -36,6 +43,17 @@ function useBottomScroll() {
 	const [container, containerRef] = useState<Element | null>()
 	const bottomScrolledRef = useRef(true)
 
+	const scrollToBottom = useCallback(() => {
+		if (container && bottomScrolledRef.current) {
+			container.scrollTop = container.scrollHeight
+		}
+	}, [container])
+
+	useEffect(() => {
+		bottomScrolledRef.current = true
+		scrollToBottom()
+	}, [scrollToBottom])
+
 	useEffect(() => {
 		if (!container) return
 
@@ -47,26 +65,28 @@ function useBottomScroll() {
 
 		container.addEventListener("scroll", handleScroll)
 		return () => container.removeEventListener("scroll", handleScroll)
-	}, [container])
+	})
 
 	useEffect(() => {
 		if (!container) return
 
-		const handleResize = () => {
-			if (bottomScrolledRef.current) {
-				container.scrollTop = container.scrollHeight - container.clientHeight
-			}
-		}
+		const observer = new ResizeObserver(scrollToBottom)
 
-		const observer = new ResizeObserver(handleResize)
 		observer.observe(container)
 		return () => observer.disconnect()
-	}, [container])
+	})
 
 	useEffect(() => {
 		if (!container) return
-		container.scrollTop = container.scrollHeight - container.clientHeight
-	}, [container])
+
+		const observer = new MutationObserver(scrollToBottom)
+
+		observer.observe(container, {
+			childList: true,
+		})
+
+		return () => observer.disconnect()
+	})
 
 	return containerRef
 }
