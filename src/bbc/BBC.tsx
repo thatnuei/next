@@ -159,25 +159,32 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 	)
 }
 
-// TODO: make this look better while still letting gray/black be visible
-const darkColorShadow = "0px 0px 2px rgba(255, 255,255, 0.8)"
-
 const colorStyles: { [color in string]?: CSSProperties } = {
-	white: { color: "rgb(236, 240, 241)" },
+	// white and black are hardly indistinguishable from the non-colored variants,
+	// and black is unreadable,
+	// so we'll give them background shades
+	white: {
+		color: "rgb(255, 255, 255)",
+		backgroundColor: "rgba(0, 0, 0, 0.5)",
+		padding: "3px",
+		margin: "-3px",
+		borderRadius: "3px",
+	},
 	black: {
-		color: "rgb(52, 73, 94)",
-		textShadow: darkColorShadow,
+		color: "rgb(15, 15, 15)",
+		backgroundColor: "rgba(255, 255, 255, 0.5)",
+		padding: "3px",
+		margin: "-3px",
+		borderRadius: "3px",
 	},
-	gray: {
-		color: "rgb(149, 165, 166)",
-	},
-	red: { color: "rgb(236, 93, 93)" },
-	blue: { color: "rgb(52, 152, 219)" },
+	gray: { color: "rgb(149, 165, 166)" },
+	red: { color: "hsl(0 87% 68% / 1)" },
+	blue: { color: "hsl(204 70% 56% / 1)" },
 	yellow: { color: "rgb(241, 196, 15)" },
 	green: { color: "rgb(46, 204, 113)" },
 	pink: { color: "rgb(255,164,156)" },
 	orange: { color: "rgb(230, 126, 34)" },
 	purple: { color: "rgb(201,135,228)" },
-	brown: { color: "rgb(211, 84, 0)" },
-	cyan: { color: "rgb(85, 175, 236)" },
+	brown: { color: "hsl(22deg 56% 60%)" },
+	cyan: { color: "hsl(200 80% 67% / 1)" },
 }
