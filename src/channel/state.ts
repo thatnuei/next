@@ -120,12 +120,15 @@ export function useJoinChannel() {
 function useAddChannelMessage() {
 	const updateChannels = useUpdateDictAtom(channelDictAtom, createChannel)
 	const logger = useChatLogger()
+	const identity = useIdentity()
 	return useCallback(
 		(id: string, message: MessageState) => {
 			updateChannels(id, (channel) => addRoomMessage(channel, message))
-			logger.addMessage(`channel:${id}`, message)
+			if (identity) {
+				logger.addMessage(`channel:${id}:${identity}`, message)
+			}
 		},
-		[updateChannels, logger],
+		[updateChannels, identity, logger],
 	)
 }
 
