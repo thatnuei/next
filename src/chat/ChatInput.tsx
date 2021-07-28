@@ -1,5 +1,5 @@
 import type { FormEvent, KeyboardEvent, ReactNode } from "react"
-import { useRef } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import BBCTextArea from "../bbc/BBCInput"
 import Button from "../dom/Button"
 import { useNotificationActions } from "../notifications/state"
@@ -20,9 +20,40 @@ export default function ChatInput(props: Props) {
 	const identity = useIdentity()
 	const notificationActions = useNotificationActions()
 
+	const valueTrimmed = props.value.trim()
+
+	const [typingTimerComplete, startTypingTimer] = useTimer(4000)
+	useEffect(() => {
+		if (valueTrimmed) startTypingTimer()
+	}, [startTypingTimer, valueTrimmed])
+
+	const lastTypingStatus = useRef<TypingStatus>("clear")
+	useEffect(() => {
+		function updateTypingStatus(typingStatus: TypingStatus) {
+			if (typingStatus !== lastTypingStatus.current) {
+				props.onTypingStatusChange?.(typingStatus)
+				lastTypingStatus.current = typingStatus
+			}
+		}
+
+		if (!valueTrimmed) {
+			updateTypingStatus("clear")
+			return
+		}
+
+		if (typingTimerComplete) {
+			updateTypingStatus("paused")
+			return
+		}
+
+		updateTypingStatus("typing")
+		return () => {
+			updateTypingStatus("paused")
+		}
+	}, [props, typingTimerComplete, valueTrimmed])
+
 	function submit() {
 		const maxLength = props.maxLength ?? Infinity
-		const valueTrimmed = props.value.trim()
 		if (valueTrimmed.length <= maxLength) {
 			props.onSubmit(valueTrimmed)
 			props.onChangeText("")
@@ -33,31 +64,6 @@ export default function ChatInput(props: Props) {
 				save: false,
 				showToast: true,
 			})
-		}
-	}
-
-	const typingStatusTimeout = useRef<number>()
-	const lastTypingStatus = useRef<TypingStatus>("clear")
-
-	function handleChangeText(text: string) {
-		props.onChangeText(text)
-
-		function updateTypingStatus(typingStatus: TypingStatus) {
-			if (typingStatus !== lastTypingStatus.current) {
-				props.onTypingStatusChange?.(typingStatus)
-				lastTypingStatus.current = typingStatus
-			}
-		}
-
-		if (text.trim()) {
-			updateTypingStatus("typing")
-
-			window.clearTimeout(typingStatusTimeout.current)
-			typingStatusTimeout.current = window.setTimeout(() => {
-				updateTypingStatus("paused")
-			}, 5000)
-		} else {
-			updateTypingStatus("clear")
 		}
 	}
 
@@ -82,7 +88,7 @@ export default function ChatInput(props: Props) {
 				<BBCTextArea
 					placeholder={`Chatting as ${identity || ""}...`}
 					value={props.value}
-					onChangeText={handleChangeText}
+					onChangeText={props.onChangeText}
 					maxLength={props.maxLength}
 					onKeyDown={handleKeyDown}
 					renderPreview={props.renderPreview}
@@ -93,4 +99,23 @@ export default function ChatInput(props: Props) {
 			</Button>
 		</form>
 	)
+}
+
+function useTimer(period: number) {
+	const [complete, setComplete] = useState(false)
+	const timeoutRef = useRef<number>()
+
+	const start = useCallback(() => {
+		setComplete(false)
+		window.clearTimeout(timeoutRef.current)
+		timeoutRef.current = window.setTimeout(() => setComplete(true), period)
+	}, [period])
+
+	useEffect(() => {
+		return () => {
+			window.clearTimeout(timeoutRef.current)
+		}
+	}, [])
+
+	return [complete, start] as const
 }
