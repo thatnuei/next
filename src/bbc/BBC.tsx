@@ -82,12 +82,17 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 					</span>
 				)
 
-			case "url":
+			case "url": {
 				return (
 					<BBCLink url={decodeHtml(node.value)}>
-						<BBCTree nodes={node.children} />
+						{node.children.length > 0 ? (
+							<BBCTree nodes={node.children} />
+						) : (
+							<span dangerouslySetInnerHTML={{ __html: node.value }} />
+						)}
 					</BBCLink>
 				)
+			}
 
 			case "icon": {
 				const characterName = getNodeChildrenAsText(node)
