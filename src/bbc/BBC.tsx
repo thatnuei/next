@@ -4,6 +4,7 @@ import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import { memoize } from "../common/memoize"
+import { decodeHtml } from "../dom/decodeHtml"
 import ExternalLink from "../dom/ExternalLink"
 import { getIconUrl } from "../flist/helpers"
 import Icon from "../ui/Icon"
@@ -83,7 +84,7 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 
 			case "url":
 				return (
-					<BBCLink url={node.value}>
+					<BBCLink url={decodeHtml(node.value)}>
 						<BBCTree nodes={node.children} />
 					</BBCLink>
 				)

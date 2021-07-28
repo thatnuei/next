@@ -1,4 +1,5 @@
 import type { CharacterStatus } from "../character/types"
+import { decodeHtml } from "../dom/decodeHtml"
 import {
 	useSocketActions,
 	useSocketCommandMatch,
@@ -17,7 +18,10 @@ export default function StatusRestorationEffect() {
 	useSocketCommandMatch({
 		STA({ character, status, statusmsg }) {
 			if (character === identity) {
-				keyValueStore.set(`status:${identity}`, { status, statusmsg })
+				keyValueStore.set(`status:${identity}`, {
+					status,
+					statusmsg: decodeHtml(statusmsg),
+				})
 			}
 		},
 

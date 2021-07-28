@@ -6,6 +6,7 @@ import { useCharacter } from "../character/state"
 import type { CharacterStatus } from "../character/types"
 import { raise } from "../common/raise"
 import Button from "../dom/Button"
+import { decodeHtml } from "../dom/decodeHtml"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
 import { select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
@@ -19,7 +20,9 @@ function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
 	const identity = useIdentity() ?? raise("Identity not set")
 	const character = useCharacter(identity)
 	const [status, setStatus] = useState(character.status)
-	const [statusMessage, setStatusMessage] = useState(character.statusMessage)
+	const [statusMessage, setStatusMessage] = useState(() =>
+		decodeHtml(character.statusMessage),
+	)
 	const [isSubmitting, setIsSubmitting] = useAtom(isSubmittingAtom)
 	const { send } = useSocketActions()
 
