@@ -2,6 +2,10 @@
 
 <!--new-version-->
 
+## 0.0.17
+
+- fix channel logs not logging to the right room
+
 ## 0.0.16
 
 - bbcode preview goes away immediately after submitting
