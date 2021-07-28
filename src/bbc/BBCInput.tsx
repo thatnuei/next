@@ -33,7 +33,7 @@ export default function BBCTextArea({
 
 	return (
 		<div className="flex flex-col gap-2 relative">
-			{previewValue ? (
+			{previewValue && props.value ? (
 				// vertical padding fixes an issue where the scroll arrows show up due to line height,
 				// even if not at max height
 				<div className="bg-midnight-1 max-h-24 py-1.5 px-2 overflow-y-auto">
