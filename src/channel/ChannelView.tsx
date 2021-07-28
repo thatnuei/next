@@ -3,8 +3,11 @@ import ChatInput from "../chat/ChatInput"
 import { useDocumentVisible } from "../dom/useDocumentVisible"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import MessageList from "../message/MessageList"
+import MessageListItem from "../message/MessageListItem"
 import type { MessageState } from "../message/MessageState"
+import { createChannelMessage } from "../message/MessageState"
 import { screenQueries } from "../ui/screens"
+import { useIdentity } from "../user"
 import ChannelHeader from "./ChannelHeader"
 import ChannelUserList from "./ChannelUserList"
 import { useActualChannelMode, useChannel, useChannelActions } from "./state"
@@ -18,6 +21,7 @@ function ChannelView({ channelId }: Props) {
 	const actualMode = useActualChannelMode(channelId)
 	const actions = useChannelActions(channelId)
 	const isLargeScreen = useMediaQuery(screenQueries.large)
+	const identity = useIdentity() || "unknown"
 
 	const messages = useMemo(() => {
 		const shouldShowMessage = (message: MessageState) => {
@@ -59,6 +63,14 @@ function ChannelView({ channelId }: Props) {
 				onChangeText={actions.setInput}
 				onSubmit={actions.sendMessage}
 				maxLength={4096}
+				renderPreview={(value) => (
+					<MessageListItem
+						message={{
+							...createChannelMessage(identity, value),
+							timestamp: undefined,
+						}}
+					/>
+				)}
 			/>
 		</div>
 	)

@@ -1,11 +1,12 @@
 import clsx from "clsx"
 import BBC from "../bbc/BBC"
 import CharacterName from "../character/CharacterName"
+import type { OptionalKeys } from "../common/types"
 import Timestamp from "../dom/Timestamp"
 import type { MessageState } from "./MessageState"
 
 interface Props {
-	message: MessageState
+	message: OptionalKeys<MessageState, "timestamp">
 }
 
 function MessageListItem({ message }: Props) {
@@ -19,9 +20,12 @@ function MessageListItem({ message }: Props) {
 
 	return (
 		<div className={clsx(typeStyle, "px-2 py-1")}>
-			<Timestamp className="text-sm mr-2 opacity-50 not-italic inline-block">
-				{message.timestamp}
-			</Timestamp>
+			{message.timestamp ? (
+				<Timestamp className="text-sm mr-2 opacity-50 not-italic inline-block">
+					{message.timestamp}
+				</Timestamp>
+			) : undefined}
+
 			{message.senderName && (
 				<span
 					className={`inline-block ${
@@ -31,6 +35,7 @@ function MessageListItem({ message }: Props) {
 					<CharacterName name={message.senderName} />
 				</span>
 			)}
+
 			<BBC text={message.text} />
 		</div>
 	)

@@ -21,3 +21,6 @@ export type Mutable<T> = T extends Record<string, unknown>
 	: T
 
 export type Falsy = false | 0 | "" | null | undefined
+
+export type OptionalKeys<T, K extends keyof T> = Omit<T, K> &
+	Partial<Pick<T, K>>

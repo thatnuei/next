@@ -1,6 +1,7 @@
 import { atom, useAtom } from "jotai"
 import * as React from "react"
 import { useState } from "react"
+import BBC from "../bbc/BBC"
 import BBCTextArea from "../bbc/BBCInput"
 import { useCharacter } from "../character/state"
 import type { CharacterStatus } from "../character/types"
@@ -75,6 +76,7 @@ function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
 							submit()
 						}
 					}}
+					renderPreview={(text) => <BBC text={text} />}
 				/>
 			</FormField>
 			<Button

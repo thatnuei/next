@@ -1,4 +1,4 @@
-import type { FormEvent, KeyboardEvent } from "react"
+import type { FormEvent, KeyboardEvent, ReactNode } from "react"
 import { useRef } from "react"
 import BBCTextArea from "../bbc/BBCInput"
 import Button from "../dom/Button"
@@ -10,6 +10,7 @@ import { useIdentity } from "../user"
 interface Props {
 	value: string
 	maxLength?: number
+	renderPreview: (value: string) => ReactNode
 	onChangeText: (value: string) => void
 	onSubmit: (text: string) => void
 	onTypingStatusChange?: (typingStatus: TypingStatus) => void
@@ -84,6 +85,7 @@ export default function ChatInput(props: Props) {
 					onChangeText={handleChangeText}
 					maxLength={props.maxLength}
 					onKeyDown={handleKeyDown}
+					renderPreview={props.renderPreview}
 				/>
 			</div>
 			<Button type="submit" className={solidButton}>

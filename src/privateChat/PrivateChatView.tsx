@@ -7,7 +7,10 @@ import ChatInput from "../chat/ChatInput"
 import ChatMenuButton from "../chat/ChatMenuButton"
 import { useDocumentVisible } from "../dom/useDocumentVisible"
 import MessageList from "../message/MessageList"
+import MessageListItem from "../message/MessageListItem"
+import { createPrivateMessage } from "../message/MessageState"
 import { useSocketActions } from "../socket/SocketConnection"
+import { useIdentity } from "../user"
 import { usePrivateChat, usePrivateChatActions } from "./state"
 import TypingStatusDisplay from "./TypingStatusDisplay"
 
@@ -19,6 +22,7 @@ function PrivateChatView({ partnerName }: Props) {
 	const { input, typingStatus, ...chat } = usePrivateChat(partnerName)
 	const privateChatActions = usePrivateChatActions(partnerName)
 	const socketActions = useSocketActions()
+	const identity = useIdentity() || "unknown"
 
 	const messages = useMemo(
 		() => [...(chat.previousMessages ?? []), ...chat.messages],
@@ -75,6 +79,14 @@ function PrivateChatView({ partnerName }: Props) {
 						},
 					})
 				}}
+				renderPreview={(value) => (
+					<MessageListItem
+						message={{
+							...createPrivateMessage(identity, value),
+							timestamp: undefined,
+						}}
+					/>
+				)}
 			/>
 		</div>
 	)
