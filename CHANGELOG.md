@@ -2,6 +2,10 @@
 
 <!--new-version-->
 
+## 0.0.16
+
+- bbcode preview goes away immediately after submitting
+
 ## 0.0.15
 
 huge focus on improving BBCode stuff:
