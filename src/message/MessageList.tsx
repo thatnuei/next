@@ -1,11 +1,5 @@
 import clsx from "clsx"
-import {
-	memo,
-	useCallback,
-	useDeferredValue,
-	useLayoutEffect,
-	useState,
-} from "react"
+import { memo, useDeferredValue, useEffect, useRef, useState } from "react"
 import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
 
@@ -13,12 +7,10 @@ interface Props {
 	messages: readonly MessageState[]
 }
 
-const bottomScrollThreshold = 20
-
 export default memo(function MessageList({ messages }: Props) {
 	const deferredMessages = useDeferredValue(messages)
 	const isStale = deferredMessages !== messages
-	const containerRef = useBottomScroll(deferredMessages)
+	const containerRef = useBottomScroll()
 
 	return (
 		<ol
@@ -38,29 +30,43 @@ export default memo(function MessageList({ messages }: Props) {
 	)
 })
 
-function useBottomScroll(observedValue: unknown) {
+const bottomScrollThreshold = 20
+
+function useBottomScroll() {
 	const [container, containerRef] = useState<Element | null>()
+	const bottomScrolledRef = useRef(true)
 
-	const isBottomScrolled = () => {
-		if (!container) return false
-		return (
-			container.scrollTop >=
-			container.scrollHeight - container.clientHeight - bottomScrollThreshold
-		)
-	}
+	useEffect(() => {
+		if (!container) return
 
-	const scrollToBottom = useCallback(() => {
+		const handleScroll = () => {
+			bottomScrolledRef.current =
+				container.scrollTop >=
+				container.scrollHeight - container.clientHeight - bottomScrollThreshold
+		}
+
+		container.addEventListener("scroll", handleScroll)
+		return () => container.removeEventListener("scroll", handleScroll)
+	}, [container])
+
+	useEffect(() => {
+		if (!container) return
+
+		const handleResize = () => {
+			if (bottomScrolledRef.current) {
+				container.scrollTop = container.scrollHeight - container.clientHeight
+			}
+		}
+
+		const observer = new ResizeObserver(handleResize)
+		observer.observe(container)
+		return () => observer.disconnect()
+	}, [container])
+
+	useEffect(() => {
 		if (!container) return
 		container.scrollTop = container.scrollHeight - container.clientHeight
 	}, [container])
-
-	// check here, so that we get the bottom-scrolled state _before_ it changes from dom updates
-	const wasScrolledToBottom = isBottomScrolled()
-	useLayoutEffect(() => {
-		if (wasScrolledToBottom) scrollToBottom()
-	}, [wasScrolledToBottom, observedValue, scrollToBottom])
-
-	useLayoutEffect(scrollToBottom, [scrollToBottom])
 
 	return containerRef
 }
