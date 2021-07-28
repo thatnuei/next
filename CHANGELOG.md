@@ -2,6 +2,29 @@
 
 <!--new-version-->
 
+## 0.0.15
+
+huge focus on improving BBCode stuff:
+
+- improve bbcode shortcut behavior
+  - when typing a shortcut without selected text, it'll put the cursor between the tags
+  - if the BBC tag has a value, e.g. `[color=]`, the cursor will go after the `=`
+- inserts `[url=][/url]` when pasting a link into a BBCode input
+- fix bbcode links sometimes being broken
+- render bbcode url as text when there is no text
+  - e.g. `[url=https://example.com][/url]` will show as `https://example.com`
+- improved bbcode link styling - fixes awkward wrapping and icon alignment
+- the bbcode preview is now more accurate, and reflects _exactly_ what your message will look like, e.g. with /me
+- bbcode preview doesn't cover stuff up anymore 👏
+- new bbc colors! white and black have backgrounds to make them stand out a bit more
+
+and some other general tweaks:
+
+- temporary fix for possibly duplicate logs across characters
+- temporary limit the number of displayed messages in log browser, performance reasons
+- fix typing status sometimes being sent when it shouldn't
+- improved message list bottom scrolling
+
 ## 0.0.14
 
 - fix changelog link in app info
