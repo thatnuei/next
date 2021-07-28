@@ -2,6 +2,10 @@
 
 <!--new-version-->
 
+## 0.0.18
+
+- fix message list bottom scrolling (again)
+
 ## 0.0.17
 
 - fix channel logs not logging to the right room
