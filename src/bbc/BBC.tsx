@@ -1,15 +1,13 @@
-import type { CSSProperties, PropsWithChildren } from "react"
+import type { CSSProperties } from "react"
 import { Fragment, memo } from "react"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import { memoize } from "../common/memoize"
 import { decodeHtml } from "../dom/decodeHtml"
-import ExternalLink from "../dom/ExternalLink"
 import { getIconUrl } from "../flist/helpers"
-import Icon from "../ui/Icon"
-import * as icons from "../ui/icons"
 import BBCChannelLink from "./BBCChannelLink"
+import BBCLink from "./BBCLink"
 import { getNodeChildrenAsText, interpret } from "./interpreter"
 import type { Node } from "./types"
 
@@ -19,12 +17,10 @@ interface Props {
 
 const createBbcTreeMemoized = memoize(interpret)
 
-function BBC({ text }: Props) {
+export default memo(function BBC({ text }: Props) {
 	const nodes = createBbcTreeMemoized(text)
 	return <BBCTree nodes={nodes} />
-}
-
-export default memo(BBC)
+})
 
 function BBCTree({ nodes }: { nodes: Node[] }) {
 	const renderNode = (node: Node): JSX.Element => {
@@ -159,29 +155,6 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 			{nodes.map((node, index) => (
 				<Fragment key={index}>{renderNode(node)}</Fragment>
 			))}
-		</span>
-	)
-}
-
-function BBCLink({ url, children }: PropsWithChildren<{ url: string }>) {
-	const domain = (() => {
-		try {
-			const { host } = new URL(url)
-			return host
-		} catch {
-			return undefined
-		}
-	})()
-
-	return (
-		<span className={`inline-flex items-baseline`}>
-			<span className={`self-center inline opacity-75 mr-0.5`}>
-				<Icon which={icons.link} />
-			</span>
-			<ExternalLink href={url} className="group">
-				<span className={`underline group-hover:no-underline`}>{children}</span>
-				{domain && <span className={`ml-1 text-sm`}>[{domain}] </span>}
-			</ExternalLink>
 		</span>
 	)
 }
