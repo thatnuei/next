@@ -2,6 +2,10 @@
 
 <!--new-version-->
 
+## 0.0.19
+
+- sort rooms alphabetically in chat log browser
+
 ## 0.0.18
 
 - fix message list bottom scrolling (again)
