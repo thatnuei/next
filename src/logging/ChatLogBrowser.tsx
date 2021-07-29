@@ -1,5 +1,6 @@
 import clsx from "clsx"
 import { atom, useAtom } from "jotai"
+import { sortBy } from "lodash-es"
 import { useDeferredValue, useMemo } from "react"
 import MessageListItem from "../message/MessageListItem"
 import usePromise from "../state/usePromise"
@@ -10,7 +11,7 @@ import LoadingIcon from "../ui/LoadingIcon"
 import { ScreenHeader } from "../ui/ScreenHeader"
 import { useChatLogger } from "./context"
 
-const selectedRoomIdAtom = atom<string | undefined>(undefined)
+const selectedRoomIdAtom = atom<string>("")
 
 export default function ChatLogBrowser() {
 	const logger = useChatLogger()
@@ -59,7 +60,7 @@ export default function ChatLogBrowser() {
 						<option value="" disabled>
 							Select a room
 						</option>
-						{rooms.map((room) => (
+						{sortBy(rooms, (room) => room.name.toLowerCase()).map((room) => (
 							<option key={room.id} value={room.id}>
 								{room.name}
 							</option>
