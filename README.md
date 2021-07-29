@@ -11,6 +11,7 @@ Just a taste of what's added or changed:
 - Channels and private chats are saved and restored automatically; no more manual pinning
 - Right click on a character to see which characters of yours they're friended with
 - Inline, easier-to-access character memos right from the menu
+- **Very performant** searching through channels and all online characters
 - Other stuff
 
 Don't like any of this? Keep using the 3.0 client c:
