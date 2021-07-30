@@ -1,10 +1,11 @@
-import { Portal } from "@headlessui/react"
+import { Portal, Transition } from "@headlessui/react"
 import type { ReactNode } from "react"
 import { useState } from "react"
 import { FocusOn } from "react-focus-on"
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
 import { raisedPanel } from "../ui/components"
+import FadeRiseTransition from "../ui/FadeRiseTransition"
 import usePopper from "../ui/usePopper"
 import CharacterMenu from "./CharacterMenu"
 
@@ -29,17 +30,19 @@ export default function CharacterMenuTarget({ name, children }: Props) {
 				{children}
 			</ExternalLink>
 
-			{open && (
+			<Transition.Root className="contents" show={open}>
 				<Portal>
 					<FocusOn onClickOutside={() => setOpen(false)}>
-						<div ref={popperRef} className={raisedPanel}>
-							<div className={"w-60 bg-midnight-1"}>
-								<CharacterMenu name={name} />
-							</div>
+						<div ref={popperRef}>
+							<FadeRiseTransition child className={raisedPanel}>
+								<div className={"w-60 bg-midnight-1"}>
+									<CharacterMenu name={name} />
+								</div>
+							</FadeRiseTransition>
 						</div>
 					</FocusOn>
 				</Portal>
-			)}
+			</Transition.Root>
 		</>
 	)
 }
