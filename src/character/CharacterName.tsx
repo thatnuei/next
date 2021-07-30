@@ -2,6 +2,7 @@ import clsx from "clsx"
 import { memo } from "react"
 import CharacterMenuTarget from "./CharacterMenuTarget"
 import { genderColors, statusColors } from "./colors"
+import { useNickname } from "./nicknames"
 import { useCharacter } from "./state"
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 
 function CharacterName({ name, statusDot = "visible" }: Props) {
 	const { gender, status } = useCharacter(name)
+	const nickname = useNickname(name)
 
 	return (
 		<CharacterMenuTarget name={name}>
@@ -26,7 +28,7 @@ function CharacterName({ name, statusDot = "visible" }: Props) {
 				</span>
 			)}
 			<span className="font-medium" style={{ color: genderColors[gender] }}>
-				{name}
+				{nickname || name}
 			</span>
 		</CharacterMenuTarget>
 	)

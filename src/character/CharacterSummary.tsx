@@ -4,18 +4,20 @@ import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
 import CharacterStatusText from "./CharacterStatusText"
 import { genderColors } from "./colors"
+import { useNickname } from "./nicknames"
 import { useCharacterGender } from "./state"
 
 function CharacterSummary({ name }: { name: string }) {
 	const gender = useCharacterGender(name)
+	const nickname = useNickname(name)
 	return (
 		<div className="grid gap-3">
 			<ExternalLink
 				href={getProfileUrl(name)}
-				className={headerText2}
 				style={{ color: genderColors[gender] }}
 			>
-				{name}
+				<div className={headerText2}>{nickname || name}</div>
+				{nickname ? <div className="text-sm">{name}</div> : null}
 			</ExternalLink>
 
 			<ExternalLink href={getProfileUrl(name)}>

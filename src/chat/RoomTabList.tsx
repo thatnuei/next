@@ -3,6 +3,7 @@ import type { Channel } from "../channel/state"
 import { useChannelActions, useJoinedChannels } from "../channel/state"
 import { useIsPublicChannel } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
+import { useNickname } from "../character/nicknames"
 import {
 	useOpenChatNames,
 	usePrivateChat,
@@ -33,10 +34,11 @@ function PrivateChatTab({ partnerName }: { partnerName: string }) {
 	const route = useRoute()
 	const privateChat = usePrivateChat(partnerName)
 	const privateChatActions = usePrivateChatActions(partnerName)
+	const nickname = useNickname(partnerName)
 
 	return (
 		<RoomTab
-			title={partnerName}
+			title={nickname || partnerName}
 			icon={<Avatar name={partnerName} size={6} />}
 			isActive={
 				route.name === "privateChat" && route.params.partnerName === partnerName

@@ -1,6 +1,7 @@
 import { sortBy } from "lodash-es"
 import { memo } from "react"
 import CharacterName from "../character/CharacterName"
+import { useGetNickname } from "../character/nicknames"
 import { useGetCharacterRoles } from "../character/state"
 import type { CharacterStatus } from "../character/types"
 import type { ValueOf } from "../common/types"
@@ -24,8 +25,8 @@ type ItemType = ValueOf<typeof itemTypes>
 function ChannelUserList({ channelId }: Props) {
 	const channel = useChannel(channelId)
 	const characters = useChannelCharacters(channelId)
-
 	const getRoles = useGetCharacterRoles()
+	const getNickname = useGetNickname()
 
 	const getType = (name: string, status: CharacterStatus): ItemType => {
 		const roles = getRoles(name)
@@ -47,7 +48,7 @@ function ChannelUserList({ channelId }: Props) {
 
 	const sortedItems = sortBy(characters, [
 		(it) => itemTypes.indexOf(getType(it.name, it.status)),
-		(it) => it.name.toLowerCase(),
+		(it) => (getNickname(it.name) || it.name).toLowerCase(),
 	])
 
 	return (

@@ -1,20 +1,26 @@
 import clsx from "clsx"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
-// import TextInput from "../dom/TextInput"
+import TextInput from "../dom/TextInput"
 import { getProfileUrl } from "../flist/helpers"
 import { usePrivateChatActions } from "../privateChat/state"
 import { routes } from "../router"
 import { useSocketActions } from "../socket/SocketConnection"
-// import { input } from "../ui/components"
+import { input } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import { useUserActions } from "../user"
 import CharacterMemoInput from "./CharacterMemoInput"
 import CharacterSummary from "./CharacterSummary"
+import { useNickname, useSetNickname } from "./nicknames"
 import { useCharacterRoles } from "./state"
 
-const menuItemClass = clsx`flex opacity-50 transition-opacity hover:opacity-100 p-2 gap-2 items-center`
+const menuItemClass = clsx`
+  p-2 
+  flex items-center gap-2 
+  transition-opacity
+  opacity-50 hover:opacity-100
+`
 
 export default function CharacterMenu({ name }: { name: string }) {
 	const { friendships, isBookmarked, isIgnored } = useCharacterRoles(name)
@@ -98,16 +104,29 @@ export default function CharacterMenu({ name }: { name: string }) {
 					<CharacterMemoInput name={name} />
 				</details>
 
-				{/* <details>
+				<details>
 					<summary className="cursor-pointer text-sm select-none">
 						Nickname
 					</summary>
 					<p className="my-1 text-xs">
-						This nickname will show up instead of their actual character name.
+						This nickname will show instead of their actual character name.
 					</p>
-					<TextInput className={input} placeholder="Stanley" />
-				</details> */}
+					<NicknameInput name={name} />
+				</details>
 			</div>
 		</>
+	)
+}
+
+function NicknameInput({ name }: { name: string }) {
+	const nickname = useNickname(name)
+	const setNickname = useSetNickname(name)
+	return (
+		<TextInput
+			className={input}
+			value={nickname || ""}
+			onChangeText={setNickname}
+			placeholder="Enter a nickname"
+		/>
 	)
 }
