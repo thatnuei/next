@@ -12,6 +12,7 @@ Just a taste of what's added or changed:
 - Right click on a character to see which characters of yours they're friended with
 - Inline, easier-to-access character memos right from the menu
 - **Very performant** searching through channels and all online characters
+- Locally nicknaming characters
 - Other stuff
 
 Don't like any of this? Keep using the 3.0 client c:
@@ -30,5 +31,7 @@ Currently it's a **heavy** work in progress; there will probably be bugs and som
 ![screenshot of next](assets/screenshot-3.png)
 ![screenshot of next](assets/screenshot-4.png)
 ![screenshot of next](assets/screenshot-5.png)
+![screenshot of next](assets/nicknames1.png)
+![screenshot of next](assets/nicknames2.png)
 
 </details>
