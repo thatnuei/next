@@ -248,6 +248,18 @@ export function usePrivateChatCommandHandler() {
 					)
 				}
 			},
+
+			STA({ character, status, statusmsg }) {
+				if (partnerNames[character]) {
+					const statusMessageSuffix = statusmsg ? `: ${statusmsg}` : ""
+					addPrivateChatMessage(
+						character,
+						createSystemMessage(
+							`[user]${character}[/user] is now ${status}${statusMessageSuffix}`,
+						),
+					)
+				}
+			},
 		})
 	})
 }

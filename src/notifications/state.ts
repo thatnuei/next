@@ -6,6 +6,7 @@ import type { CharacterStatus } from "../character/types"
 import { uniqueId } from "../common/uniqueId"
 import { useChatLogger } from "../logging/context"
 import { createSystemMessage } from "../message/MessageState"
+import { useOpenChatNames } from "../privateChat/state"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
 
@@ -167,6 +168,13 @@ export function useNotificationActions() {
 export function useNotificationCommandListener() {
 	const actions = useNotificationActions()
 	const likedCharacters = useLikedCharacters()
+	const chats = useOpenChatNames()
+
+	const shouldAddStatusNotification = (name: string) => {
+		const isLiked = likedCharacters.some((char) => char.name === name)
+		const hasOpenChat = chats.includes(name)
+		return isLiked && !hasOpenChat
+	}
 
 	useSocketListener((command) => {
 		matchCommand(command, {
@@ -189,7 +197,7 @@ export function useNotificationCommandListener() {
 			},
 
 			STA({ character: name, status, statusmsg }) {
-				if (likedCharacters.some((char) => char.name === name)) {
+				if (shouldAddStatusNotification(name)) {
 					actions.addNotification({
 						type: "status",
 						name,
@@ -200,7 +208,7 @@ export function useNotificationCommandListener() {
 			},
 
 			NLN({ identity: name }) {
-				if (likedCharacters.some((char) => char.name === name)) {
+				if (shouldAddStatusNotification(name)) {
 					actions.addNotification({
 						type: "status",
 						name,
@@ -211,7 +219,7 @@ export function useNotificationCommandListener() {
 			},
 
 			FLN({ character: name }) {
-				if (likedCharacters.some((char) => char.name === name)) {
+				if (shouldAddStatusNotification(name)) {
 					actions.addNotification({
 						type: "status",
 						name,
