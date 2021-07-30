@@ -7,6 +7,7 @@ import {
 	useRef,
 	useState,
 } from "react"
+import { useIdentity } from "../user"
 import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
 
@@ -18,6 +19,7 @@ export default memo(function MessageList({ messages }: Props) {
 	const deferredMessages = useDeferredValue(messages)
 	const isStale = deferredMessages !== messages
 	const containerRef = useBottomScroll()
+	const identity = useIdentity()
 
 	return (
 		<ol
@@ -29,7 +31,10 @@ export default memo(function MessageList({ messages }: Props) {
 			ref={containerRef}
 		>
 			{deferredMessages.map((message) => (
-				<li key={message.key}>
+				<li
+					key={message.key}
+					className={clsx(message.senderName === identity && "bg-black/30")}
+				>
 					<MessageListItem message={message} />
 				</li>
 			))}
