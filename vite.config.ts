@@ -15,10 +15,12 @@ export default defineConfig({
 		sourcemap: true,
 	},
 	define: {
-		APP_VERSION: JSON.stringify(pkg.version),
+		APP_NAME: `"${pkg.name}"`,
+		APP_VERSION: `"${pkg.version}"`,
 	},
 })
 
 declare global {
+	const APP_NAME: string
 	const APP_VERSION: string
 }

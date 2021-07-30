@@ -210,8 +210,8 @@ export function SocketConnection({ children }: { children: ReactNode }) {
 						params: {
 							...result,
 							character: identity,
-							cname: "next",
-							cversion: "0.0.0",
+							cname: APP_NAME,
+							cversion: APP_VERSION,
 							method: "ticket",
 						},
 					})
