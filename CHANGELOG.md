@@ -2,6 +2,18 @@
 
 <!--new-version-->
 
+## 0.0.20
+
+- nicknames! set a local nickname to reduce confusion
+- darken messages from self
+- decode html in notification body (fixes weird text sometimes coming up)
+- auto-focus search on opening some views with search
+- for private chat partners, show status updates in the private chat
+- fix/improve character menu behavior
+- add a more detailed placeholder for character memos
+- unfrick some animations
+- fix private chats possibly not showing unread
+
 ## 0.0.19
 
 - sort rooms alphabetically in chat log browser
