@@ -17,10 +17,11 @@ Just a taste of what's added or changed:
 
 Don't like any of this? Keep using the 3.0 client c:
 
-Currently it's a **heavy** work in progress; there will probably be bugs and some missing features. Test at your own risk. If you have suggestions or bug reports, send a note to [next-dev](https://www.f-list.net/c/next-dev/) on F-List.
+Currently it's a **heavy** work in progress; there will probably be bugs and some missing features. Test at your own risk. If you have suggestions or bug reports, join the Discord server, or send a note to [next-dev](https://www.f-list.net/c/next-dev/) on F-List.
 
-- [Changelog](./CHANGELOG.md)
+- [Discord](https://discord.gg/p5z7YvwQ8p)
 - [Trello](https://trello.com/b/Ju08Edyn/next)
+- [Changelog](./CHANGELOG.md)
 
 <details>
   <summary>Screenshot Gallery</summary>
