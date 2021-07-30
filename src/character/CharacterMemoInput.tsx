@@ -71,7 +71,7 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
 				className={inputClass}
 				value={state.memo}
 				onChange={(event) => handleChange(event.target.value)}
-				placeholder="Enter a memo"
+				placeholder="Add some personal notes for this character. Only you can see this."
 				{...props}
 			/>
 		)
