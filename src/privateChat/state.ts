@@ -61,6 +61,7 @@ function useAddPrivateChatMessage() {
 			updatePrivateChatDict(partnerName, (chat) =>
 				addRoomMessage(chat, message),
 			)
+			updatePrivateChatDict(partnerName, (chat) => setRoomUnread(chat, true))
 			if (identity) {
 				logger.addMessage(getLoggerRoomId(identity, partnerName), message)
 			}
