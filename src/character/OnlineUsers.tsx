@@ -41,7 +41,7 @@ export default function OnlineUsers() {
 			type: "friend",
 			containerClassName: "bg-green-400/10",
 			icon: (
-				<span className="text-green-300 opacity-50">
+				<span className="opacity-50 text-green-300">
 					<Icon which={heart} />
 				</span>
 			),
@@ -53,7 +53,7 @@ export default function OnlineUsers() {
 			type: "bookmark",
 			containerClassName: "bg-blue-400/10",
 			icon: (
-				<span className="text-blue-300 opacity-50">
+				<span className="opacity-50 text-blue-300">
 					<Icon which={bookmark} />
 				</span>
 			),
@@ -70,7 +70,7 @@ export default function OnlineUsers() {
 
 	return (
 		<div className="flex flex-col h-full bg-midnight-2">
-			<section className="flex-1 min-h-0 ">
+			<section className="flex-1 min-h-0">
 				<VirtualizedList
 					items={listItems}
 					itemSize={40}
@@ -90,11 +90,11 @@ export default function OnlineUsers() {
 				/>
 			</section>
 
-			<p className="p-2 text-sm italic text-center opacity-50">
+			<p className="text-sm text-center opacity-50 p-2 italic">
 				{listItems.length || "No"} result(s)
 			</p>
 
-			<section className="flex flex-row p-2 space-x-2 bg-midnight-0">
+			<section className="flex flex-row space-x-2 bg-midnight-0 p-2">
 				<TextInput
 					type="text"
 					aria-label="Search"
@@ -102,6 +102,7 @@ export default function OnlineUsers() {
 					className={clsx(input, `flex-1`)}
 					value={search}
 					onChangeText={setSearch}
+					ref={(input) => input?.focus()}
 				/>
 			</section>
 		</div>

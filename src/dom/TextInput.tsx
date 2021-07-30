@@ -1,7 +1,9 @@
-import type { TagProps } from "../jsx/types"
+import type { ComponentProps } from "react"
+import { autoRef } from "../react/autoRef"
 
-interface Props extends TagProps<"input"> {
+interface Props extends ComponentProps<"input"> {
 	onChangeText?: (text: string) => void
+	// ref?: Ref<HTMLInputElement>
 }
 
 function TextInput({ onChange, onChangeText, ...props }: Props) {
@@ -16,4 +18,4 @@ function TextInput({ onChange, onChangeText, ...props }: Props) {
 	)
 }
 
-export default TextInput
+export default autoRef<Props, HTMLInputElement>(TextInput)

@@ -69,7 +69,7 @@ function ChannelBrowser() {
 				/>
 			</section>
 
-			<section className="flex flex-row p-2 space-x-2 bg-midnight-0">
+			<section className="flex flex-row space-x-2 bg-midnight-0 p-2">
 				<input
 					type="text"
 					aria-label="Search"
@@ -77,6 +77,7 @@ function ChannelBrowser() {
 					className={clsx(input, `flex-1`)}
 					value={query}
 					onChange={(event) => setQuery(event.target.value)}
+					ref={(input) => input?.focus()}
 				/>
 				<Button
 					title="Change sort mode"
