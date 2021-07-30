@@ -1,3 +1,4 @@
+import { decodeHtml } from "../dom/decodeHtml"
 import { getAvatarUrl } from "../flist/helpers"
 import { routes, useRoute } from "../router"
 import { useSocketCommandMatch } from "../socket/SocketConnection"
@@ -13,7 +14,7 @@ export default function SystemNotificationsHandler() {
 			if (isPrivateChatRoute && document.hasFocus()) return
 
 			const note = new window.Notification(`New message from ${character}`, {
-				body: message,
+				body: decodeHtml(message),
 				icon: getAvatarUrl(character),
 			})
 
