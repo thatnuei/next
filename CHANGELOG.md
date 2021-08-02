@@ -2,6 +2,12 @@
 
 <!--new-version-->
 
+## 0.0.21
+
+- add license
+- send correct name and version when connecting
+- add PM system messages for online/offline
+
 ## 0.0.20
 
 - nicknames! set a local nickname to reduce confusion
