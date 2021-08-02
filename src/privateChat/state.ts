@@ -1,6 +1,7 @@
 import { atom } from "jotai"
 import { useAtomValue, useUpdateAtom } from "jotai/utils"
 import { useCallback, useEffect, useMemo, useState } from "react"
+import type { CharacterStatus } from "../character/types"
 import { omit } from "../common/omit"
 import { raise } from "../common/raise"
 import type { Dict, TruthyMap } from "../common/types"
@@ -201,6 +202,22 @@ export function usePrivateChatCommandHandler() {
 	const setPrivateChatDict = useUpdateAtom(privateChatDictAtom)
 	const [isRestored, setIsRestored] = useState(false)
 
+	function addStatusSystemMessage(
+		character: string,
+		status: CharacterStatus,
+		statusmsg = "",
+	) {
+		if (partnerNames[character]) {
+			const statusMessageSuffix = statusmsg ? `: ${statusmsg}` : ""
+			addPrivateChatMessage(
+				character,
+				createSystemMessage(
+					`[user]${character}[/user] is now ${status}${statusMessageSuffix}`,
+				),
+			)
+		}
+	}
+
 	useEffect(() => {
 		if (!isRestored || !identity) return
 		savePrivateChats(identity, Object.keys(partnerNames))
@@ -251,15 +268,13 @@ export function usePrivateChatCommandHandler() {
 			},
 
 			STA({ character, status, statusmsg }) {
-				if (partnerNames[character]) {
-					const statusMessageSuffix = statusmsg ? `: ${statusmsg}` : ""
-					addPrivateChatMessage(
-						character,
-						createSystemMessage(
-							`[user]${character}[/user] is now ${status}${statusMessageSuffix}`,
-						),
-					)
-				}
+				addStatusSystemMessage(character, status, statusmsg)
+			},
+			NLN({ identity, status }) {
+				addStatusSystemMessage(identity, status)
+			},
+			FLN({ character }) {
+				addStatusSystemMessage(character, "offline")
 			},
 		})
 	})
