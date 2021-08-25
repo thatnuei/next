@@ -3,28 +3,28 @@ import { createPopper } from "@popperjs/core"
 import { useEffect, useRef, useState } from "react"
 
 export default function usePopper({
-	placement = "top",
+  placement = "top",
 }: { placement?: Placement } = {}) {
-	const [reference, referenceRef] = useState<HTMLElement | null>()
-	const [popper, popperRef] = useState<HTMLElement | null>()
-	const instanceRef = useRef<PopperInstance>()
+  const [reference, referenceRef] = useState<HTMLElement | null>()
+  const [popper, popperRef] = useState<HTMLElement | null>()
+  const instanceRef = useRef<PopperInstance>()
 
-	useEffect(() => {
-		if (!reference || !popper) return
+  useEffect(() => {
+    if (!reference || !popper) return
 
-		const instance = (instanceRef.current = createPopper(reference, popper, {
-			placement,
-		}))
+    const instance = (instanceRef.current = createPopper(reference, popper, {
+      placement,
+    }))
 
-		return () => {
-			instance.destroy()
-			instanceRef.current = undefined
-		}
-	}, [placement, popper, reference])
+    return () => {
+      instance.destroy()
+      instanceRef.current = undefined
+    }
+  }, [placement, popper, reference])
 
-	useEffect(() => {
-		instanceRef.current?.update()
-	})
+  useEffect(() => {
+    instanceRef.current?.update()
+  })
 
-	return { referenceRef, popperRef }
+  return { referenceRef, popperRef }
 }

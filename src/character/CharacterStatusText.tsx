@@ -3,20 +3,20 @@ import { statusColors } from "./colors"
 import { useCharacter } from "./state"
 
 function CharacterStatusText({ name }: { name: string }) {
-	const character = useCharacter(name)
-	return (
-		<p className="text-sm">
-			<span
-				className={character.status === "crown" ? "rainbow-animation" : ""}
-				style={{ color: statusColors[character.status] }}
-			>
-				{character.status === "crown" ? "awesome" : character.status}
-			</span>
-			{character.statusMessage ? (
-				<BBC text={` - ${character.statusMessage}`} />
-			) : undefined}
-		</p>
-	)
+  const character = useCharacter(name)
+  return (
+    <p className="text-sm">
+      <span
+        className={character.status === "crown" ? "rainbow-animation" : ""}
+        style={{ color: statusColors[character.status] }}
+      >
+        {character.status === "crown" ? "awesome" : character.status}
+      </span>
+      {character.statusMessage ? (
+        <BBC text={` - ${character.statusMessage}`} />
+      ) : undefined}
+    </p>
+  )
 }
 
 export default CharacterStatusText

@@ -7,17 +7,17 @@ import { RouteProvider } from "./router"
 import { SocketConnection } from "./socket/SocketConnection"
 
 export default function Root() {
-	return (
-		<AppErrorBoundary>
-			<RouteProvider>
-				<JotaiProvider>
-					<SocketConnection>
-						<AppTitle />
-						<AppRoutes />
-						<NotificationToastOverlay />
-					</SocketConnection>
-				</JotaiProvider>
-			</RouteProvider>
-		</AppErrorBoundary>
-	)
+  return (
+    <AppErrorBoundary>
+      <RouteProvider>
+        <JotaiProvider>
+          <SocketConnection>
+            <AppTitle />
+            <AppRoutes />
+            <NotificationToastOverlay />
+          </SocketConnection>
+        </JotaiProvider>
+      </RouteProvider>
+    </AppErrorBoundary>
+  )
 }

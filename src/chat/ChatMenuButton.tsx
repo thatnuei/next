@@ -6,20 +6,20 @@ import * as icons from "../ui/icons"
 import ChatNav from "./ChatNav"
 
 export default function ChatMenuButton() {
-	return (
-		<Drawer
-			side="left"
-			renderTrigger={(props) => (
-				<Button
-					title="Show side menu"
-					className={`${fadedButton} block md:hidden`}
-					{...props}
-				>
-					<Icon which={icons.menu} />
-				</Button>
-			)}
-		>
-			<ChatNav />
-		</Drawer>
-	)
+  return (
+    <Drawer
+      side="left"
+      renderTrigger={(props) => (
+        <Button
+          title="Show side menu"
+          className={`${fadedButton} block md:hidden`}
+          {...props}
+        >
+          <Icon which={icons.menu} />
+        </Button>
+      )}
+    >
+      <ChatNav />
+    </Drawer>
+  )
 }

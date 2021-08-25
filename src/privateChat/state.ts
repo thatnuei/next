@@ -11,8 +11,8 @@ import { useUpdateDictAtom } from "../jotai/useUpdateDictAtom"
 import { useChatLogger } from "../logging/context"
 import type { MessageState } from "../message/MessageState"
 import {
-	createPrivateMessage,
-	createSystemMessage,
+  createPrivateMessage,
+  createSystemMessage,
 } from "../message/MessageState"
 import type { RoomState } from "../room/state"
 import { addRoomMessage, createRoomState, setRoomUnread } from "../room/state"
@@ -22,260 +22,260 @@ import { useIdentity } from "../user"
 import { restorePrivateChats, savePrivateChats } from "./storage"
 import type { TypingStatus } from "./types"
 
-interface PrivateChat extends RoomState {
-	readonly partnerName: string
-	readonly typingStatus: TypingStatus
-	readonly previousMessages?: readonly MessageState[]
-}
+type PrivateChat = {
+  readonly partnerName: string
+  readonly typingStatus: TypingStatus
+  readonly previousMessages?: readonly MessageState[]
+} & RoomState
 
 const privateChatDictAtom = atom<Dict<PrivateChat>>({})
 
 const privateChatAtom = dictionaryAtomFamily(
-	privateChatDictAtom,
-	createPrivateChat,
+  privateChatDictAtom,
+  createPrivateChat,
 )
 
 const openChatNamesAtom = atom<TruthyMap>({})
 
 function createPrivateChat(partnerName: string): PrivateChat {
-	return {
-		...createRoomState(),
-		partnerName,
-		typingStatus: "clear",
-	}
+  return {
+    ...createRoomState(),
+    partnerName,
+    typingStatus: "clear",
+  }
 }
 
 function getLoggerRoomId(identity: string, partnerName: string): string {
-	return `private-chat:${identity}:${partnerName}`
+  return `private-chat:${identity}:${partnerName}`
 }
 
 function useAddPrivateChatMessage() {
-	const updatePrivateChatDict = useUpdateDictAtom(
-		privateChatDictAtom,
-		createPrivateChat,
-	)
-	const logger = useChatLogger()
-	const identity = useIdentity()
+  const updatePrivateChatDict = useUpdateDictAtom(
+    privateChatDictAtom,
+    createPrivateChat,
+  )
+  const logger = useChatLogger()
+  const identity = useIdentity()
 
-	return useCallback(
-		(partnerName: string, message: MessageState) => {
-			updatePrivateChatDict(partnerName, (chat) =>
-				addRoomMessage(chat, message),
-			)
-			updatePrivateChatDict(partnerName, (chat) => setRoomUnread(chat, true))
-			if (identity) {
-				logger.addMessage(getLoggerRoomId(identity, partnerName), message)
-			}
-		},
-		[identity, logger, updatePrivateChatDict],
-	)
+  return useCallback(
+    (partnerName: string, message: MessageState) => {
+      updatePrivateChatDict(partnerName, (chat) =>
+        addRoomMessage(chat, message),
+      )
+      updatePrivateChatDict(partnerName, (chat) => setRoomUnread(chat, true))
+      if (identity) {
+        logger.addMessage(getLoggerRoomId(identity, partnerName), message)
+      }
+    },
+    [identity, logger, updatePrivateChatDict],
+  )
 }
 
 function useOpenPrivateChat() {
-	const setOpenChatNames = useUpdateAtom(openChatNamesAtom)
-	const updatePrivateChatDict = useUpdateDictAtom(
-		privateChatDictAtom,
-		createPrivateChat,
-	)
-	const logger = useChatLogger()
-	const identity = useIdentity()
+  const setOpenChatNames = useUpdateAtom(openChatNamesAtom)
+  const updatePrivateChatDict = useUpdateDictAtom(
+    privateChatDictAtom,
+    createPrivateChat,
+  )
+  const logger = useChatLogger()
+  const identity = useIdentity()
 
-	return useCallback(
-		(partnerName: string) => {
-			setOpenChatNames((names) => ({ ...names, [partnerName]: true }))
+  return useCallback(
+    (partnerName: string) => {
+      setOpenChatNames((names) => ({ ...names, [partnerName]: true }))
 
-			if (identity) {
-				logger.setRoomName(
-					getLoggerRoomId(identity, partnerName),
-					`${partnerName} (on ${identity})`,
-				)
+      if (identity) {
+        logger.setRoomName(
+          getLoggerRoomId(identity, partnerName),
+          `${partnerName} (on ${identity})`,
+        )
 
-				logger
-					.getMessages(getLoggerRoomId(identity, partnerName), 30)
-					.then((messages) => {
-						updatePrivateChatDict(partnerName, (chat) => ({
-							...chat,
-							previousMessages: chat.previousMessages ?? messages,
-						}))
-					})
-			}
-		},
-		[identity, logger, setOpenChatNames, updatePrivateChatDict],
-	)
+        logger
+          .getMessages(getLoggerRoomId(identity, partnerName), 30)
+          .then((messages) => {
+            updatePrivateChatDict(partnerName, (chat) => ({
+              ...chat,
+              previousMessages: chat.previousMessages ?? messages,
+            }))
+          })
+      }
+    },
+    [identity, logger, setOpenChatNames, updatePrivateChatDict],
+  )
 }
 
 export function useOpenChatNames() {
-	const openChatNames = useAtomValue(openChatNamesAtom)
-	return useMemo(() => Object.keys(openChatNames), [openChatNames])
+  const openChatNames = useAtomValue(openChatNamesAtom)
+  return useMemo(() => Object.keys(openChatNames), [openChatNames])
 }
 
 export function usePrivateChat(partnerName: string): PrivateChat {
-	return useAtomValue(privateChatAtom(partnerName))
+  return useAtomValue(privateChatAtom(partnerName))
 }
 
 export function useOpenPrivateChats(): readonly PrivateChat[] {
-	const openPrivateChats = useAtomValue(privateChatDictAtom)
-	return useMemo(() => Object.values(openPrivateChats), [openPrivateChats])
+  const openPrivateChats = useAtomValue(privateChatDictAtom)
+  return useMemo(() => Object.values(openPrivateChats), [openPrivateChats])
 }
 
 export function usePrivateChatActions(partnerName: string) {
-	const { send } = useSocketActions()
-	const identity = useIdentity() ?? raise("not logged in")
-	const setOpenChatNames = useUpdateAtom(openChatNamesAtom)
-	const setPrivateChat = useUpdateAtom(privateChatAtom(partnerName))
-	const addPrivateChatMessage = useAddPrivateChatMessage()
-	const openPrivateChat = useOpenPrivateChat()
+  const { send } = useSocketActions()
+  const identity = useIdentity() ?? raise("not logged in")
+  const setOpenChatNames = useUpdateAtom(openChatNamesAtom)
+  const setPrivateChat = useUpdateAtom(privateChatAtom(partnerName))
+  const addPrivateChatMessage = useAddPrivateChatMessage()
+  const openPrivateChat = useOpenPrivateChat()
 
-	return useMemo(
-		() => ({
-			open() {
-				openPrivateChat(partnerName)
-			},
-			close() {
-				setOpenChatNames((prev) => omit(prev, [partnerName]))
-			},
-			sendMessage(message: string) {
-				if (!identity) return
+  return useMemo(
+    () => ({
+      open() {
+        openPrivateChat(partnerName)
+      },
+      close() {
+        setOpenChatNames((prev) => omit(prev, [partnerName]))
+      },
+      sendMessage(message: string) {
+        if (!identity) return
 
-				const rollPrefix = "/roll"
-				if (message.startsWith(rollPrefix)) {
-					send({
-						type: "RLL",
-						params: {
-							recipient: partnerName,
-							dice: message.slice(rollPrefix.length).trim() || "1d20",
-						},
-					})
-					return
-				}
+        const rollPrefix = "/roll"
+        if (message.startsWith(rollPrefix)) {
+          send({
+            type: "RLL",
+            params: {
+              recipient: partnerName,
+              dice: message.slice(rollPrefix.length).trim() || "1d20",
+            },
+          })
+          return
+        }
 
-				const bottlePrefix = "/bottle"
-				if (message.startsWith(bottlePrefix)) {
-					send({
-						type: "RLL",
-						params: {
-							recipient: partnerName,
-							dice: "bottle",
-						},
-					})
-					return
-				}
+        const bottlePrefix = "/bottle"
+        if (message.startsWith(bottlePrefix)) {
+          send({
+            type: "RLL",
+            params: {
+              recipient: partnerName,
+              dice: "bottle",
+            },
+          })
+          return
+        }
 
-				send({
-					type: "PRI",
-					params: {
-						recipient: partnerName,
-						message,
-					},
-				})
+        send({
+          type: "PRI",
+          params: {
+            recipient: partnerName,
+            message,
+          },
+        })
 
-				addPrivateChatMessage(
-					partnerName,
-					createPrivateMessage(identity, message),
-				)
-			},
-			setInput(input: string) {
-				setPrivateChat((chat) => ({ ...chat, input }))
-			},
-			markRead() {
-				setPrivateChat((chat) => setRoomUnread(chat, false))
-			},
-		}),
-		[
-			openPrivateChat,
-			partnerName,
-			setOpenChatNames,
-			identity,
-			send,
-			addPrivateChatMessage,
-			setPrivateChat,
-		],
-	)
+        addPrivateChatMessage(
+          partnerName,
+          createPrivateMessage(identity, message),
+        )
+      },
+      setInput(input: string) {
+        setPrivateChat((chat) => ({ ...chat, input }))
+      },
+      markRead() {
+        setPrivateChat((chat) => setRoomUnread(chat, false))
+      },
+    }),
+    [
+      openPrivateChat,
+      partnerName,
+      setOpenChatNames,
+      identity,
+      send,
+      addPrivateChatMessage,
+      setPrivateChat,
+    ],
+  )
 }
 
 export function usePrivateChatCommandHandler() {
-	const identity = useIdentity()
-	const updateAtom = useUpdateAtomFn()
-	const addPrivateChatMessage = useAddPrivateChatMessage()
-	const openPrivateChat = useOpenPrivateChat()
-	const partnerNames = useAtomValue(openChatNamesAtom)
-	const setPrivateChatDict = useUpdateAtom(privateChatDictAtom)
-	const [isRestored, setIsRestored] = useState(false)
+  const identity = useIdentity()
+  const updateAtom = useUpdateAtomFn()
+  const addPrivateChatMessage = useAddPrivateChatMessage()
+  const openPrivateChat = useOpenPrivateChat()
+  const partnerNames = useAtomValue(openChatNamesAtom)
+  const setPrivateChatDict = useUpdateAtom(privateChatDictAtom)
+  const [isRestored, setIsRestored] = useState(false)
 
-	function addStatusSystemMessage(
-		character: string,
-		status: CharacterStatus,
-		statusmsg = "",
-	) {
-		if (partnerNames[character]) {
-			const statusMessageSuffix = statusmsg ? `: ${statusmsg}` : ""
-			addPrivateChatMessage(
-				character,
-				createSystemMessage(
-					`[user]${character}[/user] is now ${status}${statusMessageSuffix}`,
-				),
-			)
-		}
-	}
+  function addStatusSystemMessage(
+    character: string,
+    status: CharacterStatus,
+    statusmsg = "",
+  ) {
+    if (partnerNames[character]) {
+      const statusMessageSuffix = statusmsg ? `: ${statusmsg}` : ""
+      addPrivateChatMessage(
+        character,
+        createSystemMessage(
+          `[user]${character}[/user] is now ${status}${statusMessageSuffix}`,
+        ),
+      )
+    }
+  }
 
-	useEffect(() => {
-		if (!isRestored || !identity) return
-		savePrivateChats(identity, Object.keys(partnerNames))
-	}, [identity, partnerNames, isRestored])
+  useEffect(() => {
+    if (!isRestored || !identity) return
+    savePrivateChats(identity, Object.keys(partnerNames))
+  }, [identity, partnerNames, isRestored])
 
-	useSocketListener((command) => {
-		matchCommand(command, {
-			async IDN() {
-				setPrivateChatDict({})
+  useSocketListener((command) => {
+    matchCommand(command, {
+      async IDN() {
+        setPrivateChatDict({})
 
-				if (!identity) return
-				const names = await restorePrivateChats(identity).catch(() => [])
-				for (const name of names) {
-					openPrivateChat(name)
-				}
-				setIsRestored(true)
-			},
+        if (!identity) return
+        const names = await restorePrivateChats(identity).catch(() => [])
+        for (const name of names) {
+          openPrivateChat(name)
+        }
+        setIsRestored(true)
+      },
 
-			PRI({ character, message }) {
-				openPrivateChat(character)
-				addPrivateChatMessage(
-					character,
-					createPrivateMessage(character, message),
-				)
-				updateAtom(privateChatAtom(character), (chat) =>
-					setRoomUnread(chat, true),
-				)
-			},
+      PRI({ character, message }) {
+        openPrivateChat(character)
+        addPrivateChatMessage(
+          character,
+          createPrivateMessage(character, message),
+        )
+        updateAtom(privateChatAtom(character), (chat) =>
+          setRoomUnread(chat, true),
+        )
+      },
 
-			TPN({ character, status }) {
-				updateAtom(privateChatAtom(character), (prev) => ({
-					...prev,
-					typingStatus: status,
-				}))
-			},
+      TPN({ character, status }) {
+        updateAtom(privateChatAtom(character), (prev) => ({
+          ...prev,
+          typingStatus: status,
+        }))
+      },
 
-			RLL(params) {
-				if ("recipient" in params) {
-					const partnerName =
-						params.character === identity ? params.recipient : params.character
+      RLL(params) {
+        if ("recipient" in params) {
+          const partnerName =
+            params.character === identity ? params.recipient : params.character
 
-					openPrivateChat(partnerName)
-					addPrivateChatMessage(
-						partnerName,
-						createSystemMessage(params.message),
-					)
-				}
-			},
+          openPrivateChat(partnerName)
+          addPrivateChatMessage(
+            partnerName,
+            createSystemMessage(params.message),
+          )
+        }
+      },
 
-			STA({ character, status, statusmsg }) {
-				addStatusSystemMessage(character, status, statusmsg)
-			},
-			NLN({ identity, status }) {
-				addStatusSystemMessage(identity, status)
-			},
-			FLN({ character }) {
-				addStatusSystemMessage(character, "offline")
-			},
-		})
-	})
+      STA({ character, status, statusmsg }) {
+        addStatusSystemMessage(character, status, statusmsg)
+      },
+      NLN({ identity, status }) {
+        addStatusSystemMessage(identity, status)
+      },
+      FLN({ character }) {
+        addStatusSystemMessage(character, "offline")
+      },
+    })
+  })
 }

@@ -3,10 +3,10 @@ import { useEffect, useRef, useState } from "react"
 import { raise } from "../common/raise"
 import { useEffectRef } from "../react/useEffectRef"
 
-interface ToastCardProps {
-	children: ReactNode
-	duration: number
-	onDismissed?: () => void
+type ToastCardProps = {
+  children: ReactNode
+  duration: number
+  onDismissed?: () => void
 }
 
 type ToastStatus = "visible" | "dismissed"
@@ -14,70 +14,70 @@ type ToastStatus = "visible" | "dismissed"
 const transitionDuration = 150
 
 const keyframes = [
-	{ opacity: 0, transform: "scale(0.9)" },
-	{ opacity: 1, transform: "scale(1)" },
+  { opacity: 0, transform: "scale(0.9)" },
+  { opacity: 1, transform: "scale(1)" },
 ]
 
 export default function NotificationToast({
-	children,
-	duration,
-	onDismissed,
+  children,
+  duration,
+  onDismissed,
 }: ToastCardProps) {
-	const ref = useRef<HTMLDivElement>(null)
-	const getRef = () => ref.current ?? raise("Ref not applied")
+  const ref = useRef<HTMLDivElement>(null)
+  const getRef = () => ref.current ?? raise("Ref not applied")
 
-	const [status, setStatus] = useState<ToastStatus>("visible")
+  const [status, setStatus] = useState<ToastStatus>("visible")
 
-	const onDismissedRef = useEffectRef(onDismissed)
+  const onDismissedRef = useEffectRef(onDismissed)
 
-	useEffect(() => {
-		if (status === "visible") {
-			const element = getRef()
+  useEffect(() => {
+    if (status === "visible") {
+      const element = getRef()
 
-			const animation = element.animate(keyframes, {
-				duration: transitionDuration,
-				easing: "ease-out",
-				fill: "forwards",
-			})
+      const animation = element.animate(keyframes, {
+        duration: transitionDuration,
+        easing: "ease-out",
+        fill: "forwards",
+      })
 
-			const timeout = setTimeout(() => setStatus("dismissed"), duration)
+      const timeout = setTimeout(() => setStatus("dismissed"), duration)
 
-			return () => {
-				animation.cancel()
-				clearTimeout(timeout)
-			}
-		}
+      return () => {
+        animation.cancel()
+        clearTimeout(timeout)
+      }
+    }
 
-		if (status === "dismissed") {
-			const element = getRef()
+    if (status === "dismissed") {
+      const element = getRef()
 
-			const animation = element.animate(keyframes, {
-				duration: transitionDuration,
-				easing: "ease-out",
-				direction: "reverse",
-				fill: "forwards",
-			})
+      const animation = element.animate(keyframes, {
+        duration: transitionDuration,
+        easing: "ease-out",
+        direction: "reverse",
+        fill: "forwards",
+      })
 
-			animation.onfinish = () => {
-				onDismissedRef.current?.()
-			}
+      animation.onfinish = () => {
+        onDismissedRef.current?.()
+      }
 
-			return () => {
-				animation.cancel()
-			}
-		}
-	}, [duration, onDismissedRef, status])
+      return () => {
+        animation.cancel()
+      }
+    }
+  }, [duration, onDismissedRef, status])
 
-	// const handleClick = () => {
-	// 	if (status === "visible") {
-	// 		setStatus("dismissed")
-	// 		onClick?.()
-	// 	}
-	// }
+  // const handleClick = () => {
+  // 	if (status === "visible") {
+  // 		setStatus("dismissed")
+  // 		onClick?.()
+  // 	}
+  // }
 
-	return (
-		<div ref={ref} className="max-w-lg shadow bg-midnight-0">
-			{children}
-		</div>
-	)
+  return (
+    <div ref={ref} className="max-w-lg shadow bg-midnight-0">
+      {children}
+    </div>
+  )
 }

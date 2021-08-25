@@ -7,23 +7,23 @@ import { useCallback } from "react"
  * Returns a function to arbitrarily update an atom
  */
 export function useUpdateAtomFn() {
-	interface CallbackArg {
-		atom: WritableAtom<any, any>
-		update: any
-	}
+  type CallbackArg = {
+    atom: WritableAtom<any, any>
+    update: any
+  }
 
-	const callback = useAtomCallback(
-		useCallback((_: Getter, set: Setter, arg: CallbackArg) => {
-			set(arg.atom, arg.update)
-		}, []),
-	)
+  const callback = useAtomCallback(
+    useCallback((_: Getter, set: Setter, arg: CallbackArg) => {
+      set(arg.atom, arg.update)
+    }, []),
+  )
 
-	return useCallback(
-		<Update>(atom: WritableAtom<any, Update>, update: Update) => {
-			callback({ atom, update }).catch(() => {
-				console.warn("failed to update atom", atom, update)
-			})
-		},
-		[callback],
-	)
+  return useCallback(
+    <Update>(atom: WritableAtom<any, Update>, update: Update) => {
+      callback({ atom, update }).catch(() => {
+        console.warn("failed to update atom", atom, update)
+      })
+    },
+    [callback],
+  )
 }
