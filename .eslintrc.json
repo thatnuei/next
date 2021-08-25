@@ -30,7 +30,8 @@ eslint-plugin-jsx-a11y
 		},
 		"ecmaVersion": 2021,
 		"sourceType": "module",
-		"project": "./tsconfig.json"
+		"project": "./tsconfig.json",
+		"extraFileExtensions": [".cjs"]
 	},
 	"plugins": ["react", "@typescript-eslint"],
 	"rules": {
