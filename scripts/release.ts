@@ -4,11 +4,7 @@ import ora from "ora"
 import prompts from "prompts"
 import * as semver from "semver"
 import SimpleGit from "simple-git"
-
-const pkg = JSON.parse(
-	await fs.readFile("./package.json", "utf8"),
-	// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-) as typeof import("../package.json")
+import pkg from "../package.json"
 
 const git = SimpleGit()
 

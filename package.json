@@ -15,7 +15,7 @@
 		"ci": "npm-run-all --parallel --print-label --continue-on-error build test lint typecheck",
 		"format": "prettier --write .",
 		"prepare": "husky install",
-		"release": "node --loader ts-node/esm ./scripts/release.ts"
+		"release": "node --loader ts-node/esm --experimental-json-modules ./scripts/release.ts"
 	},
 	"dependencies": {
 		"@headlessui/react": "^1.4.0",
