@@ -8,11 +8,11 @@ import Root from "./Root"
 import "./styles.css"
 
 configure({
-	observableRequiresReaction: true,
+  observableRequiresReaction: true,
 })
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-	<ChatLoggerProvider logger={createWebChatLogger()}>
-		<Root />
-	</ChatLoggerProvider>,
+  <ChatLoggerProvider logger={createWebChatLogger()}>
+    <Root />
+  </ChatLoggerProvider>,
 )

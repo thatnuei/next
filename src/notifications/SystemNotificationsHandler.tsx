@@ -3,26 +3,26 @@ import { routes, useRoute } from "../router"
 import { useSocketCommandMatch } from "../socket/SocketConnection"
 
 export default function SystemNotificationsHandler() {
-	const route = useRoute()
+  const route = useRoute()
 
-	useSocketCommandMatch({
-		PRI({ character, message }) {
-			const isPrivateChatRoute =
-				route.name === "privateChat" && route.params.partnerName === character
+  useSocketCommandMatch({
+    PRI({ character, message }) {
+      const isPrivateChatRoute =
+        route.name === "privateChat" && route.params.partnerName === character
 
-			if (isPrivateChatRoute && document.hasFocus()) return
+      if (isPrivateChatRoute && document.hasFocus()) return
 
-			const note = new window.Notification(`New message from ${character}`, {
-				body: message,
-				icon: getAvatarUrl(character),
-			})
+      const note = new window.Notification(`New message from ${character}`, {
+        body: message,
+        icon: getAvatarUrl(character),
+      })
 
-			note.onclick = () => {
-				routes.privateChat({ partnerName: character }).push()
-				window.focus()
-			}
-		},
-	})
+      note.onclick = () => {
+        routes.privateChat({ partnerName: character }).push()
+        window.focus()
+      }
+    },
+  })
 
-	return null
+  return null
 }

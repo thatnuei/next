@@ -1,7 +1,7 @@
 import type { NonEmptyArray } from "./types"
 
 export function isNonEmptyArray<Value>(
-	array: ArrayLike<Value> | null | undefined,
+  array: ArrayLike<Value> | null | undefined,
 ): array is NonEmptyArray<Value> {
-	return array != null && array.length > 0
+  return array != null && array.length > 0
 }

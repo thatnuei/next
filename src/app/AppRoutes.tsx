@@ -14,68 +14,68 @@ import LoginRequiredMessage from "./LoginRequiredMessage"
 const Chat = lazy(() => import("../chat/Chat"))
 
 export default function AppRoutes() {
-	const route = useRoute()
-	const account = useAccount()
-	const characters = useUserCharacterNames()
+  const route = useRoute()
+  const account = useAccount()
+  const characters = useUserCharacterNames()
 
-	useEffect(() => {
-		if (route.name === false) routes.login().replace()
-	}, [route.name])
+  useEffect(() => {
+    if (route.name === false) routes.login().replace()
+  }, [route.name])
 
-	return (
-		<>
-			{route.name === "login" && (
-				<IslandLayout title="Login" isVisible header={<AppInfoModalButton />}>
-					<Login />
-				</IslandLayout>
-			)}
+  return (
+    <>
+      {route.name === "login" && (
+        <IslandLayout title="Login" isVisible header={<AppInfoModalButton />}>
+          <Login />
+        </IslandLayout>
+      )}
 
-			{route.name === "characterSelect" && (
-				<>
-					{account && isNonEmptyArray(characters) ? (
-						<IslandLayout title="Character Select" isVisible>
-							<CharacterSelect account={account} characters={characters} />
-						</IslandLayout>
-					) : (
-						<LoginRequiredMessage />
-					)}
-				</>
-			)}
+      {route.name === "characterSelect" && (
+        <>
+          {account && isNonEmptyArray(characters) ? (
+            <IslandLayout title="Character Select" isVisible>
+              <CharacterSelect account={account} characters={characters} />
+            </IslandLayout>
+          ) : (
+            <LoginRequiredMessage />
+          )}
+        </>
+      )}
 
-			{chatRouteGroup.has(route) && (
-				<AppErrorBoundary>
-					<Suspense fallback={<ChatFallback />}>
-						{account ? <Chat /> : <LoginRequiredMessage />}
-					</Suspense>
-				</AppErrorBoundary>
-			)}
-		</>
-	)
+      {chatRouteGroup.has(route) && (
+        <AppErrorBoundary>
+          <Suspense fallback={<ChatFallback />}>
+            {account ? <Chat /> : <LoginRequiredMessage />}
+          </Suspense>
+        </AppErrorBoundary>
+      )}
+    </>
+  )
 }
 
 function ChatFallback() {
-	return (
-		<LoadingOverlay>
-			<LoadingOverlayText>Loading...</LoadingOverlayText>
-		</LoadingOverlay>
-	)
+  return (
+    <LoadingOverlay>
+      <LoadingOverlayText>Loading...</LoadingOverlayText>
+    </LoadingOverlay>
+  )
 }
 
 function AppInfoModalButton() {
-	return (
-		<Modal
-			title="About next"
-			renderTrigger={(t) => (
-				<button className="text-center" {...t}>
-					<AppInfo.Heading />
-					<p className="opacity-75">click for more info</p>
-				</button>
-			)}
-			renderContent={() => (
-				<div className="p-4">
-					<AppInfo />
-				</div>
-			)}
-		/>
-	)
+  return (
+    <Modal
+      title="About next"
+      renderTrigger={(t) => (
+        <button className="text-center" {...t}>
+          <AppInfo.Heading />
+          <p className="opacity-75">click for more info</p>
+        </button>
+      )}
+      renderContent={() => (
+        <div className="p-4">
+          <AppInfo />
+        </div>
+      )}
+    />
+  )
 }

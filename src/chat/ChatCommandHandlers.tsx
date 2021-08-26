@@ -6,10 +6,10 @@ import { useNotificationCommandListener } from "../notifications/state"
 import { usePrivateChatCommandHandler } from "../privateChat/state"
 
 export default observer(function ChatCommandHandlers() {
-	useCharacterCommandListener()
-	useChannelBrowserCommandListener()
-	useChannelCommandListener()
-	usePrivateChatCommandHandler()
-	useNotificationCommandListener()
-	return null
+  useCharacterCommandListener()
+  useChannelBrowserCommandListener()
+  useChannelCommandListener()
+  usePrivateChatCommandHandler()
+  useNotificationCommandListener()
+  return null
 })

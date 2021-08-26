@@ -4,36 +4,36 @@ import CharacterName from "../character/CharacterName"
 import Timestamp from "../dom/Timestamp"
 import type { MessageState } from "./MessageState"
 
-interface Props {
-	message: MessageState
+type Props = {
+  message: MessageState
 }
 
 function MessageListItem({ message }: Props) {
-	const typeStyle = {
-		normal: undefined,
-		action: `italic`,
-		lfrp: `bg-green-500/20`,
-		warning: `bg-red-500/20`,
-		system: `bg-black/50`,
-	}[message.type]
+  const typeStyle = {
+    normal: undefined,
+    action: `italic`,
+    lfrp: `bg-green-500/20`,
+    warning: `bg-red-500/20`,
+    system: `bg-black/50`,
+  }[message.type]
 
-	return (
-		<div className={clsx(typeStyle, "px-2 py-1")}>
-			<Timestamp className="text-sm mr-2 opacity-50 not-italic inline-block">
-				{message.timestamp}
-			</Timestamp>
-			{message.senderName && (
-				<span
-					className={`inline-block ${
-						message.type === "action" ? `mr-1` : `mr-2`
-					}`}
-				>
-					<CharacterName name={message.senderName} />
-				</span>
-			)}
-			<BBC text={message.text} />
-		</div>
-	)
+  return (
+    <div className={clsx(typeStyle, "px-2 py-1")}>
+      <Timestamp className="text-sm mr-2 opacity-50 not-italic inline-block">
+        {message.timestamp}
+      </Timestamp>
+      {message.senderName && (
+        <span
+          className={`inline-block ${
+            message.type === "action" ? `mr-1` : `mr-2`
+          }`}
+        >
+          <CharacterName name={message.senderName} />
+        </span>
+      )}
+      <BBC text={message.text} />
+    </div>
+  )
 }
 
 export default MessageListItem

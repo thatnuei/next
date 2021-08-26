@@ -10,61 +10,61 @@ import ChannelHeader from "./ChannelHeader"
 import ChannelUserList from "./ChannelUserList"
 import { useActualChannelMode, useChannel, useChannelActions } from "./state"
 
-interface Props {
-	channelId: string
+type Props = {
+  channelId: string
 }
 
 function ChannelView({ channelId }: Props) {
-	const channel = useChannel(channelId)
-	const actualMode = useActualChannelMode(channelId)
-	const actions = useChannelActions(channelId)
-	const isLargeScreen = useMediaQuery(screenQueries.large)
+  const channel = useChannel(channelId)
+  const actualMode = useActualChannelMode(channelId)
+  const actions = useChannelActions(channelId)
+  const isLargeScreen = useMediaQuery(screenQueries.large)
 
-	const messages = useMemo(() => {
-		const shouldShowMessage = (message: MessageState) => {
-			if (actualMode === "ads") {
-				return message.type !== "normal" && message.type !== "action"
-			}
-			if (actualMode === "chat") {
-				return message.type !== "lfrp"
-			}
-			return true
-		}
+  const messages = useMemo(() => {
+    const shouldShowMessage = (message: MessageState) => {
+      if (actualMode === "ads") {
+        return message.type !== "normal" && message.type !== "action"
+      }
+      if (actualMode === "chat") {
+        return message.type !== "lfrp"
+      }
+      return true
+    }
 
-		return [...channel.previousMessages, ...channel.messages].filter(
-			shouldShowMessage,
-		)
-	}, [actualMode, channel.messages, channel.previousMessages])
+    return [...channel.previousMessages, ...channel.messages].filter(
+      shouldShowMessage,
+    )
+  }, [actualMode, channel.messages, channel.previousMessages])
 
-	const isDocumentVisible = useDocumentVisible()
-	useEffect(() => {
-		if (channel.isUnread && isDocumentVisible) actions.markRead()
-	}, [actions, channel.isUnread, isDocumentVisible])
+  const isDocumentVisible = useDocumentVisible()
+  useEffect(() => {
+    if (channel.isUnread && isDocumentVisible) actions.markRead()
+  }, [actions, channel.isUnread, isDocumentVisible])
 
-	return (
-		<div className={`flex flex-col h-full`}>
-			<ChannelHeader channelId={channelId} />
+  return (
+    <div className={`flex flex-col h-full`}>
+      <ChannelHeader channelId={channelId} />
 
-			<div className={`flex flex-1 min-h-0 my-1`}>
-				<main className={`relative flex-1 bg-midnight-1`}>
-					<MessageList messages={messages} />
-				</main>
+      <div className={`flex flex-1 min-h-0 my-1`}>
+        <main className={`relative flex-1 bg-midnight-1`}>
+          <MessageList messages={messages} />
+        </main>
 
-				{isLargeScreen && (
-					<div className={`w-56 min-h-0 ml-1`}>
-						<ChannelUserList channelId={channelId} />
-					</div>
-				)}
-			</div>
+        {isLargeScreen && (
+          <div className={`w-56 min-h-0 ml-1`}>
+            <ChannelUserList channelId={channelId} />
+          </div>
+        )}
+      </div>
 
-			<ChatInput
-				value={channel.input}
-				onChangeText={actions.setInput}
-				onSubmit={actions.sendMessage}
-				maxLength={4096}
-			/>
-		</div>
-	)
+      <ChatInput
+        value={channel.input}
+        onChangeText={actions.setInput}
+        onSubmit={actions.sendMessage}
+        maxLength={4096}
+      />
+    </div>
+  )
 }
 
 export default observer(ChannelView)

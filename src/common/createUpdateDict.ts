@@ -12,9 +12,9 @@ import type { Dict } from "./types"
  * )
  */
 export function createUpdateDict<T>(fallback: (key: string) => T) {
-	return (key: string, update: (value: T) => T) =>
-		(dict: Dict<T>): Dict<T> => ({
-			...dict,
-			[key]: update(dict[key] ?? fallback(key)),
-		})
+  return (key: string, update: (value: T) => T) =>
+    (dict: Dict<T>): Dict<T> => ({
+      ...dict,
+      [key]: update(dict[key] ?? fallback(key)),
+    })
 }
