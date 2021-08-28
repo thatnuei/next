@@ -13,10 +13,18 @@ export default function ConnectionGuard({
 }) {
   switch (status) {
     case "connecting":
-    case "willReconnect":
       return (
         <LoadingOverlay>
           <LoadingOverlayText>Connecting...</LoadingOverlayText>
+        </LoadingOverlay>
+      )
+
+    case "willReconnect":
+      return (
+        <LoadingOverlay>
+          <LoadingOverlayText>
+            Failed to connect, reconnecting...
+          </LoadingOverlayText>
         </LoadingOverlay>
       )
 
