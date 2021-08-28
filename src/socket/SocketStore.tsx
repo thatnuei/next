@@ -134,7 +134,11 @@ export class SocketStore extends Store<{ status: SocketStatus }> {
   }
 
   send(command: ClientCommand) {
-    this.socket?.send(JSON.stringify(command))
+    this.socket?.send(
+      command.params
+        ? `${command.type} ${JSON.stringify(command.params)}`
+        : command.type,
+    )
   }
 }
 
