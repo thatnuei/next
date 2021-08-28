@@ -1,6 +1,6 @@
 import { createSimpleContext } from "../react/createSimpleContext"
 import { Emitter } from "../state/emitter"
-import { ObjectStore } from "../state/store"
+import { Store } from "../state/store"
 import { socketUrl } from "./constants"
 import type { ClientCommand, ServerCommand } from "./helpers"
 import { parseServerCommand } from "./helpers"
@@ -30,7 +30,7 @@ const errorCodesToAvoidReconnection = new Set([
   40, /// kicked
 ])
 
-export class SocketStore extends ObjectStore<{ status: SocketStatus }> {
+export class SocketStore extends Store<{ status: SocketStatus }> {
   readonly commands = new Emitter<ServerCommand>()
   private socket: WebSocket | undefined
 

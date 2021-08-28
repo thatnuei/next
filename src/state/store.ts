@@ -1,4 +1,7 @@
+import type { Draft } from "immer"
+import produce from "immer"
 import { useState } from "react"
+import type { Dict } from "../common/types"
 import { Emitter, useEmitterListener } from "./emitter"
 
 export abstract class Store<State> extends Emitter<Readonly<State>> {
@@ -14,35 +17,72 @@ export abstract class Store<State> extends Emitter<Readonly<State>> {
   }
 
   protected set state(value: Readonly<State>) {
+    if (this._state === value) return
     this._state = value
     this.queueEmit(this._state)
   }
-}
 
-export abstract class ObjectStore<
-  Value extends Record<string, unknown>,
-> extends Store<Value> {
-  protected merge(newProperties: Partial<Value>): void {
+  protected merge(newProperties: Partial<State>): void {
     this.state = { ...this.state, ...newProperties }
+  }
+
+  protected update(recipe: (state: Draft<State>) => void): void {
+    this.state = produce(this.state, recipe)
   }
 }
 
-export function useStoreSelector<State, Selected>(
+export abstract class DictStore<Value> extends Store<Dict<Value>> {
+  constructor(private readonly fallback: (key: string) => Value) {
+    super({})
+  }
+
+  getItem(key: string): Value {
+    const value = this.state[key] ?? this.fallback(key)
+    this.update((state) => {
+      state[key] = value as Draft<Value>
+    })
+    return value
+  }
+
+  protected setItem(key: string, value: Value): void {
+    this.update((state) => {
+      state[key] = value as Draft<Value>
+    })
+  }
+
+  protected updateItem(
+    key: string,
+    getNewItem: (oldItem: Value) => Value,
+  ): void {
+    const currentItem = this.state[key] ?? this.fallback(key)
+    this.setItem(key, getNewItem(currentItem))
+  }
+}
+
+type IsEqualFn = (a: unknown, b: unknown) => boolean
+
+export function useStoreSelect<State, Selected>(
   store: Store<State>,
-  selector: (value: Readonly<State>) => Selected,
+  select: (value: Readonly<State>) => Selected,
+  isEqual: IsEqualFn = Object.is,
 ): Readonly<Selected> {
-  const [state, setState] = useState(selector(store.state))
-  useEmitterListener(store, (value) => setState(selector(value)))
+  const [state, setState] = useState(select(store.state))
+  useEmitterListener(store, (state) => {
+    const newState = select(state)
+    if (!isEqual(state, newState)) {
+      setState(newState)
+    }
+  })
   return state
 }
 
 export function useStoreState<State>(store: Store<State>): Readonly<State> {
-  return useStoreSelector(store, (state) => state)
+  return useStoreSelect(store, (state) => state)
 }
 
 export function useStoreKey<
   State extends Record<string, unknown>,
   Key extends keyof State,
->(store: ObjectStore<State>, key: Key): Readonly<State[Key]> {
-  return useStoreSelector(store, (state) => state[key])
+>(store: Store<State>, key: Key): Readonly<State[Key]> {
+  return useStoreSelect(store, (state) => state[key])
 }
