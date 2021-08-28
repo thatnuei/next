@@ -1,3 +1,4 @@
+import { useState } from ".pnpm/@types+react@17.0.14/node_modules/@types/react"
 import clsx from "clsx"
 import type { ReactNode } from "react"
 import { useDeferredValue, useEffect } from "react"
@@ -9,8 +10,9 @@ import SystemNotificationsHandler from "../notifications/SystemNotificationsHand
 import PrivateChatView from "../privateChat/PrivateChatView"
 import type { Route } from "../router"
 import { useRoute } from "../router"
-import { useSocketActions } from "../socket/SocketConnection"
-import { useIdentity } from "../user"
+import { SocketStore, SocketStoreProvider } from "../socket/SocketStore"
+import { useStoreKey } from "../state/store"
+import { useIdentity, useUserActions } from "../user"
 import ChatCommandHandlers from "./ChatCommandHandlers"
 import ChatNav from "./ChatNav"
 import ConnectionGuard from "./ConnectionGuard"
@@ -18,24 +20,30 @@ import NoRoomView from "./NoRoomView"
 import StatusRestorationEffect from "./StatusRestorationEffect"
 
 export default function Chat() {
-  const { connect, disconnect } = useSocketActions()
+  const [socket] = useState(() => new SocketStore())
+  const status = useStoreKey(socket, "status")
+  const { getFreshAuthCredentials } = useUserActions()
   const identity = useIdentity()
 
   useEffect(() => {
     if (identity) {
-      connect(identity)
+      socket.connect(async () => {
+        const creds = await getFreshAuthCredentials()
+        return { ...creds, character: identity }
+      })
+
       return () => {
-        disconnect()
+        socket.disconnect()
       }
     }
-  }, [connect, disconnect, identity])
+  }, [getFreshAuthCredentials, identity, socket])
 
   const route = useRoute()
   const deferredRoute = useDeferredValue(route)
 
   return (
-    <>
-      <ConnectionGuard>
+    <SocketStoreProvider value={socket}>
+      <ConnectionGuard status={status}>
         <div className="flex flex-row h-full gap-1">
           <div className="hidden md:block">
             <ChatNav />
@@ -52,7 +60,7 @@ export default function Chat() {
       <SystemNotificationsHandler />
       <StatusRestorationEffect />
       {import.meta.env.DEV && <DevTools />}
-    </>
+    </SocketStoreProvider>
   )
 }
 

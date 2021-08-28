@@ -1,12 +1,16 @@
 import type { ReactNode } from "react"
 import { routes } from "../router"
-import { useSocketStatus } from "../socket/SocketConnection"
+import type { SocketStatus } from "../socket/SocketStore"
 import { solidButton } from "../ui/components"
 import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
 
-export default function ConnectionGuard({ children }: { children: ReactNode }) {
-  const status = useSocketStatus()
-
+export default function ConnectionGuard({
+  status,
+  children,
+}: {
+  status: SocketStatus
+  children: ReactNode
+}) {
   switch (status) {
     case "connecting":
     case "willReconnect":

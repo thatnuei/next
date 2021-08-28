@@ -235,11 +235,13 @@ export function SocketConnection({ children }: { children: ReactNode }) {
           }
 
           if (command.type === "HLO") {
+            // eslint-disable-next-line no-console
             console.info(command.params.message)
             return
           }
 
           if (command.type === "CON") {
+            // eslint-disable-next-line no-console
             console.info(`There are ${command.params.count} users in chat`)
             return
           }
@@ -301,10 +303,6 @@ export function SocketConnection({ children }: { children: ReactNode }) {
       </ActionsContext.Provider>
     </SocketStatusContext.Provider>
   )
-}
-
-export function useSocketStatus() {
-  return useContext(SocketStatusContext).type
 }
 
 export function useSocketActions() {
