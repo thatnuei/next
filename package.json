@@ -1,7 +1,6 @@
 {
   "name": "next",
   "version": "0.0.21",
-  "type": "module",
   "private": true,
   "scripts": {
     "dev": "vite",
