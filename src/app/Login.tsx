@@ -1,15 +1,14 @@
 import { useState } from "react"
 import Button from "../dom/Button"
 import TextInput from "../dom/TextInput"
+import { authenticate } from "../flist/authenticate"
+import type { AuthUser } from "../flist/types"
 import { preventDefault } from "../react/preventDefault"
-import { routes } from "../router"
 import usePromiseState from "../state/usePromiseState"
 import { input, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
-import { useUserActions } from "../user"
 
-export default function Login() {
-  const actions = useUserActions()
+export default function Login(props: { onSuccess: (user: AuthUser) => void }) {
   const [account, setAccount] = useState("")
   const [password, setPassword] = useState("")
 
@@ -18,9 +17,7 @@ export default function Login() {
   const submit = () => {
     if (authenticateState.isLoading) return
     authenticateState.setPromise(
-      actions.submitLogin({ account, password }).then(() => {
-        routes.characterSelect().push()
-      }),
+      authenticate({ account, password }).then(props.onSuccess),
     )
   }
 

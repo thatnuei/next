@@ -1,50 +1,50 @@
-import { useState } from ".pnpm/@types+react@17.0.14/node_modules/@types/react"
 import clsx from "clsx"
 import type { ReactNode } from "react"
-import { useDeferredValue, useEffect } from "react"
+import { useEffect, useState } from "react"
 import ChannelView from "../channel/ChannelView"
-import DevTools from "../dev/DevTools"
+import type { AuthUser } from "../flist/types"
 import ChatLogBrowser from "../logging/ChatLogBrowser"
 import NotificationListScreen from "../notifications/NotificationListScreen"
-import SystemNotificationsHandler from "../notifications/SystemNotificationsHandler"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import type { Route } from "../router"
-import { useRoute } from "../router"
 import { SocketStore, SocketStoreProvider } from "../socket/SocketStore"
 import { useStoreKey } from "../state/store"
-import { useIdentity, useUserActions } from "../user"
-import ChatCommandHandlers from "./ChatCommandHandlers"
-import ChatNav from "./ChatNav"
 import ConnectionGuard from "./ConnectionGuard"
 import NoRoomView from "./NoRoomView"
-import StatusRestorationEffect from "./StatusRestorationEffect"
 
-export default function Chat() {
+export default function Chat({
+  user,
+  identity,
+}: {
+  user: AuthUser
+  identity: string
+}) {
   const [socket] = useState(() => new SocketStore())
   const status = useStoreKey(socket, "status")
-  const { getFreshAuthCredentials } = useUserActions()
-  const identity = useIdentity()
 
   useEffect(() => {
     if (identity) {
-      socket.connect(async () => {
-        const creds = await getFreshAuthCredentials()
-        return { ...creds, character: identity }
-      })
+      socket.connect(() =>
+        Promise.resolve({
+          account: user.account,
+          ticket: user.ticket,
+          character: identity,
+        }),
+      )
 
       return () => {
         socket.disconnect()
       }
     }
-  }, [getFreshAuthCredentials, identity, socket])
+  }, [identity, socket, user.account, user.ticket])
 
-  const route = useRoute()
-  const deferredRoute = useDeferredValue(route)
+  // const route = useRoute()
+  // const deferredRoute = useDeferredValue(route)
 
   return (
     <SocketStoreProvider value={socket}>
       <ConnectionGuard status={status}>
-        <div className="flex flex-row h-full gap-1">
+        {/* <div className="flex flex-row h-full gap-1">
           <div className="hidden md:block">
             <ChatNav />
           </div>
@@ -54,12 +54,13 @@ export default function Chat() {
           >
             <ChatRoutes route={deferredRoute} />
           </StalenessState>
-        </div>
+        </div> */}
+        <p>chat</p>
       </ConnectionGuard>
-      <ChatCommandHandlers />
+      {/* <ChatCommandHandlers />
       <SystemNotificationsHandler />
-      <StatusRestorationEffect />
-      {import.meta.env.DEV && <DevTools />}
+      <StatusRestorationEffect /> */}
+      {/* {import.meta.env.DEV && <DevTools />} */}
     </SocketStoreProvider>
   )
 }
