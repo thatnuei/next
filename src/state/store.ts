@@ -38,16 +38,17 @@ export abstract class DictStore<Value> extends Store<Dict<Value>> {
 
   getItem(key: string): Value {
     const value = this.state[key] ?? this.fallback(key)
-    this.update((state) => {
-      state[key] = value as Draft<Value>
-    })
+    this.setItem(key, value)
     return value
   }
 
   protected setItem(key: string, value: Value): void {
-    this.update((state) => {
-      state[key] = value as Draft<Value>
-    })
+    if (this.state[key] === value) return
+    this.state = { ...this.state, [key]: value }
+  }
+
+  protected setItems(items: Dict<Value>): void {
+    this.state = { ...this.state, ...items }
   }
 
   protected updateItem(
