@@ -22,6 +22,7 @@ export type SocketStatus =
 // https://toys.in.newtsin.space/api-docs/#server-closes-connection-after-issuing-an-err-protocol-command
 const errorCodesToAvoidReconnection = new Set([
   2, // server is full
+  4, // identification failed
   9, // banned
   30, // too many connections
   31, // logging in with same character from another location
