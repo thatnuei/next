@@ -1,14 +1,21 @@
 import ExternalLink from "../dom/ExternalLink"
 import { getProfileUrl } from "../flist/helpers"
+import { useStoreSelect } from "../state/store"
 import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
 import CharacterStatusText from "./CharacterStatusText"
+import type { CharacterStore } from "./CharacterStore"
 import { genderColors } from "./colors"
 import { useNickname } from "./nicknames"
-import { useCharacterGender } from "./state"
 
-function CharacterSummary({ name }: { name: string }) {
-  const gender = useCharacterGender(name)
+function CharacterSummary({
+  store,
+  name,
+}: {
+  store: CharacterStore
+  name: string
+}) {
+  const gender = useStoreSelect(store, (state) => state[name]?.gender) ?? "None"
   const nickname = useNickname(name)
   return (
     <div className="grid gap-3">
@@ -28,7 +35,7 @@ function CharacterSummary({ name }: { name: string }) {
         className={`px-3 py-2 overflow-y-auto bg-midnight-1`}
         style={{ maxHeight: 300 }}
       >
-        <CharacterStatusText name={name} />
+        <CharacterStatusText name={name} store={store} />
       </div>
     </div>
   )

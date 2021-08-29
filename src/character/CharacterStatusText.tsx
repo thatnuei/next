@@ -1,20 +1,32 @@
 import BBC from "../bbc/BBC"
+import { useStoreSelect } from "../state/store"
+import type { CharacterStore } from "./CharacterStore"
 import { statusColors } from "./colors"
-import { useCharacter } from "./state"
 
-function CharacterStatusText({ name }: { name: string }) {
-  const character = useCharacter(name)
+function CharacterStatusText({
+  store,
+  name,
+}: {
+  store: CharacterStore
+  name: string
+}) {
+  const status =
+    useStoreSelect(store, (state) => state[name]?.status) ?? "offline"
+
+  const statusMessage = useStoreSelect(
+    store,
+    (state) => state[name]?.statusMessage,
+  )
+
   return (
     <p className="text-sm">
       <span
-        className={character.status === "crown" ? "rainbow-animation" : ""}
-        style={{ color: statusColors[character.status] }}
+        className={status === "crown" ? "rainbow-animation" : ""}
+        style={{ color: statusColors[status] }}
       >
-        {character.status === "crown" ? "awesome" : character.status}
+        {status === "crown" ? "awesome" : status}
       </span>
-      {character.statusMessage ? (
-        <BBC text={` - ${character.statusMessage}`} />
-      ) : undefined}
+      {statusMessage ? <BBC text={` - ${statusMessage}`} /> : undefined}
     </p>
   )
 }

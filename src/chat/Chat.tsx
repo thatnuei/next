@@ -2,66 +2,79 @@ import clsx from "clsx"
 import type { ReactNode } from "react"
 import { useEffect, useState } from "react"
 import ChannelView from "../channel/ChannelView"
+import { CharacterStore } from "../character/CharacterStore"
 import type { AuthUser } from "../flist/types"
 import ChatLogBrowser from "../logging/ChatLogBrowser"
 import NotificationListScreen from "../notifications/NotificationListScreen"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import type { Route } from "../router"
-import { SocketStore, SocketStoreProvider } from "../socket/SocketStore"
+import { SocketStore } from "../socket/SocketStore"
+import { useEmitterListener } from "../state/emitter"
 import { useStoreKey } from "../state/store"
+import ChatNav from "./ChatNav"
 import ConnectionGuard from "./ConnectionGuard"
 import NoRoomView from "./NoRoomView"
 
 export default function Chat({
-  user,
+  user: initialUser,
   identity,
+  onChangeCharacter,
+  onLogout,
 }: {
   user: AuthUser
   identity: string
+  onChangeCharacter: () => void
+  onLogout: () => void
 }) {
   const [socket] = useState(() => new SocketStore())
   const status = useStoreKey(socket, "status")
 
-  useEffect(() => {
-    if (identity) {
-      socket.connect(() =>
-        Promise.resolve({
-          account: user.account,
-          ticket: user.ticket,
-          character: identity,
-        }),
-      )
+  const [characterStore] = useState(() => new CharacterStore())
+  useEmitterListener(socket.commands, (command) =>
+    characterStore.handleCommand(command),
+  )
 
-      return () => {
-        socket.disconnect()
-      }
+  useEffect(() => {
+    socket.connect(() => {
+      return Promise.resolve({
+        account: initialUser.account,
+        ticket: initialUser.ticket,
+        character: identity,
+      })
+    })
+
+    return () => {
+      socket.disconnect()
     }
-  }, [identity, socket, user.account, user.ticket])
+  }, [identity, initialUser.account, initialUser.ticket, socket])
 
   // const route = useRoute()
   // const deferredRoute = useDeferredValue(route)
 
   return (
-    <SocketStoreProvider value={socket}>
-      <ConnectionGuard status={status}>
-        {/* <div className="flex flex-row h-full gap-1">
+    <>
+      <ConnectionGuard status={status} onLogout={onLogout}>
+        <div className="flex flex-row h-full gap-1">
           <div className="hidden md:block">
-            <ChatNav />
+            <ChatNav
+              identity={identity}
+              characterStore={characterStore}
+              onLogout={onChangeCharacter}
+            />
           </div>
-          <StalenessState
+          {/* <StalenessState
             className="flex-1 min-w-0 overflow-y-auto"
             isStale={route !== deferredRoute}
           >
             <ChatRoutes route={deferredRoute} />
-          </StalenessState>
-        </div> */}
-        <p>chat</p>
+          </StalenessState> */}
+        </div>
       </ConnectionGuard>
       {/* <ChatCommandHandlers />
       <SystemNotificationsHandler />
       <StatusRestorationEffect /> */}
       {/* {import.meta.env.DEV && <DevTools />} */}
-    </SocketStoreProvider>
+    </>
   )
 }
 
@@ -95,7 +108,7 @@ function ChatRoutes({ route }: { route: Route }) {
       )}
       {route.name === "notifications" && <NotificationListScreen />}
       {route.name === "logs" && <ChatLogBrowser />}
-      {route.name === "chat" && <NoRoomView />}
+      {route.name === false && <NoRoomView />}
     </>
   )
 }

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { routes } from "../router"
+import Button from "../dom/Button"
 import type { SocketStatus } from "../socket/SocketStore"
 import { solidButton } from "../ui/components"
 import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
@@ -7,9 +7,11 @@ import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
 export default function ConnectionGuard({
   status,
   children,
+  onLogout,
 }: {
   status: SocketStatus
   children: ReactNode
+  onLogout: () => void
 }) {
   switch (status) {
     case "connecting":
@@ -38,9 +40,9 @@ export default function ConnectionGuard({
     case "closed":
       return (
         <ConnectionMessage message="The connection was closed by the server.">
-          <a {...routes.login().link} className={solidButton}>
+          <Button className={solidButton} onClick={onLogout}>
             Return to login
-          </a>
+          </Button>
         </ConnectionMessage>
       )
   }

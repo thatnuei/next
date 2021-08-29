@@ -50,7 +50,16 @@ export default function App() {
     return (
       <AppErrorBoundary>
         <Suspense fallback={<ChatFallback />}>
-          <Chat user={view.user} identity={view.identity} />
+          <Chat
+            user={view.user}
+            identity={view.identity}
+            onChangeCharacter={() => {
+              setView({ name: "characterSelect", user: view.user })
+            }}
+            onLogout={() => {
+              setView({ name: "login" })
+            }}
+          />
         </Suspense>
       </AppErrorBoundary>
     )
