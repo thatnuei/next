@@ -1,6 +1,5 @@
-import { defineConfig } from "windicss/helpers"
-
-export default defineConfig({
+module.exports = {
+  mode: "jit",
   extract: {
     // accepts globs and file paths relative to project root
     include: ["index.html", "src/**/*.{ts,tsx}"],
@@ -33,4 +32,4 @@ export default defineConfig({
     },
   },
   plugins: [],
-})
+}
