@@ -1,4 +1,3 @@
-import type { CharacterStore } from "../character/CharacterStore"
 import CharacterSummary from "../character/CharacterSummary"
 import ChatNavAction from "../chat/ChatNavAction"
 import Button from "../dom/Button"
@@ -6,11 +5,9 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 
 export default function ChatNav({
-  characterStore,
   identity,
   onLogout,
 }: {
-  characterStore: CharacterStore
   identity: string
   onLogout: () => void
 }) {
@@ -108,7 +105,7 @@ export default function ChatNav({
 
       <div className="grid grid-rows-[auto,1fr] gap-1 overflow-y-auto">
         <div className="p-2 bg-midnight-0">
-          <CharacterSummary store={characterStore} name={identity} />
+          <CharacterSummary name={identity} />
         </div>
 
         <div className="bg-midnight-1" style={{ height: "200vh" }}>

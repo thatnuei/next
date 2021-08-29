@@ -2,7 +2,10 @@ import clsx from "clsx"
 import type { ReactNode } from "react"
 import { useEffect, useState } from "react"
 import ChannelView from "../channel/ChannelView"
-import { CharacterStore } from "../character/CharacterStore"
+import {
+  CharacterStore,
+  CharacterStoreProvider,
+} from "../character/CharacterStore"
 import type { AuthUser } from "../flist/types"
 import ChatLogBrowser from "../logging/ChatLogBrowser"
 import NotificationListScreen from "../notifications/NotificationListScreen"
@@ -27,9 +30,10 @@ export default function Chat({
   onLogout: () => void
 }) {
   const [socket] = useState(() => new SocketStore())
+  const [characterStore] = useState(() => new CharacterStore())
+
   const status = useStoreKey(socket, "status")
 
-  const [characterStore] = useState(() => new CharacterStore())
   useEmitterListener(socket.commands, (command) =>
     characterStore.handleCommand(command),
   )
@@ -49,15 +53,11 @@ export default function Chat({
   }, [identity, initialUser.account, initialUser.ticket, socket])
 
   return (
-    <>
+    <CharacterStoreProvider value={characterStore}>
       <ConnectionGuard status={status} onLogout={onLogout}>
         <div className="flex flex-row h-full gap-1">
           <div className="hidden md:block">
-            <ChatNav
-              identity={identity}
-              characterStore={characterStore}
-              onLogout={onChangeCharacter}
-            />
+            <ChatNav identity={identity} onLogout={onChangeCharacter} />
           </div>
 
           {/* <StalenessState
@@ -74,7 +74,7 @@ export default function Chat({
       <StatusRestorationEffect /> */}
 
       {/* {import.meta.env.DEV && <DevTools />} */}
-    </>
+    </CharacterStoreProvider>
   )
 }
 

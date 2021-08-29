@@ -1,8 +1,8 @@
-import type { Dict, Mutable } from "../common/types"
+import { createSimpleContext } from "../react/createSimpleContext"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
-import { DictStore } from "../state/store"
-import type { Character, CharacterGender, CharacterStatus } from "./types"
+import { DictStore, useStoreSelect } from "../state/store"
+import type { Character } from "./types"
 
 export class CharacterStore extends DictStore<Character> {
   constructor() {
@@ -14,36 +14,51 @@ export class CharacterStore extends DictStore<Character> {
     }))
   }
 
-  setGender(name: string, gender: CharacterGender) {
-    this.updateItem(name, (char) => ({ ...char, gender }))
-  }
-
-  setStatus(name: string, status: CharacterStatus, statusMessage: string) {
-    this.updateItem(name, (char) => ({ ...char, status, statusMessage }))
-  }
-
   handleCommand(command: ServerCommand) {
     matchCommand(command, {
       LIS: ({ characters }) => {
-        const newCharacters: Mutable<Dict<Character>> = {}
+        const newCharacters: { [name: string]: Character } = {}
         for (const [name, gender, status, statusMessage] of characters) {
           newCharacters[name] = { name, gender, status, statusMessage }
         }
-        this.setItems(newCharacters)
+        this.merge(newCharacters)
       },
 
       NLN: ({ identity: name, gender, status }) => {
-        this.setGender(name, gender)
-        this.setStatus(name, status, "")
+        this.updateItem(name, (char) => ({
+          ...char,
+          gender,
+          status,
+          statusMessage: "",
+        }))
       },
 
       FLN: ({ character: name }) => {
-        this.setStatus(name, "offline", "")
+        this.updateItem(name, (char) => ({
+          ...char,
+          status: "offline",
+          statusMessage: "",
+        }))
       },
 
       STA: ({ character: name, status, statusmsg }) => {
-        this.setStatus(name, status, statusmsg)
+        this.updateItem(name, (char) => ({
+          ...char,
+          status,
+          statusMessage: statusmsg,
+        }))
       },
     })
   }
+}
+
+export const {
+  Provider: CharacterStoreProvider,
+  useValue: useCharacterStore,
+  useOptionalValue: useOptionalCharacterStore,
+} = createSimpleContext<CharacterStore>("CharacterStore")
+
+export function useCharacter(name: string): Character {
+  const store = useCharacterStore()
+  return useStoreSelect(store, () => store.getItemWithFallback(name))
 }

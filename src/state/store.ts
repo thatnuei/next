@@ -19,7 +19,7 @@ export abstract class Store<State> extends Emitter<Readonly<State>> {
   protected set state(value: Readonly<State>) {
     if (this._state === value) return
     this._state = value
-    this.queueEmit(this._state)
+    this.emit(this._state)
   }
 
   protected merge(newProperties: Partial<State>): void {
@@ -32,17 +32,15 @@ export abstract class Store<State> extends Emitter<Readonly<State>> {
 }
 
 export abstract class DictStore<Value> extends Store<Dict<Value>> {
-  constructor(private readonly fallback: (key: string) => Value) {
+  constructor(readonly fallback: (key: string) => Value) {
     super({})
   }
 
-  getItem(key: string): Value {
-    const value = this.state[key] ?? this.fallback(key)
-    this.setItem(key, value)
-    return value
+  getItemWithFallback(key: string): Value {
+    return this.state[key] ?? this.fallback(key)
   }
 
-  protected setItem(key: string, value: Value): void {
+  setItem(key: string, value: Value): void {
     if (this.state[key] === value) return
     this.state = { ...this.state, [key]: value }
   }
@@ -59,8 +57,6 @@ export abstract class DictStore<Value> extends Store<Dict<Value>> {
     this.setItem(key, getNewItem(currentItem))
   }
 }
-
-type IsEqualFn = (a: unknown, b: unknown) => boolean
 
 export function useStoreSelect<State, Selected>(
   store: Store<State>,
@@ -87,3 +83,5 @@ export function useStoreKey<
 >(store: Store<State>, key: Key): Readonly<State[Key]> {
   return useStoreSelect(store, (state) => state[key])
 }
+
+type IsEqualFn = (a: unknown, b: unknown) => boolean

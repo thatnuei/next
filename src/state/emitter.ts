@@ -2,7 +2,6 @@ import { useEffect } from "react"
 
 export class Emitter<Value> {
   private listeners = new Set<Listener<Value>>()
-  private callbackId: number | undefined = undefined
 
   listen(listener: Listener<Value>) {
     this.listeners.add(listener)
@@ -15,16 +14,6 @@ export class Emitter<Value> {
     for (const listener of this.listeners) {
       listener(value)
     }
-  }
-
-  queueEmit(value: Value) {
-    if (this.callbackId !== undefined) {
-      cancelIdleCallback(this.callbackId)
-    }
-
-    this.callbackId = requestIdleCallback(() => {
-      this.emit(value)
-    })
   }
 }
 
