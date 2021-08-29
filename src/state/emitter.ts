@@ -1,10 +1,8 @@
 import { useEffect } from "react"
 
-const noValue = Symbol("noValue")
-
 export class Emitter<Value> {
   private listeners = new Set<Listener<Value>>()
-  private queuedEmit: Value | typeof noValue = noValue
+  private callbackId: number | undefined = undefined
 
   listen(listener: Listener<Value>) {
     this.listeners.add(listener)
@@ -14,15 +12,18 @@ export class Emitter<Value> {
   }
 
   emit(value: Value) {
-    this.listeners.forEach((listener) => listener(value))
+    for (const listener of this.listeners) {
+      listener(value)
+    }
   }
 
   queueEmit(value: Value) {
-    this.queuedEmit = value
-    queueMicrotask(() => {
-      if (this.queuedEmit === noValue) return
-      this.emit(this.queuedEmit)
-      this.queuedEmit = noValue
+    if (this.callbackId !== undefined) {
+      cancelIdleCallback(this.callbackId)
+    }
+
+    this.callbackId = requestIdleCallback(() => {
+      this.emit(value)
     })
   }
 }
