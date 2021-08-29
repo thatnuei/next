@@ -1,87 +1,99 @@
-import type { Draft } from "immer"
-import produce from "immer"
-import { useState } from "react"
-import type { Dict } from "../common/types"
-import { Emitter, useEmitterListener } from "./emitter"
+import { useEffect, useState } from "react"
+import type { Emitter } from "./emitter"
+import { createEmitter } from "./emitter"
 
-export abstract class Store<State> extends Emitter<Readonly<State>> {
-  private _state: Readonly<State>
-
-  constructor(state: Readonly<State>) {
-    super()
-    this._state = state
-  }
-
-  get state(): Readonly<State> {
-    return this._state
-  }
-
-  protected set state(value: Readonly<State>) {
-    if (this._state === value) return
-    this._state = value
-    this.emit(this._state)
-  }
-
-  protected merge(newProperties: Partial<State>): void {
-    this.state = { ...this.state, ...newProperties }
-  }
-
-  protected update(recipe: (state: Draft<State>) => void): void {
-    this.state = produce(this.state, recipe)
-  }
+export interface Store<Value>
+  extends Pick<Emitter<Value>, "listen" | "useListener"> {
+  get value(): Value
+  useValue(isEqual?: isEqualFn): Value
 }
 
-export abstract class DictStore<Value> extends Store<Dict<Value>> {
-  constructor(readonly fallback: (key: string) => Value) {
-    super({})
-  }
-
-  getItemWithFallback(key: string): Value {
-    return this.state[key] ?? this.fallback(key)
-  }
-
-  setItem(key: string, value: Value): void {
-    if (this.state[key] === value) return
-    this.state = { ...this.state, [key]: value }
-  }
-
-  protected setItems(items: Dict<Value>): void {
-    this.state = { ...this.state, ...items }
-  }
-
-  protected updateItem(
-    key: string,
-    getNewItem: (oldItem: Value) => Value,
-  ): void {
-    const currentItem = this.state[key] ?? this.fallback(key)
-    this.setItem(key, getNewItem(currentItem))
-  }
+export interface WritableStore<Value> extends Store<Value> {
+  set(state: Value): void
+  update(fn: (oldState: Value) => Value): void
+  merge(state: Partial<Value>): void
+  derived<Derived>(getDerivedValue: (state: Value) => Derived): Store<Derived>
 }
 
-export function useStoreSelect<State, Selected>(
-  store: Store<State>,
-  select: (value: Readonly<State>) => Selected,
-  isEqual: IsEqualFn = Object.is,
-): Readonly<Selected> {
-  const [state, setState] = useState(select(store.state))
-  useEmitterListener(store, (state) => {
-    const newState = select(state)
-    if (!isEqual(state, newState)) {
-      setState(newState)
-    }
-  })
-  return state
+type isEqualFn = (a: unknown, b: unknown) => boolean
+
+export function createStore<Value>(value: Value): WritableStore<Value> {
+  const emitter = createEmitter<Value>()
+
+  const store: WritableStore<Value> = {
+    ...emitter,
+
+    get value() {
+      return value
+    },
+
+    set: (newState) => {
+      value = newState
+      emitter.emit(value)
+    },
+
+    update: (fn) => {
+      store.set(fn(value))
+    },
+
+    merge: (newState) => {
+      store.set({ ...value, ...newState })
+    },
+
+    derived: (getDerivedValue) => {
+      return createDerivedStore(store, getDerivedValue)
+    },
+
+    useValue(isEqual = Object.is) {
+      const [state, setState] = useState(store.value)
+
+      useEffect(() => {
+        return emitter.listen((newState) => {
+          if (!isEqual(newState, state)) {
+            setState(newState)
+          }
+        })
+      })
+
+      return state
+    },
+  }
+
+  return store
 }
 
-export function useStoreState<State>(store: Store<State>): Readonly<State> {
-  return useStoreSelect(store, (state) => state)
-}
+function createDerivedStore<Value, Derived>(
+  source: Store<Value>,
+  getDerivedValue: (value: Value) => Derived,
+): Store<Derived> {
+  const store: Store<Derived> = {
+    get value() {
+      return getDerivedValue(source.value)
+    },
 
-export function useStoreKey<
-  State extends Record<string, unknown>,
-  Key extends keyof State,
->(store: Store<State>, key: Key): Readonly<State[Key]> {
-  return useStoreSelect(store, (state) => state[key])
-}
+    listen(listener) {
+      return source.listen((value) => listener(getDerivedValue(value)))
+    },
 
-type IsEqualFn = (a: unknown, b: unknown) => boolean
+    useListener(listener) {
+      useEffect(() => store.listen(listener))
+    },
+
+    useValue(isEqual = Object.is) {
+      const [state, setState] = useState(store.value)
+
+      useEffect(() => {
+        return source.listen((sourceState) => {
+          const newState = getDerivedValue(sourceState)
+          if (!isEqual(newState, state)) {
+            setState(newState)
+          }
+        })
+      })
+
+      return state
+    },
+  }
+
+  return store
+}

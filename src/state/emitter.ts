@@ -1,29 +1,36 @@
 import { useEffect } from "react"
 
-export class Emitter<Value> {
-  private listeners = new Set<Listener<Value>>()
-
-  listen(listener: Listener<Value>) {
-    this.listeners.add(listener)
-    return () => {
-      this.listeners.delete(listener)
-    }
-  }
-
-  emit(value: Value) {
-    for (const listener of this.listeners) {
-      listener(value)
-    }
-  }
-}
-
 export type Listener<Value> = (value: Value) => void
 
 export type Unlisten = () => void
 
-export function useEmitterListener<Value>(
-  emitter: Emitter<Value>,
-  listener: Listener<Value>,
-) {
-  useEffect(() => emitter.listen(listener))
+export interface Emitter<Value> {
+  listen(listener: Listener<Value>): Unlisten
+  emit(value: Value): void
+  useListener(listener: Listener<Value>): void
+}
+
+export function createEmitter<Value>(): Emitter<Value> {
+  const listeners = new Set<Listener<Value>>()
+
+  const emitter: Emitter<Value> = {
+    listen(listener) {
+      listeners.add(listener)
+      return () => {
+        listeners.delete(listener)
+      }
+    },
+
+    emit(value) {
+      for (const listener of listeners) {
+        listener(value)
+      }
+    },
+
+    useListener(listener) {
+      useEffect(() => emitter.listen(listener))
+    },
+  }
+
+  return emitter
 }

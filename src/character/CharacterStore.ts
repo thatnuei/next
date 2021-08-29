@@ -1,55 +1,69 @@
+import produce from "immer"
+import type { Dict } from "../common/types"
 import { createSimpleContext } from "../react/createSimpleContext"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
-import { DictStore, useStoreSelect } from "../state/store"
+import { createStore } from "../state/store"
 import type { Character } from "./types"
 
-export class CharacterStore extends DictStore<Character> {
-  constructor() {
-    super((name) => ({
-      name,
-      gender: "None",
-      status: "offline",
-      statusMessage: "",
-    }))
+type CharacterStore = ReturnType<typeof createCharacterStore>
+
+const createCharacter = (name: string): Character => ({
+  name,
+  gender: "None",
+  status: "offline",
+  statusMessage: "",
+})
+
+export function createCharacterStore() {
+  const characters = createStore<Dict<Character>>({})
+
+  const store = {
+    characters,
+    handleCommand(command: ServerCommand) {
+      matchCommand(command, {
+        LIS: (params) => {
+          const newCharacters: { [name: string]: Character } = {}
+          // prettier-ignore
+          for (const [name, gender, status, statusMessage] of params.characters) {
+            newCharacters[name] = { name, gender, status, statusMessage }
+          }
+          characters.merge(newCharacters)
+        },
+
+        NLN: ({ identity: name, gender, status }) => {
+          characters.update(
+            produce((characters) => {
+              const char = (characters[name] ??= createCharacter(name))
+              char.gender = gender
+              char.status = status
+              char.statusMessage = ""
+            }),
+          )
+        },
+
+        FLN: ({ character: name }) => {
+          characters.update(
+            produce((characters) => {
+              delete characters[name]
+            }),
+          )
+        },
+
+        STA: ({ character: name, status, statusmsg }) => {
+          characters.update(
+            produce((characters) => {
+              const char = (characters[name] ??= createCharacter(name))
+              char.status = status
+              char.statusMessage = statusmsg
+            }),
+          )
+        },
+      })
+    },
   }
 
-  handleCommand(command: ServerCommand) {
-    matchCommand(command, {
-      LIS: ({ characters }) => {
-        const newCharacters: { [name: string]: Character } = {}
-        for (const [name, gender, status, statusMessage] of characters) {
-          newCharacters[name] = { name, gender, status, statusMessage }
-        }
-        this.merge(newCharacters)
-      },
-
-      NLN: ({ identity: name, gender, status }) => {
-        this.updateItem(name, (char) => ({
-          ...char,
-          gender,
-          status,
-          statusMessage: "",
-        }))
-      },
-
-      FLN: ({ character: name }) => {
-        this.updateItem(name, (char) => ({
-          ...char,
-          status: "offline",
-          statusMessage: "",
-        }))
-      },
-
-      STA: ({ character: name, status, statusmsg }) => {
-        this.updateItem(name, (char) => ({
-          ...char,
-          status,
-          statusMessage: statusmsg,
-        }))
-      },
-    })
-  }
+  return store
 }
 
 export const {
@@ -60,5 +74,8 @@ export const {
 
 export function useCharacter(name: string): Character {
   const store = useCharacterStore()
-  return useStoreSelect(store, () => store.getItemWithFallback(name))
+  return (
+    store.characters.derived((state) => state[name]).useValue() ??
+    createCharacter(name)
+  )
 }

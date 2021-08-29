@@ -3,17 +3,15 @@ import type { ReactNode } from "react"
 import { useEffect, useState } from "react"
 import ChannelView from "../channel/ChannelView"
 import {
-  CharacterStore,
   CharacterStoreProvider,
+  createCharacterStore,
 } from "../character/CharacterStore"
 import type { AuthUser } from "../flist/types"
 import ChatLogBrowser from "../logging/ChatLogBrowser"
 import NotificationListScreen from "../notifications/NotificationListScreen"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import type { Route } from "../router"
-import { SocketStore } from "../socket/SocketStore"
-import { useEmitterListener } from "../state/emitter"
-import { useStoreKey } from "../state/store"
+import { createSocketStore, SocketStoreProvider } from "../socket/SocketStore"
 import ChatNav from "./ChatNav"
 import ConnectionGuard from "./ConnectionGuard"
 import NoRoomView from "./NoRoomView"
@@ -29,14 +27,12 @@ export default function Chat({
   onChangeCharacter: () => void
   onLogout: () => void
 }) {
-  const [socket] = useState(() => new SocketStore())
-  const [characterStore] = useState(() => new CharacterStore())
+  const [socket] = useState(createSocketStore)
 
-  const status = useStoreKey(socket, "status")
+  const [characterStore] = useState(createCharacterStore)
+  socket.commands.useListener(characterStore.handleCommand)
 
-  useEmitterListener(socket.commands, (command) =>
-    characterStore.handleCommand(command),
-  )
+  const status = socket.status.useValue()
 
   useEffect(() => {
     socket.connect(() => {
@@ -54,26 +50,28 @@ export default function Chat({
 
   return (
     <CharacterStoreProvider value={characterStore}>
-      <ConnectionGuard status={status} onLogout={onLogout}>
-        <div className="flex flex-row h-full gap-1">
-          <div className="hidden md:block">
-            <ChatNav identity={identity} onLogout={onChangeCharacter} />
-          </div>
+      <SocketStoreProvider value={socket}>
+        <ConnectionGuard status={status} onLogout={onLogout}>
+          <div className="flex flex-row h-full gap-1">
+            <div className="hidden md:block">
+              <ChatNav identity={identity} onLogout={onChangeCharacter} />
+            </div>
 
-          {/* <StalenessState
+            {/* <StalenessState
             className="flex-1 min-w-0 overflow-y-auto"
             isStale={route !== deferredRoute}
           >
             <ChatRoutes route={deferredRoute} />
           </StalenessState> */}
-        </div>
-      </ConnectionGuard>
+          </div>
+        </ConnectionGuard>
 
-      {/* <ChatCommandHandlers />
+        {/* <ChatCommandHandlers />
       <SystemNotificationsHandler />
       <StatusRestorationEffect /> */}
 
-      {/* {import.meta.env.DEV && <DevTools />} */}
+        {/* {import.meta.env.DEV && <DevTools />} */}
+      </SocketStoreProvider>
     </CharacterStoreProvider>
   )
 }
