@@ -18,16 +18,17 @@ function CharacterSummary({
   const gender = useStoreSelect(store, (state) => state[name]?.gender) ?? "None"
   const nickname = useNickname(name)
   return (
-    <div className="grid gap-3">
+    <div className="grid">
       <ExternalLink
         href={getProfileUrl(name)}
         style={{ color: genderColors[gender] }}
+        className="mb-3"
       >
         <div className={headerText2}>{nickname || name}</div>
         {nickname ? <div className="text-sm">{name}</div> : null}
       </ExternalLink>
 
-      <ExternalLink href={getProfileUrl(name)}>
+      <ExternalLink href={getProfileUrl(name)} className="mb-2">
         <Avatar name={name} />
       </ExternalLink>
 

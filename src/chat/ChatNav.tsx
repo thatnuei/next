@@ -15,8 +15,8 @@ export default function ChatNav({
   onLogout: () => void
 }) {
   return (
-    <nav className={`flex h-full bg-midnight-2`}>
-      <div className={`flex flex-col`}>
+    <nav className="grid h-full grid-cols-[auto,15rem] gap-y-1 bg-midnight-2">
+      <div className="flex flex-col">
         {/* <Modal
           title="Channel Browser"
           renderContent={() => <ChannelBrowser />}
@@ -105,11 +105,15 @@ export default function ChatNav({
           <ChatNavAction icon={<Icon which={icons.logout} />} name="Log out" />
         </Button>
       </div>
-      <div className={`flex flex-col w-56 overflow-y-auto bg-midnight-1`}>
-        <div className={`p-2 mb-1 bg-midnight-0`}>
+
+      <div className="grid grid-rows-[auto,1fr] gap-1 overflow-y-auto">
+        <div className="p-2 bg-midnight-0">
           <CharacterSummary store={characterStore} name={identity} />
         </div>
-        <div className={`flex-1`}>{/* <RoomTabList /> */}</div>
+
+        <div className="bg-midnight-1" style={{ height: "200vh" }}>
+          room tabs
+        </div>
       </div>
     </nav>
   )

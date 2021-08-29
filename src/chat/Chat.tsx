@@ -48,9 +48,6 @@ export default function Chat({
     }
   }, [identity, initialUser.account, initialUser.ticket, socket])
 
-  // const route = useRoute()
-  // const deferredRoute = useDeferredValue(route)
-
   return (
     <>
       <ConnectionGuard status={status} onLogout={onLogout}>
@@ -62,6 +59,7 @@ export default function Chat({
               onLogout={onChangeCharacter}
             />
           </div>
+
           {/* <StalenessState
             className="flex-1 min-w-0 overflow-y-auto"
             isStale={route !== deferredRoute}
@@ -70,9 +68,11 @@ export default function Chat({
           </StalenessState> */}
         </div>
       </ConnectionGuard>
+
       {/* <ChatCommandHandlers />
       <SystemNotificationsHandler />
       <StatusRestorationEffect /> */}
+
       {/* {import.meta.env.DEV && <DevTools />} */}
     </>
   )
