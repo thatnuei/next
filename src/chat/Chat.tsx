@@ -43,7 +43,7 @@ export default function Chat({
 
   const logger = useChatLogger()
 
-  const [characterStore] = useState(() => createCharacterStore(api))
+  const [characterStore] = useState(() => createCharacterStore(api, identity))
   socket.commands.useListener(characterStore.handleCommand)
 
   const [privateChatStore] = useState(() =>
