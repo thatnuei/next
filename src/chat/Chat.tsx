@@ -6,6 +6,7 @@ import {
   CharacterStoreProvider,
   createCharacterStore,
 } from "../character/CharacterStore"
+import { createFListApi, FListApiProvider } from "../flist/api"
 import type { AuthUser } from "../flist/types"
 import ChatLogBrowser from "../logging/ChatLogBrowser"
 import NotificationListScreen from "../notifications/NotificationListScreen"
@@ -28,17 +29,18 @@ export default function Chat({
   onLogout: () => void
 }) {
   const [socket] = useState(createSocketStore)
-
-  const [characterStore] = useState(createCharacterStore)
-  socket.commands.useListener(characterStore.handleCommand)
-
   const status = socket.status.useValue()
+
+  const [api] = useState(() => createFListApi(initialUser))
+
+  const [characterStore] = useState(() => createCharacterStore(api))
+  socket.commands.useListener(characterStore.handleCommand)
 
   useEffect(() => {
     socket.connect(() => {
       return Promise.resolve({
-        account: initialUser.account,
-        ticket: initialUser.ticket,
+        account: api.user.account,
+        ticket: api.user.ticket,
         character: identity,
       })
     })
@@ -46,31 +48,33 @@ export default function Chat({
     return () => {
       socket.disconnect()
     }
-  }, [identity, initialUser.account, initialUser.ticket, socket])
+  }, [api.user.account, api.user.ticket, identity, socket])
 
   return (
     <CharacterStoreProvider value={characterStore}>
       <SocketStoreProvider value={socket}>
-        <ConnectionGuard status={status} onLogout={onLogout}>
-          <div className="flex flex-row h-full gap-1">
-            <div className="hidden md:block">
-              <ChatNav identity={identity} onLogout={onChangeCharacter} />
-            </div>
+        <FListApiProvider value={api}>
+          <ConnectionGuard status={status} onLogout={onLogout}>
+            <div className="flex flex-row h-full gap-1">
+              <div className="hidden md:block">
+                <ChatNav identity={identity} onLogout={onChangeCharacter} />
+              </div>
 
-            {/* <StalenessState
+              {/* <StalenessState
             className="flex-1 min-w-0 overflow-y-auto"
             isStale={route !== deferredRoute}
           >
             <ChatRoutes route={deferredRoute} />
           </StalenessState> */}
-          </div>
-        </ConnectionGuard>
+            </div>
+          </ConnectionGuard>
 
-        {/* <ChatCommandHandlers />
+          {/* <ChatCommandHandlers />
       <SystemNotificationsHandler />
       <StatusRestorationEffect /> */}
 
-        {/* {import.meta.env.DEV && <DevTools />} */}
+          {/* {import.meta.env.DEV && <DevTools />} */}
+        </FListApiProvider>
       </SocketStoreProvider>
     </CharacterStoreProvider>
   )

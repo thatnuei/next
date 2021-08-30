@@ -1,10 +1,14 @@
 import produce from "immer"
-import type { Dict } from "../common/types"
+import { isEqual, omit } from "lodash-es"
+import { isTruthy } from "../common/isTruthy"
+import { truthyMap } from "../common/truthyMap"
+import type { Dict, TruthyMap } from "../common/types"
+import type { FListApi } from "../flist/api"
 import { createSimpleContext } from "../react/createSimpleContext"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { createStore } from "../state/store"
-import type { Character } from "./types"
+import type { Character, Friendship } from "./types"
 
 type CharacterStore = ReturnType<typeof createCharacterStore>
 
@@ -15,13 +19,61 @@ const createCharacter = (name: string): Character => ({
   statusMessage: "",
 })
 
-export function createCharacterStore() {
+export function createCharacterStore(api: FListApi) {
   const characters = createStore<Dict<Character>>({})
+  const friendships = createStore<readonly Friendship[]>([])
+  const bookmarks = createStore<TruthyMap>({})
+  const ignores = createStore<TruthyMap>({})
+  const admins = createStore<TruthyMap>({})
 
   const store = {
     characters,
+    friendships,
+    bookmarks,
+    ignores,
+    admins,
+
     handleCommand(command: ServerCommand) {
       matchCommand(command, {
+        async IDN() {
+          const result = await api.getFriendsAndBookmarks()
+
+          const friends = result.friendlist.map((entry) => ({
+            us: entry.source,
+            them: entry.dest,
+          }))
+
+          friendships.set(friends)
+          bookmarks.set(truthyMap(result.bookmarklist))
+        },
+
+        IGN(params) {
+          if (params.action === "init" || params.action === "list") {
+            ignores.set(truthyMap(params.characters))
+          }
+          if (params.action === "add") {
+            ignores.update((prev) => ({
+              ...prev,
+              [params.character]: true,
+            }))
+          }
+          if (params.action === "delete") {
+            ignores.update((prev) => omit(prev, [params.character]))
+          }
+        },
+
+        ADL({ ops }) {
+          admins.set(truthyMap(ops))
+        },
+
+        AOP({ character }) {
+          admins.update((admins) => ({ ...admins, [character]: true }))
+        },
+
+        DOP({ character }) {
+          admins.update((admins) => omit(admins, [character]))
+        },
+
         LIS: (params) => {
           const newCharacters: { [name: string]: Character } = {}
           // prettier-ignore
@@ -75,7 +127,17 @@ export const {
 export function useCharacter(name: string): Character {
   const store = useCharacterStore()
   return (
-    store.characters.derived((state) => state[name]).useValue() ??
+    store.characters.select((state) => state[name]).useValue() ??
     createCharacter(name)
   )
+}
+
+export function useCharacters(names: string[]) {
+  const store = useCharacterStore()
+
+  return store.characters
+    .select((characters) =>
+      names.map((name) => characters[name]).filter(isTruthy),
+    )
+    .useValue(isEqual)
 }

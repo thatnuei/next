@@ -1,9 +1,9 @@
 import clsx from "clsx"
 import { memo } from "react"
 import CharacterMenuTarget from "./CharacterMenuTarget"
+import { useCharacter } from "./CharacterStore"
 import { genderColors, statusColors } from "./colors"
 import { useNickname } from "./nicknames"
-import { useCharacter } from "./state"
 
 type Props = {
   name: string

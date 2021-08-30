@@ -1,8 +1,11 @@
 import CharacterSummary from "../character/CharacterSummary"
+import OnlineUsers from "../character/OnlineUsers"
 import ChatNavAction from "../chat/ChatNavAction"
 import Button from "../dom/Button"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
+import Modal from "../ui/Modal"
+import ChatNavActionButton from "./ChatNavActionButton"
 
 export default function ChatNav({
   identity,
@@ -14,18 +17,6 @@ export default function ChatNav({
   return (
     <nav className="grid h-full grid-cols-[auto,15rem] gap-y-1 bg-midnight-2">
       <div className="flex flex-col">
-        {/* <Modal
-          title="Channel Browser"
-          renderContent={() => <ChannelBrowser />}
-          renderTrigger={(t) => (
-            <ChatNavActionButton
-              icon={<Icon which={icons.list} />}
-              name="Browse channels"
-              {...t}
-            />
-          )}
-        />
-
         <Modal
           title="Online Users"
           renderTrigger={(t) => (
@@ -41,6 +32,19 @@ export default function ChatNav({
             </div>
           )}
         />
+
+        {/* <Modal
+          title="Channel Browser"
+          renderContent={() => <ChannelBrowser />}
+          renderTrigger={(t) => (
+            <ChatNavActionButton
+              icon={<Icon which={icons.list} />}
+              name="Browse channels"
+              {...t}
+            />
+          )}
+        />
+
 
         <Modal
           title="Status update"

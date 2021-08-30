@@ -1,19 +1,16 @@
 import clsx from "clsx"
-import { atom, useAtom } from "jotai"
-import { sortBy } from "lodash-es"
+import { sortBy, uniq } from "lodash-es"
+import { matchSorter } from "match-sorter"
 import type { ReactNode } from "react"
 import { useDeferredValue } from "react"
 import TextInput from "../dom/TextInput"
+import { createStore } from "../state/store"
 import { input } from "../ui/components"
 import Icon from "../ui/Icon"
 import { bookmark, heart } from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import CharacterName from "./CharacterName"
-import {
-  useBookmarkCharacters,
-  useFriendCharacters,
-  useSearchedCharacters,
-} from "./state"
+import { useCharacters, useCharacterStore } from "./CharacterStore"
 import type { Character } from "./types"
 
 type ListItem = {
@@ -23,14 +20,30 @@ type ListItem = {
   icon?: ReactNode
 }
 
-const searchAtom = atom("")
+const searchStore = createStore("")
 
 export default function OnlineUsers() {
-  const friends = useFriendCharacters()
-  const bookmarks = useBookmarkCharacters()
+  const store = useCharacterStore()
 
-  const [search, setSearch] = useAtom(searchAtom)
-  const searchedCharacters = useSearchedCharacters(searchAtom)
+  const friends = useCharacters(
+    store.friendships
+      .select((friendships) => uniq(friendships.map((f) => f.them)))
+      .useValue(),
+  )
+
+  const bookmarks = useCharacters(
+    store.bookmarks.select((bookmarks) => Object.keys(bookmarks)).useValue(),
+  )
+
+  const search = searchStore.useValue()
+
+  const searchedCharacters = store.characters
+    .select((characters) => {
+      return matchSorter(Object.values(characters), search, {
+        keys: ["name", "gender", "status"],
+      })
+    })
+    .useValue()
 
   const sortByName = (characters: readonly Character[]) =>
     sortBy(characters, (character) => character.name.toLowerCase())
@@ -41,7 +54,7 @@ export default function OnlineUsers() {
       type: "friend",
       containerClassName: "bg-green-400/10",
       icon: (
-        <span className="opacity-50 text-green-300">
+        <span className="text-green-300 opacity-50">
           <Icon which={heart} />
         </span>
       ),
@@ -53,7 +66,7 @@ export default function OnlineUsers() {
       type: "bookmark",
       containerClassName: "bg-blue-400/10",
       icon: (
-        <span className="opacity-50 text-blue-300">
+        <span className="text-blue-300 opacity-50">
           <Icon which={bookmark} />
         </span>
       ),
@@ -90,18 +103,18 @@ export default function OnlineUsers() {
         />
       </section>
 
-      <p className="text-sm text-center opacity-50 p-2 italic">
+      <p className="p-2 text-sm italic text-center opacity-50">
         {listItems.length || "No"} result(s)
       </p>
 
-      <section className="flex flex-row space-x-2 bg-midnight-0 p-2">
+      <section className="flex flex-row p-2 space-x-2 bg-midnight-0">
         <TextInput
           type="text"
           aria-label="Search"
           placeholder="Enter a character name, or try 'looking' or 'female'"
           className={clsx(input, `flex-1`)}
           value={search}
-          onChangeText={setSearch}
+          onChangeText={searchStore.set}
           ref={(input) => input?.focus()}
         />
       </section>

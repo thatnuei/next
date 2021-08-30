@@ -2,18 +2,18 @@ import clsx from "clsx"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import TextInput from "../dom/TextInput"
+import { useFListApi } from "../flist/api"
 import { getProfileUrl } from "../flist/helpers"
 import { usePrivateChatActions } from "../privateChat/state"
 import { routes } from "../router"
-import { useSocketActions } from "../socket/SocketConnection"
+import { useSocketStoreContext } from "../socket/SocketStore"
 import { input } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import { useUserActions } from "../user"
 import CharacterMemoInput from "./CharacterMemoInput"
+import { useCharacterStore } from "./CharacterStore"
 import CharacterSummary from "./CharacterSummary"
 import { useNickname, useSetNickname } from "./nicknames"
-import { useCharacterRoles } from "./state"
 
 const menuItemClass = clsx`
   p-2 
@@ -23,9 +23,12 @@ const menuItemClass = clsx`
 `
 
 export default function CharacterMenu({ name }: { name: string }) {
-  const { friendships, isBookmarked, isIgnored } = useCharacterRoles(name)
-  const { send } = useSocketActions()
-  const { addBookmark, removeBookmark } = useUserActions()
+  const socket = useSocketStoreContext()
+  const api = useFListApi()
+  const characterStore = useCharacterStore()
+  const friendships = characterStore.friendships.useValue()
+  const isBookmarked = characterStore.bookmarks.useValue()[name] ?? false
+  const isIgnored = characterStore.ignores.useValue()[name] ?? false
   const privateChatActions = usePrivateChatActions(name)
 
   return (
@@ -69,9 +72,9 @@ export default function CharacterMenu({ name }: { name: string }) {
           aria-checked={isBookmarked}
           onClick={() => {
             if (isBookmarked) {
-              removeBookmark({ name }).catch(console.error) // show error toast
+              api.removeBookmark({ name }).catch(console.error) // show error toast
             } else {
-              addBookmark({ name }).catch(console.error) // show error toast
+              api.addBookmark({ name }).catch(console.error) // show error toast
             }
           }}
         >
@@ -84,7 +87,7 @@ export default function CharacterMenu({ name }: { name: string }) {
           role="checkbox"
           aria-checked={isIgnored}
           onClick={() => {
-            send({
+            socket.send({
               type: "IGN",
               params: {
                 action: isIgnored ? "delete" : "add",
@@ -98,14 +101,14 @@ export default function CharacterMenu({ name }: { name: string }) {
         </Button>
       </div>
 
-      <div className="space-y-2 bg-midnight-0 p-2">
+      <div className="p-2 space-y-2 bg-midnight-0">
         <details>
-          <summary className="cursor-pointer text-sm select-none">Memo</summary>
+          <summary className="text-sm cursor-pointer select-none">Memo</summary>
           <CharacterMemoInput name={name} />
         </details>
 
         <details>
-          <summary className="cursor-pointer text-sm select-none">
+          <summary className="text-sm cursor-pointer select-none">
             Nickname
           </summary>
           <p className="my-1 text-xs">

@@ -1,3 +1,4 @@
+import { isEqual as isDeepEqual } from "lodash-es"
 import { useEffect, useState } from "react"
 import type { Emitter } from "./emitter"
 import { createEmitter } from "./emitter"
@@ -12,7 +13,7 @@ export interface WritableStore<Value> extends Store<Value> {
   set(state: Value): void
   update(fn: (oldState: Value) => Value): void
   merge(state: Partial<Value>): void
-  derived<Derived>(getDerivedValue: (state: Value) => Derived): Store<Derived>
+  select<Derived>(getDerivedValue: (state: Value) => Derived): Store<Derived>
 }
 
 type isEqualFn = (a: unknown, b: unknown) => boolean
@@ -40,11 +41,11 @@ export function createStore<Value>(value: Value): WritableStore<Value> {
       store.set({ ...value, ...newState })
     },
 
-    derived: (getDerivedValue) => {
+    select: (getDerivedValue) => {
       return createDerivedStore(store, getDerivedValue)
     },
 
-    useValue(isEqual = Object.is) {
+    useValue(isEqual = isDeepEqual) {
       const [state, setState] = useState(store.value)
 
       useEffect(() => {

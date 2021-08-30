@@ -1,15 +1,15 @@
 import { debounce } from "lodash-es"
 import { useEffect, useMemo, useState } from "react"
+import { useFListApi } from "../flist/api"
 import type { TagProps } from "../jsx/types"
 import { input } from "../ui/components"
-import { useUserActions } from "../user"
 
 type Props = {
   name: string
 } & TagProps<"textarea">
 
 export default function CharacterMemoInput({ name, ...props }: Props) {
-  const { getMemo, setMemo } = useUserActions()
+  const api = useFListApi()
 
   type State =
     | { status: "loading" }
@@ -23,7 +23,8 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
 
     let cancelled = false
 
-    getMemo({ name })
+    api
+      .getMemo({ name })
       .then((memo): State => ({ status: "editing", memo }))
       .catch((): State => ({ status: "error" }))
       .then((state) => {
@@ -35,14 +36,14 @@ export default function CharacterMemoInput({ name, ...props }: Props) {
     return () => {
       cancelled = true
     }
-  }, [getMemo, name])
+  }, [api, name])
 
   const saveMemoDebounced = useMemo(() => {
     const saveMemo = (memo: string) => {
-      setMemo({ name, note: memo }).catch(console.warn)
+      api.setMemo({ name, note: memo }).catch(console.warn)
     }
     return debounce(saveMemo, 800)
-  }, [name, setMemo])
+  }, [api, name])
 
   function handleChange(memo: string) {
     if (state.status === "editing") {
