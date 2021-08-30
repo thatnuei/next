@@ -115,7 +115,6 @@ export default function OnlineUsers() {
           className={clsx(input, `flex-1`)}
           value={search}
           onChangeText={searchStore.set}
-          ref={(input) => input?.focus()}
         />
       </section>
     </div>
