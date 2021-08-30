@@ -28,8 +28,10 @@ export default function CharacterMenu({ name }: { name: string }) {
   const api = useFListApi()
   const characterStore = useCharacterStore()
   const friendships = useStoreValue(characterStore.friendships)
-  const isBookmarked = useStoreValue(characterStore.bookmarks)[name] ?? false
-  const isIgnored = useStoreValue(characterStore.ignores)[name] ?? false
+  const isBookmarked = useStoreValue(
+    characterStore.bookmarks.selectMaybeItem(name),
+  )
+  const isIgnored = useStoreValue(characterStore.ignores.selectMaybeItem(name))
   const privateChatStore = usePrivateChatStore()
 
   return (
