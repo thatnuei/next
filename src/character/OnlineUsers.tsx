@@ -2,9 +2,9 @@ import clsx from "clsx"
 import { sortBy, uniq } from "lodash-es"
 import { matchSorter } from "match-sorter"
 import type { ReactNode } from "react"
-import { useDeferredValue } from "react"
+import { useDeferredValue, useMemo } from "react"
 import TextInput from "../dom/TextInput"
-import { createStore } from "../state/store"
+import { createStore, useStoreValue } from "../state/store"
 import { input } from "../ui/components"
 import Icon from "../ui/Icon"
 import { bookmark, heart } from "../ui/icons"
@@ -26,59 +26,66 @@ export default function OnlineUsers() {
   const store = useCharacterStore()
 
   const friends = useCharacters(
-    store.friendships
-      .select((friendships) => uniq(friendships.map((f) => f.them)))
-      .useValue(),
+    useStoreValue(
+      store.friendships.select((friendships) =>
+        uniq(friendships.map((f) => f.them)),
+      ),
+    ),
   )
 
   const bookmarks = useCharacters(
-    store.bookmarks.select((bookmarks) => Object.keys(bookmarks)).useValue(),
+    useStoreValue(
+      store.bookmarks.select((bookmarks) => Object.keys(bookmarks)),
+    ),
   )
 
-  const search = searchStore.useValue()
+  const search = useStoreValue(searchStore)
 
-  const searchedCharacters = store.characters
-    .select((characters) => {
+  const searchedCharacters = useStoreValue(
+    store.characters.select((characters) => {
+      if (!search.trim()) return []
       return matchSorter(Object.values(characters), search, {
         keys: ["name", "gender", "status"],
       })
-    })
-    .useValue()
+    }),
+  )
 
   const sortByName = (characters: readonly Character[]) =>
     sortBy(characters, (character) => character.name.toLowerCase())
 
-  const getFriendItems = (): ListItem[] =>
-    sortByName(friends).map((character) => ({
-      character,
-      type: "friend",
-      containerClassName: "bg-green-400/10",
-      icon: (
-        <span className="text-green-300 opacity-50">
-          <Icon which={heart} />
-        </span>
-      ),
-    }))
-
-  const getBookmarkItems = (): ListItem[] =>
-    sortByName(bookmarks).map((character) => ({
-      character,
-      type: "bookmark",
-      containerClassName: "bg-blue-400/10",
-      icon: (
-        <span className="text-blue-300 opacity-50">
-          <Icon which={bookmark} />
-        </span>
-      ),
-    }))
-
   const listItems: ListItem[] = useDeferredValue(
-    search.trim()
-      ? searchedCharacters.map((character) => ({
-          type: "searched",
+    useMemo(() => {
+      const getFriendItems = (): ListItem[] =>
+        sortByName(friends).map((character) => ({
           character,
+          type: "friend",
+          containerClassName: "bg-green-400/10",
+          icon: (
+            <span className="text-green-300 opacity-50">
+              <Icon which={heart} />
+            </span>
+          ),
         }))
-      : [...getFriendItems(), ...getBookmarkItems()],
+
+      const getBookmarkItems = (): ListItem[] =>
+        sortByName(bookmarks).map((character) => ({
+          character,
+          type: "bookmark",
+          containerClassName: "bg-blue-400/10",
+          icon: (
+            <span className="text-blue-300 opacity-50">
+              <Icon which={bookmark} />
+            </span>
+          ),
+        }))
+
+      return searchedCharacters.length
+        ? searchedCharacters.map((character) => ({
+            type: "searched",
+            character,
+          }))
+        : [...getFriendItems(), ...getBookmarkItems()]
+    }, [bookmarks, friends, searchedCharacters]),
   )
 
   return (

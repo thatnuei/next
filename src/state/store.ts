@@ -6,7 +6,6 @@ import { createEmitter } from "./emitter"
 export interface Store<Value>
   extends Pick<Emitter<Value>, "listen" | "useListener"> {
   get value(): Value
-  useValue(isEqual?: isEqualFn): Value
 }
 
 export interface WritableStore<Value> extends Store<Value> {
@@ -41,23 +40,7 @@ export function createStore<Value>(value: Value): WritableStore<Value> {
       store.set({ ...value, ...newState })
     },
 
-    select: (getDerivedValue) => {
-      return createDerivedStore(store, getDerivedValue)
-    },
-
-    useValue(isEqual = isDeepEqual) {
-      const [state, setState] = useState(store.value)
-
-      useEffect(() => {
-        return emitter.listen((newState) => {
-          if (!isEqual(newState, state)) {
-            setState(newState)
-          }
-        })
-      })
-
-      return state
-    },
+    select: (getDerivedValue) => createDerivedStore(store, getDerivedValue),
   }
 
   return store
@@ -79,22 +62,22 @@ function createDerivedStore<Value, Derived>(
     useListener(listener) {
       useEffect(() => store.listen(listener))
     },
-
-    useValue(isEqual = Object.is) {
-      const [state, setState] = useState(store.value)
-
-      useEffect(() => {
-        return source.listen((sourceState) => {
-          const newState = getDerivedValue(sourceState)
-          if (!isEqual(newState, state)) {
-            setState(newState)
-          }
-        })
-      })
-
-      return state
-    },
   }
 
   return store
+}
+
+export function useStoreValue<Value>(
+  store: Store<Value>,
+  isEqual: isEqualFn = isDeepEqual,
+) {
+  const [state, setState] = useState(store.value)
+
+  useEffect(() => {
+    return store.listen((newState) => {
+      setState((current) => (isEqual(current, newState) ? current : newState))
+    })
+  }, [isEqual, store])
+
+  return state
 }

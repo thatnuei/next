@@ -13,6 +13,7 @@ import NotificationListScreen from "../notifications/NotificationListScreen"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import type { Route } from "../router"
 import { createSocketStore, SocketStoreProvider } from "../socket/SocketStore"
+import { useStoreValue } from "../state/store"
 import ChatNav from "./ChatNav"
 import ConnectionGuard from "./ConnectionGuard"
 import NoRoomView from "./NoRoomView"
@@ -29,7 +30,7 @@ export default function Chat({
   onLogout: () => void
 }) {
   const [socket] = useState(createSocketStore)
-  const status = socket.status.useValue()
+  const status = useStoreValue(socket.status)
 
   const [api] = useState(() => createFListApi(initialUser))
 

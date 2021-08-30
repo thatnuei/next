@@ -1,5 +1,5 @@
 import produce from "immer"
-import { isEqual, omit } from "lodash-es"
+import { omit } from "lodash-es"
 import { isTruthy } from "../common/isTruthy"
 import { truthyMap } from "../common/truthyMap"
 import type { Dict, TruthyMap } from "../common/types"
@@ -7,7 +7,7 @@ import type { FListApi } from "../flist/api"
 import { createSimpleContext } from "../react/createSimpleContext"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
-import { createStore } from "../state/store"
+import { createStore, useStoreValue } from "../state/store"
 import type { Character, Friendship } from "./types"
 
 type CharacterStore = ReturnType<typeof createCharacterStore>
@@ -127,7 +127,7 @@ export const {
 export function useCharacter(name: string): Character {
   const store = useCharacterStore()
   return (
-    store.characters.select((state) => state[name]).useValue() ??
+    useStoreValue(store.characters.select((state) => state[name])) ??
     createCharacter(name)
   )
 }
@@ -135,9 +135,9 @@ export function useCharacter(name: string): Character {
 export function useCharacters(names: string[]) {
   const store = useCharacterStore()
 
-  return store.characters
-    .select((characters) =>
+  return useStoreValue(
+    store.characters.select((characters) =>
       names.map((name) => characters[name]).filter(isTruthy),
-    )
-    .useValue(isEqual)
+    ),
+  )
 }

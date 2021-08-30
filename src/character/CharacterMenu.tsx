@@ -7,6 +7,7 @@ import { getProfileUrl } from "../flist/helpers"
 import { usePrivateChatActions } from "../privateChat/state"
 import { routes } from "../router"
 import { useSocketStoreContext } from "../socket/SocketStore"
+import { useStoreValue } from "../state/store"
 import { input } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -26,9 +27,9 @@ export default function CharacterMenu({ name }: { name: string }) {
   const socket = useSocketStoreContext()
   const api = useFListApi()
   const characterStore = useCharacterStore()
-  const friendships = characterStore.friendships.useValue()
-  const isBookmarked = characterStore.bookmarks.useValue()[name] ?? false
-  const isIgnored = characterStore.ignores.useValue()[name] ?? false
+  const friendships = useStoreValue(characterStore.friendships)
+  const isBookmarked = useStoreValue(characterStore.bookmarks)[name] ?? false
+  const isIgnored = useStoreValue(characterStore.ignores)[name] ?? false
   const privateChatActions = usePrivateChatActions(name)
 
   return (
