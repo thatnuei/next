@@ -22,8 +22,35 @@ export function createDictStore<Value>(fallback: (key: string) => Value) {
       })
     },
 
+    deleteItem(key: string) {
+      source.update((items) => {
+        const { [key]: deleted, ...rest } = items
+        return rest
+      })
+    },
+
+    hasKey(key: string) {
+      return key in source.value
+    },
+
+    hasValue(value: Value) {
+      return Object.values(source.value).includes(value)
+    },
+
     selectItem(key: string) {
       return source.select((items) => items[key] ?? fallback(key))
+    },
+
+    selectMaybeItem(key: string) {
+      return source.select((items) => items[key])
+    },
+
+    selectKeys() {
+      return source.select(Object.keys)
+    },
+
+    selectValues() {
+      return source.select<Value[]>(Object.values)
     },
   }
 
