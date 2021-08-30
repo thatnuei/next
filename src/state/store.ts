@@ -15,8 +15,6 @@ export interface WritableStore<Value> extends Store<Value> {
   merge(state: Partial<Value>): void
 }
 
-type IsEqualFn = (a: unknown, b: unknown) => boolean
-
 export function createStore<Value>(value: Value): WritableStore<Value> {
   const emitter = createEmitter<Value>()
 
@@ -71,7 +69,7 @@ function createDerivedStore<Value, Derived>(
 
 export function useStoreValue<Value>(
   store: Store<Value>,
-  isEqual: IsEqualFn = isDeepEqual,
+  isEqual: (a: unknown, b: unknown) => boolean = isDeepEqual,
 ) {
   const [state, setState] = useState(store.value)
 
