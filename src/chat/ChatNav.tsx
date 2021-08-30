@@ -6,14 +6,10 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
 import ChatNavActionButton from "./ChatNavActionButton"
+import { useIdentityContext } from "./identity-context"
 
-export default function ChatNav({
-  identity,
-  onLogout,
-}: {
-  identity: string
-  onLogout: () => void
-}) {
+export default function ChatNav({ onLogout }: { onLogout: () => void }) {
+  const identity = useIdentityContext()
   return (
     <nav className="grid h-full grid-cols-[auto,15rem] gap-y-1 bg-midnight-2">
       <div className="flex flex-col">

@@ -4,7 +4,7 @@ import ExternalLink from "../dom/ExternalLink"
 import TextInput from "../dom/TextInput"
 import { useFListApi } from "../flist/api"
 import { getProfileUrl } from "../flist/helpers"
-import { usePrivateChatActions } from "../privateChat/state"
+import { usePrivateChatStore } from "../privateChat/PrivateChatStore"
 import { routes } from "../router"
 import { useSocketStoreContext } from "../socket/SocketStore"
 import { useStoreValue } from "../state/store"
@@ -30,7 +30,7 @@ export default function CharacterMenu({ name }: { name: string }) {
   const friendships = useStoreValue(characterStore.friendships)
   const isBookmarked = useStoreValue(characterStore.bookmarks)[name] ?? false
   const isIgnored = useStoreValue(characterStore.ignores)[name] ?? false
-  const privateChatActions = usePrivateChatActions(name)
+  const privateChatStore = usePrivateChatStore()
 
   return (
     <>
@@ -60,7 +60,7 @@ export default function CharacterMenu({ name }: { name: string }) {
           className={menuItemClass}
           onClick={() => {
             routes.privateChat({ partnerName: name }).push()
-            privateChatActions.open()
+            privateChatStore.openChat(name)
           }}
         >
           <Icon which={icons.message} />

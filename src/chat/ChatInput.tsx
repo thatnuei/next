@@ -5,7 +5,7 @@ import Button from "../dom/Button"
 import { useNotificationActions } from "../notifications/state"
 import type { TypingStatus } from "../privateChat/types"
 import { solidButton } from "../ui/components"
-import { useIdentity } from "../user"
+import { useIdentityContext } from "./identity-context"
 
 type Props = {
   value: string
@@ -17,7 +17,7 @@ type Props = {
 }
 
 export default function ChatInput(props: Props) {
-  const identity = useIdentity()
+  const identity = useIdentityContext()
   const notificationActions = useNotificationActions()
 
   const valueTrimmed = props.value.trim()
@@ -84,7 +84,7 @@ export default function ChatInput(props: Props) {
       onSubmit={handleFormSubmit}
       className={`flex flex-row p-2 bg-midnight-0`}
     >
-      <div className="flex-1 mr-2 block">
+      <div className="flex-1 block mr-2">
         <BBCTextArea
           placeholder={`Chatting as ${identity || ""}...`}
           value={props.value}

@@ -6,13 +6,13 @@ import { createEmitter } from "./emitter"
 export interface Store<Value>
   extends Pick<Emitter<Value>, "listen" | "useListener"> {
   get value(): Value
+  select<Derived>(getDerivedValue: (state: Value) => Derived): Store<Derived>
 }
 
 export interface WritableStore<Value> extends Store<Value> {
   set(state: Value): void
   update(fn: (oldState: Value) => Value): void
   merge(state: Partial<Value>): void
-  select<Derived>(getDerivedValue: (state: Value) => Derived): Store<Derived>
 }
 
 type isEqualFn = (a: unknown, b: unknown) => boolean
@@ -62,6 +62,8 @@ function createDerivedStore<Value, Derived>(
     useListener(listener) {
       useEffect(() => store.listen(listener))
     },
+
+    select: (getDerivedValue) => createDerivedStore(store, getDerivedValue),
   }
 
   return store

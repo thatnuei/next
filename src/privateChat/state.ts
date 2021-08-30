@@ -14,19 +14,12 @@ import {
   createPrivateMessage,
   createSystemMessage,
 } from "../message/MessageState"
-import type { RoomState } from "../room/state"
 import { addRoomMessage, createRoomState, setRoomUnread } from "../room/state"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
 import { useIdentity } from "../user"
 import { restorePrivateChats, savePrivateChats } from "./storage"
-import type { TypingStatus } from "./types"
-
-type PrivateChat = {
-  readonly partnerName: string
-  readonly typingStatus: TypingStatus
-  readonly previousMessages?: readonly MessageState[]
-} & RoomState
+import type { PrivateChat } from "./types"
 
 const privateChatDictAtom = atom<Dict<PrivateChat>>({})
 

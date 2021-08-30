@@ -1,6 +1,6 @@
 import clsx from "clsx"
 import type { ReactNode } from "react"
-import { useEffect, useState } from "react"
+import { useDeferredValue, useEffect, useState } from "react"
 import ChannelView from "../channel/ChannelView"
 import {
   CharacterStoreProvider,
@@ -9,13 +9,20 @@ import {
 import { createFListApi, FListApiProvider } from "../flist/api"
 import type { AuthUser } from "../flist/types"
 import ChatLogBrowser from "../logging/ChatLogBrowser"
+import { useChatLogger } from "../logging/context"
 import NotificationListScreen from "../notifications/NotificationListScreen"
+import {
+  createPrivateChatStore,
+  PrivateChatProvider,
+} from "../privateChat/PrivateChatStore"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import type { Route } from "../router"
+import { useRoute } from "../router"
 import { createSocketStore, SocketStoreProvider } from "../socket/SocketStore"
 import { useStoreValue } from "../state/store"
 import ChatNav from "./ChatNav"
 import ConnectionGuard from "./ConnectionGuard"
+import { IdentityContextProvider } from "./identity-context"
 import NoRoomView from "./NoRoomView"
 
 export default function Chat({
@@ -34,8 +41,18 @@ export default function Chat({
 
   const [api] = useState(() => createFListApi(initialUser))
 
+  const logger = useChatLogger()
+
   const [characterStore] = useState(() => createCharacterStore(api))
   socket.commands.useListener(characterStore.handleCommand)
+
+  const [privateChatStore] = useState(() =>
+    createPrivateChatStore(identity, logger, socket),
+  )
+  socket.commands.useListener(privateChatStore.handleCommand)
+
+  const route = useRoute()
+  const deferredRoute = useDeferredValue(route)
 
   useEffect(() => {
     socket.connect(() => {
@@ -52,32 +69,41 @@ export default function Chat({
   }, [api.user.account, api.user.ticket, identity, socket])
 
   return (
-    <CharacterStoreProvider value={characterStore}>
-      <SocketStoreProvider value={socket}>
-        <FListApiProvider value={api}>
-          <ConnectionGuard status={status} onLogout={onLogout}>
-            <div className="flex flex-row h-full gap-1">
-              <div className="hidden md:block">
-                <ChatNav identity={identity} onLogout={onChangeCharacter} />
-              </div>
+    <IdentityContextProvider value={identity}>
+      <CharacterStoreProvider value={characterStore}>
+        <SocketStoreProvider value={socket}>
+          <FListApiProvider value={api}>
+            <PrivateChatProvider value={privateChatStore}>
+              <ConnectionGuard status={status} onLogout={onLogout}>
+                <div className="flex flex-row h-full gap-1">
+                  <div className="hidden md:block">
+                    <ChatNav onLogout={onChangeCharacter} />
+                  </div>
 
-              {/* <StalenessState
-            className="flex-1 min-w-0 overflow-y-auto"
-            isStale={route !== deferredRoute}
-          >
-            <ChatRoutes route={deferredRoute} />
-          </StalenessState> */}
-            </div>
-          </ConnectionGuard>
+                  <StalenessState
+                    className="flex-1 min-w-0 overflow-y-auto"
+                    isStale={route !== deferredRoute}
+                  >
+                    {deferredRoute.name === "privateChat" && (
+                      <PrivateChatView
+                        key={deferredRoute.params.partnerName}
+                        {...deferredRoute.params}
+                      />
+                    )}
+                  </StalenessState>
+                </div>
+              </ConnectionGuard>
 
-          {/* <ChatCommandHandlers />
+              {/* <ChatCommandHandlers />
       <SystemNotificationsHandler />
       <StatusRestorationEffect /> */}
 
-          {/* {import.meta.env.DEV && <DevTools />} */}
-        </FListApiProvider>
-      </SocketStoreProvider>
-    </CharacterStoreProvider>
+              {/* {import.meta.env.DEV && <DevTools />} */}
+            </PrivateChatProvider>
+          </FListApiProvider>
+        </SocketStoreProvider>
+      </CharacterStoreProvider>
+    </IdentityContextProvider>
   )
 }
 
