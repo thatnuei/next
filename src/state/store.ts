@@ -69,7 +69,7 @@ function createDerivedStore<Value, Derived>(
 
 export function useStoreValue<Value>(
   store: Store<Value>,
-  isEqual: (a: unknown, b: unknown) => boolean = isDeepEqual,
+  isEqual: (a: Value, b: Value) => boolean = isDeepEqual,
 ) {
   const [state, setState] = useState(store.value)
 
