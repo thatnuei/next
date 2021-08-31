@@ -74,6 +74,9 @@ export function useStoreValue<Value>(
   const [state, setState] = useState(store.value)
 
   useEffect(() => {
+    setState((current) =>
+      isEqual(current, store.value) ? current : store.value,
+    )
     return store.listen((newState) => {
       setState((current) => (isEqual(current, newState) ? current : newState))
     })
