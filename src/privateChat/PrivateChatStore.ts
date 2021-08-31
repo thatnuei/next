@@ -20,7 +20,7 @@ import { matchCommand } from "../socket/helpers"
 import type { SocketStore } from "../socket/SocketStore"
 import { createDictStore } from "../state/dict-store"
 import { createStore } from "../state/store"
-import { restorePrivateChats } from "./storage"
+import { restorePrivateChats, savePrivateChats } from "./storage"
 import type { PrivateChat } from "./types"
 
 export type PrivateChatStore = ReturnType<typeof createPrivateChatStore>
@@ -65,6 +65,11 @@ export function createPrivateChatStore(
     }
   }
 
+  function saveChats() {
+    if (!restored) return
+    savePrivateChats(identity, Object.keys(openChatNames.value))
+  }
+
   const store = {
     privateChats,
     openChatNames,
@@ -81,10 +86,12 @@ export function createPrivateChatStore(
             previousMessages: chat.previousMessages ?? messages,
           }))
         })
+      saveChats()
     },
 
     closeChat(partnerName: string) {
       openChatNames.update((names) => omit(names, [partnerName]))
+      saveChats()
     },
 
     addMessage(partnerName: string, message: MessageState) {
