@@ -1,6 +1,6 @@
 import { isEqual as isDeepEqual } from "lodash-es"
 import { useEffect, useState } from "react"
-import type { EmitterLike, Listener } from "./emitter"
+import type { EmitterLike } from "./emitter"
 import { createEmitter } from "./emitter"
 
 export interface Store<Value> extends EmitterLike<Value> {
@@ -71,14 +71,14 @@ export function combineStores<StoreValues extends readonly unknown[]>(
     },
 
     listen(listener) {
-      const unlistenFunctions = stores.map((store) =>
-        store.listen(listener as Listener<unknown>),
+      const unlistenFunctions = stores.map((subStore) =>
+        subStore.listen(() => listener(store.value)),
       )
+
       return () => unlistenFunctions.forEach((unlisten) => unlisten())
     },
 
-    select: (getDerivedValue) =>
-      createDerivedStore(store, (values) => getDerivedValue(values)),
+    select: (getDerivedValue) => createDerivedStore(store, getDerivedValue),
   }
 
   return store
