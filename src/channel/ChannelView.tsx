@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react"
 import ChatInput from "../chat/ChatInput"
-import { useDocumentVisible } from "../dom/useDocumentVisible"
+import { useDocumentVisible } from "../dom/document-visible"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import MessageList from "../message/MessageList"
 import MessageListItem from "../message/MessageListItem"
