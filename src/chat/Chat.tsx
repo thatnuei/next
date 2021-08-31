@@ -18,6 +18,7 @@ import type { WrapperFn } from "../react/WrapperStack"
 import WrapperStack from "../react/WrapperStack"
 import { useRoute } from "../router"
 import { createSocketStore, SocketStoreProvider } from "../socket/SocketStore"
+import { useEmitterListener } from "../state/emitter"
 import { useStoreValue } from "../state/store"
 import ChatMenuButton from "./ChatMenuButton"
 import ChatNav from "./ChatNav"
@@ -43,17 +44,17 @@ export default function Chat({
   const logger = useChatLogger()
 
   const [characterStore] = useState(() => createCharacterStore(api, identity))
-  socket.commands.useListener(characterStore.handleCommand)
+  useEmitterListener(socket.commands, characterStore.handleCommand)
 
   const [privateChatStore] = useState(() =>
     createPrivateChatStore(identity, logger, socket),
   )
-  socket.commands.useListener(privateChatStore.handleCommand)
+  useEmitterListener(socket.commands, privateChatStore.handleCommand)
 
   const [channelBrowserStore] = useState(() =>
     createChannelBrowserStore(socket),
   )
-  socket.commands.useListener(channelBrowserStore.handleCommand)
+  useEmitterListener(socket.commands, channelBrowserStore.handleCommand)
 
   const route = useRoute()
   const deferredRoute = useDeferredValue(route)

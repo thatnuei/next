@@ -1,10 +1,9 @@
 import { isEqual as isDeepEqual } from "lodash-es"
 import { useEffect, useState } from "react"
-import type { Emitter } from "./emitter"
+import type { EmitterLike, Listener } from "./emitter"
 import { createEmitter } from "./emitter"
 
-export interface Store<Value>
-  extends Pick<Emitter<Value>, "listen" | "useListener"> {
+export interface Store<Value> extends EmitterLike<Value> {
   get value(): Value
   select<Derived>(getDerivedValue: (state: Value) => Derived): Store<Derived>
 }

@@ -4,10 +4,12 @@ export type Listener<Value> = (value: Value) => void
 
 export type Unlisten = () => void
 
-export interface Emitter<Value> {
+export interface EmitterLike<Value> {
   listen(listener: Listener<Value>): Unlisten
+}
+
+export interface Emitter<Value> extends EmitterLike<Value> {
   emit(value: Value): void
-  useListener(listener: Listener<Value>): void
 }
 
 export function createEmitter<Value>(): Emitter<Value> {
@@ -26,11 +28,14 @@ export function createEmitter<Value>(): Emitter<Value> {
         listener(value)
       }
     },
-
-    useListener(listener) {
-      useEffect(() => emitter.listen(listener))
-    },
   }
 
   return emitter
+}
+
+export function useEmitterListener<Value>(
+  emitter: EmitterLike<Value>,
+  listener: Listener<Value>,
+) {
+  useEffect(() => emitter.listen(listener))
 }
