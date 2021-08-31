@@ -1,57 +1,56 @@
 import clsx from "clsx"
-import fuzzysearch from "fuzzysearch"
 import { sortBy } from "lodash-es"
+import { matchSorter } from "match-sorter"
 import { useEffect, useState } from "react"
 import Button from "../dom/Button"
-import { useEffectRef } from "../react/useEffectRef"
+import TextInput from "../dom/TextInput"
+import { useStoreValue } from "../state/store"
 import { input, solidButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
-import {
-  useChannelBrowserIsRefreshing,
-  usePrivateChannels,
-  usePublicChannels,
-  useRefreshChannelBrowser,
-} from "./state"
+import type { ChannelBrowserStore } from "./ChannelBrowserStore"
 import type { ChannelBrowserChannel } from "./types"
 
-function ChannelBrowser() {
-  const publicChannels = usePublicChannels()
-  const privateChannels = usePrivateChannels()
-  const isRefreshing = useChannelBrowserIsRefreshing()
-  const refresh = useRefreshChannelBrowser()
-
+function ChannelBrowser({
+  channelBrowserStore,
+}: {
+  channelBrowserStore: ChannelBrowserStore
+}) {
   const [query, setQuery] = useState("")
   const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
 
-  // only want to call this on mount
-  const refreshRef = useEffectRef(refresh)
-  useEffect(() => void refreshRef.current(), [refreshRef])
+  useEffect(() => {
+    channelBrowserStore.refresh()
+  }, [channelBrowserStore])
 
   const cycleSortMode = () =>
     setSortMode((mode) => (mode === "title" ? "userCount" : "title"))
 
   const processChannels = (channels: ChannelBrowserChannel[]) => {
-    const normalizedQuery = query.trim().toLowerCase()
-
     const sorted =
       sortMode === "title"
         ? sortBy(channels, (it) => it.title.toLowerCase())
         : sortBy(channels, "userCount").reverse()
 
-    return normalizedQuery
-      ? sorted.filter((it) =>
-          fuzzysearch(normalizedQuery, it.title.toLowerCase()),
-        )
-      : sorted
+    if (!query.trim()) {
+      return sorted
+    }
+
+    return matchSorter(sorted, query, {
+      keys: ["id", "title"],
+    })
   }
 
-  const channels = [
-    ...processChannels(publicChannels),
-    ...processChannels(privateChannels),
-  ]
+  const channels = useStoreValue(
+    channelBrowserStore.channels.select((channels) => [
+      ...processChannels(channels.public),
+      ...processChannels(channels.private),
+    ]),
+  )
+
+  const isRefreshing = useStoreValue(channelBrowserStore.isRefreshing)
 
   return (
     <div className={`flex flex-col w-full h-full`}>
@@ -64,32 +63,44 @@ function ChannelBrowser() {
           getItemKey={(channel) => channel.id}
           itemSize={40}
           renderItem={({ item, style }) => (
-            <ChannelBrowserItem key={item.id} info={item} style={style} />
+            <div style={style}>
+              <ChannelBrowserItem
+                info={item}
+                active={false}
+                onClick={() => {}}
+              />
+            </div>
           )}
         />
       </section>
 
-      <section className="flex flex-row space-x-2 bg-midnight-0 p-2">
-        <input
+      <section className="flex flex-row gap-2 p-2 bg-midnight-0">
+        <TextInput
           type="text"
           aria-label="Search"
           placeholder="Search..."
           className={clsx(input, `flex-1`)}
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          onChangeText={setQuery}
           ref={(input) => input?.focus()}
         />
+
         <Button
           title="Change sort mode"
           className={solidButton}
           onClick={cycleSortMode}
         >
-          <Icon which={icons.sortAlphabetical} />
+          {sortMode === "title" ? (
+            <Icon which={icons.sortAlphabetical} />
+          ) : (
+            <Icon which={icons.sortNumeric} />
+          )}
         </Button>
+
         <Button
           title="Refresh"
           className={solidButton}
-          onClick={refresh}
+          onClick={channelBrowserStore.refresh}
           disabled={isRefreshing}
         >
           <Icon which={icons.refresh} />

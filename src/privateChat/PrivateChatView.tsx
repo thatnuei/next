@@ -1,29 +1,34 @@
+import type { ReactNode } from "react"
 import { useEffect, useMemo } from "react"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
-import ChatMenuButton from "../chat/ChatMenuButton"
-import { useIdentityContext } from "../chat/identity-context"
 import { useDocumentVisible } from "../dom/useDocumentVisible"
 import MessageList from "../message/MessageList"
 import MessageListItem from "../message/MessageListItem"
 import { createPrivateMessage } from "../message/MessageState"
-import { useSocketStoreContext } from "../socket/SocketStore"
+import type { SocketStore } from "../socket/SocketStore"
 import { useStoreValue } from "../state/store"
-import { usePrivateChatStore } from "./PrivateChatStore"
+import type { PrivateChatStore } from "./PrivateChatStore"
 import TypingStatusDisplay from "./TypingStatusDisplay"
 
 type Props = {
   partnerName: string
+  privateChatStore: PrivateChatStore
+  socket: SocketStore
+  identity: string
+  menuButton: ReactNode
 }
 
-function PrivateChatView({ partnerName }: Props) {
-  const privateChatStore = usePrivateChatStore()
-  const socket = useSocketStoreContext()
-  const identity = useIdentityContext()
-
+function PrivateChatView({
+  partnerName,
+  privateChatStore,
+  socket,
+  identity,
+  menuButton,
+}: Props) {
   const chat = useStoreValue(
     privateChatStore.privateChats.selectItem(partnerName),
   )
@@ -41,7 +46,7 @@ function PrivateChatView({ partnerName }: Props) {
   return (
     <div className="flex flex-col h-full">
       <div className="flex flex-row items-center h-20 gap-3 px-3 mb-1 bg-midnight-0">
-        <ChatMenuButton />
+        {menuButton}
 
         <CharacterMenuTarget name={partnerName}>
           <Avatar name={partnerName} size={12} />

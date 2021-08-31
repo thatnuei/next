@@ -1,16 +1,14 @@
 import clsx from "clsx"
 import type { ReactNode } from "react"
 import { useDeferredValue, useEffect, useState } from "react"
-import ChannelView from "../channel/ChannelView"
+import { createChannelBrowserStore } from "../channelBrowser/ChannelBrowserStore"
 import {
   CharacterStoreProvider,
   createCharacterStore,
 } from "../character/CharacterStore"
 import { createFListApi, FListApiProvider } from "../flist/api"
 import type { AuthUser } from "../flist/types"
-import ChatLogBrowser from "../logging/ChatLogBrowser"
 import { useChatLogger } from "../logging/context"
-import NotificationListScreen from "../notifications/NotificationListScreen"
 import {
   createPrivateChatStore,
   PrivateChatProvider,
@@ -18,14 +16,13 @@ import {
 import PrivateChatView from "../privateChat/PrivateChatView"
 import type { WrapperFn } from "../react/WrapperStack"
 import WrapperStack from "../react/WrapperStack"
-import type { Route } from "../router"
 import { useRoute } from "../router"
 import { createSocketStore, SocketStoreProvider } from "../socket/SocketStore"
 import { useStoreValue } from "../state/store"
+import ChatMenuButton from "./ChatMenuButton"
 import ChatNav from "./ChatNav"
 import ConnectionGuard from "./ConnectionGuard"
 import { IdentityContextProvider } from "./identity-context"
-import NoRoomView from "./NoRoomView"
 
 export default function Chat({
   user: initialUser,
@@ -53,6 +50,11 @@ export default function Chat({
   )
   socket.commands.useListener(privateChatStore.handleCommand)
 
+  const [channelBrowserStore] = useState(() =>
+    createChannelBrowserStore(socket),
+  )
+  socket.commands.useListener(channelBrowserStore.handleCommand)
+
   const route = useRoute()
   const deferredRoute = useDeferredValue(route)
 
@@ -73,18 +75,23 @@ export default function Chat({
   const wrappers: WrapperFn[] = [
     (p) => <IdentityContextProvider value={identity} {...p} />,
     (p) => <SocketStoreProvider value={socket} {...p} />,
+    (p) => <FListApiProvider value={api} {...p} />,
     (p) => <CharacterStoreProvider value={characterStore} {...p} />,
     (p) => <PrivateChatProvider value={privateChatStore} {...p} />,
-    (p) => <FListApiProvider value={api} {...p} />,
     (p) => <ConnectionGuard status={status} onLogout={onLogout} {...p} />,
   ]
+
+  const chatNav = (
+    <ChatNav
+      channelBrowserStore={channelBrowserStore}
+      onLogout={onChangeCharacter}
+    />
+  )
 
   return (
     <WrapperStack wrappers={wrappers}>
       <div className="flex flex-row h-full gap-1">
-        <div className="hidden md:block">
-          <ChatNav onLogout={onChangeCharacter} />
-        </div>
+        <div className="hidden md:block">{chatNav}</div>
 
         <StalenessState
           className="flex-1 min-w-0 overflow-y-auto"
@@ -93,7 +100,11 @@ export default function Chat({
           {deferredRoute.name === "privateChat" && (
             <PrivateChatView
               key={deferredRoute.params.partnerName}
-              {...deferredRoute.params}
+              partnerName={deferredRoute.params.partnerName}
+              privateChatStore={privateChatStore}
+              socket={socket}
+              identity={identity}
+              menuButton={<ChatMenuButton>{chatNav}</ChatMenuButton>}
             />
           )}
         </StalenessState>
@@ -121,6 +132,7 @@ function StalenessState({
   )
 }
 
+/* 
 function ChatRoutes({ route }: { route: Route }) {
   return (
     <>
@@ -136,3 +148,4 @@ function ChatRoutes({ route }: { route: Route }) {
     </>
   )
 }
+ */

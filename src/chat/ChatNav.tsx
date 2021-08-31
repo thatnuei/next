@@ -1,3 +1,5 @@
+import ChannelBrowser from "../channelBrowser/ChannelBrowser"
+import type { ChannelBrowserStore } from "../channelBrowser/ChannelBrowserStore"
 import CharacterSummary from "../character/CharacterSummary"
 import OnlineUsers from "../character/OnlineUsers"
 import ChatNavAction from "../chat/ChatNavAction"
@@ -8,11 +10,31 @@ import Modal from "../ui/Modal"
 import ChatNavActionButton from "./ChatNavActionButton"
 import { useIdentityContext } from "./identity-context"
 
-export default function ChatNav({ onLogout }: { onLogout: () => void }) {
+export default function ChatNav({
+  channelBrowserStore,
+  onLogout,
+}: {
+  channelBrowserStore: ChannelBrowserStore
+  onLogout: () => void
+}) {
   const identity = useIdentityContext()
   return (
     <nav className="grid h-full grid-cols-[auto,15rem] gap-y-1 bg-midnight-2">
       <div className="flex flex-col">
+        <Modal
+          title="Channel Browser"
+          renderContent={() => (
+            <ChannelBrowser channelBrowserStore={channelBrowserStore} />
+          )}
+          renderTrigger={(t) => (
+            <ChatNavActionButton
+              icon={<Icon which={icons.list} />}
+              name="Browse channels"
+              {...t}
+            />
+          )}
+        />
+
         <Modal
           title="Online Users"
           renderTrigger={(t) => (

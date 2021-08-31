@@ -1,11 +1,11 @@
+import type { ReactNode } from ".pnpm/@types+react@17.0.14/node_modules/@types/react"
 import Button from "../dom/Button"
 import { fadedButton } from "../ui/components"
 import Drawer from "../ui/Drawer"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
-import ChatNav from "./ChatNav"
 
-export default function ChatMenuButton() {
+export default function ChatMenuButton({ children }: { children: ReactNode }) {
   return (
     <Drawer
       side="left"
@@ -19,7 +19,7 @@ export default function ChatMenuButton() {
         </Button>
       )}
     >
-      <ChatNav onLogout={() => {}} />
+      {children}
     </Drawer>
   )
 }
