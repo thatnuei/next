@@ -4,6 +4,8 @@ import CharacterSummary from "../character/CharacterSummary"
 import OnlineUsers from "../character/OnlineUsers"
 import ChatNavAction from "../chat/ChatNavAction"
 import Button from "../dom/Button"
+import type { PrivateChatStore } from "../privateChat/PrivateChatStore"
+import PrivateChatTabList from "../privateChat/PrivateChatTabList"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
@@ -11,9 +13,11 @@ import ChatNavActionButton from "./ChatNavActionButton"
 import { useIdentityContext } from "./identity-context"
 
 export default function ChatNav({
+  privateChatStore,
   channelBrowserStore,
   onLogout,
 }: {
+  privateChatStore: PrivateChatStore
   channelBrowserStore: ChannelBrowserStore
   onLogout: () => void
 }) {
@@ -51,19 +55,7 @@ export default function ChatNav({
           )}
         />
 
-        {/* <Modal
-          title="Channel Browser"
-          renderContent={() => <ChannelBrowser />}
-          renderTrigger={(t) => (
-            <ChatNavActionButton
-              icon={<Icon which={icons.list} />}
-              name="Browse channels"
-              {...t}
-            />
-          )}
-        />
-
-
+        {/* 
         <Modal
           title="Status update"
           renderContent={({ close }) => <StatusUpdateForm onSuccess={close} />}
@@ -130,8 +122,8 @@ export default function ChatNav({
           <CharacterSummary name={identity} />
         </div>
 
-        <div className="bg-midnight-1" style={{ height: "200vh" }}>
-          room tabs
+        <div className="bg-midnight-1">
+          <PrivateChatTabList privateChatStore={privateChatStore} />
         </div>
       </div>
     </nav>

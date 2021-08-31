@@ -83,6 +83,7 @@ export default function Chat({
 
   const chatNav = (
     <ChatNav
+      privateChatStore={privateChatStore}
       channelBrowserStore={channelBrowserStore}
       onLogout={onChangeCharacter}
     />
