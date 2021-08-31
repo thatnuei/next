@@ -56,11 +56,29 @@ function createDerivedStore<Value, Derived>(
       return source.listen((value) => listener(getDerivedValue(value)))
     },
 
-    useListener(listener) {
-      useEffect(() => store.listen(listener))
+    select: (getDerivedValue) => createDerivedStore(store, getDerivedValue),
+  }
+
+  return store
+}
+
+export function combineStores<StoreValues extends readonly unknown[]>(
+  ...stores: { [key in keyof StoreValues]: Store<StoreValues[key]> }
+): Store<StoreValues> {
+  const store: Store<StoreValues> = {
+    get value() {
+      return stores.map((store) => store.value) as unknown as StoreValues
     },
 
-    select: (getDerivedValue) => createDerivedStore(store, getDerivedValue),
+    listen(listener) {
+      const unlistenFunctions = stores.map((store) =>
+        store.listen(listener as Listener<unknown>),
+      )
+      return () => unlistenFunctions.forEach((unlisten) => unlisten())
+    },
+
+    select: (getDerivedValue) =>
+      createDerivedStore(store, (values) => getDerivedValue(values)),
   }
 
   return store
