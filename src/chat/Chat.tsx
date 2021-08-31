@@ -16,6 +16,8 @@ import {
   PrivateChatProvider,
 } from "../privateChat/PrivateChatStore"
 import PrivateChatView from "../privateChat/PrivateChatView"
+import type { WrapperFn } from "../react/WrapperStack"
+import WrapperStack from "../react/WrapperStack"
 import type { Route } from "../router"
 import { useRoute } from "../router"
 import { createSocketStore, SocketStoreProvider } from "../socket/SocketStore"
@@ -68,42 +70,35 @@ export default function Chat({
     }
   }, [api.user.account, api.user.ticket, identity, socket])
 
+  const wrappers: WrapperFn[] = [
+    (p) => <IdentityContextProvider value={identity} {...p} />,
+    (p) => <SocketStoreProvider value={socket} {...p} />,
+    (p) => <CharacterStoreProvider value={characterStore} {...p} />,
+    (p) => <PrivateChatProvider value={privateChatStore} {...p} />,
+    (p) => <FListApiProvider value={api} {...p} />,
+    (p) => <ConnectionGuard status={status} onLogout={onLogout} {...p} />,
+  ]
+
   return (
-    <IdentityContextProvider value={identity}>
-      <CharacterStoreProvider value={characterStore}>
-        <SocketStoreProvider value={socket}>
-          <FListApiProvider value={api}>
-            <PrivateChatProvider value={privateChatStore}>
-              <ConnectionGuard status={status} onLogout={onLogout}>
-                <div className="flex flex-row h-full gap-1">
-                  <div className="hidden md:block">
-                    <ChatNav onLogout={onChangeCharacter} />
-                  </div>
+    <WrapperStack wrappers={wrappers}>
+      <div className="flex flex-row h-full gap-1">
+        <div className="hidden md:block">
+          <ChatNav onLogout={onChangeCharacter} />
+        </div>
 
-                  <StalenessState
-                    className="flex-1 min-w-0 overflow-y-auto"
-                    isStale={route !== deferredRoute}
-                  >
-                    {deferredRoute.name === "privateChat" && (
-                      <PrivateChatView
-                        key={deferredRoute.params.partnerName}
-                        {...deferredRoute.params}
-                      />
-                    )}
-                  </StalenessState>
-                </div>
-              </ConnectionGuard>
-
-              {/* <ChatCommandHandlers />
-      <SystemNotificationsHandler />
-      <StatusRestorationEffect /> */}
-
-              {/* {import.meta.env.DEV && <DevTools />} */}
-            </PrivateChatProvider>
-          </FListApiProvider>
-        </SocketStoreProvider>
-      </CharacterStoreProvider>
-    </IdentityContextProvider>
+        <StalenessState
+          className="flex-1 min-w-0 overflow-y-auto"
+          isStale={route !== deferredRoute}
+        >
+          {deferredRoute.name === "privateChat" && (
+            <PrivateChatView
+              key={deferredRoute.params.partnerName}
+              {...deferredRoute.params}
+            />
+          )}
+        </StalenessState>
+      </div>
+    </WrapperStack>
   )
 }
 
