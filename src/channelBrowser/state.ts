@@ -5,13 +5,7 @@ import { delay } from "../common/delay"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
-
-export type ChannelBrowserChannel = {
-  id: string
-  title: string
-  type: "public" | "private"
-  userCount: number
-}
+import type { ChannelBrowserChannel } from "./types"
 
 const publicChannelsAtom = atom<ChannelBrowserChannel[]>([])
 const privateChannelsAtom = atom<ChannelBrowserChannel[]>([])

@@ -2,7 +2,7 @@ import { useChannelActions, useIsChannelJoined } from "../channel/state"
 import type { TagProps } from "../jsx/types"
 import Icon from "../ui/Icon"
 import { earth, lock } from "../ui/icons"
-import type { ChannelBrowserChannel } from "./state"
+import type { ChannelBrowserChannel } from "./types"
 
 type Props = TagProps<"button"> & {
   info: ChannelBrowserChannel

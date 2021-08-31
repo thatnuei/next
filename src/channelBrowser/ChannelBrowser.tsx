@@ -9,13 +9,13 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
-import type { ChannelBrowserChannel } from "./state"
 import {
   useChannelBrowserIsRefreshing,
   usePrivateChannels,
   usePublicChannels,
   useRefreshChannelBrowser,
 } from "./state"
+import type { ChannelBrowserChannel } from "./types"
 
 function ChannelBrowser() {
   const publicChannels = usePublicChannels()
