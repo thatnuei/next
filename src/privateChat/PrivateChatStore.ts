@@ -9,7 +9,12 @@ import {
   createSystemMessage,
 } from "../message/MessageState"
 import { createSimpleContext } from "../react/createSimpleContext"
-import { addRoomMessage, createRoomState, setRoomUnread } from "../room/state"
+import {
+  addRoomMessage,
+  createRoomState,
+  setRoomInput,
+  setRoomUnread,
+} from "../room/state"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import type { SocketStore } from "../socket/SocketStore"
@@ -126,17 +131,11 @@ export function createPrivateChatStore(
     },
 
     setInput(partnerName: string, input: string) {
-      privateChats.updateItem(partnerName, (chat) => ({
-        ...chat,
-        input,
-      }))
+      privateChats.updateItem(partnerName, (chat) => setRoomInput(chat, input))
     },
 
     markRead(partnerName: string) {
-      privateChats.updateItem(partnerName, (chat) => ({
-        ...chat,
-        unread: false,
-      }))
+      privateChats.updateItem(partnerName, (chat) => setRoomUnread(chat, false))
     },
 
     handleCommand(command: ServerCommand) {
