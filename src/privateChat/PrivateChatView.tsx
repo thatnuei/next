@@ -1,16 +1,16 @@
 import type { ReactNode } from "react"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import CharacterStatusText from "../character/CharacterStatusText"
 import ChatInput from "../chat/ChatInput"
-import { useDocumentVisible } from "../dom/useDocumentVisible"
 import MessageList from "../message/MessageList"
 import MessageListItem from "../message/MessageListItem"
 import { createPrivateMessage } from "../message/MessageState"
 import type { SocketStore } from "../socket/SocketStore"
-import { useStoreValue } from "../state/store"
+import { useEmitterListener } from "../state/emitter"
+import { combineStores, createStore, useStoreValue } from "../state/store"
 import type { PrivateChatStore } from "./PrivateChatStore"
 import TypingStatusDisplay from "./TypingStatusDisplay"
 
@@ -22,7 +22,13 @@ type Props = {
   menuButton: ReactNode
 }
 
-function PrivateChatView({
+const documentVisibleStore = createStore(document.visibilityState === "visible")
+
+document.addEventListener("visibilitychange", () => {
+  documentVisibleStore.set(document.visibilityState === "visible")
+})
+
+export default function PrivateChatView({
   partnerName,
   privateChatStore,
   socket,
@@ -38,10 +44,18 @@ function PrivateChatView({
     [chat.previousMessages, chat.messages],
   )
 
-  const isDocumentVisible = useDocumentVisible()
-  useEffect(() => {
-    if (isDocumentVisible) privateChatStore.markRead(partnerName)
-  }, [chat.isUnread, isDocumentVisible, privateChatStore, partnerName])
+  const isUnread = privateChatStore.privateChats
+    .selectItem(partnerName)
+    .select((it) => it.isUnread)
+
+  useEmitterListener(
+    combineStores(isUnread, documentVisibleStore),
+    ([isUnread, documentVisible]) => {
+      if (isUnread && documentVisible) {
+        privateChatStore.markRead(partnerName)
+      }
+    },
+  )
 
   return (
     <div className="flex flex-col h-full">
@@ -100,5 +114,3 @@ function PrivateChatView({
     </div>
   )
 }
-
-export default PrivateChatView
