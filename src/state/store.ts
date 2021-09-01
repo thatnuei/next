@@ -12,6 +12,7 @@ export interface WritableStore<Value> extends Store<Value> {
   set(state: Value): void
   update(fn: (oldState: Value) => Value): void
   mergeSet(state: Partial<Value>): void
+  readonly(): Store<Value>
 }
 
 export function createStore<Value>(value: Value): WritableStore<Value> {
@@ -38,6 +39,8 @@ export function createStore<Value>(value: Value): WritableStore<Value> {
     },
 
     select: (getDerivedValue) => createDerivedStore(store, getDerivedValue),
+
+    readonly: () => store,
   }
 
   return store
