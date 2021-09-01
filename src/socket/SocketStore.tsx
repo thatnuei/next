@@ -29,7 +29,7 @@ const errorCodesToAvoidReconnection = new Set([
   31, // logging in with same character from another location
   33, // invalid auth method
   39, // timed out
-  40, /// kicked
+  40, // kicked
 ])
 
 export function createSocketStore() {
