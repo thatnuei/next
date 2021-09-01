@@ -1,6 +1,5 @@
 import type { CharacterStatus } from "../character/types"
 import { omit } from "../common/omit"
-import { truthyMap } from "../common/truthyMap"
 import type { TruthyMap } from "../common/types"
 import type { ChatLogger } from "../logging/logger"
 import type { MessageState } from "../message/MessageState"
@@ -34,7 +33,7 @@ function createPrivateChat(partnerName: string): PrivateChat {
 }
 
 function getLoggerRoomId(identity: string, partnerName: string): string {
-  return `private-chat:${identity}:${partnerName}`
+  return `private-chat:${identity.toLowerCase()}:${partnerName.toLowerCase()}`
 }
 
 export function createPrivateChatStore(
@@ -86,6 +85,7 @@ export function createPrivateChatStore(
             previousMessages: chat.previousMessages ?? messages,
           }))
         })
+
       saveChats()
     },
 
@@ -150,7 +150,7 @@ export function createPrivateChatStore(
         IDN() {
           restorePrivateChats(identity)
             .then((names) => {
-              openChatNames.set(truthyMap(names))
+              for (const name of names) store.openChat(name)
               restored = true
             })
             .catch((error) => {
