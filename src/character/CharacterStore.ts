@@ -1,9 +1,11 @@
 import { truthyMap } from "../common/truthyMap"
+import type { Dict } from "../common/types"
+import { unique } from "../common/unique"
 import type { FListApi } from "../flist/api"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { createDictStore } from "../state/dict-store"
-import { createStore } from "../state/store"
+import { combineStores, createStore } from "../state/store"
 import type { Character, Friendship } from "./types"
 
 export type CharacterStore = ReturnType<typeof createCharacterStore>
@@ -39,12 +41,38 @@ export function createCharacterStore(api: FListApi, identity: string) {
     }
   }
 
+  function getCharacterList(
+    characters: Dict<Character>,
+    names: readonly string[],
+  ) {
+    return unique(
+      names.map((name) => characters[name] ?? createCharacter(name)),
+      (char) => char.name,
+    )
+  }
+
   const store = {
     characters,
     friendships,
     bookmarks,
     ignores,
     admins,
+
+    selectCharacterList(names: readonly string[]) {
+      return characters.select((characters) =>
+        getCharacterList(characters, names),
+      )
+    },
+
+    selectLikedCharacters() {
+      return combineStores(friendships, bookmarks, characters).select(
+        ([friendships, bookmarks, characters]) =>
+          getCharacterList(characters, [
+            ...friendships.map((friendship) => friendship.them),
+            ...Object.keys(bookmarks),
+          ]),
+      )
+    },
 
     handleCommand(command: ServerCommand) {
       matchCommand(command, {
