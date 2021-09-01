@@ -1,25 +1,22 @@
 import Avatar from "../character/Avatar"
 import { useNickname } from "../character/nicknames"
+import { useChatContext } from "../chat/ChatContext"
 import RoomTab from "../chat/RoomTab"
 import { routes, useRoute } from "../router"
 import type { Store } from "../state/store"
 import { useStoreValue } from "../state/store"
-import type { PrivateChatStore } from "./PrivateChatStore"
 import type { PrivateChat } from "./types"
 
-export default function PrivateChatTabList({
-  privateChatStore,
-}: {
-  privateChatStore: PrivateChatStore
-}) {
-  const openChatNames = useStoreValue(privateChatStore.openChatNames)
+export default function PrivateChatTabList() {
+  const context = useChatContext()
+  const openChatNames = useStoreValue(context.privateChatStore.openChatNames)
   return (
     <>
       {Object.keys(openChatNames).map((name) => (
         <PrivateChatTab
           key={name}
-          privateChat={privateChatStore.privateChats.selectItem(name)}
-          onClose={() => privateChatStore.closeChat(name)}
+          privateChat={context.privateChatStore.privateChats.selectItem(name)}
+          onClose={() => context.privateChatStore.closeChat(name)}
         />
       ))}
     </>

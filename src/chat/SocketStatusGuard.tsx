@@ -1,18 +1,18 @@
 import type { ReactNode } from "react"
 import Button from "../dom/Button"
-import type { SocketStatus } from "../socket/SocketStore"
+import { useStoreValue } from "../state/store"
 import { solidButton } from "../ui/components"
 import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
+import { useChatContext } from "./ChatContext"
 
-export default function ConnectionGuard({
-  status,
+export default function SocketStatusGuard({
   children,
-  onLogout,
 }: {
-  status: SocketStatus
   children: ReactNode
-  onLogout: () => void
 }) {
+  const context = useChatContext()
+  const status = useStoreValue(context.socket.status)
+
   switch (status) {
     case "connecting":
       return (
@@ -40,7 +40,7 @@ export default function ConnectionGuard({
     case "closed":
       return (
         <ConnectionMessage message="The connection was closed by the server.">
-          <Button className={solidButton} onClick={onLogout}>
+          <Button className={solidButton} onClick={context.showLogin}>
             Return to login
           </Button>
         </ConnectionMessage>

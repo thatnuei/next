@@ -1,26 +1,17 @@
-import type { ReactNode } from "react"
 import { useMemo } from "react"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import CharacterStatusText from "../character/CharacterStatusText"
+import { useChatContext } from "../chat/ChatContext"
 import ChatInput from "../chat/ChatInput"
+import ChatMenuButton from "../chat/ChatMenuButton"
 import MessageList from "../message/MessageList"
 import MessageListItem from "../message/MessageListItem"
 import { createPrivateMessage } from "../message/MessageState"
-import type { SocketStore } from "../socket/SocketStore"
 import { useEmitterListener } from "../state/emitter"
 import { combineStores, createStore, useStoreValue } from "../state/store"
-import type { PrivateChatStore } from "./PrivateChatStore"
 import TypingStatusDisplay from "./TypingStatusDisplay"
-
-type Props = {
-  partnerName: string
-  privateChatStore: PrivateChatStore
-  socket: SocketStore
-  identity: string
-  menuButton: ReactNode
-}
 
 const documentVisibleStore = createStore(document.visibilityState === "visible")
 
@@ -28,15 +19,19 @@ document.addEventListener("visibilitychange", () => {
   documentVisibleStore.set(document.visibilityState === "visible")
 })
 
+function repeatArray<T>(array: T[], count: number): T[] {
+  return [...Array(count)].flatMap(() => array)
+}
+
 export default function PrivateChatView({
   partnerName,
-  privateChatStore,
-  socket,
-  identity,
-  menuButton,
-}: Props) {
+}: {
+  partnerName: string
+}) {
+  const context = useChatContext()
+
   const chat = useStoreValue(
-    privateChatStore.privateChats.selectItem(partnerName),
+    context.privateChatStore.privateChats.selectItem(partnerName),
   )
 
   const allMessages = useMemo(
@@ -44,7 +39,7 @@ export default function PrivateChatView({
     [chat.previousMessages, chat.messages],
   )
 
-  const isUnread = privateChatStore.privateChats
+  const isUnread = context.privateChatStore.privateChats
     .selectItem(partnerName)
     .select((it) => it.isUnread)
 
@@ -52,7 +47,7 @@ export default function PrivateChatView({
     combineStores(isUnread, documentVisibleStore),
     ([isUnread, documentVisible]) => {
       if (isUnread && documentVisible) {
-        privateChatStore.markRead(partnerName)
+        context.privateChatStore.markRead(partnerName)
       }
     },
   )
@@ -60,7 +55,7 @@ export default function PrivateChatView({
   return (
     <div className="flex flex-col h-full">
       <div className="flex flex-row items-center h-20 gap-3 px-3 mb-1 bg-midnight-0">
-        {menuButton}
+        <ChatMenuButton />
 
         <CharacterMenuTarget name={partnerName}>
           <Avatar name={partnerName} size={12} />
@@ -88,13 +83,15 @@ export default function PrivateChatView({
       <ChatInput
         value={chat.input}
         maxLength={50000}
-        onChangeText={(input) => privateChatStore.setInput(partnerName, input)}
+        onChangeText={(input) =>
+          context.privateChatStore.setInput(partnerName, input)
+        }
         onSubmit={(message) => {
-          privateChatStore.sendMessage(partnerName, message)
-          privateChatStore.setInput(partnerName, "")
+          context.privateChatStore.sendMessage(partnerName, message)
+          context.privateChatStore.setInput(partnerName, "")
         }}
         onTypingStatusChange={(status) => {
-          socket.send({
+          context.socket.send({
             type: "TPN",
             params: {
               character: partnerName,
@@ -105,7 +102,7 @@ export default function PrivateChatView({
         renderPreview={(value) => (
           <MessageListItem
             message={{
-              ...createPrivateMessage(identity, value),
+              ...createPrivateMessage(context.identity, value),
               timestamp: undefined,
             }}
           />

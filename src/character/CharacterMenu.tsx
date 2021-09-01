@@ -1,18 +1,15 @@
 import clsx from "clsx"
+import { useChatContext } from "../chat/ChatContext"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import TextInput from "../dom/TextInput"
-import { useFListApi } from "../flist/api"
 import { getProfileUrl } from "../flist/helpers"
-import { usePrivateChatStore } from "../privateChat/PrivateChatStore"
 import { routes } from "../router"
-import { useSocketStoreContext } from "../socket/SocketStore"
 import { useStoreValue } from "../state/store"
 import { input } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import CharacterMemoInput from "./CharacterMemoInput"
-import { useCharacterStore } from "./CharacterStore"
 import CharacterSummary from "./CharacterSummary"
 import { useNickname, useSetNickname } from "./nicknames"
 
@@ -24,15 +21,12 @@ const menuItemClass = clsx`
 `
 
 export default function CharacterMenu({ name }: { name: string }) {
-  const socket = useSocketStoreContext()
-  const api = useFListApi()
-  const characterStore = useCharacterStore()
+  const { characterStore, privateChatStore, socket, api } = useChatContext()
   const friendships = useStoreValue(characterStore.friendships)
   const isBookmarked = useStoreValue(
     characterStore.bookmarks.selectMaybeItem(name),
   )
   const isIgnored = useStoreValue(characterStore.ignores.selectMaybeItem(name))
-  const privateChatStore = usePrivateChatStore()
 
   return (
     <>

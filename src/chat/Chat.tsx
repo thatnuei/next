@@ -1,153 +1,69 @@
-import clsx from "clsx"
-import type { ReactNode } from "react"
-import { useDeferredValue, useEffect, useState } from "react"
-import { createChannelBrowserStore } from "../channelBrowser/ChannelBrowserStore"
-import {
-  CharacterStoreProvider,
-  createCharacterStore,
-} from "../character/CharacterStore"
-import { createFListApi, FListApiProvider } from "../flist/api"
-import type { AuthUser } from "../flist/types"
-import { useChatLogger } from "../logging/context"
-import {
-  createPrivateChatStore,
-  PrivateChatProvider,
-} from "../privateChat/PrivateChatStore"
+import { useDeferredValue } from "react"
 import PrivateChatView from "../privateChat/PrivateChatView"
-import type { WrapperFn } from "../react/WrapperStack"
-import WrapperStack from "../react/WrapperStack"
 import { useRoute } from "../router"
-import { createSocketStore, SocketStoreProvider } from "../socket/SocketStore"
-import { useEmitterListener } from "../state/emitter"
 import { useStoreValue } from "../state/store"
-import ChatMenuButton from "./ChatMenuButton"
+import StalenessState from "../ui/StalenessState"
+import { useChatContext } from "./ChatContext"
 import ChatNav from "./ChatNav"
-import ConnectionGuard from "./ConnectionGuard"
-import { IdentityContextProvider } from "./identity-context"
+import NoRoomView from "./NoRoomView"
+import SocketStatusGuard from "./SocketStatusGuard"
 
-export default function Chat({
-  user: initialUser,
-  identity,
-  onChangeCharacter,
-  onLogout,
-}: {
-  user: AuthUser
-  identity: string
-  onChangeCharacter: () => void
-  onLogout: () => void
-}) {
-  const [socket] = useState(createSocketStore)
-  const status = useStoreValue(socket.status)
-
-  const [api] = useState(() => createFListApi(initialUser))
-
-  const logger = useChatLogger()
-
-  const [characterStore] = useState(() => createCharacterStore(api, identity))
-  useEmitterListener(socket.commands, characterStore.handleCommand)
-
-  const [privateChatStore] = useState(() =>
-    createPrivateChatStore(identity, logger, socket),
-  )
-  useEmitterListener(socket.commands, privateChatStore.handleCommand)
-
-  const [channelBrowserStore] = useState(() =>
-    createChannelBrowserStore(socket),
-  )
-  useEmitterListener(socket.commands, channelBrowserStore.handleCommand)
-
-  const route = useRoute()
-  const deferredRoute = useDeferredValue(route)
-
-  useEffect(() => {
-    socket.connect(() => {
-      return Promise.resolve({
-        account: api.user.account,
-        ticket: api.user.ticket,
-        character: identity,
-      })
-    })
-
-    return () => {
-      socket.disconnect()
-    }
-  }, [api.user.account, api.user.ticket, identity, socket])
-
-  const wrappers: WrapperFn[] = [
-    (p) => <IdentityContextProvider value={identity} {...p} />,
-    (p) => <SocketStoreProvider value={socket} {...p} />,
-    (p) => <FListApiProvider value={api} {...p} />,
-    (p) => <CharacterStoreProvider value={characterStore} {...p} />,
-    (p) => <PrivateChatProvider value={privateChatStore} {...p} />,
-    (p) => <ConnectionGuard status={status} onLogout={onLogout} {...p} />,
-  ]
-
-  const chatNav = (
-    <ChatNav
-      privateChatStore={privateChatStore}
-      channelBrowserStore={channelBrowserStore}
-      onLogout={onChangeCharacter}
-    />
-  )
-
+export default function Chat() {
   return (
-    <WrapperStack wrappers={wrappers}>
-      <div className="flex flex-row h-full gap-1">
-        <div className="hidden md:block">{chatNav}</div>
-
-        <StalenessState
-          className="flex-1 min-w-0 overflow-y-auto"
-          isStale={route !== deferredRoute}
-        >
-          {deferredRoute.name === "privateChat" && (
-            <PrivateChatView
-              key={deferredRoute.params.partnerName}
-              partnerName={deferredRoute.params.partnerName}
-              privateChatStore={privateChatStore}
-              socket={socket}
-              identity={identity}
-              menuButton={<ChatMenuButton>{chatNav}</ChatMenuButton>}
-            />
-          )}
-        </StalenessState>
+    <SocketStatusGuard>
+      <div className="flex h-full gap-1">
+        <div className="hidden md:block">
+          <ChatNav />
+        </div>
+        <div className="flex-1 min-w-0 overflow-y-auto">
+          <ChatRoutes />
+        </div>
       </div>
-    </WrapperStack>
+    </SocketStatusGuard>
   )
 }
 
-function StalenessState({
-  className,
-  isStale,
-  children,
-}: {
-  isStale: boolean
-  className: string
-  children: ReactNode
-}) {
-  return (
-    <div
-      className={clsx(className, isStale && "transition-opacity opacity-50")}
-      style={{ transitionDelay: isStale ? "0.3s" : "0" }}
-    >
-      {children}
-    </div>
-  )
-}
+function ChatRoutes() {
+  const context = useChatContext()
+  const route = useRoute()
 
-/* 
-function ChatRoutes({ route }: { route: Route }) {
-  return (
-    <>
-      {route.name === "channel" && (
-        <ChannelView key={route.params.channelId} {...route.params} />
-      )}
-      {route.name === "privateChat" && (
-        <PrivateChatView key={route.params.partnerName} {...route.params} />
-      )}
-      {route.name === "notifications" && <NotificationListScreen />}
-      {route.name === "logs" && <ChatLogBrowser />}
-      {route.name === false && <NoRoomView />}
-    </>
+  const privateChatRoute = useStoreValue(
+    context.privateChatStore.openChatNames.select(
+      (openChatNames) =>
+        route.name === "privateChat" &&
+        openChatNames[route.params.partnerName] &&
+        route,
+    ),
+    // the route object has functions on it,
+    // so deepEquals won't work here
+    Object.is,
   )
+  const deferredPrivateChatRoute = useDeferredValue(privateChatRoute)
+
+  if (deferredPrivateChatRoute) {
+    return (
+      <StalenessState isStale={deferredPrivateChatRoute !== privateChatRoute}>
+        <PrivateChatView
+          key={deferredPrivateChatRoute.params.partnerName}
+          {...deferredPrivateChatRoute.params}
+        />
+      </StalenessState>
+    )
+  }
+
+  return <NoRoomView />
+
+  // return (
+  //   <>
+  //     {route.name === "channel" && (
+  //       <ChannelView key={route.params.channelId} {...route.params} />
+  //     )}
+  //     {route.name === "privateChat" && (
+  //       <PrivateChatView key={route.params.partnerName} {...route.params} />
+  //     )}
+  //     {route.name === "notifications" && <NotificationListScreen />}
+  //     {route.name === "logs" && <ChatLogBrowser />}
+  //     {route.name === false && <NoRoomView />}
+  //   </>
+  // )
 }
- */

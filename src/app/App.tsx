@@ -15,6 +15,10 @@ type AppView =
 
 const Chat = lazy(() => import("../chat/Chat"))
 
+const ChatProvider = lazy(() =>
+  import("../chat/ChatContext").then((mod) => ({ default: mod.ChatProvider })),
+)
+
 export default function App() {
   const [view, setView] = useState<AppView>({ name: "login" })
 
@@ -50,16 +54,18 @@ export default function App() {
     return (
       <AppErrorBoundary>
         <Suspense fallback={<ChatFallback />}>
-          <Chat
+          <ChatProvider
             user={view.user}
             identity={view.identity}
-            onChangeCharacter={() => {
-              setView({ name: "characterSelect", user: view.user })
-            }}
-            onLogout={() => {
+            onShowLogin={() => {
               setView({ name: "login" })
             }}
-          />
+            onShowCharacterSelect={() => {
+              setView({ name: "characterSelect", user: view.user })
+            }}
+          >
+            <Chat />
+          </ChatProvider>
         </Suspense>
       </AppErrorBoundary>
     )

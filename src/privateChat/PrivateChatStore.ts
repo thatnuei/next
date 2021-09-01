@@ -7,7 +7,6 @@ import {
   createPrivateMessage,
   createSystemMessage,
 } from "../message/MessageState"
-import { createSimpleContext } from "../react/createSimpleContext"
 import {
   addRoomMessage,
   createRoomState,
@@ -199,9 +198,3 @@ export function createPrivateChatStore(
 
   return store
 }
-
-export const {
-  Provider: PrivateChatProvider,
-  useValue: usePrivateChatStore,
-  useOptionalValue: useOptionalPrivateChatStore,
-} = createSimpleContext<PrivateChatStore>("PrivateChatStore")

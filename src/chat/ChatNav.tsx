@@ -1,35 +1,23 @@
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
-import type { ChannelBrowserStore } from "../channelBrowser/ChannelBrowserStore"
 import CharacterSummary from "../character/CharacterSummary"
 import OnlineUsers from "../character/OnlineUsers"
 import ChatNavAction from "../chat/ChatNavAction"
 import Button from "../dom/Button"
-import type { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import PrivateChatTabList from "../privateChat/PrivateChatTabList"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
+import { useChatContext } from "./ChatContext"
 import ChatNavActionButton from "./ChatNavActionButton"
-import { useIdentityContext } from "./identity-context"
 
-export default function ChatNav({
-  privateChatStore,
-  channelBrowserStore,
-  onLogout,
-}: {
-  privateChatStore: PrivateChatStore
-  channelBrowserStore: ChannelBrowserStore
-  onLogout: () => void
-}) {
-  const identity = useIdentityContext()
+export default function ChatNav() {
+  const context = useChatContext()
   return (
     <nav className="grid h-full grid-cols-[auto,15rem] gap-y-1 bg-midnight-2">
       <div className="flex flex-col">
         <Modal
           title="Channel Browser"
-          renderContent={() => (
-            <ChannelBrowser channelBrowserStore={channelBrowserStore} />
-          )}
+          renderContent={() => <ChannelBrowser />}
           renderTrigger={(t) => (
             <ChatNavActionButton
               icon={<Icon which={icons.list} />}
@@ -112,18 +100,18 @@ export default function ChatNav({
 
         <div className={`flex-1`} />
 
-        <Button onClick={onLogout}>
+        <Button onClick={context.showCharacterSelect}>
           <ChatNavAction icon={<Icon which={icons.logout} />} name="Log out" />
         </Button>
       </div>
 
       <div className="grid grid-rows-[auto,1fr] gap-1 overflow-y-auto">
         <div className="p-2 bg-midnight-0">
-          <CharacterSummary name={identity} />
+          <CharacterSummary name={context.identity} />
         </div>
 
         <div className="bg-midnight-1">
-          <PrivateChatTabList privateChatStore={privateChatStore} />
+          <PrivateChatTabList />
         </div>
       </div>
     </nav>

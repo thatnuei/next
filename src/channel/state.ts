@@ -4,7 +4,7 @@ import { mapValues } from "lodash-es"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { characterAtom } from "../character/state"
 import type { Character } from "../character/types"
-import { useIdentityContext } from "../chat/identity-context"
+import { useChatContext } from "../chat/ChatContext"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
 import type { Dict, TruthyMap } from "../common/types"
@@ -28,7 +28,6 @@ import {
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { useSocketListener } from "../socket/SocketConnection"
-import { useSocketStoreContext } from "../socket/SocketStore"
 import { useAccount } from "../user"
 import { loadChannels, saveChannels } from "./storage"
 import type { ChannelMode } from "./types"
@@ -100,7 +99,7 @@ export function useActualChannelMode(id: string) {
 }
 
 export function useJoinChannel() {
-  const { send } = useSocketStoreContext()
+  const { send } = useChatContext().socket
   const updateAtom = useUpdateAtomFn()
 
   return useCallback(
@@ -122,7 +121,7 @@ export function useJoinChannel() {
 function useAddChannelMessage() {
   const updateChannels = useUpdateDictAtom(channelDictAtom, createChannel)
   const logger = useChatLogger()
-  const identity = useIdentityContext()
+  const identity = useChatContext().identity
   return useCallback(
     (id: string, message: MessageState) => {
       updateChannels(id, (channel) => addRoomMessage(channel, message))
@@ -135,8 +134,8 @@ function useAddChannelMessage() {
 }
 
 export function useChannelActions(id: string) {
-  const { send } = useSocketStoreContext()
-  const identity = useIdentityContext()
+  const { send } = useChatContext().socket
+  const identity = useChatContext().identity
   const updateChannel = useUpdateAtom(channelAtom(id))
   const joinChannel = useJoinChannel()
   const addChannelMessage = useAddChannelMessage()
@@ -205,7 +204,7 @@ export function useChannelActions(id: string) {
 }
 
 export function useChannelCommandListener() {
-  const identity = useIdentityContext()
+  const identity = useChatContext().identity
   const account = useAccount()
   const logger = useChatLogger()
   const [channelDict, setChannelDict] = useAtom(channelDictAtom)

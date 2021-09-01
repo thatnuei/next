@@ -1,24 +1,17 @@
 import { atom } from "jotai"
 import { useAtomValue, useUpdateAtom } from "jotai/utils"
-import { useCallback, useEffect, useMemo, useState } from "react"
-import type { CharacterStatus } from "../character/types"
+import { useCallback, useMemo } from "react"
 import { omit } from "../common/omit"
 import { raise } from "../common/raise"
 import type { Dict, TruthyMap } from "../common/types"
 import { dictionaryAtomFamily } from "../jotai/dictionaryAtomFamily"
-import { useUpdateAtomFn } from "../jotai/useUpdateAtomFn"
 import { useUpdateDictAtom } from "../jotai/useUpdateDictAtom"
 import { useChatLogger } from "../logging/context"
 import type { MessageState } from "../message/MessageState"
-import {
-  createPrivateMessage,
-  createSystemMessage,
-} from "../message/MessageState"
+import { createPrivateMessage } from "../message/MessageState"
 import { addRoomMessage, createRoomState, setRoomUnread } from "../room/state"
-import { matchCommand } from "../socket/helpers"
-import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
+import { useSocketActions } from "../socket/SocketConnection"
 import { useIdentity } from "../user"
-import { restorePrivateChats, savePrivateChats } from "./storage"
 import type { PrivateChat } from "./types"
 
 const privateChatDictAtom = atom<Dict<PrivateChat>>({})
@@ -184,91 +177,4 @@ export function usePrivateChatActions(partnerName: string) {
       setPrivateChat,
     ],
   )
-}
-
-export function usePrivateChatCommandHandler() {
-  const identity = useIdentity()
-  const updateAtom = useUpdateAtomFn()
-  const addPrivateChatMessage = useAddPrivateChatMessage()
-  const openPrivateChat = useOpenPrivateChat()
-  const partnerNames = useAtomValue(openChatNamesAtom)
-  const setPrivateChatDict = useUpdateAtom(privateChatDictAtom)
-  const [isRestored, setIsRestored] = useState(false)
-
-  function addStatusSystemMessage(
-    character: string,
-    status: CharacterStatus,
-    statusmsg = "",
-  ) {
-    if (partnerNames[character]) {
-      const statusMessageSuffix = statusmsg ? `: ${statusmsg}` : ""
-      addPrivateChatMessage(
-        character,
-        createSystemMessage(
-          `[user]${character}[/user] is now ${status}${statusMessageSuffix}`,
-        ),
-      )
-    }
-  }
-
-  useEffect(() => {
-    if (!isRestored || !identity) return
-    savePrivateChats(identity, Object.keys(partnerNames))
-  }, [identity, partnerNames, isRestored])
-
-  useSocketListener((command) => {
-    matchCommand(command, {
-      async IDN() {
-        setPrivateChatDict({})
-
-        if (!identity) return
-        const names = await restorePrivateChats(identity).catch(() => [])
-        for (const name of names) {
-          openPrivateChat(name)
-        }
-        setIsRestored(true)
-      },
-
-      PRI({ character, message }) {
-        openPrivateChat(character)
-        addPrivateChatMessage(
-          character,
-          createPrivateMessage(character, message),
-        )
-        updateAtom(privateChatAtom(character), (chat) =>
-          setRoomUnread(chat, true),
-        )
-      },
-
-      TPN({ character, status }) {
-        updateAtom(privateChatAtom(character), (prev) => ({
-          ...prev,
-          typingStatus: status,
-        }))
-      },
-
-      RLL(params) {
-        if ("recipient" in params) {
-          const partnerName =
-            params.character === identity ? params.recipient : params.character
-
-          openPrivateChat(partnerName)
-          addPrivateChatMessage(
-            partnerName,
-            createSystemMessage(params.message),
-          )
-        }
-      },
-
-      STA({ character, status, statusmsg }) {
-        addStatusSystemMessage(character, status, statusmsg)
-      },
-      NLN({ identity, status }) {
-        addStatusSystemMessage(identity, status)
-      },
-      FLN({ character }) {
-        addStatusSystemMessage(character, "offline")
-      },
-    })
-  })
 }

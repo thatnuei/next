@@ -1,4 +1,3 @@
-import { createSimpleContext } from "../react/createSimpleContext"
 import { createEmitter } from "../state/emitter"
 import { createStore } from "../state/store"
 import { socketUrl } from "./constants"
@@ -139,9 +138,3 @@ export function createSocketStore() {
     send,
   }
 }
-
-export const {
-  Provider: SocketStoreProvider,
-  useValue: useSocketStoreContext,
-  useOptionalValue: useOptionalSocketStoreContext,
-} = createSimpleContext<SocketStore>("SocketStore")

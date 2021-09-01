@@ -1,6 +1,5 @@
 import { pick } from "lodash-es"
 import { toError } from "../common/toError"
-import { createSimpleContext } from "../react/createSimpleContext"
 import { authenticate } from "./authenticate"
 import { fetchFlist } from "./fetchFlist"
 import type { AuthUser, LoginCredentials } from "./types"
@@ -100,9 +99,3 @@ export function createFListApi(initialUser: AuthUser) {
 
   return api
 }
-
-export const {
-  Provider: FListApiProvider,
-  useValue: useFListApi,
-  useOptionalValue: useOptionalFListApi,
-} = createSimpleContext<FListApi>("FListApi")

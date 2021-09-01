@@ -1,22 +1,23 @@
 import type { Ref } from "react"
-import { useGetChannelLink } from "../channelBrowser/state"
+import type { ChannelBrowserStore } from "../channelBrowser/ChannelBrowserStore"
 import Button from "../dom/Button"
 import { useNotificationActions } from "../notifications/state"
 import { autoRef } from "../react/autoRef"
 
 export default autoRef(function CopyChannelCodeButton({
   channelId,
+  channelBrowserStore,
   className,
   onClick,
   ref,
 }: {
   channelId: string
+  channelBrowserStore: ChannelBrowserStore
   className?: string
   onClick?: () => void
-  ref: Ref<HTMLButtonElement>
+  ref?: Ref<HTMLButtonElement>
 }) {
   const { addNotification } = useNotificationActions()
-  const getChannelLink = useGetChannelLink()
 
   return (
     <Button
@@ -25,7 +26,7 @@ export default autoRef(function CopyChannelCodeButton({
       ref={ref}
       onClick={() => {
         window.navigator.clipboard
-          .writeText(getChannelLink(channelId))
+          .writeText(channelBrowserStore.selectChannelLink(channelId).value)
           .then(() => {
             addNotification({
               type: "info",

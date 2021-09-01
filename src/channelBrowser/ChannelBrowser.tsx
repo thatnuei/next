@@ -2,6 +2,7 @@ import clsx from "clsx"
 import { sortBy } from "lodash-es"
 import { matchSorter } from "match-sorter"
 import { useEffect, useState } from "react"
+import { useChatContext } from "../chat/ChatContext"
 import Button from "../dom/Button"
 import TextInput from "../dom/TextInput"
 import { useStoreValue } from "../state/store"
@@ -10,20 +11,16 @@ import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
-import type { ChannelBrowserStore } from "./ChannelBrowserStore"
 import type { ChannelBrowserChannel } from "./types"
 
-function ChannelBrowser({
-  channelBrowserStore,
-}: {
-  channelBrowserStore: ChannelBrowserStore
-}) {
+function ChannelBrowser() {
+  const context = useChatContext()
   const [query, setQuery] = useState("")
   const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
 
   useEffect(() => {
-    channelBrowserStore.refresh()
-  }, [channelBrowserStore])
+    context.channelBrowserStore.refresh()
+  }, [context.channelBrowserStore])
 
   const cycleSortMode = () =>
     setSortMode((mode) => (mode === "title" ? "userCount" : "title"))
@@ -44,13 +41,13 @@ function ChannelBrowser({
   }
 
   const channels = useStoreValue(
-    channelBrowserStore.channels.select((channels) => [
+    context.channelBrowserStore.channels.select((channels) => [
       ...processChannels(channels.public),
       ...processChannels(channels.private),
     ]),
   )
 
-  const isRefreshing = useStoreValue(channelBrowserStore.isRefreshing)
+  const isRefreshing = useStoreValue(context.channelBrowserStore.isRefreshing)
 
   return (
     <div className={`flex flex-col w-full h-full`}>
@@ -100,7 +97,7 @@ function ChannelBrowser({
         <Button
           title="Refresh"
           className={solidButton}
-          onClick={channelBrowserStore.refresh}
+          onClick={context.channelBrowserStore.refresh}
           disabled={isRefreshing}
         >
           <Icon which={icons.refresh} />

@@ -1,5 +1,4 @@
 import { delay } from "../common/delay"
-import { createSimpleContext } from "../react/createSimpleContext"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import type { SocketStore } from "../socket/SocketStore"
@@ -96,6 +95,3 @@ export function createChannelBrowserStore(socket: SocketStore) {
 
   return store
 }
-
-export const ChannelBrowserStoreContext =
-  createSimpleContext<ChannelBrowserStore>("ChannelBrowserStore")

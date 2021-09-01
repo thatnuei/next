@@ -5,7 +5,7 @@ import Button from "../dom/Button"
 import { useNotificationActions } from "../notifications/state"
 import type { TypingStatus } from "../privateChat/types"
 import { solidButton } from "../ui/components"
-import { useIdentityContext } from "./identity-context"
+import { useChatContext } from "./ChatContext"
 
 type Props = {
   value: string
@@ -17,7 +17,7 @@ type Props = {
 }
 
 export default function ChatInput(props: Props) {
-  const identity = useIdentityContext()
+  const identity = useChatContext().identity
   const notificationActions = useNotificationActions()
 
   const valueTrimmed = props.value.trim()

@@ -22,12 +22,12 @@ select {
 
 /* prettier-ignore */
 @keyframes rainbow {
-		from { color: #6666ff }
-		10% { color: #0099ff }
-		50% { color: #00ff00 }
-		75% { color: #ff3399 }
-		100% { color: #6666ff }
-	}
+  from { color: #6666ff }
+  10% { color: #0099ff }
+  50% { color: #00ff00 }
+  75% { color: #ff3399 }
+  100% { color: #6666ff }
+}
 
 .rainbow-animation {
   animation: rainbow 5s infinite;
@@ -161,4 +161,22 @@ select {
 .prose a:hover,
 .prose a:focus {
   color: theme("colors.blue.400");
+}
+
+@keyframes ghost {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.75;
+  }
+}
+
+.ghost-animation-in {
+  animation: ghost 0.3s forwards;
+  animation-delay: 0.3s;
+}
+
+.ghost-animation-out {
+  animation: ghost 0.3s reverse forwards;
 }

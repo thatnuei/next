@@ -1,16 +1,14 @@
-import { isTruthy } from "../common/isTruthy"
 import { truthyMap } from "../common/truthyMap"
 import type { FListApi } from "../flist/api"
-import { createSimpleContext } from "../react/createSimpleContext"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { createDictStore } from "../state/dict-store"
-import { createStore, useStoreValue } from "../state/store"
+import { createStore } from "../state/store"
 import type { Character, Friendship } from "./types"
 
-type CharacterStore = ReturnType<typeof createCharacterStore>
+export type CharacterStore = ReturnType<typeof createCharacterStore>
 
-const createCharacter = (name: string): Character => ({
+export const createCharacter = (name: string): Character => ({
   name,
   gender: "None",
   status: "offline",
@@ -124,28 +122,4 @@ export function createCharacterStore(api: FListApi, identity: string) {
   }
 
   return store
-}
-
-export const {
-  Provider: CharacterStoreProvider,
-  useValue: useCharacterStore,
-  useOptionalValue: useOptionalCharacterStore,
-} = createSimpleContext<CharacterStore>("CharacterStore")
-
-export function useCharacter(name: string): Character {
-  const store = useCharacterStore()
-  return (
-    useStoreValue(store.characters.select((state) => state[name])) ??
-    createCharacter(name)
-  )
-}
-
-export function useCharacters(names: string[]) {
-  const store = useCharacterStore()
-
-  return useStoreValue(
-    store.characters.select((characters) =>
-      names.map((name) => characters[name]).filter(isTruthy),
-    ),
-  )
 }

@@ -1,6 +1,6 @@
 import BBC from "../bbc/BBC"
-import { useCharacter } from "./CharacterStore"
 import { statusColors } from "./colors"
+import { useCharacter } from "./useCharacter"
 
 function CharacterStatusText({ name }: { name: string }) {
   const { status, statusMessage } = useCharacter(name)

@@ -3,9 +3,9 @@ import { getProfileUrl } from "../flist/helpers"
 import { headerText2 } from "../ui/components"
 import Avatar from "./Avatar"
 import CharacterStatusText from "./CharacterStatusText"
-import { useCharacter } from "./CharacterStore"
 import { genderColors } from "./colors"
 import { useNickname } from "./nicknames"
+import { useCharacter } from "./useCharacter"
 
 function CharacterSummary({ name }: { name: string }) {
   const { gender } = useCharacter(name)

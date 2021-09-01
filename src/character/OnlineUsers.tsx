@@ -3,6 +3,7 @@ import { sortBy, uniq } from "lodash-es"
 import { matchSorter } from "match-sorter"
 import type { ReactNode } from "react"
 import { useDeferredValue, useMemo } from "react"
+import { useChatContext } from "../chat/ChatContext"
 import TextInput from "../dom/TextInput"
 import { createStore, useStoreValue } from "../state/store"
 import { input } from "../ui/components"
@@ -10,8 +11,8 @@ import Icon from "../ui/Icon"
 import { bookmark, heart } from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import CharacterName from "./CharacterName"
-import { useCharacters, useCharacterStore } from "./CharacterStore"
 import type { Character } from "./types"
+import { useCharacterList } from "./useCharacterList"
 
 type ListItem = {
   type: "friend" | "bookmark" | "searched"
@@ -23,9 +24,9 @@ type ListItem = {
 const searchStore = createStore("")
 
 export default function OnlineUsers() {
-  const store = useCharacterStore()
+  const store = useChatContext().characterStore
 
-  const friends = useCharacters(
+  const friends = useCharacterList(
     useStoreValue(
       store.friendships.select((friendships) =>
         uniq(friendships.map((f) => f.them)),
@@ -33,7 +34,7 @@ export default function OnlineUsers() {
     ),
   )
 
-  const bookmarks = useCharacters(
+  const bookmarks = useCharacterList(
     useStoreValue(
       store.bookmarks.select((bookmarks) => Object.keys(bookmarks)),
     ),

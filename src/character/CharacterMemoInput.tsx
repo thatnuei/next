@@ -1,6 +1,6 @@
 import { debounce } from "lodash-es"
 import { useEffect, useMemo, useState } from "react"
-import { useFListApi } from "../flist/api"
+import { useChatContext } from "../chat/ChatContext"
 import type { TagProps } from "../jsx/types"
 import { input } from "../ui/components"
 
@@ -9,7 +9,7 @@ type Props = {
 } & TagProps<"textarea">
 
 export default function CharacterMemoInput({ name, ...props }: Props) {
-  const api = useFListApi()
+  const api = useChatContext().api
 
   type State =
     | { status: "loading" }
