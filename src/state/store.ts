@@ -1,7 +1,7 @@
 import { isEqual as isDeepEqual } from "lodash-es"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import type { EmitterLike } from "./emitter"
-import { createEmitter } from "./emitter"
+import { createEmitter, useEmitterListener } from "./emitter"
 
 export interface Store<Value> extends EmitterLike<Value> {
   get value(): Value
@@ -90,14 +90,15 @@ export function useStoreValue<Value>(
 ) {
   const [state, setState] = useState(store.value)
 
-  useEffect(() => {
-    setState((current) =>
-      isEqual(current, store.value) ? current : store.value,
-    )
-    return store.listen((newState) => {
+  const setIfChanged = useCallback(
+    (newState: Value) => {
       setState((current) => (isEqual(current, newState) ? current : newState))
-    })
-  }, [isEqual, store])
+    },
+    [isEqual],
+  )
+
+  useEffect(() => setIfChanged(store.value), [setIfChanged, store])
+  useEmitterListener(store, setIfChanged)
 
   return state
 }
