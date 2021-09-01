@@ -84,7 +84,7 @@ export function createCharacterStore(api: FListApi, identity: string) {
           for (const [name, gender, status, statusMessage] of params.characters) {
             newCharacters[name] = { name, gender, status, statusMessage }
           }
-          characters.merge(newCharacters)
+          characters.mergeSet(newCharacters)
         },
 
         NLN: ({ identity: name, gender, status }) => {

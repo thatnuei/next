@@ -70,7 +70,7 @@ export function createChannelBrowserStore(socket: SocketStore) {
         },
 
         CHA(params) {
-          channels.merge({
+          channels.mergeSet({
             public: params.channels.map((it) => ({
               id: it.name,
               title: it.name,
@@ -81,7 +81,7 @@ export function createChannelBrowserStore(socket: SocketStore) {
         },
 
         ORS(params) {
-          channels.merge({
+          channels.mergeSet({
             private: params.channels.map((it) => ({
               id: it.name,
               title: it.title,

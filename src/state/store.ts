@@ -11,7 +11,7 @@ export interface Store<Value> extends EmitterLike<Value> {
 export interface WritableStore<Value> extends Store<Value> {
   set(state: Value): void
   update(fn: (oldState: Value) => Value): void
-  merge(state: Partial<Value>): void
+  mergeSet(state: Partial<Value>): void
 }
 
 export function createStore<Value>(value: Value): WritableStore<Value> {
@@ -33,7 +33,7 @@ export function createStore<Value>(value: Value): WritableStore<Value> {
       store.set(fn(value))
     },
 
-    merge: (newState) => {
+    mergeSet: (newState) => {
       store.set({ ...value, ...newState })
     },
 
