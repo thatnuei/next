@@ -1,13 +1,18 @@
 import { useChatContext } from "../chat/ChatContext"
-import { isTruthy } from "../common/isTruthy"
+import { unique } from "../common/unique"
 import { useStoreValue } from "../state/store"
+import { createCharacter } from "./CharacterStore"
+import type { Character } from "./types"
 
-export function useCharacterList(names: string[]) {
+export function useCharacterList(names: string[]): readonly Character[] {
   const context = useChatContext()
 
   return useStoreValue(
     context.characterStore.characters.select((characters) =>
-      names.map((name) => characters[name]).filter(isTruthy),
+      unique(
+        names.map((name) => characters[name] ?? createCharacter(name)),
+        (char) => char.name,
+      ),
     ),
   )
 }
