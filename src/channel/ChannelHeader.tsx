@@ -1,8 +1,7 @@
-import type { ReactNode } from ".pnpm/@types+react@17.0.14/node_modules/@types/react"
 import * as React from "react"
 import BBC from "../bbc/BBC"
-import type { ChannelBrowserStore } from "../channelBrowser/ChannelBrowserStore"
 import { useIsPublicChannel } from "../channelBrowser/state"
+import ChatMenuButton from "../chat/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
 import { fadedButton, headerText2 } from "../ui/components"
@@ -24,11 +23,9 @@ import { useChannel, useChannelActions } from "./state"
 
 type Props = {
   channelId: string
-  channelBrowserStore: ChannelBrowserStore
-  menuButton: ReactNode
 }
 
-function ChannelHeader({ channelBrowserStore, channelId, menuButton }: Props) {
+function ChannelHeader({ channelId }: Props) {
   const channel = useChannel(channelId)
   const isLargeScreen = useMediaQuery(screenQueries.large)
   const [inviteOpen, setInviteOpen] = React.useState(false)
@@ -37,7 +34,7 @@ function ChannelHeader({ channelBrowserStore, channelId, menuButton }: Props) {
 
   return (
     <header className="flex flex-row items-center gap-3 p-3 bg-midnight-0">
-      {menuButton}
+      <ChatMenuButton />
 
       <Modal
         title="Channel Description"
@@ -90,10 +87,7 @@ function ChannelHeader({ channelBrowserStore, channelId, menuButton }: Props) {
 
           <div className="flex flex-col bg-midnight-1">
             <DropdownMenuItem icon={<Icon which={icons.code} />}>
-              <CopyChannelCodeButton
-                channelBrowserStore={channelBrowserStore}
-                channelId={channelId}
-              />
+              <CopyChannelCodeButton channelId={channelId} />
             </DropdownMenuItem>
 
             <DropdownMenuItem icon={<Icon which={icons.clearMessages} />}>

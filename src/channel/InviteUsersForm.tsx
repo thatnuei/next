@@ -1,6 +1,7 @@
 import CharacterName from "../character/CharacterName"
-import { useLikedCharacters, useUserCharacters } from "../character/state"
 import type { Character } from "../character/types"
+import { useLikedCharacters } from "../character/useLikedCharacters"
+import { useUserCharacters } from "../character/useUserCharacters"
 import { useNotificationActions } from "../notifications/state"
 import { useSocketActions } from "../socket/SocketConnection"
 import { fadedButton } from "../ui/components"

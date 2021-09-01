@@ -2,8 +2,8 @@ import { atom, useAtom } from "jotai"
 import { selectAtom, useAtomValue, useUpdateAtom } from "jotai/utils"
 import { mapValues } from "lodash-es"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { characterAtom } from "../character/state"
 import type { Character } from "../character/types"
+import { useCharacterList } from "../character/useCharacterList"
 import { useChatContext } from "../chat/ChatContext"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
@@ -83,14 +83,7 @@ export function useChannelCharacters(id: string): readonly Character[] {
     return selectAtom(channelAtom(id), (channel) => channel.users)
   }, [id])
 
-  const channelCharactersAtom = useMemo(() => {
-    return atom((get) => {
-      const channelUsers = get(channelUsersAtom)
-      return Object.keys(channelUsers).map((name) => get(characterAtom(name)))
-    })
-  }, [channelUsersAtom])
-
-  return useAtomValue(channelCharactersAtom)
+  return useCharacterList(Object.keys(useAtomValue(channelUsersAtom)))
 }
 
 export function useActualChannelMode(id: string) {

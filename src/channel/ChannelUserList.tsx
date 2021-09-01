@@ -1,10 +1,12 @@
+import clsx from "clsx"
 import { sortBy } from "lodash-es"
 import { memo } from "react"
 import CharacterName from "../character/CharacterName"
 import { useGetNickname } from "../character/nicknames"
-import { useGetCharacterRoles } from "../character/state"
-import type { CharacterStatus } from "../character/types"
+import type { Character } from "../character/types"
+import { useChatContext } from "../chat/ChatContext"
 import type { ValueOf } from "../common/types"
+import { useStoreValue } from "../state/store"
 import VirtualizedList from "../ui/VirtualizedList"
 import { useChannel, useChannelCharacters } from "./state"
 
@@ -12,43 +14,66 @@ type Props = {
   channelId: string
 }
 
-const itemTypes = [
-  "friend",
-  "bookmark",
-  "admin",
-  "op",
-  "looking",
-  "default",
-] as const
+type ListItem = {
+  character: Character
+  type: ItemType
+}
+
+const itemTypes = ["friend", "bookmark", "admin", "op", "looking", "default"]
 type ItemType = ValueOf<typeof itemTypes>
 
+const itemTypeSortOrders = new Map<string, number>(
+  [...itemTypes.entries()].map(([order, type]) => [type, Number(order)]),
+)
+
 function ChannelUserList({ channelId }: Props) {
-  const channel = useChannel(channelId)
+  const context = useChatContext()
   const characters = useChannelCharacters(channelId)
-  const getRoles = useGetCharacterRoles()
+  const admins = useStoreValue(context.characterStore.admins)
+  const channel = useChannel(channelId)
   const getNickname = useGetNickname()
 
-  const getType = (name: string, status: CharacterStatus): ItemType => {
-    const roles = getRoles(name)
-    if (roles.isAdmin) return "admin"
-    if (channel.ops[name]) return "op"
-    if (roles.isFriend) return "friend"
-    if (roles.isBookmarked) return "bookmark"
-    if (status === "looking") return "looking"
+  const friendships = useStoreValue(
+    context.characterStore.friendships.select((friendships) =>
+      friendships.map((f) => f.them),
+    ),
+  )
+
+  const bookmarks = useStoreValue(context.characterStore.bookmarks.selectKeys())
+
+  const getType = (character: Character): ItemType => {
+    if (admins[character.name]) return "admin"
+    if (channel.ops[character.name]) return "op"
+    if (friendships.includes(character.name)) return "friend"
+    if (bookmarks.includes(character.name)) return "bookmark"
+    if (character.status === "looking") return "looking"
     return "default"
   }
 
-  const getTypeClassName = (type: ItemType): string => {
-    if (type === "admin") return `bg-red-500 bg-opacity-20`
-    if (type === "op") return `bg-yellow-500 bg-opacity-20`
-    if (type === "friend") return `bg-green-500 bg-opacity-20`
-    if (type === "bookmark") return `bg-blue-500 bg-opacity-20`
+  const getTypeClass = (type: ItemType) => {
+    switch (type) {
+      case "admin":
+        return `bg-red-500 bg-opacity-20`
+      case "op":
+        return `bg-yellow-500 bg-opacity-20`
+      case "friend":
+        return `bg-green-500 bg-opacity-20`
+      case "bookmark":
+        return `bg-blue-500 bg-opacity-20`
+    }
     return ""
   }
 
-  const sortedItems = sortBy(characters, [
-    (it) => itemTypes.indexOf(getType(it.name, it.status)),
-    (it) => (getNickname(it.name) || it.name).toLowerCase(),
+  const items = characters.map(
+    (character): ListItem => ({
+      character,
+      type: getType(character),
+    }),
+  )
+
+  const sortedItems = sortBy(items, [
+    (it) => itemTypeSortOrders.get(it.type),
+    (it) => (getNickname(it.character.name) || it.character.name).toLowerCase(),
   ])
 
   return (
@@ -60,16 +85,17 @@ function ChannelUserList({ channelId }: Props) {
         <VirtualizedList
           items={sortedItems}
           itemSize={32}
-          getItemKey={(item) => item.name}
+          getItemKey={(item) => item.character.name}
           renderItem={({ item, style }) => (
             <div
               role="listitem"
               style={style}
-              className={`flex items-center px-2 ${getTypeClassName(
-                getType(item.name, item.status),
-              )}`}
+              className={clsx(
+                `flex items-center px-2`,
+                getTypeClass(item.type),
+              )}
             >
-              <CharacterName name={item.name} />
+              <CharacterName name={item.character.name} />
             </div>
           )}
         />

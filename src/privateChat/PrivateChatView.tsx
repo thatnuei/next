@@ -19,10 +19,6 @@ document.addEventListener("visibilitychange", () => {
   documentVisibleStore.set(document.visibilityState === "visible")
 })
 
-function repeatArray<T>(array: T[], count: number): T[] {
-  return [...Array(count)].flatMap(() => array)
-}
-
 export default function PrivateChatView({
   partnerName,
 }: {

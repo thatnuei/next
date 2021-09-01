@@ -8,7 +8,6 @@ import { authenticate } from "./flist/authenticate"
 import { fetchFlist } from "./flist/fetchFlist"
 import type { AuthUser, LoginCredentials } from "./flist/types"
 import { useEffectRef } from "./react/useEffectRef"
-import { routes } from "./router"
 
 type FriendsAndBookmarksResponse = {
   readonly friendlist: ReadonlyArray<{
@@ -80,7 +79,6 @@ export function useUserActions() {
         setAccount(undefined)
         setUserCharacters([])
         user = undefined
-        routes.login().push()
       },
 
       setIdentity(identity: string) {
