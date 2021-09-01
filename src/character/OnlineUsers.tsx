@@ -54,8 +54,8 @@ export default function OnlineUsers() {
   const sortByName = (characters: readonly Character[]) =>
     sortBy(characters, (character) => character.name.toLowerCase())
 
-  const listItems: ListItem[] = useDeferredValue(
-    useMemo(() => {
+  const listItems = useDeferredValue(
+    useMemo((): ListItem[] => {
       const getFriendItems = (): ListItem[] =>
         sortByName(friends).map((character) => ({
           character,
@@ -80,12 +80,16 @@ export default function OnlineUsers() {
           ),
         }))
 
-      return searchedCharacters.length
-        ? searchedCharacters.map((character) => ({
-            type: "searched",
-            character,
-          }))
+      const items = searchedCharacters.length
+        ? searchedCharacters.map(
+            (character): ListItem => ({
+              type: "searched",
+              character,
+            }),
+          )
         : [...getFriendItems(), ...getBookmarkItems()]
+
+      return items.filter((item) => item.character.status !== "offline")
     }, [bookmarks, friends, searchedCharacters]),
   )
 
