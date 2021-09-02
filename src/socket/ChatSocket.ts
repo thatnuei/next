@@ -18,7 +18,7 @@ export type SocketStatus =
   | "willReconnect"
   | "closed"
 
-export type SocketStore = ReturnType<typeof createSocketStore>
+export type ChatSocket = ReturnType<typeof createChatSocket>
 
 // https://toys.in.newtsin.space/api-docs/#server-closes-connection-after-issuing-an-err-protocol-command
 const errorCodesToAvoidReconnection = new Set([
@@ -32,7 +32,7 @@ const errorCodesToAvoidReconnection = new Set([
   40, // kicked
 ])
 
-export function createSocketStore() {
+export function createChatSocket() {
   const commands = createEmitter<ServerCommand>()
   const status = createStore<SocketStatus>("initial")
   let socket: WebSocket | undefined

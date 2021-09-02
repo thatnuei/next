@@ -1,14 +1,14 @@
 import { delay } from "../common/delay"
+import type { ChatSocket } from "../socket/ChatSocket"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
-import type { SocketStore } from "../socket/SocketStore"
 import type { Store } from "../state/store"
 import { createStore } from "../state/store"
 import type { ChannelBrowserChannel } from "./types"
 
 export type ChannelBrowserStore = ReturnType<typeof createChannelBrowserStore>
 
-export function createChannelBrowserStore(socket: SocketStore) {
+export function createChannelBrowserStore(socket: ChatSocket) {
   const channels = createStore<{
     public: ChannelBrowserChannel[]
     private: ChannelBrowserChannel[]

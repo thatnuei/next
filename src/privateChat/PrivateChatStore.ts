@@ -13,9 +13,9 @@ import {
   setRoomInput,
   setRoomUnread,
 } from "../room/state"
+import type { ChatSocket } from "../socket/ChatSocket"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
-import type { SocketStore } from "../socket/SocketStore"
 import { createDictStore } from "../state/dict-store"
 import { createStore } from "../state/store"
 import { restorePrivateChats, savePrivateChats } from "./storage"
@@ -38,7 +38,7 @@ function getLoggerRoomId(identity: string, partnerName: string): string {
 export function createPrivateChatStore(
   identity: string,
   logger: ChatLogger,
-  socket: SocketStore,
+  socket: ChatSocket,
 ) {
   const privateChats = createDictStore<PrivateChat>(createPrivateChat)
   const openChatNames = createStore<TruthyMap>({})

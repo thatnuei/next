@@ -11,8 +11,8 @@ import { createSystemNotificationsHandler } from "../notifications/createSystemN
 import type { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { createPrivateChatStore } from "../privateChat/PrivateChatStore"
 import { useRoute } from "../router"
-import type { SocketStore } from "../socket/SocketStore"
-import { createSocketStore } from "../socket/SocketStore"
+import type { ChatSocket } from "../socket/ChatSocket"
+import { createChatSocket } from "../socket/ChatSocket"
 import { useEmitterListener } from "../state/emitter"
 import createStatusPersistenceHandler from "./createStatusPersistenceHandler"
 
@@ -22,7 +22,7 @@ type ChatContextType = {
   showLogin: () => void
   showCharacterSelect: () => void
 
-  socket: SocketStore
+  socket: ChatSocket
   api: FListApi
   characterStore: CharacterStore
   privateChatStore: PrivateChatStore
@@ -46,7 +46,7 @@ export function ChatProvider({
   onShowCharacterSelect: () => void
   children: React.ReactNode
 }) {
-  const [socket] = useState(createSocketStore)
+  const [socket] = useState(createChatSocket)
   const logger = useChatLogger()
   const route = useRoute()
 

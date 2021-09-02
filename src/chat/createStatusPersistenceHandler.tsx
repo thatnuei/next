@@ -1,7 +1,7 @@
 import type { CharacterStatus } from "../character/types"
 import { decodeHtml } from "../dom/decodeHtml"
+import type { ChatSocket } from "../socket/ChatSocket"
 import { createCommandHandler } from "../socket/helpers"
-import type { SocketStore } from "../socket/SocketStore"
 import { keyValueStore } from "../storage/keyValueStore"
 
 export function clearStoredStatus(identity: string) {
@@ -10,7 +10,7 @@ export function clearStoredStatus(identity: string) {
 
 export default function createStatusPersistenceHandler(
   identity: string,
-  socket: SocketStore,
+  socket: ChatSocket,
 ) {
   return createCommandHandler({
     STA({ character, status, statusmsg }) {
