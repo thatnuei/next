@@ -1,11 +1,16 @@
+import AppInfo from "../app/AppInfo"
 import ChannelBrowser from "../channelBrowser/ChannelBrowser"
 import CharacterSummary from "../character/CharacterSummary"
 import OnlineUsers from "../character/OnlineUsers"
 import ChatNavAction from "../chat/ChatNavAction"
 import Button from "../dom/Button"
+import NotificationListLink from "../notifications/NotificationListLink"
 import PrivateChatTabList from "../privateChat/PrivateChatTabList"
+import { routes, useRoute } from "../router"
+import SettingsScreen from "../settings/SettingsScreen"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
+import LogsIcon from "../ui/LogsIcon"
 import Modal from "../ui/Modal"
 import { useChatContext } from "./ChatContext"
 import ChatNavActionButton from "./ChatNavActionButton"
@@ -13,8 +18,10 @@ import StatusUpdateForm from "./StatusUpdateForm"
 
 export default function ChatNav() {
   const context = useChatContext()
+  const route = useRoute()
+
   return (
-    <nav className="grid h-full grid-cols-[auto,15rem] gap-y-1 bg-midnight-2">
+    <nav className="grid h-full grid-cols-[auto,15rem] bg-midnight-2">
       <div className="flex flex-col">
         <Modal
           title="Channel Browser"
@@ -56,7 +63,6 @@ export default function ChatNav() {
           )}
         />
 
-        {/* 
         <NotificationListLink />
 
         <a {...routes.logs().link}>
@@ -97,7 +103,7 @@ export default function ChatNav() {
               <AppInfo />
             </div>
           )}
-        /> */}
+        />
 
         <div className={`flex-1`} />
 

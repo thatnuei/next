@@ -1,5 +1,8 @@
 import { useDeferredValue } from "react"
+import ChannelView from "../channel/ChannelView"
 import { useChannelCommandHandler } from "../channel/state"
+import ChatLogBrowser from "../logging/ChatLogBrowser"
+import NotificationListScreen from "../notifications/NotificationListScreen"
 import { useNotificationCommandListener } from "../notifications/state"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { useRoute } from "../router"
@@ -58,19 +61,17 @@ function ChatRoutes() {
     )
   }
 
-  return <NoRoomView />
+  if (route.name === "channel") {
+    return <ChannelView key={route.params.channelId} {...route.params} />
+  }
 
-  // return (
-  //   <>
-  //     {route.name === "channel" && (
-  //       <ChannelView key={route.params.channelId} {...route.params} />
-  //     )}
-  //     {route.name === "privateChat" && (
-  //       <PrivateChatView key={route.params.partnerName} {...route.params} />
-  //     )}
-  //     {route.name === "notifications" && <NotificationListScreen />}
-  //     {route.name === "logs" && <ChatLogBrowser />}
-  //     {route.name === false && <NoRoomView />}
-  //   </>
-  // )
+  if (route.name === "notifications") {
+    return <NotificationListScreen />
+  }
+
+  if (route.name === "logs") {
+    return <ChatLogBrowser />
+  }
+
+  return <NoRoomView />
 }
