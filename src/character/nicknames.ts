@@ -1,38 +1,23 @@
-import {
-  atomWithStorage,
-  selectAtom,
-  useAtomValue,
-  useUpdateAtom,
-} from "jotai/utils"
-import { useCallback, useMemo } from "react"
+import { useCallback } from "react"
+import { createDictStore } from "../state/dict-store"
+import { persistStore, useStoreValue } from "../state/store"
+import * as v from "../validation"
 
-const nicknamesAtom = atomWithStorage<{ [characterName: string]: string }>(
-  "characterNicknames",
-  {},
-)
+const nicknamesStore = createDictStore<string>((name) => name)
+persistStore("characterNicknames", v.dictionary(v.string), nicknamesStore)
 
 export function useNickname(characterName: string): string | undefined {
-  return useAtomValue(
-    useMemo(() => {
-      return selectAtom(nicknamesAtom, (nicknames) => nicknames[characterName])
-    }, [characterName]),
-  )
+  return useStoreValue(nicknamesStore.selectMaybeItem(characterName))
 }
 
 export function useSetNickname(characterName: string) {
-  const setNicknames = useUpdateAtom(nicknamesAtom)
   return useCallback(
-    (newNickname: string) => {
-      setNicknames((nicks) => ({ ...nicks, [characterName]: newNickname }))
-    },
-    [characterName, setNicknames],
+    (newNickname: string) => nicknamesStore.setItem(characterName, newNickname),
+    [characterName],
   )
 }
 
 export function useGetNickname() {
-  const nicknames = useAtomValue(nicknamesAtom)
-  return useCallback(
-    (characterName: string) => nicknames[characterName],
-    [nicknames],
-  )
+  const nicknames = useStoreValue(nicknamesStore)
+  return useCallback((name: string) => nicknames[name], [nicknames])
 }
