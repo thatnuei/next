@@ -38,7 +38,6 @@ specifiers:
   idb: ^6.1.2
   immer: 9.0.5
   jest: 27.0.6
-  jotai: 1.3.1
   lodash-es: ^4.17.21
   match-sorter: 6.3.0
   nanoid: 3.1.25
@@ -75,7 +74,6 @@ dependencies:
   fuzzysearch: 1.0.3
   idb: 6.1.2
   immer: 9.0.5
-  jotai: 1.3.1_a0056b2bcc8be9d265f984e3ed729d69
   lodash-es: 4.17.21
   match-sorter: 6.3.0
   nanoid: 3.1.25
@@ -4477,38 +4475,6 @@ packages:
       - ts-node
       - utf-8-validate
     dev: true
-
-  /jotai/1.3.1_a0056b2bcc8be9d265f984e3ed729d69:
-    resolution: {integrity: sha512-kxBCafmsO8v3Tc02LwElkCa2cVfuKfGsKG8A1TrTiWV2ygfNqdleh6lf0GrWE7BxRYCE1WoTJQMoa3IHkyabKg==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      '@urql/core': '*'
-      immer: '*'
-      optics-ts: '*'
-      react: '>=16.8'
-      react-query: '*'
-      valtio: '*'
-      wonka: '*'
-      xstate: '*'
-    peerDependenciesMeta:
-      '@urql/core':
-        optional: true
-      immer:
-        optional: true
-      optics-ts:
-        optional: true
-      react-query:
-        optional: true
-      valtio:
-        optional: true
-      wonka:
-        optional: true
-      xstate:
-        optional: true
-    dependencies:
-      immer: 9.0.5
-      react: 18.0.0-alpha-ed6c091fe-20210701
-    dev: false
 
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
