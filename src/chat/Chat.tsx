@@ -1,4 +1,4 @@
-import { useDeferredValue } from "react"
+import { memo, useDeferredValue } from "react"
 import ChannelView from "../channel/ChannelView"
 import { useChannelCommandHandler, useJoinedChannels } from "../channel/state"
 import ChatLogBrowser from "../logging/ChatLogBrowser"
@@ -13,11 +13,14 @@ import { useChatContext } from "./ChatContext"
 import ChatNav from "./ChatNav"
 import NoRoomView from "./NoRoomView"
 import SocketStatusGuard from "./SocketStatusGuard"
+import { useChatDocumentTitle } from "./useChatDocumentTitle"
 
 export default function Chat() {
   const context = useChatContext()
   useEmitterListener(context.socket.commands, useChannelCommandHandler())
   useEmitterListener(context.socket.commands, useNotificationCommandListener())
+
+  useChatDocumentTitle()
 
   return (
     <SocketStatusGuard>
@@ -33,7 +36,7 @@ export default function Chat() {
   )
 }
 
-function ChatRoutes() {
+const ChatRoutes = memo(function ChatRoutes() {
   const context = useChatContext()
   const route = useRoute()
   const joinedChannels = useJoinedChannels()
@@ -89,4 +92,4 @@ function ChatRoutes() {
   }
 
   return <NoRoomView />
-}
+})
