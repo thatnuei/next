@@ -15,9 +15,9 @@ export default function ChatNavAction({
   return (
     <div
       title={name}
-      className={clsx(fadedButton, `block p-3`, active && `bg-midnight-0`)}
+      className={clsx(active && "bg-midnight-0/70 transition-colors")}
     >
-      {icon}
+      <div className={clsx(fadedButton, `block p-3`)}>{icon}</div>
     </div>
   )
 }
