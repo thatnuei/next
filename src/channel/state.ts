@@ -109,6 +109,21 @@ export function useJoinChannel() {
   )
 }
 
+export function useLeaveChannel() {
+  const { send } = useChatContext().socket
+  const updateAtom = useUpdateAtomFn()
+  return useCallback(
+    (id: string) => {
+      send({ type: "LCH", params: { channel: id } })
+      updateAtom(channelAtom(id), (channel) => ({
+        ...channel,
+        joinState: "leaving",
+      }))
+    },
+    [send, updateAtom],
+  )
+}
+
 function useAddChannelMessage() {
   const updateChannels = useUpdateDictAtom(channelDictAtom, createChannel)
   const logger = useChatLogger()

@@ -2,6 +2,11 @@ import clsx from "clsx"
 import { sortBy } from "lodash-es"
 import { matchSorter } from "match-sorter"
 import { useEffect, useState } from "react"
+import {
+  useJoinChannel,
+  useJoinedChannels,
+  useLeaveChannel,
+} from "../channel/state"
 import { useChatContext } from "../chat/ChatContext"
 import Button from "../dom/Button"
 import TextInput from "../dom/TextInput"
@@ -17,6 +22,9 @@ function ChannelBrowser() {
   const context = useChatContext()
   const [query, setQuery] = useState("")
   const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
+  const joinChannel = useJoinChannel()
+  const leaveChannel = useLeaveChannel()
+  const joinedChannels = useJoinedChannels()
 
   useEffect(() => {
     context.channelBrowserStore.refresh()
@@ -59,15 +67,24 @@ function ChannelBrowser() {
           items={channels}
           getItemKey={(channel) => channel.id}
           itemSize={40}
-          renderItem={({ item, style }) => (
-            <div style={style}>
-              <ChannelBrowserItem
-                info={item}
-                active={false}
-                onClick={() => {}}
-              />
-            </div>
-          )}
+          renderItem={({ item, style }) => {
+            const joined = joinedChannels.some((ch) => ch.id === item.id)
+            return (
+              <div style={style}>
+                <ChannelBrowserItem
+                  info={item}
+                  active={joined}
+                  onClick={() => {
+                    if (joined) {
+                      leaveChannel(item.id)
+                    } else {
+                      joinChannel(item.id, item.title)
+                    }
+                  }}
+                />
+              </div>
+            )
+          }}
         />
       </section>
 
