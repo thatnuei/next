@@ -1,11 +1,10 @@
 import clsx from "clsx"
-import { useAtom } from "jotai"
-import { atomWithStorage } from "jotai/utils"
 import { useChatContext } from "../chat/ChatContext"
 import { safeJsonParse } from "../common/json"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import type { ServerCommand } from "../socket/helpers"
+import { createStore, useStoreValue } from "../state/store"
 import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
 
@@ -32,12 +31,12 @@ const presets: Preset[] = [
   },
 ]
 
-const commandAtom = atomWithStorage("CommandSimulator:command", "")
-const paramsAtom = atomWithStorage("CommandSimulator:params", "")
+const commandStore = createStore("")
+const paramsStore = createStore("")
 
 export default function CommandSimulator() {
-  const [command, setCommand] = useAtom(commandAtom)
-  const [params, setParams] = useAtom(paramsAtom)
+  const command = useStoreValue(commandStore)
+  const params = useStoreValue(paramsStore)
   const socket = useChatContext().socket
 
   const paramsParseResult =
@@ -84,8 +83,8 @@ export default function CommandSimulator() {
             const presetIndex = Number(e.currentTarget.value)
             const preset = presets[presetIndex]
             if (preset) {
-              setCommand(preset.type)
-              setParams(JSON.stringify(preset.params ?? {}))
+              commandStore.set(preset.type)
+              paramsStore.set(JSON.stringify(preset.params ?? {}))
             }
           }}
         >
@@ -103,7 +102,7 @@ export default function CommandSimulator() {
           className={input}
           placeholder="HLO"
           value={command}
-          onChange={(e) => setCommand(e.target.value)}
+          onChange={(e) => commandStore.set(e.target.value)}
         />
       </FormField>
 
@@ -113,7 +112,7 @@ export default function CommandSimulator() {
           className={clsx(input, "font-mono resize-y")}
           placeholder='{"message": "hi world"}'
           value={params}
-          onChange={(e) => setParams(e.target.value)}
+          onChange={(e) => paramsStore.set(e.target.value)}
         />
       </FormField>
       <pre className="overflow-x-auto">{paramsParseResult?.error?.message}</pre>

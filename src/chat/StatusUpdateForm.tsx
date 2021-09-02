@@ -1,4 +1,3 @@
-import { atom, useAtom } from "jotai"
 import * as React from "react"
 import { useState } from "react"
 import BBC from "../bbc/BBC"
@@ -9,13 +8,14 @@ import Button from "../dom/Button"
 import { decodeHtml } from "../dom/decodeHtml"
 import { createCommandHandler } from "../socket/helpers"
 import { useEmitterListener } from "../state/emitter"
+import { createStore, useStoreValue } from "../state/store"
 import { select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
 import Icon from "../ui/Icon"
 import { about } from "../ui/icons"
 import { useChatContext } from "./ChatContext"
 
-const isSubmittingAtom = atom(false)
+const isSubmittingStore = createStore(false)
 
 function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
   const { identity, socket } = useChatContext()
@@ -24,7 +24,7 @@ function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
   const [statusMessage, setStatusMessage] = useState(() =>
     decodeHtml(character.statusMessage),
   )
-  const [isSubmitting, setIsSubmitting] = useAtom(isSubmittingAtom)
+  const isSubmitting = useStoreValue(isSubmittingStore)
 
   useEmitterListener(
     socket.commands,
@@ -43,9 +43,9 @@ function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
     if (isSubmitting) return
 
     // submission has a timeout
-    setIsSubmitting(true)
+    isSubmittingStore.set(true)
     setTimeout(() => {
-      setIsSubmitting(false)
+      isSubmittingStore.set(false)
     }, 7000)
 
     socket.send({

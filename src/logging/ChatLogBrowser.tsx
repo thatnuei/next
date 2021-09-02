@@ -1,8 +1,8 @@
 import clsx from "clsx"
-import { atom, useAtom } from "jotai"
 import { sortBy } from "lodash-es"
 import { useDeferredValue, useMemo } from "react"
 import MessageListItem from "../message/MessageListItem"
+import { createStore, useStoreValue } from "../state/store"
 import usePromise from "../state/usePromise"
 import { headerText, select } from "../ui/components"
 import EmptyState from "../ui/EmptyState"
@@ -11,7 +11,7 @@ import LoadingIcon from "../ui/LoadingIcon"
 import { ScreenHeader } from "../ui/ScreenHeader"
 import { useChatLogger } from "./context"
 
-const selectedRoomIdAtom = atom<string>("")
+const selectedRoomIdStore = createStore<string | undefined>(undefined)
 
 export default function ChatLogBrowser() {
   const logger = useChatLogger()
@@ -20,7 +20,7 @@ export default function ChatLogBrowser() {
     useMemo(() => logger.getAllRooms(), [logger]),
   )
 
-  const [selectedRoomId, setSelectedRoomId] = useAtom(selectedRoomIdAtom)
+  const selectedRoomId = useStoreValue(selectedRoomIdStore)
 
   const { value: messages = [], isLoading: loadingMessagesPromise } =
     usePromise(
@@ -44,18 +44,18 @@ export default function ChatLogBrowser() {
   }
 
   return (
-    <div className="flex flex-col h-full gap-1 relative">
+    <div className="relative flex flex-col h-full gap-1">
       <div className="bg-midnight-0">
         <ScreenHeader>
           <h1 className={headerText}>Logs</h1>
         </ScreenHeader>
       </div>
-      <div className="bg-midnight-0 p-3">
+      <div className="p-3 bg-midnight-0">
         <FormField labelText="Room">
           <select
             className={select}
             value={selectedRoomId}
-            onChange={(event) => setSelectedRoomId(event.target.value)}
+            onChange={(event) => selectedRoomIdStore.set(event.target.value)}
           >
             <option value="" disabled>
               Select a room
@@ -68,7 +68,7 @@ export default function ChatLogBrowser() {
           </select>
         </FormField>
       </div>
-      <div className="bg-midnight-1 flex-1 min-h-0">
+      <div className="flex-1 min-h-0 bg-midnight-1">
         {selectedRoomId == null ? (
           <EmptyState>Choose a room to view its logs</EmptyState>
         ) : !loadingMessages && deferredMessages.length === 0 ? (
