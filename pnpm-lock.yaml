@@ -7,6 +7,7 @@ specifiers:
   '@radix-ui/react-context-menu': ^0.0.24
   '@radix-ui/react-dropdown-menu': ^0.0.23
   '@radix-ui/react-slot': ^0.0.12
+  '@tailwindcss/line-clamp': 0.2.1
   '@types/jest': 27.0.1
   '@types/lodash-es': ^4.17.4
   '@types/node': 16.7.1
@@ -87,6 +88,7 @@ dependencies:
   type-route: 0.6.0
 
 devDependencies:
+  '@tailwindcss/line-clamp': 0.2.1_tailwindcss@2.2.8
   '@types/jest': 27.0.1
   '@types/lodash-es': 4.17.4
   '@types/node': 16.7.1
@@ -1403,6 +1405,14 @@ packages:
     resolution: {integrity: sha512-iQADsW4LBMISqZ6Ci1dupJL9pprqwcVFTcOsEmQOEhW+KLCVn/Y4Jrvg2k19fIHCp+iFprriYPTdRcQR8NbUPg==}
     dependencies:
       '@sinonjs/commons': 1.8.3
+    dev: true
+
+  /@tailwindcss/line-clamp/0.2.1_tailwindcss@2.2.8:
+    resolution: {integrity: sha512-Hq2KJY1+T2v7jw/mnT3mnC7CKbp5kj1XTqzSb2xbEt1j+JkxIR6N3ijsN/WevZtsKJfVE1KOejA/3IRKuhZEsQ==}
+    peerDependencies:
+      tailwindcss: '>=2.0.0'
+    dependencies:
+      tailwindcss: 2.2.8_ts-node@10.2.1
     dev: true
 
   /@tootallnate/once/1.1.2:
