@@ -118,7 +118,13 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
 
       case "channel": {
         const channelId = getNodeChildrenAsText(node)
-        return <BBCChannelLink id={channelId} title={channelId} type="public" />
+        return (
+          <BBCChannelLink
+            channelId={channelId}
+            title={channelId}
+            type="public"
+          />
+        )
       }
 
       case "session": {
@@ -126,7 +132,9 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
         // need to replace it so it doesn't clash with the rest of our uppercased IDs
         const channelId = getNodeChildrenAsText(node).replace(/^adh/i, "ADH")
         const title = node.value
-        return <BBCChannelLink id={channelId} title={title} type="private" />
+        return (
+          <BBCChannelLink channelId={channelId} title={title} type="private" />
+        )
       }
 
       case "noparse":

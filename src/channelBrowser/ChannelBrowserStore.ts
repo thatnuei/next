@@ -2,6 +2,7 @@ import { delay } from "../common/delay"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import type { SocketStore } from "../socket/SocketStore"
+import type { Store } from "../state/store"
 import { createStore } from "../state/store"
 import type { ChannelBrowserChannel } from "./types"
 
@@ -34,6 +35,19 @@ export function createChannelBrowserStore(socket: SocketStore) {
       isRefreshing.set(true)
       await delay(7000)
       isRefreshing.set(false)
+    },
+
+    selectChannelInfo(channelId: string): Store<ChannelBrowserChannel> {
+      return channels.select(
+        (channels) =>
+          channels.public.find((channel) => channel.id === channelId) ??
+          channels.private.find((channel) => channel.id === channelId) ?? {
+            id: channelId,
+            title: channelId,
+            type: "public",
+            userCount: 0,
+          },
+      )
     },
 
     selectUserCount(channelId: string) {

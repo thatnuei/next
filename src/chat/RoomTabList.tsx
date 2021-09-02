@@ -1,7 +1,6 @@
 import { sortBy } from "lodash-es"
 import type { Channel } from "../channel/state"
 import { useChannelActions, useJoinedChannels } from "../channel/state"
-import { useIsPublicChannel } from "../channelBrowser/state"
 import Avatar from "../character/Avatar"
 import { useNickname } from "../character/nicknames"
 import {
@@ -10,8 +9,10 @@ import {
   usePrivateChatActions,
 } from "../privateChat/state"
 import { routes, useRoute } from "../router"
+import { useStoreValue } from "../state/store"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
+import { useChatContext } from "./ChatContext"
 import RoomTab from "./RoomTab"
 
 export default function RoomTabList() {
@@ -51,8 +52,11 @@ function PrivateChatTab({ partnerName }: { partnerName: string }) {
 }
 
 function ChannelRoomTab({ channel }: { channel: Channel }) {
+  const context = useChatContext()
   const route = useRoute()
-  const isPublic = useIsPublicChannel(channel.id)
+  const isPublic = useStoreValue(
+    context.channelBrowserStore.selectIsPublic(channel.id),
+  )
   const { leave } = useChannelActions(channel.id)
 
   return (

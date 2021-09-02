@@ -1,23 +1,29 @@
 import type { PropsWithChildren } from "react"
 import { useChannelActions } from "../channel/state"
-import { useChannelUserCount } from "../channelBrowser/state"
+import { useChatContext } from "../chat/ChatContext"
+import { useStoreValue } from "../state/store"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 
 export default function BBCChannelLink({
-  id,
+  channelId,
   title,
   type,
 }: PropsWithChildren<{
-  id: string
+  channelId: string
   title: string
   type: "public" | "private"
 }>) {
-  const userCount = useChannelUserCount(id)
-  const { join } = useChannelActions(id)
+  const context = useChatContext()
+
+  const info = useStoreValue(
+    context.channelBrowserStore.selectChannelInfo(channelId),
+  )
+
+  const { join } = useChannelActions(channelId)
 
   return (
-    <button className="group inline-block" onClick={() => join(title)}>
+    <button className="inline-block group" onClick={() => join(title)}>
       <span className="opacity-75">
         <Icon
           which={type === "public" ? icons.earth : icons.lock}
@@ -29,7 +35,7 @@ export default function BBCChannelLink({
         className={`underline group-hover:no-underline`}
         dangerouslySetInnerHTML={{ __html: title }}
       />{" "}
-      <span>({userCount})</span>
+      <span>({info.userCount})</span>
     </button>
   )
 }

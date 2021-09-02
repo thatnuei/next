@@ -1,9 +1,10 @@
 import * as React from "react"
 import BBC from "../bbc/BBC"
-import { useIsPublicChannel } from "../channelBrowser/state"
+import { useChatContext } from "../chat/ChatContext"
 import ChatMenuButton from "../chat/ChatMenuButton"
 import Button from "../dom/Button"
 import { useMediaQuery } from "../dom/useMediaQuery"
+import { useStoreValue } from "../state/store"
 import { fadedButton, headerText2 } from "../ui/components"
 import Drawer from "../ui/Drawer"
 import DropdownMenu, {
@@ -26,10 +27,13 @@ type Props = {
 }
 
 function ChannelHeader({ channelId }: Props) {
+  const context = useChatContext()
   const channel = useChannel(channelId)
   const isLargeScreen = useMediaQuery(screenQueries.large)
   const [inviteOpen, setInviteOpen] = React.useState(false)
-  const isPublic = useIsPublicChannel(channelId)
+  const isPublic = useStoreValue(
+    context.channelBrowserStore.selectIsPublic(channelId),
+  )
   const actions = useChannelActions(channelId)
 
   return (

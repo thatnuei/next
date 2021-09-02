@@ -76,7 +76,7 @@ export default function NotificationCard({
           <CharacterName name={notification.sender} statusDot="hidden" /> has
           invited you to{" "}
           <BBCChannelLink
-            id={notification.channelId}
+            channelId={notification.channelId}
             title={notification.title}
             type={notification.title === notification.id ? "public" : "private"}
           />
