@@ -3,11 +3,12 @@ import { useAtomValue, useUpdateAtom } from "jotai/utils"
 import { useMemo } from "react"
 import type { CharacterStatus } from "../character/types"
 import { useLikedCharacters } from "../character/useLikedCharacters"
+import { useChatContext } from "../chat/ChatContext"
 import { uniqueId } from "../common/uniqueId"
 import { useChatLogger } from "../logging/context"
 import { createSystemMessage } from "../message/MessageState"
-import { useOpenChatNames } from "../privateChat/state"
 import { createCommandHandler } from "../socket/helpers"
+import { useStoreValue } from "../state/store"
 
 /// constants
 const maxNotifications = 1000
@@ -165,9 +166,12 @@ export function useNotificationActions() {
 }
 
 export function useNotificationCommandListener() {
+  const context = useChatContext()
+  const chats = useStoreValue(
+    context.privateChatStore.openChatNames.selectKeys(),
+  )
   const actions = useNotificationActions()
   const likedCharacters = useLikedCharacters()
-  const chats = useOpenChatNames()
 
   return useMemo(() => {
     const shouldAddStatusNotification = (name: string) => {

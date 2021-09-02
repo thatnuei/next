@@ -1,6 +1,6 @@
 import type { CharacterStatus } from "../character/types"
+import { isTruthy } from "../common/isTruthy"
 import { omit } from "../common/omit"
-import type { TruthyMap } from "../common/types"
 import type { ChatLogger } from "../logging/logger"
 import type { MessageState } from "../message/MessageState"
 import {
@@ -17,7 +17,8 @@ import type { ChatSocket } from "../socket/ChatSocket"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { createDictStore } from "../state/dict-store"
-import { createStore } from "../state/store"
+import type { Store } from "../state/store"
+import { combineStores } from "../state/store"
 import { restorePrivateChats, savePrivateChats } from "./storage"
 import type { PrivateChat } from "./types"
 
@@ -41,7 +42,7 @@ export function createPrivateChatStore(
   socket: ChatSocket,
 ) {
   const privateChats = createDictStore<PrivateChat>(createPrivateChat)
-  const openChatNames = createStore<TruthyMap>({})
+  const openChatNames = createDictStore<true>(() => true)
   let restored = false
 
   function addStatusSystemMessage(
@@ -71,6 +72,15 @@ export function createPrivateChatStore(
   const store = {
     privateChats,
     openChatNames,
+
+    selectOpenPrivateChats(): Store<readonly PrivateChat[]> {
+      return combineStores(privateChats, openChatNames).select(
+        ([privateChats, openChatNames]) =>
+          Object.keys(openChatNames)
+            .map((name) => privateChats[name])
+            .filter(isTruthy),
+      )
+    },
 
     openChat(partnerName: string) {
       openChatNames.update((names) => ({ ...names, [partnerName]: true }))
