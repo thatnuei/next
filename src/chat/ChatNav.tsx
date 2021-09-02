@@ -9,6 +9,7 @@ import * as icons from "../ui/icons"
 import Modal from "../ui/Modal"
 import { useChatContext } from "./ChatContext"
 import ChatNavActionButton from "./ChatNavActionButton"
+import StatusUpdateForm from "./StatusUpdateForm"
 
 export default function ChatNav() {
   const context = useChatContext()
@@ -43,7 +44,6 @@ export default function ChatNav() {
           )}
         />
 
-        {/* 
         <Modal
           title="Status update"
           renderContent={({ close }) => <StatusUpdateForm onSuccess={close} />}
@@ -56,6 +56,7 @@ export default function ChatNav() {
           )}
         />
 
+        {/* 
         <NotificationListLink />
 
         <a {...routes.logs().link}>
