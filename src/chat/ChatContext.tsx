@@ -4,9 +4,8 @@ import { createChannelBrowserStore } from "../channelBrowser/ChannelBrowserStore
 import type { CharacterStore } from "../character/CharacterStore"
 import { createCharacterStore } from "../character/CharacterStore"
 import { raise } from "../common/raise"
-import type { FListApi } from "../flist/api"
-import { createFListApi } from "../flist/api"
-import type { AuthUser } from "../flist/types"
+import type { NonEmptyArray } from "../common/types"
+import type { FListApi, LoginResponse } from "../flist/api"
 import { useChatLogger } from "../logging/context"
 import type { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { createPrivateChatStore } from "../privateChat/PrivateChatStore"
@@ -15,8 +14,8 @@ import { createSocketStore } from "../socket/SocketStore"
 import { useEmitterListener } from "../state/emitter"
 
 type ChatContextType = {
-  user: AuthUser
   identity: string
+  userCharacters: NonEmptyArray<string>
   showLogin: () => void
   showCharacterSelect: () => void
 
@@ -32,18 +31,19 @@ const Context = createContext<ChatContextType>()
 export function ChatProvider({
   user,
   identity,
+  api,
   onShowLogin,
   onShowCharacterSelect,
   children,
 }: {
-  user: AuthUser
+  user: LoginResponse
   identity: string
+  api: FListApi
   onShowLogin: () => void
   onShowCharacterSelect: () => void
   children: React.ReactNode
 }) {
   const [socket] = useState(createSocketStore)
-  const [api] = useState(() => createFListApi(user))
   const logger = useChatLogger()
 
   const [characterStore] = useState(() => createCharacterStore(api, identity))
@@ -60,22 +60,21 @@ export function ChatProvider({
   useEmitterListener(socket.commands, channelBrowserStore.handleCommand)
 
   useEffect(() => {
-    socket.connect(() => {
-      return Promise.resolve({
-        account: api.user.account,
-        ticket: api.user.ticket,
-        character: identity,
-      })
+    socket.connect(async () => {
+      // the ticket may be invalid since the last time we joined chat
+      // I can't figure out a better way to do this right now
+      const { account, ticket } = await api.reauthenticate()
+      return { account, ticket, character: identity }
     })
 
     return () => {
       socket.disconnect()
     }
-  }, [api.user.account, api.user.ticket, identity, socket])
+  }, [api, identity, socket])
 
   const contextValue: ChatContextType = {
-    user,
     identity,
+    userCharacters: user.characters,
     showLogin: onShowLogin,
     showCharacterSelect: onShowCharacterSelect,
 

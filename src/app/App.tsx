@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState } from "react"
 import AppErrorBoundary from "../AppErrorBoundary"
-import type { AuthUser } from "../flist/types"
+import type { LoginResponse } from "../flist/api"
+import { createFListApi } from "../flist/api"
 import IslandLayout from "../ui/IslandLayout"
 import LoadingOverlay, { LoadingOverlayText } from "../ui/LoadingOverlay"
 import Modal from "../ui/Modal"
@@ -10,8 +11,8 @@ import Login from "./Login"
 
 type AppView =
   | { name: "login" }
-  | { name: "characterSelect"; user: AuthUser }
-  | { name: "chat"; user: AuthUser; identity: string }
+  | { name: "characterSelect"; user: LoginResponse }
+  | { name: "chat"; user: LoginResponse; identity: string }
 
 const Chat = lazy(() => import("../chat/Chat"))
 
@@ -21,12 +22,14 @@ const ChatProvider = lazy(() =>
 
 export default function App() {
   const [view, setView] = useState<AppView>({ name: "login" })
+  const [api] = useState(createFListApi)
 
   if (view.name === "login") {
     return (
       <IslandLayout title="Login" isVisible header={<AppInfoModalButton />}>
         <Login
-          onSuccess={(user) => {
+          onSubmit={async (credentials) => {
+            const user = await api.login(credentials)
             setView({ name: "characterSelect", user })
           }}
         />
@@ -57,6 +60,7 @@ export default function App() {
           <ChatProvider
             user={view.user}
             identity={view.identity}
+            api={api}
             onShowLogin={() => {
               setView({ name: "login" })
             }}

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import Avatar from "../character/Avatar"
 import { compareLower } from "../common/compareLower"
 import Button from "../dom/Button"
-import type { AuthUser } from "../flist/types"
+import type { LoginResponse } from "../flist/api"
 import { preventDefault } from "../react/preventDefault"
 import { anchor, select, solidButton } from "../ui/components"
 
@@ -11,7 +11,7 @@ function CharacterSelect({
   onSubmit,
   onBack,
 }: {
-  user: AuthUser
+  user: LoginResponse
   onSubmit: (character: string) => void
   onBack: () => void
 }) {

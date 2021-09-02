@@ -1,14 +1,15 @@
 import { useState } from "react"
 import Button from "../dom/Button"
 import TextInput from "../dom/TextInput"
-import { authenticate } from "../flist/authenticate"
-import type { AuthUser } from "../flist/types"
+import type { LoginCredentials } from "../flist/types"
 import { preventDefault } from "../react/preventDefault"
 import usePromiseState from "../state/usePromiseState"
 import { input, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
 
-export default function Login(props: { onSuccess: (user: AuthUser) => void }) {
+export default function Login(props: {
+  onSubmit: (credentials: LoginCredentials) => Promise<unknown> | void
+}) {
   const [account, setAccount] = useState("")
   const [password, setPassword] = useState("")
 
@@ -16,9 +17,7 @@ export default function Login(props: { onSuccess: (user: AuthUser) => void }) {
 
   const submit = () => {
     if (authenticateState.isLoading) return
-    authenticateState.setPromise(
-      authenticate({ account, password }).then(props.onSuccess),
-    )
+    authenticateState.setPromise(props.onSubmit({ account, password }))
   }
 
   const canSubmit =

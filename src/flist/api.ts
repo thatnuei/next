@@ -1,5 +1,7 @@
 import { pick } from "lodash-es"
+import { raise } from "../common/raise"
 import { toError } from "../common/toError"
+import type { NonEmptyArray } from "../common/types"
 import { authenticate } from "./authenticate"
 import { fetchFlist } from "./fetchFlist"
 import type { AuthUser, LoginCredentials } from "./types"
@@ -14,28 +16,50 @@ type FriendsAndBookmarksResponse = {
   readonly bookmarklist: readonly string[]
 }
 
-type TicketCredentials = {
+export type TicketCredentials = {
   account: string
   ticket: string
 }
 
+export type LoginResponse = {
+  account: string
+  ticket: string
+  characters: NonEmptyArray<string>
+}
+
 export type FListApi = ReturnType<typeof createFListApi>
 
-export function createFListApi(initialUser: AuthUser) {
-  let user = initialUser
+export function createFListApi() {
+  let user: AuthUser | undefined
 
   const api = {
-    get user() {
-      return user
+    async login(credentials: LoginCredentials): Promise<LoginResponse> {
+      user = await authenticate(credentials)
+      return {
+        account: user.account,
+        ticket: user.ticket,
+        characters: user.characters,
+      }
     },
 
-    async login(credentials: LoginCredentials) {
-      user = await authenticate(credentials)
+    async reauthenticate(): Promise<TicketCredentials> {
+      if (user === undefined) {
+        raise("not logged in")
+      }
+      user = await authenticate(pick(user, ["account", "password"]))
+      return {
+        account: user.account,
+        ticket: user.ticket,
+      }
     },
 
     async tryWithValidTicket<Result>(
       block: (credentials: TicketCredentials) => Promise<Result>,
     ): Promise<Result> {
+      if (!user) {
+        raise("not logged in")
+      }
+
       try {
         return await block(pick(user, ["account", "ticket"]))
       } catch (error) {
