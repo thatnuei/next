@@ -1,7 +1,6 @@
 /// <reference types="vite/client" />
 import reactRefresh from "@vitejs/plugin-react-refresh"
 import { defineConfig } from "vite"
-import windi from "vite-plugin-windicss"
 import pkg from "./package.json"
 
 export default defineConfig({
@@ -10,7 +9,7 @@ export default defineConfig({
     jsxFactory: `jsx$.createElement`,
     jsxFragment: `jsx$.Fragment`,
   },
-  plugins: [reactRefresh(), windi()],
+  plugins: [reactRefresh()],
   build: {
     sourcemap: true,
   },

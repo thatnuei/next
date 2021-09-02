@@ -1,10 +1,6 @@
 module.exports = {
   mode: "jit",
-  extract: {
-    // accepts globs and file paths relative to project root
-    include: ["index.html", "src/**/*.{ts,tsx}"],
-    exclude: ["node_modules/**/*", ".git/**/*"],
-  },
+  purge: ["index.html", "src/**/*.{ts,tsx}"],
   darkMode: false, // or 'media' or 'class'
   theme: {
     boxShadow: {

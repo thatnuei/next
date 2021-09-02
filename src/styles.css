@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   color: theme("colors.clouds");
   background: theme("colors.midnight.2");

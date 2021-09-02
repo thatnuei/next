@@ -1,6 +1,5 @@
 import "focus-visible"
 import ReactDOM from "react-dom"
-import "virtual:windi.css"
 import { ChatLoggerProvider } from "./logging/context"
 import { createWebChatLogger } from "./logging/web"
 import Root from "./Root"
