@@ -1,6 +1,6 @@
 import { sortBy } from "lodash-es"
-import type { Channel } from "../channel/state"
 import { useChannelActions, useJoinedChannels } from "../channel/state"
+import type { Channel } from "../channel/types"
 import Avatar from "../character/Avatar"
 import { useNickname } from "../character/nicknames"
 import type { PrivateChat } from "../privateChat/types"

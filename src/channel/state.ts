@@ -7,7 +7,7 @@ import { useCharacterList } from "../character/useCharacterList"
 import { useChatContext } from "../chat/ChatContext"
 import { omit } from "../common/omit"
 import { truthyMap } from "../common/truthyMap"
-import type { Dict, TruthyMap } from "../common/types"
+import type { Dict } from "../common/types"
 import { dictionaryAtomFamily } from "../jotai/dictionaryAtomFamily"
 import { useUpdateAtomFn } from "../jotai/useUpdateAtomFn"
 import { useUpdateDictAtom } from "../jotai/useUpdateDictAtom"
@@ -18,7 +18,6 @@ import {
   createChannelMessage,
   createSystemMessage,
 } from "../message/MessageState"
-import type { RoomState } from "../room/state"
 import {
   addRoomMessage,
   clearRoomMessages,
@@ -27,20 +26,7 @@ import {
 } from "../room/state"
 import { createCommandHandler } from "../socket/helpers"
 import { loadChannels, saveChannels } from "./storage"
-import type { ChannelMode } from "./types"
-
-type ChannelJoinState = "joining" | "joined" | "leaving" | "left"
-
-export type Channel = {
-  readonly id: string
-  readonly title: string
-  readonly description: string
-  readonly mode: ChannelMode
-  readonly selectedMode: ChannelMode
-  readonly users: TruthyMap
-  readonly ops: TruthyMap
-  readonly joinState: ChannelJoinState
-} & RoomState
+import type { Channel, ChannelMode } from "./types"
 
 function createChannel(id: string): Channel {
   return {
@@ -51,7 +37,7 @@ function createChannel(id: string): Channel {
     selectedMode: "chat",
     users: {},
     ops: {},
-    joinState: "left",
+    joinState: "absent",
     ...createRoomState(),
   }
 }
@@ -60,7 +46,7 @@ const channelDictAtom = atom<Dict<Channel>>({})
 
 const channelAtom = dictionaryAtomFamily(channelDictAtom, createChannel)
 
-const isChannelJoined = (channel: Channel) => channel.joinState !== "left"
+const isChannelJoined = (channel: Channel) => channel.joinState !== "absent"
 
 export function useChannel(id: string): Channel {
   return useAtomValue(channelAtom(id))
@@ -244,7 +230,7 @@ export function useChannelCommandHandler() {
           ...channel,
           title,
           users: { ...channel.users, [name]: true },
-          joinState: "joined",
+          joinState: "present",
         }))
 
         if (name === identity) {
@@ -267,7 +253,7 @@ export function useChannelCommandHandler() {
       LCH({ channel: id, character }) {
         updateAtom(channelAtom(id), (channel) => ({
           ...channel,
-          joinState: character === identity ? "left" : channel.joinState,
+          joinState: character === identity ? "absent" : channel.joinState,
           users: omit(channel.users, [character]),
         }))
       },
