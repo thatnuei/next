@@ -8,6 +8,8 @@ import type { NonEmptyArray } from "../common/types"
 import type { FListApi, LoginResponse } from "../flist/api"
 import { useChatLogger } from "../logging/context"
 import { createSystemNotificationsHandler } from "../notifications/createSystemNotificationsHandler"
+import type { NotificationStore } from "../notifications/NotificationStore"
+import { createNotificationStore } from "../notifications/NotificationStore"
 import type { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { createPrivateChatStore } from "../privateChat/PrivateChatStore"
 import { useRoute } from "../router"
@@ -27,6 +29,7 @@ type ChatContextType = {
   characterStore: CharacterStore
   privateChatStore: PrivateChatStore
   channelBrowserStore: ChannelBrowserStore
+  notificationStore: NotificationStore
 }
 
 const Context = createContext<ChatContextType>()
@@ -60,9 +63,14 @@ export function ChatProvider({
     return createChannelBrowserStore(socket)
   })
 
+  const [notificationStore] = useState(() =>
+    createNotificationStore(logger, characterStore, privateChatStore),
+  )
+
   useEmitterListener(socket.commands, characterStore.handleCommand)
   useEmitterListener(socket.commands, privateChatStore.handleCommand)
   useEmitterListener(socket.commands, channelBrowserStore.handleCommand)
+  useEmitterListener(socket.commands, notificationStore.handleCommand)
   useEmitterListener(socket.commands, createSystemNotificationsHandler(route))
   useEmitterListener(
     socket.commands,
@@ -93,6 +101,7 @@ export function ChatProvider({
     characterStore,
     privateChatStore,
     channelBrowserStore,
+    notificationStore,
   }
 
   return <Context.Provider value={contextValue}>{children}</Context.Provider>

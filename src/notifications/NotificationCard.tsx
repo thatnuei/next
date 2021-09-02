@@ -6,21 +6,21 @@ import { statusColors } from "../character/colors"
 import Timestamp from "../dom/Timestamp"
 import Icon from "../ui/Icon"
 import { about } from "../ui/icons"
-import type { Notification } from "./state"
+import type { NotificationDetails } from "./types"
 
 export default function NotificationCard({
-  notification,
+  details,
   timestamp,
 }: {
-  notification: Notification
+  details: NotificationDetails
   timestamp?: number
 }) {
-  switch (notification.type) {
+  switch (details.type) {
     case "info":
     case "error":
       return (
         <NotificationCardBase
-          message={notification.message}
+          message={details.message}
           timestamp={timestamp}
         />
       )
@@ -28,16 +28,16 @@ export default function NotificationCard({
     case "broadcast":
       return (
         <NotificationCardBase
-          message={notification.message}
-          avatarName={notification.actorName}
+          message={details.message}
+          avatarName={details.actorName}
           timestamp={timestamp}
           header={
-            notification.actorName ? (
+            details.actorName ? (
               <>
                 Broadcast from{" "}
                 <strong className="font-medium opacity-100">
                   <CharacterName
-                    name={notification.actorName}
+                    name={details.actorName}
                     statusDot="hidden"
                   />
                 </strong>
@@ -52,16 +52,16 @@ export default function NotificationCard({
     case "status":
       return (
         <NotificationCardBase
-          avatarName={notification.name}
+          avatarName={details.name}
           timestamp={timestamp}
         >
-          <CharacterName name={notification.name} statusDot="hidden" /> is now{" "}
-          <span style={{ color: statusColors[notification.status] }}>
-            {notification.status}
+          <CharacterName name={details.name} statusDot="hidden" /> is now{" "}
+          <span style={{ color: statusColors[details.status] }}>
+            {details.status}
           </span>
-          {notification.message ? (
+          {details.message ? (
             <>
-              : <BBC text={notification.message} />
+              : <BBC text={details.message} />
             </>
           ) : null}
         </NotificationCardBase>
@@ -70,15 +70,19 @@ export default function NotificationCard({
     case "invite":
       return (
         <NotificationCardBase
-          avatarName={notification.sender}
+          avatarName={details.sender}
           timestamp={timestamp}
         >
-          <CharacterName name={notification.sender} statusDot="hidden" /> has
+          <CharacterName name={details.sender} statusDot="hidden" /> has
           invited you to{" "}
           <BBCChannelLink
-            channelId={notification.channelId}
-            title={notification.title}
-            type={notification.title === notification.id ? "public" : "private"}
+            channelId={details.channelId}
+            title={details.title}
+            type={
+              details.title === details.channelId
+                ? "public"
+                : "private"
+            }
           />
         </NotificationCardBase>
       )

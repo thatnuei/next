@@ -3,7 +3,6 @@ import type { Character } from "../character/types"
 import { useLikedCharacters } from "../character/useLikedCharacters"
 import { useUserCharacters } from "../character/useUserCharacters"
 import { useChatContext } from "../chat/ChatContext"
-import { useNotificationActions } from "../notifications/state"
 import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -17,23 +16,22 @@ type Props = {
 // need to have a list of all online character names in order to make them searchable,
 // do that later
 function InviteUsersForm({ channelId }: Props) {
-  const { send } = useChatContext().socket
+  const { socket, notificationStore } = useChatContext()
   const likedCharacters = useLikedCharacters()
   const userCharacters = useUserCharacters()
-  const notificationActions = useNotificationActions()
 
   const sendInvite = (name: string) => {
-    send({
+    socket.send({
       type: "CIU",
       params: { channel: channelId, character: name },
     })
 
-    notificationActions.addNotification({
-      type: "info",
-      message: `Sent an invitation to ${name}`,
-      save: false,
-      showToast: true,
-      toastDuration: 5000,
+    notificationStore.addToast({
+      duration: 5000,
+      details: {
+        type: "info",
+        message: `Sent an invitation to ${name}`,
+      },
     })
   }
 

@@ -1,6 +1,5 @@
 import { useEffect } from "react"
 import type { Falsy } from "../common/types"
-import { useNotificationList } from "../notifications/state"
 import { useStoreValue } from "../state/store"
 import { useChatContext } from "./ChatContext"
 
@@ -13,12 +12,18 @@ export function useChatDocumentTitle() {
       .select((chats) => chats.filter((chat) => chat.isUnread).length),
   )
 
-  const notifications = useNotificationList()
-  const unreadNotifications = notifications
-    .filter((n) => n.readStatus === "unread")
-    .filter((n) => n.type === "invite" || n.type === "broadcast")
+  const unreadNotificationCount = useStoreValue(
+    context.notificationStore.notifications.select((notifications) => {
+      const importantNotifications = notifications
+        .filter((n) => n.readStatus === "unread")
+        .filter(
+          (n) => n.details.type === "invite" || n.details.type === "broadcast",
+        )
+      return importantNotifications.length
+    }),
+  )
 
-  const totalUnread = unreadChatCount + unreadNotifications.length
+  const totalUnread = unreadChatCount + unreadNotificationCount
 
   const prefixParts = [context.identity, totalUnread > 0 && `(${totalUnread})`]
   const prefix = joinContentfulStrings(prefixParts, " ")

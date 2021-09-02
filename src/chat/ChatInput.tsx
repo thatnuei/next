@@ -2,7 +2,6 @@ import type { FormEvent, KeyboardEvent, ReactNode } from "react"
 import { useCallback, useEffect, useRef, useState } from "react"
 import BBCTextArea from "../bbc/BBCInput"
 import Button from "../dom/Button"
-import { useNotificationActions } from "../notifications/state"
 import type { TypingStatus } from "../privateChat/types"
 import { solidButton } from "../ui/components"
 import { useChatContext } from "./ChatContext"
@@ -17,8 +16,7 @@ type Props = {
 }
 
 export default function ChatInput(props: Props) {
-  const identity = useChatContext().identity
-  const notificationActions = useNotificationActions()
+  const { identity, notificationStore } = useChatContext()
 
   const valueTrimmed = props.value.trim()
 
@@ -58,11 +56,12 @@ export default function ChatInput(props: Props) {
       props.onSubmit(valueTrimmed)
       props.onChangeText("")
     } else {
-      notificationActions.addNotification({
-        type: "error",
-        message: `Your message is too long! Shorten it to ${maxLength} characters or less.`,
-        save: false,
-        showToast: true,
+      notificationStore.addToast({
+        duration: 7000,
+        details: {
+          type: "error",
+          message: `Your message is too long! Shorten it to ${maxLength} characters or less.`,
+        },
       })
     }
   }

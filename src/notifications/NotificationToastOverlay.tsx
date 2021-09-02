@@ -1,11 +1,12 @@
 import { Portal } from "@headlessui/react"
+import { useChatContext } from "../chat/ChatContext"
+import { useStoreValue } from "../state/store"
 import NotificationCard from "./NotificationCard"
 import NotificationToast from "./NotificationToast"
-import { useNotificationActions, useNotificationToastList } from "./state"
 
 export default function NotificationToastOverlay() {
-  const toasts = useNotificationToastList()
-  const actions = useNotificationActions()
+  const context = useChatContext()
+  const toasts = useStoreValue(context.notificationStore.toasts)
 
   return (
     <Portal>
@@ -14,9 +15,11 @@ export default function NotificationToastOverlay() {
           <li key={toast.id} className="pointer-events-auto">
             <NotificationToast
               duration={toast.duration}
-              onDismissed={() => actions.removeToast(toast.id)}
+              onDismissed={() =>
+                context.notificationStore.removeToast(toast.id)
+              }
             >
-              <NotificationCard notification={toast.notification} />
+              <NotificationCard details={toast.details} />
             </NotificationToast>
           </li>
         ))}

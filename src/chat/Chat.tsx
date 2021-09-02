@@ -1,9 +1,10 @@
 import { memo, useDeferredValue } from "react"
 import ChannelView from "../channel/ChannelView"
 import { useChannelCommandHandler, useJoinedChannels } from "../channel/state"
+import DevTools from "../dev/DevTools"
 import ChatLogBrowser from "../logging/ChatLogBrowser"
 import NotificationListScreen from "../notifications/NotificationListScreen"
-import { useNotificationCommandListener } from "../notifications/state"
+import NotificationToastOverlay from "../notifications/NotificationToastOverlay"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { useRoute } from "../router"
 import { useEmitterListener } from "../state/emitter"
@@ -18,7 +19,6 @@ import { useChatDocumentTitle } from "./useChatDocumentTitle"
 export default function Chat() {
   const context = useChatContext()
   useEmitterListener(context.socket.commands, useChannelCommandHandler())
-  useEmitterListener(context.socket.commands, useNotificationCommandListener())
 
   useChatDocumentTitle()
 
@@ -32,6 +32,8 @@ export default function Chat() {
           <ChatRoutes />
         </div>
       </div>
+      {import.meta.env.DEV && <DevTools />}
+      <NotificationToastOverlay />
     </SocketStatusGuard>
   )
 }

@@ -1,7 +1,6 @@
 import type { Ref } from "react"
 import { useChatContext } from "../chat/ChatContext"
 import Button from "../dom/Button"
-import { useNotificationActions } from "../notifications/state"
 import { autoRef } from "../react/autoRef"
 
 export default autoRef(function CopyChannelCodeButton({
@@ -16,7 +15,6 @@ export default autoRef(function CopyChannelCodeButton({
   ref?: Ref<HTMLButtonElement>
 }) {
   const context = useChatContext()
-  const { addNotification } = useNotificationActions()
 
   return (
     <Button
@@ -32,21 +30,21 @@ export default autoRef(function CopyChannelCodeButton({
         try {
           await window.navigator.clipboard.writeText(link)
 
-          addNotification({
-            type: "info",
-            message: "Copied code to clipboard!",
-            save: false,
-            showToast: true,
-            toastDuration: 3000,
+          context.notificationStore.addToast({
+            details: {
+              type: "info",
+              message: "Copied code to clipboard!",
+            },
+            duration: 3000,
           })
         } catch (e) {
-          addNotification({
-            type: "error",
-            message:
-              "Copy to clipboard failed. Check your browser settings and make sure clipboard permissions are enabled.",
-            save: false,
-            showToast: true,
-            toastDuration: 6000,
+          context.notificationStore.addToast({
+            details: {
+              type: "error",
+              message:
+                "Copy to clipboard failed. Check your browser settings and make sure clipboard permissions are enabled.",
+            },
+            duration: 6000,
           })
         }
       }}

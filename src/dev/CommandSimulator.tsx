@@ -37,7 +37,7 @@ const paramsStore = createStore("")
 export default function CommandSimulator() {
   const command = useStoreValue(commandStore)
   const params = useStoreValue(paramsStore)
-  const socket = useChatContext().socket
+  const { socket } = useChatContext()
 
   const paramsParseResult =
     params.length > 2 ? safeJsonParse(params) : undefined
