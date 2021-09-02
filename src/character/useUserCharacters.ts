@@ -4,5 +4,5 @@ import { useCharacterList } from "./useCharacterList"
 
 export function useUserCharacters(): readonly Character[] {
   const context = useChatContext()
-  return useCharacterList(context.user.characters)
+  return useCharacterList(context.userCharacters)
 }
