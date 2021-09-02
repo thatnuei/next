@@ -2,8 +2,8 @@ import CharacterName from "../character/CharacterName"
 import type { Character } from "../character/types"
 import { useLikedCharacters } from "../character/useLikedCharacters"
 import { useUserCharacters } from "../character/useUserCharacters"
+import { useChatContext } from "../chat/ChatContext"
 import { useNotificationActions } from "../notifications/state"
-import { useSocketActions } from "../socket/SocketConnection"
 import { fadedButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -17,7 +17,7 @@ type Props = {
 // need to have a list of all online character names in order to make them searchable,
 // do that later
 function InviteUsersForm({ channelId }: Props) {
-  const { send } = useSocketActions()
+  const { send } = useChatContext().socket
   const likedCharacters = useLikedCharacters()
   const userCharacters = useUserCharacters()
   const notificationActions = useNotificationActions()

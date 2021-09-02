@@ -25,9 +25,7 @@ import {
   createRoomState,
   setRoomUnread,
 } from "../room/state"
-import type { ServerCommand } from "../socket/helpers"
-import { matchCommand } from "../socket/helpers"
-import { useSocketListener } from "../socket/SocketConnection"
+import { createCommandHandler } from "../socket/helpers"
 import { useAccount } from "../user"
 import { loadChannels, saveChannels } from "./storage"
 import type { ChannelMode } from "./types"
@@ -196,7 +194,7 @@ export function useChannelActions(id: string) {
   }, [addChannelMessage, id, identity, joinChannel, send, updateChannel])
 }
 
-export function useChannelCommandListener() {
+export function useChannelCommandHandler() {
   const identity = useChatContext().identity
   const account = useAccount()
   const logger = useChatLogger()
@@ -217,8 +215,8 @@ export function useChannelCommandListener() {
     saveChannels(channels, account, identity)
   }, [account, channelDict, channelsLoaded, identity])
 
-  useSocketListener((command: ServerCommand) => {
-    matchCommand(command, {
+  return useMemo(() => {
+    return createCommandHandler({
       async IDN() {
         setChannelDict({})
 
@@ -401,5 +399,13 @@ export function useChannelCommandListener() {
         )
       },
     })
-  })
+  }, [
+    account,
+    addChannelMessage,
+    identity,
+    joinChannel,
+    logger,
+    setChannelDict,
+    updateAtom,
+  ])
 }

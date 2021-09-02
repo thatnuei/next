@@ -7,8 +7,7 @@ import { uniqueId } from "../common/uniqueId"
 import { useChatLogger } from "../logging/context"
 import { createSystemMessage } from "../message/MessageState"
 import { useOpenChatNames } from "../privateChat/state"
-import { matchCommand } from "../socket/helpers"
-import { useSocketListener } from "../socket/SocketConnection"
+import { createCommandHandler } from "../socket/helpers"
 
 /// constants
 const maxNotifications = 1000
@@ -170,14 +169,14 @@ export function useNotificationCommandListener() {
   const likedCharacters = useLikedCharacters()
   const chats = useOpenChatNames()
 
-  const shouldAddStatusNotification = (name: string) => {
-    const isLiked = likedCharacters.some((char) => char.name === name)
-    const hasOpenChat = chats.includes(name)
-    return isLiked && !hasOpenChat
-  }
+  return useMemo(() => {
+    const shouldAddStatusNotification = (name: string) => {
+      const isLiked = likedCharacters.some((char) => char.name === name)
+      const hasOpenChat = chats.includes(name)
+      return isLiked && !hasOpenChat
+    }
 
-  useSocketListener((command) => {
-    matchCommand(command, {
+    return createCommandHandler({
       BRO({ message, character }) {
         actions.addNotification({
           type: "broadcast",
@@ -241,8 +240,9 @@ export function useNotificationCommandListener() {
 
       SYS({ message }) {
         // we don't actually need to notify for these, so just log for now
+        // eslint-disable-next-line no-console
         console.info(message)
       },
     })
-  })
+  }, [actions, chats, likedCharacters])
 }

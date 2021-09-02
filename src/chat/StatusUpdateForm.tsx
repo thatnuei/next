@@ -5,33 +5,37 @@ import BBC from "../bbc/BBC"
 import BBCTextArea from "../bbc/BBCInput"
 import type { CharacterStatus } from "../character/types"
 import { useCharacter } from "../character/useCharacter"
-import { raise } from "../common/raise"
 import Button from "../dom/Button"
 import { decodeHtml } from "../dom/decodeHtml"
-import { useSocketActions, useSocketListener } from "../socket/SocketConnection"
+import { createCommandHandler } from "../socket/helpers"
+import { useEmitterListener } from "../state/emitter"
 import { select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
 import Icon from "../ui/Icon"
 import { about } from "../ui/icons"
-import { useIdentity } from "../user"
+import { useChatContext } from "./ChatContext"
 
 const isSubmittingAtom = atom(false)
 
 function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
-  const identity = useIdentity() ?? raise("Identity not set")
+  const { identity, socket } = useChatContext()
   const character = useCharacter(identity)
   const [status, setStatus] = useState(character.status)
   const [statusMessage, setStatusMessage] = useState(() =>
     decodeHtml(character.statusMessage),
   )
   const [isSubmitting, setIsSubmitting] = useAtom(isSubmittingAtom)
-  const { send } = useSocketActions()
 
-  useSocketListener((command) => {
-    if (command.type === "STA" && command.params.character === identity) {
-      onSuccess()
-    }
-  })
+  useEmitterListener(
+    socket.commands,
+    createCommandHandler({
+      STA(params) {
+        if (params.character === identity) {
+          onSuccess()
+        }
+      },
+    }),
+  )
 
   const submit = (e?: React.SyntheticEvent) => {
     e?.preventDefault()
@@ -44,7 +48,7 @@ function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
       setIsSubmitting(false)
     }, 7000)
 
-    send({
+    socket.send({
       type: "STA",
       params: { status, statusmsg: statusMessage },
     })

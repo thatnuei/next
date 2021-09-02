@@ -1,12 +1,11 @@
 import { decodeHtml } from "../dom/decodeHtml"
 import { getAvatarUrl } from "../flist/helpers"
-import { routes, useRoute } from "../router"
-import { useSocketCommandMatch } from "../socket/SocketConnection"
+import type { Route } from "../router"
+import { routes } from "../router"
+import { createCommandHandler } from "../socket/helpers"
 
-export default function SystemNotificationsHandler() {
-  const route = useRoute()
-
-  useSocketCommandMatch({
+export function createSystemNotificationsHandler(route: Route) {
+  return createCommandHandler({
     PRI({ character, message }) {
       const isPrivateChatRoute =
         route.name === "privateChat" && route.params.partnerName === character
@@ -24,6 +23,4 @@ export default function SystemNotificationsHandler() {
       }
     },
   })
-
-  return null
 }

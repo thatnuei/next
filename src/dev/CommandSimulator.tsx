@@ -1,11 +1,11 @@
 import clsx from "clsx"
 import { useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
+import { useChatContext } from "../chat/ChatContext"
 import { safeJsonParse } from "../common/json"
 import Button from "../dom/Button"
 import ExternalLink from "../dom/ExternalLink"
 import type { ServerCommand } from "../socket/helpers"
-import { useSocketActions } from "../socket/SocketConnection"
 import { input, select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
 
@@ -38,7 +38,7 @@ const paramsAtom = atomWithStorage("CommandSimulator:params", "")
 export default function CommandSimulator() {
   const [command, setCommand] = useAtom(commandAtom)
   const [params, setParams] = useAtom(paramsAtom)
-  const { callListeners } = useSocketActions()
+  const socket = useChatContext().socket
 
   const paramsParseResult =
     params.length > 2 ? safeJsonParse(params) : undefined
@@ -47,7 +47,7 @@ export default function CommandSimulator() {
     event.preventDefault()
 
     if (paramsParseResult?.result) {
-      callListeners({
+      socket.commands.emit({
         type: command,
         params: paramsParseResult.result,
       } as ServerCommand)

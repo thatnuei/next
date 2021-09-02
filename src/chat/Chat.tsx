@@ -1,6 +1,9 @@
 import { useDeferredValue } from "react"
+import { useChannelCommandHandler } from "../channel/state"
+import { useNotificationCommandListener } from "../notifications/state"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { useRoute } from "../router"
+import { useEmitterListener } from "../state/emitter"
 import { useStoreValue } from "../state/store"
 import StalenessState from "../ui/StalenessState"
 import { useChatContext } from "./ChatContext"
@@ -9,6 +12,10 @@ import NoRoomView from "./NoRoomView"
 import SocketStatusGuard from "./SocketStatusGuard"
 
 export default function Chat() {
+  const context = useChatContext()
+  useEmitterListener(context.socket.commands, useChannelCommandHandler())
+  useEmitterListener(context.socket.commands, useNotificationCommandListener())
+
   return (
     <SocketStatusGuard>
       <div className="flex h-full gap-1">

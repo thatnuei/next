@@ -7,11 +7,14 @@ import { raise } from "../common/raise"
 import type { NonEmptyArray } from "../common/types"
 import type { FListApi, LoginResponse } from "../flist/api"
 import { useChatLogger } from "../logging/context"
+import { createSystemNotificationsHandler } from "../notifications/createSystemNotificationsHandler"
 import type { PrivateChatStore } from "../privateChat/PrivateChatStore"
 import { createPrivateChatStore } from "../privateChat/PrivateChatStore"
+import { useRoute } from "../router"
 import type { SocketStore } from "../socket/SocketStore"
 import { createSocketStore } from "../socket/SocketStore"
 import { useEmitterListener } from "../state/emitter"
+import createStatusPersistenceHandler from "./createStatusPersistenceHandler"
 
 type ChatContextType = {
   identity: string
@@ -45,19 +48,26 @@ export function ChatProvider({
 }) {
   const [socket] = useState(createSocketStore)
   const logger = useChatLogger()
+  const route = useRoute()
 
   const [characterStore] = useState(() => createCharacterStore(api, identity))
+
+  const [privateChatStore] = useState(() => {
+    return createPrivateChatStore(identity, logger, socket)
+  })
+
+  const [channelBrowserStore] = useState(() => {
+    return createChannelBrowserStore(socket)
+  })
+
   useEmitterListener(socket.commands, characterStore.handleCommand)
-
-  const [privateChatStore] = useState(() =>
-    createPrivateChatStore(identity, logger, socket),
-  )
   useEmitterListener(socket.commands, privateChatStore.handleCommand)
-
-  const [channelBrowserStore] = useState(() =>
-    createChannelBrowserStore(socket),
-  )
   useEmitterListener(socket.commands, channelBrowserStore.handleCommand)
+  useEmitterListener(socket.commands, createSystemNotificationsHandler(route))
+  useEmitterListener(
+    socket.commands,
+    createStatusPersistenceHandler(identity, socket),
+  )
 
   useEffect(() => {
     socket.connect(async () => {

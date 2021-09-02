@@ -1,21 +1,18 @@
 import type { CharacterStatus } from "../character/types"
 import { decodeHtml } from "../dom/decodeHtml"
-import {
-  useSocketActions,
-  useSocketCommandMatch,
-} from "../socket/SocketConnection"
+import { createCommandHandler } from "../socket/helpers"
+import type { SocketStore } from "../socket/SocketStore"
 import { keyValueStore } from "../storage/keyValueStore"
-import { useIdentity } from "../user"
 
 export function clearStoredStatus(identity: string) {
   keyValueStore.delete(`status:${identity}`)
 }
 
-export default function StatusRestorationEffect() {
-  const identity = useIdentity()
-  const socketActions = useSocketActions()
-
-  useSocketCommandMatch({
+export default function createStatusPersistenceHandler(
+  identity: string,
+  socket: SocketStore,
+) {
+  return createCommandHandler({
     STA({ character, status, statusmsg }) {
       if (character === identity) {
         keyValueStore.set(`status:${identity}`, {
@@ -34,7 +31,7 @@ export default function StatusRestorationEffect() {
         typeof savedStatus?.status === "string" &&
         typeof savedStatus?.statusmsg === "string"
       ) {
-        socketActions.send({
+        socket.send({
           type: "STA",
           params: {
             status: savedStatus.status as CharacterStatus,
@@ -44,6 +41,4 @@ export default function StatusRestorationEffect() {
       }
     },
   })
-
-  return null
 }

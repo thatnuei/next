@@ -46,3 +46,9 @@ export function matchCommand(
   const handler = handlers[command.type]
   handler?.(command.params as never) // lol
 }
+
+export function createCommandHandler(handlers: CommandHandlerMap) {
+  return function handleCommand(command: ServerCommand) {
+    matchCommand(command, handlers)
+  }
+}

@@ -1,6 +1,7 @@
 import { atom } from "jotai"
 import { useAtomValue, useUpdateAtom } from "jotai/utils"
 import { useCallback, useMemo } from "react"
+import { useChatContext } from "../chat/ChatContext"
 import { omit } from "../common/omit"
 import { raise } from "../common/raise"
 import type { Dict, TruthyMap } from "../common/types"
@@ -10,7 +11,6 @@ import { useChatLogger } from "../logging/context"
 import type { MessageState } from "../message/MessageState"
 import { createPrivateMessage } from "../message/MessageState"
 import { addRoomMessage, createRoomState, setRoomUnread } from "../room/state"
-import { useSocketActions } from "../socket/SocketConnection"
 import { useIdentity } from "../user"
 import type { PrivateChat } from "./types"
 
@@ -105,7 +105,7 @@ export function useOpenPrivateChats(): readonly PrivateChat[] {
 }
 
 export function usePrivateChatActions(partnerName: string) {
-  const { send } = useSocketActions()
+  const { send } = useChatContext().socket
   const identity = useIdentity() ?? raise("not logged in")
   const setOpenChatNames = useUpdateAtom(openChatNamesAtom)
   const setPrivateChat = useUpdateAtom(privateChatAtom(partnerName))
