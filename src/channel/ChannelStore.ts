@@ -45,6 +45,7 @@ export function createChannelStore(
   characterStore: CharacterStore,
 ) {
   const channels = createDictStore(createChannel)
+  let restored = false
 
   const store = {
     channels,
@@ -152,23 +153,26 @@ export function createChannelStore(
     },
 
     handleCommand(command: ServerCommand) {
-      let restored = false
-
       function saveIfRestored() {
         if (!restored) return
-
         saveChannels(Object.keys(store.selectJoinedChannels().value), identity)
       }
 
       matchCommand(command, {
-        async IDN() {
-          channels.set({})
-
-          const channelIds = await loadChannels(identity)
-          for (const id of channelIds) {
-            store.join(id)
-          }
-          restored = true
+        IDN() {
+          loadChannels(identity)
+            .then((channels) => {
+              for (const id of channels) {
+                store.join(id)
+              }
+            })
+            .catch((error) => {
+              // eslint-disable-next-line no-console
+              console.warn("Could not load channels", error)
+            })
+            .finally(() => {
+              restored = true
+            })
         },
 
         JCH({ channel: id, character: { identity: name }, title }) {
