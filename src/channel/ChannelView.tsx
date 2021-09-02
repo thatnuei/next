@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react"
+import { memo, useEffect, useMemo } from "react"
 import { useChatContext } from "../chat/ChatContext"
 import ChatInput from "../chat/ChatInput"
 import { useDocumentVisible } from "../dom/document-visible"
@@ -7,10 +7,11 @@ import MessageList from "../message/MessageList"
 import MessageListItem from "../message/MessageListItem"
 import type { MessageState } from "../message/MessageState"
 import { createChannelMessage } from "../message/MessageState"
+import { useStoreValue } from "../state/store"
 import { screenQueries } from "../ui/screens"
 import ChannelHeader from "./ChannelHeader"
 import ChannelUserList from "./ChannelUserList"
-import { useActualChannelMode, useChannel, useChannelActions } from "./state"
+import { useChannelKeys } from "./useChannelKeys"
 
 type Props = {
   channelId: string
@@ -18,9 +19,10 @@ type Props = {
 
 function ChannelView({ channelId }: Props) {
   const context = useChatContext()
-  const channel = useChannel(channelId)
-  const actualMode = useActualChannelMode(channelId)
-  const actions = useChannelActions(channelId)
+  const channel = useChannelKeys(channelId, ["input", "messages", "isUnread"])
+  const actualMode = useStoreValue(
+    context.channelStore.selectActualChannelMode(channelId),
+  )
   const isLargeScreen = useMediaQuery(screenQueries.large)
 
   const messages = useMemo(() => {
@@ -39,8 +41,9 @@ function ChannelView({ channelId }: Props) {
 
   const isDocumentVisible = useDocumentVisible()
   useEffect(() => {
-    if (channel.isUnread && isDocumentVisible) actions.markRead()
-  }, [actions, channel.isUnread, isDocumentVisible])
+    if (channel.isUnread && isDocumentVisible)
+      context.channelStore.markRead(channelId)
+  }, [channel.isUnread, channelId, context.channelStore, isDocumentVisible])
 
   return (
     <div className={`flex flex-col h-full`}>
@@ -60,8 +63,12 @@ function ChannelView({ channelId }: Props) {
 
       <ChatInput
         value={channel.input}
-        onChangeText={actions.setInput}
-        onSubmit={actions.sendMessage}
+        onChangeText={(input) =>
+          context.channelStore.setInput(channelId, input)
+        }
+        onSubmit={(message) =>
+          context.channelStore.sendMessage(channelId, message)
+        }
         maxLength={4096}
         renderPreview={(value) => (
           <MessageListItem
@@ -76,4 +83,4 @@ function ChannelView({ channelId }: Props) {
   )
 }
 
-export default ChannelView
+export default memo(ChannelView)

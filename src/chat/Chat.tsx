@@ -1,13 +1,12 @@
 import { memo, useDeferredValue } from "react"
 import ChannelView from "../channel/ChannelView"
-import { useChannelCommandHandler, useJoinedChannels } from "../channel/state"
+import { useJoinedChannels } from "../channel/useJoinedChannels"
 import DevTools from "../dev/DevTools"
 import ChatLogBrowser from "../logging/ChatLogBrowser"
 import NotificationListScreen from "../notifications/NotificationListScreen"
 import NotificationToastOverlay from "../notifications/NotificationToastOverlay"
 import PrivateChatView from "../privateChat/PrivateChatView"
 import { useRoute } from "../router"
-import { useEmitterListener } from "../state/emitter"
 import { useStoreValue } from "../state/store"
 import StalenessState from "../ui/StalenessState"
 import { useChatContext } from "./ChatContext"
@@ -17,9 +16,6 @@ import SocketStatusGuard from "./SocketStatusGuard"
 import { useChatDocumentTitle } from "./useChatDocumentTitle"
 
 export default function Chat() {
-  const context = useChatContext()
-  useEmitterListener(context.socket.commands, useChannelCommandHandler())
-
   useChatDocumentTitle()
 
   return (

@@ -4,11 +4,12 @@ import { memo } from "react"
 import CharacterName from "../character/CharacterName"
 import { useGetNickname } from "../character/nicknames"
 import type { Character } from "../character/types"
+import { useCharacterList } from "../character/useCharacterList"
 import { useChatContext } from "../chat/ChatContext"
 import type { ValueOf } from "../common/types"
 import { useStoreValue } from "../state/store"
 import VirtualizedList from "../ui/VirtualizedList"
-import { useChannel, useChannelCharacters } from "./state"
+import { useChannelKeys } from "./useChannelKeys"
 
 type Props = {
   channelId: string
@@ -28,9 +29,9 @@ const itemTypeSortOrders = new Map<string, number>(
 
 function ChannelUserList({ channelId }: Props) {
   const context = useChatContext()
-  const characters = useChannelCharacters(channelId)
   const admins = useStoreValue(context.characterStore.admins)
-  const channel = useChannel(channelId)
+  const channel = useChannelKeys(channelId, ["ops", "users"])
+  const characters = useCharacterList(Object.keys(channel.users))
   const getNickname = useGetNickname()
 
   const friendships = useStoreValue(

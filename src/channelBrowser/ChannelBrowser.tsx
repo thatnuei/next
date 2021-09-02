@@ -2,11 +2,7 @@ import clsx from "clsx"
 import { sortBy } from "lodash-es"
 import { matchSorter } from "match-sorter"
 import { useEffect, useState } from "react"
-import {
-  useJoinChannel,
-  useJoinedChannels,
-  useLeaveChannel,
-} from "../channel/state"
+import { useJoinedChannels } from "../channel/useJoinedChannels"
 import { useChatContext } from "../chat/ChatContext"
 import Button from "../dom/Button"
 import TextInput from "../dom/TextInput"
@@ -22,8 +18,6 @@ function ChannelBrowser() {
   const context = useChatContext()
   const [query, setQuery] = useState("")
   const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
-  const joinChannel = useJoinChannel()
-  const leaveChannel = useLeaveChannel()
   const joinedChannels = useJoinedChannels()
 
   useEffect(() => {
@@ -76,9 +70,9 @@ function ChannelBrowser() {
                   active={joined}
                   onClick={() => {
                     if (joined) {
-                      leaveChannel(item.id)
+                      context.channelStore.leave(item.id)
                     } else {
-                      joinChannel(item.id, item.title)
+                      context.channelStore.join(item.id, item.title)
                     }
                   }}
                 />

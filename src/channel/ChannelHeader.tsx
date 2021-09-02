@@ -1,4 +1,5 @@
 import * as React from "react"
+import { memo } from "react"
 import BBC from "../bbc/BBC"
 import { useChatContext } from "../chat/ChatContext"
 import ChatMenuButton from "../chat/ChatMenuButton"
@@ -20,7 +21,7 @@ import ChannelFilters from "./ChannelFilters"
 import ChannelUserList from "./ChannelUserList"
 import CopyChannelCodeButton from "./CopyChannelCodeButton"
 import InviteUsersForm from "./InviteUsersForm"
-import { useChannel, useChannelActions } from "./state"
+import { useChannelKeys } from "./useChannelKeys"
 
 type Props = {
   channelId: string
@@ -28,13 +29,12 @@ type Props = {
 
 function ChannelHeader({ channelId }: Props) {
   const context = useChatContext()
-  const channel = useChannel(channelId)
+  const channel = useChannelKeys(channelId, ["title", "description"])
   const isLargeScreen = useMediaQuery(screenQueries.large)
   const [inviteOpen, setInviteOpen] = React.useState(false)
   const isPublic = useStoreValue(
     context.channelBrowserStore.selectIsPublic(channelId),
   )
-  const actions = useChannelActions(channelId)
 
   return (
     <header className="flex flex-row items-center gap-3 p-3 bg-midnight-0">
@@ -59,7 +59,7 @@ function ChannelHeader({ channelId }: Props) {
         <h1 className={headerText2}>{channel.title}</h1>
       </div>
 
-      {isLargeScreen && <ChannelFilters channelId={channel.id} />}
+      {isLargeScreen && <ChannelFilters channelId={channelId} />}
 
       {!isLargeScreen && (
         <Drawer
@@ -85,7 +85,7 @@ function ChannelHeader({ channelId }: Props) {
         <DropdownMenuPanel>
           {!isLargeScreen && (
             <div className="px-3 py-2 mb-1 bg-midnight-0">
-              <ChannelFilters channelId={channel.id} />
+              <ChannelFilters channelId={channelId} />
             </div>
           )}
 
@@ -95,7 +95,10 @@ function ChannelHeader({ channelId }: Props) {
             </DropdownMenuItem>
 
             <DropdownMenuItem icon={<Icon which={icons.clearMessages} />}>
-              <button type="button" onClick={() => actions.clearMessages()}>
+              <button
+                type="button"
+                onClick={() => context.channelStore.clearMessages(channelId)}
+              >
                 Clear messages
               </button>
             </DropdownMenuItem>
@@ -122,4 +125,4 @@ function ChannelHeader({ channelId }: Props) {
   )
 }
 
-export default ChannelHeader
+export default memo(ChannelHeader)

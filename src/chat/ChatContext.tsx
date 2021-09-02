@@ -1,4 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useMemo } from "react"
+import type { ChannelStore } from "../channel/ChannelStore"
+import { createChannelStore } from "../channel/ChannelStore"
 import type { ChannelBrowserStore } from "../channelBrowser/ChannelBrowserStore"
 import { createChannelBrowserStore } from "../channelBrowser/ChannelBrowserStore"
 import type { CharacterStore } from "../character/CharacterStore"
@@ -30,6 +32,7 @@ type ChatContextType = {
   privateChatStore: PrivateChatStore
   channelBrowserStore: ChannelBrowserStore
   notificationStore: NotificationStore
+  channelStore: ChannelStore
 }
 
 const Context = createContext<ChatContextType>()
@@ -49,29 +52,42 @@ export function ChatProvider({
   onShowCharacterSelect: () => void
   children: React.ReactNode
 }) {
-  const [socket] = useState(createChatSocket)
+  const socket = useMemo(createChatSocket, [])
   const logger = useChatLogger()
   const route = useRoute()
 
-  const [characterStore] = useState(() => createCharacterStore(api, identity))
-
-  const [privateChatStore] = useState(() => {
-    return createPrivateChatStore(identity, logger, socket)
-  })
-
-  const [channelBrowserStore] = useState(() => {
-    return createChannelBrowserStore(socket)
-  })
-
-  const [notificationStore] = useState(() =>
-    createNotificationStore(logger, characterStore, privateChatStore),
+  const characterStore = useMemo(
+    () => createCharacterStore(api, identity),
+    [api, identity],
   )
-
   useEmitterListener(socket.commands, characterStore.handleCommand)
+
+  const privateChatStore = useMemo(
+    () => createPrivateChatStore(identity, logger, socket),
+    [identity, logger, socket],
+  )
   useEmitterListener(socket.commands, privateChatStore.handleCommand)
+
+  const channelBrowserStore = useMemo(
+    () => createChannelBrowserStore(socket),
+    [socket],
+  )
   useEmitterListener(socket.commands, channelBrowserStore.handleCommand)
+
+  const notificationStore = useMemo(
+    () => createNotificationStore(logger, characterStore, privateChatStore),
+    [characterStore, logger, privateChatStore],
+  )
   useEmitterListener(socket.commands, notificationStore.handleCommand)
+
+  const channelStore = useMemo(
+    () => createChannelStore(identity, socket, logger, characterStore),
+    [characterStore, identity, logger, socket],
+  )
+  useEmitterListener(socket.commands, channelStore.handleCommand)
+
   useEmitterListener(socket.commands, createSystemNotificationsHandler(route))
+
   useEmitterListener(
     socket.commands,
     createStatusPersistenceHandler(identity, socket),
@@ -102,6 +118,7 @@ export function ChatProvider({
     privateChatStore,
     channelBrowserStore,
     notificationStore,
+    channelStore,
   }
 
   return <Context.Provider value={contextValue}>{children}</Context.Provider>

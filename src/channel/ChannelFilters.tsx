@@ -1,20 +1,24 @@
 import clsx from "clsx"
 import type { ReactNode } from "react"
+import { useChatContext } from "../chat/ChatContext"
 import Button from "../dom/Button"
-import { useChannel, useChannelActions } from "./state"
 import type { ChannelMode } from "./types"
+import { useChannelKeys } from "./useChannelKeys"
 
 type Props = {
   channelId: string
 }
 
 function ChannelFilters({ channelId, ...props }: Props) {
-  const { mode, selectedMode } = useChannel(channelId)
-  const actions = useChannelActions(channelId)
+  const context = useChatContext()
+  const { mode, selectedMode } = useChannelKeys(channelId, [
+    "mode",
+    "selectedMode",
+  ])
 
   function buttonProps(mode: ChannelMode) {
     return {
-      onClick: () => actions.setSelectedMode(mode),
+      onClick: () => context.channelStore.setSelectedMode(channelId, mode),
       active: selectedMode === mode,
     }
   }
@@ -22,9 +26,9 @@ function ChannelFilters({ channelId, ...props }: Props) {
   if (mode === "ads") {
     return (
       <div className="flex flex-row gap-3" role="radiogroup" {...props}>
-        <ChannelFilterButton disabled>Chat</ChannelFilterButton>
-        <ChannelFilterButton active>Ads</ChannelFilterButton>
-        <ChannelFilterButton disabled>Both</ChannelFilterButton>
+        <FilterButton disabled>Chat</FilterButton>
+        <FilterButton active>Ads</FilterButton>
+        <FilterButton disabled>Both</FilterButton>
       </div>
     )
   }
@@ -32,25 +36,25 @@ function ChannelFilters({ channelId, ...props }: Props) {
   if (mode === "chat") {
     return (
       <div className="flex flex-row gap-3" role="radiogroup" {...props}>
-        <ChannelFilterButton active>Chat</ChannelFilterButton>
-        <ChannelFilterButton disabled>Ads</ChannelFilterButton>
-        <ChannelFilterButton disabled>Both</ChannelFilterButton>
+        <FilterButton active>Chat</FilterButton>
+        <FilterButton disabled>Ads</FilterButton>
+        <FilterButton disabled>Both</FilterButton>
       </div>
     )
   }
 
   return (
     <div className="flex flex-row gap-3" role="radiogroup" {...props}>
-      <ChannelFilterButton {...buttonProps("chat")}>Chat</ChannelFilterButton>
-      <ChannelFilterButton {...buttonProps("ads")}>Ads</ChannelFilterButton>
-      <ChannelFilterButton {...buttonProps("both")}>Both</ChannelFilterButton>
+      <FilterButton {...buttonProps("chat")}>Chat</FilterButton>
+      <FilterButton {...buttonProps("ads")}>Ads</FilterButton>
+      <FilterButton {...buttonProps("both")}>Both</FilterButton>
     </div>
   )
 }
 
 export default ChannelFilters
 
-function ChannelFilterButton({
+function FilterButton({
   children,
   active,
   disabled,

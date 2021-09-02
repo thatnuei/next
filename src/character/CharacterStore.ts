@@ -58,6 +58,8 @@ export function createCharacterStore(api: FListApi, identity: string) {
     ignores,
     admins,
 
+    getCharacterList,
+
     selectCharacterList(names: readonly string[]) {
       return characters.select((characters) =>
         getCharacterList(characters, names),

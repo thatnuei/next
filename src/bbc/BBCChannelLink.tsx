@@ -1,5 +1,4 @@
 import type { PropsWithChildren } from "react"
-import { useChannelActions } from "../channel/state"
 import { useChatContext } from "../chat/ChatContext"
 import { useStoreValue } from "../state/store"
 import Icon from "../ui/Icon"
@@ -20,10 +19,11 @@ export default function BBCChannelLink({
     context.channelBrowserStore.selectChannelInfo(channelId),
   )
 
-  const { join } = useChannelActions(channelId)
-
   return (
-    <button className="inline-block group" onClick={() => join(title)}>
+    <button
+      className="inline-block group"
+      onClick={() => context.channelStore.join(channelId, title)}
+    >
       <span className="opacity-75">
         <Icon
           which={type === "public" ? icons.earth : icons.lock}
