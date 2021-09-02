@@ -2,7 +2,6 @@ import clsx from "clsx"
 import * as React from "react"
 import Button from "../dom/Button"
 import { fadedButton } from "../ui/components"
-import { ellipsize } from "../ui/helpers"
 import Icon from "../ui/Icon"
 import { close } from "../ui/icons"
 
@@ -29,18 +28,18 @@ function RoomTab(props: RoomTabProps) {
   return (
     <div
       className={clsx(
-        `flex flex-row items-center transition`,
+        `flex flex-row items-center transition min-w-0`,
         activeStateStyle,
       )}
     >
       <Button
-        className={`flex flex-row items-center flex-1 p-2 ${ellipsize}`}
+        className="flex flex-row items-center flex-1 p-2"
         onClick={props.onClick}
         role="link"
       >
         {props.icon}
         <div
-          className={`flex-1 ml-2 ${ellipsize}`}
+          className="flex-1 ml-2 line-clamp-1"
           dangerouslySetInnerHTML={{ __html: props.title }}
         />
       </Button>
