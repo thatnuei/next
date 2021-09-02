@@ -1,6 +1,6 @@
 import { useDeferredValue } from "react"
 import ChannelView from "../channel/ChannelView"
-import { useChannelCommandHandler } from "../channel/state"
+import { useChannelCommandHandler, useJoinedChannels } from "../channel/state"
 import ChatLogBrowser from "../logging/ChatLogBrowser"
 import NotificationListScreen from "../notifications/NotificationListScreen"
 import { useNotificationCommandListener } from "../notifications/state"
@@ -36,6 +36,14 @@ export default function Chat() {
 function ChatRoutes() {
   const context = useChatContext()
   const route = useRoute()
+  const joinedChannels = useJoinedChannels()
+
+  const channelRoute =
+    route.name === "channel" &&
+    joinedChannels.some((ch) => ch.id === route.params.channelId) &&
+    route
+
+  const deferredChannelRoute = useDeferredValue(channelRoute)
 
   const privateChatRoute = useStoreValue(
     context.privateChatStore.openChatNames.select(
@@ -50,6 +58,17 @@ function ChatRoutes() {
   )
   const deferredPrivateChatRoute = useDeferredValue(privateChatRoute)
 
+  if (deferredChannelRoute) {
+    return (
+      <StalenessState isStale={deferredChannelRoute !== channelRoute}>
+        <ChannelView
+          key={deferredChannelRoute.params.channelId}
+          {...deferredChannelRoute.params}
+        />
+      </StalenessState>
+    )
+  }
+
   if (deferredPrivateChatRoute) {
     return (
       <StalenessState isStale={deferredPrivateChatRoute !== privateChatRoute}>
@@ -59,10 +78,6 @@ function ChatRoutes() {
         />
       </StalenessState>
     )
-  }
-
-  if (route.name === "channel") {
-    return <ChannelView key={route.params.channelId} {...route.params} />
   }
 
   if (route.name === "notifications") {
