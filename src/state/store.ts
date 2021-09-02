@@ -1,5 +1,6 @@
 import { isEqual as isDeepEqual } from "lodash-es"
 import { useCallback, useEffect, useState } from "react"
+import { pick } from "../common/pick"
 import type { EmitterLike } from "./emitter"
 import { createEmitter, useEmitterListener } from "./emitter"
 
@@ -104,4 +105,15 @@ export function useStoreValue<Value>(
   useEmitterListener(store, setIfChanged)
 
   return state
+}
+
+export function useStoreKeys<Value, Key extends keyof Value>(
+  store: Store<Value>,
+  keys: Key[],
+  isEqual?: (a: Pick<Value, Key>, b: Pick<Value, Key>) => boolean,
+): Pick<Value, Key> {
+  return useStoreValue(
+    store.select((value) => pick(value, keys)),
+    isEqual,
+  )
 }
