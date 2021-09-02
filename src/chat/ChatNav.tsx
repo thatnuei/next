@@ -5,7 +5,6 @@ import OnlineUsers from "../character/OnlineUsers"
 import ChatNavAction from "../chat/ChatNavAction"
 import Button from "../dom/Button"
 import NotificationListLink from "../notifications/NotificationListLink"
-import PrivateChatTabList from "../privateChat/PrivateChatTabList"
 import { routes, useRoute } from "../router"
 import SettingsScreen from "../settings/SettingsScreen"
 import Icon from "../ui/Icon"
@@ -14,6 +13,7 @@ import LogsIcon from "../ui/LogsIcon"
 import Modal from "../ui/Modal"
 import { useChatContext } from "./ChatContext"
 import ChatNavActionButton from "./ChatNavActionButton"
+import RoomTabList from "./RoomTabList"
 import StatusUpdateForm from "./StatusUpdateForm"
 
 export default function ChatNav() {
@@ -118,7 +118,7 @@ export default function ChatNav() {
         </div>
 
         <div className="bg-midnight-1">
-          <PrivateChatTabList />
+          <RoomTabList />
         </div>
       </div>
     </nav>

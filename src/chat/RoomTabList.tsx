@@ -3,12 +3,9 @@ import type { Channel } from "../channel/state"
 import { useChannelActions, useJoinedChannels } from "../channel/state"
 import Avatar from "../character/Avatar"
 import { useNickname } from "../character/nicknames"
-import {
-  useOpenChatNames,
-  usePrivateChat,
-  usePrivateChatActions,
-} from "../privateChat/state"
+import type { PrivateChat } from "../privateChat/types"
 import { routes, useRoute } from "../router"
+import type { Store } from "../state/store"
 import { useStoreValue } from "../state/store"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
@@ -17,12 +14,17 @@ import RoomTab from "./RoomTab"
 
 export default function RoomTabList() {
   const joinedChannels = useJoinedChannels()
-  const privateChats = useOpenChatNames()
+  const context = useChatContext()
+  const openChatNames = useStoreValue(context.privateChatStore.openChatNames)
 
   return (
     <>
-      {sortBy(privateChats, (name) => name.toLowerCase()).map((name) => (
-        <PrivateChatTab key={name} partnerName={name} />
+      {sortBy(Object.keys(openChatNames)).map((name) => (
+        <PrivateChatTab
+          key={name}
+          privateChat={context.privateChatStore.privateChats.selectItem(name)}
+          onClose={() => context.privateChatStore.closeChat(name)}
+        />
       ))}
       {sortBy(joinedChannels, (ch) => ch.title.toLowerCase()).map((channel) => (
         <ChannelRoomTab key={channel.id} channel={channel} />
@@ -31,10 +33,16 @@ export default function RoomTabList() {
   )
 }
 
-function PrivateChatTab({ partnerName }: { partnerName: string }) {
+function PrivateChatTab({
+  privateChat,
+  onClose,
+}: {
+  privateChat: Store<PrivateChat>
+  onClose: () => void
+}) {
+  const partnerName = useStoreValue(privateChat.select((pc) => pc.partnerName))
+  const isUnread = useStoreValue(privateChat.select((pc) => pc.isUnread))
   const route = useRoute()
-  const privateChat = usePrivateChat(partnerName)
-  const privateChatActions = usePrivateChatActions(partnerName)
   const nickname = useNickname(partnerName)
 
   return (
@@ -44,9 +52,9 @@ function PrivateChatTab({ partnerName }: { partnerName: string }) {
       isActive={
         route.name === "privateChat" && route.params.partnerName === partnerName
       }
-      isUnread={privateChat.isUnread}
+      isUnread={isUnread}
       onClick={() => routes.privateChat({ partnerName }).push()}
-      onClose={() => privateChatActions.close()}
+      onClose={onClose}
     />
   )
 }
