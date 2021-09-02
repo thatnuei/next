@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from "react"
+import { useChatContext } from "../chat/ChatContext"
 import ChatInput from "../chat/ChatInput"
 import { useDocumentVisible } from "../dom/document-visible"
 import { useMediaQuery } from "../dom/useMediaQuery"
@@ -7,7 +8,6 @@ import MessageListItem from "../message/MessageListItem"
 import type { MessageState } from "../message/MessageState"
 import { createChannelMessage } from "../message/MessageState"
 import { screenQueries } from "../ui/screens"
-import { useIdentity } from "../user"
 import ChannelHeader from "./ChannelHeader"
 import ChannelUserList from "./ChannelUserList"
 import { useActualChannelMode, useChannel, useChannelActions } from "./state"
@@ -17,11 +17,11 @@ type Props = {
 }
 
 function ChannelView({ channelId }: Props) {
+  const context = useChatContext()
   const channel = useChannel(channelId)
   const actualMode = useActualChannelMode(channelId)
   const actions = useChannelActions(channelId)
   const isLargeScreen = useMediaQuery(screenQueries.large)
-  const identity = useIdentity() || "unknown"
 
   const messages = useMemo(() => {
     const shouldShowMessage = (message: MessageState) => {
@@ -66,7 +66,7 @@ function ChannelView({ channelId }: Props) {
         renderPreview={(value) => (
           <MessageListItem
             message={{
-              ...createChannelMessage(identity, value),
+              ...createChannelMessage(context.identity, value),
               timestamp: undefined,
             }}
           />

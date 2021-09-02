@@ -26,7 +26,6 @@ import {
   setRoomUnread,
 } from "../room/state"
 import { createCommandHandler } from "../socket/helpers"
-import { useAccount } from "../user"
 import { loadChannels, saveChannels } from "./storage"
 import type { ChannelMode } from "./types"
 
@@ -211,7 +210,6 @@ export function useChannelActions(id: string) {
 
 export function useChannelCommandHandler() {
   const identity = useChatContext().identity
-  const account = useAccount()
   const logger = useChatLogger()
   const [channelDict, setChannelDict] = useAtom(channelDictAtom)
   const updateAtom = useUpdateAtomFn()
@@ -221,25 +219,22 @@ export function useChannelCommandHandler() {
 
   useEffect(() => {
     if (!channelsLoaded) return
-    if (!account || !identity) return
 
     const channels = Object.values(channelDict)
       .filter(isChannelJoined)
       .map((ch) => ch.id)
 
-    saveChannels(channels, account, identity)
-  }, [account, channelDict, channelsLoaded, identity])
+    saveChannels(channels, identity)
+  }, [channelDict, channelsLoaded, identity])
 
   return useMemo(() => {
     return createCommandHandler({
       async IDN() {
         setChannelDict({})
 
-        if (account && identity) {
-          const channelIds = await loadChannels(account, identity)
-          for (const id of channelIds) {
-            joinChannel(id)
-          }
+        const channelIds = await loadChannels(identity)
+        for (const id of channelIds) {
+          joinChannel(id)
         }
         setChannelsLoaded(true)
       },
@@ -415,7 +410,6 @@ export function useChannelCommandHandler() {
       },
     })
   }, [
-    account,
     addChannelMessage,
     identity,
     joinChannel,

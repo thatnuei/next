@@ -5,15 +5,11 @@ const serializedChannelsSchema = v.shape({
   channelsByIdentity: v.dictionary(v.array(v.string)),
 })
 
-const getStoredChannels = (account: string) =>
-  createStoredValue(`channels:${account}`, serializedChannelsSchema)
+const getStoredChannels = (identity: string) =>
+  createStoredValue(`channels:${identity}`, serializedChannelsSchema)
 
-export function saveChannels(
-  channelIds: string[],
-  account: string,
-  identity: string,
-) {
-  const storage = getStoredChannels(account)
+export function saveChannels(channelIds: string[], identity: string) {
+  const storage = getStoredChannels(identity)
 
   storage
     .update(
@@ -23,13 +19,15 @@ export function saveChannels(
       },
       () => ({ channelsByIdentity: {} }),
     )
+    // eslint-disable-next-line no-console
     .catch(console.warn)
 }
 
-export async function loadChannels(account: string, identity: string) {
-  const storage = getStoredChannels(account)
+export async function loadChannels(identity: string) {
+  const storage = getStoredChannels(identity)
 
   const data = await storage.get().catch((error) => {
+    // eslint-disable-next-line no-console
     console.warn(`could not restore channels:`, error)
     return undefined
   })

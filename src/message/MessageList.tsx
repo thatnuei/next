@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react"
-import { useIdentity } from "../user"
+import { useChatContext } from "../chat/ChatContext"
 import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
 
@@ -19,7 +19,7 @@ export default memo(function MessageList({ messages }: Props) {
   const deferredMessages = useDeferredValue(messages)
   const isStale = deferredMessages !== messages
   const containerRef = useBottomScroll()
-  const identity = useIdentity()
+  const identity = useChatContext().identity
 
   return (
     <ol
