@@ -1,7 +1,9 @@
 import { isEqual as isDeepEqual } from "lodash-es"
 import { useCallback, useEffect, useState } from "react"
 import { pick } from "../common/pick"
-import type { EmitterLike } from "./emitter"
+import { keyValueStore } from "../storage/keyValueStore"
+import type { Validator } from "../validation"
+import type { EmitterLike, Unlisten } from "./emitter"
 import { createEmitter, useEmitterListener } from "./emitter"
 
 export interface Store<Value> extends EmitterLike<Value> {
@@ -116,4 +118,21 @@ export function useStoreKeys<Value, Key extends keyof Value>(
     store.select((value) => pick(value, keys)),
     isEqual,
   )
+}
+
+export function persistStore<Value>(
+  key: string,
+  validator: Validator<Value>,
+  store: WritableStore<Value>,
+): Unlisten {
+  keyValueStore
+    .get(key)
+    .then(validator.parse)
+    .then(store.set)
+    .catch((error) => {
+      // eslint-disable-next-line no-console
+      console.warn("Validator error:", error)
+    })
+
+  return store.listen((value) => keyValueStore.set(key, value))
 }
