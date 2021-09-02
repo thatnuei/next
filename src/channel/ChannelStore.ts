@@ -155,7 +155,10 @@ export function createChannelStore(
     handleCommand(command: ServerCommand) {
       function saveIfRestored() {
         if (!restored) return
-        saveChannels(Object.keys(store.selectJoinedChannels().value), identity)
+        saveChannels(
+          store.selectJoinedChannels().value.map((ch) => ch.id),
+          identity,
+        )
       }
 
       matchCommand(command, {
