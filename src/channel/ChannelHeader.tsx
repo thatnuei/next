@@ -56,7 +56,10 @@ function ChannelHeader({ channelId }: Props) {
       </Modal>
 
       <div className="flex-1">
-        <h1 className={headerText2}>{channel.title}</h1>
+        <h1
+          className={headerText2}
+          dangerouslySetInnerHTML={{ __html: channel.title }}
+        />
       </div>
 
       {isLargeScreen && <ChannelFilters channelId={channelId} />}
