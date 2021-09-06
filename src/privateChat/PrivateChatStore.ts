@@ -1,6 +1,5 @@
 import type { CharacterStatus } from "../character/types"
 import { isTruthy } from "../common/isTruthy"
-import { omit } from "../common/omit"
 import type { ChatLogger } from "../logging/logger"
 import type { MessageState } from "../message/MessageState"
 import {
@@ -83,7 +82,7 @@ export function createPrivateChatStore(
     },
 
     openChat(partnerName: string) {
-      openChatNames.update((names) => ({ ...names, [partnerName]: true }))
+      openChatNames.setItem(partnerName, true)
       logger.setRoomName(getLoggerRoomId(identity, partnerName), partnerName)
 
       logger
@@ -99,7 +98,7 @@ export function createPrivateChatStore(
     },
 
     closeChat(partnerName: string) {
-      openChatNames.update((names) => omit(names, [partnerName]))
+      openChatNames.deleteItem(partnerName)
       saveChats()
     },
 
