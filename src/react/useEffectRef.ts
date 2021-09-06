@@ -5,9 +5,9 @@ import { useEffect, useRef } from "react"
  * without it being a dependency
  */
 export function useEffectRef<T>(value: T): { readonly current: T } {
-	const ref = useRef(value)
-	useEffect(() => {
-		ref.current = value
-	})
-	return ref
+  const ref = useRef(value)
+  useEffect(() => {
+    ref.current = value
+  })
+  return ref
 }

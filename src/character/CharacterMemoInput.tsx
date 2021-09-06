@@ -1,85 +1,86 @@
 import { debounce } from "lodash-es"
 import { useEffect, useMemo, useState } from "react"
+import { useChatContext } from "../chat/ChatContext"
 import type { TagProps } from "../jsx/types"
 import { input } from "../ui/components"
-import { useUserActions } from "../user"
 
 type Props = {
-	name: string
+  name: string
 } & TagProps<"textarea">
 
 export default function CharacterMemoInput({ name, ...props }: Props) {
-	const { getMemo, setMemo } = useUserActions()
+  const api = useChatContext().api
 
-	type State =
-		| { status: "loading" }
-		| { status: "editing"; memo: string }
-		| { status: "error" }
+  type State =
+    | { status: "loading" }
+    | { status: "editing"; memo: string }
+    | { status: "error" }
 
-	const [state, setState] = useState<State>({ status: "loading" })
+  const [state, setState] = useState<State>({ status: "loading" })
 
-	useEffect(() => {
-		setState({ status: "loading" })
+  useEffect(() => {
+    setState({ status: "loading" })
 
-		let cancelled = false
+    let cancelled = false
 
-		getMemo({ name })
-			.then((memo): State => ({ status: "editing", memo }))
-			.catch((): State => ({ status: "error" }))
-			.then((state) => {
-				if (cancelled) return
-				setState(state)
-			})
-			.catch(console.warn)
+    api
+      .getMemo({ name })
+      .then((memo): State => ({ status: "editing", memo }))
+      .catch((): State => ({ status: "error" }))
+      .then((state) => {
+        if (cancelled) return
+        setState(state)
+      })
+      .catch(console.warn)
 
-		return () => {
-			cancelled = true
-		}
-	}, [getMemo, name])
+    return () => {
+      cancelled = true
+    }
+  }, [api, name])
 
-	const saveMemoDebounced = useMemo(() => {
-		const saveMemo = (memo: string) => {
-			setMemo({ name, note: memo }).catch(console.warn)
-		}
-		return debounce(saveMemo, 800)
-	}, [name, setMemo])
+  const saveMemoDebounced = useMemo(() => {
+    const saveMemo = (memo: string) => {
+      api.setMemo({ name, note: memo }).catch(console.warn)
+    }
+    return debounce(saveMemo, 800)
+  }, [api, name])
 
-	function handleChange(memo: string) {
-		if (state.status === "editing") {
-			setState({ ...state, memo })
-		}
-		void saveMemoDebounced(memo)
-	}
+  function handleChange(memo: string) {
+    if (state.status === "editing") {
+      setState({ ...state, memo })
+    }
+    void saveMemoDebounced(memo)
+  }
 
-	const inputClass = `${input} h-20 text-sm`
+  const inputClass = `${input} h-20 text-sm`
 
-	if (state.status === "loading") {
-		return (
-			<textarea
-				className={inputClass}
-				disabled
-				placeholder="Loading..."
-				value=""
-				{...props}
-			/>
-		)
-	}
+  if (state.status === "loading") {
+    return (
+      <textarea
+        className={inputClass}
+        disabled
+        placeholder="Loading..."
+        value=""
+        {...props}
+      />
+    )
+  }
 
-	if (state.status === "editing") {
-		return (
-			<textarea
-				className={inputClass}
-				value={state.memo}
-				onChange={(event) => handleChange(event.target.value)}
-				placeholder="Add some personal notes for this character. Only you can see this."
-				{...props}
-			/>
-		)
-	}
+  if (state.status === "editing") {
+    return (
+      <textarea
+        className={inputClass}
+        value={state.memo}
+        onChange={(event) => handleChange(event.target.value)}
+        placeholder="Add some personal notes for this character. Only you can see this."
+        {...props}
+      />
+    )
+  }
 
-	if (state.status === "error") {
-		return <p className={`text-sm`}>Failed to load memo</p>
-	}
+  if (state.status === "error") {
+    return <p className={`text-sm`}>Failed to load memo</p>
+  }
 
-	return null
+  return null
 }

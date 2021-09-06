@@ -1,92 +1,93 @@
-import clsx from "clsx"
-import type { ReactNode } from "react"
-import { useDeferredValue, useEffect } from "react"
+import { memo, useDeferredValue } from "react"
 import ChannelView from "../channel/ChannelView"
+import { useJoinedChannels } from "../channel/useJoinedChannels"
 import DevTools from "../dev/DevTools"
 import ChatLogBrowser from "../logging/ChatLogBrowser"
 import NotificationListScreen from "../notifications/NotificationListScreen"
-import SystemNotificationsHandler from "../notifications/SystemNotificationsHandler"
+import NotificationToastOverlay from "../notifications/NotificationToastOverlay"
 import PrivateChatView from "../privateChat/PrivateChatView"
-import type { Route } from "../router"
 import { useRoute } from "../router"
-import { useSocketActions } from "../socket/SocketConnection"
-import { useIdentity } from "../user"
-import ChatCommandHandlers from "./ChatCommandHandlers"
+import { useStoreValue } from "../state/store"
+import StalenessState from "../ui/StalenessState"
+import { useChatContext } from "./ChatContext"
 import ChatNav from "./ChatNav"
-import ConnectionGuard from "./ConnectionGuard"
 import NoRoomView from "./NoRoomView"
-import StatusRestorationEffect from "./StatusRestorationEffect"
+import SocketStatusGuard from "./SocketStatusGuard"
+import { useChatDocumentTitle } from "./useChatDocumentTitle"
 
 export default function Chat() {
-	const { connect, disconnect } = useSocketActions()
-	const identity = useIdentity()
+  useChatDocumentTitle()
 
-	useEffect(() => {
-		if (identity) {
-			connect(identity)
-			return () => {
-				disconnect()
-			}
-		}
-	}, [connect, disconnect, identity])
-
-	const route = useRoute()
-	const deferredRoute = useDeferredValue(route)
-
-	return (
-		<>
-			<ConnectionGuard>
-				<div className="flex flex-row h-full gap-1">
-					<div className="hidden md:block">
-						<ChatNav />
-					</div>
-					<StalenessState
-						className="flex-1 min-w-0 overflow-y-auto"
-						isStale={route !== deferredRoute}
-					>
-						<ChatRoutes route={deferredRoute} />
-					</StalenessState>
-				</div>
-			</ConnectionGuard>
-			<ChatCommandHandlers />
-			<SystemNotificationsHandler />
-			<StatusRestorationEffect />
-			{import.meta.env.DEV && <DevTools />}
-		</>
-	)
+  return (
+    <SocketStatusGuard>
+      <div className="flex h-full gap-1">
+        <div className="hidden md:block">
+          <ChatNav />
+        </div>
+        <div className="flex-1 min-w-0 overflow-y-auto">
+          <ChatRoutes />
+        </div>
+      </div>
+      {import.meta.env.DEV && <DevTools />}
+      <NotificationToastOverlay />
+    </SocketStatusGuard>
+  )
 }
 
-function StalenessState({
-	className,
-	isStale,
-	children,
-}: {
-	isStale: boolean
-	className: string
-	children: ReactNode
-}) {
-	return (
-		<div
-			className={clsx(className, isStale && "transition-opacity opacity-50")}
-			style={{ transitionDelay: isStale ? "0.3s" : "0" }}
-		>
-			{children}
-		</div>
-	)
-}
+const ChatRoutes = memo(function ChatRoutes() {
+  const context = useChatContext()
+  const route = useRoute()
+  const joinedChannels = useJoinedChannels()
 
-function ChatRoutes({ route }: { route: Route }) {
-	return (
-		<>
-			{route.name === "channel" && (
-				<ChannelView key={route.params.channelId} {...route.params} />
-			)}
-			{route.name === "privateChat" && (
-				<PrivateChatView key={route.params.partnerName} {...route.params} />
-			)}
-			{route.name === "notifications" && <NotificationListScreen />}
-			{route.name === "logs" && <ChatLogBrowser />}
-			{route.name === "chat" && <NoRoomView />}
-		</>
-	)
-}
+  const channelRoute =
+    route.name === "channel" &&
+    joinedChannels.some((ch) => ch.id === route.params.channelId) &&
+    route
+
+  const deferredChannelRoute = useDeferredValue(channelRoute)
+
+  const privateChatRoute = useStoreValue(
+    context.privateChatStore.openChatNames.select(
+      (openChatNames) =>
+        route.name === "privateChat" &&
+        openChatNames[route.params.partnerName] &&
+        route,
+    ),
+    // the route object has functions on it,
+    // so deepEquals won't work here
+    Object.is,
+  )
+  const deferredPrivateChatRoute = useDeferredValue(privateChatRoute)
+
+  if (deferredChannelRoute) {
+    return (
+      <StalenessState isStale={deferredChannelRoute !== channelRoute}>
+        <ChannelView
+          key={deferredChannelRoute.params.channelId}
+          {...deferredChannelRoute.params}
+        />
+      </StalenessState>
+    )
+  }
+
+  if (deferredPrivateChatRoute) {
+    return (
+      <StalenessState isStale={deferredPrivateChatRoute !== privateChatRoute}>
+        <PrivateChatView
+          key={deferredPrivateChatRoute.params.partnerName}
+          {...deferredPrivateChatRoute.params}
+        />
+      </StalenessState>
+    )
+  }
+
+  if (route.name === "notifications") {
+    return <NotificationListScreen />
+  }
+
+  if (route.name === "logs") {
+    return <ChatLogBrowser />
+  }
+
+  return <NoRoomView />
+})

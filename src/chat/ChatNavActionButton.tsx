@@ -2,17 +2,17 @@ import Button from "../dom/Button"
 import type { ChatNavActionProps } from "./ChatNavAction"
 import ChatNavAction from "./ChatNavAction"
 
-interface ChatNavActionButtonProps extends ChatNavActionProps {
-	onClick?: () => void
-}
+type ChatNavActionButtonProps = {
+  onClick?: () => void
+} & ChatNavActionProps
 
 export default function ChatNavActionButton({
-	onClick,
-	...props
+  onClick,
+  ...props
 }: ChatNavActionButtonProps) {
-	return (
-		<Button onClick={() => onClick?.()}>
-			<ChatNavAction {...props} />
-		</Button>
-	)
+  return (
+    <Button onClick={() => onClick?.()}>
+      <ChatNavAction {...props} />
+    </Button>
+  )
 }

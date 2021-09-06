@@ -6,13 +6,13 @@ import type { ChatLogger } from "./logger"
 const Context = createContext<ChatLogger | undefined>(undefined)
 
 export function ChatLoggerProvider(
-	props: { logger: ChatLogger } & ChildrenProps,
+  props: { logger: ChatLogger } & ChildrenProps,
 ) {
-	return (
-		<Context.Provider value={props.logger}>{props.children}</Context.Provider>
-	)
+  return (
+    <Context.Provider value={props.logger}>{props.children}</Context.Provider>
+  )
 }
 
 export function useChatLogger(): ChatLogger {
-	return useContext(Context) ?? raise(`ChatLoggerProvider not found`)
+  return useContext(Context) ?? raise(`ChatLoggerProvider not found`)
 }

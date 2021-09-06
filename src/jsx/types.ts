@@ -2,14 +2,14 @@
  *
  * here to keep JSX mostly agnostic from react, and for less typing */
 export type TagProps<T extends keyof JSX.IntrinsicElements> =
-	React.ComponentPropsWithoutRef<T>
+  React.ComponentPropsWithoutRef<T>
 
 /** Get the props for a component
  *
  * here to keep JSX mostly agnostic from react, and for less typing */
 export type ComponentProps<C extends React.ComponentType> =
-	React.ComponentPropsWithoutRef<C>
+  React.ComponentPropsWithoutRef<C>
 
-export interface ChildrenProps {
-	children: React.ReactNode
+export type ChildrenProps = {
+  children: React.ReactNode
 }

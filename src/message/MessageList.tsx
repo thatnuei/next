@@ -1,97 +1,81 @@
+import { useRect } from "@reach/rect"
 import clsx from "clsx"
-import {
-	memo,
-	useCallback,
-	useDeferredValue,
-	useEffect,
-	useRef,
-	useState,
-} from "react"
-import { useIdentity } from "../user"
+import { memo, useDeferredValue, useLayoutEffect, useRef } from "react"
+import { useChatContext } from "../chat/ChatContext"
+import { useDomEvent } from "../dom/useDomEvent"
 import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
 
-interface Props {
-	messages: readonly MessageState[]
+type Props = {
+  messages: readonly MessageState[]
 }
 
 export default memo(function MessageList({ messages }: Props) {
-	const deferredMessages = useDeferredValue(messages)
-	const isStale = deferredMessages !== messages
-	const containerRef = useBottomScroll()
-	const identity = useIdentity()
+  const deferredMessages = useDeferredValue(messages)
+  const isStale = deferredMessages !== messages
+  const containerRef = useBottomScroll<HTMLOListElement>(messages)
+  const identity = useChatContext().identity
 
-	return (
-		<ol
-			className={clsx(
-				"h-full overflow-y-auto transition-opacity transform translate-z-0",
-				isStale && `opacity-50`,
-			)}
-			style={{ transitionDelay: isStale ? "0.5s" : "0s" }}
-			ref={containerRef}
-		>
-			{deferredMessages.map((message) => (
-				<li
-					key={message.key}
-					className={clsx(message.senderName === identity && "bg-black/30")}
-				>
-					<MessageListItem message={message} />
-				</li>
-			))}
-		</ol>
-	)
+  return (
+    <ol
+      className={clsx(
+        "h-full overflow-y-auto transition-opacity transform translate-z-0",
+        isStale && `opacity-50`,
+      )}
+      style={{ transitionDelay: isStale ? "0.5s" : "0s" }}
+      ref={containerRef}
+    >
+      {deferredMessages.map((message) => (
+        <li
+          key={message.key}
+          className={clsx(message.senderName === identity && "bg-black/30")}
+          onDragStart={(event) => event.preventDefault()}
+        >
+          <MessageListItem message={message} />
+        </li>
+      ))}
+    </ol>
+  )
 })
 
 const bottomScrollThreshold = 20
 
-function useBottomScroll() {
-	const [container, containerRef] = useState<Element | null>()
-	const bottomScrolledRef = useRef(true)
+const scrollBottom = (element: Element) =>
+  element ? element.scrollTop + element.clientHeight : 0
 
-	const scrollToBottom = useCallback(() => {
-		if (container && bottomScrolledRef.current) {
-			container.scrollTop = container.scrollHeight
-		}
-	}, [container])
+function useBottomScroll<E extends HTMLElement>(observedValue: unknown) {
+  const containerRef = useRef<E>(null)
+  const rect = useRect(containerRef)
 
-	useEffect(() => {
-		bottomScrolledRef.current = true
-		scrollToBottom()
-	}, [scrollToBottom])
+  const scrollRef = useRef<number>()
+  if (scrollRef.current === undefined && containerRef.current) {
+    scrollBottom(containerRef.current)
+  }
 
-	useEffect(() => {
-		if (!container) return
+  const scrollToBottom = () => {
+    if (!containerRef.current) return
+    containerRef.current.scrollTop = containerRef.current.scrollHeight
+  }
 
-		const handleScroll = () => {
-			bottomScrolledRef.current =
-				container.scrollTop >=
-				container.scrollHeight - container.clientHeight - bottomScrollThreshold
-		}
+  const updateScrollRef = () => {
+    if (containerRef.current) {
+      scrollRef.current = scrollBottom(containerRef.current)
+    }
+  }
 
-		container.addEventListener("scroll", handleScroll)
-		return () => container.removeEventListener("scroll", handleScroll)
-	})
+  useLayoutEffect(scrollToBottom, [])
 
-	useEffect(() => {
-		if (!container) return
+  useLayoutEffect(() => {
+    const scrollHeight = containerRef.current?.scrollHeight ?? 0
 
-		const observer = new ResizeObserver(scrollToBottom)
+    if ((scrollRef.current ?? 0) > scrollHeight - bottomScrollThreshold) {
+      scrollToBottom()
+    }
 
-		observer.observe(container)
-		return () => observer.disconnect()
-	})
+    updateScrollRef()
+  }, [observedValue, rect])
 
-	useEffect(() => {
-		if (!container) return
+  useDomEvent(containerRef, "scroll", updateScrollRef, { passive: true })
 
-		const observer = new MutationObserver(scrollToBottom)
-
-		observer.observe(container, {
-			childList: true,
-		})
-
-		return () => observer.disconnect()
-	})
-
-	return containerRef
+  return containerRef
 }

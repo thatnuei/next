@@ -1,102 +1,121 @@
 import clsx from "clsx"
-import fuzzysearch from "fuzzysearch"
 import { sortBy } from "lodash-es"
+import { matchSorter } from "match-sorter"
 import { useEffect, useState } from "react"
+import { useJoinedChannels } from "../channel/useJoinedChannels"
+import { useChatContext } from "../chat/ChatContext"
 import Button from "../dom/Button"
-import { useEffectRef } from "../react/useEffectRef"
+import TextInput from "../dom/TextInput"
+import { useStoreValue } from "../state/store"
 import { input, solidButton } from "../ui/components"
 import Icon from "../ui/Icon"
 import * as icons from "../ui/icons"
 import VirtualizedList from "../ui/VirtualizedList"
 import ChannelBrowserItem from "./ChannelBrowserItem"
-import type { ChannelBrowserChannel } from "./state"
-import {
-	useChannelBrowserIsRefreshing,
-	usePrivateChannels,
-	usePublicChannels,
-	useRefreshChannelBrowser,
-} from "./state"
+import type { ChannelBrowserChannel } from "./types"
 
 function ChannelBrowser() {
-	const publicChannels = usePublicChannels()
-	const privateChannels = usePrivateChannels()
-	const isRefreshing = useChannelBrowserIsRefreshing()
-	const refresh = useRefreshChannelBrowser()
+  const context = useChatContext()
+  const [query, setQuery] = useState("")
+  const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
+  const joinedChannels = useJoinedChannels()
 
-	const [query, setQuery] = useState("")
-	const [sortMode, setSortMode] = useState<"title" | "userCount">("title")
+  useEffect(() => {
+    context.channelBrowserStore.refresh()
+  }, [context.channelBrowserStore])
 
-	// only want to call this on mount
-	const refreshRef = useEffectRef(refresh)
-	useEffect(() => void refreshRef.current(), [refreshRef])
+  const cycleSortMode = () =>
+    setSortMode((mode) => (mode === "title" ? "userCount" : "title"))
 
-	const cycleSortMode = () =>
-		setSortMode((mode) => (mode === "title" ? "userCount" : "title"))
+  const processChannels = (channels: ChannelBrowserChannel[]) => {
+    const sorted =
+      sortMode === "title"
+        ? sortBy(channels, (it) => it.title.toLowerCase())
+        : sortBy(channels, "userCount").reverse()
 
-	const processChannels = (channels: ChannelBrowserChannel[]) => {
-		const normalizedQuery = query.trim().toLowerCase()
+    if (!query.trim()) {
+      return sorted
+    }
 
-		const sorted =
-			sortMode === "title"
-				? sortBy(channels, (it) => it.title.toLowerCase())
-				: sortBy(channels, "userCount").reverse()
+    return matchSorter(sorted, query, {
+      keys: ["id", "title"],
+    })
+  }
 
-		return normalizedQuery
-			? sorted.filter((it) =>
-					fuzzysearch(normalizedQuery, it.title.toLowerCase()),
-			  )
-			: sorted
-	}
+  const channels = useStoreValue(
+    context.channelBrowserStore.channels.select((channels) => [
+      ...processChannels(channels.public),
+      ...processChannels(channels.private),
+    ]),
+  )
 
-	const channels = [
-		...processChannels(publicChannels),
-		...processChannels(privateChannels),
-	]
+  const isRefreshing = useStoreValue(context.channelBrowserStore.isRefreshing)
 
-	return (
-		<div className={`flex flex-col w-full h-full`}>
-			<section
-				className={`bg-midnight-2`}
-				style={{ height: "calc(100vh - 10rem)" }}
-			>
-				<VirtualizedList
-					items={channels}
-					getItemKey={(channel) => channel.id}
-					itemSize={40}
-					renderItem={({ item, style }) => (
-						<ChannelBrowserItem key={item.id} info={item} style={style} />
-					)}
-				/>
-			</section>
+  return (
+    <div className={`flex flex-col w-full h-full`}>
+      <section
+        className={`bg-midnight-2`}
+        style={{ height: "calc(100vh - 10rem)" }}
+      >
+        <VirtualizedList
+          items={channels}
+          getItemKey={(channel) => channel.id}
+          itemSize={40}
+          renderItem={({ item, style }) => {
+            const joined = joinedChannels.some((ch) => ch.id === item.id)
+            return (
+              <div style={style}>
+                <ChannelBrowserItem
+                  info={item}
+                  active={joined}
+                  onClick={() => {
+                    if (joined) {
+                      context.channelStore.leave(item.id)
+                    } else {
+                      context.channelStore.join(item.id, item.title)
+                    }
+                  }}
+                />
+              </div>
+            )
+          }}
+        />
+      </section>
 
-			<section className="flex flex-row space-x-2 bg-midnight-0 p-2">
-				<input
-					type="text"
-					aria-label="Search"
-					placeholder="Search..."
-					className={clsx(input, `flex-1`)}
-					value={query}
-					onChange={(event) => setQuery(event.target.value)}
-					ref={(input) => input?.focus()}
-				/>
-				<Button
-					title="Change sort mode"
-					className={solidButton}
-					onClick={cycleSortMode}
-				>
-					<Icon which={icons.sortAlphabetical} />
-				</Button>
-				<Button
-					title="Refresh"
-					className={solidButton}
-					onClick={refresh}
-					disabled={isRefreshing}
-				>
-					<Icon which={icons.refresh} />
-				</Button>
-			</section>
-		</div>
-	)
+      <section className="flex flex-row gap-2 p-2 bg-midnight-0">
+        <TextInput
+          type="text"
+          aria-label="Search"
+          placeholder="Search..."
+          className={clsx(input, `flex-1`)}
+          value={query}
+          onChangeText={setQuery}
+          ref={(input) => input?.focus()}
+        />
+
+        <Button
+          title="Change sort mode"
+          className={solidButton}
+          onClick={cycleSortMode}
+        >
+          {sortMode === "title" ? (
+            <Icon which={icons.sortAlphabetical} />
+          ) : (
+            <Icon which={icons.sortNumeric} />
+          )}
+        </Button>
+
+        <Button
+          title="Refresh"
+          className={solidButton}
+          onClick={context.channelBrowserStore.refresh}
+          disabled={isRefreshing}
+        >
+          <Icon which={icons.refresh} />
+        </Button>
+      </section>
+    </div>
+  )
 }
 
 export default ChannelBrowser

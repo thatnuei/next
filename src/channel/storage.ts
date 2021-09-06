@@ -2,37 +2,35 @@ import { createStoredValue } from "../storage/createStoredValue"
 import * as v from "../validation"
 
 const serializedChannelsSchema = v.shape({
-	channelsByIdentity: v.dictionary(v.array(v.string)),
+  channelsByIdentity: v.dictionary(v.array(v.string)),
 })
 
-const getStoredChannels = (account: string) =>
-	createStoredValue(`channels:${account}`, serializedChannelsSchema)
+const getStoredChannels = (identity: string) =>
+  createStoredValue(`channels:${identity}`, serializedChannelsSchema)
 
-export function saveChannels(
-	channelIds: string[],
-	account: string,
-	identity: string,
-) {
-	const storage = getStoredChannels(account)
+export function saveChannels(channelIds: string[], identity: string) {
+  const storage = getStoredChannels(identity)
 
-	storage
-		.update(
-			(data) => {
-				data.channelsByIdentity[identity] = channelIds
-				return data
-			},
-			() => ({ channelsByIdentity: {} }),
-		)
-		.catch(console.warn)
+  storage
+    .update(
+      (data) => {
+        data.channelsByIdentity[identity] = channelIds
+        return data
+      },
+      () => ({ channelsByIdentity: {} }),
+    )
+    // eslint-disable-next-line no-console
+    .catch(console.warn)
 }
 
-export async function loadChannels(account: string, identity: string) {
-	const storage = getStoredChannels(account)
+export async function loadChannels(identity: string) {
+  const storage = getStoredChannels(identity)
 
-	const data = await storage.get().catch((error) => {
-		console.warn(`could not restore channels:`, error)
-		return undefined
-	})
+  const data = await storage.get().catch((error) => {
+    // eslint-disable-next-line no-console
+    console.warn(`could not restore channels:`, error)
+    return undefined
+  })
 
-	return data?.channelsByIdentity[identity] || []
+  return data?.channelsByIdentity[identity] || []
 }

@@ -3,18 +3,18 @@ import type { Dict } from "../common/types"
 import { fetchJson } from "../network/fetchJson"
 
 export async function fetchFlist<T>(
-	endpoint: string,
-	body: Dict<unknown>,
+  endpoint: string,
+  body: Dict<unknown>,
 ): Promise<T> {
-	endpoint = endpoint.replace(/^\/+/, "")
+  endpoint = endpoint.replace(/^\/+/, "")
 
-	const data = await fetchJson<T & { error?: string }>(
-		`https://www.f-list.net/json/${endpoint}`,
-		{
-			method: "post",
-			body,
-		},
-	)
+  const data = await fetchJson<T & { error?: string }>(
+    `https://www.f-list.net/json/${endpoint}`,
+    {
+      method: "post",
+      body,
+    },
+  )
 
-	return data.error ? raise(data.error) : data
+  return data.error ? raise(data.error) : data
 }

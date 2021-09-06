@@ -1,17 +1,17 @@
 import * as React from "react"
 
-interface Props {
-	labelText: string
-	children: React.ReactNode
+type Props = {
+  labelText: string
+  children: React.ReactNode
 }
 
 function FormField({ labelText, children }: Props) {
-	return (
-		<label className={`block w-full`}>
-			<div className={`mb-1 text-sm`}>{labelText}</div>
-			{children}
-		</label>
-	)
+  return (
+    <label className={`block w-full`}>
+      <div className={`mb-1 text-sm`}>{labelText}</div>
+      {children}
+    </label>
+  )
 }
 
 export default FormField
