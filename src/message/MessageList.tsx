@@ -2,6 +2,7 @@ import { useRect } from "@reach/rect"
 import clsx from "clsx"
 import { memo, useDeferredValue, useLayoutEffect, useRef } from "react"
 import { useChatContext } from "../chat/ChatContext"
+import { useDomEvent } from "../dom/useDomEvent"
 import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
 
@@ -12,7 +13,7 @@ type Props = {
 export default memo(function MessageList({ messages }: Props) {
   const deferredMessages = useDeferredValue(messages)
   const isStale = deferredMessages !== messages
-  const containerRef = useBottomScroll<HTMLOListElement>(deferredMessages)
+  const containerRef = useBottomScroll<HTMLOListElement>(messages)
   const identity = useChatContext().identity
 
   return (
@@ -39,27 +40,42 @@ export default memo(function MessageList({ messages }: Props) {
 
 const bottomScrollThreshold = 20
 
-function useBottomScroll<E extends Element>(observedValue: unknown) {
-  const containerRef = useRef<E>(null)
+const scrollBottom = (element: Element) =>
+  element ? element.scrollTop + element.clientHeight : 0
 
-  // get whether we're bottom scrolled before the dom is rendered
-  const wasBottomScrolled = containerRef.current
-    ? containerRef.current.scrollTop + containerRef.current.clientHeight >=
-      containerRef.current.scrollHeight - bottomScrollThreshold
-    : true
+function useBottomScroll<E extends HTMLElement>(observedValue: unknown) {
+  const containerRef = useRef<E>(null)
+  const rect = useRect(containerRef)
+
+  const scrollRef = useRef<number>()
+  if (scrollRef.current === undefined && containerRef.current) {
+    scrollBottom(containerRef.current)
+  }
 
   const scrollToBottom = () => {
     if (!containerRef.current) return
     containerRef.current.scrollTop = containerRef.current.scrollHeight
   }
 
+  const updateScrollRef = () => {
+    if (containerRef.current) {
+      scrollRef.current = scrollBottom(containerRef.current)
+    }
+  }
+
   useLayoutEffect(scrollToBottom, [])
 
-  const rect = useRect(containerRef)
   useLayoutEffect(() => {
-    // if we were bottom scrolled, scroll to the bottom again
-    if (wasBottomScrolled) scrollToBottom()
-  }, [wasBottomScrolled, observedValue, rect])
+    const scrollHeight = containerRef.current?.scrollHeight ?? 0
+
+    if ((scrollRef.current ?? 0) > scrollHeight - bottomScrollThreshold) {
+      scrollToBottom()
+    }
+
+    updateScrollRef()
+  }, [observedValue, rect])
+
+  useDomEvent(containerRef, "scroll", updateScrollRef, { passive: true })
 
   return containerRef
 }
