@@ -1,4 +1,5 @@
 import clsx from "clsx"
+import { memo } from "react"
 import BBC from "../bbc/BBC"
 import CharacterName from "../character/CharacterName"
 import type { OptionalKeys } from "../common/types"
@@ -21,7 +22,7 @@ function MessageListItem({ message }: Props) {
   return (
     <div className={clsx(typeStyle, "px-2 py-1")}>
       {message.timestamp ? (
-        <Timestamp className="text-sm mr-2 opacity-50 not-italic inline-block">
+        <Timestamp className="inline-block mr-2 text-sm not-italic opacity-50">
           {message.timestamp}
         </Timestamp>
       ) : undefined}
@@ -41,4 +42,4 @@ function MessageListItem({ message }: Props) {
   )
 }
 
-export default MessageListItem
+export default memo(MessageListItem)

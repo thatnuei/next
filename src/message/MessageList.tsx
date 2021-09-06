@@ -1,12 +1,6 @@
+import { useRect } from "@reach/rect"
 import clsx from "clsx"
-import {
-  memo,
-  useCallback,
-  useDeferredValue,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import { memo, useDeferredValue, useLayoutEffect, useRef } from "react"
 import { useChatContext } from "../chat/ChatContext"
 import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
@@ -18,7 +12,7 @@ type Props = {
 export default memo(function MessageList({ messages }: Props) {
   const deferredMessages = useDeferredValue(messages)
   const isStale = deferredMessages !== messages
-  const containerRef = useBottomScroll()
+  const containerRef = useBottomScroll<HTMLOListElement>(deferredMessages)
   const identity = useChatContext().identity
 
   return (
@@ -34,6 +28,7 @@ export default memo(function MessageList({ messages }: Props) {
         <li
           key={message.key}
           className={clsx(message.senderName === identity && "bg-black/30")}
+          onDragStart={(event) => event.preventDefault()}
         >
           <MessageListItem message={message} />
         </li>
@@ -44,54 +39,27 @@ export default memo(function MessageList({ messages }: Props) {
 
 const bottomScrollThreshold = 20
 
-function useBottomScroll() {
-  const [container, containerRef] = useState<Element | null>()
-  const bottomScrolledRef = useRef(true)
+function useBottomScroll<E extends Element>(observedValue: unknown) {
+  const containerRef = useRef<E>(null)
 
-  const scrollToBottom = useCallback(() => {
-    if (container && bottomScrolledRef.current) {
-      container.scrollTop = container.scrollHeight
-    }
-  }, [container])
+  // get whether we're bottom scrolled before the dom is rendered
+  const wasBottomScrolled = containerRef.current
+    ? containerRef.current.scrollTop + containerRef.current.clientHeight >=
+      containerRef.current.scrollHeight - bottomScrollThreshold
+    : true
 
-  useEffect(() => {
-    bottomScrolledRef.current = true
-    scrollToBottom()
-  }, [scrollToBottom])
+  const scrollToBottom = () => {
+    if (!containerRef.current) return
+    containerRef.current.scrollTop = containerRef.current.scrollHeight
+  }
 
-  useEffect(() => {
-    if (!container) return
+  useLayoutEffect(scrollToBottom, [])
 
-    const handleScroll = () => {
-      bottomScrolledRef.current =
-        container.scrollTop >=
-        container.scrollHeight - container.clientHeight - bottomScrollThreshold
-    }
-
-    container.addEventListener("scroll", handleScroll)
-    return () => container.removeEventListener("scroll", handleScroll)
-  })
-
-  useEffect(() => {
-    if (!container) return
-
-    const observer = new ResizeObserver(scrollToBottom)
-
-    observer.observe(container)
-    return () => observer.disconnect()
-  })
-
-  useEffect(() => {
-    if (!container) return
-
-    const observer = new MutationObserver(scrollToBottom)
-
-    observer.observe(container, {
-      childList: true,
-    })
-
-    return () => observer.disconnect()
-  })
+  const rect = useRect(containerRef)
+  useLayoutEffect(() => {
+    // if we were bottom scrolled, scroll to the bottom again
+    if (wasBottomScrolled) scrollToBottom()
+  }, [wasBottomScrolled, observedValue, rect])
 
   return containerRef
 }

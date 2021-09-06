@@ -7,6 +7,7 @@ specifiers:
   '@radix-ui/react-context-menu': ^0.0.24
   '@radix-ui/react-dropdown-menu': ^0.0.23
   '@radix-ui/react-slot': ^0.0.12
+  '@reach/rect': 0.16.0
   '@tailwindcss/line-clamp': 0.2.1
   '@types/jest': 27.0.1
   '@types/lodash-es': ^4.17.4
@@ -68,6 +69,7 @@ dependencies:
   '@radix-ui/react-context-menu': 0.0.24_bb9644733e304bc28debd2a266754826
   '@radix-ui/react-dropdown-menu': 0.0.23_bb9644733e304bc28debd2a266754826
   '@radix-ui/react-slot': 0.0.12_2809a9cb067487d57565c7f65c527eaf
+  '@reach/rect': 0.16.0_99a5b08213840631d1fe42c974a0200d
   clsx: 1.1.1
   fchat: 1.4.0
   focus-visible: 5.2.0
@@ -1377,6 +1379,37 @@ packages:
     resolution: {integrity: sha512-gXw171KbjyttA7K1DRIvPguLmKsg8raitB67MIcsdZwcquy+a1O2w3xY21NIKEqGhJwqJkECPUmMJDXgMNYuAg==}
     dependencies:
       '@babel/runtime': 7.14.8
+    dev: false
+
+  /@reach/observe-rect/1.2.0:
+    resolution: {integrity: sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==}
+    dev: false
+
+  /@reach/rect/0.16.0_99a5b08213840631d1fe42c974a0200d:
+    resolution: {integrity: sha512-/qO9jQDzpOCdrSxVPR6l674mRHNTqfEjkaxZHluwJ/2qGUtYsA0GSZiF/+wX/yOWeBif1ycxJDa6HusAMJZC5Q==}
+    peerDependencies:
+      react: ^16.8.0 || 17.x
+      react-dom: ^16.8.0 || 17.x
+    dependencies:
+      '@reach/observe-rect': 1.2.0
+      '@reach/utils': 0.16.0_99a5b08213840631d1fe42c974a0200d
+      prop-types: 15.7.2
+      react: 18.0.0-alpha-ed6c091fe-20210701
+      react-dom: 18.0.0-alpha-ed6c091fe-20210701_2809a9cb067487d57565c7f65c527eaf
+      tiny-warning: 1.0.3
+      tslib: 2.3.0
+    dev: false
+
+  /@reach/utils/0.16.0_99a5b08213840631d1fe42c974a0200d:
+    resolution: {integrity: sha512-PCggBet3qaQmwFNcmQ/GqHSefadAFyNCUekq9RrWoaU9hh/S4iaFgf2MBMdM47eQj5i/Bk0Mm07cP/XPFlkN+Q==}
+    peerDependencies:
+      react: ^16.8.0 || 17.x
+      react-dom: ^16.8.0 || 17.x
+    dependencies:
+      react: 18.0.0-alpha-ed6c091fe-20210701
+      react-dom: 18.0.0-alpha-ed6c091fe-20210701_2809a9cb067487d57565c7f65c527eaf
+      tiny-warning: 1.0.3
+      tslib: 2.3.0
     dev: false
 
   /@rollup/pluginutils/4.1.1:
@@ -6239,6 +6272,10 @@ packages:
   /throat/6.0.1:
     resolution: {integrity: sha512-8hmiGIJMDlwjg7dlJ4yKGLK8EsYqKgPWbG3b4wjJddKNwc7N7Dpn08Df4szr/sZdMVeOstrdYSsqzX6BYbcB+w==}
     dev: true
+
+  /tiny-warning/1.0.3:
+    resolution: {integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==}
+    dev: false
 
   /tmp/0.2.1:
     resolution: {integrity: sha512-76SUhtfqR2Ijn+xllcI5P1oyannHNHByD80W1q447gU3mp9G9PSpGdWmjUOHRDPiHYacIk66W7ubDTuPF3BEtQ==}
