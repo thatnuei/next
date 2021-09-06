@@ -7,6 +7,11 @@ export function createDictStore<Value>(fallback: (key: string) => Value) {
   const store = {
     ...source,
 
+    // getters aren't carried over
+    get value() {
+      return source.value
+    },
+
     getItem(key: string) {
       return source.value[key]
     },
