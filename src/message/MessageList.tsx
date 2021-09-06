@@ -13,7 +13,7 @@ type Props = {
 export default memo(function MessageList({ messages }: Props) {
   const deferredMessages = useDeferredValue(messages)
   const isStale = deferredMessages !== messages
-  const containerRef = useBottomScroll<HTMLOListElement>(messages)
+  const containerRef = useBottomScroll<HTMLOListElement>(deferredMessages)
   const identity = useChatContext().identity
 
   return (
@@ -46,11 +46,8 @@ const scrollBottom = (element: Element) =>
 function useBottomScroll<E extends HTMLElement>(observedValue: unknown) {
   const containerRef = useRef<E>(null)
   const rect = useRect(containerRef)
-
-  const scrollRef = useRef<number>()
-  if (scrollRef.current === undefined && containerRef.current) {
-    scrollBottom(containerRef.current)
-  }
+  const scrollRef = useRef(0)
+  const scrollHeightRef = useRef(0)
 
   const scrollToBottom = () => {
     if (!containerRef.current) return
@@ -60,18 +57,16 @@ function useBottomScroll<E extends HTMLElement>(observedValue: unknown) {
   const updateScrollRef = () => {
     if (containerRef.current) {
       scrollRef.current = scrollBottom(containerRef.current)
+      scrollHeightRef.current = containerRef.current.scrollHeight
     }
   }
 
   useLayoutEffect(scrollToBottom, [])
 
   useLayoutEffect(() => {
-    const scrollHeight = containerRef.current?.scrollHeight ?? 0
-
-    if ((scrollRef.current ?? 0) > scrollHeight - bottomScrollThreshold) {
+    if (scrollRef.current > scrollHeightRef.current - bottomScrollThreshold) {
       scrollToBottom()
     }
-
     updateScrollRef()
   }, [observedValue, rect])
 

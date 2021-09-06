@@ -2,6 +2,10 @@
 
 <!--new-version-->
 
+## 0.0.23
+
+- fix bottom scrolling (again)
+
 ## 0.0.22
 
 - fixed private chats getting mixed up between characters
