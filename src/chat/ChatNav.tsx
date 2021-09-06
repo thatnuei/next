@@ -22,7 +22,7 @@ export default function ChatNav() {
 
   return (
     <nav className="grid h-full grid-cols-[auto,15rem] bg-midnight-2">
-      <div className="flex flex-col">
+      <div className="flex flex-col overflow-y-auto">
         <Modal
           title="Channel Browser"
           renderContent={() => <ChannelBrowser />}
