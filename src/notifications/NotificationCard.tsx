@@ -19,10 +19,7 @@ export default function NotificationCard({
     case "info":
     case "error":
       return (
-        <NotificationCardBase
-          message={details.message}
-          timestamp={timestamp}
-        />
+        <NotificationCardBase message={details.message} timestamp={timestamp} />
       )
 
     case "broadcast":
@@ -36,10 +33,7 @@ export default function NotificationCard({
               <>
                 Broadcast from{" "}
                 <strong className="font-medium opacity-100">
-                  <CharacterName
-                    name={details.actorName}
-                    statusDot="hidden"
-                  />
+                  <CharacterName name={details.actorName} statusDot="hidden" />
                 </strong>
               </>
             ) : (
@@ -51,10 +45,7 @@ export default function NotificationCard({
 
     case "status":
       return (
-        <NotificationCardBase
-          avatarName={details.name}
-          timestamp={timestamp}
-        >
+        <NotificationCardBase avatarName={details.name} timestamp={timestamp}>
           <CharacterName name={details.name} statusDot="hidden" /> is now{" "}
           <span style={{ color: statusColors[details.status] }}>
             {details.status}
@@ -69,20 +60,13 @@ export default function NotificationCard({
 
     case "invite":
       return (
-        <NotificationCardBase
-          avatarName={details.sender}
-          timestamp={timestamp}
-        >
-          <CharacterName name={details.sender} statusDot="hidden" /> has
-          invited you to{" "}
+        <NotificationCardBase avatarName={details.sender} timestamp={timestamp}>
+          <CharacterName name={details.sender} statusDot="hidden" /> has invited
+          you to{" "}
           <BBCChannelLink
             channelId={details.channelId}
             title={details.title}
-            type={
-              details.title === details.channelId
-                ? "public"
-                : "private"
-            }
+            type={details.title === details.channelId ? "public" : "private"}
           />
         </NotificationCardBase>
       )
