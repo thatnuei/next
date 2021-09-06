@@ -200,6 +200,10 @@ export function createPrivateChatStore(
         },
         FLN({ character }) {
           addStatusSystemMessage(character, "offline")
+          privateChats.updateItem(character, (chat) => ({
+            ...chat,
+            typingStatus: "clear",
+          }))
         },
       })
     },
