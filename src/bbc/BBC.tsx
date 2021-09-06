@@ -171,19 +171,19 @@ const colorStyles: { [color in string]?: CSSProperties } = {
   // white and black are hardly indistinguishable from the non-colored variants,
   // and black is unreadable,
   // so we'll give them background shades
-  white: {
+  black: {
     color: "rgb(255, 255, 255)",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    padding: "3px",
-    margin: "-3px",
-    borderRadius: "3px",
+    padding: "2px",
+    margin: "-2px",
+    borderRadius: "2px",
   },
-  black: {
+  white: {
     color: "rgb(15, 15, 15)",
     backgroundColor: "rgba(255, 255, 255, 0.5)",
-    padding: "3px",
-    margin: "-3px",
-    borderRadius: "3px",
+    padding: "2px",
+    margin: "-2px",
+    borderRadius: "2px",
   },
   gray: { color: "rgb(149, 165, 166)" },
   red: { color: "hsl(0 87% 68% / 1)" },
