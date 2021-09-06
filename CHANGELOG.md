@@ -2,6 +2,19 @@
 
 <!--new-version-->
 
+## 0.0.22
+
+- fixed private chats getting mixed up between characters
+- when closing a tab you're currently present in, it shows the "no room" screen, instead of still showing the channel
+- fixed? issue where the (1) in the title just wOULDN'T GO AWAY DAMMIT
+- fixed sometimes wonky channel titles (e.g. "Idols \&amp; Vtubers")
+- swapped black and white bbc colors; black has black background, white has white background. these are the more prominent colors respectfully, so it makes more sense here
+- fixed big space at the bottom of the app if the window is really short
+- tightened edge cases on message bottom scrolling
+- fixed issues around sending typing status too often
+- performance and security improvements
+- the left sidebar is sixteen pixels wider
+
 ## 0.0.21
 
 - add license
