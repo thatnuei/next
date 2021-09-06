@@ -1,8 +1,6 @@
 import type { FormEvent, KeyboardEvent, ReactNode } from "react"
-import { useCallback, useEffect, useRef, useState } from "react"
 import BBCTextArea from "../bbc/BBCInput"
 import Button from "../dom/Button"
-import type { TypingStatus } from "../privateChat/types"
 import { solidButton } from "../ui/components"
 import { useChatContext } from "./ChatContext"
 
@@ -12,43 +10,12 @@ type Props = {
   renderPreview: (value: string) => ReactNode
   onChangeText: (value: string) => void
   onSubmit: (text: string) => void
-  onTypingStatusChange?: (typingStatus: TypingStatus) => void
 }
 
 export default function ChatInput(props: Props) {
   const { identity, notificationStore } = useChatContext()
 
   const valueTrimmed = props.value.trim()
-
-  const [typingTimerComplete, startTypingTimer] = useTimer(4000)
-  useEffect(() => {
-    if (valueTrimmed) startTypingTimer()
-  }, [startTypingTimer, valueTrimmed])
-
-  const lastTypingStatus = useRef<TypingStatus>("clear")
-  useEffect(() => {
-    function updateTypingStatus(typingStatus: TypingStatus) {
-      if (typingStatus !== lastTypingStatus.current) {
-        props.onTypingStatusChange?.(typingStatus)
-        lastTypingStatus.current = typingStatus
-      }
-    }
-
-    if (!valueTrimmed) {
-      updateTypingStatus("clear")
-      return
-    }
-
-    if (typingTimerComplete) {
-      updateTypingStatus("paused")
-      return
-    }
-
-    updateTypingStatus("typing")
-    return () => {
-      updateTypingStatus("paused")
-    }
-  }, [props, typingTimerComplete, valueTrimmed])
 
   function submit() {
     const maxLength = props.maxLength ?? Infinity
@@ -98,23 +65,4 @@ export default function ChatInput(props: Props) {
       </Button>
     </form>
   )
-}
-
-function useTimer(period: number) {
-  const [complete, setComplete] = useState(false)
-  const timeoutRef = useRef<number>()
-
-  const start = useCallback(() => {
-    setComplete(false)
-    window.clearTimeout(timeoutRef.current)
-    timeoutRef.current = window.setTimeout(() => setComplete(true), period)
-  }, [period])
-
-  useEffect(() => {
-    return () => {
-      window.clearTimeout(timeoutRef.current)
-    }
-  }, [])
-
-  return [complete, start] as const
 }

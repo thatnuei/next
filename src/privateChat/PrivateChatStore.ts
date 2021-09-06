@@ -44,6 +44,8 @@ export function createPrivateChatStore(
   const openChatNames = createDictStore<true>(() => true)
   let restored = false
 
+  const typingStatusManager = createTypingStatusManager(socket)
+
   function addStatusSystemMessage(
     character: string,
     status: CharacterStatus,
@@ -147,6 +149,7 @@ export function createPrivateChatStore(
 
     setInput(partnerName: string, input: string) {
       privateChats.updateItem(partnerName, (chat) => setRoomInput(chat, input))
+      typingStatusManager.handleInputChange(partnerName, input)
     },
 
     markRead(partnerName: string) {
@@ -210,4 +213,49 @@ export function createPrivateChatStore(
   }
 
   return store
+}
+
+function createTypingStatusManager(socket: ChatSocket) {
+  const timeouts = new Map<string, number>()
+
+  return {
+    handleInputChange(partnerName: string, input: string) {
+      const timeout = timeouts.get(partnerName)
+      if (timeout) {
+        clearTimeout(timeout)
+        timeouts.delete(partnerName)
+      }
+
+      if (input.trim().length > 0) {
+        socket.send({
+          type: "TPN",
+          params: {
+            character: partnerName,
+            status: "typing",
+          },
+        })
+
+        const timeout = window.setTimeout(() => {
+          socket.send({
+            type: "TPN",
+            params: {
+              character: partnerName,
+              status: "paused",
+            },
+          })
+          timeouts.delete(partnerName)
+        }, 5000)
+        timeouts.set(partnerName, timeout)
+      } else {
+        timeouts.delete(partnerName)
+        socket.send({
+          type: "TPN",
+          params: {
+            character: partnerName,
+            status: "clear",
+          },
+        })
+      }
+    },
+  }
 }

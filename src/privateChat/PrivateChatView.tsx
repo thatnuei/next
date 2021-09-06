@@ -86,15 +86,6 @@ export default function PrivateChatView({
           context.privateChatStore.sendMessage(partnerName, message)
           context.privateChatStore.setInput(partnerName, "")
         }}
-        onTypingStatusChange={(status) => {
-          context.socket.send({
-            type: "TPN",
-            params: {
-              character: partnerName,
-              status,
-            },
-          })
-        }}
         renderPreview={(value) => (
           <MessageListItem
             message={{
