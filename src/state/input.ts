@@ -3,6 +3,8 @@ export type InputState = {
   index: number
 }
 
+const historyLimit = 1000
+
 export function createInputState(initialValue = ""): InputState {
   return {
     history: [initialValue],
@@ -14,10 +16,22 @@ export function setInputStateValue(
   state: InputState,
   newValue: string,
 ): InputState {
+  // if the new input is the same as the current input, do nothing
+  const value = getInputStateValue(state)
+  if (value === newValue) {
+    return state
+  }
+
+  // limit the history to a set number of items
+  const newHistory = [
+    ...state.history.slice(0, state.index + 1),
+    newValue,
+  ].slice(-historyLimit)
+
   return {
     ...state,
-    history: [...state.history.slice(0, state.index + 1), newValue],
-    index: state.index + 1,
+    history: newHistory,
+    index: Math.min(state.index + 1, newHistory.length - 1),
   }
 }
 
