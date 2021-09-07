@@ -62,9 +62,9 @@ function ChannelView({ channelId }: Props) {
       </div>
 
       <ChatInput
-        value={channel.input}
-        onChangeText={(input) =>
-          context.channelStore.setInput(channelId, input)
+        inputState={channel.input}
+        onInputStateChange={(state) =>
+          context.channelStore.setInputState(channelId, state)
         }
         onSubmit={(message) =>
           context.channelStore.sendMessage(channelId, message)

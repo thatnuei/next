@@ -6,16 +6,13 @@ import {
   createPrivateMessage,
   createSystemMessage,
 } from "../message/MessageState"
-import {
-  addRoomMessage,
-  createRoomState,
-  setRoomInput,
-  setRoomUnread,
-} from "../room/state"
+import { addRoomMessage, createRoomState, setRoomUnread } from "../room/state"
 import type { ChatSocket } from "../socket/ChatSocket"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { createDictStore } from "../state/dict-store"
+import type { InputState } from "../state/input"
+import { getInputStateValue } from "../state/input"
 import type { Store } from "../state/store"
 import { combineStores } from "../state/store"
 import { restorePrivateChats, savePrivateChats } from "./storage"
@@ -147,9 +144,12 @@ export function createPrivateChatStore(
       store.addMessage(partnerName, createPrivateMessage(identity, message))
     },
 
-    setInput(partnerName: string, input: string) {
-      privateChats.updateItem(partnerName, (chat) => setRoomInput(chat, input))
-      typingStatusManager.handleInputChange(partnerName, input)
+    setInput(partnerName: string, input: InputState) {
+      privateChats.updateItem(partnerName, (chat) => ({ ...chat, input }))
+      typingStatusManager.handleInputChange(
+        partnerName,
+        getInputStateValue(input),
+      )
     },
 
     markRead(partnerName: string) {

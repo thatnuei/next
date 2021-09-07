@@ -8,6 +8,7 @@ import Button from "../dom/Button"
 import { decodeHtml } from "../dom/decodeHtml"
 import { createCommandHandler } from "../socket/helpers"
 import { useEmitterListener } from "../state/emitter"
+import { createInputState, getInputStateValue } from "../state/input"
 import { createStore, useStoreValue } from "../state/store"
 import { select, solidButton } from "../ui/components"
 import FormField from "../ui/FormField"
@@ -21,8 +22,8 @@ function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
   const { identity, socket } = useChatContext()
   const character = useCharacter(identity)
   const [status, setStatus] = useState(character.status)
-  const [statusMessage, setStatusMessage] = useState(() =>
-    decodeHtml(character.statusMessage),
+  const [statusMessageInput, setStatusMessageInput] = useState(() =>
+    createInputState(decodeHtml(character.statusMessage)),
   )
   const isSubmitting = useStoreValue(isSubmittingStore)
 
@@ -50,7 +51,7 @@ function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
 
     socket.send({
       type: "STA",
-      params: { status, statusmsg: statusMessage },
+      params: { status, statusmsg: getInputStateValue(statusMessageInput) },
     })
   }
 
@@ -71,8 +72,8 @@ function StatusUpdateForm({ onSuccess }: { onSuccess: () => void }) {
       </FormField>
       <FormField labelText="Status message (optional)">
         <BBCTextArea
-          value={statusMessage}
-          onChangeText={setStatusMessage}
+          inputState={statusMessageInput}
+          onInputStateChange={setStatusMessageInput}
           maxLength={255}
           placeholder="Hey! How's it goin'?"
           onKeyPress={(event) => {

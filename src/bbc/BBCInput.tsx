@@ -2,6 +2,13 @@ import clsx from "clsx"
 import type { ReactNode } from "react"
 import { isUrl } from "../common/isUrl"
 import type { TagProps } from "../jsx/types"
+import type { InputState } from "../state/input"
+import {
+  getInputStateValue,
+  inputStateRedo,
+  inputStateUndo,
+  setInputStateValue,
+} from "../state/input"
 import { useDebouncedValue } from "../state/useDebouncedValue"
 import { input } from "../ui/components"
 import { applyBBCodeShortcut } from "./applyBBCodeShortcut"
@@ -11,29 +18,32 @@ import { shortcuts } from "./shortcuts"
 
 type BBCTextAreaProps = {
   maxLength?: number
-  value: string
-  onChangeText: (value: string) => void
+  inputState: InputState
+  onInputStateChange: (inputState: InputState) => void
   renderPreview: (previewValue: string) => ReactNode
-} & Omit<TagProps<"textarea">, "className">
+} & Omit<TagProps<"textarea">, "className" | "value">
 
 export default function BBCTextArea({
+  inputState,
   maxLength,
+  onInputStateChange,
   onKeyDown,
   onChange,
-  onChangeText,
   renderPreview,
   ...props
 }: BBCTextAreaProps) {
+  const value = getInputStateValue(inputState)
+
   // debouncing the value for the preview,
   // so it changes less often to reduce distraction
-  const previewValue = useDebouncedValue(props.value, 500)
+  const previewValue = useDebouncedValue(value, 500)
 
-  const valueTrimmed = props.value.trim()
+  const valueTrimmed = value.trim()
   const valueLength = valueTrimmed.length
 
   return (
     <div className="relative flex flex-col gap-2">
-      {previewValue && props.value ? (
+      {previewValue && value ? (
         // vertical padding fixes an issue where the scroll arrows show up due to line height,
         // even if not at max height
         <div className="px-3 py-2 overflow-y-auto bg-midnight-1 max-h-24">
@@ -43,20 +53,46 @@ export default function BBCTextArea({
 
       <div className="relative">
         <textarea
+          value={value}
           className={clsx(input, "peer")}
           rows={3}
           onChange={(event) => {
-            onChangeText(event.target.value)
             onChange?.(event)
+            onInputStateChange(
+              setInputStateValue(inputState, event.target.value),
+            )
           }}
           onKeyDown={(event) => {
             onKeyDown?.(event)
 
-            if (event.ctrlKey) {
+            const isCtrlOrCmd =
+              (event.ctrlKey || event.metaKey) &&
+              !event.shiftKey &&
+              !event.altKey
+
+            if (isCtrlOrCmd) {
+              if (event.code === "KeyZ") {
+                event.preventDefault()
+                onInputStateChange(inputStateUndo(inputState))
+                return
+              }
+
+              if (event.code === "KeyY") {
+                event.preventDefault()
+                onInputStateChange(inputStateRedo(inputState))
+                return
+              }
+
               const shortcut = shortcuts.find((s) => s.key === event.code)
               if (shortcut?.type === "bbcode") {
                 event.preventDefault()
-                onChangeText(applyBBCodeShortcut(event.currentTarget, shortcut))
+                onInputStateChange(
+                  setInputStateValue(
+                    inputState,
+                    applyBBCodeShortcut(event.currentTarget, shortcut),
+                  ),
+                )
+                return
               }
             }
           }}
@@ -64,7 +100,13 @@ export default function BBCTextArea({
             const text = event.clipboardData.getData("text/plain")
             if (isUrl(text)) {
               event.preventDefault()
-              onChangeText(insertBBCForPastedUrl(event.currentTarget, text))
+              onInputStateChange(
+                setInputStateValue(
+                  inputState,
+                  insertBBCForPastedUrl(event.currentTarget, text),
+                ),
+              )
+              return
             }
           }}
           {...props}

@@ -10,6 +10,7 @@ import MessageList from "../message/MessageList"
 import MessageListItem from "../message/MessageListItem"
 import { createPrivateMessage } from "../message/MessageState"
 import { useEmitterListener } from "../state/emitter"
+import { setInputStateValue } from "../state/input"
 import { combineStores, createStore, useStoreValue } from "../state/store"
 import TypingStatusDisplay from "./TypingStatusDisplay"
 
@@ -76,14 +77,17 @@ export default function PrivateChatView({
       </div>
 
       <ChatInput
-        value={chat.input}
+        inputState={chat.input}
         maxLength={50000}
-        onChangeText={(input) =>
+        onInputStateChange={(input) =>
           context.privateChatStore.setInput(partnerName, input)
         }
         onSubmit={(message) => {
           context.privateChatStore.sendMessage(partnerName, message)
-          context.privateChatStore.setInput(partnerName, "")
+          context.privateChatStore.setInput(
+            partnerName,
+            setInputStateValue(chat.input, ""),
+          )
         }}
         renderPreview={(value) => (
           <MessageListItem

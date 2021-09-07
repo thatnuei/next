@@ -1,8 +1,10 @@
 import type { MessageState } from "../message/MessageState"
+import type { InputState } from "../state/input"
+import { createInputState, setInputStateValue } from "../state/input"
 
 export type RoomState = {
   readonly messages: readonly MessageState[]
-  readonly input: string
+  readonly input: InputState
   readonly isUnread: boolean
 }
 
@@ -11,8 +13,8 @@ const maxMessageCount = 500
 export function createRoomState(): RoomState {
   return {
     messages: [],
-    input: "",
     isUnread: false,
+    input: createInputState(),
   }
 }
 
@@ -34,7 +36,7 @@ export const setRoomInput = <T extends RoomState>(
   input: string,
 ): T => ({
   ...room,
-  input,
+  input: setInputStateValue(room.input, input),
 })
 
 export const setRoomUnread = <T extends RoomState>(
