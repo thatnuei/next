@@ -32,11 +32,11 @@ export default function BBCTextArea({
   const valueLength = valueTrimmed.length
 
   return (
-    <div className="flex flex-col gap-2 relative">
+    <div className="relative flex flex-col gap-2">
       {previewValue && props.value ? (
         // vertical padding fixes an issue where the scroll arrows show up due to line height,
         // even if not at max height
-        <div className="bg-midnight-1 max-h-24 py-1.5 px-2 overflow-y-auto">
+        <div className="px-3 py-2 overflow-y-auto bg-midnight-1 max-h-24">
           {renderPreview(previewValue)}
         </div>
       ) : undefined}
@@ -81,7 +81,7 @@ export default function BBCTextArea({
           </p>
         )}
 
-        <div className="p-1 top-0 right-0 absolute">
+        <div className="absolute top-0 right-0 p-1">
           <KeyboardShortcutsPopoverButton />
         </div>
       </div>

@@ -28,7 +28,10 @@ export default memo(function MessageList({ messages }: Props) {
       {deferredMessages.map((message) => (
         <li
           key={message.key}
-          className={clsx(message.senderName === identity && "bg-black/30")}
+          className={clsx(
+            "px-2 py-1",
+            message.senderName === identity && "bg-black/30",
+          )}
           onDragStart={(event) => event.preventDefault()}
         >
           <MessageListItem message={message} />
