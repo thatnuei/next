@@ -40,9 +40,6 @@ export default memo(function MessageList({ messages }: Props) {
 
 const bottomScrollThreshold = 20
 
-const scrollBottom = (element: Element) =>
-  element ? element.scrollTop + element.clientHeight : 0
-
 function useBottomScroll<E extends HTMLElement>(observedValue: unknown) {
   const containerRef = useRef<E>(null)
   const rect = useRect(containerRef)
@@ -56,21 +53,55 @@ function useBottomScroll<E extends HTMLElement>(observedValue: unknown) {
 
   const updateScrollRef = () => {
     if (containerRef.current) {
-      scrollRef.current = scrollBottom(containerRef.current)
-      scrollHeightRef.current = containerRef.current.scrollHeight
+      scrollRef.current = containerRef.current.scrollTop
     }
   }
 
-  useLayoutEffect(scrollToBottom, [])
+  const updateScrollHeightRef = () => {
+    if (containerRef.current) {
+      scrollHeightRef.current =
+        containerRef.current.scrollHeight - containerRef.current.clientHeight
+    }
+  }
 
+  // scroll to bottom initially
+  useLayoutEffect(() => {
+    scrollToBottom()
+    updateScrollRef()
+    updateScrollHeightRef()
+  }, [])
+
+  // scroll to bottom when the observed value changes
+  // we don't expect the height to have changed here,
+  // so don't update the scroll height ref
   useLayoutEffect(() => {
     if (scrollRef.current > scrollHeightRef.current - bottomScrollThreshold) {
       scrollToBottom()
     }
     updateScrollRef()
-  }, [observedValue, rect])
+  }, [observedValue])
 
-  useDomEvent(containerRef, "scroll", updateScrollRef, { passive: true })
+  // only update scroll height ref when we expect a change in the scroll height
+  useLayoutEffect(() => {
+    if (scrollRef.current > scrollHeightRef.current - bottomScrollThreshold) {
+      scrollToBottom()
+    }
+    updateScrollRef()
+    updateScrollHeightRef()
+  }, [rect])
+
+  useDomEvent(
+    containerRef,
+    "scroll",
+    () => {
+      // the scroll event can fire when the rect height changes,
+      // rIC to ensure the rect handler runs before this
+      requestIdleCallback(() => {
+        updateScrollRef()
+      })
+    },
+    { passive: true },
+  )
 
   return containerRef
 }
