@@ -50,20 +50,19 @@ export default function PrivateChatView({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex flex-row items-center h-20 gap-3 px-3 mb-1 bg-midnight-0">
+      <div className="flex flex-row h-20 gap-3 pl-3 mb-1 bg-midnight-0">
         <ChatMenuButton />
 
-        <CharacterMenuTarget name={partnerName}>
-          <Avatar name={partnerName} size={12} />
-        </CharacterMenuTarget>
+        <div className="self-center">
+          <CharacterMenuTarget name={partnerName}>
+            <Avatar name={partnerName} size={12} />
+          </CharacterMenuTarget>
+        </div>
 
-        <div className="flex flex-col self-stretch justify-center flex-1 overflow-y-auto">
-          {/* need this extra container to keep the children from shrinking */}
-          <div className="my-3">
+        <div className="flex flex-col flex-1 py-3 overflow-y-auto">
+          <div className="pr-3 my-auto">
             <CharacterName name={partnerName} statusDot="hidden" />
             <CharacterStatusText name={partnerName} />
-            {/* this spacer needs to be here, otherwise the scrolling flex column eats the bottom spacing */}
-            <div className="h-3" />
           </div>
         </div>
       </div>
