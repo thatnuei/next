@@ -57,9 +57,21 @@ export default function BBCTextArea({
           className={clsx(input, "peer")}
           rows={3}
           onChange={(event) => {
+            const newCharacter = (event.nativeEvent as InputEvent).data ?? ""
+
+            // we want to replace the current history stack entry if we're only editing the last word,
+            // that way we can undo/redo the whole word instead of just the last character
+            //
+            // this is convenient enough for the common case, but is weird in some edge cases
+            // (e.g. adding single letter in middle of a word)
+            // a better solution will probably involve diffing the text
+            const addingSingleLetter = /^[a-z0-9]$/i.test(newCharacter)
+
             onChange?.(event)
             onInputStateChange(
-              setInputStateValue(inputState, event.target.value),
+              setInputStateValue(inputState, event.target.value, {
+                replace: addingSingleLetter && value !== "",
+              }),
             )
           }}
           onKeyDown={(event) => {

@@ -15,6 +15,7 @@ export function createInputState(initialValue = ""): InputState {
 export function setInputStateValue(
   state: InputState,
   newValue: string,
+  { replace = false } = {},
 ): InputState {
   // if the new input is the same as the current input, do nothing
   const value = getInputStateValue(state)
@@ -24,7 +25,7 @@ export function setInputStateValue(
 
   // limit the history to a set number of items
   const newHistory = [
-    ...state.history.slice(0, state.index + 1),
+    ...state.history.slice(0, state.index + (replace ? 0 : 1)),
     newValue,
   ].slice(-historyLimit)
 
