@@ -3,6 +3,7 @@ import clsx from "clsx"
 import { memo, useDeferredValue, useLayoutEffect, useRef } from "react"
 import { useChatContext } from "../chat/ChatContext"
 import { useDomEvent } from "../dom/useDomEvent"
+import MessageHighlight from "./MessageHighlight"
 import MessageListItem from "./MessageListItem"
 import type { MessageState } from "./MessageState"
 
@@ -28,13 +29,14 @@ export default memo(function MessageList({ messages }: Props) {
       {deferredMessages.map((message) => (
         <li
           key={message.key}
-          className={clsx(
-            "px-2 py-1",
-            message.senderName === identity && "bg-black/30",
-          )}
+          className={clsx(message.senderName === identity && "bg-black/30")}
           onDragStart={(event) => event.preventDefault()}
         >
-          <MessageListItem message={message} />
+          <MessageHighlight message={message}>
+            <div className="px-2 py-1">
+              <MessageListItem message={message} />
+            </div>
+          </MessageHighlight>
         </li>
       ))}
     </ol>
