@@ -1,3 +1,11 @@
+import {
+  delay,
+  distinctUntilKeyChanged,
+  merge,
+  of,
+  Subject,
+  switchMap,
+} from "rxjs"
 import type { CharacterStatus } from "../character/types"
 import { isTruthy } from "../common/isTruthy"
 import type { ChatLogger } from "../logging/logger"
@@ -16,7 +24,7 @@ import { getInputStateValue } from "../state/input"
 import type { Store } from "../state/store"
 import { combineStores } from "../state/store"
 import { restorePrivateChats, savePrivateChats } from "./storage"
-import type { PrivateChat } from "./types"
+import type { PrivateChat, TypingStatus } from "./types"
 
 export type PrivateChatStore = ReturnType<typeof createPrivateChatStore>
 
@@ -216,46 +224,39 @@ export function createPrivateChatStore(
 }
 
 function createTypingStatusManager(socket: ChatSocket) {
-  const timeouts = new Map<string, number>()
+  type Input = { partnerName: string; input: string }
+  type Output = { partnerName: string; status: TypingStatus }
+
+  const subject = new Subject<Input>()
+
+  subject
+    .pipe(
+      // using switchmap cancels the timer of the previous stream
+      switchMap(({ partnerName, input }) => {
+        // if the input is empty, send a clear status
+        if (input.trim().length === 0) {
+          return of<Output>({ partnerName, status: "clear" })
+        }
+
+        // if the input has content, send typing,
+        // then send paused after a short delay
+        return merge(
+          of<Output>({ partnerName, status: "typing" }),
+          of<Output>({ partnerName, status: "paused" }).pipe(delay(5000)),
+        )
+      }),
+      distinctUntilKeyChanged("status"),
+    )
+    .subscribe(({ partnerName, status }) => {
+      socket.send({
+        type: "TPN",
+        params: { character: partnerName, status },
+      })
+    })
 
   return {
     handleInputChange(partnerName: string, input: string) {
-      const timeout = timeouts.get(partnerName)
-      if (timeout) {
-        clearTimeout(timeout)
-        timeouts.delete(partnerName)
-      }
-
-      if (input.trim().length > 0) {
-        socket.send({
-          type: "TPN",
-          params: {
-            character: partnerName,
-            status: "typing",
-          },
-        })
-
-        const timeout = window.setTimeout(() => {
-          socket.send({
-            type: "TPN",
-            params: {
-              character: partnerName,
-              status: "paused",
-            },
-          })
-          timeouts.delete(partnerName)
-        }, 5000)
-        timeouts.set(partnerName, timeout)
-      } else {
-        timeouts.delete(partnerName)
-        socket.send({
-          type: "TPN",
-          params: {
-            character: partnerName,
-            status: "clear",
-          },
-        })
-      }
+      subject.next({ partnerName, input })
     },
   }
 }
