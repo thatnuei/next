@@ -31,13 +31,13 @@ export function createNotificationStore(
 
     addNotification(details: NotificationDetails) {
       notifications.update((notifications) => [
-        ...notifications,
         {
           id: uniqueId(),
           timestamp: Date.now(),
           readStatus: "unread",
           details,
         },
+        ...notifications,
       ])
 
       logger.setRoomName("notifications", "Notifications")
