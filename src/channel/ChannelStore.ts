@@ -18,6 +18,7 @@ import type { ChatSocket } from "../socket/ChatSocket"
 import type { ServerCommand } from "../socket/helpers"
 import { matchCommand } from "../socket/helpers"
 import { createDictStore } from "../state/dict-store"
+import type { InputState } from "../state/input"
 import { combineStores } from "../state/store"
 import { loadChannels, saveChannels } from "./storage"
 import type { Channel, ChannelMode } from "./types"
@@ -141,11 +142,8 @@ export function createChannelStore(
       }))
     },
 
-    setInput(id: string, input: string) {
-      channels.updateItem(id, (channel) => ({
-        ...channel,
-        input,
-      }))
+    setInputState(id: string, input: InputState) {
+      channels.updateItem(id, (channel) => ({ ...channel, input }))
     },
 
     markRead(id: string) {

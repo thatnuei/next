@@ -12,7 +12,7 @@ export type DeepReadonly<T> = T extends Record<string, unknown>
   ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
   : T
 
-export type NonEmptyArray<T> = [T, ...T[]]
+export type NonEmptyArray<T> = readonly [T, ...T[]]
 
 export type Mutable<T> = T extends Record<string, unknown>
   ? { -readonly [K in keyof T]: T[K] }

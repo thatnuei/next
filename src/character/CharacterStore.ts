@@ -125,7 +125,11 @@ export function createCharacterStore(api: FListApi, identity: string) {
         },
 
         FLN: ({ character: name }) => {
-          characters.deleteItem(name)
+          characters.updateItem(name, (char) => ({
+            ...char,
+            status: "offline",
+            statusMessage: "",
+          }))
         },
 
         STA: ({ character: name, status, statusmsg }) => {

@@ -2,6 +2,16 @@
 
 <!--new-version-->
 
+## 0.0.24
+
+- improve bottom scroll logic (again) (again) (again)
+- fixed character genders going to "none" when logging out
+- fixed notifications showing in the wrong order
+- fixed and polished the private chat header styling
+- implement bbcode spoiler tags
+- minor padding fix on bbc preview
+- added undo/redo functionality for bbcode inputs
+
 ## 0.0.23
 
 - fix bottom scrolling (again)

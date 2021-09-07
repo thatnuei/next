@@ -1,4 +1,3 @@
-import clsx from "clsx"
 import { memo } from "react"
 import BBC from "../bbc/BBC"
 import CharacterName from "../character/CharacterName"
@@ -11,16 +10,8 @@ type Props = {
 }
 
 function MessageListItem({ message }: Props) {
-  const typeStyle = {
-    normal: undefined,
-    action: `italic`,
-    lfrp: `bg-green-500/20`,
-    warning: `bg-red-500/20`,
-    system: `bg-black/50`,
-  }[message.type]
-
   return (
-    <div className={clsx(typeStyle, "px-2 py-1")}>
+    <div>
       {message.timestamp ? (
         <Timestamp className="inline-block mr-2 text-sm not-italic opacity-50">
           {message.timestamp}
