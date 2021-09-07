@@ -1,9 +1,11 @@
+import clsx from "clsx"
 import type { CSSProperties } from "react"
-import { Fragment, memo } from "react"
+import { Fragment, memo, useState } from "react"
 import Avatar from "../character/Avatar"
 import CharacterMenuTarget from "../character/CharacterMenuTarget"
 import CharacterName from "../character/CharacterName"
 import { memoize } from "../common/memoize"
+import Button from "../dom/Button"
 import { decodeHtml } from "../dom/decodeHtml"
 import { getIconUrl } from "../flist/helpers"
 import BBCChannelLink from "./BBCChannelLink"
@@ -140,6 +142,13 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
       case "noparse":
         return <>{getNodeChildrenAsText(node)}</>
 
+      case "spoiler":
+        return (
+          <BBCSpoiler>
+            <BBCTree nodes={node.children} />
+          </BBCSpoiler>
+        )
+
       default: {
         const startTagText = `[${node.tag}${
           node.value ? `=${node.value}` : ""
@@ -163,6 +172,29 @@ function BBCTree({ nodes }: { nodes: Node[] }) {
       {nodes.map((node, index) => (
         <Fragment key={index}>{renderNode(node)}</Fragment>
       ))}
+    </span>
+  )
+}
+
+function BBCSpoiler({ children }: { children: React.ReactNode }) {
+  const [revealed, setRevealed] = useState(false)
+
+  return (
+    <span
+      className={clsx(
+        "relative inline-block rounded",
+        revealed && `bg-white/10`,
+      )}
+    >
+      <span aria-hidden={!revealed}>{children}</span>
+      <Button
+        className={clsx(
+          "absolute inset-0 w-full bg-gray-900 border-1  hover:bg-gray-800  rounded transition-all",
+          revealed ? "invisible opacity-0" : "visible opacity-100",
+        )}
+        onClick={() => setRevealed(!revealed)}
+        title="Reveal Spoiler"
+      />
     </span>
   )
 }
