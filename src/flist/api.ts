@@ -1,9 +1,8 @@
 import { pick } from "lodash-es"
 import { raise } from "../common/raise"
 import { toError } from "../common/toError"
-import type { NonEmptyArray } from "../common/types"
-import { authenticate } from "./authenticate"
-import { fetchFlist } from "./fetchFlist"
+import type { Dict, NonEmptyArray } from "../common/types"
+import { fetchJson } from "../network/fetchJson"
 import type { AuthUser, LoginCredentials } from "./types"
 
 type FriendsAndBookmarksResponse = {
@@ -14,6 +13,11 @@ type FriendsAndBookmarksResponse = {
     dest: string
   }>
   readonly bookmarklist: readonly string[]
+}
+
+type GetApiTicketResponse = {
+  characters: NonEmptyArray<string>
+  ticket: string
 }
 
 export type TicketCredentials = {
@@ -29,8 +33,17 @@ export type LoginResponse = {
 
 export type FListApi = ReturnType<typeof createFListApi>
 
-export function createFListApi() {
+export function createFListApi(fetch = fetchFromFlist) {
   let user: AuthUser | undefined
+
+  async function authenticate(args: LoginCredentials): Promise<AuthUser> {
+    const response = await fetch<GetApiTicketResponse>("/getApiTicket.php", {
+      ...args,
+      no_friends: true,
+      no_bookmarks: true,
+    })
+    return { ...response, account: args.account, password: args.password }
+  }
 
   const api = {
     async login(credentials: LoginCredentials): Promise<LoginResponse> {
@@ -77,19 +90,19 @@ export function createFListApi() {
 
     async addBookmark(args: { name: string }) {
       await api.tryWithValidTicket(async (creds) => {
-        await fetchFlist(`/api/bookmark-add.php`, { ...args, ...creds })
+        await fetch(`/api/bookmark-add.php`, { ...args, ...creds })
       })
     },
 
     async removeBookmark(args: { name: string }) {
       await api.tryWithValidTicket(async (creds) => {
-        await fetchFlist(`/api/bookmark-remove.php`, { ...args, ...creds })
+        await fetch(`/api/bookmark-remove.php`, { ...args, ...creds })
       })
     },
 
     async getFriendsAndBookmarks() {
       return api.tryWithValidTicket((creds) => {
-        return fetchFlist<FriendsAndBookmarksResponse>(
+        return fetch<FriendsAndBookmarksResponse>(
           `/api/friend-bookmark-lists.php`,
           {
             ...creds,
@@ -102,7 +115,7 @@ export function createFListApi() {
 
     async getMemo(args: { name: string }) {
       return api.tryWithValidTicket(async (creds) => {
-        const res = await fetchFlist<{ note: string | null }>(
+        const res = await fetch<{ note: string | null }>(
           "/api/character-memo-get2.php",
           { ...creds, target: args.name },
         )
@@ -112,7 +125,7 @@ export function createFListApi() {
 
     async setMemo({ name, ...params }: { name: string; note: string }) {
       await api.tryWithValidTicket(async (creds) => {
-        await fetchFlist("/api/character-memo-save.php", {
+        await fetch("/api/character-memo-save.php", {
           ...creds,
           ...params,
           target_name: name,
@@ -122,4 +135,21 @@ export function createFListApi() {
   }
 
   return api
+}
+
+async function fetchFromFlist<T>(
+  endpoint: string,
+  body: Dict<unknown>,
+): Promise<T> {
+  endpoint = endpoint.replace(/^\/+/, "")
+
+  const data = await fetchJson<T & { error?: string }>(
+    `https://www.f-list.net/json/${endpoint}`,
+    {
+      method: "post",
+      body,
+    },
+  )
+
+  return data.error ? raise(data.error) : data
 }
