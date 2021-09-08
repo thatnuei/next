@@ -1,5 +1,4 @@
 import * as RadixMenu from "@radix-ui/react-dropdown-menu"
-import { Slot } from "@radix-ui/react-slot"
 import clsx from "clsx"
 import type { ReactElement, ReactNode } from "react"
 
@@ -8,7 +7,7 @@ export default function DropdownMenu({ children }: { children: ReactNode }) {
 }
 
 export function DropdownMenuButton({ children }: { children: ReactElement }) {
-  return <RadixMenu.Trigger as={Slot as any}>{children}</RadixMenu.Trigger>
+  return <RadixMenu.Trigger asChild>{children}</RadixMenu.Trigger>
 }
 
 export function DropdownMenuPanel({ children }: { children: ReactNode }) {
@@ -29,7 +28,7 @@ export function DropdownMenuItem({
   return (
     <div className="relative flex transition-opacity opacity-50 hover:opacity-100 focus-within:opacity-100">
       <RadixMenu.Item
-        as={Slot as any}
+        asChild
         className={clsx(`p-2 flex-1 flex flex-row`, icon != null && `pl-10`)}
       >
         {children}
@@ -55,7 +54,7 @@ export function DropdownMenuCheckbox({
   return (
     <div className="relative flex transition-opacity opacity-50 hover:opacity-100 focus-within:opacity-100">
       <RadixMenu.CheckboxItem
-        as={Slot as any}
+        asChild
         className={clsx(`p-2 flex-1 flex flex-row`, icon != null && `pl-10`)}
         checked={checked}
         onCheckedChange={onCheckedChange}
