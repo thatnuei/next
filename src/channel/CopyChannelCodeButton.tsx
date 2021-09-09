@@ -11,7 +11,7 @@ export default autoRef(function CopyChannelCodeButton({
 }: {
   channelId: string
   className?: string
-  onClick?: () => void
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
   ref?: Ref<HTMLButtonElement>
 }) {
   const context = useChatContext()
@@ -21,8 +21,8 @@ export default autoRef(function CopyChannelCodeButton({
       title="Copy channel code"
       className={className}
       ref={ref}
-      onClick={async () => {
-        onClick?.()
+      onClick={async (event) => {
+        onClick?.(event)
 
         const link =
           context.channelBrowserStore.selectChannelLink(channelId).value

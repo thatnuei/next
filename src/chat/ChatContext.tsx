@@ -8,6 +8,7 @@ import { createCharacterStore } from "../character/CharacterStore"
 import { raise } from "../common/raise"
 import type { NonEmptyArray } from "../common/types"
 import type { FListApi, LoginResponse } from "../flist/api"
+import { createTestApi } from "../flist/test-api"
 import { useChatLogger } from "../logging/context"
 import { createSystemNotificationsHandler } from "../notifications/createSystemNotificationsHandler"
 import type { NotificationStore } from "../notifications/NotificationStore"
@@ -35,23 +36,72 @@ type ChatContextType = {
   channelStore: ChannelStore
 }
 
-const Context = createContext<ChatContextType>()
-
-export function ChatProvider({
-  user,
-  identity,
-  api,
-  onShowLogin,
-  onShowCharacterSelect,
-  children,
-}: {
+type ChatProviderProps = {
   user: LoginResponse
   identity: string
   api: FListApi
   onShowLogin: () => void
   onShowCharacterSelect: () => void
   children: React.ReactNode
-}) {
+}
+
+const Context = createContext<ChatContextType>()
+
+export function ChatProvider(props: ChatProviderProps) {
+  const contextValue = useContextValue(props)
+
+  useEffect(() => {
+    contextValue.socket.connect(async () => {
+      // the ticket may be invalid since the last time we joined chat
+      // I can't figure out a better way to do this right now
+      const { account, ticket } = await contextValue.api.reauthenticate()
+      return { account, ticket, character: props.identity }
+    })
+
+    return () => {
+      contextValue.socket.disconnect()
+    }
+  }, [contextValue.api, contextValue.socket, props.identity])
+
+  return (
+    <Context.Provider value={contextValue}>{props.children}</Context.Provider>
+  )
+}
+
+export function TestChatProvider({
+  user = {
+    account: "Testificate",
+    characters: ["Testificate"],
+    ticket: "ticket",
+  },
+  identity = "Testificate",
+  api = createTestApi().api,
+  children = <></>,
+  onShowLogin = () => {},
+  onShowCharacterSelect = () => {},
+}: Partial<ChatProviderProps>) {
+  const contextValue = useContextValue({
+    api,
+    identity,
+    onShowLogin,
+    onShowCharacterSelect,
+    user,
+  })
+
+  return <Context.Provider value={contextValue}>{children}</Context.Provider>
+}
+
+export function useChatContext(): ChatContextType {
+  return useContext(Context) ?? raise(`ChatProvider not found`)
+}
+
+function useContextValue({
+  api,
+  identity,
+  onShowLogin,
+  onShowCharacterSelect,
+  user,
+}: Omit<ChatProviderProps, "children">): ChatContextType {
   const socket = useMemo(createChatSocket, [])
   const logger = useChatLogger()
   const route = useRoute()
@@ -106,7 +156,7 @@ export function ChatProvider({
     }
   }, [api, identity, socket])
 
-  const contextValue: ChatContextType = {
+  return {
     identity,
     userCharacters: user.characters,
     showLogin: onShowLogin,
@@ -120,10 +170,4 @@ export function ChatProvider({
     notificationStore,
     channelStore,
   }
-
-  return <Context.Provider value={contextValue}>{children}</Context.Provider>
-}
-
-export function useChatContext(): ChatContextType {
-  return useContext(Context) ?? raise(`ChatProvider not found`)
 }

@@ -107,7 +107,7 @@ async function main() {
   })
 
   await withSpinner("Committing and tagging...", async () => {
-    await git.add(["package.json", "CHANGELOG.md"])
+    await git.add(["-A"])
     await git.commit(`v${newVersion}`)
     await git.tag([`v${newVersion}`])
   })
