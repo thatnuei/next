@@ -1,6 +1,5 @@
 import { pick } from "lodash-es"
 import { raise } from "../common/raise"
-import { toError } from "../common/toError"
 import type { Dict, NonEmptyArray } from "../common/types"
 import { fetchJson } from "../network/fetchJson"
 import type { AuthUser, LoginCredentials } from "./types"
@@ -15,7 +14,7 @@ type FriendsAndBookmarksResponse = {
   readonly bookmarklist: readonly string[]
 }
 
-type GetApiTicketResponse = {
+export type GetApiTicketResponse = {
   characters: NonEmptyArray<string>
   ticket: string
 }
@@ -76,15 +75,8 @@ export function createFListApi(fetch = fetchFromFlist) {
       try {
         return await block(pick(user, ["account", "ticket"]))
       } catch (error) {
-        const message = toError(error).message
-
-        if (message.includes("Invalid ticket")) {
-          user = await authenticate(pick(user, ["account", "password"]))
-
-          return await block(pick(user, ["account", "ticket"]))
-        }
-
-        throw error
+        user = await authenticate(pick(user, ["account", "password"]))
+        return await block(pick(user, ["account", "ticket"]))
       }
     },
 
