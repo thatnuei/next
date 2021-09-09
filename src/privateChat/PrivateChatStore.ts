@@ -90,7 +90,10 @@ export function createPrivateChatStore(
 
     openChat(partnerName: string) {
       openChatNames.setItem(partnerName, true)
-      logger.setRoomName(getLoggerRoomId(identity, partnerName), partnerName)
+      logger.setRoomName(
+        getLoggerRoomId(identity, partnerName),
+        `${partnerName} (on ${identity})`,
+      )
 
       logger
         .getMessages(getLoggerRoomId(identity, partnerName), 30)

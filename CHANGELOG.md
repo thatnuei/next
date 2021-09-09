@@ -2,6 +2,10 @@
 
 <!--new-version-->
 
+## 0.0.26
+
+- fixed private chat log titles to say "(on YourCharacter)"
+
 ## 0.0.25
 
 - fixed bookmarks/memo not working after a while
