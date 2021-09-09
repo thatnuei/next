@@ -2,6 +2,10 @@
 module.exports = {
   setupFilesAfterEnv: ["./jest.setup.ts"],
   transform: {
-    "^.+\\.tsx?$": "esbuild-jest",
+    "\\.(js|ts)x?$": "@sucrase/jest-plugin",
+  },
+  moduleNameMapper: {
+    // jest can't transform es modules
+    "lodash-es": "lodash",
   },
 }
