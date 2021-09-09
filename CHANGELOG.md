@@ -2,6 +2,10 @@
 
 <!--new-version-->
 
+## 0.0.25
+
+- fixed bookmarks/memo not working after a while
+
 ## 0.0.24
 
 - improve bottom scroll logic (again) (again) (again)
