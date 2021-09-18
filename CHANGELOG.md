@@ -2,6 +2,11 @@
 
 <!--new-version-->
 
+## 0.0.27
+
+- fixed sometimes incorrect notification count
+- fixed status being restored too often
+
 ## 0.0.26
 
 - fixed private chat log titles to say "(on YourCharacter)"
