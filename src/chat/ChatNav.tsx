@@ -13,6 +13,7 @@ import LogsIcon from "../ui/LogsIcon"
 import Modal from "../ui/Modal"
 import { useChatContext } from "./ChatContext"
 import ChatNavActionButton from "./ChatNavActionButton"
+import { clearStoredStatus } from "./createStatusPersistenceHandler"
 import RoomTabList from "./RoomTabList"
 import StatusUpdateForm from "./StatusUpdateForm"
 
@@ -107,7 +108,12 @@ export default function ChatNav() {
 
         <div className={`flex-1`} />
 
-        <Button onClick={context.showCharacterSelect}>
+        <Button
+          onClick={() => {
+            context.showCharacterSelect()
+            clearStoredStatus()
+          }}
+        >
           <ChatNavAction icon={<Icon which={icons.logout} />} name="Log out" />
         </Button>
       </div>

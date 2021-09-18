@@ -4,8 +4,8 @@ import type { ChatSocket } from "../socket/ChatSocket"
 import { createCommandHandler } from "../socket/helpers"
 import { keyValueStore } from "../storage/keyValueStore"
 
-export function clearStoredStatus(identity: string) {
-  keyValueStore.delete(`status:${identity}`)
+export function clearStoredStatus() {
+  keyValueStore.delete(`status`)
 }
 
 export default function createStatusPersistenceHandler(
@@ -15,7 +15,8 @@ export default function createStatusPersistenceHandler(
   return createCommandHandler({
     STA({ character, status, statusmsg }) {
       if (character === identity) {
-        keyValueStore.set(`status:${identity}`, {
+        keyValueStore.set(`status`, {
+          identity,
           status,
           statusmsg: decodeHtml(statusmsg),
         })
@@ -23,11 +24,12 @@ export default function createStatusPersistenceHandler(
     },
 
     async IDN({ character: identity }) {
-      const savedStatus = (await keyValueStore.get(`status:${identity}`)) as
+      const savedStatus = (await keyValueStore.get(`status`)) as
         | Record<string, unknown>
         | undefined
 
       if (
+        savedStatus?.identity === identity &&
         typeof savedStatus?.status === "string" &&
         typeof savedStatus?.statusmsg === "string"
       ) {
@@ -38,6 +40,10 @@ export default function createStatusPersistenceHandler(
             statusmsg: savedStatus.statusmsg,
           },
         })
+      } else {
+        // it'd be weird hopping onto one character,
+        // then going to another character and their status gets restored
+        clearStoredStatus()
       }
     },
   })

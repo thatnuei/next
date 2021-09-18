@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import type { Falsy } from "../common/types"
+import { useRoute } from "../router"
 import { useStoreValue } from "../state/store"
 import { useChatContext } from "./ChatContext"
 
@@ -29,9 +30,14 @@ export function useChatDocumentTitle() {
   const prefix = joinContentfulStrings(prefixParts, " ")
   const title = joinContentfulStrings([prefix, "next"], " | ")
 
+  const route = useRoute()
+
   useEffect(() => {
     document.title = title
-  })
+    // the browser stores titles with each history entry,
+    // so going back could show an old and incorrect notification count,
+    // so we need to update the title when the route changes
+  }, [title, route])
 }
 
 function joinContentfulStrings(
